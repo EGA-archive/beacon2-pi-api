@@ -6,20 +6,6 @@ FROM cdm.person
 LIMIT :limit
 OFFSET :offset
 
--- name: cohort_individuals
--- Get individuals
-SELECT subject_id as person_id
-FROM cdm.cohort
-where cohort_definition_id = :cohort_id
-LIMIT :limit
-OFFSET :offset
-
--- name: count_cohort_individuals$
--- Get individuals count
-SELECT count(*)
-FROM cdm.cohort
-where cohort_definition_id = :cohort_id
-
 -- name: count_individuals$
 -- Get individuals count
 SELECT count(*)
