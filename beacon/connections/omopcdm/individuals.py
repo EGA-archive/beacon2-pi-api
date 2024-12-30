@@ -15,16 +15,20 @@ queries_file = Path(__file__).parent / "sql" / "individuals.sql"
 individual_queries = aiosql.from_path(queries_file, "psycopg2")
 
 
-def get_individual_id(offset=0, limit=10, person_id=None):
+def get_individual_info(offset: int=0, limit: int=10, person_id: str=None) -> list:
     if person_id == None:
         records = individual_queries.sql_get_individuals(client, offset=offset, limit=limit)
+        if not records:
+            return []
         listId = [str(record[0]) for record in records]
     else:
         records = individual_queries.sql_get_individual_id(client, person_id=person_id)
+        if not records:
+            return []
         listId = [str(records[0])]
     return listId
 
-def get_individuals_person(listIds):
+def get_individuals_person(listIds: list) -> dict:
     dict_person = {}
     for person_id in listIds:
         records = individual_queries.sql_get_person(client, person_id=person_id)
@@ -36,7 +40,7 @@ def get_individuals_person(listIds):
     return dict_person
 
 
-def get_individuals_condition(listIds):
+def get_individuals_condition(listIds: list) -> dict:
     dict_condition = {}
     for person_id in listIds:
         records = individual_queries.sql_get_condition(client, person_id=person_id)
@@ -52,7 +56,7 @@ def get_individuals_condition(listIds):
 
     return dict_condition
 
-def get_individuals_procedure(listIds):
+def get_individuals_procedure(listIds: list) -> dict:
     dict_procedure = {}
     for person_id in listIds:
         records = individual_queries.sql_get_procedure(client, person_id=person_id)
@@ -69,7 +73,7 @@ def get_individuals_procedure(listIds):
     return dict_procedure        
 
 
-def get_individuals_measures(listIds):
+def get_individuals_measures(listIds: list) -> dict:
     dict_measures = {}
     for person_id in listIds:
         records = individual_queries.sql_get_measure(client, person_id=person_id)
@@ -88,7 +92,7 @@ def get_individuals_measures(listIds):
     return dict_measures
 
 
-def get_individuals_exposures(listIds):
+def get_individuals_exposures(listIds: list) -> dict:
     dict_exposures = {}
     for person_id in listIds:
         records = individual_queries.sql_get_exposure(client, person_id=person_id)
@@ -111,7 +115,7 @@ def get_individuals_exposures(listIds):
         dict_exposures[person_id] = listValues
     return dict_exposures
 
-def get_individuals_treatments(listIds):
+def get_individuals_treatments(listIds: list) -> dict:
     dict_treatments = {}
     for person_id in listIds:
         records = individual_queries.sql_get_treatment(client, person_id=person_id)
@@ -127,7 +131,7 @@ def get_individuals_treatments(listIds):
     return dict_treatments 
 
 
-def format_query(listIds, dictPerson, dictCondition, dictProcedures, dictMeasures, dictExposures, dictTreatments):
+def format_query(listIds: list, dictPerson: dict, dictCondition: dict, dictProcedures: dict, dictMeasures: dict, dictExposures: dict, dictTreatments: dict)-> list:
     list_format = []
     for person_id in listIds:
         dictId = {"id":person_id}
@@ -147,6 +151,25 @@ def format_query(listIds, dictPerson, dictCondition, dictProcedures, dictMeasure
             dictId["treatments"] = list(map(mappings.treatments_table_map, dictTreatments[person_id]))
         list_format.append(dictId)
     return list_format
+
+def retrieveRecords(listIds: list) -> list:
+    dictPerson = get_individuals_person(listIds)        # List with Id, sex, ethnicity
+    dictCondition = get_individuals_condition(listIds)  # List with al the diseases per Id
+    dictProcedures = get_individuals_procedure(listIds)
+    dictMeasures = get_individuals_measures(listIds)
+    dictExposures = get_individuals_exposures(listIds)
+    dictTreatments = get_individuals_treatments(listIds)
+
+    dictPerson = search_ontologies(dictPerson)
+    dictCondition = search_ontologies(dictCondition)
+    dictProcedures = search_ontologies(dictProcedures)
+    dictMeasures = search_ontologies(dictMeasures)
+    dictExposures = search_ontologies(dictExposures)
+    dictTreatments = search_ontologies(dictTreatments)
+
+    docs = format_query(listIds, dictPerson, dictCondition, dictProcedures, dictMeasures, dictExposures, dictTreatments)
+
+    return docs
 
 @log_with_args(level)
 def get_individuals(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
@@ -169,118 +192,57 @@ def get_individuals(self, entry_id: Optional[str], qparams: RequestParams, datas
                       granularity,
                       limit, 
                       skip)
-        LOG.debug(f"Final query {query}")
         # Run query
         resultQuery = queryExecutor(query)
     else:   # Get All individuals
-        resultQuery = get_individual_with_id(entry_id, qparams, dataset)    # List with all Ids
+        listIds = get_individual_info(skip, limit, entry_id)    # List with all Ids
+        countIds = individual_queries.count_individuals(client)   # Count individuals
+        if countIds ==0:
+            resultQuery = []
+        else:
+            resultQuery = [(countIds, listId) for listId in listIds ]
 
+    LOG.debug(f"Final query {resultQuery}")
+    if not resultQuery:
+        return schema, 0, 0, {}, dataset
     # Different response depending the granularity
     if granularity == "boolean":
-        if resultQuery:
-            return schema, 1, 1, {}, dataset
-        else:
-            return schema, 0, 0, {}, dataset
+        return schema, 1, 1, {}, dataset
     elif granularity == "count":
         return schema, resultQuery[0][0], resultQuery[0][0], {}, dataset
     # Record response
-    count = resultQuery[0][1]
-    listIds = [str(record[0]) for record in resultQuery]
-    LOG.debug(f"count {count}")
-    LOG.debug(f"listIds {listIds}")
-
-    dictPerson = get_individuals_person(listIds)        # List with Id, sex, ethnicity
-    dictCondition = get_individuals_condition(listIds)  # List with al the diseases per Id
-    dictProcedures = get_individuals_procedure(listIds)
-    dictMeasures = get_individuals_measures(listIds)
-    dictExposures = get_individuals_exposures(listIds)
-    dictTreatments = get_individuals_treatments(listIds)
-
-    dictPerson = search_ontologies(dictPerson)
-    dictCondition = search_ontologies(dictCondition)
-    dictProcedures = search_ontologies(dictProcedures)
-    dictMeasures = search_ontologies(dictMeasures)
-    dictExposures = search_ontologies(dictExposures)
-    dictTreatments = search_ontologies(dictTreatments)
-
-    docs = format_query(listIds, dictPerson, dictCondition, dictProcedures, dictMeasures, dictExposures, dictTreatments)
+    count = resultQuery[0][0]
+    listIds = [str(record[1]) for record in resultQuery]
+    docs = retrieveRecords(listIds)
 
     return schema, count, count, docs, dataset
 
 @log_with_args(level)
 def get_individual_with_id(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
-    collection = 'individuals'
-    idq="id"
-    mongo_collection = client.beacon.individuals
-    query, parameters_as_filters = apply_request_parameters(self, {}, qparams, dataset)
-    query = apply_filters(self, query, qparams.query.filters, collection, {}, dataset)
-    query = query_id(self, query, entry_id)
     schema = DefaultSchemas.INDIVIDUALS
     include = qparams.query.include_resultset_responses
-    limit = qparams.query.pagination.limit
-    skip = qparams.query.pagination.skip
-    if limit > 100 or limit == 0:
-        limit = 100# pragma: no cover
-    count, dataset_count, docs = get_docs_by_response_type(self, include, query, dataset, limit, skip, mongo_collection, idq)
-    return schema, count, dataset_count, docs, dataset
+    
+    # Search Id
+    listIds = get_individual_info(person_id=entry_id)
+    if not listIds:
+        return schema, 0, 0, {}, dataset
 
+    docs = retrieveRecords(listIds)
+
+    return schema, 1, 1, docs, dataset
+
+# OMOP CDM do not work with variants
 @log_with_args(level)
 def get_variants_of_individual(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
-    collection = 'g_variants'
-    targets = client.beacon.targets \
-        .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
-    position=0
-    bioids=targets[0]["biosampleIds"]
-    for bioid in bioids:
-        if bioid == entry_id:
-            break
-        position+=1
-    position=str(position)
-    position1="^"+position+","
-    position2=","+position+","
-    position3=","+position+"$"
-    query_cl={ "$or": [
-    {"biosampleIds": {"$regex": position1}}, 
-    {"biosampleIds": {"$regex": position2}},
-    {"biosampleIds": {"$regex": position3}}
-    ]}
-    string_of_ids = client.beacon.caseLevelData \
-        .find(query_cl, {"id": 1, "_id": 0})
-    HGVSIds=list(string_of_ids)
-    query={}
-    queryHGVS={}
-    listHGVS=[]
-    for HGVSId in HGVSIds:
-        justid=HGVSId["id"]
-        listHGVS.append(justid)
-    queryHGVS["$in"]=listHGVS
-    query["identifiers.genomicHGVSId"]=queryHGVS
-    mongo_collection = client.beacon.genomicVariations
-    query, parameters_as_filters = apply_request_parameters(self, query, qparams, dataset)
-    query = apply_filters(self, query, qparams.query.filters, collection, {}, dataset)
     schema = DefaultSchemas.GENOMICVARIATIONS
-    include = qparams.query.include_resultset_responses
-    limit = qparams.query.pagination.limit
-    skip = qparams.query.pagination.skip
-    if limit > 100 or limit == 0:
-        limit = 100# pragma: no cover
-    idq="caseLevelData.biosampleId"
-    count, dataset_count, docs = get_docs_by_response_type(self, include, query, dataset, limit, skip, mongo_collection, idq)
-    return schema, count, dataset_count, docs, dataset
+
+    return schema, 0, 0, {}, dataset
 
 @log_with_args(level)
 def get_biosamples_of_individual(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
-    collection = 'biosamples'
-    mongo_collection = client.beacon.biosamples
-    query = {"individualId": entry_id}
-    query, parameters_as_filters = apply_request_parameters(self, query, qparams, dataset)
-    query = apply_filters(self, query, qparams.query.filters, collection, {}, dataset)
+    
     schema = DefaultSchemas.BIOSAMPLES
-    include = qparams.query.include_resultset_responses
-    limit = qparams.query.pagination.limit
-    skip = qparams.query.pagination.skip
-    if limit > 100 or limit == 0:
-        limit = 100# pragma: no cover
-    idq="id"
-    count, dataset_count, docs = get_docs_by_response_type(self, include, query, dataset, limit, skip, mongo_collection, idq)
-    return schema, count, dataset_count, docs, dataset
+
+    # schema, count, docs = get_biosamples_with_person_id(entry_id, qparams)
+    
+    # return schema, count, dataset_count, docs, dataset
