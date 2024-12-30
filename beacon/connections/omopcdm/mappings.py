@@ -1,7 +1,7 @@
 
 # File for all the mappings from the Beacon v2 specification and the results of the SQL Queries
 
-############################### Individual model  ####################################
+## Individual model ##
 
 def diseases_table_map(dictValues):
     return {
