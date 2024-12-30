@@ -1,126 +1,160 @@
 from beacon.request.parameters import RequestParams
 from beacon.response.schemas import DefaultSchemas
-import yaml
-from beacon.connections.mongo.__init__ import client
-from beacon.connections.mongo.utils import get_docs_by_response_type, query_id
-from beacon.logs.logs import log_with_args
+from beacon.connections.omopcdm.__init__ import client
+from beacon.connections.omopcdm.utils import queryExecutor, search_ontologies
+from beacon.logs.logs import log_with_args, LOG
 from beacon.conf.conf import level
-from beacon.connections.mongo.filters import apply_filters
-from beacon.connections.mongo.request_parameters import apply_request_parameters
+from beacon.connections.omopcdm.filters import apply_filters
 from typing import Optional
+
+import aiosql
+from pathlib import Path
+queries_file = Path(__file__).parent / "sql" / "biosamples.sql"
+biosamples_queries = aiosql.from_path(queries_file, "psycopg2")
+
+def get_biosample_info(offset=0, limit=10, biosample_id=None):
+    if biosample_id == None:
+        records = biosamples_queries.sql_get_biosamples(client, offset=offset, limit=limit)
+        if not records:
+            return []
+        listId = [str(record[0]) for record in records]
+    else:
+        records = biosamples_queries.sql_get_biosample_id(client, specimen_id=biosample_id)
+        if not records:
+            return []
+        listId = [str(records[0])]
+    return listId
+
+def get_specimens(listIds):
+    dict_specimens = {}
+    for biosample_id in listIds:
+        records = biosamples_queries.sql_get_specimen(client, specimen_id = biosample_id)
+        listValues = []
+        for record in records:
+            listValues.append({'person_id': record[0],
+                               'disease_status_concept_id': record[1],
+                               'anatomic_site_concept_id': record[2],
+                               'specimen_date': record[3],
+                               'specimen_moment': record[4]})
+        dict_specimens[biosample_id] = listValues
+    return dict_specimens
+
+def format_query(listIds, specimens):
+
+    list_format = []
+    for biosample_id in listIds:
+        dict_biosample_id =  { 
+            "id": str(biosample_id),
+            "individualId": str(specimens[biosample_id][0]["person_id"]),
+            "biosampleStatus": {
+                "id":  specimens[biosample_id][0]["disease_status_concept_id"]["id"],
+                "label": specimens[biosample_id][0]["disease_status_concept_id"]["label"]
+            },
+            "sampleOriginType": {
+                "id" : specimens[biosample_id][0]["anatomic_site_concept_id"]["id"],
+                "label" : specimens[biosample_id][0]["anatomic_site_concept_id"]["label"]
+            },
+            "collectionMoment": specimens[biosample_id][0]["specimen_date"],
+            "collectionDate": specimens[biosample_id][0]["specimen_moment"],
+            "info": {}
+            }
+        list_format.append(dict_biosample_id)
+    return list_format
+
+
+def retrieveRecords(listIds: list) -> list:
+    specimens = get_specimens(listIds)
+
+    specimens = search_ontologies(specimens)
+
+    docs = format_query(listIds, specimens)
+
+    return docs
 
 @log_with_args(level)
 def get_biosamples(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
-    collection = 'biosamples'
-    mongo_collection = client.beacon.biosamples
-    parameters_as_filters=False
-    query_parameters, parameters_as_filters = apply_request_parameters(self, {}, qparams, dataset)
-    if parameters_as_filters == True and query_parameters != {'$and': []}:# pragma: no cover
-        query, parameters_as_filters = apply_request_parameters(self, {}, qparams, dataset)
-        query_parameters={}
-    elif query_parameters != {'$and': []}:
-        query=query_parameters
-    elif query_parameters == {'$and': []}:# pragma: no cover
-        query_parameters = {}
-        query={}
-    query = apply_filters(self, query, qparams.query.filters, collection, query_parameters, dataset)
+    scope = 'biosamples'
+    include = qparams.query.include_resultset_responses # Always HIT responses
     schema = DefaultSchemas.BIOSAMPLES
-    include = qparams.query.include_resultset_responses
     limit = qparams.query.pagination.limit
     skip = qparams.query.pagination.skip
-    if limit > 100 or limit == 0:
-        limit = 100
-    idq="id"
-    count, dataset_count, docs = get_docs_by_response_type(self, include, query, dataset, limit, skip, mongo_collection, idq)
-    return schema, count, dataset_count, docs, dataset
+    if limit > 50 or limit == 0:
+        limit = 50
+    granularity = qparams.query.requested_granularity   # record, count, boolean
+
+    # If filters
+    if qparams.query.filters or "filters" in qparams.query.request_parameters:
+        query = apply_filters(self,
+                      qparams.query.request_parameters, 
+                      qparams.query.filters, 
+                      scope,
+                      granularity,
+                      limit, 
+                      skip)
+        # Run query
+        resultQuery = queryExecutor(query)
+    else:   # Get All individuals
+        listIds = get_biosample_info(skip, limit, entry_id)    # List with all Ids
+        countIds = biosamples_queries.get_count_specimen(client)   # Count individuals
+        if countIds ==0:
+            resultQuery = []
+        else:
+            resultQuery = [(countIds, listId) for listId in listIds ]
+
+    LOG.debug(f"Final query {resultQuery}")
+    if not resultQuery:
+        return schema, 0, 0, {}, dataset
+    # Different response depending the granularity
+    if granularity == "boolean":
+        return schema, 1, 1, {}, dataset
+    elif granularity == "count":
+        return schema, resultQuery[0][0], resultQuery[0][0], {}, dataset
+    # Record response
+    count = resultQuery[0][0]
+    listIds = [str(record[1]) for record in resultQuery]
+    docs = retrieveRecords(listIds)
+
+    return schema, count, count, docs, dataset
 
 @log_with_args(level)
 def get_biosample_with_id(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
-    collection = 'biosamples'
-    mongo_collection = client.beacon.biosamples
-    query = apply_filters(self, {}, qparams.query.filters, collection, {}, dataset)
-    query = query_id(self, query, entry_id)
-    schema = DefaultSchemas.BIOSAMPLES
     include = qparams.query.include_resultset_responses
-    limit = qparams.query.pagination.limit
-    skip = qparams.query.pagination.skip
-    if limit > 100 or limit == 0:
-        limit = 100# pragma: no cover
-    idq="id"
-    count, dataset_count, docs = get_docs_by_response_type(self, include, query, dataset, limit, skip, mongo_collection, idq)
-    return schema, count, dataset_count, docs, dataset
+    schema = DefaultSchemas.BIOSAMPLES
+
+    # Search Id
+    listIds = get_biosample_info(person_id=entry_id)
+    if not listIds:
+        return schema, 0, 0, {}, dataset
+
+    docs = retrieveRecords(listIds)
+
+    return schema, 1, 1, docs, dataset
+
+# Function to get all the biosamples from an individual id
+def get_biosamples_with_person_id(person_id: Optional[str], qparams: RequestParams):
+
+    schema = DefaultSchemas.BIOSAMPLES
+    specimens = biosamples_queries.get_specimen_by_person_id(client, person_id=person_id)
+    listSpecimenIds = [specimen[0] for specimen in specimens ]
+    if not listSpecimenIds:
+        return 0, {}
+    docs = retrieveRecords(listSpecimenIds)
+    return  len(listSpecimenIds), docs
 
 @log_with_args(level)
 def get_variants_of_biosample(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
-    collection = 'g_variants'
-    mongo_collection = client.beacon.genomicVariations
-    targets = client.beacon.targets \
-        .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
-    position=0
-    bioids=targets[0]["biosampleIds"]
-    for bioid in bioids:
-        if bioid == entry_id:
-            break
-        position+=1
-    position=str(position)
-    position1="^"+position+","
-    position2=","+position+","
-    position3=","+position+"$"
-    query_cl={ "$or": [
-    {"biosampleIds": {"$regex": position1}}, 
-    {"biosampleIds": {"$regex": position2}},
-    {"biosampleIds": {"$regex": position3}}
-    ]}
-    string_of_ids = client.beacon.caseLevelData \
-        .find(query_cl, {"id": 1, "_id": 0})
-    HGVSIds=list(string_of_ids)
-    query={}
-    queryHGVS={}
-    listHGVS=[]
-    for HGVSId in HGVSIds:
-        justid=HGVSId["id"]
-        listHGVS.append(justid)
-    queryHGVS["$in"]=listHGVS
-    query["identifiers.genomicHGVSId"]=queryHGVS
-    query = apply_filters(self, query, qparams.query.filters, collection, {}, dataset)
     schema = DefaultSchemas.GENOMICVARIATIONS
-    include = qparams.query.include_resultset_responses
-    limit = qparams.query.pagination.limit
-    skip = qparams.query.pagination.skip
-    if limit > 100 or limit == 0:
-        limit = 100# pragma: no cover
-    idq="caseLevelData.biosampleId"
-    count, dataset_count, docs = get_docs_by_response_type(self, include, query, dataset, limit, skip, mongo_collection, idq)
-    return schema, count, dataset_count, docs, dataset
+
+    return schema, 0, 0, {}, dataset
 
 @log_with_args(level)
 def get_analyses_of_biosample(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
-    collection = 'biosamples'
-    mongo_collection = client.beacon.analyses
-    query = {"biosampleId": entry_id}
-    query = apply_filters(self, query, qparams.query.filters, collection, {}, dataset)
     schema = DefaultSchemas.ANALYSES
-    include = qparams.query.include_resultset_responses
-    limit = qparams.query.pagination.limit
-    skip = qparams.query.pagination.skip
-    if limit > 100 or limit == 0:
-        limit = 100# pragma: no cover
-    idq="biosampleId"
-    count, dataset_count, docs = get_docs_by_response_type(self, include, query, dataset, limit, skip, mongo_collection, idq)
-    return schema, count, dataset_count, docs, dataset
+
+    return schema, 0, 0, {}, dataset
 
 @log_with_args(level)
 def get_runs_of_biosample(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
-    collection = 'biosamples'
-    mongo_collection = client.beacon.runs
-    query = {"individualId": entry_id}
-    query = apply_filters(self, query, qparams.query.filters, collection, {}, dataset)
     schema = DefaultSchemas.RUNS
-    include = qparams.query.include_resultset_responses
-    limit = qparams.query.pagination.limit
-    skip = qparams.query.pagination.skip
-    if limit > 100 or limit == 0:
-        limit = 100# pragma: no cover
-    idq="biosampleId"
-    count, dataset_count, docs = get_docs_by_response_type(self, include, query, dataset, limit, skip, mongo_collection, idq)
-    return schema, count, dataset_count, docs, dataset
+
+    return schema, 0, 0, {}, dataset
