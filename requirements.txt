@@ -27,3 +27,5 @@ six==1.16.0
 progressbar==2.5
 tqdm==4.62.3
 obonet==0.3.1
+psycopg2==2.9.5
+aiosql==8.0
