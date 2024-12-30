@@ -76,10 +76,10 @@ def apply_filters(self, filtersGet: dict, filtersPost: List[dict], scope: str, g
         """
     else:   # Record response
         finalQuery = f""" 
-            SELECT {column}, 
-                ( SELECT COUNT(*)
+            SELECT ( SELECT COUNT(*)
                     FROM cdm.{table} p
-                    WHERE true {query}) AS totalCount
+                    WHERE true {query}) AS totalCount,
+                    {column}
             FROM cdm.{table} p
             WHERE true {query}
             limit {limit}
@@ -192,8 +192,6 @@ def apply_alphanumeric_filter(self,  filter: AlphanumericFilter) -> str:
             'ageAtExposure': ['observation', 'observation_date'],
             'ageAtTreatment': ['drug_exposure', 'drug_exposure_start_date']
             }
-        LOG.debug(f"scope {scope}")
-        LOG.debug(f"mappingDict[filter.id][0] {mappingDict[filter.id][0]}")
 
         # Create filter
         query = f"""
@@ -211,7 +209,6 @@ def apply_alphanumeric_filter(self,  filter: AlphanumericFilter) -> str:
     # Other alphanumeric filters with integers
     else:
         conceptId, tableMap = filter_to_OMOP_vocabulary(self, filter)
-        LOG.debug(tableMap)
         query = f"""
             and exists (
                 select 1
@@ -227,7 +224,9 @@ def apply_alphanumeric_filter(self,  filter: AlphanumericFilter) -> str:
 @log_with_args(level)
 def apply_ontology_filter(self, filter: OntologyFilter, scope: str) -> str:
     setConceptId, tableMap = filter_to_OMOP_vocabulary(self, filter)
-    LOG.debug(tableMap)
+
+    if tableMap == 0:
+        return "and False"
     listConceptId = []
     for conceptId in setConceptId:
         listConceptId.append(tableMap[1] + ' = ' + str(conceptId))
