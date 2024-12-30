@@ -1,13 +1,14 @@
 from beacon.request.parameters import RequestParams
 from beacon.response.schemas import DefaultSchemas
 from beacon.connections.omopcdm.__init__ import client
-from beacon.connections.omopcdm.utils import queryExecutor, search_ontologies, get_docs_by_response_type, query_id
+from beacon.connections.omopcdm.utils import queryExecutor, search_ontologies
 from beacon.logs.logs import log_with_args, LOG
 from beacon.conf.conf import level
 from beacon.connections.omopcdm.filters import apply_filters
 from typing import Optional
 
 import beacon.connections.omopcdm.mappings as mappings
+from beacon.connections.omopcdm.biosamples import get_biosamples_with_person_id
 
 import aiosql
 from pathlib import Path
@@ -243,6 +244,6 @@ def get_biosamples_of_individual(self, entry_id: Optional[str], qparams: Request
     
     schema = DefaultSchemas.BIOSAMPLES
 
-    # schema, count, docs = get_biosamples_with_person_id(entry_id, qparams)
+    count, docs = get_biosamples_with_person_id(entry_id, qparams)
     
-    # return schema, count, dataset_count, docs, dataset
+    return schema, count, count, docs, dataset
