@@ -6,16 +6,22 @@ FROM cdm.person
 LIMIT :limit
 OFFSET :offset
 
+-- name: sql_get_individual_listIds
+-- Check individuals list
+SELECT person_id
+FROM cdm.person
+where person_id in :person_id
+
 -- name: count_individuals$
 -- Get individuals count
 SELECT count(*)
 FROM cdm.person
 
--- name: sql_get_individual_id^
--- Get individual by id
+-- name: sql_get_individual_id
+-- Check individual by id
 SELECT DISTINCT person_id
 FROM cdm.person
-WHERE person_id = :person_id
+WHERE person_id in :person_id
 
 -- name: sql_get_person
 -- Get gender and race by id

@@ -28,4 +28,4 @@ WHERE specimen_id = :specimen_id
 -- Get specimen id by person id
 SELECT distinct specimen_id
 FROM cdm.specimen
-WHERE person_id = :person_id
+WHERE person_id in :person_id
