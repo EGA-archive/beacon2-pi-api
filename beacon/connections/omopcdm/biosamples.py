@@ -133,8 +133,7 @@ def get_biosample_with_id(self, entry_id: Optional[str], qparams: RequestParams,
 # Function to get all the biosamples from an individual id
 def get_biosamples_with_person_id(person_id: Optional[str], qparams: RequestParams):
 
-    schema = DefaultSchemas.BIOSAMPLES
-    specimens = biosamples_queries.get_specimen_by_person_id(client, person_id=person_id)
+    specimens = biosamples_queries.get_specimen_by_person_id(client, person_id=tuple(person_id))
     listSpecimenIds = [specimen[0] for specimen in specimens ]
     if not listSpecimenIds:
         return 0, {}

@@ -1,10 +1,12 @@
 from beacon.request.parameters import RequestParams
 from beacon.response.schemas import DefaultSchemas
 from beacon.connections.omopcdm.__init__ import client
-from beacon.logs.logs import log_with_args_mongo
+from beacon.logs.logs import log_with_args
 from beacon.conf.conf import level
 from typing import Optional
 from beacon.connections.omopcdm.individuals import get_individuals
+from beacon.connections.omopcdm.biosamples import get_biosamples, get_biosamples_with_person_id
+
 
 import aiosql
 from pathlib import Path
@@ -172,7 +174,7 @@ def search_cohorts(isAll):
         list_cohorts.append({'cohort':dict_cohort, 'individuals': individuals})
     return list_cohorts
 
-@log_with_args_mongo(level)
+@log_with_args(level)
 def get_cohorts(self, entry_id: Optional[str], qparams: RequestParams):
 
     schema = DefaultSchemas.COHORTS
@@ -205,7 +207,7 @@ def search_single_cohort(cohort_id):
     return {'cohort':dict_cohort, 'individuals': individuals}
 
 
-@log_with_args_mongo(level)
+@log_with_args(level)
 def get_cohort_with_id(self, entry_id: Optional[str], qparams: RequestParams):
     schema = DefaultSchemas.COHORTS
     cohortBasicInfo = search_single_cohort(entry_id)
@@ -217,23 +219,30 @@ def get_cohort_with_id(self, entry_id: Optional[str], qparams: RequestParams):
     )
     return response_converted, 1, schema
 
-@log_with_args_mongo(level)
+@log_with_args(level)
 def get_individuals_of_cohort(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
     schema = DefaultSchemas.INDIVIDUALS
     limit = qparams.query.pagination.limit
-    if entry_id == '1':
-        return get_individuals(self, entry_id, qparams, dataset)
-    else:
-        listIds = cohortQueries.get_cohort_individuals_limited(client,
-                                limit=limit,
-                                cohort_id=entry_id)                 # List with all Ids
-        count_ids = cohortQueries.count_cohort_individuals(client, cohort_id=entry_id)   # Count individuals
+    if entry_id == '0':
+        return get_individuals(self, None, qparams, dataset)
+    
+    records = cohortQueries.get_cohort_individuals_limited(client,
+                            limit=limit,
+                            cohort_id=entry_id)                 # List with all Ids
+    listIds = [record[0] for record in records]
 
-        return get_individuals(self, [listIds], qparams, dataset)
+    return get_individuals(self, listIds, qparams, dataset)
 
-# To Do
-@log_with_args_mongo(level)
+@log_with_args(level)
 def get_biosamples_of_cohort(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
-
     schema = DefaultSchemas.BIOSAMPLES
-    return schema, 0, 0, {}, dataset
+
+    limit = qparams.query.pagination.limit
+    if entry_id == '0':
+        return get_biosamples(self, None, qparams, dataset)
+    
+    listIndividualIds = cohortQueries.get_cohort_individuals_limited(client,
+                            limit=limit,
+                            cohort_id=entry_id)                 # List with all Ids
+    count, records= get_biosamples_with_person_id(listIndividualIds, qparams)
+    return schema, count, count, records, dataset

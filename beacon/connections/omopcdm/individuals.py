@@ -15,17 +15,17 @@ queries_file = Path(__file__).parent / "sql" / "individuals.sql"
 individual_queries = aiosql.from_path(queries_file, "psycopg2")
 
 
-def get_individual_info(offset: int=0, limit: int=10, person_id: str=None) -> list:
+def get_individual_info(offset: int=0, limit: int=10, person_id = None) -> list:
     if person_id == None:
         records = individual_queries.sql_get_individuals(client, offset=offset, limit=limit)
         if not records:
             return []
         listId = [str(record[0]) for record in records]
     else:
-        records = individual_queries.sql_get_individual_id(client, person_id=person_id)
+        records = individual_queries.sql_get_individual_id(client, person_id=tuple(person_id))
         if not records:
             return []
-        listId = [str(records[0])]
+        listId = [str(record[0]) for record in records]
     return listId
 
 def get_individuals_person(listIds: list) -> dict:
