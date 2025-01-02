@@ -6,12 +6,11 @@ from beacon.logs.logs import log_with_args, LOG
 from beacon.conf.conf import level
 from beacon.connections.omopcdm.filters import apply_filters
 from typing import Optional
-
 import beacon.connections.omopcdm.mappings as mappings
 from beacon.connections.omopcdm.biosamples import get_biosamples_with_person_id
-
 import aiosql
 from pathlib import Path
+
 queries_file = Path(__file__).parent / "sql" / "individuals.sql"
 individual_queries = aiosql.from_path(queries_file, "psycopg2")
 
@@ -231,13 +230,6 @@ def get_individual_with_id(self, entry_id: Optional[str], qparams: RequestParams
     docs = retrieveRecords(listIds)
 
     return schema, 1, 1, docs, dataset
-
-# OMOP CDM do not work with variants
-@log_with_args(level)
-def get_variants_of_individual(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
-    schema = DefaultSchemas.GENOMICVARIATIONS
-
-    return schema, 0, 0, {}, dataset
 
 @log_with_args(level)
 def get_biosamples_of_individual(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):

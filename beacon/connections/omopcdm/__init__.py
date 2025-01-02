@@ -1,8 +1,5 @@
 from beacon.connections.omopcdm import conf
 import psycopg2
-import os
-from beacon.logs.logs import log_with_args, LOG
-
 
 uri = "postgresql://{}:{}@{}:{}/{}".format(
     conf.database_user,

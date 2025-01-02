@@ -1,21 +1,6 @@
 
 # File for all the mappings from the Beacon v2 specification and the results of the SQL Queries
 
-## Individual model ##
-
-def diseases_table_map(dictValues):
-    return {
-            'diseaseCode': dictValues["condition_concept_id"],
-            'ageOfOnset': {'iso8601duration': dictValues["condition_ageOfOnset"]},
-        }
-
-def procedures_table_map(dictValues):
-    return {
-            'procedureCode': dictValues["procedure_concept_id"],
-            'ageAtProcedure': {'iso8601duration': dictValues["procedure_ageOfOnset"]},
-            'dateOfProcedure': dictValues["procedure_date"],
-        }
-
 def isfloat(num):
     try:
         float(num)
@@ -30,8 +15,20 @@ def convertToNum(num):
     except ValueError:
         pass
 
-    
+## Individual model ##
 
+def diseases_table_map(dictValues):
+    return {
+            'diseaseCode': dictValues["condition_concept_id"],
+            'ageOfOnset': {'iso8601duration': dictValues["condition_ageOfOnset"]},
+        }
+
+def procedures_table_map(dictValues):
+    return {
+            'procedureCode': dictValues["procedure_concept_id"],
+            'ageAtProcedure': {'iso8601duration': dictValues["procedure_ageOfOnset"]},
+            'dateOfProcedure': dictValues["procedure_date"],
+        }
 
 def measures_table_map(dictValues):
     # TO DO

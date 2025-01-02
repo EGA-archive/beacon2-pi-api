@@ -17,9 +17,6 @@ async def execute_function(self, entry_type: str, datasets: list, qparams: Reque
     datasets_docs={}
     datasets_count={}
     new_count=0
-    LOG.debug(f"entry_type {entry_type}")
-    LOG.debug(f"datasets {datasets}")
-    LOG.debug(f"qparams {qparams}")
 
     if entry_id == None:
         if entry_type == 'individuals':
