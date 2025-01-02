@@ -5,7 +5,6 @@ from beacon.connections.omopcdm.utils import peek
 from beacon.connections.omopcdm.__init__ import client
 from beacon.logs.logs import log_with_args, LOG
 from beacon.conf.conf import level
-
 import aiosql
 from pathlib import Path
 
@@ -163,13 +162,6 @@ def apply_alphanumeric_filter(self,  filter: AlphanumericFilter) -> str:
 
     formatted_value = format_value(self, filter.value)
 
-    # # If value is string
-    # if isinstance(formatted_value,str):
-    #     if filter.id in conf.alphanumeric_terms:
-    #         filter.id = filter.id# pragma: no cover
-    #     else:
-    #         filter.id = filter.id + '.' + 'label'        
-    # else:
     #     # Age Alphanumeric filters
     if (filter.id == 'ageOfOnset' or
         filter.id == 'ageAtProcedure' or

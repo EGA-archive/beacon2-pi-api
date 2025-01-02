@@ -140,21 +140,3 @@ def get_biosamples_with_person_id(person_id: Optional[str], qparams: RequestPara
         return 0, {}
     docs = retrieveRecords(listSpecimenIds)
     return  len(listSpecimenIds), docs
-
-@log_with_args(level)
-def get_variants_of_biosample(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
-    schema = DefaultSchemas.GENOMICVARIATIONS
-
-    return schema, 0, 0, {}, dataset
-
-@log_with_args(level)
-def get_analyses_of_biosample(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
-    schema = DefaultSchemas.ANALYSES
-
-    return schema, 0, 0, {}, dataset
-
-@log_with_args(level)
-def get_runs_of_biosample(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
-    schema = DefaultSchemas.RUNS
-
-    return schema, 0, 0, {}, dataset

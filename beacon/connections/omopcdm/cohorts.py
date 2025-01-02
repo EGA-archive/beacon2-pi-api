@@ -231,26 +231,7 @@ def get_individuals_of_cohort(self, entry_id: Optional[str], qparams: RequestPar
 
         return get_individuals(self, [listIds], qparams, dataset)
 
-
-    return schema, 0, 0, {}, dataset   
-
-@log_with_args_mongo(level)
-def get_analyses_of_cohort(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
-
-    schema = DefaultSchemas.ANALYSES
-    return schema, 0, 0, {}, dataset    
-
-@log_with_args_mongo(level)
-def get_variants_of_cohort(self,entry_id: Optional[str], qparams: RequestParams, dataset: str):
-
-    schema = DefaultSchemas.GENOMICVARIATIONS# pragma: no cover
-    return schema, 0, 0, {}, dataset
-
-@log_with_args_mongo(level)
-def get_runs_of_cohort(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
-    schema = DefaultSchemas.RUNS
-    return schema, 0, 0, {}, dataset
-
+# To Do
 @log_with_args_mongo(level)
 def get_biosamples_of_cohort(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
 

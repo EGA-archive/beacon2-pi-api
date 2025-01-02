@@ -1,5 +1,5 @@
 from beacon.connections.mongo.__init__ import client
-from beacon.logs.logs import log_with_args_mongo
+from beacon.logs.logs import log_with_args
 from beacon.conf.conf import level
 from beacon.exceptions.exceptions import raise_exception
 from beacon.connections.mongo.utils import get_count, get_documents
@@ -10,7 +10,7 @@ from beacon.connections.mongo.filters import apply_filters
 from beacon.connections.mongo.utils import get_docs_by_response_type, query_id, get_cross_query
 from beacon.connections.mongo.request_parameters import apply_request_parameters
 
-@log_with_args_mongo(level)
+@log_with_args(level)
 def get_datasets(self):
     try:
         collection = client.beacon.datasets
@@ -22,7 +22,7 @@ def get_datasets(self):
         errcode=500
         raise_exception(err, errcode)
 
-@log_with_args_mongo(level)
+@log_with_args(level)
 def get_full_datasets(self, entry_id: Optional[str], qparams: RequestParams):
     try:
         collection = client.beacon.datasets
@@ -42,7 +42,7 @@ def get_full_datasets(self, entry_id: Optional[str], qparams: RequestParams):
         errcode=500
         raise_exception(err, errcode)
 
-@log_with_args_mongo(level)
+@log_with_args(level)
 def get_list_of_datasets(self):
     try:
         datasets = get_datasets(self)
@@ -53,7 +53,7 @@ def get_list_of_datasets(self):
         errcode=500
         raise_exception(err, errcode)
 
-@log_with_args_mongo(level)
+@log_with_args(level)
 def get_dataset_with_id(self, entry_id: Optional[str], qparams: RequestParams):
     limit = qparams.query.pagination.limit
     query_parameters, parameters_as_filters = apply_request_parameters(self, {}, qparams, entry_id)
@@ -75,33 +75,7 @@ def get_dataset_with_id(self, entry_id: Optional[str], qparams: RequestParams):
             )
     return response_converted, count, schema
 
-@log_with_args_mongo(level)
-def get_variants_of_dataset(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
-    collection = 'datasets'
-    mongo_collection = client.beacon.genomicVariations
-    dataset_count=0
-    limit = qparams.query.pagination.limit
-    query_count={}
-    idq="caseLevelData.biosampleId"
-    query_count["$or"]=[]
-    if dataset == entry_id:
-        queryid={}
-        queryid["datasetId"]=dataset
-        query_count["$or"].append(queryid)
-    else:
-        schema = DefaultSchemas.GENOMICVARIATIONS# pragma: no cover
-        return schema, 0, 0, None, dataset# pragma: no cover
-    query = apply_filters(self, query_count, qparams.query.filters, collection, {}, dataset)
-    schema = DefaultSchemas.GENOMICVARIATIONS
-    include = qparams.query.include_resultset_responses
-    limit = qparams.query.pagination.limit
-    skip = qparams.query.pagination.skip
-    if limit > 100 or limit == 0:
-        limit = 100# pragma: no cover
-    count, dataset_count, docs = get_docs_by_response_type(self, include, query, dataset, limit, skip, mongo_collection, idq)
-    return schema, count, dataset_count, docs, dataset
-
-@log_with_args_mongo(level)
+@log_with_args(level)
 def get_biosamples_of_dataset(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
     collection = 'datasets'
     mongo_collection = client.beacon.biosamples
@@ -123,7 +97,7 @@ def get_biosamples_of_dataset(self, entry_id: Optional[str], qparams: RequestPar
     count, dataset_count, docs = get_docs_by_response_type(self, include, query, dataset, limit, skip, mongo_collection, idq)
     return schema, count, dataset_count, docs, dataset
 
-@log_with_args_mongo(level)
+@log_with_args(level)
 def get_individuals_of_dataset(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
     collection = 'datasets'
     mongo_collection = client.beacon.individuals
@@ -142,52 +116,5 @@ def get_individuals_of_dataset(self, entry_id: Optional[str], qparams: RequestPa
     if limit > 100 or limit == 0:
         limit = 100# pragma: no cover
     idq="id"
-    count, dataset_count, docs = get_docs_by_response_type(self, include, query, dataset, limit, skip, mongo_collection, idq)
-    return schema, count, dataset_count, docs, dataset
-
-@log_with_args_mongo(level)
-def get_runs_of_dataset(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
-    collection = 'datasets'
-    mongo_collection = client.beacon.runs
-    dataset_count=0
-    limit = qparams.query.pagination.limit
-    query = apply_filters(self, {}, qparams.query.filters, collection, {}, dataset)
-    query = query_id(self, query, entry_id)
-    count = get_count(self, client.beacon.datasets, query)
-    dict_in={}
-    dict_in['datasetId']=dataset
-    query = apply_filters(self, dict_in, qparams.query.filters, collection, {}, dataset)
-    schema = DefaultSchemas.RUNS
-    include = qparams.query.include_resultset_responses
-    limit = qparams.query.pagination.limit
-    skip = qparams.query.pagination.skip
-    if limit > 100 or limit == 0:
-        limit = 100# pragma: no cover
-    idq="biosampleId"
-    count, dataset_count, docs = get_docs_by_response_type(self, include, query, dataset, limit, skip, mongo_collection, idq)
-    list_of_records = (
-            [r for r in docs] if docs else []
-        )
-    return schema, count, dataset_count, list_of_records, dataset
-
-@log_with_args_mongo(level)
-def get_analyses_of_dataset(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
-    collection = 'datasets'
-    idq="biosampleId"
-    mongo_collection = client.beacon.analyses
-    dataset_count=0
-    limit = qparams.query.pagination.limit
-    query = apply_filters(self, {}, qparams.query.filters, collection, {}, dataset)
-    query = query_id(self, query, entry_id)
-    count = get_count(self, client.beacon.datasets, query)
-    dict_in={}
-    dict_in['datasetId']=dataset
-    query = apply_filters(self, dict_in, qparams.query.filters, collection, {}, dataset)
-    schema = DefaultSchemas.ANALYSES
-    include = qparams.query.include_resultset_responses
-    limit = qparams.query.pagination.limit
-    skip = qparams.query.pagination.skip
-    if limit > 100 or limit == 0:
-        limit = 100# pragma: no cover
     count, dataset_count, docs = get_docs_by_response_type(self, include, query, dataset, limit, skip, mongo_collection, idq)
     return schema, count, dataset_count, docs, dataset

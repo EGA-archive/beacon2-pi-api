@@ -2,9 +2,9 @@ from beacon.connections.omopcdm.__init__ import client
 from typing import Optional
 from beacon.response.schemas import DefaultSchemas
 from beacon.request.parameters import RequestParams
-
 import aiosql
 from pathlib import Path
+
 queries_file = Path(__file__).parent / "sql" / "filteringTerms.sql"
 filteringTerms_queries = aiosql.from_path(queries_file, "psycopg2")
 
