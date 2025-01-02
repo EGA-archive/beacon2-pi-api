@@ -1,120 +1,45 @@
-from beacon.connections.mongo.__init__ import client
 from beacon.logs.logs import log_with_args
 from beacon.conf.conf import level
-from beacon.exceptions.exceptions import raise_exception
-from beacon.connections.mongo.utils import get_count, get_documents
 from typing import Optional
 from beacon.response.schemas import DefaultSchemas
 from beacon.request.parameters import RequestParams
-from beacon.connections.mongo.filters import apply_filters
-from beacon.connections.mongo.utils import get_docs_by_response_type, query_id, get_cross_query
-from beacon.connections.mongo.request_parameters import apply_request_parameters
+from beacon.connections.omopcdm.biosamples import get_biosamples
+from beacon.connections.omopcdm.individuals import get_individuals
 
-@log_with_args(level)
-def get_datasets(self):
-    try:
-        collection = client.beacon.datasets
-        query = {}
-        query = collection.find(query)
-        return query
-    except Exception as e:# pragma: no cover
-        err = str(e)
-        errcode=500
-        raise_exception(err, errcode)
 
+# There are no different datasets in OMOPCDM
 @log_with_args(level)
 def get_full_datasets(self, entry_id: Optional[str], qparams: RequestParams):
-    try:
-        collection = client.beacon.datasets
-        if entry_id == None:
-            query = {}
-        else:# pragma: no cover
-            query = {'id': entry_id}
-        count = get_count(self, client.beacon.datasets, query)
-        query = collection.find(query)
-        entity_schema = DefaultSchemas.DATASETS
-        response_converted = (
-            [r for r in query] if query else []
-        )
-        return response_converted, count, entity_schema
-    except Exception as e:# pragma: no cover
-        err = str(e)
-        errcode=500
-        raise_exception(err, errcode)
+    schema = DefaultSchemas.DATASETS
+    response = [{'id':'cdm', 'name':'OMOP CDM dataset'}]
+    count = 1
+    return response, count, schema
 
 @log_with_args(level)
 def get_list_of_datasets(self):
-    try:
-        datasets = get_datasets(self)
-        beacon_datasets = [ r for r in datasets ]
-        return beacon_datasets
-    except Exception as e:# pragma: no cover
-        err = str(e)
-        errcode=500
-        raise_exception(err, errcode)
+    datasets = get_full_datasets( None, None)
+    beacon_datasets = [ r for r in datasets ]
+    return beacon_datasets
 
 @log_with_args(level)
 def get_dataset_with_id(self, entry_id: Optional[str], qparams: RequestParams):
-    limit = qparams.query.pagination.limit
-    query_parameters, parameters_as_filters = apply_request_parameters(self, {}, qparams, entry_id)
-    if parameters_as_filters == True:
-        query, parameters_as_filters = apply_request_parameters(self, {}, qparams, entry_id)# pragma: no cover
-    else:
-        query={}
-    query = query_id(self, query, entry_id)
     schema = DefaultSchemas.DATASETS
-    count = get_count(self, client.beacon.datasets, query)
-    docs = get_documents(self,
-        client.beacon.datasets,
-        query,
-        qparams.query.pagination.skip,
-        qparams.query.pagination.skip*limit
-    )
-    response_converted = (
-                [r for r in docs] if docs else []
-            )
-    return response_converted, count, schema
+    if entry_id=='cdm':
+        response = [{'id':'cdm', 'name':'OMOP CDM dataset'}]
+        count = 1
+        return response, count, schema
+    return {}, 0, schema
 
 @log_with_args(level)
 def get_biosamples_of_dataset(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
-    collection = 'datasets'
-    mongo_collection = client.beacon.biosamples
-    dataset_count=0
-    limit = qparams.query.pagination.limit
-    query = apply_filters(self, {}, qparams.query.filters, collection, {}, dataset)
-    query = query_id(self, query, entry_id)
-    count = get_count(self, client.beacon.datasets, query)
-    dict_in={}
-    dict_in['datasetId']=dataset
-    query = apply_filters(self, dict_in, qparams.query.filters, collection, {}, dataset)
     schema = DefaultSchemas.BIOSAMPLES
-    include = qparams.query.include_resultset_responses
-    limit = qparams.query.pagination.limit
-    skip = qparams.query.pagination.skip
-    if limit > 100 or limit == 0:
-        limit = 100# pragma: no cover
-    idq="id"
-    count, dataset_count, docs = get_docs_by_response_type(self, include, query, dataset, limit, skip, mongo_collection, idq)
-    return schema, count, dataset_count, docs, dataset
+    if entry_id=='cdm':
+        return get_biosamples(self, None, qparams, dataset)
+    return schema, 0, 0, {}, dataset
 
 @log_with_args(level)
 def get_individuals_of_dataset(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
-    collection = 'datasets'
-    mongo_collection = client.beacon.individuals
-    dataset_count=0
-    limit = qparams.query.pagination.limit
-    query = apply_filters(self, {}, qparams.query.filters, collection, {}, dataset)
-    query = query_id(self, query, entry_id)
-    count = get_count(self, client.beacon.datasets, query)
-    dict_in={}
-    dict_in['datasetId']=dataset
-    query = apply_filters(self, dict_in, qparams.query.filters, collection, {}, dataset)
     schema = DefaultSchemas.INDIVIDUALS
-    include = qparams.query.include_resultset_responses
-    limit = qparams.query.pagination.limit
-    skip = qparams.query.pagination.skip
-    if limit > 100 or limit == 0:
-        limit = 100# pragma: no cover
-    idq="id"
-    count, dataset_count, docs = get_docs_by_response_type(self, include, query, dataset, limit, skip, mongo_collection, idq)
-    return schema, count, dataset_count, docs, dataset
+    if entry_id=='cdm':
+        return get_individuals(self, None, qparams, dataset)
+    return schema, 0, 0, {}, dataset
