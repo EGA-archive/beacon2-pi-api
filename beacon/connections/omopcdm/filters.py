@@ -18,14 +18,12 @@ def apply_filters(self, filtersGet: dict, filtersPost: List[dict], scope: str, g
     # Get and Post Filters as dict
     filters = []
     if filtersGet:
-        LOG.debug("Get Query")
         listFilters= filtersGet["filters"].split(",")
         for filter in listFilters:
             # All Get Queries have include descendant terms as default
             filterDict = {"id":filter, "scope": scope, "includeDescendantTerms": "true"}
             filters.append(filterDict)
     elif filtersPost:
-        LOG.debug("Post Query")
         filters = filtersPost
     else:
         return {}
