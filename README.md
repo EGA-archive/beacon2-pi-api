@@ -44,28 +44,36 @@ If you are using a build with all the services in the same cluster, you can use:
 docker compose up -d --build
 ```
 
-#### Load the data
+#### Up the containers (with services in independent servers)
 
-To load the database we execute the following commands:
+If you wish to have each service (or some of them) in different servers, you will need to use the remote version of the docker compose file, and deploy the remote services you need by selecting them individually in the build. Example:
 
 ```bash
-docker cp /path/to/analyses.json mongoprod:tmp/analyses.json
-docker cp /path/to/biosamples.json mongoprod:tmp/biosamples.json
-docker cp /path/to/cohorts.json mongoprod:tmp/cohorts.json
-docker cp /path/to/datasets.json mongoprod:tmp/datasets.json
-docker cp /path/to/genomicVariations.json mongoprod:tmp/genomicVariations.json
-docker cp /path/to/individuals.json mongoprod:tmp/individuals.json
-docker cp /path/to/runs.json mongoprod:tmp/runs.json
+docker-compose -f docker-compose.remote.yml up -d --build beaconprod
 ```
 
+After that, you will need to configure the IPs in the different conf files to make them connect. Remember to bind the IP in mongo to 0.0.0.0 in case you are making an independent deployment of the beacon and the mongodb.
+
+#### Load the data
+
+To load the database (mongo) just copy your files in the data folder. Then, locate yourself in the mongo folder:
+
 ```bash
-docker exec mongoprod mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --file /tmp/datasets.json --collection datasets
-docker exec mongoprod mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --file /tmp/analyses.json --collection analyses
-docker exec mongoprod mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --file /tmp/biosamples.json --collection biosamples
-docker exec mongoprod mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --file /tmp/cohorts.json --collection cohorts
-docker exec mongoprod mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --file /tmp/genomicVariations.json --collection genomicVariations
-docker exec mongoprod mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --file /tmp/individuals.json --collection individuals
-docker exec mongoprod mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --file /tmp/runs.json --collection runs
+cd beacon/connections/mongo
+```
+
+And execute the next commands (only the ones you need):
+
+```bash
+	docker exec mongoprod mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --file /data/datasets.json --collection datasets
+	docker exec mongoprod mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --file /data/individuals.json --collection individuals
+	docker exec mongoprod mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --file /data/cohorts.json --collection cohorts
+	docker exec mongoprod mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --file /data/analyses.json --collection analyses
+	docker exec mongoprod mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --file /data/biosamples.json --collection biosamples
+	docker exec mongoprod mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --file /data/genomicVariations.json --collection genomicVariations
+	docker exec mongoprod mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --file /data/runs.json --collection runs
+	docker exec mongoprod mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --file /data/targets.json --collection targets
+	docker exec mongoprod mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --file /data/caseLevelData.json --collection caseLevelData
 ```
 
 This loads the JSON files inside of the `data` folder into the MongoDB database container. Each time you import data you will have to create indexes for the queries to run smoothly. Please, check the next point about how to Create the indexes.

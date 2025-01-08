@@ -1,0 +1,85 @@
+version: '3.1'
+
+services:
+  beaconprod:
+    build:
+      context: .
+    container_name: beaconprod
+    ports:
+      - "5050:5050"
+    entrypoint: ['python','-m','beacon']
+    volumes:
+      - ./beacon/logs/logs.log:/beacon/logs/logs.log
+      - ./beacon/conf/conf.py:/beacon/conf/conf.py
+      - ./beacon/permissions:/beacon/permissions
+
+  idp:
+    #image: quay.io/keycloak/keycloak:12.0.0
+    image: sleighzy/keycloak
+    hostname: idp
+    container_name: idp
+    environment:
+      # - KEYCLOAK_FRONTEND_URL=http://idp:8080/auth
+      # - KEYCLOAK_LOGLEVEL=DEBUG
+      # - ROOT_LOGLEVEL=DEBUG
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=secret
+      - DB_USER=admin
+      - DB_PASSWORD=secret
+      - DB_VENDOR=postgres
+      - DB_ADDR=127.0.0.1
+      - DB_PORT=5432
+      - DB_DATABASE=keycloak
+      #- DB_SCHEMA=public
+      - KEYCLOAK_IMPORT=/tmp/beacon-realm.json -Dkeycloak.profile.feature.upload_scripts=enabled -Dkeycloak.profile.feature.token_exchange=enabled -Dkeycloak.profile.feature.admin_fine_grained_authz=enabled
+      - KEYCLOAK_HOSTNAME=localhost
+      #- KC_HOSTNAME_URL=https://beacon-network-test2.ega-archive.org
+      #- KC_HOSTNAME_ADMIN_URL=https://beacon-network-test2.ega-archive.org
+      #- KEYCLOAK_FRONTEND_URL=https://beacon-network-test2.ega-archive.org/auth/
+      #- PROXY_ADDRESS_FORWARDING=true
+    volumes:
+      - ./beacon/auth/realms/beacon-realm.json:/tmp/beacon-realm.json
+    ports:
+      - "8080:8080"
+      - "9991:8443"
+
+  idp-db:
+    image: postgres
+    hostname: idp-db
+    container_name: idp-db
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_DB=keycloak
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=secret
+
+  db:
+    image: mongo:5
+    command: --wiredTigerCacheSizeGB 4
+    hostname: mongo
+    container_name: mongoprod
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_DATABASE: beacon
+    volumes:
+      - ./beacon/connections/mongo/mongo-init/:/docker-entrypoint-initdb.d/:ro
+      - ./beacon/connections/mongo/data/:/data
+      - ./beacon/connections/mongo/data/db:/data/db
+      - ./beacon/connections/mongo/data/configdb:/data/configdb
+      - ./beacon/connections/mongo/data/caseLevelData:/data/caseLevelData
+    #command: --verbose
+
+  beacon-ri-tools:
+    image: ghcr.io/ega-archive/beacon2-ri-tools-v2:latest
+    hostname: beacon-ri-tools
+    container_name: ri-tools
+    tty: true
+    volumes:
+      - ./ri-tools/output_docs:/usr/src/app/output_docs
+      - ./ri-tools/conf:/usr/src/app/conf
+      - ./ri-tools/files/vcf/files_to_read:/usr/src/app/files/vcf/files_to_read
+      - ./ri-tools/csv:/usr/src/app/csv

@@ -20,6 +20,10 @@ else:
     sh.setFormatter(formatter)
     LOG.addHandler(sh)
 
+if len(LOG.handlers) > 0:
+    # Remove the first handler
+    LOG.removeHandler(LOG.handlers[0])
+
 # LOGS per iniciar i parar el contenidor (INFO)
 # LOGS per he rebut una request i retorno una response (INFO)
 # Tota la resta per DEBUG

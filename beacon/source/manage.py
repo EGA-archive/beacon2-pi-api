@@ -2,7 +2,6 @@
 
 analyses={
     'granularity': {
-        'boolean': True,
         'count': True,
         'record': True
     },
@@ -15,7 +14,6 @@ analyses={
 }
 biosamples={
     'granularity': {
-        'boolean': True,
         'count': True,
         'record': True
     },
@@ -29,11 +27,6 @@ biosamples={
     'database': 'mongo'
 }
 cohorts={
-    'granularity': {
-        'boolean': True,
-        'count': True,
-        'record': True
-    },
     'singleEntryUrl': True,
     'endpoints': {
         'analysis': True,
@@ -44,11 +37,6 @@ cohorts={
     'database': 'mongo'
 }
 datasets={
-    'granularity': {
-        'boolean': True,
-        'count': True,
-        'record': True
-    },
     'singleEntryUrl': True,
     'endpoints': {
         'analysis': True,
@@ -62,7 +50,6 @@ datasets={
 }
 g_variants={
     'granularity': {
-        'boolean': True,
         'count': True,
         'record': True
     },
@@ -78,7 +65,6 @@ g_variants={
 }
 individuals={
     'granularity': {
-        'boolean': True,
         'count': True,
         'record': True
     },
@@ -94,7 +80,6 @@ individuals={
 }
 runs={
     'granularity': {
-        'boolean': True,
         'count': True,
         'record': True
     },

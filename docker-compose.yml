@@ -81,6 +81,9 @@ services:
     volumes:
       - ./beacon/connections/mongo/mongo-init/:/docker-entrypoint-initdb.d/:ro
       - ./beacon/connections/mongo/data/:/data
+      - ./beacon/connections/mongo/data/db:/data/db
+      - ./beacon/connections/mongo/data/configdb:/data/configdb
+      - ./beacon/connections/mongo/data/caseLevelData:/data/caseLevelData
     networks:
       - pub
     #command: --verbose

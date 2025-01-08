@@ -8,7 +8,12 @@ from beacon.logs.logs import LOG
 from beacon.auth.__main__ import authentication
 from beacon.logs.logs import log_with_args
 from beacon.conf.conf import level
-from beacon.connections.mongo.datasets import get_list_of_datasets
+from beacon.source.manage import datasets
+
+source=datasets['database']
+complete_module='beacon.connections.'+source+'.datasets'
+import importlib
+module = importlib.import_module(complete_module, package=None)
 
 @log_with_args(level)
 async def authorization(self, request, headers):
@@ -48,11 +53,11 @@ async def get_datasets_list(self, qparams, request: Request, authorized_datasets
             for elemento in specific_datasets:# pragma: no cover
                 if elemento not in search_and_authorized_datasets:
                     specific_datasets_unauthorized.append(elemento)
-            beacon_datasets = get_list_of_datasets(self)# pragma: no cover
+            beacon_datasets = module.get_list_of_datasets(self)# pragma: no cover
             response_datasets = [ r['id'] for r in beacon_datasets if r['id'] in search_and_authorized_datasets]# pragma: no cover
 
         else:
-            beacon_datasets = get_list_of_datasets(self)
+            beacon_datasets = module.get_list_of_datasets(self)
             specific_datasets = [ r['id'] for r in beacon_datasets if r['id'] not in authorized_datasets]
             response_datasets = [ r['id'] for r in beacon_datasets if r['id'] in authorized_datasets]
             specific_datasets_unauthorized.append(specific_datasets)

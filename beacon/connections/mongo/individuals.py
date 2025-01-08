@@ -62,17 +62,25 @@ def get_variants_of_individual(self, entry_id: Optional[str], qparams: RequestPa
         if bioid == entry_id:
             break
         position+=1
+    if position == len(bioids):
+        schema = DefaultSchemas.GENOMICVARIATIONS
+        return schema, 0, -1, None, dataset
     position=str(position)
-    position1="^"+position+","
-    position2=","+position+","
-    position3=","+position+"$"
-    query_cl={ "$or": [
-    {"biosampleIds": {"$regex": position1}}, 
-    {"biosampleIds": {"$regex": position2}},
-    {"biosampleIds": {"$regex": position3}}
-    ]}
+    filters=qparams.query.filters
+    if filters != []:
+        for filter in filters:
+            if filter['id']=='GENO:GENO_0000458':
+                query_cl={"$or": [{ position: "10", "datasetId": dataset}, { position: "01", "datasetId": dataset}]}
+                qparams.query.filters.remove(filter)
+            elif filter['id']=='GENO:GENO_0000136':
+                query_cl={"$or": [{ position: "11", "datasetId": dataset}]}
+                qparams.query.filters.remove(filter)
+            else:
+                query_cl={"$or": [{ position: "10", "datasetId": dataset},{ position: "11", "datasetId": dataset}, { position: "01", "datasetId": dataset}]}
+    else:
+        query_cl={"$or": [{ position: "10", "datasetId": dataset},{ position: "11", "datasetId": dataset}, { position: "01", "datasetId": dataset}]}
     string_of_ids = client.beacon.caseLevelData \
-        .find(query_cl, {"id": 1, "_id": 0})
+        .find(query_cl, {"id": 1, "_id": 0}).limit(qparams.query.pagination.limit).skip(qparams.query.pagination.skip)
     HGVSIds=list(string_of_ids)
     query={}
     queryHGVS={}

@@ -80,16 +80,34 @@ def get_biosamples_of_variant(self, entry_id: Optional[str], qparams: RequestPar
     HGVSId=HGVSIds[0]["identifiers"]["genomicHGVSId"]
     queryHGVSId={"datasetId": dataset, "id": HGVSId}
     string_of_ids = client.beacon.caseLevelData \
-        .find(queryHGVSId, {"biosampleIds": 1, "_id": 0})
+        .find(queryHGVSId)
     targets = client.beacon.targets \
-        .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
+        .find({"datasetId": HGVSDataset}, {"biosampleIds": 1, "_id": 0})
     targets=list(targets)
     list_of_targets=targets[0]["biosampleIds"]
-    list_of_positions_strings= string_of_ids[0]['biosampleIds'].split(',')
+    list_of_positions_strings= string_of_ids[0]
     biosampleIds=[]
-    for position in list_of_positions_strings:
-        if position != '':
-            biosampleIds.append(list_of_targets[int(position)])
+    filters=qparams.query.filters
+    if filters != []:
+        for filter in filters:
+            if filter['id']=='GENO:GENO_0000458':
+                for key, value in list_of_positions_strings.items():
+                    if key != 'datasetId' and key != 'id' and key != '_id' and value != '11':
+                        biosampleIds.append(list_of_targets[int(key)])
+                qparams.query.filters.remove(filter)
+            elif filter['id']=='GENO:GENO_0000136':
+                for key, value in list_of_positions_strings.items():
+                    if key != 'datasetId' and key != 'id' and key != '_id' and value != '10' and value != '01':
+                        biosampleIds.append(list_of_targets[int(key)])
+                qparams.query.filters.remove(filter)
+            else:
+                for key, value in list_of_positions_strings.items():
+                    if key != 'datasetId' and key != 'id' and key != '_id':
+                        biosampleIds.append(list_of_targets[int(key)])
+    else:
+        for key, value in list_of_positions_strings.items():
+            if key != 'datasetId' and key != 'id' and key != '_id':
+                biosampleIds.append(list_of_targets[int(key)])
     finalids=biosampleIds
     try:
         finalids=[]
@@ -131,16 +149,34 @@ def get_runs_of_variant(self, entry_id: Optional[str], qparams: RequestParams, d
     HGVSId=HGVSIds[0]["identifiers"]["genomicHGVSId"]
     queryHGVSId={"datasetId": dataset, "id": HGVSId}
     string_of_ids = client.beacon.caseLevelData \
-        .find(queryHGVSId, {"biosampleIds": 1, "_id": 0})
+        .find(queryHGVSId)
     targets = client.beacon.targets \
-        .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
+        .find({"datasetId": HGVSDataset}, {"biosampleIds": 1, "_id": 0})
     targets=list(targets)
     list_of_targets=targets[0]["biosampleIds"]
-    list_of_positions_strings= string_of_ids[0]['biosampleIds'].split(',')
+    list_of_positions_strings= string_of_ids[0]
     biosampleIds=[]
-    for position in list_of_positions_strings:
-        if position != '':
-            biosampleIds.append(list_of_targets[int(position)])
+    filters=qparams.query.filters
+    if filters != []:
+        for filter in filters:
+            if filter['id']=='GENO:GENO_0000458':
+                for key, value in list_of_positions_strings.items():
+                    if key != 'datasetId' and key != 'id' and key != '_id' and value != '11':
+                        biosampleIds.append(list_of_targets[int(key)])
+                qparams.query.filters.remove(filter)
+            elif filter['id']=='GENO:GENO_0000136':
+                for key, value in list_of_positions_strings.items():
+                    if key != 'datasetId' and key != 'id' and key != '_id' and value != '10' and value != '01':
+                        biosampleIds.append(list_of_targets[int(key)])
+                qparams.query.filters.remove(filter)
+            else:
+                for key, value in list_of_positions_strings.items():
+                    if key != 'datasetId' and key != 'id' and key != '_id':
+                        biosampleIds.append(list_of_targets[int(key)])
+    else:
+        for key, value in list_of_positions_strings.items():
+            if key != 'datasetId' and key != 'id' and key != '_id':
+                biosampleIds.append(list_of_targets[int(key)])
     try:
         finalids=[]
         for bioid in biosampleIds:
@@ -181,16 +217,34 @@ def get_analyses_of_variant(self, entry_id: Optional[str], qparams: RequestParam
     HGVSId=HGVSIds[0]["identifiers"]["genomicHGVSId"]
     queryHGVSId={"datasetId": dataset, "id": HGVSId}
     string_of_ids = client.beacon.caseLevelData \
-        .find(queryHGVSId, {"biosampleIds": 1, "_id": 0})
+        .find(queryHGVSId)
     targets = client.beacon.targets \
-        .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
+        .find({"datasetId": HGVSDataset}, {"biosampleIds": 1, "_id": 0})
     targets=list(targets)
     list_of_targets=targets[0]["biosampleIds"]
-    list_of_positions_strings= string_of_ids[0]['biosampleIds'].split(',')
+    list_of_positions_strings= string_of_ids[0]
     biosampleIds=[]
-    for position in list_of_positions_strings:
-        if position != '':
-            biosampleIds.append(list_of_targets[int(position)])
+    filters=qparams.query.filters
+    if filters != []:
+        for filter in filters:
+            if filter['id']=='GENO:GENO_0000458':
+                for key, value in list_of_positions_strings.items():
+                    if key != 'datasetId' and key != 'id' and key != '_id' and value != '11':
+                        biosampleIds.append(list_of_targets[int(key)])
+                qparams.query.filters.remove(filter)
+            elif filter['id']=='GENO:GENO_0000136':
+                for key, value in list_of_positions_strings.items():
+                    if key != 'datasetId' and key != 'id' and key != '_id' and value != '10' and value != '01':
+                        biosampleIds.append(list_of_targets[int(key)])
+                qparams.query.filters.remove(filter)
+            else:
+                for key, value in list_of_positions_strings.items():
+                    if key != 'datasetId' and key != 'id' and key != '_id':
+                        biosampleIds.append(list_of_targets[int(key)])
+    else:
+        for key, value in list_of_positions_strings.items():
+            if key != 'datasetId' and key != 'id' and key != '_id':
+                biosampleIds.append(list_of_targets[int(key)])
     try:
         finalids=[]
         for bioid in biosampleIds:
@@ -231,16 +285,34 @@ def get_individuals_of_variant(self, entry_id: Optional[str], qparams: RequestPa
     HGVSId=HGVSIds[0]["identifiers"]["genomicHGVSId"]
     queryHGVSId={"datasetId": HGVSDataset, "id": HGVSId}
     string_of_ids = client.beacon.caseLevelData \
-        .find(queryHGVSId, {"biosampleIds": 1, "_id": 0})
+        .find(queryHGVSId)
     targets = client.beacon.targets \
         .find({"datasetId": HGVSDataset}, {"biosampleIds": 1, "_id": 0})
     targets=list(targets)
     list_of_targets=targets[0]["biosampleIds"]
-    list_of_positions_strings= string_of_ids[0]['biosampleIds'].split(',')
+    list_of_positions_strings= string_of_ids[0]
     biosampleIds=[]
-    for position in list_of_positions_strings:
-        if position != '':
-            biosampleIds.append(list_of_targets[int(position)])
+    filters=qparams.query.filters
+    if filters != []:
+        for filter in filters:
+            if filter['id']=='GENO:GENO_0000458':
+                for key, value in list_of_positions_strings.items():
+                    if key != 'datasetId' and key != 'id' and key != '_id' and value != '11':
+                        biosampleIds.append(list_of_targets[int(key)])
+                qparams.query.filters.remove(filter)
+            elif filter['id']=='GENO:GENO_0000136':
+                for key, value in list_of_positions_strings.items():
+                    if key != 'datasetId' and key != 'id' and key != '_id' and value != '10' and value != '01':
+                        biosampleIds.append(list_of_targets[int(key)])
+                qparams.query.filters.remove(filter)
+            else:
+                for key, value in list_of_positions_strings.items():
+                    if key != 'datasetId' and key != 'id' and key != '_id':
+                        biosampleIds.append(list_of_targets[int(key)])
+    else:
+        for key, value in list_of_positions_strings.items():
+            if key != 'datasetId' and key != 'id' and key != '_id':
+                biosampleIds.append(list_of_targets[int(key)])
     try:
         finalquery={}
         finalquery["$or"]=[]

@@ -1,7 +1,7 @@
 from aiohttp.web_request import Request
 from beacon.response.catalog import build_beacon_record_response_by_dataset, build_beacon_count_response, build_beacon_collection_response, build_beacon_info_response, build_map, build_configuration, build_entry_types, build_beacon_service_info_response, build_filtering_terms_response, build_beacon_boolean_response, build_beacon_none_response
 from beacon.logs.logs import log_with_args, LOG
-from beacon.conf.conf import level, default_beacon_granularity
+from beacon.conf.conf import level, max_beacon_granularity
 from beacon.request.classes import Granularity
 from beacon.source.manage import analyses, biosamples, cohorts, datasets, g_variants, individuals, runs, filtering_terms
 
@@ -14,24 +14,40 @@ async def builder(self, request: Request, datasets, qparams, entry_type, entry_i
             source_entry_type = source_entry_type[1]
             if source_entry_type == 'analyses':
                 source = analyses['database']
+                source_granularity = analyses['granularity']
             elif source_entry_type == 'biosamples':
                 source = biosamples['database']
+                source_granularity = biosamples['granularity']
             elif source_entry_type == 'individuals':
                 source = individuals['database']
+                source_granularity = individuals['granularity']
             elif source_entry_type == 'runs':
                 source = runs['database']
+                source_granularity = runs['granularity']
         elif entry_type == 'g_variants':
             source = g_variants['database']
+            source_granularity = g_variants['granularity']
         elif '_' in entry_type:
             source = g_variants['database']
+            source_granularity = g_variants['granularity']
         elif entry_type == 'analyses':
             source = analyses['database']
+            source_granularity = analyses['granularity']
         elif entry_type == 'biosamples':
             source = biosamples['database']
+            source_granularity = biosamples['granularity']
         elif entry_type == 'individuals':
             source = individuals['database']
+            source_granularity = individuals['granularity']
         elif entry_type == 'runs':
             source = runs['database']
+            source_granularity = runs['granularity']
+        if source_granularity['record']==True:
+            allowed_granularity='record'
+        elif source_granularity['count']==True:
+            allowed_granularity='count'
+        else:
+            allowed_granularity='boolean'
         complete_module='beacon.connections.'+source+'.executor'
         import importlib
         module = importlib.import_module(complete_module, package=None)
@@ -39,11 +55,15 @@ async def builder(self, request: Request, datasets, qparams, entry_type, entry_i
         if testMode == True:
             datasets = ['test']
         datasets_docs, datasets_count, count, entity_schema, include, datasets = await module.execute_function(self, entry_type, datasets, qparams, entry_id)
-        if include != 'NONE' and granularity == Granularity.RECORD and default_beacon_granularity == 'record':
+        if include != 'NONE' and granularity == Granularity.RECORD and max_beacon_granularity == 'record' and allowed_granularity=='record':
             response = build_beacon_record_response_by_dataset(self, datasets, datasets_docs, datasets_count, count, qparams, entity_schema)
-        elif include == 'NONE' and granularity == Granularity.RECORD and default_beacon_granularity == 'record':
+        elif include == 'NONE' and granularity == Granularity.RECORD and max_beacon_granularity == 'record' and allowed_granularity=='record':
             response = build_beacon_none_response(self, datasets_docs["NONE"], count, qparams, entity_schema)
-        elif granularity == Granularity.COUNT or granularity == Granularity.RECORD and default_beacon_granularity in ['count', 'record']:
+        elif granularity == Granularity.COUNT and max_beacon_granularity in ['count', 'record'] and allowed_granularity in ['count', 'record']:
+            response = build_beacon_count_response(self, count, qparams, entity_schema)
+        elif granularity == Granularity.RECORD and max_beacon_granularity in ['count'] and allowed_granularity in ['count', 'record']:
+            response = build_beacon_count_response(self, count, qparams, entity_schema)
+        elif granularity == Granularity.RECORD and allowed_granularity in ['count'] and max_beacon_granularity in ['count', 'record']:
             response = build_beacon_count_response(self, count, qparams, entity_schema)
         else:
             response = build_beacon_boolean_response(self, count, qparams, entity_schema)
