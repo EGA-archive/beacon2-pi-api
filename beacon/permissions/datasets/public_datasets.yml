@@ -4,3 +4,4 @@ public_datasets:
 - rd-connect_dataset
 - coadread_tcga_pan_can_atlas_2018
 - COVID_pop11_fin_2
+- cdm
