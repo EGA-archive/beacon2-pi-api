@@ -17,9 +17,8 @@ def get_full_datasets(self, entry_id: Optional[str], qparams: RequestParams):
 
 @log_with_args(level)
 def get_list_of_datasets(self):
-    datasets = get_full_datasets( None, None)
-    beacon_datasets = [ r for r in datasets ]
-    return beacon_datasets
+    datasets, count, schema = get_full_datasets(self, None, None)
+    return datasets
 
 @log_with_args(level)
 def get_dataset_with_id(self, entry_id: Optional[str], qparams: RequestParams):
