@@ -1,7 +1,7 @@
 from beacon.request.parameters import RequestParams
 from beacon.response.schemas import DefaultSchemas
 from beacon.connections.omopcdm.__init__ import client
-from beacon.connections.omopcdm.utils import queryExecutor, search_ontologies
+from beacon.connections.omopcdm.utils import queryExecutor, search_ontologies, materialised_view_exists
 from beacon.logs.logs import log_with_args, LOG
 from beacon.conf.conf import level
 from beacon.connections.omopcdm.filters import apply_filters
@@ -28,7 +28,8 @@ def get_individual_info(offset: int=0, limit: int=10, person_id = None) -> list:
         listId = [str(record[0]) for record in records]
     return listId
 
-def get_individuals_person(listIds: list) -> dict:
+@log_with_args(level)
+def get_individuals_person(self, listIds: list) -> dict:
     dict_person = {}
     for person_id in listIds:
         records = individual_queries.sql_get_person(client, person_id=person_id)
@@ -39,8 +40,8 @@ def get_individuals_person(listIds: list) -> dict:
         dict_person[person_id] = listValues
     return dict_person
 
-
-def get_individuals_condition(listIds: list) -> dict:
+@log_with_args(level)
+def get_individuals_condition(self, listIds: list) -> dict:
     dict_condition = {}
     for person_id in listIds:
         records = individual_queries.sql_get_condition(client, person_id=person_id)
@@ -56,7 +57,8 @@ def get_individuals_condition(listIds: list) -> dict:
 
     return dict_condition
 
-def get_individuals_procedure(listIds: list) -> dict:
+@log_with_args(level)
+def get_individuals_procedure(self, listIds: list) -> dict:
     dict_procedure = {}
     for person_id in listIds:
         records = individual_queries.sql_get_procedure(client, person_id=person_id)
@@ -73,7 +75,8 @@ def get_individuals_procedure(listIds: list) -> dict:
     return dict_procedure        
 
 
-def get_individuals_measures(listIds: list) -> dict:
+@log_with_args(level)
+def get_individuals_measures(self, listIds: list) -> dict:
     dict_measures = {}
     for person_id in listIds:
         records = individual_queries.sql_get_measure(client, person_id=person_id)
@@ -91,8 +94,8 @@ def get_individuals_measures(listIds: list) -> dict:
         dict_measures[person_id] = listValues
     return dict_measures
 
-
-def get_individuals_exposures(listIds: list) -> dict:
+@log_with_args(level)
+def get_individuals_exposures(self, listIds: list) -> dict:
     dict_exposures = {}
     for person_id in listIds:
         records = individual_queries.sql_get_exposure(client, person_id=person_id)
@@ -115,7 +118,8 @@ def get_individuals_exposures(listIds: list) -> dict:
         dict_exposures[person_id] = listValues
     return dict_exposures
 
-def get_individuals_treatments(listIds: list) -> dict:
+@log_with_args(level)
+def get_individuals_treatments(self, listIds: list) -> dict:
     dict_treatments = {}
     for person_id in listIds:
         records = individual_queries.sql_get_treatment(client, person_id=person_id)
@@ -130,8 +134,8 @@ def get_individuals_treatments(listIds: list) -> dict:
         dict_treatments[person_id] = listValues
     return dict_treatments 
 
-
-def format_query(listIds: list, dictPerson: dict, dictCondition: dict, dictProcedures: dict, dictMeasures: dict, dictExposures: dict, dictTreatments: dict)-> list:
+@log_with_args(level)
+def format_query(self, listIds: list, dictPerson: dict, dictCondition: dict, dictProcedures: dict, dictMeasures: dict, dictExposures: dict, dictTreatments: dict)-> list:
     list_format = []
     for person_id in listIds:
         dictId = {"id":person_id}
@@ -152,22 +156,24 @@ def format_query(listIds: list, dictPerson: dict, dictCondition: dict, dictProce
         list_format.append(dictId)
     return list_format
 
-def retrieveRecords(listIds: list) -> list:
-    dictPerson = get_individuals_person(listIds)        # List with Id, sex, ethnicity
-    dictCondition = get_individuals_condition(listIds)  # List with al the diseases per Id
-    dictProcedures = get_individuals_procedure(listIds)
-    dictMeasures = get_individuals_measures(listIds)
-    dictExposures = get_individuals_exposures(listIds)
-    dictTreatments = get_individuals_treatments(listIds)
+@log_with_args(level)
+def retrieveRecords(self, listIds: list) -> list:
+    dictPerson = get_individuals_person(self, listIds)        # List with Id, sex, ethnicity
+    dictCondition = get_individuals_condition(self, listIds)  # List with al the diseases per Id
+    dictProcedures = get_individuals_procedure(self, listIds)
+    dictMeasures = get_individuals_measures(self, listIds)
+    dictExposures = get_individuals_exposures(self, listIds)
+    dictTreatments = get_individuals_treatments(self, listIds)
 
-    dictPerson = search_ontologies(dictPerson)
-    dictCondition = search_ontologies(dictCondition)
-    dictProcedures = search_ontologies(dictProcedures)
-    dictMeasures = search_ontologies(dictMeasures)
-    dictExposures = search_ontologies(dictExposures)
-    dictTreatments = search_ontologies(dictTreatments)
+    matView = materialised_view_exists()
+    dictPerson = search_ontologies(self, dictPerson, matView)
+    dictCondition = search_ontologies(self, dictCondition, matView)
+    dictProcedures = search_ontologies(self, dictProcedures, matView)
+    dictMeasures = search_ontologies(self, dictMeasures, matView)
+    dictExposures = search_ontologies(self, dictExposures, matView)
+    dictTreatments = search_ontologies(self, dictTreatments, matView)
 
-    docs = format_query(listIds, dictPerson, dictCondition, dictProcedures, dictMeasures, dictExposures, dictTreatments)
+    docs = format_query(self, listIds, dictPerson, dictCondition, dictProcedures, dictMeasures, dictExposures, dictTreatments)
 
     return docs
 
@@ -202,7 +208,6 @@ def get_individuals(self, entry_id: Optional[str], qparams: RequestParams, datas
         else:
             resultQuery = [(countIds, listId) for listId in listIds ]
 
-    LOG.debug(f"Final query {resultQuery}")
     if not resultQuery:
         return schema, 0, 0, {}, dataset
     # Different response depending the granularity
@@ -213,7 +218,7 @@ def get_individuals(self, entry_id: Optional[str], qparams: RequestParams, datas
     # Record response
     count = resultQuery[0][0]
     listIds = [str(record[1]) for record in resultQuery]
-    docs = retrieveRecords(listIds)
+    docs = retrieveRecords(self, listIds)
 
     return schema, count, count, docs, dataset
 

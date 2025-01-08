@@ -1,4 +1,6 @@
 from beacon.connections.omopcdm.__init__ import client
+from beacon.logs.logs import log_with_args, LOG
+from beacon.conf.conf import level
 import itertools
 import aiosql
 from pathlib import Path
@@ -21,12 +23,26 @@ def queryExecutor(query):
     records = cur.fetchall()
     return records
 
-def search_ontology(concept_id):
-    records = basic_queries.sql_get_ontology(client, concept_id=concept_id)
+# Check if a materialised view exists in the given the R/W permissions
+def materialised_view_exists():
+
+    query = """
+        SELECT count(*)
+        FROM pg_matviews
+        WHERE matviewname = 'search_ontologies_view';
+    """
+    result = queryExecutor(query)
+    return result[0][0] > 0
+
+def search_ontology(concept_id, matView):
+    if matView:
+        records = basic_queries.sql_get_ontology_view(client, concept_id=concept_id)
+    else:
+        records = basic_queries.sql_get_ontology(client, concept_id=concept_id)
     return records
 
-
-def search_ontologies(dictValues):
+@log_with_args(level)
+def search_ontologies(self, dictValues, matView):
     for person_id, listVariableValues in dictValues.items():    # For each id
         for dictVariableValue in listVariableValues:                        # For each object of the list   
             for variable, value in dictVariableValue.items():                                     
@@ -35,7 +51,7 @@ def search_ontologies(dictValues):
                     if value == 0:
                         dictVariableValue[variable] = {'id':"None:No matching concept", 'label':"No matching concept"}
                         continue
-                    records = search_ontology(value)
+                    records = search_ontology(value, matView)
                     if records:
                         label = records[0]
                         id = records[1]
