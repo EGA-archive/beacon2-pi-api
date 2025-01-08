@@ -17,3 +17,12 @@ SELECT concept_name as label,
     vocabulary_id || ':' || concept_code as id
 FROM vocabularies.concept 
 WHERE concept_id = :concept_id
+Limit 1
+
+-- name: sql_get_ontology_view^
+-- Get ontology in materialised view
+SELECT concept_name as label,
+    vocabulary_id || ':' || concept_code as id
+FROM  search_ontologies_view
+WHERE concept_id = :concept_id
+Limit 1
