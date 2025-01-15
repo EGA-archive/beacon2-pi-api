@@ -5,7 +5,7 @@ from aiohttp import ClientSession, BasicAuth, FormData
 from aiohttp import web
 import os
 from dotenv import load_dotenv
-from beacon.logs.logs import log_with_args
+from beacon.logs.logs import log_with_args, LOG
 from beacon.conf.conf import level
 
 @log_with_args(level)
@@ -37,6 +37,7 @@ def validate_access_token(self, access_token, idp_issuer, jwks_url, algorithm, a
 @log_with_args(level)
 def fetch_idp(self, access_token):
     try:
+        LOG.debug(access_token)
         header = jwt.get_unverified_header(access_token)
         algorithm=header["alg"]
         decoded = jwt.decode(access_token, options={"verify_signature": False})

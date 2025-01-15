@@ -140,6 +140,31 @@ class Info(EndpointView):
         except Exception as e:# pragma: no cover
             response_obj = build_beacon_error_response(self, ErrorClass.error_code, 'prova', ErrorClass.error_response)
             return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')
+        
+class WellKnown(EndpointView):
+    @log_with_args(level)
+    async def info(self, request):
+        try:
+            response_obj = {"resource": "http://beaconprod:5050/api/",
+                            "authorization_servers": ["http://idp:8080/auth/realms/Beacon/"],
+                            "client_id": "beacon"}
+            return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
+        except Exception:# pragma: no cover
+            raise
+
+    async def get(self):
+        try:
+            return await self.info(self.request)
+        except Exception as e:# pragma: no cover
+            response_obj = build_beacon_error_response(self, ErrorClass.error_code, 'prova', ErrorClass.error_response)
+            return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')
+
+    async def post(self):
+        try:
+            return await self.info(self.request)
+        except Exception as e:# pragma: no cover
+            response_obj = build_beacon_error_response(self, ErrorClass.error_code, 'prova', ErrorClass.error_response)
+            return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')
 
 class Collection(EndpointView):
     @log_with_args(level)
@@ -305,6 +330,7 @@ async def create_api():# pragma: no cover
     
     app.add_routes([web.post('/api', Info)])
     app.add_routes([web.post('/api/info', Info)])
+    app.add_routes([web.post('/api/.well-known/oauth-protected-resource', WellKnown)])
     app.add_routes([web.post('/api/entry_types', EntryTypes)])
     app.add_routes([web.post('/api/service-info', ServiceInfo)])
     app.add_routes([web.post('/api/configuration', Configuration)])
@@ -348,6 +374,7 @@ async def create_api():# pragma: no cover
     app.add_routes([web.post('/api/runs/{id}/g_variants', Resultset)])
     app.add_routes([web.get('/api', Info)])
     app.add_routes([web.get('/api/info', Info)])
+    app.add_routes([web.get('/api/.well-known/oauth-protected-resource', WellKnown)])
     app.add_routes([web.get('/api/entry_types', EntryTypes)])
     app.add_routes([web.get('/api/service-info', ServiceInfo)])
     app.add_routes([web.get('/api/configuration', Configuration)])
