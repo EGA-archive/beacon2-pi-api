@@ -111,7 +111,11 @@ def get_biosamples_of_dataset(self, entry_id: Optional[str], qparams: RequestPar
     query = query_id(self, query, entry_id)
     count = get_count(self, client.beacon.datasets, query)
     dict_in={}
-    dict_in['datasetId']=dataset
+    if dataset == entry_id:
+        dict_in['datasetId']=entry_id
+    else:
+        schema = DefaultSchemas.BIOSAMPLES# pragma: no cover
+        return schema, 0, 0, None, dataset# pragma: no cover
     query = apply_filters(self, dict_in, qparams.query.filters, collection, {}, dataset)
     schema = DefaultSchemas.BIOSAMPLES
     include = qparams.query.include_resultset_responses
@@ -133,7 +137,11 @@ def get_individuals_of_dataset(self, entry_id: Optional[str], qparams: RequestPa
     query = query_id(self, query, entry_id)
     count = get_count(self, client.beacon.datasets, query)
     dict_in={}
-    dict_in['datasetId']=dataset
+    if dataset == entry_id:
+        dict_in['datasetId']=entry_id
+    else:
+        schema = DefaultSchemas.INDIVIDUALS# pragma: no cover
+        return schema, 0, 0, None, dataset# pragma: no cover
     query = apply_filters(self, dict_in, qparams.query.filters, collection, {}, dataset)
     schema = DefaultSchemas.INDIVIDUALS
     include = qparams.query.include_resultset_responses
@@ -155,7 +163,12 @@ def get_runs_of_dataset(self, entry_id: Optional[str], qparams: RequestParams, d
     query = query_id(self, query, entry_id)
     count = get_count(self, client.beacon.datasets, query)
     dict_in={}
-    dict_in['datasetId']=dataset
+    dict_in={}
+    if dataset == entry_id:
+        dict_in['datasetId']=entry_id
+    else:
+        schema = DefaultSchemas.RUNS# pragma: no cover
+        return schema, 0, 0, None, dataset# pragma: no cover
     query = apply_filters(self, dict_in, qparams.query.filters, collection, {}, dataset)
     schema = DefaultSchemas.RUNS
     include = qparams.query.include_resultset_responses
@@ -181,7 +194,12 @@ def get_analyses_of_dataset(self, entry_id: Optional[str], qparams: RequestParam
     query = query_id(self, query, entry_id)
     count = get_count(self, client.beacon.datasets, query)
     dict_in={}
-    dict_in['datasetId']=dataset
+    dict_in={}
+    if dataset == entry_id:
+        dict_in['datasetId']=entry_id
+    else:
+        schema = DefaultSchemas.ANALYSES# pragma: no cover
+        return schema, 0, 0, None, dataset# pragma: no cover
     query = apply_filters(self, dict_in, qparams.query.filters, collection, {}, dataset)
     schema = DefaultSchemas.ANALYSES
     include = qparams.query.include_resultset_responses

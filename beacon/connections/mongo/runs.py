@@ -106,7 +106,7 @@ def get_variants_of_run(self, entry_id: Optional[str], qparams: RequestParams, d
 def get_analyses_of_run(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
     collection = 'runs'
     mongo_collection = client.beacon.analyses
-    query = {"runId": entry_id}
+    query = {"id": entry_id}
     query = apply_filters(self, query, qparams.query.filters, collection, {}, dataset)
     schema = DefaultSchemas.RUNS
     include = qparams.query.include_resultset_responses

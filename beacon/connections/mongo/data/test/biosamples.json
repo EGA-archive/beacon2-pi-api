@@ -1,0 +1,2262 @@
+[
+    {
+        "biosampleStatus": {
+            "id": "EFO:0009655",
+            "label": "abnormal sample"
+        },
+        "collectionDate": "2020-09-11",
+        "collectionMoment": "P32Y6M1D",
+        "diagnosticMarkers": [
+            {
+                "id": "RO:0000085",
+                "label": "has_function"
+            }
+        ],
+        "histologicalDiagnosis": {
+            "id": "NCIT:C3778",
+            "label": "Serous Cystadenocarcinoma"
+        },
+        "id": "SAMPLE1",
+        "individualId": "SAMPLE1",
+        "info": {
+            "info": "Bothmetadataandgenomicvariationsinformationaresynthetic."
+        },
+        "measurements": [
+            {
+                "assayCode": {
+                    "id": "UBERON:0001062",
+                    "label": "anatomical entity"
+                },
+                "date": "2019-04-23",
+                "measurementValue": {
+                    "id": "LOINC:26515-7",
+                    "label": "Platelets [#/volume] in Blood"
+                },
+                "notes": "Bear in mind that all this information is synthetic",
+                "observationMoment": {
+                    "iso8601duration": "P53Y8M"
+                },
+                "procedure": {
+                    "procedureCode": {
+                        "id": "OBI:0002657",
+                        "label": "surgical biopsy"
+                    }
+                }
+            }
+        ],
+        "notes": "Bear in mind that all this information is synthetic",
+        "pathologicalStage": {
+            "id": "NCIT:C27977",
+            "label": "Stage IIIA"
+        },
+        "pathologicalTnmFinding": [
+            {
+                "id": "NCIT:C48725",
+                "label": "T2a Stage Finding"
+            }
+        ],
+        "phenotypicFeatures": [
+            {
+                "evidence": {
+                    "reference": {
+                        "id": "ECO:0006017",
+                        "notes": "author statement from published clinical study used in manual assertion"
+                    }
+                },
+                "excluded": "TRUE",
+                "featureType": {
+                    "id": "HP:0000002",
+                    "label": "Abnormality of body height"
+                },
+                "modifiers": {
+                    "id": "HP:0032500",
+                    "label": "Exacerbated by tobacco use"
+                },
+                "notes": "Please note that all this information is synthetic",
+                "onset": {
+                    "days": 5
+                },
+                "resolution": {
+                    "days": 8,
+                    "weeks": 8
+                },
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "sampleOriginDetail": {
+            "id": "UBERON:0000474",
+            "label": "female reproductive system"
+        },
+        "sampleOriginType": {
+            "id": "UBERON:0000992",
+            "label": "ovary"
+        },
+        "sampleProcessing": {
+            "id": "EFO:0009129",
+            "label": "mechanical dissociation"
+        },
+        "sampleStorage": {
+            "id": "OBI:0000915",
+            "label": "freezing storage"
+        },
+        "tumorGrade": {
+            "id": "NCIT:C28080",
+            "label": "Grade 3a"
+        },
+        "tumorProgression": {
+            "id": "NCIT:C84509",
+            "label": "Primary Malignant Neoplasm"
+        },
+        "datasetId": "synthetic_usecases_4beacon_testingV3"
+    },
+    {
+        "biosampleStatus": {
+            "id": "EFO:0009655",
+            "label": "abnormal sample"
+        },
+        "collectionDate": "2020-09-11",
+        "collectionMoment": "P32Y6M1D",
+        "diagnosticMarkers": [
+            {
+                "id": "RO:0000085",
+                "label": "has_function"
+            }
+        ],
+        "histologicalDiagnosis": {
+            "id": "NCIT:C3778",
+            "label": "Serous Cystadenocarcinoma"
+        },
+        "id": "SAMPLE2",
+        "individualId": "SAMPLE2",
+        "info": {
+            "info": "Bothmetadataandgenomicvariationsinformationaresynthetic."
+        },
+        "measurements": [
+            {
+                "assayCode": {
+                    "id": "UBERON:0001062",
+                    "label": "anatomical entity"
+                },
+                "date": "2019-04-23",
+                "measurementValue": {
+                    "id": "LOINC:26515-7",
+                    "label": "Platelets [#/volume] in Blood"
+                },
+                "notes": "Bear in mind that all this information is synthetic",
+                "observationMoment": {
+                    "iso8601duration": "P53Y8M"
+                },
+                "procedure": {
+                    "procedureCode": {
+                        "id": "OBI:0002657",
+                        "label": "surgical biopsy"
+                    }
+                }
+            }
+        ],
+        "notes": "Bear in mind that all this information is synthetic",
+        "pathologicalStage": {
+            "id": "NCIT:C27977",
+            "label": "Stage IIIA"
+        },
+        "pathologicalTnmFinding": [
+            {
+                "id": "NCIT:C48725",
+                "label": "T2a Stage Finding"
+            }
+        ],
+        "phenotypicFeatures": [
+            {
+                "evidence": {
+                    "reference": {
+                        "id": "ECO:0006017",
+                        "notes": "author statement from published clinical study used in manual assertion"
+                    }
+                },
+                "excluded": "TRUE",
+                "featureType": {
+                    "id": "HP:0000002",
+                    "label": "Abnormality of body height"
+                },
+                "modifiers": {
+                    "id": "HP:0032500",
+                    "label": "Exacerbated by tobacco use"
+                },
+                "notes": "Please note that all this information is synthetic",
+                "onset": {
+                    "days": 5
+                },
+                "resolution": {
+                    "days": 8,
+                    "weeks": 8
+                },
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "sampleOriginDetail": {
+            "id": "UBERON:0000474",
+            "label": "female reproductive system"
+        },
+        "sampleOriginType": {
+            "id": "UBERON:0000992",
+            "label": "ovary"
+        },
+        "sampleProcessing": {
+            "id": "EFO:0009129",
+            "label": "mechanical dissociation"
+        },
+        "sampleStorage": {
+            "id": "OBI:0000915",
+            "label": "freezing storage"
+        },
+        "tumorGrade": {
+            "id": "NCIT:C28080",
+            "label": "Grade 3a"
+        },
+        "tumorProgression": {
+            "id": "NCIT:C84509",
+            "label": "Primary Malignant Neoplasm"
+        },
+        "datasetId": "synthetic_usecases_4beacon_testingV3"
+    },
+    {
+        "biosampleStatus": {
+            "id": "EFO:0009655",
+            "label": "abnormal sample"
+        },
+        "collectionDate": "2020-09-11",
+        "collectionMoment": "P32Y6M1D",
+        "diagnosticMarkers": [
+            {
+                "id": "RO:0000085",
+                "label": "has_function"
+            }
+        ],
+        "histologicalDiagnosis": {
+            "id": "NCIT:C3778",
+            "label": "Serous Cystadenocarcinoma"
+        },
+        "id": "SAMPLE3",
+        "individualId": "SAMPLE3",
+        "info": {
+            "info": "Bothmetadataandgenomicvariationsinformationaresynthetic."
+        },
+        "measurements": [
+            {
+                "assayCode": {
+                    "id": "UBERON:0001062",
+                    "label": "anatomical entity"
+                },
+                "date": "2019-04-23",
+                "measurementValue": {
+                    "id": "LOINC:26515-7",
+                    "label": "Platelets [#/volume] in Blood"
+                },
+                "notes": "Bear in mind that all this information is synthetic",
+                "observationMoment": {
+                    "iso8601duration": "P53Y8M"
+                },
+                "procedure": {
+                    "procedureCode": {
+                        "id": "OBI:0002657",
+                        "label": "surgical biopsy"
+                    }
+                }
+            }
+        ],
+        "notes": "Bear in mind that all this information is synthetic",
+        "pathologicalStage": {
+            "id": "NCIT:C27977",
+            "label": "Stage IIIA"
+        },
+        "pathologicalTnmFinding": [
+            {
+                "id": "NCIT:C48725",
+                "label": "T2a Stage Finding"
+            }
+        ],
+        "phenotypicFeatures": [
+            {
+                "evidence": {
+                    "reference": {
+                        "id": "ECO:0006017",
+                        "notes": "author statement from published clinical study used in manual assertion"
+                    }
+                },
+                "excluded": "TRUE",
+                "featureType": {
+                    "id": "HP:0000002",
+                    "label": "Abnormality of body height"
+                },
+                "modifiers": {
+                    "id": "HP:0032500",
+                    "label": "Exacerbated by tobacco use"
+                },
+                "notes": "Please note that all this information is synthetic",
+                "onset": {
+                    "days": 5
+                },
+                "resolution": {
+                    "days": 8,
+                    "weeks": 8
+                },
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "sampleOriginDetail": {
+            "id": "UBERON:0000474",
+            "label": "female reproductive system"
+        },
+        "sampleOriginType": {
+            "id": "UBERON:0000992",
+            "label": "ovary"
+        },
+        "sampleProcessing": {
+            "id": "EFO:0009129",
+            "label": "mechanical dissociation"
+        },
+        "sampleStorage": {
+            "id": "OBI:0000915",
+            "label": "freezing storage"
+        },
+        "tumorGrade": {
+            "id": "NCIT:C28080",
+            "label": "Grade 3a"
+        },
+        "tumorProgression": {
+            "id": "NCIT:C84509",
+            "label": "Primary Malignant Neoplasm"
+        },
+        "datasetId": "synthetic_usecases_4beacon_testingV3"
+    },
+    {
+        "biosampleStatus": {
+            "id": "EFO:0009655",
+            "label": "abnormal sample"
+        },
+        "collectionDate": "2020-09-11",
+        "collectionMoment": "P32Y6M1D",
+        "diagnosticMarkers": [
+            {
+                "id": "RO:0000085",
+                "label": "has_function"
+            }
+        ],
+        "histologicalDiagnosis": {
+            "id": "NCIT:C3778",
+            "label": "Serous Cystadenocarcinoma"
+        },
+        "id": "SAMPLE4",
+        "individualId": "SAMPLE4",
+        "info": {
+            "info": "Bothmetadataandgenomicvariationsinformationaresynthetic."
+        },
+        "measurements": [
+            {
+                "assayCode": {
+                    "id": "UBERON:0001062",
+                    "label": "anatomical entity"
+                },
+                "date": "2019-04-23",
+                "measurementValue": {
+                    "id": "LOINC:26515-7",
+                    "label": "Platelets [#/volume] in Blood"
+                },
+                "notes": "Bear in mind that all this information is synthetic",
+                "observationMoment": {
+                    "iso8601duration": "P53Y8M"
+                },
+                "procedure": {
+                    "procedureCode": {
+                        "id": "OBI:0002657",
+                        "label": "surgical biopsy"
+                    }
+                }
+            }
+        ],
+        "notes": "Bear in mind that all this information is synthetic",
+        "pathologicalStage": {
+            "id": "NCIT:C27977",
+            "label": "Stage IIIA"
+        },
+        "pathologicalTnmFinding": [
+            {
+                "id": "NCIT:C48725",
+                "label": "T2a Stage Finding"
+            }
+        ],
+        "phenotypicFeatures": [
+            {
+                "evidence": {
+                    "reference": {
+                        "id": "ECO:0006017",
+                        "notes": "author statement from published clinical study used in manual assertion"
+                    }
+                },
+                "excluded": "TRUE",
+                "featureType": {
+                    "id": "HP:0000002",
+                    "label": "Abnormality of body height"
+                },
+                "modifiers": {
+                    "id": "HP:0032500",
+                    "label": "Exacerbated by tobacco use"
+                },
+                "notes": "Please note that all this information is synthetic",
+                "onset": {
+                    "days": 5
+                },
+                "resolution": {
+                    "days": 8,
+                    "weeks": 8
+                },
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "sampleOriginDetail": {
+            "id": "UBERON:0000474",
+            "label": "female reproductive system"
+        },
+        "sampleOriginType": {
+            "id": "UBERON:0000992",
+            "label": "ovary"
+        },
+        "sampleProcessing": {
+            "id": "EFO:0009129",
+            "label": "mechanical dissociation"
+        },
+        "sampleStorage": {
+            "id": "OBI:0000915",
+            "label": "freezing storage"
+        },
+        "tumorGrade": {
+            "id": "NCIT:C28080",
+            "label": "Grade 3a"
+        },
+        "tumorProgression": {
+            "id": "NCIT:C84509",
+            "label": "Primary Malignant Neoplasm"
+        },
+        "datasetId": "synthetic_usecases_4beacon_testingV3"
+    },
+    {
+        "biosampleStatus": {
+            "id": "EFO:0009655",
+            "label": "abnormal sample"
+        },
+        "collectionDate": "2020-09-11",
+        "collectionMoment": "P32Y6M1D",
+        "diagnosticMarkers": [
+            {
+                "id": "RO:0000085",
+                "label": "has_function"
+            }
+        ],
+        "histologicalDiagnosis": {
+            "id": "NCIT:C3778",
+            "label": "Serous Cystadenocarcinoma"
+        },
+        "id": "SAMPLE5",
+        "individualId": "SAMPLE5",
+        "info": {
+            "info": "Bothmetadataandgenomicvariationsinformationaresynthetic."
+        },
+        "measurements": [
+            {
+                "assayCode": {
+                    "id": "UBERON:0001062",
+                    "label": "anatomical entity"
+                },
+                "date": "2019-04-23",
+                "measurementValue": {
+                    "id": "LOINC:26515-7",
+                    "label": "Platelets [#/volume] in Blood"
+                },
+                "notes": "Bear in mind that all this information is synthetic",
+                "observationMoment": {
+                    "iso8601duration": "P53Y8M"
+                },
+                "procedure": {
+                    "procedureCode": {
+                        "id": "OBI:0002657",
+                        "label": "surgical biopsy"
+                    }
+                }
+            }
+        ],
+        "notes": "Bear in mind that all this information is synthetic",
+        "pathologicalStage": {
+            "id": "NCIT:C27977",
+            "label": "Stage IIIA"
+        },
+        "pathologicalTnmFinding": [
+            {
+                "id": "NCIT:C48725",
+                "label": "T2a Stage Finding"
+            }
+        ],
+        "phenotypicFeatures": [
+            {
+                "evidence": {
+                    "reference": {
+                        "id": "ECO:0006017",
+                        "notes": "author statement from published clinical study used in manual assertion"
+                    }
+                },
+                "excluded": "TRUE",
+                "featureType": {
+                    "id": "HP:0000002",
+                    "label": "Abnormality of body height"
+                },
+                "modifiers": {
+                    "id": "HP:0032500",
+                    "label": "Exacerbated by tobacco use"
+                },
+                "notes": "Please note that all this information is synthetic",
+                "onset": {
+                    "days": 5
+                },
+                "resolution": {
+                    "days": 8,
+                    "weeks": 8
+                },
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "sampleOriginDetail": {
+            "id": "UBERON:0000474",
+            "label": "female reproductive system"
+        },
+        "sampleOriginType": {
+            "id": "UBERON:0000992",
+            "label": "ovary"
+        },
+        "sampleProcessing": {
+            "id": "EFO:0009129",
+            "label": "mechanical dissociation"
+        },
+        "sampleStorage": {
+            "id": "OBI:0000915",
+            "label": "freezing storage"
+        },
+        "tumorGrade": {
+            "id": "NCIT:C28080",
+            "label": "Grade 3a"
+        },
+        "tumorProgression": {
+            "id": "NCIT:C84509",
+            "label": "Primary Malignant Neoplasm"
+        },
+        "datasetId": "synthetic_usecases_4beacon_testingV3"
+    },
+    {
+        "biosampleStatus": {
+            "id": "EFO:0009655",
+            "label": "abnormal sample"
+        },
+        "collectionDate": "2020-09-11",
+        "collectionMoment": "P32Y6M1D",
+        "diagnosticMarkers": [
+            {
+                "id": "RO:0000085",
+                "label": "has_function"
+            }
+        ],
+        "histologicalDiagnosis": {
+            "id": "NCIT:C3778",
+            "label": "Serous Cystadenocarcinoma"
+        },
+        "id": "SAMPLE6",
+        "individualId": "SAMPLE6",
+        "info": {
+            "info": "Bothmetadataandgenomicvariationsinformationaresynthetic."
+        },
+        "measurements": [
+            {
+                "assayCode": {
+                    "id": "UBERON:0001062",
+                    "label": "anatomical entity"
+                },
+                "date": "2019-04-23",
+                "measurementValue": {
+                    "id": "LOINC:26515-7",
+                    "label": "Platelets [#/volume] in Blood"
+                },
+                "notes": "Bear in mind that all this information is synthetic",
+                "observationMoment": {
+                    "iso8601duration": "P53Y8M"
+                },
+                "procedure": {
+                    "procedureCode": {
+                        "id": "OBI:0002657",
+                        "label": "surgical biopsy"
+                    }
+                }
+            }
+        ],
+        "notes": "Bear in mind that all this information is synthetic",
+        "pathologicalStage": {
+            "id": "NCIT:C27977",
+            "label": "Stage IIIA"
+        },
+        "pathologicalTnmFinding": [
+            {
+                "id": "NCIT:C48725",
+                "label": "T2a Stage Finding"
+            }
+        ],
+        "phenotypicFeatures": [
+            {
+                "evidence": {
+                    "reference": {
+                        "id": "ECO:0006017",
+                        "notes": "author statement from published clinical study used in manual assertion"
+                    }
+                },
+                "excluded": "TRUE",
+                "featureType": {
+                    "id": "HP:0000002",
+                    "label": "Abnormality of body height"
+                },
+                "modifiers": {
+                    "id": "HP:0032500",
+                    "label": "Exacerbated by tobacco use"
+                },
+                "notes": "Please note that all this information is synthetic",
+                "onset": {
+                    "days": 5
+                },
+                "resolution": {
+                    "days": 8,
+                    "weeks": 8
+                },
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "sampleOriginDetail": {
+            "id": "UBERON:0000474",
+            "label": "female reproductive system"
+        },
+        "sampleOriginType": {
+            "id": "UBERON:0000992",
+            "label": "ovary"
+        },
+        "sampleProcessing": {
+            "id": "EFO:0009129",
+            "label": "mechanical dissociation"
+        },
+        "sampleStorage": {
+            "id": "OBI:0000915",
+            "label": "freezing storage"
+        },
+        "tumorGrade": {
+            "id": "NCIT:C28080",
+            "label": "Grade 3a"
+        },
+        "tumorProgression": {
+            "id": "NCIT:C84509",
+            "label": "Primary Malignant Neoplasm"
+        },
+        "datasetId": "synthetic_usecases_4beacon_testingV3"
+    },
+    {
+        "biosampleStatus": {
+            "id": "EFO:0009655",
+            "label": "abnormal sample"
+        },
+        "collectionDate": "2020-09-11",
+        "collectionMoment": "P32Y6M1D",
+        "diagnosticMarkers": [
+            {
+                "id": "RO:0000085",
+                "label": "has_function"
+            }
+        ],
+        "histologicalDiagnosis": {
+            "id": "NCIT:C3778",
+            "label": "Serous Cystadenocarcinoma"
+        },
+        "id": "SAMPLE7",
+        "individualId": "SAMPLE7",
+        "info": {
+            "info": "Bothmetadataandgenomicvariationsinformationaresynthetic."
+        },
+        "measurements": [
+            {
+                "assayCode": {
+                    "id": "UBERON:0001062",
+                    "label": "anatomical entity"
+                },
+                "date": "2019-04-23",
+                "measurementValue": {
+                    "id": "LOINC:26515-7",
+                    "label": "Platelets [#/volume] in Blood"
+                },
+                "notes": "Bear in mind that all this information is synthetic",
+                "observationMoment": {
+                    "iso8601duration": "P53Y8M"
+                },
+                "procedure": {
+                    "procedureCode": {
+                        "id": "OBI:0002657",
+                        "label": "surgical biopsy"
+                    }
+                }
+            }
+        ],
+        "notes": "Bear in mind that all this information is synthetic",
+        "pathologicalStage": {
+            "id": "NCIT:C27977",
+            "label": "Stage IIIA"
+        },
+        "pathologicalTnmFinding": [
+            {
+                "id": "NCIT:C48725",
+                "label": "T2a Stage Finding"
+            }
+        ],
+        "phenotypicFeatures": [
+            {
+                "evidence": {
+                    "reference": {
+                        "id": "ECO:0006017",
+                        "notes": "author statement from published clinical study used in manual assertion"
+                    }
+                },
+                "excluded": "TRUE",
+                "featureType": {
+                    "id": "HP:0000002",
+                    "label": "Abnormality of body height"
+                },
+                "modifiers": {
+                    "id": "HP:0032500",
+                    "label": "Exacerbated by tobacco use"
+                },
+                "notes": "Please note that all this information is synthetic",
+                "onset": {
+                    "days": 5
+                },
+                "resolution": {
+                    "days": 8,
+                    "weeks": 8
+                },
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "sampleOriginDetail": {
+            "id": "UBERON:0000474",
+            "label": "female reproductive system"
+        },
+        "sampleOriginType": {
+            "id": "UBERON:0000992",
+            "label": "ovary"
+        },
+        "sampleProcessing": {
+            "id": "EFO:0009129",
+            "label": "mechanical dissociation"
+        },
+        "sampleStorage": {
+            "id": "OBI:0000915",
+            "label": "freezing storage"
+        },
+        "tumorGrade": {
+            "id": "NCIT:C28080",
+            "label": "Grade 3a"
+        },
+        "tumorProgression": {
+            "id": "NCIT:C84509",
+            "label": "Primary Malignant Neoplasm"
+        },
+        "datasetId": "synthetic_usecases_4beacon_testingV3"
+    },
+    {
+        "biosampleStatus": {
+            "id": "EFO:0009655",
+            "label": "abnormal sample"
+        },
+        "collectionDate": "2020-09-11",
+        "collectionMoment": "P32Y6M1D",
+        "diagnosticMarkers": [
+            {
+                "id": "RO:0000085",
+                "label": "has_function"
+            }
+        ],
+        "histologicalDiagnosis": {
+            "id": "NCIT:C3778",
+            "label": "Serous Cystadenocarcinoma"
+        },
+        "id": "SAMPLE8",
+        "individualId": "SAMPLE8",
+        "info": {
+            "info": "Bothmetadataandgenomicvariationsinformationaresynthetic."
+        },
+        "measurements": [
+            {
+                "assayCode": {
+                    "id": "UBERON:0001062",
+                    "label": "anatomical entity"
+                },
+                "date": "2019-04-23",
+                "measurementValue": {
+                    "id": "LOINC:26515-7",
+                    "label": "Platelets [#/volume] in Blood"
+                },
+                "notes": "Bear in mind that all this information is synthetic",
+                "observationMoment": {
+                    "iso8601duration": "P53Y8M"
+                },
+                "procedure": {
+                    "procedureCode": {
+                        "id": "OBI:0002657",
+                        "label": "surgical biopsy"
+                    }
+                }
+            }
+        ],
+        "notes": "Bear in mind that all this information is synthetic",
+        "pathologicalStage": {
+            "id": "NCIT:C27977",
+            "label": "Stage IIIA"
+        },
+        "pathologicalTnmFinding": [
+            {
+                "id": "NCIT:C48725",
+                "label": "T2a Stage Finding"
+            }
+        ],
+        "phenotypicFeatures": [
+            {
+                "evidence": {
+                    "reference": {
+                        "id": "ECO:0006017",
+                        "notes": "author statement from published clinical study used in manual assertion"
+                    }
+                },
+                "excluded": "TRUE",
+                "featureType": {
+                    "id": "HP:0000002",
+                    "label": "Abnormality of body height"
+                },
+                "modifiers": {
+                    "id": "HP:0032500",
+                    "label": "Exacerbated by tobacco use"
+                },
+                "notes": "Please note that all this information is synthetic",
+                "onset": {
+                    "days": 5
+                },
+                "resolution": {
+                    "days": 8,
+                    "weeks": 8
+                },
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "sampleOriginDetail": {
+            "id": "UBERON:0000474",
+            "label": "female reproductive system"
+        },
+        "sampleOriginType": {
+            "id": "UBERON:0000992",
+            "label": "ovary"
+        },
+        "sampleProcessing": {
+            "id": "EFO:0009129",
+            "label": "mechanical dissociation"
+        },
+        "sampleStorage": {
+            "id": "OBI:0000915",
+            "label": "freezing storage"
+        },
+        "tumorGrade": {
+            "id": "NCIT:C28080",
+            "label": "Grade 3a"
+        },
+        "tumorProgression": {
+            "id": "NCIT:C84509",
+            "label": "Primary Malignant Neoplasm"
+        },
+        "datasetId": "synthetic_usecases_4beacon_testingV3"
+    },
+    {
+        "biosampleStatus": {
+            "id": "EFO:0009655",
+            "label": "abnormal sample"
+        },
+        "collectionDate": "2020-09-11",
+        "collectionMoment": "P32Y6M1D",
+        "diagnosticMarkers": [
+            {
+                "id": "RO:0000085",
+                "label": "has_function"
+            }
+        ],
+        "histologicalDiagnosis": {
+            "id": "NCIT:C3778",
+            "label": "Serous Cystadenocarcinoma"
+        },
+        "id": "SAMPLE9",
+        "individualId": "SAMPLE9",
+        "info": {
+            "info": "Bothmetadataandgenomicvariationsinformationaresynthetic."
+        },
+        "measurements": [
+            {
+                "assayCode": {
+                    "id": "UBERON:0001062",
+                    "label": "anatomical entity"
+                },
+                "date": "2019-04-23",
+                "measurementValue": {
+                    "id": "LOINC:26515-7",
+                    "label": "Platelets [#/volume] in Blood"
+                },
+                "notes": "Bear in mind that all this information is synthetic",
+                "observationMoment": {
+                    "iso8601duration": "P53Y8M"
+                },
+                "procedure": {
+                    "procedureCode": {
+                        "id": "OBI:0002657",
+                        "label": "surgical biopsy"
+                    }
+                }
+            }
+        ],
+        "notes": "Bear in mind that all this information is synthetic",
+        "pathologicalStage": {
+            "id": "NCIT:C27977",
+            "label": "Stage IIIA"
+        },
+        "pathologicalTnmFinding": [
+            {
+                "id": "NCIT:C48725",
+                "label": "T2a Stage Finding"
+            }
+        ],
+        "phenotypicFeatures": [
+            {
+                "evidence": {
+                    "reference": {
+                        "id": "ECO:0006017",
+                        "notes": "author statement from published clinical study used in manual assertion"
+                    }
+                },
+                "excluded": "TRUE",
+                "featureType": {
+                    "id": "HP:0000002",
+                    "label": "Abnormality of body height"
+                },
+                "modifiers": {
+                    "id": "HP:0032500",
+                    "label": "Exacerbated by tobacco use"
+                },
+                "notes": "Please note that all this information is synthetic",
+                "onset": {
+                    "days": 5
+                },
+                "resolution": {
+                    "days": 8,
+                    "weeks": 8
+                },
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "sampleOriginDetail": {
+            "id": "UBERON:0000474",
+            "label": "female reproductive system"
+        },
+        "sampleOriginType": {
+            "id": "UBERON:0000992",
+            "label": "ovary"
+        },
+        "sampleProcessing": {
+            "id": "EFO:0009129",
+            "label": "mechanical dissociation"
+        },
+        "sampleStorage": {
+            "id": "OBI:0000915",
+            "label": "freezing storage"
+        },
+        "tumorGrade": {
+            "id": "NCIT:C28080",
+            "label": "Grade 3a"
+        },
+        "tumorProgression": {
+            "id": "NCIT:C84509",
+            "label": "Primary Malignant Neoplasm"
+        },
+        "datasetId": "synthetic_usecases_4beacon_testingV3"
+    },
+    {
+        "biosampleStatus": {
+            "id": "EFO:0009655",
+            "label": "abnormal sample"
+        },
+        "collectionDate": "2020-09-11",
+        "collectionMoment": "P32Y6M1D",
+        "diagnosticMarkers": [
+            {
+                "id": "RO:0000085",
+                "label": "has_function"
+            }
+        ],
+        "histologicalDiagnosis": {
+            "id": "NCIT:C3778",
+            "label": "Serous Cystadenocarcinoma"
+        },
+        "id": "SAMPLE10",
+        "individualId": "SAMPLE10",
+        "info": {
+            "info": "Bothmetadataandgenomicvariationsinformationaresynthetic."
+        },
+        "measurements": [
+            {
+                "assayCode": {
+                    "id": "UBERON:0001062",
+                    "label": "anatomical entity"
+                },
+                "date": "2019-04-23",
+                "measurementValue": {
+                    "id": "LOINC:26515-7",
+                    "label": "Platelets [#/volume] in Blood"
+                },
+                "notes": "Bear in mind that all this information is synthetic",
+                "observationMoment": {
+                    "iso8601duration": "P53Y8M"
+                },
+                "procedure": {
+                    "procedureCode": {
+                        "id": "OBI:0002657",
+                        "label": "surgical biopsy"
+                    }
+                }
+            }
+        ],
+        "notes": "Bear in mind that all this information is synthetic",
+        "pathologicalStage": {
+            "id": "NCIT:C27977",
+            "label": "Stage IIIA"
+        },
+        "pathologicalTnmFinding": [
+            {
+                "id": "NCIT:C48725",
+                "label": "T2a Stage Finding"
+            }
+        ],
+        "phenotypicFeatures": [
+            {
+                "evidence": {
+                    "reference": {
+                        "id": "ECO:0006017",
+                        "notes": "author statement from published clinical study used in manual assertion"
+                    }
+                },
+                "excluded": "TRUE",
+                "featureType": {
+                    "id": "HP:0000002",
+                    "label": "Abnormality of body height"
+                },
+                "modifiers": {
+                    "id": "HP:0032500",
+                    "label": "Exacerbated by tobacco use"
+                },
+                "notes": "Please note that all this information is synthetic",
+                "onset": {
+                    "days": 5
+                },
+                "resolution": {
+                    "days": 8,
+                    "weeks": 8
+                },
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "sampleOriginDetail": {
+            "id": "UBERON:0000474",
+            "label": "female reproductive system"
+        },
+        "sampleOriginType": {
+            "id": "UBERON:0000992",
+            "label": "ovary"
+        },
+        "sampleProcessing": {
+            "id": "EFO:0009129",
+            "label": "mechanical dissociation"
+        },
+        "sampleStorage": {
+            "id": "OBI:0000915",
+            "label": "freezing storage"
+        },
+        "tumorGrade": {
+            "id": "NCIT:C28080",
+            "label": "Grade 3a"
+        },
+        "tumorProgression": {
+            "id": "NCIT:C84509",
+            "label": "Primary Malignant Neoplasm"
+        },
+        "datasetId": "synthetic_usecases_4beacon_testingV3"
+    },
+    {
+        "biosampleStatus": {
+            "id": "EFO:0009655",
+            "label": "abnormal sample"
+        },
+        "collectionDate": "2020-09-11",
+        "collectionMoment": "P32Y6M1D",
+        "diagnosticMarkers": [
+            {
+                "id": "RO:0000085",
+                "label": "has_function"
+            }
+        ],
+        "histologicalDiagnosis": {
+            "id": "NCIT:C3778",
+            "label": "Serous Cystadenocarcinoma"
+        },
+        "id": "SAMPLE11",
+        "individualId": "SAMPLE11",
+        "info": {
+            "info": "Bothmetadataandgenomicvariationsinformationaresynthetic."
+        },
+        "measurements": [
+            {
+                "assayCode": {
+                    "id": "UBERON:0001062",
+                    "label": "anatomical entity"
+                },
+                "date": "2019-04-23",
+                "measurementValue": {
+                    "id": "LOINC:26515-7",
+                    "label": "Platelets [#/volume] in Blood"
+                },
+                "notes": "Bear in mind that all this information is synthetic",
+                "observationMoment": {
+                    "iso8601duration": "P53Y8M"
+                },
+                "procedure": {
+                    "procedureCode": {
+                        "id": "OBI:0002657",
+                        "label": "surgical biopsy"
+                    }
+                }
+            }
+        ],
+        "notes": "Bear in mind that all this information is synthetic",
+        "pathologicalStage": {
+            "id": "NCIT:C27977",
+            "label": "Stage IIIA"
+        },
+        "pathologicalTnmFinding": [
+            {
+                "id": "NCIT:C48725",
+                "label": "T2a Stage Finding"
+            }
+        ],
+        "phenotypicFeatures": [
+            {
+                "evidence": {
+                    "reference": {
+                        "id": "ECO:0006017",
+                        "notes": "author statement from published clinical study used in manual assertion"
+                    }
+                },
+                "excluded": "TRUE",
+                "featureType": {
+                    "id": "HP:0000002",
+                    "label": "Abnormality of body height"
+                },
+                "modifiers": {
+                    "id": "HP:0032500",
+                    "label": "Exacerbated by tobacco use"
+                },
+                "notes": "Please note that all this information is synthetic",
+                "onset": {
+                    "days": 5
+                },
+                "resolution": {
+                    "days": 8,
+                    "weeks": 8
+                },
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "sampleOriginDetail": {
+            "id": "UBERON:0000474",
+            "label": "female reproductive system"
+        },
+        "sampleOriginType": {
+            "id": "UBERON:0000992",
+            "label": "ovary"
+        },
+        "sampleProcessing": {
+            "id": "EFO:0009129",
+            "label": "mechanical dissociation"
+        },
+        "sampleStorage": {
+            "id": "OBI:0000915",
+            "label": "freezing storage"
+        },
+        "tumorGrade": {
+            "id": "NCIT:C28080",
+            "label": "Grade 3a"
+        },
+        "tumorProgression": {
+            "id": "NCIT:C84509",
+            "label": "Primary Malignant Neoplasm"
+        },
+        "datasetId": "synthetic_usecases_4beacon_testingV3"
+    },
+    {
+        "biosampleStatus": {
+            "id": "EFO:0009655",
+            "label": "abnormal sample"
+        },
+        "collectionDate": "2020-09-11",
+        "collectionMoment": "P32Y6M1D",
+        "diagnosticMarkers": [
+            {
+                "id": "RO:0000085",
+                "label": "has_function"
+            }
+        ],
+        "histologicalDiagnosis": {
+            "id": "NCIT:C3778",
+            "label": "Serous Cystadenocarcinoma"
+        },
+        "id": "SAMPLE12",
+        "individualId": "SAMPLE12",
+        "info": {
+            "info": "Bothmetadataandgenomicvariationsinformationaresynthetic."
+        },
+        "measurements": [
+            {
+                "assayCode": {
+                    "id": "UBERON:0001062",
+                    "label": "anatomical entity"
+                },
+                "date": "2019-04-23",
+                "measurementValue": {
+                    "id": "LOINC:26515-7",
+                    "label": "Platelets [#/volume] in Blood"
+                },
+                "notes": "Bear in mind that all this information is synthetic",
+                "observationMoment": {
+                    "iso8601duration": "P53Y8M"
+                },
+                "procedure": {
+                    "procedureCode": {
+                        "id": "OBI:0002657",
+                        "label": "surgical biopsy"
+                    }
+                }
+            }
+        ],
+        "notes": "Bear in mind that all this information is synthetic",
+        "pathologicalStage": {
+            "id": "NCIT:C27977",
+            "label": "Stage IIIA"
+        },
+        "pathologicalTnmFinding": [
+            {
+                "id": "NCIT:C48725",
+                "label": "T2a Stage Finding"
+            }
+        ],
+        "phenotypicFeatures": [
+            {
+                "evidence": {
+                    "reference": {
+                        "id": "ECO:0006017",
+                        "notes": "author statement from published clinical study used in manual assertion"
+                    }
+                },
+                "excluded": "TRUE",
+                "featureType": {
+                    "id": "HP:0000002",
+                    "label": "Abnormality of body height"
+                },
+                "modifiers": {
+                    "id": "HP:0032500",
+                    "label": "Exacerbated by tobacco use"
+                },
+                "notes": "Please note that all this information is synthetic",
+                "onset": {
+                    "days": 5
+                },
+                "resolution": {
+                    "days": 8,
+                    "weeks": 8
+                },
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "sampleOriginDetail": {
+            "id": "UBERON:0000474",
+            "label": "female reproductive system"
+        },
+        "sampleOriginType": {
+            "id": "UBERON:0000992",
+            "label": "ovary"
+        },
+        "sampleProcessing": {
+            "id": "EFO:0009129",
+            "label": "mechanical dissociation"
+        },
+        "sampleStorage": {
+            "id": "OBI:0000915",
+            "label": "freezing storage"
+        },
+        "tumorGrade": {
+            "id": "NCIT:C28080",
+            "label": "Grade 3a"
+        },
+        "tumorProgression": {
+            "id": "NCIT:C84509",
+            "label": "Primary Malignant Neoplasm"
+        },
+        "datasetId": "synthetic_usecases_4beacon_testingV3"
+    },
+    {
+        "biosampleStatus": {
+            "id": "EFO:0009655",
+            "label": "abnormal sample"
+        },
+        "collectionDate": "2020-09-11",
+        "collectionMoment": "P32Y6M1D",
+        "diagnosticMarkers": [
+            {
+                "id": "RO:0000085",
+                "label": "has_function"
+            }
+        ],
+        "histologicalDiagnosis": {
+            "id": "NCIT:C3778",
+            "label": "Serous Cystadenocarcinoma"
+        },
+        "id": "SAMPLE13",
+        "individualId": "SAMPLE13",
+        "info": {
+            "info": "Bothmetadataandgenomicvariationsinformationaresynthetic."
+        },
+        "measurements": [
+            {
+                "assayCode": {
+                    "id": "UBERON:0001062",
+                    "label": "anatomical entity"
+                },
+                "date": "2019-04-23",
+                "measurementValue": {
+                    "id": "LOINC:26515-7",
+                    "label": "Platelets [#/volume] in Blood"
+                },
+                "notes": "Bear in mind that all this information is synthetic",
+                "observationMoment": {
+                    "iso8601duration": "P53Y8M"
+                },
+                "procedure": {
+                    "procedureCode": {
+                        "id": "OBI:0002657",
+                        "label": "surgical biopsy"
+                    }
+                }
+            }
+        ],
+        "notes": "Bear in mind that all this information is synthetic",
+        "pathologicalStage": {
+            "id": "NCIT:C27977",
+            "label": "Stage IIIA"
+        },
+        "pathologicalTnmFinding": [
+            {
+                "id": "NCIT:C48725",
+                "label": "T2a Stage Finding"
+            }
+        ],
+        "phenotypicFeatures": [
+            {
+                "evidence": {
+                    "reference": {
+                        "id": "ECO:0006017",
+                        "notes": "author statement from published clinical study used in manual assertion"
+                    }
+                },
+                "excluded": "TRUE",
+                "featureType": {
+                    "id": "HP:0000002",
+                    "label": "Abnormality of body height"
+                },
+                "modifiers": {
+                    "id": "HP:0032500",
+                    "label": "Exacerbated by tobacco use"
+                },
+                "notes": "Please note that all this information is synthetic",
+                "onset": {
+                    "days": 5
+                },
+                "resolution": {
+                    "days": 8,
+                    "weeks": 8
+                },
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "sampleOriginDetail": {
+            "id": "UBERON:0000474",
+            "label": "female reproductive system"
+        },
+        "sampleOriginType": {
+            "id": "UBERON:0000992",
+            "label": "ovary"
+        },
+        "sampleProcessing": {
+            "id": "EFO:0009129",
+            "label": "mechanical dissociation"
+        },
+        "sampleStorage": {
+            "id": "OBI:0000915",
+            "label": "freezing storage"
+        },
+        "tumorGrade": {
+            "id": "NCIT:C28080",
+            "label": "Grade 3a"
+        },
+        "tumorProgression": {
+            "id": "NCIT:C84509",
+            "label": "Primary Malignant Neoplasm"
+        },
+        "datasetId": "synthetic_usecases_4beacon_testingV3"
+    },
+    {
+        "biosampleStatus": {
+            "id": "EFO:0009655",
+            "label": "abnormal sample"
+        },
+        "collectionDate": "2020-09-11",
+        "collectionMoment": "P32Y6M1D",
+        "diagnosticMarkers": [
+            {
+                "id": "RO:0000085",
+                "label": "has_function"
+            }
+        ],
+        "histologicalDiagnosis": {
+            "id": "NCIT:C3778",
+            "label": "Serous Cystadenocarcinoma"
+        },
+        "id": "SAMPLE14",
+        "individualId": "SAMPLE14",
+        "info": {
+            "info": "Bothmetadataandgenomicvariationsinformationaresynthetic."
+        },
+        "measurements": [
+            {
+                "assayCode": {
+                    "id": "UBERON:0001062",
+                    "label": "anatomical entity"
+                },
+                "date": "2019-04-23",
+                "measurementValue": {
+                    "id": "LOINC:26515-7",
+                    "label": "Platelets [#/volume] in Blood"
+                },
+                "notes": "Bear in mind that all this information is synthetic",
+                "observationMoment": {
+                    "iso8601duration": "P53Y8M"
+                },
+                "procedure": {
+                    "procedureCode": {
+                        "id": "OBI:0002657",
+                        "label": "surgical biopsy"
+                    }
+                }
+            }
+        ],
+        "notes": "Bear in mind that all this information is synthetic",
+        "pathologicalStage": {
+            "id": "NCIT:C27977",
+            "label": "Stage IIIA"
+        },
+        "pathologicalTnmFinding": [
+            {
+                "id": "NCIT:C48725",
+                "label": "T2a Stage Finding"
+            }
+        ],
+        "phenotypicFeatures": [
+            {
+                "evidence": {
+                    "reference": {
+                        "id": "ECO:0006017",
+                        "notes": "author statement from published clinical study used in manual assertion"
+                    }
+                },
+                "excluded": "TRUE",
+                "featureType": {
+                    "id": "HP:0000002",
+                    "label": "Abnormality of body height"
+                },
+                "modifiers": {
+                    "id": "HP:0032500",
+                    "label": "Exacerbated by tobacco use"
+                },
+                "notes": "Please note that all this information is synthetic",
+                "onset": {
+                    "days": 5
+                },
+                "resolution": {
+                    "days": 8,
+                    "weeks": 8
+                },
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "sampleOriginDetail": {
+            "id": "UBERON:0000474",
+            "label": "female reproductive system"
+        },
+        "sampleOriginType": {
+            "id": "UBERON:0000992",
+            "label": "ovary"
+        },
+        "sampleProcessing": {
+            "id": "EFO:0009129",
+            "label": "mechanical dissociation"
+        },
+        "sampleStorage": {
+            "id": "OBI:0000915",
+            "label": "freezing storage"
+        },
+        "tumorGrade": {
+            "id": "NCIT:C28080",
+            "label": "Grade 3a"
+        },
+        "tumorProgression": {
+            "id": "NCIT:C84509",
+            "label": "Primary Malignant Neoplasm"
+        },
+        "datasetId": "synthetic_usecases_4beacon_testingV3"
+    },
+    {
+        "biosampleStatus": {
+            "id": "EFO:0009655",
+            "label": "abnormal sample"
+        },
+        "collectionDate": "2020-09-11",
+        "collectionMoment": "P32Y6M1D",
+        "diagnosticMarkers": [
+            {
+                "id": "RO:0000085",
+                "label": "has_function"
+            }
+        ],
+        "histologicalDiagnosis": {
+            "id": "NCIT:C3778",
+            "label": "Serous Cystadenocarcinoma"
+        },
+        "id": "SAMPLE15",
+        "individualId": "SAMPLE15",
+        "info": {
+            "info": "Bothmetadataandgenomicvariationsinformationaresynthetic."
+        },
+        "measurements": [
+            {
+                "assayCode": {
+                    "id": "UBERON:0001062",
+                    "label": "anatomical entity"
+                },
+                "date": "2019-04-23",
+                "measurementValue": {
+                    "id": "LOINC:26515-7",
+                    "label": "Platelets [#/volume] in Blood"
+                },
+                "notes": "Bear in mind that all this information is synthetic",
+                "observationMoment": {
+                    "iso8601duration": "P53Y8M"
+                },
+                "procedure": {
+                    "procedureCode": {
+                        "id": "OBI:0002657",
+                        "label": "surgical biopsy"
+                    }
+                }
+            }
+        ],
+        "notes": "Bear in mind that all this information is synthetic",
+        "pathologicalStage": {
+            "id": "NCIT:C27977",
+            "label": "Stage IIIA"
+        },
+        "pathologicalTnmFinding": [
+            {
+                "id": "NCIT:C48725",
+                "label": "T2a Stage Finding"
+            }
+        ],
+        "phenotypicFeatures": [
+            {
+                "evidence": {
+                    "reference": {
+                        "id": "ECO:0006017",
+                        "notes": "author statement from published clinical study used in manual assertion"
+                    }
+                },
+                "excluded": "TRUE",
+                "featureType": {
+                    "id": "HP:0000002",
+                    "label": "Abnormality of body height"
+                },
+                "modifiers": {
+                    "id": "HP:0032500",
+                    "label": "Exacerbated by tobacco use"
+                },
+                "notes": "Please note that all this information is synthetic",
+                "onset": {
+                    "days": 5
+                },
+                "resolution": {
+                    "days": 8,
+                    "weeks": 8
+                },
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "sampleOriginDetail": {
+            "id": "UBERON:0000474",
+            "label": "female reproductive system"
+        },
+        "sampleOriginType": {
+            "id": "UBERON:0000992",
+            "label": "ovary"
+        },
+        "sampleProcessing": {
+            "id": "EFO:0009129",
+            "label": "mechanical dissociation"
+        },
+        "sampleStorage": {
+            "id": "OBI:0000915",
+            "label": "freezing storage"
+        },
+        "tumorGrade": {
+            "id": "NCIT:C28080",
+            "label": "Grade 3a"
+        },
+        "tumorProgression": {
+            "id": "NCIT:C84509",
+            "label": "Primary Malignant Neoplasm"
+        },
+        "datasetId": "synthetic_usecases_4beacon_testingV3"
+    },
+    {
+        "biosampleStatus": {
+            "id": "EFO:0009655",
+            "label": "abnormal sample"
+        },
+        "collectionDate": "2020-09-11",
+        "collectionMoment": "P32Y6M1D",
+        "diagnosticMarkers": [
+            {
+                "id": "RO:0000085",
+                "label": "has_function"
+            }
+        ],
+        "histologicalDiagnosis": {
+            "id": "NCIT:C3778",
+            "label": "Serous Cystadenocarcinoma"
+        },
+        "id": "SAMPLE16",
+        "individualId": "SAMPLE16",
+        "info": {
+            "info": "Bothmetadataandgenomicvariationsinformationaresynthetic."
+        },
+        "measurements": [
+            {
+                "assayCode": {
+                    "id": "UBERON:0001062",
+                    "label": "anatomical entity"
+                },
+                "date": "2019-04-23",
+                "measurementValue": {
+                    "id": "LOINC:26515-7",
+                    "label": "Platelets [#/volume] in Blood"
+                },
+                "notes": "Bear in mind that all this information is synthetic",
+                "observationMoment": {
+                    "iso8601duration": "P53Y8M"
+                },
+                "procedure": {
+                    "procedureCode": {
+                        "id": "OBI:0002657",
+                        "label": "surgical biopsy"
+                    }
+                }
+            }
+        ],
+        "notes": "Bear in mind that all this information is synthetic",
+        "pathologicalStage": {
+            "id": "NCIT:C27977",
+            "label": "Stage IIIA"
+        },
+        "pathologicalTnmFinding": [
+            {
+                "id": "NCIT:C48725",
+                "label": "T2a Stage Finding"
+            }
+        ],
+        "phenotypicFeatures": [
+            {
+                "evidence": {
+                    "reference": {
+                        "id": "ECO:0006017",
+                        "notes": "author statement from published clinical study used in manual assertion"
+                    }
+                },
+                "excluded": "TRUE",
+                "featureType": {
+                    "id": "HP:0000002",
+                    "label": "Abnormality of body height"
+                },
+                "modifiers": {
+                    "id": "HP:0032500",
+                    "label": "Exacerbated by tobacco use"
+                },
+                "notes": "Please note that all this information is synthetic",
+                "onset": {
+                    "days": 5
+                },
+                "resolution": {
+                    "days": 8,
+                    "weeks": 8
+                },
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "sampleOriginDetail": {
+            "id": "UBERON:0000474",
+            "label": "female reproductive system"
+        },
+        "sampleOriginType": {
+            "id": "UBERON:0000992",
+            "label": "ovary"
+        },
+        "sampleProcessing": {
+            "id": "EFO:0009129",
+            "label": "mechanical dissociation"
+        },
+        "sampleStorage": {
+            "id": "OBI:0000915",
+            "label": "freezing storage"
+        },
+        "tumorGrade": {
+            "id": "NCIT:C28080",
+            "label": "Grade 3a"
+        },
+        "tumorProgression": {
+            "id": "NCIT:C84509",
+            "label": "Primary Malignant Neoplasm"
+        },
+        "datasetId": "synthetic_usecases_4beacon_testingV3"
+    },
+    {
+        "biosampleStatus": {
+            "id": "EFO:0009655",
+            "label": "abnormal sample"
+        },
+        "collectionDate": "2020-09-11",
+        "collectionMoment": "P32Y6M1D",
+        "diagnosticMarkers": [
+            {
+                "id": "RO:0000085",
+                "label": "has_function"
+            }
+        ],
+        "histologicalDiagnosis": {
+            "id": "NCIT:C3778",
+            "label": "Serous Cystadenocarcinoma"
+        },
+        "id": "SAMPLE17",
+        "individualId": "SAMPLE17",
+        "info": {
+            "info": "Bothmetadataandgenomicvariationsinformationaresynthetic."
+        },
+        "measurements": [
+            {
+                "assayCode": {
+                    "id": "UBERON:0001062",
+                    "label": "anatomical entity"
+                },
+                "date": "2019-04-23",
+                "measurementValue": {
+                    "id": "LOINC:26515-7",
+                    "label": "Platelets [#/volume] in Blood"
+                },
+                "notes": "Bear in mind that all this information is synthetic",
+                "observationMoment": {
+                    "iso8601duration": "P53Y8M"
+                },
+                "procedure": {
+                    "procedureCode": {
+                        "id": "OBI:0002657",
+                        "label": "surgical biopsy"
+                    }
+                }
+            }
+        ],
+        "notes": "Bear in mind that all this information is synthetic",
+        "pathologicalStage": {
+            "id": "NCIT:C27977",
+            "label": "Stage IIIA"
+        },
+        "pathologicalTnmFinding": [
+            {
+                "id": "NCIT:C48725",
+                "label": "T2a Stage Finding"
+            }
+        ],
+        "phenotypicFeatures": [
+            {
+                "evidence": {
+                    "reference": {
+                        "id": "ECO:0006017",
+                        "notes": "author statement from published clinical study used in manual assertion"
+                    }
+                },
+                "excluded": "TRUE",
+                "featureType": {
+                    "id": "HP:0000002",
+                    "label": "Abnormality of body height"
+                },
+                "modifiers": {
+                    "id": "HP:0032500",
+                    "label": "Exacerbated by tobacco use"
+                },
+                "notes": "Please note that all this information is synthetic",
+                "onset": {
+                    "days": 5
+                },
+                "resolution": {
+                    "days": 8,
+                    "weeks": 8
+                },
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "sampleOriginDetail": {
+            "id": "UBERON:0000474",
+            "label": "female reproductive system"
+        },
+        "sampleOriginType": {
+            "id": "UBERON:0000992",
+            "label": "ovary"
+        },
+        "sampleProcessing": {
+            "id": "EFO:0009129",
+            "label": "mechanical dissociation"
+        },
+        "sampleStorage": {
+            "id": "OBI:0000915",
+            "label": "freezing storage"
+        },
+        "tumorGrade": {
+            "id": "NCIT:C28080",
+            "label": "Grade 3a"
+        },
+        "tumorProgression": {
+            "id": "NCIT:C84509",
+            "label": "Primary Malignant Neoplasm"
+        },
+        "datasetId": "synthetic_usecases_4beacon_testingV3"
+    },
+    {
+        "biosampleStatus": {
+            "id": "EFO:0009655",
+            "label": "abnormal sample"
+        },
+        "collectionDate": "2020-09-11",
+        "collectionMoment": "P32Y6M1D",
+        "diagnosticMarkers": [
+            {
+                "id": "RO:0000085",
+                "label": "has_function"
+            }
+        ],
+        "histologicalDiagnosis": {
+            "id": "NCIT:C3778",
+            "label": "Serous Cystadenocarcinoma"
+        },
+        "id": "SAMPLE18",
+        "individualId": "SAMPLE18",
+        "info": {
+            "info": "Bothmetadataandgenomicvariationsinformationaresynthetic."
+        },
+        "measurements": [
+            {
+                "assayCode": {
+                    "id": "UBERON:0001062",
+                    "label": "anatomical entity"
+                },
+                "date": "2019-04-23",
+                "measurementValue": {
+                    "id": "LOINC:26515-7",
+                    "label": "Platelets [#/volume] in Blood"
+                },
+                "notes": "Bear in mind that all this information is synthetic",
+                "observationMoment": {
+                    "iso8601duration": "P53Y8M"
+                },
+                "procedure": {
+                    "procedureCode": {
+                        "id": "OBI:0002657",
+                        "label": "surgical biopsy"
+                    }
+                }
+            }
+        ],
+        "notes": "Bear in mind that all this information is synthetic",
+        "pathologicalStage": {
+            "id": "NCIT:C27977",
+            "label": "Stage IIIA"
+        },
+        "pathologicalTnmFinding": [
+            {
+                "id": "NCIT:C48725",
+                "label": "T2a Stage Finding"
+            }
+        ],
+        "phenotypicFeatures": [
+            {
+                "evidence": {
+                    "reference": {
+                        "id": "ECO:0006017",
+                        "notes": "author statement from published clinical study used in manual assertion"
+                    }
+                },
+                "excluded": "TRUE",
+                "featureType": {
+                    "id": "HP:0000002",
+                    "label": "Abnormality of body height"
+                },
+                "modifiers": {
+                    "id": "HP:0032500",
+                    "label": "Exacerbated by tobacco use"
+                },
+                "notes": "Please note that all this information is synthetic",
+                "onset": {
+                    "days": 5
+                },
+                "resolution": {
+                    "days": 8,
+                    "weeks": 8
+                },
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "sampleOriginDetail": {
+            "id": "UBERON:0000474",
+            "label": "female reproductive system"
+        },
+        "sampleOriginType": {
+            "id": "UBERON:0000992",
+            "label": "ovary"
+        },
+        "sampleProcessing": {
+            "id": "EFO:0009129",
+            "label": "mechanical dissociation"
+        },
+        "sampleStorage": {
+            "id": "OBI:0000915",
+            "label": "freezing storage"
+        },
+        "tumorGrade": {
+            "id": "NCIT:C28080",
+            "label": "Grade 3a"
+        },
+        "tumorProgression": {
+            "id": "NCIT:C84509",
+            "label": "Primary Malignant Neoplasm"
+        },
+        "datasetId": "synthetic_usecases_4beacon_testingV3"
+    },
+    {
+        "biosampleStatus": {
+            "id": "EFO:0009655",
+            "label": "abnormal sample"
+        },
+        "collectionDate": "2020-09-11",
+        "collectionMoment": "P32Y6M1D",
+        "diagnosticMarkers": [
+            {
+                "id": "RO:0000085",
+                "label": "has_function"
+            }
+        ],
+        "histologicalDiagnosis": {
+            "id": "NCIT:C3778",
+            "label": "Serous Cystadenocarcinoma"
+        },
+        "id": "SAMPLE19",
+        "individualId": "SAMPLE19",
+        "info": {
+            "info": "Bothmetadataandgenomicvariationsinformationaresynthetic."
+        },
+        "measurements": [
+            {
+                "assayCode": {
+                    "id": "UBERON:0001062",
+                    "label": "anatomical entity"
+                },
+                "date": "2019-04-23",
+                "measurementValue": {
+                    "id": "LOINC:26515-7",
+                    "label": "Platelets [#/volume] in Blood"
+                },
+                "notes": "Bear in mind that all this information is synthetic",
+                "observationMoment": {
+                    "iso8601duration": "P53Y8M"
+                },
+                "procedure": {
+                    "procedureCode": {
+                        "id": "OBI:0002657",
+                        "label": "surgical biopsy"
+                    }
+                }
+            }
+        ],
+        "notes": "Bear in mind that all this information is synthetic",
+        "pathologicalStage": {
+            "id": "NCIT:C27977",
+            "label": "Stage IIIA"
+        },
+        "pathologicalTnmFinding": [
+            {
+                "id": "NCIT:C48725",
+                "label": "T2a Stage Finding"
+            }
+        ],
+        "phenotypicFeatures": [
+            {
+                "evidence": {
+                    "reference": {
+                        "id": "ECO:0006017",
+                        "notes": "author statement from published clinical study used in manual assertion"
+                    }
+                },
+                "excluded": "TRUE",
+                "featureType": {
+                    "id": "HP:0000002",
+                    "label": "Abnormality of body height"
+                },
+                "modifiers": {
+                    "id": "HP:0032500",
+                    "label": "Exacerbated by tobacco use"
+                },
+                "notes": "Please note that all this information is synthetic",
+                "onset": {
+                    "days": 5
+                },
+                "resolution": {
+                    "days": 8,
+                    "weeks": 8
+                },
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "sampleOriginDetail": {
+            "id": "UBERON:0000474",
+            "label": "female reproductive system"
+        },
+        "sampleOriginType": {
+            "id": "UBERON:0000992",
+            "label": "ovary"
+        },
+        "sampleProcessing": {
+            "id": "EFO:0009129",
+            "label": "mechanical dissociation"
+        },
+        "sampleStorage": {
+            "id": "OBI:0000915",
+            "label": "freezing storage"
+        },
+        "tumorGrade": {
+            "id": "NCIT:C28080",
+            "label": "Grade 3a"
+        },
+        "tumorProgression": {
+            "id": "NCIT:C84509",
+            "label": "Primary Malignant Neoplasm"
+        },
+        "datasetId": "synthetic_usecases_4beacon_testingV3"
+    },
+    {
+        "biosampleStatus": {
+            "id": "EFO:0009655",
+            "label": "abnormal sample"
+        },
+        "collectionDate": "2020-09-11",
+        "collectionMoment": "P32Y6M1D",
+        "diagnosticMarkers": [
+            {
+                "id": "RO:0000085",
+                "label": "has_function"
+            }
+        ],
+        "histologicalDiagnosis": {
+            "id": "NCIT:C3778",
+            "label": "Serous Cystadenocarcinoma"
+        },
+        "id": "SAMPLE20",
+        "individualId": "SAMPLE20",
+        "info": {
+            "info": "Bothmetadataandgenomicvariationsinformationaresynthetic."
+        },
+        "measurements": [
+            {
+                "assayCode": {
+                    "id": "UBERON:0001062",
+                    "label": "anatomical entity"
+                },
+                "date": "2019-04-23",
+                "measurementValue": {
+                    "id": "LOINC:26515-7",
+                    "label": "Platelets [#/volume] in Blood"
+                },
+                "notes": "Bear in mind that all this information is synthetic",
+                "observationMoment": {
+                    "iso8601duration": "P53Y8M"
+                },
+                "procedure": {
+                    "procedureCode": {
+                        "id": "OBI:0002657",
+                        "label": "surgical biopsy"
+                    }
+                }
+            }
+        ],
+        "notes": "Bear in mind that all this information is synthetic",
+        "pathologicalStage": {
+            "id": "NCIT:C27977",
+            "label": "Stage IIIA"
+        },
+        "pathologicalTnmFinding": [
+            {
+                "id": "NCIT:C48725",
+                "label": "T2a Stage Finding"
+            }
+        ],
+        "phenotypicFeatures": [
+            {
+                "evidence": {
+                    "reference": {
+                        "id": "ECO:0006017",
+                        "notes": "author statement from published clinical study used in manual assertion"
+                    }
+                },
+                "excluded": "TRUE",
+                "featureType": {
+                    "id": "HP:0000002",
+                    "label": "Abnormality of body height"
+                },
+                "modifiers": {
+                    "id": "HP:0032500",
+                    "label": "Exacerbated by tobacco use"
+                },
+                "notes": "Please note that all this information is synthetic",
+                "onset": {
+                    "days": 5
+                },
+                "resolution": {
+                    "days": 8,
+                    "weeks": 8
+                },
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "sampleOriginDetail": {
+            "id": "UBERON:0000474",
+            "label": "female reproductive system"
+        },
+        "sampleOriginType": {
+            "id": "UBERON:0000992",
+            "label": "ovary"
+        },
+        "sampleProcessing": {
+            "id": "EFO:0009129",
+            "label": "mechanical dissociation"
+        },
+        "sampleStorage": {
+            "id": "OBI:0000915",
+            "label": "freezing storage"
+        },
+        "tumorGrade": {
+            "id": "NCIT:C28080",
+            "label": "Grade 3a"
+        },
+        "tumorProgression": {
+            "id": "NCIT:C84509",
+            "label": "Primary Malignant Neoplasm"
+        },
+        "datasetId": "synthetic_usecases_4beacon_testingV3"
+    }
+]

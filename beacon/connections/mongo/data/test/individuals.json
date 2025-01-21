@@ -1,0 +1,4062 @@
+[
+    {
+        "diseases": [
+            {
+                "ageOfOnset": {
+                    "id": "NCIT:C16731",
+                    "label": "Neonate"
+                },
+                "diseaseCode": {
+                    "id": "MONDO:0004975",
+                    "label": "Cystic fibrosis"
+                },
+                "familyHistory": true,
+                "notes": "Bear in mind that all information is synthetic",
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "ethnicity": {
+            "id": "NCIT:C43851",
+            "label": "European"
+        },
+        "exposures": [
+            {
+                "ageAtExposure": {
+                    "iso8601duration": "P32Y6M1D"
+                },
+                "date": "2024-09-25",
+                "duration": "14 months",
+                "exposureCode": {
+                    "id": "CHEBI:46661",
+                    "label": "asbestos"
+                },
+                "unit": {
+                    "id": "NCIT:C28253",
+                    "label": "Milligram"
+                }
+            }
+        ],
+        "geographicOrigin": {
+            "id": "GAZ:00002586",
+            "label": "State of Wisconsin"
+        },
+        "id": "SAMPLE1",
+        "interventionsOrProcedures": [
+            {
+                "bodySite": {
+                    "id": "FMAID:7195",
+                    "label": "lung"
+                },
+                "dateOfProcedure": "2024-12-24",
+                "procedureCode": {
+                    "id": "OBI:0002657",
+                    "label": "surgical biopsy"
+                }
+            }
+        ],
+        "karyotypicSex": "XX,XY",
+        "measures": [
+            {
+                "assayCode": {
+                    "id": "UBERON:0001062",
+                    "label": "anatomical entity"
+                },
+                "date": "2024-11-08",
+                "measurementValue": [
+                    {
+                        "referenceRange": {
+                            "high": "50",
+                            "low": "20",
+                            "unit": {
+                                "id": "NCIT:C28253",
+                                "label": "Milligram"
+                            }
+                        },
+                        "unit": {
+                            "id": "NCIT:C28253",
+                            "label": "Milligram"
+                        },
+                        "value": "50"
+                    }
+                ],
+                "notes": "Bear in mind that all this information is synthetic",
+                "observationMoment": {
+                    "iso8601duration": "P32Y6M1D"
+                },
+                "procedure": {
+                    "ageAtProcedure": "1999-08-05T17:21:00+01:00",
+                    "bodySite": {
+                        "id": "FMAID:7195",
+                        "label": "lung"
+                    },
+                    "dateOfProcedure": "2024-08-15",
+                    "procedureCode": {
+                        "id": "OBI:0002657",
+                        "label": "surgical biopsy"
+                    }
+                }
+            }
+        ],
+        "pedigrees": [
+            {
+                "disease": {
+                    "diseaseCode": {
+                        "id": "HP:0001645",
+                        "label": "Sudden cardiac death"
+                    },
+                    "familyHistory": true,
+                    "notes": "Bear in mind that all this information is synthetic ",
+                    "severity": {
+                        "id": "HP:0012828",
+                        "label": "Severe"
+                    },
+                    "stage": {
+                        "id": "OGMS:0000103",
+                        "label": "Disease stage"
+                    }
+                },
+                "id": "SCD-Pedigree001",
+                "members": [
+                    {
+                        "affected": true,
+                        "memberId": "Ind001",
+                        "role": {
+                            "id": "NCIT:C64435",
+                            "label": "Proband"
+                        }
+                    },
+                    {
+                        "affected": true,
+                        "memberId": "Ind002",
+                        "role": {
+                            "id": "NCIT:C96572",
+                            "label": "Father"
+                        }
+                    },
+                    {
+                        "affected": true,
+                        "memberId": "Ind003",
+                        "role": {
+                            "id": "NCIT:C111201",
+                            "label": "Full Brother"
+                        }
+                    }
+                ]
+            }
+        ],
+        "phenotypicFeatures": [
+            {
+                "evidence": {
+                    "evidenceCode": {
+                        "id": "ECO:0006017",
+                        "label": "author statement from published clinical study used in manual assertion"
+                    }
+                },
+                "excluded": true,
+                "featureType": {
+                    "id": "HP:0000002",
+                    "label": "Abnormality of body height"
+                },
+                "modifiers": [
+                    {
+                        "id": "HP:0032500",
+                        "label": "Exacerbated by tobacco use"
+                    }
+                ],
+                "notes": "Please note that all this information is synthetic",
+                "onset": {
+                    "id": "HP:0011463",
+                    "label": "Infantile onset"
+                },
+                "resolution": {
+                    "days": "8",
+                    "weeks": "8"
+                },
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "sex": {
+            "id": "NCIT:C16576",
+            "label": "female"
+        },
+        "treatments": [
+            {
+                "ageAtOnset": {
+                    "iso8601duration": "P1Y1"
+                },
+                "routeOfAdministration": {
+                    "id": "NCIT:C38288",
+                    "label": "Oral Route of Administration"
+                },
+                "treatmentCode": {
+                    "id": "OGMS:0000113",
+                    "label": "chemotherapy procedure"
+                }
+            }
+        ],
+        "datasetId": "synthetic_usecases_4beacon_testingV3"
+    },
+    {
+        "diseases": [
+            {
+                "ageOfOnset": {
+                    "id": "NCIT:C16731",
+                    "label": "Neonate"
+                },
+                "diseaseCode": {
+                    "id": "MONDO:0004975",
+                    "label": "Cystic fibrosis"
+                },
+                "familyHistory": true,
+                "notes": "Bear in mind that all information is synthetic",
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "ethnicity": {
+            "id": "NCIT:C43851",
+            "label": "European"
+        },
+        "exposures": [
+            {
+                "ageAtExposure": {
+                    "iso8601duration": "P32Y6M1D"
+                },
+                "date": "2024-09-25",
+                "duration": "14 months",
+                "exposureCode": {
+                    "id": "CHEBI:46661",
+                    "label": "asbestos"
+                },
+                "unit": {
+                    "id": "NCIT:C28253",
+                    "label": "Milligram"
+                }
+            }
+        ],
+        "geographicOrigin": {
+            "id": "GAZ:00002586",
+            "label": "State of Wisconsin"
+        },
+        "id": "SAMPLE2",
+        "interventionsOrProcedures": [
+            {
+                "bodySite": {
+                    "id": "FMAID:7195",
+                    "label": "lung"
+                },
+                "dateOfProcedure": "2024-12-24",
+                "procedureCode": {
+                    "id": "OBI:0002657",
+                    "label": "surgical biopsy"
+                }
+            }
+        ],
+        "karyotypicSex": "XX,XY",
+        "measures": [
+            {
+                "assayCode": {
+                    "id": "UBERON:0001062",
+                    "label": "anatomical entity"
+                },
+                "date": "2024-11-08",
+                "measurementValue": [
+                    {
+                        "referenceRange": {
+                            "high": "50",
+                            "low": "20",
+                            "unit": {
+                                "id": "NCIT:C28253",
+                                "label": "Milligram"
+                            }
+                        },
+                        "unit": {
+                            "id": "NCIT:C28253",
+                            "label": "Milligram"
+                        },
+                        "value": "50"
+                    }
+                ],
+                "notes": "Bear in mind that all this information is synthetic",
+                "observationMoment": {
+                    "iso8601duration": "P32Y6M1D"
+                },
+                "procedure": {
+                    "ageAtProcedure": "1999-08-05T17:21:00+01:00",
+                    "bodySite": {
+                        "id": "FMAID:7195",
+                        "label": "lung"
+                    },
+                    "dateOfProcedure": "2024-08-15",
+                    "procedureCode": {
+                        "id": "OBI:0002657",
+                        "label": "surgical biopsy"
+                    }
+                }
+            }
+        ],
+        "pedigrees": [
+            {
+                "disease": {
+                    "diseaseCode": {
+                        "id": "HP:0001645",
+                        "label": "Sudden cardiac death"
+                    },
+                    "familyHistory": true,
+                    "notes": "Bear in mind that all this information is synthetic ",
+                    "severity": {
+                        "id": "HP:0012828",
+                        "label": "Severe"
+                    },
+                    "stage": {
+                        "id": "OGMS:0000103",
+                        "label": "Disease stage"
+                    }
+                },
+                "id": "SCD-Pedigree001",
+                "members": [
+                    {
+                        "affected": true,
+                        "memberId": "Ind001",
+                        "role": {
+                            "id": "NCIT:C64435",
+                            "label": "Proband"
+                        }
+                    },
+                    {
+                        "affected": true,
+                        "memberId": "Ind002",
+                        "role": {
+                            "id": "NCIT:C96572",
+                            "label": "Father"
+                        }
+                    },
+                    {
+                        "affected": true,
+                        "memberId": "Ind003",
+                        "role": {
+                            "id": "NCIT:C111201",
+                            "label": "Full Brother"
+                        }
+                    }
+                ]
+            }
+        ],
+        "phenotypicFeatures": [
+            {
+                "evidence": {
+                    "evidenceCode": {
+                        "id": "ECO:0006017",
+                        "label": "author statement from published clinical study used in manual assertion"
+                    }
+                },
+                "excluded": true,
+                "featureType": {
+                    "id": "HP:0000002",
+                    "label": "Abnormality of body height"
+                },
+                "modifiers": [
+                    {
+                        "id": "HP:0032500",
+                        "label": "Exacerbated by tobacco use"
+                    }
+                ],
+                "notes": "Please note that all this information is synthetic",
+                "onset": {
+                    "id": "HP:0011463",
+                    "label": "Infantile onset"
+                },
+                "resolution": {
+                    "days": "8",
+                    "weeks": "8"
+                },
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "sex": {
+            "id": "NCIT:C16576",
+            "label": "female"
+        },
+        "treatments": [
+            {
+                "ageAtOnset": {
+                    "iso8601duration": "P1Y1"
+                },
+                "routeOfAdministration": {
+                    "id": "NCIT:C38288",
+                    "label": "Oral Route of Administration"
+                },
+                "treatmentCode": {
+                    "id": "OGMS:0000113",
+                    "label": "chemotherapy procedure"
+                }
+            }
+        ],
+        "datasetId": "synthetic_usecases_4beacon_testingV3"
+    },
+    {
+        "diseases": [
+            {
+                "ageOfOnset": {
+                    "id": "NCIT:C16731",
+                    "label": "Neonate"
+                },
+                "diseaseCode": {
+                    "id": "MONDO:0004975",
+                    "label": "Cystic fibrosis"
+                },
+                "familyHistory": true,
+                "notes": "Bear in mind that all information is synthetic",
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "ethnicity": {
+            "id": "NCIT:C43851",
+            "label": "European"
+        },
+        "exposures": [
+            {
+                "ageAtExposure": {
+                    "iso8601duration": "P32Y6M1D"
+                },
+                "date": "2024-09-25",
+                "duration": "14 months",
+                "exposureCode": {
+                    "id": "CHEBI:46661",
+                    "label": "asbestos"
+                },
+                "unit": {
+                    "id": "NCIT:C28253",
+                    "label": "Milligram"
+                }
+            }
+        ],
+        "geographicOrigin": {
+            "id": "GAZ:00002586",
+            "label": "State of Wisconsin"
+        },
+        "id": "SAMPLE3",
+        "interventionsOrProcedures": [
+            {
+                "bodySite": {
+                    "id": "FMAID:7195",
+                    "label": "lung"
+                },
+                "dateOfProcedure": "2024-12-24",
+                "procedureCode": {
+                    "id": "OBI:0002657",
+                    "label": "surgical biopsy"
+                }
+            }
+        ],
+        "karyotypicSex": "XX,XY",
+        "measures": [
+            {
+                "assayCode": {
+                    "id": "UBERON:0001062",
+                    "label": "anatomical entity"
+                },
+                "date": "2024-11-08",
+                "measurementValue": [
+                    {
+                        "referenceRange": {
+                            "high": "50",
+                            "low": "20",
+                            "unit": {
+                                "id": "NCIT:C28253",
+                                "label": "Milligram"
+                            }
+                        },
+                        "unit": {
+                            "id": "NCIT:C28253",
+                            "label": "Milligram"
+                        },
+                        "value": "50"
+                    }
+                ],
+                "notes": "Bear in mind that all this information is synthetic",
+                "observationMoment": {
+                    "iso8601duration": "P32Y6M1D"
+                },
+                "procedure": {
+                    "ageAtProcedure": "1999-08-05T17:21:00+01:00",
+                    "bodySite": {
+                        "id": "FMAID:7195",
+                        "label": "lung"
+                    },
+                    "dateOfProcedure": "2024-08-15",
+                    "procedureCode": {
+                        "id": "OBI:0002657",
+                        "label": "surgical biopsy"
+                    }
+                }
+            }
+        ],
+        "pedigrees": [
+            {
+                "disease": {
+                    "diseaseCode": {
+                        "id": "HP:0001645",
+                        "label": "Sudden cardiac death"
+                    },
+                    "familyHistory": true,
+                    "notes": "Bear in mind that all this information is synthetic ",
+                    "severity": {
+                        "id": "HP:0012828",
+                        "label": "Severe"
+                    },
+                    "stage": {
+                        "id": "OGMS:0000103",
+                        "label": "Disease stage"
+                    }
+                },
+                "id": "SCD-Pedigree001",
+                "members": [
+                    {
+                        "affected": true,
+                        "memberId": "Ind001",
+                        "role": {
+                            "id": "NCIT:C64435",
+                            "label": "Proband"
+                        }
+                    },
+                    {
+                        "affected": true,
+                        "memberId": "Ind002",
+                        "role": {
+                            "id": "NCIT:C96572",
+                            "label": "Father"
+                        }
+                    },
+                    {
+                        "affected": true,
+                        "memberId": "Ind003",
+                        "role": {
+                            "id": "NCIT:C111201",
+                            "label": "Full Brother"
+                        }
+                    }
+                ]
+            }
+        ],
+        "phenotypicFeatures": [
+            {
+                "evidence": {
+                    "evidenceCode": {
+                        "id": "ECO:0006017",
+                        "label": "author statement from published clinical study used in manual assertion"
+                    }
+                },
+                "excluded": true,
+                "featureType": {
+                    "id": "HP:0000002",
+                    "label": "Abnormality of body height"
+                },
+                "modifiers": [
+                    {
+                        "id": "HP:0032500",
+                        "label": "Exacerbated by tobacco use"
+                    }
+                ],
+                "notes": "Please note that all this information is synthetic",
+                "onset": {
+                    "id": "HP:0011463",
+                    "label": "Infantile onset"
+                },
+                "resolution": {
+                    "days": "8",
+                    "weeks": "8"
+                },
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "sex": {
+            "id": "NCIT:C16576",
+            "label": "female"
+        },
+        "treatments": [
+            {
+                "ageAtOnset": {
+                    "iso8601duration": "P1Y1"
+                },
+                "routeOfAdministration": {
+                    "id": "NCIT:C38288",
+                    "label": "Oral Route of Administration"
+                },
+                "treatmentCode": {
+                    "id": "OGMS:0000113",
+                    "label": "chemotherapy procedure"
+                }
+            }
+        ],
+        "datasetId": "synthetic_usecases_4beacon_testingV3"
+    },
+    {
+        "diseases": [
+            {
+                "ageOfOnset": {
+                    "id": "NCIT:C16731",
+                    "label": "Neonate"
+                },
+                "diseaseCode": {
+                    "id": "MONDO:0004975",
+                    "label": "Cystic fibrosis"
+                },
+                "familyHistory": true,
+                "notes": "Bear in mind that all information is synthetic",
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "ethnicity": {
+            "id": "NCIT:C43851",
+            "label": "European"
+        },
+        "exposures": [
+            {
+                "ageAtExposure": {
+                    "iso8601duration": "P32Y6M1D"
+                },
+                "date": "2024-09-25",
+                "duration": "14 months",
+                "exposureCode": {
+                    "id": "CHEBI:46661",
+                    "label": "asbestos"
+                },
+                "unit": {
+                    "id": "NCIT:C28253",
+                    "label": "Milligram"
+                }
+            }
+        ],
+        "geographicOrigin": {
+            "id": "GAZ:00002586",
+            "label": "State of Wisconsin"
+        },
+        "id": "SAMPLE4",
+        "interventionsOrProcedures": [
+            {
+                "bodySite": {
+                    "id": "FMAID:7195",
+                    "label": "lung"
+                },
+                "dateOfProcedure": "2024-12-24",
+                "procedureCode": {
+                    "id": "OBI:0002657",
+                    "label": "surgical biopsy"
+                }
+            }
+        ],
+        "karyotypicSex": "XX,XY",
+        "measures": [
+            {
+                "assayCode": {
+                    "id": "UBERON:0001062",
+                    "label": "anatomical entity"
+                },
+                "date": "2024-11-08",
+                "measurementValue": [
+                    {
+                        "referenceRange": {
+                            "high": "50",
+                            "low": "20",
+                            "unit": {
+                                "id": "NCIT:C28253",
+                                "label": "Milligram"
+                            }
+                        },
+                        "unit": {
+                            "id": "NCIT:C28253",
+                            "label": "Milligram"
+                        },
+                        "value": "50"
+                    }
+                ],
+                "notes": "Bear in mind that all this information is synthetic",
+                "observationMoment": {
+                    "iso8601duration": "P32Y6M1D"
+                },
+                "procedure": {
+                    "ageAtProcedure": "1999-08-05T17:21:00+01:00",
+                    "bodySite": {
+                        "id": "FMAID:7195",
+                        "label": "lung"
+                    },
+                    "dateOfProcedure": "2024-08-15",
+                    "procedureCode": {
+                        "id": "OBI:0002657",
+                        "label": "surgical biopsy"
+                    }
+                }
+            }
+        ],
+        "pedigrees": [
+            {
+                "disease": {
+                    "diseaseCode": {
+                        "id": "HP:0001645",
+                        "label": "Sudden cardiac death"
+                    },
+                    "familyHistory": true,
+                    "notes": "Bear in mind that all this information is synthetic ",
+                    "severity": {
+                        "id": "HP:0012828",
+                        "label": "Severe"
+                    },
+                    "stage": {
+                        "id": "OGMS:0000103",
+                        "label": "Disease stage"
+                    }
+                },
+                "id": "SCD-Pedigree001",
+                "members": [
+                    {
+                        "affected": true,
+                        "memberId": "Ind001",
+                        "role": {
+                            "id": "NCIT:C64435",
+                            "label": "Proband"
+                        }
+                    },
+                    {
+                        "affected": true,
+                        "memberId": "Ind002",
+                        "role": {
+                            "id": "NCIT:C96572",
+                            "label": "Father"
+                        }
+                    },
+                    {
+                        "affected": true,
+                        "memberId": "Ind003",
+                        "role": {
+                            "id": "NCIT:C111201",
+                            "label": "Full Brother"
+                        }
+                    }
+                ]
+            }
+        ],
+        "phenotypicFeatures": [
+            {
+                "evidence": {
+                    "evidenceCode": {
+                        "id": "ECO:0006017",
+                        "label": "author statement from published clinical study used in manual assertion"
+                    }
+                },
+                "excluded": true,
+                "featureType": {
+                    "id": "HP:0000002",
+                    "label": "Abnormality of body height"
+                },
+                "modifiers": [
+                    {
+                        "id": "HP:0032500",
+                        "label": "Exacerbated by tobacco use"
+                    }
+                ],
+                "notes": "Please note that all this information is synthetic",
+                "onset": {
+                    "id": "HP:0011463",
+                    "label": "Infantile onset"
+                },
+                "resolution": {
+                    "days": "8",
+                    "weeks": "8"
+                },
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "sex": {
+            "id": "NCIT:C16576",
+            "label": "female"
+        },
+        "treatments": [
+            {
+                "ageAtOnset": {
+                    "iso8601duration": "P1Y1"
+                },
+                "routeOfAdministration": {
+                    "id": "NCIT:C38288",
+                    "label": "Oral Route of Administration"
+                },
+                "treatmentCode": {
+                    "id": "OGMS:0000113",
+                    "label": "chemotherapy procedure"
+                }
+            }
+        ],
+        "datasetId": "synthetic_usecases_4beacon_testingV3"
+    },
+    {
+        "diseases": [
+            {
+                "ageOfOnset": {
+                    "id": "NCIT:C16731",
+                    "label": "Neonate"
+                },
+                "diseaseCode": {
+                    "id": "MONDO:0004975",
+                    "label": "Cystic fibrosis"
+                },
+                "familyHistory": true,
+                "notes": "Bear in mind that all information is synthetic",
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "ethnicity": {
+            "id": "NCIT:C43851",
+            "label": "European"
+        },
+        "exposures": [
+            {
+                "ageAtExposure": {
+                    "iso8601duration": "P32Y6M1D"
+                },
+                "date": "2024-09-25",
+                "duration": "14 months",
+                "exposureCode": {
+                    "id": "CHEBI:46661",
+                    "label": "asbestos"
+                },
+                "unit": {
+                    "id": "NCIT:C28253",
+                    "label": "Milligram"
+                }
+            }
+        ],
+        "geographicOrigin": {
+            "id": "GAZ:00002586",
+            "label": "State of Wisconsin"
+        },
+        "id": "SAMPLE5",
+        "interventionsOrProcedures": [
+            {
+                "bodySite": {
+                    "id": "FMAID:7195",
+                    "label": "lung"
+                },
+                "dateOfProcedure": "2024-12-24",
+                "procedureCode": {
+                    "id": "OBI:0002657",
+                    "label": "surgical biopsy"
+                }
+            }
+        ],
+        "karyotypicSex": "XX,XY",
+        "measures": [
+            {
+                "assayCode": {
+                    "id": "UBERON:0001062",
+                    "label": "anatomical entity"
+                },
+                "date": "2024-11-08",
+                "measurementValue": [
+                    {
+                        "referenceRange": {
+                            "high": "50",
+                            "low": "20",
+                            "unit": {
+                                "id": "NCIT:C28253",
+                                "label": "Milligram"
+                            }
+                        },
+                        "unit": {
+                            "id": "NCIT:C28253",
+                            "label": "Milligram"
+                        },
+                        "value": "50"
+                    }
+                ],
+                "notes": "Bear in mind that all this information is synthetic",
+                "observationMoment": {
+                    "iso8601duration": "P32Y6M1D"
+                },
+                "procedure": {
+                    "ageAtProcedure": "1999-08-05T17:21:00+01:00",
+                    "bodySite": {
+                        "id": "FMAID:7195",
+                        "label": "lung"
+                    },
+                    "dateOfProcedure": "2024-08-15",
+                    "procedureCode": {
+                        "id": "OBI:0002657",
+                        "label": "surgical biopsy"
+                    }
+                }
+            }
+        ],
+        "pedigrees": [
+            {
+                "disease": {
+                    "diseaseCode": {
+                        "id": "HP:0001645",
+                        "label": "Sudden cardiac death"
+                    },
+                    "familyHistory": true,
+                    "notes": "Bear in mind that all this information is synthetic ",
+                    "severity": {
+                        "id": "HP:0012828",
+                        "label": "Severe"
+                    },
+                    "stage": {
+                        "id": "OGMS:0000103",
+                        "label": "Disease stage"
+                    }
+                },
+                "id": "SCD-Pedigree001",
+                "members": [
+                    {
+                        "affected": true,
+                        "memberId": "Ind001",
+                        "role": {
+                            "id": "NCIT:C64435",
+                            "label": "Proband"
+                        }
+                    },
+                    {
+                        "affected": true,
+                        "memberId": "Ind002",
+                        "role": {
+                            "id": "NCIT:C96572",
+                            "label": "Father"
+                        }
+                    },
+                    {
+                        "affected": true,
+                        "memberId": "Ind003",
+                        "role": {
+                            "id": "NCIT:C111201",
+                            "label": "Full Brother"
+                        }
+                    }
+                ]
+            }
+        ],
+        "phenotypicFeatures": [
+            {
+                "evidence": {
+                    "evidenceCode": {
+                        "id": "ECO:0006017",
+                        "label": "author statement from published clinical study used in manual assertion"
+                    }
+                },
+                "excluded": true,
+                "featureType": {
+                    "id": "HP:0000002",
+                    "label": "Abnormality of body height"
+                },
+                "modifiers": [
+                    {
+                        "id": "HP:0032500",
+                        "label": "Exacerbated by tobacco use"
+                    }
+                ],
+                "notes": "Please note that all this information is synthetic",
+                "onset": {
+                    "id": "HP:0011463",
+                    "label": "Infantile onset"
+                },
+                "resolution": {
+                    "days": "8",
+                    "weeks": "8"
+                },
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "sex": {
+            "id": "NCIT:C16576",
+            "label": "female"
+        },
+        "treatments": [
+            {
+                "ageAtOnset": {
+                    "iso8601duration": "P1Y1"
+                },
+                "routeOfAdministration": {
+                    "id": "NCIT:C38288",
+                    "label": "Oral Route of Administration"
+                },
+                "treatmentCode": {
+                    "id": "OGMS:0000113",
+                    "label": "chemotherapy procedure"
+                }
+            }
+        ],
+        "datasetId": "synthetic_usecases_4beacon_testingV3"
+    },
+    {
+        "diseases": [
+            {
+                "ageOfOnset": {
+                    "id": "NCIT:C16731",
+                    "label": "Neonate"
+                },
+                "diseaseCode": {
+                    "id": "MONDO:0004975",
+                    "label": "Cystic fibrosis"
+                },
+                "familyHistory": true,
+                "notes": "Bear in mind that all information is synthetic",
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "ethnicity": {
+            "id": "NCIT:C43851",
+            "label": "European"
+        },
+        "exposures": [
+            {
+                "ageAtExposure": {
+                    "iso8601duration": "P32Y6M1D"
+                },
+                "date": "2024-09-25",
+                "duration": "14 months",
+                "exposureCode": {
+                    "id": "CHEBI:46661",
+                    "label": "asbestos"
+                },
+                "unit": {
+                    "id": "NCIT:C28253",
+                    "label": "Milligram"
+                }
+            }
+        ],
+        "geographicOrigin": {
+            "id": "GAZ:00002586",
+            "label": "State of Wisconsin"
+        },
+        "id": "SAMPLE6",
+        "interventionsOrProcedures": [
+            {
+                "bodySite": {
+                    "id": "FMAID:7195",
+                    "label": "lung"
+                },
+                "dateOfProcedure": "2024-12-24",
+                "procedureCode": {
+                    "id": "OBI:0002657",
+                    "label": "surgical biopsy"
+                }
+            }
+        ],
+        "karyotypicSex": "XX,XY",
+        "measures": [
+            {
+                "assayCode": {
+                    "id": "UBERON:0001062",
+                    "label": "anatomical entity"
+                },
+                "date": "2024-11-08",
+                "measurementValue": [
+                    {
+                        "referenceRange": {
+                            "high": "50",
+                            "low": "20",
+                            "unit": {
+                                "id": "NCIT:C28253",
+                                "label": "Milligram"
+                            }
+                        },
+                        "unit": {
+                            "id": "NCIT:C28253",
+                            "label": "Milligram"
+                        },
+                        "value": "50"
+                    }
+                ],
+                "notes": "Bear in mind that all this information is synthetic",
+                "observationMoment": {
+                    "iso8601duration": "P32Y6M1D"
+                },
+                "procedure": {
+                    "ageAtProcedure": "1999-08-05T17:21:00+01:00",
+                    "bodySite": {
+                        "id": "FMAID:7195",
+                        "label": "lung"
+                    },
+                    "dateOfProcedure": "2024-08-15",
+                    "procedureCode": {
+                        "id": "OBI:0002657",
+                        "label": "surgical biopsy"
+                    }
+                }
+            }
+        ],
+        "pedigrees": [
+            {
+                "disease": {
+                    "diseaseCode": {
+                        "id": "HP:0001645",
+                        "label": "Sudden cardiac death"
+                    },
+                    "familyHistory": true,
+                    "notes": "Bear in mind that all this information is synthetic ",
+                    "severity": {
+                        "id": "HP:0012828",
+                        "label": "Severe"
+                    },
+                    "stage": {
+                        "id": "OGMS:0000103",
+                        "label": "Disease stage"
+                    }
+                },
+                "id": "SCD-Pedigree001",
+                "members": [
+                    {
+                        "affected": true,
+                        "memberId": "Ind001",
+                        "role": {
+                            "id": "NCIT:C64435",
+                            "label": "Proband"
+                        }
+                    },
+                    {
+                        "affected": true,
+                        "memberId": "Ind002",
+                        "role": {
+                            "id": "NCIT:C96572",
+                            "label": "Father"
+                        }
+                    },
+                    {
+                        "affected": true,
+                        "memberId": "Ind003",
+                        "role": {
+                            "id": "NCIT:C111201",
+                            "label": "Full Brother"
+                        }
+                    }
+                ]
+            }
+        ],
+        "phenotypicFeatures": [
+            {
+                "evidence": {
+                    "evidenceCode": {
+                        "id": "ECO:0006017",
+                        "label": "author statement from published clinical study used in manual assertion"
+                    }
+                },
+                "excluded": true,
+                "featureType": {
+                    "id": "HP:0000002",
+                    "label": "Abnormality of body height"
+                },
+                "modifiers": [
+                    {
+                        "id": "HP:0032500",
+                        "label": "Exacerbated by tobacco use"
+                    }
+                ],
+                "notes": "Please note that all this information is synthetic",
+                "onset": {
+                    "id": "HP:0011463",
+                    "label": "Infantile onset"
+                },
+                "resolution": {
+                    "days": "8",
+                    "weeks": "8"
+                },
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "sex": {
+            "id": "NCIT:C16576",
+            "label": "female"
+        },
+        "treatments": [
+            {
+                "ageAtOnset": {
+                    "iso8601duration": "P1Y1"
+                },
+                "routeOfAdministration": {
+                    "id": "NCIT:C38288",
+                    "label": "Oral Route of Administration"
+                },
+                "treatmentCode": {
+                    "id": "OGMS:0000113",
+                    "label": "chemotherapy procedure"
+                }
+            }
+        ],
+        "datasetId": "synthetic_usecases_4beacon_testingV3"
+    },
+    {
+        "diseases": [
+            {
+                "ageOfOnset": {
+                    "id": "NCIT:C16731",
+                    "label": "Neonate"
+                },
+                "diseaseCode": {
+                    "id": "MONDO:0004975",
+                    "label": "Cystic fibrosis"
+                },
+                "familyHistory": true,
+                "notes": "Bear in mind that all information is synthetic",
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "ethnicity": {
+            "id": "NCIT:C43851",
+            "label": "European"
+        },
+        "exposures": [
+            {
+                "ageAtExposure": {
+                    "iso8601duration": "P32Y6M1D"
+                },
+                "date": "2024-09-25",
+                "duration": "14 months",
+                "exposureCode": {
+                    "id": "CHEBI:46661",
+                    "label": "asbestos"
+                },
+                "unit": {
+                    "id": "NCIT:C28253",
+                    "label": "Milligram"
+                }
+            }
+        ],
+        "geographicOrigin": {
+            "id": "GAZ:00002586",
+            "label": "State of Wisconsin"
+        },
+        "id": "SAMPLE7",
+        "interventionsOrProcedures": [
+            {
+                "bodySite": {
+                    "id": "FMAID:7195",
+                    "label": "lung"
+                },
+                "dateOfProcedure": "2024-12-24",
+                "procedureCode": {
+                    "id": "OBI:0002657",
+                    "label": "surgical biopsy"
+                }
+            }
+        ],
+        "karyotypicSex": "XX,XY",
+        "measures": [
+            {
+                "assayCode": {
+                    "id": "UBERON:0001062",
+                    "label": "anatomical entity"
+                },
+                "date": "2024-11-08",
+                "measurementValue": [
+                    {
+                        "referenceRange": {
+                            "high": "50",
+                            "low": "20",
+                            "unit": {
+                                "id": "NCIT:C28253",
+                                "label": "Milligram"
+                            }
+                        },
+                        "unit": {
+                            "id": "NCIT:C28253",
+                            "label": "Milligram"
+                        },
+                        "value": "50"
+                    }
+                ],
+                "notes": "Bear in mind that all this information is synthetic",
+                "observationMoment": {
+                    "iso8601duration": "P32Y6M1D"
+                },
+                "procedure": {
+                    "ageAtProcedure": "1999-08-05T17:21:00+01:00",
+                    "bodySite": {
+                        "id": "FMAID:7195",
+                        "label": "lung"
+                    },
+                    "dateOfProcedure": "2024-08-15",
+                    "procedureCode": {
+                        "id": "OBI:0002657",
+                        "label": "surgical biopsy"
+                    }
+                }
+            }
+        ],
+        "pedigrees": [
+            {
+                "disease": {
+                    "diseaseCode": {
+                        "id": "HP:0001645",
+                        "label": "Sudden cardiac death"
+                    },
+                    "familyHistory": true,
+                    "notes": "Bear in mind that all this information is synthetic ",
+                    "severity": {
+                        "id": "HP:0012828",
+                        "label": "Severe"
+                    },
+                    "stage": {
+                        "id": "OGMS:0000103",
+                        "label": "Disease stage"
+                    }
+                },
+                "id": "SCD-Pedigree001",
+                "members": [
+                    {
+                        "affected": true,
+                        "memberId": "Ind001",
+                        "role": {
+                            "id": "NCIT:C64435",
+                            "label": "Proband"
+                        }
+                    },
+                    {
+                        "affected": true,
+                        "memberId": "Ind002",
+                        "role": {
+                            "id": "NCIT:C96572",
+                            "label": "Father"
+                        }
+                    },
+                    {
+                        "affected": true,
+                        "memberId": "Ind003",
+                        "role": {
+                            "id": "NCIT:C111201",
+                            "label": "Full Brother"
+                        }
+                    }
+                ]
+            }
+        ],
+        "phenotypicFeatures": [
+            {
+                "evidence": {
+                    "evidenceCode": {
+                        "id": "ECO:0006017",
+                        "label": "author statement from published clinical study used in manual assertion"
+                    }
+                },
+                "excluded": true,
+                "featureType": {
+                    "id": "HP:0000002",
+                    "label": "Abnormality of body height"
+                },
+                "modifiers": [
+                    {
+                        "id": "HP:0032500",
+                        "label": "Exacerbated by tobacco use"
+                    }
+                ],
+                "notes": "Please note that all this information is synthetic",
+                "onset": {
+                    "id": "HP:0011463",
+                    "label": "Infantile onset"
+                },
+                "resolution": {
+                    "days": "8",
+                    "weeks": "8"
+                },
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "sex": {
+            "id": "NCIT:C16576",
+            "label": "female"
+        },
+        "treatments": [
+            {
+                "ageAtOnset": {
+                    "iso8601duration": "P1Y1"
+                },
+                "routeOfAdministration": {
+                    "id": "NCIT:C38288",
+                    "label": "Oral Route of Administration"
+                },
+                "treatmentCode": {
+                    "id": "OGMS:0000113",
+                    "label": "chemotherapy procedure"
+                }
+            }
+        ],
+        "datasetId": "synthetic_usecases_4beacon_testingV3"
+    },
+    {
+        "diseases": [
+            {
+                "ageOfOnset": {
+                    "id": "NCIT:C16731",
+                    "label": "Neonate"
+                },
+                "diseaseCode": {
+                    "id": "MONDO:0004975",
+                    "label": "Cystic fibrosis"
+                },
+                "familyHistory": true,
+                "notes": "Bear in mind that all information is synthetic",
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "ethnicity": {
+            "id": "NCIT:C43851",
+            "label": "European"
+        },
+        "exposures": [
+            {
+                "ageAtExposure": {
+                    "iso8601duration": "P32Y6M1D"
+                },
+                "date": "2024-09-25",
+                "duration": "14 months",
+                "exposureCode": {
+                    "id": "CHEBI:46661",
+                    "label": "asbestos"
+                },
+                "unit": {
+                    "id": "NCIT:C28253",
+                    "label": "Milligram"
+                }
+            }
+        ],
+        "geographicOrigin": {
+            "id": "GAZ:00002586",
+            "label": "State of Wisconsin"
+        },
+        "id": "SAMPLE8",
+        "interventionsOrProcedures": [
+            {
+                "bodySite": {
+                    "id": "FMAID:7195",
+                    "label": "lung"
+                },
+                "dateOfProcedure": "2024-12-24",
+                "procedureCode": {
+                    "id": "OBI:0002657",
+                    "label": "surgical biopsy"
+                }
+            }
+        ],
+        "karyotypicSex": "XX,XY",
+        "measures": [
+            {
+                "assayCode": {
+                    "id": "UBERON:0001062",
+                    "label": "anatomical entity"
+                },
+                "date": "2024-11-08",
+                "measurementValue": [
+                    {
+                        "referenceRange": {
+                            "high": "50",
+                            "low": "20",
+                            "unit": {
+                                "id": "NCIT:C28253",
+                                "label": "Milligram"
+                            }
+                        },
+                        "unit": {
+                            "id": "NCIT:C28253",
+                            "label": "Milligram"
+                        },
+                        "value": "50"
+                    }
+                ],
+                "notes": "Bear in mind that all this information is synthetic",
+                "observationMoment": {
+                    "iso8601duration": "P32Y6M1D"
+                },
+                "procedure": {
+                    "ageAtProcedure": "1999-08-05T17:21:00+01:00",
+                    "bodySite": {
+                        "id": "FMAID:7195",
+                        "label": "lung"
+                    },
+                    "dateOfProcedure": "2024-08-15",
+                    "procedureCode": {
+                        "id": "OBI:0002657",
+                        "label": "surgical biopsy"
+                    }
+                }
+            }
+        ],
+        "pedigrees": [
+            {
+                "disease": {
+                    "diseaseCode": {
+                        "id": "HP:0001645",
+                        "label": "Sudden cardiac death"
+                    },
+                    "familyHistory": true,
+                    "notes": "Bear in mind that all this information is synthetic ",
+                    "severity": {
+                        "id": "HP:0012828",
+                        "label": "Severe"
+                    },
+                    "stage": {
+                        "id": "OGMS:0000103",
+                        "label": "Disease stage"
+                    }
+                },
+                "id": "SCD-Pedigree001",
+                "members": [
+                    {
+                        "affected": true,
+                        "memberId": "Ind001",
+                        "role": {
+                            "id": "NCIT:C64435",
+                            "label": "Proband"
+                        }
+                    },
+                    {
+                        "affected": true,
+                        "memberId": "Ind002",
+                        "role": {
+                            "id": "NCIT:C96572",
+                            "label": "Father"
+                        }
+                    },
+                    {
+                        "affected": true,
+                        "memberId": "Ind003",
+                        "role": {
+                            "id": "NCIT:C111201",
+                            "label": "Full Brother"
+                        }
+                    }
+                ]
+            }
+        ],
+        "phenotypicFeatures": [
+            {
+                "evidence": {
+                    "evidenceCode": {
+                        "id": "ECO:0006017",
+                        "label": "author statement from published clinical study used in manual assertion"
+                    }
+                },
+                "excluded": true,
+                "featureType": {
+                    "id": "HP:0000002",
+                    "label": "Abnormality of body height"
+                },
+                "modifiers": [
+                    {
+                        "id": "HP:0032500",
+                        "label": "Exacerbated by tobacco use"
+                    }
+                ],
+                "notes": "Please note that all this information is synthetic",
+                "onset": {
+                    "id": "HP:0011463",
+                    "label": "Infantile onset"
+                },
+                "resolution": {
+                    "days": "8",
+                    "weeks": "8"
+                },
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "sex": {
+            "id": "NCIT:C16576",
+            "label": "female"
+        },
+        "treatments": [
+            {
+                "ageAtOnset": {
+                    "iso8601duration": "P1Y1"
+                },
+                "routeOfAdministration": {
+                    "id": "NCIT:C38288",
+                    "label": "Oral Route of Administration"
+                },
+                "treatmentCode": {
+                    "id": "OGMS:0000113",
+                    "label": "chemotherapy procedure"
+                }
+            }
+        ],
+        "datasetId": "synthetic_usecases_4beacon_testingV3"
+    },
+    {
+        "diseases": [
+            {
+                "ageOfOnset": {
+                    "id": "NCIT:C16731",
+                    "label": "Neonate"
+                },
+                "diseaseCode": {
+                    "id": "MONDO:0004975",
+                    "label": "Cystic fibrosis"
+                },
+                "familyHistory": true,
+                "notes": "Bear in mind that all information is synthetic",
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "ethnicity": {
+            "id": "NCIT:C43851",
+            "label": "European"
+        },
+        "exposures": [
+            {
+                "ageAtExposure": {
+                    "iso8601duration": "P32Y6M1D"
+                },
+                "date": "2024-09-25",
+                "duration": "14 months",
+                "exposureCode": {
+                    "id": "CHEBI:46661",
+                    "label": "asbestos"
+                },
+                "unit": {
+                    "id": "NCIT:C28253",
+                    "label": "Milligram"
+                }
+            }
+        ],
+        "geographicOrigin": {
+            "id": "GAZ:00002586",
+            "label": "State of Wisconsin"
+        },
+        "id": "SAMPLE9",
+        "interventionsOrProcedures": [
+            {
+                "bodySite": {
+                    "id": "FMAID:7195",
+                    "label": "lung"
+                },
+                "dateOfProcedure": "2024-12-24",
+                "procedureCode": {
+                    "id": "OBI:0002657",
+                    "label": "surgical biopsy"
+                }
+            }
+        ],
+        "karyotypicSex": "XX,XY",
+        "measures": [
+            {
+                "assayCode": {
+                    "id": "UBERON:0001062",
+                    "label": "anatomical entity"
+                },
+                "date": "2024-11-08",
+                "measurementValue": [
+                    {
+                        "referenceRange": {
+                            "high": "50",
+                            "low": "20",
+                            "unit": {
+                                "id": "NCIT:C28253",
+                                "label": "Milligram"
+                            }
+                        },
+                        "unit": {
+                            "id": "NCIT:C28253",
+                            "label": "Milligram"
+                        },
+                        "value": "50"
+                    }
+                ],
+                "notes": "Bear in mind that all this information is synthetic",
+                "observationMoment": {
+                    "iso8601duration": "P32Y6M1D"
+                },
+                "procedure": {
+                    "ageAtProcedure": "1999-08-05T17:21:00+01:00",
+                    "bodySite": {
+                        "id": "FMAID:7195",
+                        "label": "lung"
+                    },
+                    "dateOfProcedure": "2024-08-15",
+                    "procedureCode": {
+                        "id": "OBI:0002657",
+                        "label": "surgical biopsy"
+                    }
+                }
+            }
+        ],
+        "pedigrees": [
+            {
+                "disease": {
+                    "diseaseCode": {
+                        "id": "HP:0001645",
+                        "label": "Sudden cardiac death"
+                    },
+                    "familyHistory": true,
+                    "notes": "Bear in mind that all this information is synthetic ",
+                    "severity": {
+                        "id": "HP:0012828",
+                        "label": "Severe"
+                    },
+                    "stage": {
+                        "id": "OGMS:0000103",
+                        "label": "Disease stage"
+                    }
+                },
+                "id": "SCD-Pedigree001",
+                "members": [
+                    {
+                        "affected": true,
+                        "memberId": "Ind001",
+                        "role": {
+                            "id": "NCIT:C64435",
+                            "label": "Proband"
+                        }
+                    },
+                    {
+                        "affected": true,
+                        "memberId": "Ind002",
+                        "role": {
+                            "id": "NCIT:C96572",
+                            "label": "Father"
+                        }
+                    },
+                    {
+                        "affected": true,
+                        "memberId": "Ind003",
+                        "role": {
+                            "id": "NCIT:C111201",
+                            "label": "Full Brother"
+                        }
+                    }
+                ]
+            }
+        ],
+        "phenotypicFeatures": [
+            {
+                "evidence": {
+                    "evidenceCode": {
+                        "id": "ECO:0006017",
+                        "label": "author statement from published clinical study used in manual assertion"
+                    }
+                },
+                "excluded": true,
+                "featureType": {
+                    "id": "HP:0000002",
+                    "label": "Abnormality of body height"
+                },
+                "modifiers": [
+                    {
+                        "id": "HP:0032500",
+                        "label": "Exacerbated by tobacco use"
+                    }
+                ],
+                "notes": "Please note that all this information is synthetic",
+                "onset": {
+                    "id": "HP:0011463",
+                    "label": "Infantile onset"
+                },
+                "resolution": {
+                    "days": "8",
+                    "weeks": "8"
+                },
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "sex": {
+            "id": "NCIT:C16576",
+            "label": "female"
+        },
+        "treatments": [
+            {
+                "ageAtOnset": {
+                    "iso8601duration": "P1Y1"
+                },
+                "routeOfAdministration": {
+                    "id": "NCIT:C38288",
+                    "label": "Oral Route of Administration"
+                },
+                "treatmentCode": {
+                    "id": "OGMS:0000113",
+                    "label": "chemotherapy procedure"
+                }
+            }
+        ],
+        "datasetId": "synthetic_usecases_4beacon_testingV3"
+    },
+    {
+        "diseases": [
+            {
+                "ageOfOnset": {
+                    "id": "NCIT:C16731",
+                    "label": "Neonate"
+                },
+                "diseaseCode": {
+                    "id": "MONDO:0004975",
+                    "label": "Cystic fibrosis"
+                },
+                "familyHistory": true,
+                "notes": "Bear in mind that all information is synthetic",
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "ethnicity": {
+            "id": "NCIT:C43851",
+            "label": "European"
+        },
+        "exposures": [
+            {
+                "ageAtExposure": {
+                    "iso8601duration": "P32Y6M1D"
+                },
+                "date": "2024-09-25",
+                "duration": "14 months",
+                "exposureCode": {
+                    "id": "CHEBI:46661",
+                    "label": "asbestos"
+                },
+                "unit": {
+                    "id": "NCIT:C28253",
+                    "label": "Milligram"
+                }
+            }
+        ],
+        "geographicOrigin": {
+            "id": "GAZ:00002586",
+            "label": "State of Wisconsin"
+        },
+        "id": "SAMPLE10",
+        "interventionsOrProcedures": [
+            {
+                "bodySite": {
+                    "id": "FMAID:7195",
+                    "label": "lung"
+                },
+                "dateOfProcedure": "2024-12-24",
+                "procedureCode": {
+                    "id": "OBI:0002657",
+                    "label": "surgical biopsy"
+                }
+            }
+        ],
+        "karyotypicSex": "XX,XY",
+        "measures": [
+            {
+                "assayCode": {
+                    "id": "UBERON:0001062",
+                    "label": "anatomical entity"
+                },
+                "date": "2024-11-08",
+                "measurementValue": [
+                    {
+                        "referenceRange": {
+                            "high": "50",
+                            "low": "20",
+                            "unit": {
+                                "id": "NCIT:C28253",
+                                "label": "Milligram"
+                            }
+                        },
+                        "unit": {
+                            "id": "NCIT:C28253",
+                            "label": "Milligram"
+                        },
+                        "value": "50"
+                    }
+                ],
+                "notes": "Bear in mind that all this information is synthetic",
+                "observationMoment": {
+                    "iso8601duration": "P32Y6M1D"
+                },
+                "procedure": {
+                    "ageAtProcedure": "1999-08-05T17:21:00+01:00",
+                    "bodySite": {
+                        "id": "FMAID:7195",
+                        "label": "lung"
+                    },
+                    "dateOfProcedure": "2024-08-15",
+                    "procedureCode": {
+                        "id": "OBI:0002657",
+                        "label": "surgical biopsy"
+                    }
+                }
+            }
+        ],
+        "pedigrees": [
+            {
+                "disease": {
+                    "diseaseCode": {
+                        "id": "HP:0001645",
+                        "label": "Sudden cardiac death"
+                    },
+                    "familyHistory": true,
+                    "notes": "Bear in mind that all this information is synthetic ",
+                    "severity": {
+                        "id": "HP:0012828",
+                        "label": "Severe"
+                    },
+                    "stage": {
+                        "id": "OGMS:0000103",
+                        "label": "Disease stage"
+                    }
+                },
+                "id": "SCD-Pedigree001",
+                "members": [
+                    {
+                        "affected": true,
+                        "memberId": "Ind001",
+                        "role": {
+                            "id": "NCIT:C64435",
+                            "label": "Proband"
+                        }
+                    },
+                    {
+                        "affected": true,
+                        "memberId": "Ind002",
+                        "role": {
+                            "id": "NCIT:C96572",
+                            "label": "Father"
+                        }
+                    },
+                    {
+                        "affected": true,
+                        "memberId": "Ind003",
+                        "role": {
+                            "id": "NCIT:C111201",
+                            "label": "Full Brother"
+                        }
+                    }
+                ]
+            }
+        ],
+        "phenotypicFeatures": [
+            {
+                "evidence": {
+                    "evidenceCode": {
+                        "id": "ECO:0006017",
+                        "label": "author statement from published clinical study used in manual assertion"
+                    }
+                },
+                "excluded": true,
+                "featureType": {
+                    "id": "HP:0000002",
+                    "label": "Abnormality of body height"
+                },
+                "modifiers": [
+                    {
+                        "id": "HP:0032500",
+                        "label": "Exacerbated by tobacco use"
+                    }
+                ],
+                "notes": "Please note that all this information is synthetic",
+                "onset": {
+                    "id": "HP:0011463",
+                    "label": "Infantile onset"
+                },
+                "resolution": {
+                    "days": "8",
+                    "weeks": "8"
+                },
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "sex": {
+            "id": "NCIT:C16576",
+            "label": "female"
+        },
+        "treatments": [
+            {
+                "ageAtOnset": {
+                    "iso8601duration": "P1Y1"
+                },
+                "routeOfAdministration": {
+                    "id": "NCIT:C38288",
+                    "label": "Oral Route of Administration"
+                },
+                "treatmentCode": {
+                    "id": "OGMS:0000113",
+                    "label": "chemotherapy procedure"
+                }
+            }
+        ],
+        "datasetId": "synthetic_usecases_4beacon_testingV3"
+    },
+    {
+        "diseases": [
+            {
+                "ageOfOnset": {
+                    "id": "NCIT:C16731",
+                    "label": "Neonate"
+                },
+                "diseaseCode": {
+                    "id": "MONDO:0004975",
+                    "label": "Cystic fibrosis"
+                },
+                "familyHistory": true,
+                "notes": "Bear in mind that all information is synthetic",
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "ethnicity": {
+            "id": "NCIT:C43851",
+            "label": "European"
+        },
+        "exposures": [
+            {
+                "ageAtExposure": {
+                    "iso8601duration": "P32Y6M1D"
+                },
+                "date": "2024-09-25",
+                "duration": "14 months",
+                "exposureCode": {
+                    "id": "CHEBI:46661",
+                    "label": "asbestos"
+                },
+                "unit": {
+                    "id": "NCIT:C28253",
+                    "label": "Milligram"
+                }
+            }
+        ],
+        "geographicOrigin": {
+            "id": "GAZ:00002586",
+            "label": "State of Wisconsin"
+        },
+        "id": "SAMPLE11",
+        "interventionsOrProcedures": [
+            {
+                "bodySite": {
+                    "id": "FMAID:7195",
+                    "label": "lung"
+                },
+                "dateOfProcedure": "2024-12-24",
+                "procedureCode": {
+                    "id": "OBI:0002657",
+                    "label": "surgical biopsy"
+                }
+            }
+        ],
+        "karyotypicSex": "XX,XY",
+        "measures": [
+            {
+                "assayCode": {
+                    "id": "UBERON:0001062",
+                    "label": "anatomical entity"
+                },
+                "date": "2024-11-08",
+                "measurementValue": [
+                    {
+                        "referenceRange": {
+                            "high": "50",
+                            "low": "20",
+                            "unit": {
+                                "id": "NCIT:C28253",
+                                "label": "Milligram"
+                            }
+                        },
+                        "unit": {
+                            "id": "NCIT:C28253",
+                            "label": "Milligram"
+                        },
+                        "value": "50"
+                    }
+                ],
+                "notes": "Bear in mind that all this information is synthetic",
+                "observationMoment": {
+                    "iso8601duration": "P32Y6M1D"
+                },
+                "procedure": {
+                    "ageAtProcedure": "1999-08-05T17:21:00+01:00",
+                    "bodySite": {
+                        "id": "FMAID:7195",
+                        "label": "lung"
+                    },
+                    "dateOfProcedure": "2024-08-15",
+                    "procedureCode": {
+                        "id": "OBI:0002657",
+                        "label": "surgical biopsy"
+                    }
+                }
+            }
+        ],
+        "pedigrees": [
+            {
+                "disease": {
+                    "diseaseCode": {
+                        "id": "HP:0001645",
+                        "label": "Sudden cardiac death"
+                    },
+                    "familyHistory": true,
+                    "notes": "Bear in mind that all this information is synthetic ",
+                    "severity": {
+                        "id": "HP:0012828",
+                        "label": "Severe"
+                    },
+                    "stage": {
+                        "id": "OGMS:0000103",
+                        "label": "Disease stage"
+                    }
+                },
+                "id": "SCD-Pedigree001",
+                "members": [
+                    {
+                        "affected": true,
+                        "memberId": "Ind001",
+                        "role": {
+                            "id": "NCIT:C64435",
+                            "label": "Proband"
+                        }
+                    },
+                    {
+                        "affected": true,
+                        "memberId": "Ind002",
+                        "role": {
+                            "id": "NCIT:C96572",
+                            "label": "Father"
+                        }
+                    },
+                    {
+                        "affected": true,
+                        "memberId": "Ind003",
+                        "role": {
+                            "id": "NCIT:C111201",
+                            "label": "Full Brother"
+                        }
+                    }
+                ]
+            }
+        ],
+        "phenotypicFeatures": [
+            {
+                "evidence": {
+                    "evidenceCode": {
+                        "id": "ECO:0006017",
+                        "label": "author statement from published clinical study used in manual assertion"
+                    }
+                },
+                "excluded": true,
+                "featureType": {
+                    "id": "HP:0000002",
+                    "label": "Abnormality of body height"
+                },
+                "modifiers": [
+                    {
+                        "id": "HP:0032500",
+                        "label": "Exacerbated by tobacco use"
+                    }
+                ],
+                "notes": "Please note that all this information is synthetic",
+                "onset": {
+                    "id": "HP:0011463",
+                    "label": "Infantile onset"
+                },
+                "resolution": {
+                    "days": "8",
+                    "weeks": "8"
+                },
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "sex": {
+            "id": "NCIT:C16576",
+            "label": "female"
+        },
+        "treatments": [
+            {
+                "ageAtOnset": {
+                    "iso8601duration": "P1Y1"
+                },
+                "routeOfAdministration": {
+                    "id": "NCIT:C38288",
+                    "label": "Oral Route of Administration"
+                },
+                "treatmentCode": {
+                    "id": "OGMS:0000113",
+                    "label": "chemotherapy procedure"
+                }
+            }
+        ],
+        "datasetId": "synthetic_usecases_4beacon_testingV3"
+    },
+    {
+        "diseases": [
+            {
+                "ageOfOnset": {
+                    "id": "NCIT:C16731",
+                    "label": "Neonate"
+                },
+                "diseaseCode": {
+                    "id": "MONDO:0004975",
+                    "label": "Cystic fibrosis"
+                },
+                "familyHistory": true,
+                "notes": "Bear in mind that all information is synthetic",
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "ethnicity": {
+            "id": "NCIT:C43851",
+            "label": "European"
+        },
+        "exposures": [
+            {
+                "ageAtExposure": {
+                    "iso8601duration": "P32Y6M1D"
+                },
+                "date": "2024-09-25",
+                "duration": "14 months",
+                "exposureCode": {
+                    "id": "CHEBI:46661",
+                    "label": "asbestos"
+                },
+                "unit": {
+                    "id": "NCIT:C28253",
+                    "label": "Milligram"
+                }
+            }
+        ],
+        "geographicOrigin": {
+            "id": "GAZ:00002586",
+            "label": "State of Wisconsin"
+        },
+        "id": "SAMPLE12",
+        "interventionsOrProcedures": [
+            {
+                "bodySite": {
+                    "id": "FMAID:7195",
+                    "label": "lung"
+                },
+                "dateOfProcedure": "2024-12-24",
+                "procedureCode": {
+                    "id": "OBI:0002657",
+                    "label": "surgical biopsy"
+                }
+            }
+        ],
+        "karyotypicSex": "XX,XY",
+        "measures": [
+            {
+                "assayCode": {
+                    "id": "UBERON:0001062",
+                    "label": "anatomical entity"
+                },
+                "date": "2024-11-08",
+                "measurementValue": [
+                    {
+                        "referenceRange": {
+                            "high": "50",
+                            "low": "20",
+                            "unit": {
+                                "id": "NCIT:C28253",
+                                "label": "Milligram"
+                            }
+                        },
+                        "unit": {
+                            "id": "NCIT:C28253",
+                            "label": "Milligram"
+                        },
+                        "value": "50"
+                    }
+                ],
+                "notes": "Bear in mind that all this information is synthetic",
+                "observationMoment": {
+                    "iso8601duration": "P32Y6M1D"
+                },
+                "procedure": {
+                    "ageAtProcedure": "1999-08-05T17:21:00+01:00",
+                    "bodySite": {
+                        "id": "FMAID:7195",
+                        "label": "lung"
+                    },
+                    "dateOfProcedure": "2024-08-15",
+                    "procedureCode": {
+                        "id": "OBI:0002657",
+                        "label": "surgical biopsy"
+                    }
+                }
+            }
+        ],
+        "pedigrees": [
+            {
+                "disease": {
+                    "diseaseCode": {
+                        "id": "HP:0001645",
+                        "label": "Sudden cardiac death"
+                    },
+                    "familyHistory": true,
+                    "notes": "Bear in mind that all this information is synthetic ",
+                    "severity": {
+                        "id": "HP:0012828",
+                        "label": "Severe"
+                    },
+                    "stage": {
+                        "id": "OGMS:0000103",
+                        "label": "Disease stage"
+                    }
+                },
+                "id": "SCD-Pedigree001",
+                "members": [
+                    {
+                        "affected": true,
+                        "memberId": "Ind001",
+                        "role": {
+                            "id": "NCIT:C64435",
+                            "label": "Proband"
+                        }
+                    },
+                    {
+                        "affected": true,
+                        "memberId": "Ind002",
+                        "role": {
+                            "id": "NCIT:C96572",
+                            "label": "Father"
+                        }
+                    },
+                    {
+                        "affected": true,
+                        "memberId": "Ind003",
+                        "role": {
+                            "id": "NCIT:C111201",
+                            "label": "Full Brother"
+                        }
+                    }
+                ]
+            }
+        ],
+        "phenotypicFeatures": [
+            {
+                "evidence": {
+                    "evidenceCode": {
+                        "id": "ECO:0006017",
+                        "label": "author statement from published clinical study used in manual assertion"
+                    }
+                },
+                "excluded": true,
+                "featureType": {
+                    "id": "HP:0000002",
+                    "label": "Abnormality of body height"
+                },
+                "modifiers": [
+                    {
+                        "id": "HP:0032500",
+                        "label": "Exacerbated by tobacco use"
+                    }
+                ],
+                "notes": "Please note that all this information is synthetic",
+                "onset": {
+                    "id": "HP:0011463",
+                    "label": "Infantile onset"
+                },
+                "resolution": {
+                    "days": "8",
+                    "weeks": "8"
+                },
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "sex": {
+            "id": "NCIT:C16576",
+            "label": "female"
+        },
+        "treatments": [
+            {
+                "ageAtOnset": {
+                    "iso8601duration": "P1Y1"
+                },
+                "routeOfAdministration": {
+                    "id": "NCIT:C38288",
+                    "label": "Oral Route of Administration"
+                },
+                "treatmentCode": {
+                    "id": "OGMS:0000113",
+                    "label": "chemotherapy procedure"
+                }
+            }
+        ],
+        "datasetId": "synthetic_usecases_4beacon_testingV3"
+    },
+    {
+        "diseases": [
+            {
+                "ageOfOnset": {
+                    "id": "NCIT:C16731",
+                    "label": "Neonate"
+                },
+                "diseaseCode": {
+                    "id": "MONDO:0004975",
+                    "label": "Cystic fibrosis"
+                },
+                "familyHistory": true,
+                "notes": "Bear in mind that all information is synthetic",
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "ethnicity": {
+            "id": "NCIT:C43851",
+            "label": "European"
+        },
+        "exposures": [
+            {
+                "ageAtExposure": {
+                    "iso8601duration": "P32Y6M1D"
+                },
+                "date": "2024-09-25",
+                "duration": "14 months",
+                "exposureCode": {
+                    "id": "CHEBI:46661",
+                    "label": "asbestos"
+                },
+                "unit": {
+                    "id": "NCIT:C28253",
+                    "label": "Milligram"
+                }
+            }
+        ],
+        "geographicOrigin": {
+            "id": "GAZ:00002586",
+            "label": "State of Wisconsin"
+        },
+        "id": "SAMPLE13",
+        "interventionsOrProcedures": [
+            {
+                "bodySite": {
+                    "id": "FMAID:7195",
+                    "label": "lung"
+                },
+                "dateOfProcedure": "2024-12-24",
+                "procedureCode": {
+                    "id": "OBI:0002657",
+                    "label": "surgical biopsy"
+                }
+            }
+        ],
+        "karyotypicSex": "XX,XY",
+        "measures": [
+            {
+                "assayCode": {
+                    "id": "UBERON:0001062",
+                    "label": "anatomical entity"
+                },
+                "date": "2024-11-08",
+                "measurementValue": [
+                    {
+                        "referenceRange": {
+                            "high": "50",
+                            "low": "20",
+                            "unit": {
+                                "id": "NCIT:C28253",
+                                "label": "Milligram"
+                            }
+                        },
+                        "unit": {
+                            "id": "NCIT:C28253",
+                            "label": "Milligram"
+                        },
+                        "value": "50"
+                    }
+                ],
+                "notes": "Bear in mind that all this information is synthetic",
+                "observationMoment": {
+                    "iso8601duration": "P32Y6M1D"
+                },
+                "procedure": {
+                    "ageAtProcedure": "1999-08-05T17:21:00+01:00",
+                    "bodySite": {
+                        "id": "FMAID:7195",
+                        "label": "lung"
+                    },
+                    "dateOfProcedure": "2024-08-15",
+                    "procedureCode": {
+                        "id": "OBI:0002657",
+                        "label": "surgical biopsy"
+                    }
+                }
+            }
+        ],
+        "pedigrees": [
+            {
+                "disease": {
+                    "diseaseCode": {
+                        "id": "HP:0001645",
+                        "label": "Sudden cardiac death"
+                    },
+                    "familyHistory": true,
+                    "notes": "Bear in mind that all this information is synthetic ",
+                    "severity": {
+                        "id": "HP:0012828",
+                        "label": "Severe"
+                    },
+                    "stage": {
+                        "id": "OGMS:0000103",
+                        "label": "Disease stage"
+                    }
+                },
+                "id": "SCD-Pedigree001",
+                "members": [
+                    {
+                        "affected": true,
+                        "memberId": "Ind001",
+                        "role": {
+                            "id": "NCIT:C64435",
+                            "label": "Proband"
+                        }
+                    },
+                    {
+                        "affected": true,
+                        "memberId": "Ind002",
+                        "role": {
+                            "id": "NCIT:C96572",
+                            "label": "Father"
+                        }
+                    },
+                    {
+                        "affected": true,
+                        "memberId": "Ind003",
+                        "role": {
+                            "id": "NCIT:C111201",
+                            "label": "Full Brother"
+                        }
+                    }
+                ]
+            }
+        ],
+        "phenotypicFeatures": [
+            {
+                "evidence": {
+                    "evidenceCode": {
+                        "id": "ECO:0006017",
+                        "label": "author statement from published clinical study used in manual assertion"
+                    }
+                },
+                "excluded": true,
+                "featureType": {
+                    "id": "HP:0000002",
+                    "label": "Abnormality of body height"
+                },
+                "modifiers": [
+                    {
+                        "id": "HP:0032500",
+                        "label": "Exacerbated by tobacco use"
+                    }
+                ],
+                "notes": "Please note that all this information is synthetic",
+                "onset": {
+                    "id": "HP:0011463",
+                    "label": "Infantile onset"
+                },
+                "resolution": {
+                    "days": "8",
+                    "weeks": "8"
+                },
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "sex": {
+            "id": "NCIT:C16576",
+            "label": "female"
+        },
+        "treatments": [
+            {
+                "ageAtOnset": {
+                    "iso8601duration": "P1Y1"
+                },
+                "routeOfAdministration": {
+                    "id": "NCIT:C38288",
+                    "label": "Oral Route of Administration"
+                },
+                "treatmentCode": {
+                    "id": "OGMS:0000113",
+                    "label": "chemotherapy procedure"
+                }
+            }
+        ],
+        "datasetId": "synthetic_usecases_4beacon_testingV3"
+    },
+    {
+        "diseases": [
+            {
+                "ageOfOnset": {
+                    "id": "NCIT:C16731",
+                    "label": "Neonate"
+                },
+                "diseaseCode": {
+                    "id": "MONDO:0004975",
+                    "label": "Cystic fibrosis"
+                },
+                "familyHistory": true,
+                "notes": "Bear in mind that all information is synthetic",
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "ethnicity": {
+            "id": "NCIT:C43851",
+            "label": "European"
+        },
+        "exposures": [
+            {
+                "ageAtExposure": {
+                    "iso8601duration": "P32Y6M1D"
+                },
+                "date": "2024-09-25",
+                "duration": "14 months",
+                "exposureCode": {
+                    "id": "CHEBI:46661",
+                    "label": "asbestos"
+                },
+                "unit": {
+                    "id": "NCIT:C28253",
+                    "label": "Milligram"
+                }
+            }
+        ],
+        "geographicOrigin": {
+            "id": "GAZ:00002586",
+            "label": "State of Wisconsin"
+        },
+        "id": "SAMPLE14",
+        "interventionsOrProcedures": [
+            {
+                "bodySite": {
+                    "id": "FMAID:7195",
+                    "label": "lung"
+                },
+                "dateOfProcedure": "2024-12-24",
+                "procedureCode": {
+                    "id": "OBI:0002657",
+                    "label": "surgical biopsy"
+                }
+            }
+        ],
+        "karyotypicSex": "XX,XY",
+        "measures": [
+            {
+                "assayCode": {
+                    "id": "UBERON:0001062",
+                    "label": "anatomical entity"
+                },
+                "date": "2024-11-08",
+                "measurementValue": [
+                    {
+                        "referenceRange": {
+                            "high": "50",
+                            "low": "20",
+                            "unit": {
+                                "id": "NCIT:C28253",
+                                "label": "Milligram"
+                            }
+                        },
+                        "unit": {
+                            "id": "NCIT:C28253",
+                            "label": "Milligram"
+                        },
+                        "value": "50"
+                    }
+                ],
+                "notes": "Bear in mind that all this information is synthetic",
+                "observationMoment": {
+                    "iso8601duration": "P32Y6M1D"
+                },
+                "procedure": {
+                    "ageAtProcedure": "1999-08-05T17:21:00+01:00",
+                    "bodySite": {
+                        "id": "FMAID:7195",
+                        "label": "lung"
+                    },
+                    "dateOfProcedure": "2024-08-15",
+                    "procedureCode": {
+                        "id": "OBI:0002657",
+                        "label": "surgical biopsy"
+                    }
+                }
+            }
+        ],
+        "pedigrees": [
+            {
+                "disease": {
+                    "diseaseCode": {
+                        "id": "HP:0001645",
+                        "label": "Sudden cardiac death"
+                    },
+                    "familyHistory": true,
+                    "notes": "Bear in mind that all this information is synthetic ",
+                    "severity": {
+                        "id": "HP:0012828",
+                        "label": "Severe"
+                    },
+                    "stage": {
+                        "id": "OGMS:0000103",
+                        "label": "Disease stage"
+                    }
+                },
+                "id": "SCD-Pedigree001",
+                "members": [
+                    {
+                        "affected": true,
+                        "memberId": "Ind001",
+                        "role": {
+                            "id": "NCIT:C64435",
+                            "label": "Proband"
+                        }
+                    },
+                    {
+                        "affected": true,
+                        "memberId": "Ind002",
+                        "role": {
+                            "id": "NCIT:C96572",
+                            "label": "Father"
+                        }
+                    },
+                    {
+                        "affected": true,
+                        "memberId": "Ind003",
+                        "role": {
+                            "id": "NCIT:C111201",
+                            "label": "Full Brother"
+                        }
+                    }
+                ]
+            }
+        ],
+        "phenotypicFeatures": [
+            {
+                "evidence": {
+                    "evidenceCode": {
+                        "id": "ECO:0006017",
+                        "label": "author statement from published clinical study used in manual assertion"
+                    }
+                },
+                "excluded": true,
+                "featureType": {
+                    "id": "HP:0000002",
+                    "label": "Abnormality of body height"
+                },
+                "modifiers": [
+                    {
+                        "id": "HP:0032500",
+                        "label": "Exacerbated by tobacco use"
+                    }
+                ],
+                "notes": "Please note that all this information is synthetic",
+                "onset": {
+                    "id": "HP:0011463",
+                    "label": "Infantile onset"
+                },
+                "resolution": {
+                    "days": "8",
+                    "weeks": "8"
+                },
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "sex": {
+            "id": "NCIT:C16576",
+            "label": "female"
+        },
+        "treatments": [
+            {
+                "ageAtOnset": {
+                    "iso8601duration": "P1Y1"
+                },
+                "routeOfAdministration": {
+                    "id": "NCIT:C38288",
+                    "label": "Oral Route of Administration"
+                },
+                "treatmentCode": {
+                    "id": "OGMS:0000113",
+                    "label": "chemotherapy procedure"
+                }
+            }
+        ],
+        "datasetId": "synthetic_usecases_4beacon_testingV3"
+    },
+    {
+        "diseases": [
+            {
+                "ageOfOnset": {
+                    "id": "NCIT:C16731",
+                    "label": "Neonate"
+                },
+                "diseaseCode": {
+                    "id": "MONDO:0004975",
+                    "label": "Cystic fibrosis"
+                },
+                "familyHistory": true,
+                "notes": "Bear in mind that all information is synthetic",
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "ethnicity": {
+            "id": "NCIT:C43851",
+            "label": "European"
+        },
+        "exposures": [
+            {
+                "ageAtExposure": {
+                    "iso8601duration": "P32Y6M1D"
+                },
+                "date": "2024-09-25",
+                "duration": "14 months",
+                "exposureCode": {
+                    "id": "CHEBI:46661",
+                    "label": "asbestos"
+                },
+                "unit": {
+                    "id": "NCIT:C28253",
+                    "label": "Milligram"
+                }
+            }
+        ],
+        "geographicOrigin": {
+            "id": "GAZ:00002586",
+            "label": "State of Wisconsin"
+        },
+        "id": "SAMPLE15",
+        "interventionsOrProcedures": [
+            {
+                "bodySite": {
+                    "id": "FMAID:7195",
+                    "label": "lung"
+                },
+                "dateOfProcedure": "2024-12-24",
+                "procedureCode": {
+                    "id": "OBI:0002657",
+                    "label": "surgical biopsy"
+                }
+            }
+        ],
+        "karyotypicSex": "XX,XY",
+        "measures": [
+            {
+                "assayCode": {
+                    "id": "UBERON:0001062",
+                    "label": "anatomical entity"
+                },
+                "date": "2024-11-08",
+                "measurementValue": [
+                    {
+                        "referenceRange": {
+                            "high": "50",
+                            "low": "20",
+                            "unit": {
+                                "id": "NCIT:C28253",
+                                "label": "Milligram"
+                            }
+                        },
+                        "unit": {
+                            "id": "NCIT:C28253",
+                            "label": "Milligram"
+                        },
+                        "value": "50"
+                    }
+                ],
+                "notes": "Bear in mind that all this information is synthetic",
+                "observationMoment": {
+                    "iso8601duration": "P32Y6M1D"
+                },
+                "procedure": {
+                    "ageAtProcedure": "1999-08-05T17:21:00+01:00",
+                    "bodySite": {
+                        "id": "FMAID:7195",
+                        "label": "lung"
+                    },
+                    "dateOfProcedure": "2024-08-15",
+                    "procedureCode": {
+                        "id": "OBI:0002657",
+                        "label": "surgical biopsy"
+                    }
+                }
+            }
+        ],
+        "pedigrees": [
+            {
+                "disease": {
+                    "diseaseCode": {
+                        "id": "HP:0001645",
+                        "label": "Sudden cardiac death"
+                    },
+                    "familyHistory": true,
+                    "notes": "Bear in mind that all this information is synthetic ",
+                    "severity": {
+                        "id": "HP:0012828",
+                        "label": "Severe"
+                    },
+                    "stage": {
+                        "id": "OGMS:0000103",
+                        "label": "Disease stage"
+                    }
+                },
+                "id": "SCD-Pedigree001",
+                "members": [
+                    {
+                        "affected": true,
+                        "memberId": "Ind001",
+                        "role": {
+                            "id": "NCIT:C64435",
+                            "label": "Proband"
+                        }
+                    },
+                    {
+                        "affected": true,
+                        "memberId": "Ind002",
+                        "role": {
+                            "id": "NCIT:C96572",
+                            "label": "Father"
+                        }
+                    },
+                    {
+                        "affected": true,
+                        "memberId": "Ind003",
+                        "role": {
+                            "id": "NCIT:C111201",
+                            "label": "Full Brother"
+                        }
+                    }
+                ]
+            }
+        ],
+        "phenotypicFeatures": [
+            {
+                "evidence": {
+                    "evidenceCode": {
+                        "id": "ECO:0006017",
+                        "label": "author statement from published clinical study used in manual assertion"
+                    }
+                },
+                "excluded": true,
+                "featureType": {
+                    "id": "HP:0000002",
+                    "label": "Abnormality of body height"
+                },
+                "modifiers": [
+                    {
+                        "id": "HP:0032500",
+                        "label": "Exacerbated by tobacco use"
+                    }
+                ],
+                "notes": "Please note that all this information is synthetic",
+                "onset": {
+                    "id": "HP:0011463",
+                    "label": "Infantile onset"
+                },
+                "resolution": {
+                    "days": "8",
+                    "weeks": "8"
+                },
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "sex": {
+            "id": "NCIT:C16576",
+            "label": "female"
+        },
+        "treatments": [
+            {
+                "ageAtOnset": {
+                    "iso8601duration": "P1Y1"
+                },
+                "routeOfAdministration": {
+                    "id": "NCIT:C38288",
+                    "label": "Oral Route of Administration"
+                },
+                "treatmentCode": {
+                    "id": "OGMS:0000113",
+                    "label": "chemotherapy procedure"
+                }
+            }
+        ],
+        "datasetId": "synthetic_usecases_4beacon_testingV3"
+    },
+    {
+        "diseases": [
+            {
+                "ageOfOnset": {
+                    "id": "NCIT:C16731",
+                    "label": "Neonate"
+                },
+                "diseaseCode": {
+                    "id": "MONDO:0004975",
+                    "label": "Cystic fibrosis"
+                },
+                "familyHistory": true,
+                "notes": "Bear in mind that all information is synthetic",
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "ethnicity": {
+            "id": "NCIT:C43851",
+            "label": "European"
+        },
+        "exposures": [
+            {
+                "ageAtExposure": {
+                    "iso8601duration": "P32Y6M1D"
+                },
+                "date": "2024-09-25",
+                "duration": "14 months",
+                "exposureCode": {
+                    "id": "CHEBI:46661",
+                    "label": "asbestos"
+                },
+                "unit": {
+                    "id": "NCIT:C28253",
+                    "label": "Milligram"
+                }
+            }
+        ],
+        "geographicOrigin": {
+            "id": "GAZ:00002586",
+            "label": "State of Wisconsin"
+        },
+        "id": "SAMPLE16",
+        "interventionsOrProcedures": [
+            {
+                "bodySite": {
+                    "id": "FMAID:7195",
+                    "label": "lung"
+                },
+                "dateOfProcedure": "2024-12-24",
+                "procedureCode": {
+                    "id": "OBI:0002657",
+                    "label": "surgical biopsy"
+                }
+            }
+        ],
+        "karyotypicSex": "XX,XY",
+        "measures": [
+            {
+                "assayCode": {
+                    "id": "UBERON:0001062",
+                    "label": "anatomical entity"
+                },
+                "date": "2024-11-08",
+                "measurementValue": [
+                    {
+                        "referenceRange": {
+                            "high": "50",
+                            "low": "20",
+                            "unit": {
+                                "id": "NCIT:C28253",
+                                "label": "Milligram"
+                            }
+                        },
+                        "unit": {
+                            "id": "NCIT:C28253",
+                            "label": "Milligram"
+                        },
+                        "value": "50"
+                    }
+                ],
+                "notes": "Bear in mind that all this information is synthetic",
+                "observationMoment": {
+                    "iso8601duration": "P32Y6M1D"
+                },
+                "procedure": {
+                    "ageAtProcedure": "1999-08-05T17:21:00+01:00",
+                    "bodySite": {
+                        "id": "FMAID:7195",
+                        "label": "lung"
+                    },
+                    "dateOfProcedure": "2024-08-15",
+                    "procedureCode": {
+                        "id": "OBI:0002657",
+                        "label": "surgical biopsy"
+                    }
+                }
+            }
+        ],
+        "pedigrees": [
+            {
+                "disease": {
+                    "diseaseCode": {
+                        "id": "HP:0001645",
+                        "label": "Sudden cardiac death"
+                    },
+                    "familyHistory": true,
+                    "notes": "Bear in mind that all this information is synthetic ",
+                    "severity": {
+                        "id": "HP:0012828",
+                        "label": "Severe"
+                    },
+                    "stage": {
+                        "id": "OGMS:0000103",
+                        "label": "Disease stage"
+                    }
+                },
+                "id": "SCD-Pedigree001",
+                "members": [
+                    {
+                        "affected": true,
+                        "memberId": "Ind001",
+                        "role": {
+                            "id": "NCIT:C64435",
+                            "label": "Proband"
+                        }
+                    },
+                    {
+                        "affected": true,
+                        "memberId": "Ind002",
+                        "role": {
+                            "id": "NCIT:C96572",
+                            "label": "Father"
+                        }
+                    },
+                    {
+                        "affected": true,
+                        "memberId": "Ind003",
+                        "role": {
+                            "id": "NCIT:C111201",
+                            "label": "Full Brother"
+                        }
+                    }
+                ]
+            }
+        ],
+        "phenotypicFeatures": [
+            {
+                "evidence": {
+                    "evidenceCode": {
+                        "id": "ECO:0006017",
+                        "label": "author statement from published clinical study used in manual assertion"
+                    }
+                },
+                "excluded": true,
+                "featureType": {
+                    "id": "HP:0000002",
+                    "label": "Abnormality of body height"
+                },
+                "modifiers": [
+                    {
+                        "id": "HP:0032500",
+                        "label": "Exacerbated by tobacco use"
+                    }
+                ],
+                "notes": "Please note that all this information is synthetic",
+                "onset": {
+                    "id": "HP:0011463",
+                    "label": "Infantile onset"
+                },
+                "resolution": {
+                    "days": "8",
+                    "weeks": "8"
+                },
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "sex": {
+            "id": "NCIT:C16576",
+            "label": "female"
+        },
+        "treatments": [
+            {
+                "ageAtOnset": {
+                    "iso8601duration": "P1Y1"
+                },
+                "routeOfAdministration": {
+                    "id": "NCIT:C38288",
+                    "label": "Oral Route of Administration"
+                },
+                "treatmentCode": {
+                    "id": "OGMS:0000113",
+                    "label": "chemotherapy procedure"
+                }
+            }
+        ],
+        "datasetId": "synthetic_usecases_4beacon_testingV3"
+    },
+    {
+        "diseases": [
+            {
+                "ageOfOnset": {
+                    "id": "NCIT:C16731",
+                    "label": "Neonate"
+                },
+                "diseaseCode": {
+                    "id": "MONDO:0004975",
+                    "label": "Cystic fibrosis"
+                },
+                "familyHistory": true,
+                "notes": "Bear in mind that all information is synthetic",
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "ethnicity": {
+            "id": "NCIT:C43851",
+            "label": "European"
+        },
+        "exposures": [
+            {
+                "ageAtExposure": {
+                    "iso8601duration": "P32Y6M1D"
+                },
+                "date": "2024-09-25",
+                "duration": "14 months",
+                "exposureCode": {
+                    "id": "CHEBI:46661",
+                    "label": "asbestos"
+                },
+                "unit": {
+                    "id": "NCIT:C28253",
+                    "label": "Milligram"
+                }
+            }
+        ],
+        "geographicOrigin": {
+            "id": "GAZ:00002586",
+            "label": "State of Wisconsin"
+        },
+        "id": "SAMPLE17",
+        "interventionsOrProcedures": [
+            {
+                "bodySite": {
+                    "id": "FMAID:7195",
+                    "label": "lung"
+                },
+                "dateOfProcedure": "2024-12-24",
+                "procedureCode": {
+                    "id": "OBI:0002657",
+                    "label": "surgical biopsy"
+                }
+            }
+        ],
+        "karyotypicSex": "XX,XY",
+        "measures": [
+            {
+                "assayCode": {
+                    "id": "UBERON:0001062",
+                    "label": "anatomical entity"
+                },
+                "date": "2024-11-08",
+                "measurementValue": [
+                    {
+                        "referenceRange": {
+                            "high": "50",
+                            "low": "20",
+                            "unit": {
+                                "id": "NCIT:C28253",
+                                "label": "Milligram"
+                            }
+                        },
+                        "unit": {
+                            "id": "NCIT:C28253",
+                            "label": "Milligram"
+                        },
+                        "value": "50"
+                    }
+                ],
+                "notes": "Bear in mind that all this information is synthetic",
+                "observationMoment": {
+                    "iso8601duration": "P32Y6M1D"
+                },
+                "procedure": {
+                    "ageAtProcedure": "1999-08-05T17:21:00+01:00",
+                    "bodySite": {
+                        "id": "FMAID:7195",
+                        "label": "lung"
+                    },
+                    "dateOfProcedure": "2024-08-15",
+                    "procedureCode": {
+                        "id": "OBI:0002657",
+                        "label": "surgical biopsy"
+                    }
+                }
+            }
+        ],
+        "pedigrees": [
+            {
+                "disease": {
+                    "diseaseCode": {
+                        "id": "HP:0001645",
+                        "label": "Sudden cardiac death"
+                    },
+                    "familyHistory": true,
+                    "notes": "Bear in mind that all this information is synthetic ",
+                    "severity": {
+                        "id": "HP:0012828",
+                        "label": "Severe"
+                    },
+                    "stage": {
+                        "id": "OGMS:0000103",
+                        "label": "Disease stage"
+                    }
+                },
+                "id": "SCD-Pedigree001",
+                "members": [
+                    {
+                        "affected": true,
+                        "memberId": "Ind001",
+                        "role": {
+                            "id": "NCIT:C64435",
+                            "label": "Proband"
+                        }
+                    },
+                    {
+                        "affected": true,
+                        "memberId": "Ind002",
+                        "role": {
+                            "id": "NCIT:C96572",
+                            "label": "Father"
+                        }
+                    },
+                    {
+                        "affected": true,
+                        "memberId": "Ind003",
+                        "role": {
+                            "id": "NCIT:C111201",
+                            "label": "Full Brother"
+                        }
+                    }
+                ]
+            }
+        ],
+        "phenotypicFeatures": [
+            {
+                "evidence": {
+                    "evidenceCode": {
+                        "id": "ECO:0006017",
+                        "label": "author statement from published clinical study used in manual assertion"
+                    }
+                },
+                "excluded": true,
+                "featureType": {
+                    "id": "HP:0000002",
+                    "label": "Abnormality of body height"
+                },
+                "modifiers": [
+                    {
+                        "id": "HP:0032500",
+                        "label": "Exacerbated by tobacco use"
+                    }
+                ],
+                "notes": "Please note that all this information is synthetic",
+                "onset": {
+                    "id": "HP:0011463",
+                    "label": "Infantile onset"
+                },
+                "resolution": {
+                    "days": "8",
+                    "weeks": "8"
+                },
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "sex": {
+            "id": "NCIT:C16576",
+            "label": "female"
+        },
+        "treatments": [
+            {
+                "ageAtOnset": {
+                    "iso8601duration": "P1Y1"
+                },
+                "routeOfAdministration": {
+                    "id": "NCIT:C38288",
+                    "label": "Oral Route of Administration"
+                },
+                "treatmentCode": {
+                    "id": "OGMS:0000113",
+                    "label": "chemotherapy procedure"
+                }
+            }
+        ],
+        "datasetId": "synthetic_usecases_4beacon_testingV3"
+    },
+    {
+        "diseases": [
+            {
+                "ageOfOnset": {
+                    "id": "NCIT:C16731",
+                    "label": "Neonate"
+                },
+                "diseaseCode": {
+                    "id": "MONDO:0004975",
+                    "label": "Cystic fibrosis"
+                },
+                "familyHistory": true,
+                "notes": "Bear in mind that all information is synthetic",
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "ethnicity": {
+            "id": "NCIT:C43851",
+            "label": "European"
+        },
+        "exposures": [
+            {
+                "ageAtExposure": {
+                    "iso8601duration": "P32Y6M1D"
+                },
+                "date": "2024-09-25",
+                "duration": "14 months",
+                "exposureCode": {
+                    "id": "CHEBI:46661",
+                    "label": "asbestos"
+                },
+                "unit": {
+                    "id": "NCIT:C28253",
+                    "label": "Milligram"
+                }
+            }
+        ],
+        "geographicOrigin": {
+            "id": "GAZ:00002586",
+            "label": "State of Wisconsin"
+        },
+        "id": "SAMPLE18",
+        "interventionsOrProcedures": [
+            {
+                "bodySite": {
+                    "id": "FMAID:7195",
+                    "label": "lung"
+                },
+                "dateOfProcedure": "2024-12-24",
+                "procedureCode": {
+                    "id": "OBI:0002657",
+                    "label": "surgical biopsy"
+                }
+            }
+        ],
+        "karyotypicSex": "XX,XY",
+        "measures": [
+            {
+                "assayCode": {
+                    "id": "UBERON:0001062",
+                    "label": "anatomical entity"
+                },
+                "date": "2024-11-08",
+                "measurementValue": [
+                    {
+                        "referenceRange": {
+                            "high": "50",
+                            "low": "20",
+                            "unit": {
+                                "id": "NCIT:C28253",
+                                "label": "Milligram"
+                            }
+                        },
+                        "unit": {
+                            "id": "NCIT:C28253",
+                            "label": "Milligram"
+                        },
+                        "value": "50"
+                    }
+                ],
+                "notes": "Bear in mind that all this information is synthetic",
+                "observationMoment": {
+                    "iso8601duration": "P32Y6M1D"
+                },
+                "procedure": {
+                    "ageAtProcedure": "1999-08-05T17:21:00+01:00",
+                    "bodySite": {
+                        "id": "FMAID:7195",
+                        "label": "lung"
+                    },
+                    "dateOfProcedure": "2024-08-15",
+                    "procedureCode": {
+                        "id": "OBI:0002657",
+                        "label": "surgical biopsy"
+                    }
+                }
+            }
+        ],
+        "pedigrees": [
+            {
+                "disease": {
+                    "diseaseCode": {
+                        "id": "HP:0001645",
+                        "label": "Sudden cardiac death"
+                    },
+                    "familyHistory": true,
+                    "notes": "Bear in mind that all this information is synthetic ",
+                    "severity": {
+                        "id": "HP:0012828",
+                        "label": "Severe"
+                    },
+                    "stage": {
+                        "id": "OGMS:0000103",
+                        "label": "Disease stage"
+                    }
+                },
+                "id": "SCD-Pedigree001",
+                "members": [
+                    {
+                        "affected": true,
+                        "memberId": "Ind001",
+                        "role": {
+                            "id": "NCIT:C64435",
+                            "label": "Proband"
+                        }
+                    },
+                    {
+                        "affected": true,
+                        "memberId": "Ind002",
+                        "role": {
+                            "id": "NCIT:C96572",
+                            "label": "Father"
+                        }
+                    },
+                    {
+                        "affected": true,
+                        "memberId": "Ind003",
+                        "role": {
+                            "id": "NCIT:C111201",
+                            "label": "Full Brother"
+                        }
+                    }
+                ]
+            }
+        ],
+        "phenotypicFeatures": [
+            {
+                "evidence": {
+                    "evidenceCode": {
+                        "id": "ECO:0006017",
+                        "label": "author statement from published clinical study used in manual assertion"
+                    }
+                },
+                "excluded": true,
+                "featureType": {
+                    "id": "HP:0000002",
+                    "label": "Abnormality of body height"
+                },
+                "modifiers": [
+                    {
+                        "id": "HP:0032500",
+                        "label": "Exacerbated by tobacco use"
+                    }
+                ],
+                "notes": "Please note that all this information is synthetic",
+                "onset": {
+                    "id": "HP:0011463",
+                    "label": "Infantile onset"
+                },
+                "resolution": {
+                    "days": "8",
+                    "weeks": "8"
+                },
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "sex": {
+            "id": "NCIT:C16576",
+            "label": "female"
+        },
+        "treatments": [
+            {
+                "ageAtOnset": {
+                    "iso8601duration": "P1Y1"
+                },
+                "routeOfAdministration": {
+                    "id": "NCIT:C38288",
+                    "label": "Oral Route of Administration"
+                },
+                "treatmentCode": {
+                    "id": "OGMS:0000113",
+                    "label": "chemotherapy procedure"
+                }
+            }
+        ],
+        "datasetId": "synthetic_usecases_4beacon_testingV3"
+    },
+    {
+        "diseases": [
+            {
+                "ageOfOnset": {
+                    "id": "NCIT:C16731",
+                    "label": "Neonate"
+                },
+                "diseaseCode": {
+                    "id": "MONDO:0004975",
+                    "label": "Cystic fibrosis"
+                },
+                "familyHistory": true,
+                "notes": "Bear in mind that all information is synthetic",
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "ethnicity": {
+            "id": "NCIT:C43851",
+            "label": "European"
+        },
+        "exposures": [
+            {
+                "ageAtExposure": {
+                    "iso8601duration": "P32Y6M1D"
+                },
+                "date": "2024-09-25",
+                "duration": "14 months",
+                "exposureCode": {
+                    "id": "CHEBI:46661",
+                    "label": "asbestos"
+                },
+                "unit": {
+                    "id": "NCIT:C28253",
+                    "label": "Milligram"
+                }
+            }
+        ],
+        "geographicOrigin": {
+            "id": "GAZ:00002586",
+            "label": "State of Wisconsin"
+        },
+        "id": "SAMPLE19",
+        "interventionsOrProcedures": [
+            {
+                "bodySite": {
+                    "id": "FMAID:7195",
+                    "label": "lung"
+                },
+                "dateOfProcedure": "2024-12-24",
+                "procedureCode": {
+                    "id": "OBI:0002657",
+                    "label": "surgical biopsy"
+                }
+            }
+        ],
+        "karyotypicSex": "XX,XY",
+        "measures": [
+            {
+                "assayCode": {
+                    "id": "UBERON:0001062",
+                    "label": "anatomical entity"
+                },
+                "date": "2024-11-08",
+                "measurementValue": [
+                    {
+                        "referenceRange": {
+                            "high": "50",
+                            "low": "20",
+                            "unit": {
+                                "id": "NCIT:C28253",
+                                "label": "Milligram"
+                            }
+                        },
+                        "unit": {
+                            "id": "NCIT:C28253",
+                            "label": "Milligram"
+                        },
+                        "value": "50"
+                    }
+                ],
+                "notes": "Bear in mind that all this information is synthetic",
+                "observationMoment": {
+                    "iso8601duration": "P32Y6M1D"
+                },
+                "procedure": {
+                    "ageAtProcedure": "1999-08-05T17:21:00+01:00",
+                    "bodySite": {
+                        "id": "FMAID:7195",
+                        "label": "lung"
+                    },
+                    "dateOfProcedure": "2024-08-15",
+                    "procedureCode": {
+                        "id": "OBI:0002657",
+                        "label": "surgical biopsy"
+                    }
+                }
+            }
+        ],
+        "pedigrees": [
+            {
+                "disease": {
+                    "diseaseCode": {
+                        "id": "HP:0001645",
+                        "label": "Sudden cardiac death"
+                    },
+                    "familyHistory": true,
+                    "notes": "Bear in mind that all this information is synthetic ",
+                    "severity": {
+                        "id": "HP:0012828",
+                        "label": "Severe"
+                    },
+                    "stage": {
+                        "id": "OGMS:0000103",
+                        "label": "Disease stage"
+                    }
+                },
+                "id": "SCD-Pedigree001",
+                "members": [
+                    {
+                        "affected": true,
+                        "memberId": "Ind001",
+                        "role": {
+                            "id": "NCIT:C64435",
+                            "label": "Proband"
+                        }
+                    },
+                    {
+                        "affected": true,
+                        "memberId": "Ind002",
+                        "role": {
+                            "id": "NCIT:C96572",
+                            "label": "Father"
+                        }
+                    },
+                    {
+                        "affected": true,
+                        "memberId": "Ind003",
+                        "role": {
+                            "id": "NCIT:C111201",
+                            "label": "Full Brother"
+                        }
+                    }
+                ]
+            }
+        ],
+        "phenotypicFeatures": [
+            {
+                "evidence": {
+                    "evidenceCode": {
+                        "id": "ECO:0006017",
+                        "label": "author statement from published clinical study used in manual assertion"
+                    }
+                },
+                "excluded": true,
+                "featureType": {
+                    "id": "HP:0000002",
+                    "label": "Abnormality of body height"
+                },
+                "modifiers": [
+                    {
+                        "id": "HP:0032500",
+                        "label": "Exacerbated by tobacco use"
+                    }
+                ],
+                "notes": "Please note that all this information is synthetic",
+                "onset": {
+                    "id": "HP:0011463",
+                    "label": "Infantile onset"
+                },
+                "resolution": {
+                    "days": "8",
+                    "weeks": "8"
+                },
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "sex": {
+            "id": "NCIT:C16576",
+            "label": "female"
+        },
+        "treatments": [
+            {
+                "ageAtOnset": {
+                    "iso8601duration": "P1Y1"
+                },
+                "routeOfAdministration": {
+                    "id": "NCIT:C38288",
+                    "label": "Oral Route of Administration"
+                },
+                "treatmentCode": {
+                    "id": "OGMS:0000113",
+                    "label": "chemotherapy procedure"
+                }
+            }
+        ],
+        "datasetId": "synthetic_usecases_4beacon_testingV3"
+    },
+    {
+        "diseases": [
+            {
+                "ageOfOnset": {
+                    "id": "NCIT:C16731",
+                    "label": "Neonate"
+                },
+                "diseaseCode": {
+                    "id": "MONDO:0004975",
+                    "label": "Cystic fibrosis"
+                },
+                "familyHistory": true,
+                "notes": "Bear in mind that all information is synthetic",
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "ethnicity": {
+            "id": "NCIT:C43851",
+            "label": "European"
+        },
+        "exposures": [
+            {
+                "ageAtExposure": {
+                    "iso8601duration": "P32Y6M1D"
+                },
+                "date": "2024-09-25",
+                "duration": "14 months",
+                "exposureCode": {
+                    "id": "CHEBI:46661",
+                    "label": "asbestos"
+                },
+                "unit": {
+                    "id": "NCIT:C28253",
+                    "label": "Milligram"
+                }
+            }
+        ],
+        "geographicOrigin": {
+            "id": "GAZ:00002586",
+            "label": "State of Wisconsin"
+        },
+        "id": "SAMPLE20",
+        "interventionsOrProcedures": [
+            {
+                "bodySite": {
+                    "id": "FMAID:7195",
+                    "label": "lung"
+                },
+                "dateOfProcedure": "2024-12-24",
+                "procedureCode": {
+                    "id": "OBI:0002657",
+                    "label": "surgical biopsy"
+                }
+            }
+        ],
+        "karyotypicSex": "XX,XY",
+        "measures": [
+            {
+                "assayCode": {
+                    "id": "UBERON:0001062",
+                    "label": "anatomical entity"
+                },
+                "date": "2024-11-08",
+                "measurementValue": [
+                    {
+                        "referenceRange": {
+                            "high": "50",
+                            "low": "20",
+                            "unit": {
+                                "id": "NCIT:C28253",
+                                "label": "Milligram"
+                            }
+                        },
+                        "unit": {
+                            "id": "NCIT:C28253",
+                            "label": "Milligram"
+                        },
+                        "value": "50"
+                    }
+                ],
+                "notes": "Bear in mind that all this information is synthetic",
+                "observationMoment": {
+                    "iso8601duration": "P32Y6M1D"
+                },
+                "procedure": {
+                    "ageAtProcedure": "1999-08-05T17:21:00+01:00",
+                    "bodySite": {
+                        "id": "FMAID:7195",
+                        "label": "lung"
+                    },
+                    "dateOfProcedure": "2024-08-15",
+                    "procedureCode": {
+                        "id": "OBI:0002657",
+                        "label": "surgical biopsy"
+                    }
+                }
+            }
+        ],
+        "pedigrees": [
+            {
+                "disease": {
+                    "diseaseCode": {
+                        "id": "HP:0001645",
+                        "label": "Sudden cardiac death"
+                    },
+                    "familyHistory": true,
+                    "notes": "Bear in mind that all this information is synthetic ",
+                    "severity": {
+                        "id": "HP:0012828",
+                        "label": "Severe"
+                    },
+                    "stage": {
+                        "id": "OGMS:0000103",
+                        "label": "Disease stage"
+                    }
+                },
+                "id": "SCD-Pedigree001",
+                "members": [
+                    {
+                        "affected": true,
+                        "memberId": "Ind001",
+                        "role": {
+                            "id": "NCIT:C64435",
+                            "label": "Proband"
+                        }
+                    },
+                    {
+                        "affected": true,
+                        "memberId": "Ind002",
+                        "role": {
+                            "id": "NCIT:C96572",
+                            "label": "Father"
+                        }
+                    },
+                    {
+                        "affected": true,
+                        "memberId": "Ind003",
+                        "role": {
+                            "id": "NCIT:C111201",
+                            "label": "Full Brother"
+                        }
+                    }
+                ]
+            }
+        ],
+        "phenotypicFeatures": [
+            {
+                "evidence": {
+                    "evidenceCode": {
+                        "id": "ECO:0006017",
+                        "label": "author statement from published clinical study used in manual assertion"
+                    }
+                },
+                "excluded": true,
+                "featureType": {
+                    "id": "HP:0000002",
+                    "label": "Abnormality of body height"
+                },
+                "modifiers": [
+                    {
+                        "id": "HP:0032500",
+                        "label": "Exacerbated by tobacco use"
+                    }
+                ],
+                "notes": "Please note that all this information is synthetic",
+                "onset": {
+                    "id": "HP:0011463",
+                    "label": "Infantile onset"
+                },
+                "resolution": {
+                    "days": "8",
+                    "weeks": "8"
+                },
+                "severity": {
+                    "id": "HP:0012828",
+                    "label": "Severe"
+                }
+            }
+        ],
+        "sex": {
+            "id": "NCIT:C16576",
+            "label": "female"
+        },
+        "treatments": [
+            {
+                "ageAtOnset": {
+                    "iso8601duration": "P1Y1"
+                },
+                "routeOfAdministration": {
+                    "id": "NCIT:C38288",
+                    "label": "Oral Route of Administration"
+                },
+                "treatmentCode": {
+                    "id": "OGMS:0000113",
+                    "label": "chemotherapy procedure"
+                }
+            }
+        ],
+        "datasetId": "synthetic_usecases_4beacon_testingV3"
+    }
+]
