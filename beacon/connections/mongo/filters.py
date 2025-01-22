@@ -31,20 +31,6 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
             mongo_collection=client.beacon.individuals
             original_id="id"
             join_ids=list(join_query(self, mongo_collection, query, original_id))
-            '''
-            final_id="individualId"
-            for id_item in join_ids:
-                new_id={}
-                new_id[final_id] = id_item.pop(original_id)
-                def_list.append(new_id)
-            
-            query={}
-            query['$or']=def_list
-            mongo_collection=client.beacon.biosamples
-            original_id="id"
-            join_ids2=list(join_query(self, mongo_collection, query, original_id))
-            LOG.debug(join_ids2)
-            '''
             targets = client.beacon.targets \
                 .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
             bioids=targets[0]["biosampleIds"]
@@ -52,18 +38,18 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
             for id_item in join_ids:
                 new_id={}
                 biosampleId=id_item.pop(original_id)
-                position=bioids.index(biosampleId)
+                try:
+                    position=bioids.index(biosampleId)
+                except Exception:
+                    continue
                 positions_list.append(position)
             query_cl={}
             query_cl["$or"]=[]
             for position in positions_list:
                 position=str(position)
-                position1="^"+position+","
-                position2=","+position+","
-                position3=","+position+"$"
-                query_cl["$or"].append({"biosampleIds": {"$regex": position1}})
-                query_cl["$or"].append({"biosampleIds": {"$regex": position2}})
-                query_cl["$or"].append({"biosampleIds": {"$regex": position3}})
+                query_cl["$or"].append({ position: "10", "datasetId": dataset})
+                query_cl["$or"].append({ position: "11", "datasetId": dataset})
+                query_cl["$or"].append({ position: "01", "datasetId": dataset})
             string_of_ids = client.beacon.caseLevelData \
                 .find(query_cl, {"id": 1, "_id": 0})
             HGVSIds=list(string_of_ids)
@@ -811,8 +797,9 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, col
                     dict_regex['$regex']='^NC_0000'+'24'
                 else:
                     dict_regex['$regex']='^NC_0000'+filter.value+'.'+'10:g'+'|'+'^NC_0000'+filter.value+'.'+'11:g'+'|'+'^NC_0000'+filter.value+'.'+'9:g'
-            elif '>' in filter.value:# pragma: no cover
-                dict_regex=filter.value
+            elif '&gt;' in filter.value:# pragma: no cover
+                newvalue=filter.value.replace("&gt;",">")
+                dict_regex=newvalue
             elif '.' in filter.value:# pragma: no cover
                 valuesplitted = filter.value.split('.')
                 dict_regex['$regex']=valuesplitted[0]+".*"+valuesplitted[-1]+":"

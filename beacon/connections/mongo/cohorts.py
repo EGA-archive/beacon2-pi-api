@@ -53,12 +53,18 @@ def get_individuals_of_cohort(self, entry_id: Optional[str], qparams: RequestPar
     dataset_count=0
     limit = qparams.query.pagination.limit
     include = qparams.query.include_resultset_responses
-    query = apply_filters(self, {}, qparams.query.filters, collection, {}, dataset)
-    query = query_id(self, query, entry_id)
-    count = get_count(self, client.beacon.cohorts, query)
+    dataset_found = client.beacon.cohorts \
+        .find({"id": entry_id}, {"datasetId": 1, "_id": 0})
+    dataset_found=list(dataset_found)
     dict_in={}
-    dict_in['datasetId']=dataset
+    dataset_found=dataset_found[0]["datasetId"]
+    if dataset == dataset_found:
+        dict_in['datasetId']=dataset_found
+    else:
+        schema = DefaultSchemas.INDIVIDUALS# pragma: no cover
+        return schema, 0, 0, None, dataset# pragma: no cover
     query = apply_filters(self, dict_in, qparams.query.filters, collection, {}, dataset)
+    count = get_count(self, client.beacon.cohorts, query)
 
     schema = DefaultSchemas.INDIVIDUALS
     skip = qparams.query.pagination.skip
@@ -75,12 +81,18 @@ def get_analyses_of_cohort(self, entry_id: Optional[str], qparams: RequestParams
     dataset_count=0
     limit = qparams.query.pagination.limit
     include = qparams.query.include_resultset_responses
-    query = apply_filters(self, {}, qparams.query.filters, collection, {}, dataset)
-    query = query_id(self, query, entry_id)
-    count = get_count(self, client.beacon.cohorts, query)
+    dataset_found = client.beacon.cohorts \
+        .find({"id": entry_id}, {"datasetId": 1, "_id": 0})
+    dataset_found=list(dataset_found)
     dict_in={}
-    dict_in['datasetId']=dataset
+    dataset_found=dataset_found[0]["datasetId"]
+    if dataset == dataset_found:
+        dict_in['datasetId']=dataset_found
+    else:
+        schema = DefaultSchemas.ANALYSES# pragma: no cover
+        return schema, 0, 0, None, dataset# pragma: no cover
     query = apply_filters(self, dict_in, qparams.query.filters, collection, {}, dataset)
+    count = get_count(self, client.beacon.cohorts, query)
     schema = DefaultSchemas.ANALYSES
     skip = qparams.query.pagination.skip
     if limit > 100 or limit == 0:
@@ -96,8 +108,17 @@ def get_variants_of_cohort(self,entry_id: Optional[str], qparams: RequestParams,
     dataset_count=0
     limit = qparams.query.pagination.limit
     include = qparams.query.include_resultset_responses
-    query = apply_filters(self, {}, qparams.query.filters, collection, {}, dataset)
-    query = query_id(self, query, entry_id)
+    dataset_found = client.beacon.cohorts \
+        .find({"id": entry_id}, {"datasetId": 1, "_id": 0})
+    dataset_found=list(dataset_found)
+    dict_in={}
+    dataset_found=dataset_found[0]["datasetId"]
+    if dataset == dataset_found:
+        dict_in['datasetId']=dataset_found
+    else:
+        schema = DefaultSchemas.GENOMICVARIATIONS# pragma: no cover
+        return schema, 0, 0, None, dataset# pragma: no cover
+    query = apply_filters(self, dict_in, qparams.query.filters, collection, {}, dataset)
     count = get_count(self, client.beacon.cohorts, query)
     query_count={}
     query_count["$or"]=[]
@@ -133,12 +154,18 @@ def get_runs_of_cohort(self, entry_id: Optional[str], qparams: RequestParams, da
     dataset_count=0
     limit = qparams.query.pagination.limit
     include = qparams.query.include_resultset_responses
-    query = apply_filters(self, {}, qparams.query.filters, collection, {}, dataset)
-    query = query_id(self, query, entry_id)
-    count = get_count(self, client.beacon.cohorts, query)
+    dataset_found = client.beacon.cohorts \
+        .find({"id": entry_id}, {"datasetId": 1, "_id": 0})
+    dataset_found=list(dataset_found)
     dict_in={}
-    dict_in['datasetId']=dataset
+    dataset_found=dataset_found[0]["datasetId"]
+    if dataset == dataset_found:
+        dict_in['datasetId']=dataset_found
+    else:
+        schema = DefaultSchemas.RUNS# pragma: no cover
+        return schema, 0, 0, None, dataset# pragma: no cover
     query = apply_filters(self, dict_in, qparams.query.filters, collection, {}, dataset)
+    count = get_count(self, client.beacon.cohorts, query)
     schema = DefaultSchemas.RUNS
     skip = qparams.query.pagination.skip
     if limit > 100 or limit == 0:
@@ -154,12 +181,18 @@ def get_biosamples_of_cohort(self, entry_id: Optional[str], qparams: RequestPara
     dataset_count=0
     limit = qparams.query.pagination.limit
     include = qparams.query.include_resultset_responses
-    query = apply_filters(self, {}, qparams.query.filters, collection, {}, dataset)
-    query = query_id(self, query, entry_id)
-    count = get_count(self, client.beacon.cohorts, query)
+    dataset_found = client.beacon.cohorts \
+        .find({"id": entry_id}, {"datasetId": 1, "_id": 0})
+    dataset_found=list(dataset_found)
     dict_in={}
-    dict_in['datasetId']=dataset
+    dataset_found=dataset_found[0]["datasetId"]
+    if dataset == dataset_found:
+        dict_in['datasetId']=dataset_found
+    else:
+        schema = DefaultSchemas.BIOSAMPLES# pragma: no cover
+        return schema, 0, 0, None, dataset# pragma: no cover
     query = apply_filters(self, dict_in, qparams.query.filters, collection, {}, dataset)
+    count = get_count(self, client.beacon.cohorts, query)
     schema = DefaultSchemas.BIOSAMPLES
     skip = qparams.query.pagination.skip
     if limit > 100 or limit == 0:

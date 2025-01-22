@@ -1,0 +1,17 @@
+[
+    {
+        "aligner": "bwa-0.7.8",
+        "analysisDate": "2021-10-17",
+        "biosampleId": "SAMPLE1",
+        "id": "EGA-testing",
+        "individualId": "SAMPLE1",
+        "info": {
+            "info": "Bothmetadataandgenomicvariationsinformationaresynthetic."
+        },
+        "pipelineName": "Pipeline-panel-0001-v1",
+        "pipelineRef": "https://doi.org/10.48511/workflowhub.workflow.111.1",
+        "runId": "EGAR5000XXX",
+        "variantCaller": "GATK4.0",
+        "datasetId": "synthetic_usecases_4beacon_testingV3"
+    }
+]

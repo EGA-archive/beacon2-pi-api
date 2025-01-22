@@ -1,7 +1,7 @@
 from aiohttp.web_request import Request
 from beacon.response.catalog import build_beacon_record_response_by_dataset, build_beacon_count_response, build_beacon_collection_response, build_beacon_info_response, build_map, build_configuration, build_entry_types, build_beacon_service_info_response, build_filtering_terms_response, build_beacon_boolean_response, build_beacon_none_response
 from beacon.logs.logs import log_with_args, LOG
-from beacon.conf.conf import level, max_beacon_granularity
+from beacon.conf.conf import level, max_beacon_granularity, test_datasetId
 from beacon.request.classes import Granularity
 from beacon.source.manage import analyses, biosamples, cohorts, datasets, g_variants, individuals, runs, filtering_terms
 
@@ -53,7 +53,7 @@ async def builder(self, request: Request, datasets, qparams, entry_type, entry_i
         module = importlib.import_module(complete_module, package=None)
         testMode = qparams.query.test_mode
         if testMode == True:
-            datasets = ['test']
+            datasets = [test_datasetId]
         datasets_docs, datasets_count, count, entity_schema, include, datasets = await module.execute_function(self, entry_type, datasets, qparams, entry_id)
         if include != 'NONE' and granularity == Granularity.RECORD and max_beacon_granularity == 'record' and allowed_granularity=='record':
             response = build_beacon_record_response_by_dataset(self, datasets, datasets_docs, datasets_count, count, qparams, entity_schema)
