@@ -68,8 +68,8 @@
                 "measurementValue": [
                     {
                         "referenceRange": {
-                            "high": "50",
-                            "low": "20",
+                            "high": 50,
+                            "low": 20,
                             "unit": {
                                 "id": "NCIT:C28253",
                                 "label": "Milligram"
@@ -79,7 +79,7 @@
                             "id": "NCIT:C28253",
                             "label": "Milligram"
                         },
-                        "value": "50"
+                        "value": 50
                     }
                 ],
                 "notes": "Bear in mind that all this information is synthetic",
@@ -172,8 +172,8 @@
                     "label": "Infantile onset"
                 },
                 "resolution": {
-                    "days": "8",
-                    "weeks": "8"
+                    "days": 8,
+                    "weeks": 8
                 },
                 "severity": {
                     "id": "HP:0012828",
@@ -271,8 +271,8 @@
                 "measurementValue": [
                     {
                         "referenceRange": {
-                            "high": "50",
-                            "low": "20",
+                            "high": 50,
+                            "low": 20,
                             "unit": {
                                 "id": "NCIT:C28253",
                                 "label": "Milligram"
@@ -282,7 +282,7 @@
                             "id": "NCIT:C28253",
                             "label": "Milligram"
                         },
-                        "value": "50"
+                        "value": 50
                     }
                 ],
                 "notes": "Bear in mind that all this information is synthetic",
@@ -375,8 +375,8 @@
                     "label": "Infantile onset"
                 },
                 "resolution": {
-                    "days": "8",
-                    "weeks": "8"
+                    "days": 8,
+                    "weeks": 8
                 },
                 "severity": {
                     "id": "HP:0012828",
@@ -474,8 +474,8 @@
                 "measurementValue": [
                     {
                         "referenceRange": {
-                            "high": "50",
-                            "low": "20",
+                            "high": 50,
+                            "low": 20,
                             "unit": {
                                 "id": "NCIT:C28253",
                                 "label": "Milligram"
@@ -485,7 +485,7 @@
                             "id": "NCIT:C28253",
                             "label": "Milligram"
                         },
-                        "value": "50"
+                        "value": 50
                     }
                 ],
                 "notes": "Bear in mind that all this information is synthetic",
@@ -578,8 +578,8 @@
                     "label": "Infantile onset"
                 },
                 "resolution": {
-                    "days": "8",
-                    "weeks": "8"
+                    "days": 8,
+                    "weeks": 8
                 },
                 "severity": {
                     "id": "HP:0012828",
@@ -677,8 +677,8 @@
                 "measurementValue": [
                     {
                         "referenceRange": {
-                            "high": "50",
-                            "low": "20",
+                            "high": 50,
+                            "low": 20,
                             "unit": {
                                 "id": "NCIT:C28253",
                                 "label": "Milligram"
@@ -688,7 +688,7 @@
                             "id": "NCIT:C28253",
                             "label": "Milligram"
                         },
-                        "value": "50"
+                        "value": 50
                     }
                 ],
                 "notes": "Bear in mind that all this information is synthetic",
@@ -781,8 +781,8 @@
                     "label": "Infantile onset"
                 },
                 "resolution": {
-                    "days": "8",
-                    "weeks": "8"
+                    "days": 8,
+                    "weeks": 8
                 },
                 "severity": {
                     "id": "HP:0012828",
@@ -880,8 +880,8 @@
                 "measurementValue": [
                     {
                         "referenceRange": {
-                            "high": "50",
-                            "low": "20",
+                            "high": 50,
+                            "low": 20,
                             "unit": {
                                 "id": "NCIT:C28253",
                                 "label": "Milligram"
@@ -891,7 +891,7 @@
                             "id": "NCIT:C28253",
                             "label": "Milligram"
                         },
-                        "value": "50"
+                        "value": 50
                     }
                 ],
                 "notes": "Bear in mind that all this information is synthetic",
@@ -984,8 +984,8 @@
                     "label": "Infantile onset"
                 },
                 "resolution": {
-                    "days": "8",
-                    "weeks": "8"
+                    "days": 8,
+                    "weeks": 8
                 },
                 "severity": {
                     "id": "HP:0012828",
@@ -1083,8 +1083,8 @@
                 "measurementValue": [
                     {
                         "referenceRange": {
-                            "high": "50",
-                            "low": "20",
+                            "high": 50,
+                            "low": 20,
                             "unit": {
                                 "id": "NCIT:C28253",
                                 "label": "Milligram"
@@ -1094,7 +1094,7 @@
                             "id": "NCIT:C28253",
                             "label": "Milligram"
                         },
-                        "value": "50"
+                        "value": 50
                     }
                 ],
                 "notes": "Bear in mind that all this information is synthetic",
@@ -1187,8 +1187,8 @@
                     "label": "Infantile onset"
                 },
                 "resolution": {
-                    "days": "8",
-                    "weeks": "8"
+                    "days": 8,
+                    "weeks": 8
                 },
                 "severity": {
                     "id": "HP:0012828",
@@ -1286,8 +1286,8 @@
                 "measurementValue": [
                     {
                         "referenceRange": {
-                            "high": "50",
-                            "low": "20",
+                            "high": 50,
+                            "low": 20,
                             "unit": {
                                 "id": "NCIT:C28253",
                                 "label": "Milligram"
@@ -1297,7 +1297,7 @@
                             "id": "NCIT:C28253",
                             "label": "Milligram"
                         },
-                        "value": "50"
+                        "value": 50
                     }
                 ],
                 "notes": "Bear in mind that all this information is synthetic",
@@ -1390,8 +1390,8 @@
                     "label": "Infantile onset"
                 },
                 "resolution": {
-                    "days": "8",
-                    "weeks": "8"
+                    "days": 8,
+                    "weeks": 8
                 },
                 "severity": {
                     "id": "HP:0012828",
@@ -1489,8 +1489,8 @@
                 "measurementValue": [
                     {
                         "referenceRange": {
-                            "high": "50",
-                            "low": "20",
+                            "high": 50,
+                            "low": 20,
                             "unit": {
                                 "id": "NCIT:C28253",
                                 "label": "Milligram"
@@ -1500,7 +1500,7 @@
                             "id": "NCIT:C28253",
                             "label": "Milligram"
                         },
-                        "value": "50"
+                        "value": 50
                     }
                 ],
                 "notes": "Bear in mind that all this information is synthetic",
@@ -1593,8 +1593,8 @@
                     "label": "Infantile onset"
                 },
                 "resolution": {
-                    "days": "8",
-                    "weeks": "8"
+                    "days": 8,
+                    "weeks": 8
                 },
                 "severity": {
                     "id": "HP:0012828",
@@ -1692,8 +1692,8 @@
                 "measurementValue": [
                     {
                         "referenceRange": {
-                            "high": "50",
-                            "low": "20",
+                            "high": 50,
+                            "low": 20,
                             "unit": {
                                 "id": "NCIT:C28253",
                                 "label": "Milligram"
@@ -1703,7 +1703,7 @@
                             "id": "NCIT:C28253",
                             "label": "Milligram"
                         },
-                        "value": "50"
+                        "value": 50
                     }
                 ],
                 "notes": "Bear in mind that all this information is synthetic",
@@ -1796,8 +1796,8 @@
                     "label": "Infantile onset"
                 },
                 "resolution": {
-                    "days": "8",
-                    "weeks": "8"
+                    "days": 8,
+                    "weeks": 8
                 },
                 "severity": {
                     "id": "HP:0012828",
@@ -1895,8 +1895,8 @@
                 "measurementValue": [
                     {
                         "referenceRange": {
-                            "high": "50",
-                            "low": "20",
+                            "high": 50,
+                            "low": 20,
                             "unit": {
                                 "id": "NCIT:C28253",
                                 "label": "Milligram"
@@ -1906,7 +1906,7 @@
                             "id": "NCIT:C28253",
                             "label": "Milligram"
                         },
-                        "value": "50"
+                        "value": 50
                     }
                 ],
                 "notes": "Bear in mind that all this information is synthetic",
@@ -1999,8 +1999,8 @@
                     "label": "Infantile onset"
                 },
                 "resolution": {
-                    "days": "8",
-                    "weeks": "8"
+                    "days": 8,
+                    "weeks": 8
                 },
                 "severity": {
                     "id": "HP:0012828",
@@ -2098,8 +2098,8 @@
                 "measurementValue": [
                     {
                         "referenceRange": {
-                            "high": "50",
-                            "low": "20",
+                            "high": 50,
+                            "low": 20,
                             "unit": {
                                 "id": "NCIT:C28253",
                                 "label": "Milligram"
@@ -2109,7 +2109,7 @@
                             "id": "NCIT:C28253",
                             "label": "Milligram"
                         },
-                        "value": "50"
+                        "value": 50
                     }
                 ],
                 "notes": "Bear in mind that all this information is synthetic",
@@ -2202,8 +2202,8 @@
                     "label": "Infantile onset"
                 },
                 "resolution": {
-                    "days": "8",
-                    "weeks": "8"
+                    "days": 8,
+                    "weeks": 8
                 },
                 "severity": {
                     "id": "HP:0012828",
@@ -2301,8 +2301,8 @@
                 "measurementValue": [
                     {
                         "referenceRange": {
-                            "high": "50",
-                            "low": "20",
+                            "high": 50,
+                            "low": 20,
                             "unit": {
                                 "id": "NCIT:C28253",
                                 "label": "Milligram"
@@ -2312,7 +2312,7 @@
                             "id": "NCIT:C28253",
                             "label": "Milligram"
                         },
-                        "value": "50"
+                        "value": 50
                     }
                 ],
                 "notes": "Bear in mind that all this information is synthetic",
@@ -2405,8 +2405,8 @@
                     "label": "Infantile onset"
                 },
                 "resolution": {
-                    "days": "8",
-                    "weeks": "8"
+                    "days": 8,
+                    "weeks": 8
                 },
                 "severity": {
                     "id": "HP:0012828",
@@ -2504,8 +2504,8 @@
                 "measurementValue": [
                     {
                         "referenceRange": {
-                            "high": "50",
-                            "low": "20",
+                            "high": 50,
+                            "low": 20,
                             "unit": {
                                 "id": "NCIT:C28253",
                                 "label": "Milligram"
@@ -2515,7 +2515,7 @@
                             "id": "NCIT:C28253",
                             "label": "Milligram"
                         },
-                        "value": "50"
+                        "value": 50
                     }
                 ],
                 "notes": "Bear in mind that all this information is synthetic",
@@ -2608,8 +2608,8 @@
                     "label": "Infantile onset"
                 },
                 "resolution": {
-                    "days": "8",
-                    "weeks": "8"
+                    "days": 8,
+                    "weeks": 8
                 },
                 "severity": {
                     "id": "HP:0012828",
@@ -2707,8 +2707,8 @@
                 "measurementValue": [
                     {
                         "referenceRange": {
-                            "high": "50",
-                            "low": "20",
+                            "high": 50,
+                            "low": 20,
                             "unit": {
                                 "id": "NCIT:C28253",
                                 "label": "Milligram"
@@ -2718,7 +2718,7 @@
                             "id": "NCIT:C28253",
                             "label": "Milligram"
                         },
-                        "value": "50"
+                        "value": 50
                     }
                 ],
                 "notes": "Bear in mind that all this information is synthetic",
@@ -2811,8 +2811,8 @@
                     "label": "Infantile onset"
                 },
                 "resolution": {
-                    "days": "8",
-                    "weeks": "8"
+                    "days": 8,
+                    "weeks": 8
                 },
                 "severity": {
                     "id": "HP:0012828",
@@ -2910,8 +2910,8 @@
                 "measurementValue": [
                     {
                         "referenceRange": {
-                            "high": "50",
-                            "low": "20",
+                            "high": 50,
+                            "low": 20,
                             "unit": {
                                 "id": "NCIT:C28253",
                                 "label": "Milligram"
@@ -2921,7 +2921,7 @@
                             "id": "NCIT:C28253",
                             "label": "Milligram"
                         },
-                        "value": "50"
+                        "value": 50
                     }
                 ],
                 "notes": "Bear in mind that all this information is synthetic",
@@ -3014,8 +3014,8 @@
                     "label": "Infantile onset"
                 },
                 "resolution": {
-                    "days": "8",
-                    "weeks": "8"
+                    "days": 8,
+                    "weeks": 8
                 },
                 "severity": {
                     "id": "HP:0012828",
@@ -3113,8 +3113,8 @@
                 "measurementValue": [
                     {
                         "referenceRange": {
-                            "high": "50",
-                            "low": "20",
+                            "high": 50,
+                            "low": 20,
                             "unit": {
                                 "id": "NCIT:C28253",
                                 "label": "Milligram"
@@ -3124,7 +3124,7 @@
                             "id": "NCIT:C28253",
                             "label": "Milligram"
                         },
-                        "value": "50"
+                        "value": 50
                     }
                 ],
                 "notes": "Bear in mind that all this information is synthetic",
@@ -3217,8 +3217,8 @@
                     "label": "Infantile onset"
                 },
                 "resolution": {
-                    "days": "8",
-                    "weeks": "8"
+                    "days": 8,
+                    "weeks": 8
                 },
                 "severity": {
                     "id": "HP:0012828",
@@ -3316,8 +3316,8 @@
                 "measurementValue": [
                     {
                         "referenceRange": {
-                            "high": "50",
-                            "low": "20",
+                            "high": 50,
+                            "low": 20,
                             "unit": {
                                 "id": "NCIT:C28253",
                                 "label": "Milligram"
@@ -3327,7 +3327,7 @@
                             "id": "NCIT:C28253",
                             "label": "Milligram"
                         },
-                        "value": "50"
+                        "value": 50
                     }
                 ],
                 "notes": "Bear in mind that all this information is synthetic",
@@ -3420,8 +3420,8 @@
                     "label": "Infantile onset"
                 },
                 "resolution": {
-                    "days": "8",
-                    "weeks": "8"
+                    "days": 8,
+                    "weeks": 8
                 },
                 "severity": {
                     "id": "HP:0012828",
@@ -3519,8 +3519,8 @@
                 "measurementValue": [
                     {
                         "referenceRange": {
-                            "high": "50",
-                            "low": "20",
+                            "high": 50,
+                            "low": 20,
                             "unit": {
                                 "id": "NCIT:C28253",
                                 "label": "Milligram"
@@ -3530,7 +3530,7 @@
                             "id": "NCIT:C28253",
                             "label": "Milligram"
                         },
-                        "value": "50"
+                        "value": 50
                     }
                 ],
                 "notes": "Bear in mind that all this information is synthetic",
@@ -3623,8 +3623,8 @@
                     "label": "Infantile onset"
                 },
                 "resolution": {
-                    "days": "8",
-                    "weeks": "8"
+                    "days": 8,
+                    "weeks": 8
                 },
                 "severity": {
                     "id": "HP:0012828",
@@ -3722,8 +3722,8 @@
                 "measurementValue": [
                     {
                         "referenceRange": {
-                            "high": "50",
-                            "low": "20",
+                            "high": 50,
+                            "low": 20,
                             "unit": {
                                 "id": "NCIT:C28253",
                                 "label": "Milligram"
@@ -3733,7 +3733,7 @@
                             "id": "NCIT:C28253",
                             "label": "Milligram"
                         },
-                        "value": "50"
+                        "value": 50
                     }
                 ],
                 "notes": "Bear in mind that all this information is synthetic",
@@ -3826,8 +3826,8 @@
                     "label": "Infantile onset"
                 },
                 "resolution": {
-                    "days": "8",
-                    "weeks": "8"
+                    "days": 8,
+                    "weeks": 8
                 },
                 "severity": {
                     "id": "HP:0012828",
@@ -3925,8 +3925,8 @@
                 "measurementValue": [
                     {
                         "referenceRange": {
-                            "high": "50",
-                            "low": "20",
+                            "high": 50,
+                            "low": 20,
                             "unit": {
                                 "id": "NCIT:C28253",
                                 "label": "Milligram"
@@ -3936,7 +3936,7 @@
                             "id": "NCIT:C28253",
                             "label": "Milligram"
                         },
-                        "value": "50"
+                        "value": 50
                     }
                 ],
                 "notes": "Bear in mind that all this information is synthetic",
@@ -4029,8 +4029,8 @@
                     "label": "Infantile onset"
                 },
                 "resolution": {
-                    "days": "8",
-                    "weeks": "8"
+                    "days": 8,
+                    "weeks": 8
                 },
                 "severity": {
                     "id": "HP:0012828",

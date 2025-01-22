@@ -655,13 +655,63 @@ class TestMain(unittest.TestCase):
                 assert resp.status == 200
             loop.run_until_complete(test_check_g_variants_endpoint_NONE_resultSetResponse_is_working())
             loop.run_until_complete(client.close())
-    def test_main_check_g_variants_endpoint_with_parameters_is_working(self):
+    def test_main_check_g_variants_sequence_query(self):
         with loop_context() as loop:
             app = create_app()
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
-                resp = await client.get("/api/g_variants?start=16050074&end=16050075&alternateBases=A&referenceBases=G&referenceName=22")
+                resp = await client.get("/api/g_variants?start=43045703&referenceName=17&assemblyId=GRCh38&referenceBases=G&alternateBases=A")
+                assert resp.status == 200
+            loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_g_variants_range_query(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_g_variants_endpoint_with_parameters_is_working():
+                resp = await client.get("/api/g_variants?start=345675&referenceName=2&assemblyId=GRCh38&end=345681")
+                assert resp.status == 200
+            loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_g_variants_geneId_query(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_g_variants_endpoint_with_parameters_is_working():
+                resp = await client.get("/api/g_variants?geneId=BRCA1")
+                assert resp.status == 200
+            loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_g_variants_bracket_query(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_g_variants_endpoint_with_parameters_is_working():
+                resp = await client.get("/api/g_variants?start=43045703,43045704&end=43045704,43045705&referenceName=17&assemblyId=GRCh38")
+                assert resp.status == 200
+            loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_g_variants_genomic_allele_query(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_g_variants_endpoint_with_parameters_is_working():
+                resp = await client.get("/api/g_variants?genomicAlleleShortForm=NC_000017.11:g.43045703G>A")
+                assert resp.status == 200
+            loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_g_variants_aminoacidChange_query(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_g_variants_endpoint_with_parameters_is_working():
+                resp = await client.get("/api/g_variants?aminoacidChange=Pro1856Ser&geneId=BRCA1")
                 assert resp.status == 200
             loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
             loop.run_until_complete(client.close())
@@ -676,13 +726,13 @@ class TestMain(unittest.TestCase):
                 },
                 "query": { "requestParameters": {        },
                     "filters": [
-            {"id":"NCIT:C42331", "scope":"individual"}],
+            {"id":"NCIT:C16576", "scope":"individual"}],
                     "includeResultsetResponses": "HIT",
                     "pagination": {
                         "skip": 0,
                         "limit": 10
                     },
-                    "testMode": False,
+                    "testMode": True,
                     "requestedGranularity": "record"
                 }
                 })
@@ -700,13 +750,13 @@ class TestMain(unittest.TestCase):
                 },
                 "query": { "requestParameters": {        },
                     "filters": [
-            {"id":"NCIT:C42331", "scope":"individual"}],
+            {"id":"NCIT:C16576", "scope":"individual"}],
                     "includeResultsetResponses": "HIT",
                     "pagination": {
                         "skip": 0,
                         "limit": 10
                     },
-                    "testMode": False,
+                    "testMode": True,
                     "requestedGranularity": "record"
                 }
                 })
@@ -740,7 +790,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_datasets_g_variants_endpoint_is_working():
-                resp = await client.get("/api/g_variants?datasets=CINECA_synthetic_cohort_EUROPE_UK1")
+                resp = await client.get("/api/g_variants?datasets=synthetic_usecases_4beacon_testingV3")
                 assert resp.status == 200
             loop.run_until_complete(test_check_datasets_g_variants_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -751,7 +801,7 @@ class TestMain(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_cross_query_is_working():
                 MagicClass = MagicMock(_id='hohoho')
-                resp = cross_query(MagicClass, {'$or': [{'ethnicity.id': 'NCIT:C42331'}]}, 'individual', 'biosamples', {}, 'CINECA_synthetic_cohort_EUROPE_UK1')
+                resp = cross_query(MagicClass, {'$or': [{'ethnicity.id': 'NCIT:C43851'}]}, 'individual', 'biosamples', {}, 'synthetic_usecases_4beacon_testingV3')
                 assert resp != {}
             loop.run_until_complete(test_check_cross_query_is_working())
             loop.run_until_complete(client.close())
@@ -762,7 +812,7 @@ class TestMain(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_cross_query_3_is_working():
                 MagicClass = MagicMock(_id='hohoho')
-                resp = cross_query(MagicClass, {'$or': [{'ethnicity.id': 'NCIT:C42331'}]}, 'individual', 'g_variants', {}, 'CINECA_synthetic_cohort_EUROPE_UK1')
+                resp = cross_query(MagicClass, {'$or': [{'ethnicity.id': 'NCIT:C43851'}]}, 'individual', 'g_variants', {}, 'synthetic_usecases_4beacon_testingV3')
                 assert resp != {}
             loop.run_until_complete(test_check_cross_query_3_is_working())
             loop.run_until_complete(client.close())
@@ -773,7 +823,7 @@ class TestMain(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_cross_query_7_is_working():
                 MagicClass = MagicMock(_id='hohoho')
-                resp = cross_query(MagicClass, {'$or': [{'platformModel.id': 'OBI:0002048'}]}, 'run', 'individuals', {}, 'CINECA_synthetic_cohort_EUROPE_UK1')
+                resp = cross_query(MagicClass, {'$or': [{'platformModel.id': 'OBI:0002048'}]}, 'run', 'individuals', {}, 'synthetic_usecases_4beacon_testingV3')
                 assert resp != {}
             loop.run_until_complete(test_check_cross_query_7_is_working())
             loop.run_until_complete(client.close())
@@ -784,7 +834,7 @@ class TestMain(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_cross_query_8_is_working():
                 MagicClass = MagicMock(_id='hohoho')
-                resp = cross_query(MagicClass, {'$or': [{'platformModel.id': 'OBI:0002048'}]}, 'run', 'biosamples', {}, 'CINECA_synthetic_cohort_EUROPE_UK1')
+                resp = cross_query(MagicClass, {'$or': [{'platformModel.id': 'OBI:0002048'}]}, 'run', 'biosamples', {}, 'synthetic_usecases_4beacon_testingV3')
                 assert resp != {}
             loop.run_until_complete(test_check_cross_query_8_is_working())
             loop.run_until_complete(client.close())
@@ -795,7 +845,7 @@ class TestMain(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_cross_query_9_is_working():
                 MagicClass = MagicMock(_id='hohoho')
-                resp = cross_query(MagicClass, {'$or': [{'platformModel.id': 'OBI:0002048'}]}, 'run', 'g_variants', {}, 'CINECA_synthetic_cohort_EUROPE_UK1')
+                resp = cross_query(MagicClass, {'$or': [{'platformModel.id': 'OBI:0002048'}]}, 'run', 'g_variants', {}, 'synthetic_usecases_4beacon_testingV3')
                 assert resp != {}
             loop.run_until_complete(test_check_cross_query_9_is_working())
             loop.run_until_complete(client.close())
@@ -813,19 +863,18 @@ class TestMain(unittest.TestCase):
                     "filters": [
             {"id": "ethnicity",
                     "operator": "=",
-                    "value": "British",
+                    "value": "European",
             "scope":"individual"}],
                     "includeResultsetResponses": "HIT",
                     "pagination": {
                         "skip": 0,
                         "limit": 10
                     },
-                    "testMode": False,
+                    "testMode": True,
                     "requestedGranularity": "record"
                 }
             }
             )
-
                 assert resp.status == 200
             loop.run_until_complete(test_check_alphanumeric_equal_query_is_working())
             loop.run_until_complete(client.close())
@@ -843,14 +892,14 @@ class TestMain(unittest.TestCase):
                     "filters": [
             {"id": "ethnicity",
                     "operator": "=",
-                    "value": "%itish%",
+                    "value": "%pean%",
             "scope":"individual"}],
                     "includeResultsetResponses": "HIT",
                     "pagination": {
                         "skip": 0,
                         "limit": 10
                     },
-                    "testMode": False,
+                    "testMode": True,
                     "requestedGranularity": "record"
                 }
             }
@@ -873,19 +922,18 @@ class TestMain(unittest.TestCase):
                     "filters": [
             {"id": "ethnicity",
                     "operator": "!",
-                    "value": "%itish%",
+                    "value": "%uropean%",
             "scope":"individual"}],
                     "includeResultsetResponses": "HIT",
                     "pagination": {
                         "skip": 0,
                         "limit": 10
                     },
-                    "testMode": False,
+                    "testMode": True,
                     "requestedGranularity": "record"
                 }
             }
             )
-
                 assert resp.status == 200
             loop.run_until_complete(test_check_alphanumeric_not_like_query_is_working())
             loop.run_until_complete(client.close())
@@ -903,19 +951,18 @@ class TestMain(unittest.TestCase):
                     "filters": [
             {"id": "ethnicity",
                     "operator": "!",
-                    "value": "British",
+                    "value": "European",
             "scope":"individual"}],
                     "includeResultsetResponses": "HIT",
                     "pagination": {
                         "skip": 0,
                         "limit": 10
                     },
-                    "testMode": False,
+                    "testMode": True,
                     "requestedGranularity": "record"
                 }
             }
             )
-
                 assert resp.status == 200
             loop.run_until_complete(test_check_alphanumeric_not_query_is_working())
             loop.run_until_complete(client.close())
@@ -931,16 +978,16 @@ class TestMain(unittest.TestCase):
                 },
                 "query": { "requestParameters": {        },
                     "filters": [
-            {"id": "diseases.ageOfOnset.iso8601duration",
+            {"id": "exposures.ageAtExposure.iso8601duration",
                     "operator": ">",
-                    "value": "45",
+                    "value": "31",
             "scope":"individual"}],
                     "includeResultsetResponses": "HIT",
                     "pagination": {
                         "skip": 0,
                         "limit": 10
                     },
-                    "testMode": False,
+                    "testMode": True,
                     "requestedGranularity": "record"
                 }
             }
@@ -961,16 +1008,16 @@ class TestMain(unittest.TestCase):
                 },
                 "query": { "requestParameters": {        },
                     "filters": [
-            {"id": "diseases.ageOfOnset.iso8601duration",
+            {"id": "exposures.ageAtExposure.iso8601duration",
                     "operator": "<",
-                    "value": "45",
+                    "value": "33",
             "scope":"individual"}],
                     "includeResultsetResponses": "HIT",
                     "pagination": {
                         "skip": 0,
                         "limit": 10
                     },
-                    "testMode": False,
+                    "testMode": True,
                     "requestedGranularity": "record"
                 }
             }
@@ -992,9 +1039,9 @@ class TestMain(unittest.TestCase):
                 "query": { "requestParameters": {        },
                     "filters": [
                             {
-                        "id": "Weight",
+                        "id": "anatomical entity",
                         "operator": ">",
-                        "value": "75"
+                        "value": "44"
                     }, 
                 ],
                     "includeResultsetResponses": "HIT",
@@ -1002,7 +1049,7 @@ class TestMain(unittest.TestCase):
                         "skip": 0,
                         "limit": 10
                     },
-                    "testMode": False,
+                    "testMode": True,
                     "requestedGranularity": "record"
                 }
             }
@@ -1024,7 +1071,7 @@ class TestMain(unittest.TestCase):
                 "query": { "requestParameters": {        },
                     "filters": [
                             {
-                        "id": "sampleOriginType:blood"
+                        "id": "sampleOriginType:ovary"
                     } 
                 , 
                 ],
@@ -1033,7 +1080,7 @@ class TestMain(unittest.TestCase):
                         "skip": 0,
                         "limit": 10
                     },
-                    "testMode": False,
+                    "testMode": True,
                     "requestedGranularity": "record"
                 }
             }
@@ -1048,7 +1095,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_range_query_with_variant_min_and_max_lengths_working():
-                resp = await client.get("/api/g_variants?start=16050074&end=16050075&variantMinLength=0&variantMaxLength=3&referenceName=22")
+                resp = await client.get("/api/g_variants?start=345675&referenceName=2&assemblyId=GRCh38&end=345681&variantMinLength=0&variantMaxLength=10&testMode=true")
                 assert resp.status == 200
             loop.run_until_complete(test_check_range_query_with_variant_min_and_max_lengths_working())
             loop.run_until_complete(client.close())
@@ -1058,7 +1105,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_filters_as_request_parameter_working():
-                resp = await client.get("/api/individuals?filters=NCIT:C42331")
+                resp = await client.get("/api/individuals?filters=NCIT:C16576&testMode=true")
                 assert resp.status == 200
             loop.run_until_complete(test_check_filters_as_request_parameter_working())
             loop.run_until_complete(client.close())
@@ -1073,7 +1120,7 @@ class TestMain(unittest.TestCase):
                     "apiVersion": "2.0"
                 },
                 "query": { "requestParameters": {
-                "datasets": ["CINECA_synthetic_cohort_EUROPE_UK1", "Hola"]
+                "datasets": ["synthetic_usecases_4beacon_testingV3"]
                 },
                     "filters": [                ],
                     "includeResultsetResponses": "HIT",
@@ -1081,7 +1128,7 @@ class TestMain(unittest.TestCase):
                         "skip": 0,
                         "limit": 101
                     },
-                    "testMode": False,
+                    "testMode": True,
                     "requestedGranularity": "record"
                 }
             }
@@ -1133,15 +1180,15 @@ class TestMain(unittest.TestCase):
                 "query": { "requestParameters": {        },
                     "filters": [
             {"id": "ethnicity",
-                    "operator": "!",
-                    "value": "%itish%",
+                    "operator": "=",
+                    "value": "European",
             "scope":"individual"}],
                     "includeResultsetResponses": "NONE",
                     "pagination": {
                         "skip": 0,
                         "limit": 10
                     },
-                    "testMode": False,
+                    "testMode": True,
                     "requestedGranularity": "count"
                 }
             }
