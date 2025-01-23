@@ -76,19 +76,21 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
             HGVSIds = client.beacon.genomicVariations \
                 .find(query, {"identifiers.genomicHGVSId": 1, "_id": 0})
             HGVSIds=list(HGVSIds)
-            HGVSId=HGVSIds[0]["identifiers"]["genomicHGVSId"]
-            queryHGVSId={"datasetId": dataset, "id": HGVSId}
+            list_of_variants_found=[]
+            for variant_found in HGVSIds:
+                list_of_variants_found.append(variant_found["identifiers"]["genomicHGVSId"])
+            queryHGVSId={"datasetId": dataset, "id": {"$in": list_of_variants_found}}
             string_of_ids = client.beacon.caseLevelData \
-                .find(queryHGVSId, {"biosampleIds": 1, "_id": 0})
+                .find(queryHGVSId)
             targets = client.beacon.targets \
                 .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
             targets=list(targets)
             list_of_targets=targets[0]["biosampleIds"]
-            list_of_positions_strings= string_of_ids[0]['biosampleIds'].split(',')
+            list_of_positions_strings= string_of_ids[0]
             biosampleIds=[]
-            for position in list_of_positions_strings:
-                if position != '':
-                    biosampleIds.append(list_of_targets[int(position)])
+            for key, value in list_of_positions_strings.items():
+                if key != 'datasetId' and key != 'id' and key != '_id':
+                    biosampleIds.append(list_of_targets[int(key)])
             try:
                 finalquery={}
                 finalquery["$or"]=[]
@@ -105,7 +107,7 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                     finalids=[]
                 if finalids==[]:
                     finalids=biosampleIds
-            except Exception:
+            except Exception:# pragma: no cover
                 finalids=biosampleIds
             query={}
             query["$or"]=[]
@@ -116,24 +118,26 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
             HGVSIds = client.beacon.genomicVariations \
                 .find(query, {"identifiers.genomicHGVSId": 1, "_id": 0})
             HGVSIds=list(HGVSIds)
-            HGVSId=HGVSIds[0]["identifiers"]["genomicHGVSId"]
-            queryHGVSId={"datasetId": dataset, "id": HGVSId}
+            list_of_variants_found=[]
+            for variant_found in HGVSIds:
+                list_of_variants_found.append(variant_found["identifiers"]["genomicHGVSId"])
+            queryHGVSId={"datasetId": dataset, "id": {"$in": list_of_variants_found}}
             string_of_ids = client.beacon.caseLevelData \
-                .find(queryHGVSId, {"biosampleIds": 1, "_id": 0})
+                .find(queryHGVSId)
             targets = client.beacon.targets \
                 .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
             targets=list(targets)
             list_of_targets=targets[0]["biosampleIds"]
-            list_of_positions_strings= string_of_ids[0]['biosampleIds'].split(',')
+            list_of_positions_strings= string_of_ids[0]
             biosampleIds=[]
-            for position in list_of_positions_strings:
-                if position != '':
-                    biosampleIds.append(list_of_targets[int(position)])
+            for key, value in list_of_positions_strings.items():
+                if key != 'datasetId' and key != 'id' and key != '_id':
+                    biosampleIds.append(list_of_targets[int(key)])
             finalids=biosampleIds
             try:
                 finalids=[]
                 for bioid in biosampleIds:
-                    finalids.append({"biosampleId": bioid})
+                    finalids.append({"id": bioid})
             except Exception:# pragma: no cover
                 finalids=[]
             query = {"$and": [{"$or": finalids}]}
@@ -141,24 +145,26 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
             HGVSIds = client.beacon.genomicVariations \
                 .find(query, {"identifiers.genomicHGVSId": 1, "_id": 0})
             HGVSIds=list(HGVSIds)
-            HGVSId=HGVSIds[0]["identifiers"]["genomicHGVSId"]
-            queryHGVSId={"datasetId": dataset, "id": HGVSId}
+            list_of_variants_found=[]
+            for variant_found in HGVSIds:
+                list_of_variants_found.append(variant_found["identifiers"]["genomicHGVSId"])
+            queryHGVSId={"datasetId": dataset, "id": {"$in": list_of_variants_found}}
             string_of_ids = client.beacon.caseLevelData \
-                .find(queryHGVSId, {"biosampleIds": 1, "_id": 0})
+                .find(queryHGVSId)
             targets = client.beacon.targets \
                 .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
             targets=list(targets)
             list_of_targets=targets[0]["biosampleIds"]
-            list_of_positions_strings= string_of_ids[0]['biosampleIds'].split(',')
+            list_of_positions_strings= string_of_ids[0]
             biosampleIds=[]
-            for position in list_of_positions_strings:
-                if position != '':
-                    biosampleIds.append(list_of_targets[int(position)])
+            for key, value in list_of_positions_strings.items():
+                if key != 'datasetId' and key != 'id' and key != '_id':
+                    biosampleIds.append(list_of_targets[int(key)])
             finalids=biosampleIds
             try:
                 finalids=[]
                 for bioid in biosampleIds:
-                    finalids.append({"id": bioid})
+                    finalids.append({"biosampleId": bioid})
             except Exception:# pragma: no cover
                 finalids=[]
             query = {"$and": [{"$or": finalids}]}

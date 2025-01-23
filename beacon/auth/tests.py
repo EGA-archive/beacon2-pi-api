@@ -103,7 +103,7 @@ class TestAuthN(unittest.TestCase):
                 IDP_JWKS_URL = os.getenv('JWKS_URL')
                 list_visa_datasets=[]
                 user, list_visa_datasets = await fetch_user_info(self, mock_access_token, IDP_USER_INFO, IDP_ISSUER, list_visa_datasets)
-                assert user.get('preferred_username') == 'costero-e'
+                assert user.get('preferred_username') == 'jane'
             loop.run_until_complete(test_fetch_user_info())
             loop.run_until_complete(client.close())
     def test_auth_authentication(self):
@@ -113,7 +113,7 @@ class TestAuthN(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_authentication():
                 user, list_visa_datasets = await authentication(self, mock_access_token)
-                assert user.get('preferred_username') == 'costero-e'
+                assert user.get('preferred_username') == 'jane'
             loop.run_until_complete(test_authentication())
             loop.run_until_complete(client.close())
     def test_auth_authentication_false(self):

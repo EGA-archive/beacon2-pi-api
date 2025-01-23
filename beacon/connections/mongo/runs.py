@@ -67,19 +67,7 @@ def get_variants_of_run(self, entry_id: Optional[str], qparams: RequestParams, d
         schema = DefaultSchemas.GENOMICVARIATIONS
         return schema, 0, -1, None, dataset
     position=str(position)
-    filters=qparams.query.filters
-    if filters != []:
-        for filter in filters:
-            if filter['id']=='GENO:GENO_0000458':
-                query_cl={"$or": [{ position: "10", "datasetId": dataset}, { position: "01", "datasetId": dataset}]}
-                qparams.query.filters.remove(filter)
-            elif filter['id']=='GENO:GENO_0000136':
-                query_cl={"$or": [{ position: "11", "datasetId": dataset}]}
-                qparams.query.filters.remove(filter)
-            else:
-                query_cl={"$or": [{ position: "10", "datasetId": dataset},{ position: "11", "datasetId": dataset}, { position: "01", "datasetId": dataset}]}
-    else:
-        query_cl={"$or": [{ position: "10", "datasetId": dataset},{ position: "11", "datasetId": dataset}, { position: "01", "datasetId": dataset}]}
+    query_cl={"$or": [{ position: "10", "datasetId": dataset},{ position: "11", "datasetId": dataset}, { position: "01", "datasetId": dataset}]}
     string_of_ids = client.beacon.caseLevelData \
         .find(query_cl, {"id": 1, "_id": 0}).limit(qparams.query.pagination.limit).skip(qparams.query.pagination.skip)
     HGVSIds=list(string_of_ids)

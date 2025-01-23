@@ -14,7 +14,9 @@ from beacon.response.catalog import build_beacon_error_response
 from bson import json_util
 from beacon.logs.logs import LOG
 from beacon.connections.mongo.filters import cross_query, apply_filters
+from beacon.connections.mongo.g_variants import get_analyses_of_variant
 from unittest.mock import MagicMock
+from beacon.request.parameters import RequestMeta, RequestQuery, Pagination, RequestParams
 
 def create_app():
     app = web.Application()
@@ -571,7 +573,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_datasets_analyses_endpoint_is_working():
-                resp = await client.get("/api/datasets/CINECA_synthetic_cohort_EUROPE_UK1/analyses")
+                resp = await client.get("/api/datasets/synthetic_usecases_4beacon_testingV3/analyses")
                 assert resp.status == 200
             loop.run_until_complete(test_check_datasets_analyses_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -581,7 +583,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_datasets_inividuals_endpoint_is_working():
-                resp = await client.get("/api/datasets/CINECA_synthetic_cohort_EUROPE_UK1/individuals")
+                resp = await client.get("/api/datasets/synthetic_usecases_4beacon_testingV3/individuals")
                 assert resp.status == 200
             loop.run_until_complete(test_check_datasets_inividuals_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -654,6 +656,26 @@ class TestMain(unittest.TestCase):
                 resp = await client.get("/api/g_variants?includeResultsetResponses=NONE")
                 assert resp.status == 200
             loop.run_until_complete(test_check_g_variants_endpoint_NONE_resultSetResponse_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_g_variants_endpoint_MISS_resultSetResponse_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_g_variants_endpoint_MISS_resultSetResponse_is_working():
+                resp = await client.get("/api/g_variants?includeResultsetResponses=MISS")
+                assert resp.status == 200
+            loop.run_until_complete(test_check_g_variants_endpoint_MISS_resultSetResponse_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_g_variants_endpoint_MISS_resultSetResponse_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_g_variants_endpoint_ALL_resultSetResponse_is_working():
+                resp = await client.get("/api/g_variants?includeResultsetResponses=ALL")
+                assert resp.status == 200
+            loop.run_until_complete(test_check_g_variants_endpoint_ALL_resultSetResponse_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_g_variants_sequence_query(self):
         with loop_context() as loop:
@@ -1197,10 +1219,446 @@ class TestMain(unittest.TestCase):
                 assert resp.status == 200
             loop.run_until_complete(test_check_NONE_count_query_is_working())
             loop.run_until_complete(client.close())
-
-
-
-
+    def test_individuals_variants_with_heterozygosity(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_heterozygosity():
+                resp = await client.post("/api/g_variants/beffb86a-d809-11ef-bdb1-0242ac130002:G:A/individuals", json={
+                    "meta": {
+                        "apiVersion": "2.0"
+                    },
+                    "query":{ "requestParameters": {
+                    
+                        },
+                        "filters": [
+                {"id":"GENO:0000458"}],
+                        "includeResultsetResponses": "HIT",
+                        "pagination": {
+                            "skip": 0,
+                            "limit": 10
+                        },
+                        "testMode": True,
+                        "requestedGranularity": "record"
+                    }
+                }
+            )
+                assert resp.status == 200
+            loop.run_until_complete(test_check_heterozygosity())
+            loop.run_until_complete(client.close())
+    def test_individuals_variants_with_homozygosity(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_homozygosity():
+                resp = await client.post("/api/g_variants/beffb86a-d809-11ef-bdb1-0242ac130002:G:A/individuals", json={
+                    "meta": {
+                        "apiVersion": "2.0"
+                    },
+                    "query":{ "requestParameters": {
+                    
+                        },
+                        "filters": [
+                {"id":"GENO:0000136"}],
+                        "includeResultsetResponses": "HIT",
+                        "pagination": {
+                            "skip": 0,
+                            "limit": 10
+                        },
+                        "testMode": True,
+                        "requestedGranularity": "record"
+                    }
+                }
+            )
+                assert resp.status == 200
+            loop.run_until_complete(test_check_homozygosity())
+            loop.run_until_complete(client.close())
+    def test_individuals_variants_with_filter(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_individuals_variants():
+                resp = await client.post("/api/g_variants/beffb86a-d809-11ef-bdb1-0242ac130002:G:A/individuals", json={
+                    "meta": {
+                        "apiVersion": "2.0"
+                    },
+                    "query":{ "requestParameters": {
+                    
+                        },
+                        "filters": [ {"id": "NCIT:C16576", "scope": "individual"}
+                ],
+                        "includeResultsetResponses": "HIT",
+                        "pagination": {
+                            "skip": 0,
+                            "limit": 10
+                        },
+                        "testMode": True,
+                        "requestedGranularity": "record"
+                    }
+                }
+            )
+                assert resp.status == 200
+            loop.run_until_complete(test_check_individuals_variants())
+            loop.run_until_complete(client.close())
+    def test_analyses_variants_with_heterozygosity(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_heterozygosity():
+                resp = await client.post("/api/g_variants/beffb86a-d809-11ef-bdb1-0242ac130002:G:A/analyses", json={
+                    "meta": {
+                        "apiVersion": "2.0"
+                    },
+                    "query":{ "requestParameters": {
+                    
+                        },
+                        "filters": [
+                {"id":"GENO:0000458"}],
+                        "includeResultsetResponses": "HIT",
+                        "pagination": {
+                            "skip": 0,
+                            "limit": 10
+                        },
+                        "testMode": True,
+                        "requestedGranularity": "record"
+                    }
+                }
+            )
+                assert resp.status == 200
+            loop.run_until_complete(test_check_heterozygosity())
+            loop.run_until_complete(client.close())
+    def test_analyses_variants_with_homozygosity(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_homozygosity():
+                resp = await client.post("/api/g_variants/beffb86a-d809-11ef-bdb1-0242ac130002:G:A/analyses", json={
+                    "meta": {
+                        "apiVersion": "2.0"
+                    },
+                    "query":{ "requestParameters": {
+                    
+                        },
+                        "filters": [
+                {"id":"GENO:0000136"}],
+                        "includeResultsetResponses": "HIT",
+                        "pagination": {
+                            "skip": 0,
+                            "limit": 10
+                        },
+                        "testMode": True,
+                        "requestedGranularity": "record"
+                    }
+                }
+            )
+                assert resp.status == 200
+            loop.run_until_complete(test_check_homozygosity())
+            loop.run_until_complete(client.close())
+    def test_analyses_variants_with_filter(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_analyses_variants():
+                resp = await client.post("/api/g_variants/beffb86a-d809-11ef-bdb1-0242ac130002:G:A/analyses", json={
+                    "meta": {
+                        "apiVersion": "2.0"
+                    },
+                    "query":{ "requestParameters": {
+                    
+                        },
+                        "filters": [ {"id": "NCIT:C16576", "scope": "individual"}
+                ],
+                        "includeResultsetResponses": "HIT",
+                        "pagination": {
+                            "skip": 0,
+                            "limit": 10
+                        },
+                        "testMode": True,
+                        "requestedGranularity": "record"
+                    }
+                }
+            )
+                assert resp.status == 200
+            loop.run_until_complete(test_check_analyses_variants())
+            loop.run_until_complete(client.close())
+    def test_biosamples_variants_with_heterozygosity(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_heterozygosity():
+                resp = await client.post("/api/g_variants/beffb86a-d809-11ef-bdb1-0242ac130002:G:A/biosamples", json={
+                    "meta": {
+                        "apiVersion": "2.0"
+                    },
+                    "query":{ "requestParameters": {
+                    
+                        },
+                        "filters": [
+                {"id":"GENO:0000458"}],
+                        "includeResultsetResponses": "HIT",
+                        "pagination": {
+                            "skip": 0,
+                            "limit": 10
+                        },
+                        "testMode": True,
+                        "requestedGranularity": "record"
+                    }
+                }
+            )
+                assert resp.status == 200
+            loop.run_until_complete(test_check_heterozygosity())
+            loop.run_until_complete(client.close())
+    def test_biosamples_variants_with_homozygosity(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_homozygosity():
+                resp = await client.post("/api/g_variants/beffb86a-d809-11ef-bdb1-0242ac130002:G:A/biosamples", json={
+                    "meta": {
+                        "apiVersion": "2.0"
+                    },
+                    "query":{ "requestParameters": {
+                    
+                        },
+                        "filters": [
+                {"id":"GENO:0000136"}],
+                        "includeResultsetResponses": "HIT",
+                        "pagination": {
+                            "skip": 0,
+                            "limit": 10
+                        },
+                        "testMode": True,
+                        "requestedGranularity": "record"
+                    }
+                }
+            )
+                assert resp.status == 200
+            loop.run_until_complete(test_check_homozygosity())
+            loop.run_until_complete(client.close())
+    def test_biosamples_variants_with_filter(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_biosamples_variants():
+                resp = await client.post("/api/g_variants/beffb86a-d809-11ef-bdb1-0242ac130002:G:A/biosamples", json={
+                    "meta": {
+                        "apiVersion": "2.0"
+                    },
+                    "query":{ "requestParameters": {
+                    
+                        },
+                        "filters": [ {"id": "NCIT:C16576", "scope": "individual"}
+                ],
+                        "includeResultsetResponses": "HIT",
+                        "pagination": {
+                            "skip": 0,
+                            "limit": 10
+                        },
+                        "testMode": True,
+                        "requestedGranularity": "record"
+                    }
+                }
+            )
+                assert resp.status == 200
+            loop.run_until_complete(test_check_biosamples_variants())
+            loop.run_until_complete(client.close())
+    def test_runs_variants_with_heterozygosity(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_heterozygosity():
+                resp = await client.post("/api/g_variants/beffb86a-d809-11ef-bdb1-0242ac130002:G:A/runs", json={
+                    "meta": {
+                        "apiVersion": "2.0"
+                    },
+                    "query":{ "requestParameters": {
+                    
+                        },
+                        "filters": [
+                {"id":"GENO:0000458"}],
+                        "includeResultsetResponses": "HIT",
+                        "pagination": {
+                            "skip": 0,
+                            "limit": 10
+                        },
+                        "testMode": True,
+                        "requestedGranularity": "record"
+                    }
+                }
+            )
+                assert resp.status == 200
+            loop.run_until_complete(test_check_heterozygosity())
+            loop.run_until_complete(client.close())
+    def test_runs_variants_with_homozygosity(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_homozygosity():
+                resp = await client.post("/api/g_variants/beffb86a-d809-11ef-bdb1-0242ac130002:G:A/runs", json={
+                    "meta": {
+                        "apiVersion": "2.0"
+                    },
+                    "query":{ "requestParameters": {
+                    
+                        },
+                        "filters": [
+                {"id":"GENO:0000136"}],
+                        "includeResultsetResponses": "HIT",
+                        "pagination": {
+                            "skip": 0,
+                            "limit": 10
+                        },
+                        "testMode": True,
+                        "requestedGranularity": "record"
+                    }
+                }
+            )
+                assert resp.status == 200
+            loop.run_until_complete(test_check_homozygosity())
+            loop.run_until_complete(client.close())
+    def test_runs_variants_with_filter(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_runs_variants():
+                resp = await client.post("/api/g_variants/beffb86a-d809-11ef-bdb1-0242ac130002:G:A/runs", json={
+                    "meta": {
+                        "apiVersion": "2.0"
+                    },
+                    "query":{ "requestParameters": {
+                    
+                        },
+                        "filters": [ {"id": "NCIT:C16576", "scope": "individual"}
+                ],
+                        "includeResultsetResponses": "HIT",
+                        "pagination": {
+                            "skip": 0,
+                            "limit": 10
+                        },
+                        "testMode": True,
+                        "requestedGranularity": "record"
+                    }
+                }
+            )
+                assert resp.status == 200
+            loop.run_until_complete(test_check_runs_variants())
+            loop.run_until_complete(client.close())
+    def test_individuals_with_variant_filter(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_individuals_variants():
+                resp = await client.post("/api/individuals", json={
+                "meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": { "requestParameters": {        },
+                    "filters": [
+            {"id":"ENSGLOSSARY:0000150", "scope":"genomicVariation"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+            }
+            )
+                assert resp.status == 200
+            loop.run_until_complete(test_check_individuals_variants())
+            loop.run_until_complete(client.close())
+    def test_biosamples_with_variant_filter(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_biosamples_variants():
+                resp = await client.post("/api/biosamples", json={
+                "meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": { "requestParameters": {        },
+                    "filters": [
+            {"id":"ENSGLOSSARY:0000150", "scope":"genomicVariation"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+            }
+            )
+                assert resp.status == 200
+            loop.run_until_complete(test_check_biosamples_variants())
+            loop.run_until_complete(client.close())
+    def test_analyses_with_variant_filter(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_analyses_variants():
+                resp = await client.post("/api/analyses", json={
+                "meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": { "requestParameters": {        },
+                    "filters": [
+            {"id":"ENSGLOSSARY:0000150", "scope":"genomicVariation"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+            }
+            )
+                assert resp.status == 200
+            loop.run_until_complete(test_check_analyses_variants())
+            loop.run_until_complete(client.close())
+    def test_runs_with_variant_filter(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_runs_variants():
+                resp = await client.post("/api/runs", json={
+                "meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": { "requestParameters": {        },
+                    "filters": [
+            {"id":"ENSGLOSSARY:0000150", "scope":"genomicVariation"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+            }
+            )
+                assert resp.status == 200
+            loop.run_until_complete(test_check_runs_variants())
+            loop.run_until_complete(client.close())
 
 if __name__ == '__main__':
     unittest.main()

@@ -73,7 +73,7 @@ def get_biosamples_of_variant(self, entry_id: Optional[str], qparams: RequestPar
     HGVSIds = client.beacon.genomicVariations \
         .find(query, {"identifiers.genomicHGVSId": 1, "datasetId": 1, "_id": 0})
     HGVSDataset=HGVSIds[0]["datasetId"]
-    if dataset != HGVSDataset:
+    if dataset != HGVSDataset:# pragma: no cover
         schema = DefaultSchemas.BIOSAMPLES
         return schema, 0, 0, [], dataset
     HGVSIds=list(HGVSIds)
@@ -90,12 +90,12 @@ def get_biosamples_of_variant(self, entry_id: Optional[str], qparams: RequestPar
     filters=qparams.query.filters
     if filters != []:
         for filter in filters:
-            if filter['id']=='GENO:GENO_0000458':
+            if filter['id']=='GENO:0000458':
                 for key, value in list_of_positions_strings.items():
                     if key != 'datasetId' and key != 'id' and key != '_id' and value != '11':
                         biosampleIds.append(list_of_targets[int(key)])
                 qparams.query.filters.remove(filter)
-            elif filter['id']=='GENO:GENO_0000136':
+            elif filter['id']=='GENO:0000136':
                 for key, value in list_of_positions_strings.items():
                     if key != 'datasetId' and key != 'id' and key != '_id' and value != '10' and value != '01':
                         biosampleIds.append(list_of_targets[int(key)])
@@ -142,7 +142,7 @@ def get_runs_of_variant(self, entry_id: Optional[str], qparams: RequestParams, d
     HGVSIds = client.beacon.genomicVariations \
         .find(query, {"identifiers.genomicHGVSId": 1, "datasetId": 1, "_id": 0})
     HGVSDataset=HGVSIds[0]["datasetId"]
-    if dataset != HGVSDataset:
+    if dataset != HGVSDataset:# pragma: no cover
         schema = DefaultSchemas.INDIVIDUALS
         return schema, 0, 0, [], dataset
     HGVSIds=list(HGVSIds)
@@ -159,12 +159,12 @@ def get_runs_of_variant(self, entry_id: Optional[str], qparams: RequestParams, d
     filters=qparams.query.filters
     if filters != []:
         for filter in filters:
-            if filter['id']=='GENO:GENO_0000458':
+            if filter['id']=='GENO:0000458':
                 for key, value in list_of_positions_strings.items():
                     if key != 'datasetId' and key != 'id' and key != '_id' and value != '11':
                         biosampleIds.append(list_of_targets[int(key)])
                 qparams.query.filters.remove(filter)
-            elif filter['id']=='GENO:GENO_0000136':
+            elif filter['id']=='GENO:0000136':
                 for key, value in list_of_positions_strings.items():
                     if key != 'datasetId' and key != 'id' and key != '_id' and value != '10' and value != '01':
                         biosampleIds.append(list_of_targets[int(key)])
@@ -197,6 +197,9 @@ def get_runs_of_variant(self, entry_id: Optional[str], qparams: RequestParams, d
 
 @log_with_args(level)
 def get_analyses_of_variant(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
+    LOG.debug(entry_id)
+    LOG.debug(qparams)
+    LOG.debug(dataset)
     collection = 'g_variants'
     mongo_collection = client.beacon.analyses
     query = {"$and": [{"variantInternalId": entry_id}]}
@@ -210,7 +213,7 @@ def get_analyses_of_variant(self, entry_id: Optional[str], qparams: RequestParam
     HGVSIds = client.beacon.genomicVariations \
         .find(query, {"identifiers.genomicHGVSId": 1, "datasetId": 1, "_id": 0})
     HGVSDataset=HGVSIds[0]["datasetId"]
-    if dataset != HGVSDataset:
+    if dataset != HGVSDataset:# pragma: no cover
         schema = DefaultSchemas.INDIVIDUALS
         return schema, 0, 0, [], dataset
     HGVSIds=list(HGVSIds)
@@ -227,12 +230,12 @@ def get_analyses_of_variant(self, entry_id: Optional[str], qparams: RequestParam
     filters=qparams.query.filters
     if filters != []:
         for filter in filters:
-            if filter['id']=='GENO:GENO_0000458':
+            if filter['id']=='GENO:0000458':
                 for key, value in list_of_positions_strings.items():
                     if key != 'datasetId' and key != 'id' and key != '_id' and value != '11':
                         biosampleIds.append(list_of_targets[int(key)])
                 qparams.query.filters.remove(filter)
-            elif filter['id']=='GENO:GENO_0000136':
+            elif filter['id']=='GENO:0000136':
                 for key, value in list_of_positions_strings.items():
                     if key != 'datasetId' and key != 'id' and key != '_id' and value != '10' and value != '01':
                         biosampleIds.append(list_of_targets[int(key)])
@@ -279,7 +282,7 @@ def get_individuals_of_variant(self, entry_id: Optional[str], qparams: RequestPa
         .find(query, {"identifiers.genomicHGVSId": 1, "datasetId": 1, "_id": 0})
     HGVSIds=list(HGVSIds)
     HGVSDataset=HGVSIds[0]["datasetId"]
-    if dataset != HGVSDataset:
+    if dataset != HGVSDataset:# pragma: no cover
         schema = DefaultSchemas.INDIVIDUALS
         return schema, 0, 0, [], dataset
     HGVSId=HGVSIds[0]["identifiers"]["genomicHGVSId"]
@@ -295,12 +298,12 @@ def get_individuals_of_variant(self, entry_id: Optional[str], qparams: RequestPa
     filters=qparams.query.filters
     if filters != []:
         for filter in filters:
-            if filter['id']=='GENO:GENO_0000458':
+            if filter['id']=='GENO:0000458':
                 for key, value in list_of_positions_strings.items():
                     if key != 'datasetId' and key != 'id' and key != '_id' and value != '11':
                         biosampleIds.append(list_of_targets[int(key)])
                 qparams.query.filters.remove(filter)
-            elif filter['id']=='GENO:GENO_0000136':
+            elif filter['id']=='GENO:0000136':
                 for key, value in list_of_positions_strings.items():
                     if key != 'datasetId' and key != 'id' and key != '_id' and value != '10' and value != '01':
                         biosampleIds.append(list_of_targets[int(key)])
@@ -328,8 +331,8 @@ def get_individuals_of_variant(self, entry_id: Optional[str], qparams: RequestPa
         except Exception:# pragma: no cover
             finalids=[]
         if finalids==[]:
-            finalids=biosampleIds
-    except Exception:
+            finalids=biosampleIds# pragma: no cover
+    except Exception:# pragma: no cover
         finalids=biosampleIds
     finalquery={}
     finalquery["$or"]=[]
