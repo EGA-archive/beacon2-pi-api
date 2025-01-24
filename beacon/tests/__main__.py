@@ -1048,6 +1048,35 @@ class TestMain(unittest.TestCase):
                 assert resp.status == 200
             loop.run_until_complete(test_check_iso8601duration_ls_query_is_working())
             loop.run_until_complete(client.close())
+    def test_main_check_iso8601duration_eq_query_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_iso8601duration_eq_query_is_working():
+                resp = await client.post("/api/individuals", json={
+                "meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": { "requestParameters": {        },
+                    "filters": [
+            {"id": "exposures.ageAtExposure.iso8601duration",
+                    "operator": "=",
+                    "value": "34",
+            "scope":"individual"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+            }
+            )
+                assert resp.status == 200
+            loop.run_until_complete(test_check_iso8601duration_eq_query_is_working())
+            loop.run_until_complete(client.close())
     def test_main_check_measurement_value_query_is_working(self):
         with loop_context() as loop:
             app = create_app()
@@ -1646,6 +1675,353 @@ class TestMain(unittest.TestCase):
                 "query": { "requestParameters": {        },
                     "filters": [
             {"id":"ENSGLOSSARY:0000150", "scope":"genomicVariation"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+            }
+            )
+                assert resp.status == 200
+            loop.run_until_complete(test_check_runs_variants())
+            loop.run_until_complete(client.close())
+    def test_variants_with_run_filter(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_runs_variants():
+                resp = await client.post("/api/g_variants", json={
+                "meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": { "requestParameters": {        },
+                    "filters": [
+            {"id":"GENEPIO:0001966", "scope":"run"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+            }
+            )
+                assert resp.status == 200
+            loop.run_until_complete(test_check_runs_variants())
+            loop.run_until_complete(client.close())
+    def test_individuals_with_run_filter(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_runs_variants():
+                resp = await client.post("/api/individuals", json={
+                "meta": {
+                    "apiVersion": "2.0"
+                },
+                "query":{ "requestParameters": {
+                
+                    },
+                    "filters": [
+            {"id":"GENEPIO:0001966", "scope":"run"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+            }
+            )
+                assert resp.status == 200
+            loop.run_until_complete(test_check_runs_variants())
+            loop.run_until_complete(client.close())
+    def test_analyses_with_run_filter(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_runs_variants():
+                resp = await client.post("/api/analyses", json={
+                "meta": {
+                    "apiVersion": "2.0"
+                },
+                "query":{ "requestParameters": {
+                
+                    },
+                    "filters": [
+            {"id":"GENEPIO:0001966", "scope":"run"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+            }
+            )
+                assert resp.status == 200
+            loop.run_until_complete(test_check_runs_variants())
+            loop.run_until_complete(client.close())
+    def test_biosamples_with_run_filter(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_runs_variants():
+                resp = await client.post("/api/biosamples", json={
+                "meta": {
+                    "apiVersion": "2.0"
+                },
+                "query":{ "requestParameters": {
+                
+                    },
+                    "filters": [
+            {"id":"GENEPIO:0001966", "scope":"run"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+            }
+            )
+                assert resp.status == 200
+            loop.run_until_complete(test_check_runs_variants())
+            loop.run_until_complete(client.close())
+    def test_variants_with_biosample_filter(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_runs_variants():
+                resp = await client.post("/api/g_variants", json={
+            "meta": {
+                "apiVersion": "2.0"
+            },
+            "query":{ "requestParameters": {
+            
+                },
+                "filters": [
+        {"id":"EFO:0009655", "scope":"biosample"}],
+                "includeResultsetResponses": "HIT",
+                "pagination": {
+                    "skip": 0,
+                    "limit": 10
+                },
+                "testMode": True,
+                "requestedGranularity": "record"
+            }
+        }
+            )
+                assert resp.status == 200
+            loop.run_until_complete(test_check_runs_variants())
+            loop.run_until_complete(client.close())
+    def test_individuals_with_biosample_filter(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_runs_variants():
+                resp = await client.post("/api/individuals", json={
+            "meta": {
+                "apiVersion": "2.0"
+            },
+            "query":{ "requestParameters": {
+            
+                },
+                "filters": [
+        {"id":"EFO:0009655", "scope":"biosample"}],
+                "includeResultsetResponses": "HIT",
+                "pagination": {
+                    "skip": 0,
+                    "limit": 10
+                },
+                "testMode": True,
+                "requestedGranularity": "record"
+            }
+        }
+            )
+                assert resp.status == 200
+            loop.run_until_complete(test_check_runs_variants())
+            loop.run_until_complete(client.close())
+    def test_analyses_with_biosample_filter(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_runs_variants():
+                resp = await client.post("/api/analyses", json={
+            "meta": {
+                "apiVersion": "2.0"
+            },
+            "query":{ "requestParameters": {
+            
+                },
+                "filters": [
+        {"id":"EFO:0009655", "scope":"biosample"}],
+                "includeResultsetResponses": "HIT",
+                "pagination": {
+                    "skip": 0,
+                    "limit": 10
+                },
+                "testMode": True,
+                "requestedGranularity": "record"
+            }
+        }
+            )
+                assert resp.status == 200
+            loop.run_until_complete(test_check_runs_variants())
+            loop.run_until_complete(client.close())
+    def test_runs_with_biosample_filter(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_runs_variants():
+                resp = await client.post("/api/runs", json={
+            "meta": {
+                "apiVersion": "2.0"
+            },
+            "query":{ "requestParameters": {
+            
+                },
+                "filters": [
+        {"id":"EFO:0009655", "scope":"biosample"}],
+                "includeResultsetResponses": "HIT",
+                "pagination": {
+                    "skip": 0,
+                    "limit": 10
+                },
+                "testMode": True,
+                "requestedGranularity": "record"
+            }
+        }
+            )
+                assert resp.status == 200
+            loop.run_until_complete(test_check_runs_variants())
+            loop.run_until_complete(client.close())
+    def test_individuals_with_request_parameters(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_runs_variants():
+                resp = await client.post("/api/individuals", json={
+                "meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "requestParameters": {
+                    "alternateBases": "A" ,
+                "referenceBases": "G" ,
+            "start": [43045703],
+                        "referenceName": "17",
+            "assemblyId": "GRCh38"
+            },        
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+            }
+            )
+                assert resp.status == 200
+            loop.run_until_complete(test_check_runs_variants())
+            loop.run_until_complete(client.close())
+    def test_biosamples_with_request_parameters(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_runs_variants():
+                resp = await client.post("/api/biosamples", json={
+                "meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "requestParameters": {
+                    "alternateBases": "A" ,
+                "referenceBases": "G" ,
+            "start": [43045703],
+                        "referenceName": "17",
+            "assemblyId": "GRCh38"
+            },        
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+            }
+            )
+                assert resp.status == 200
+            loop.run_until_complete(test_check_runs_variants())
+            loop.run_until_complete(client.close())
+    def test_analyses_with_request_parameters(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_runs_variants():
+                resp = await client.post("/api/analyses", json={
+                "meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "requestParameters": {
+                    "alternateBases": "A" ,
+                "referenceBases": "G" ,
+            "start": [43045703],
+                        "referenceName": "17",
+            "assemblyId": "GRCh38"
+            },        
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+            }
+            )
+                assert resp.status == 200
+            loop.run_until_complete(test_check_runs_variants())
+            loop.run_until_complete(client.close())
+    def test_variants_with_request_parameters_and_filters(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_runs_variants():
+                resp = await client.post("/api/g_variants", json={
+                "meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "requestParameters": {
+                    "alternateBases": "A" ,
+                "referenceBases": "G" ,
+            "start": [43045703],
+                        "referenceName": "17",
+            "assemblyId": "GRCh38"
+            },        
+            "filters": [{"id":"ENSGLOSSARY:0000150", "scope":"genomicVariation"}],
                     "includeResultsetResponses": "HIT",
                     "pagination": {
                         "skip": 0,
