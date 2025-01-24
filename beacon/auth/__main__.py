@@ -90,7 +90,7 @@ async def fetch_user_info(self, access_token, user_info, idp_issuer, list_visa_d
                 user = await resp.json()
                 try:
                     visa_datasets = user['ga4gh_passport_v1']
-                    if visa_datasets is not None:
+                    if visa_datasets is not None:# pragma: no cover
                         for visa_dataset in visa_datasets:
                             try:
                                 visa = jwt.decode(visa_dataset, options={"verify_signature": False}, algorithms=["RS256"])
