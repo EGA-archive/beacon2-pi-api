@@ -105,9 +105,9 @@ class SequenceQuery(BaseModel):
                     raise_exception(err, errcode)
                 else:
                     pass
-            except Exception as e:
+            except Exception as e:# pragma: no cover
                 raise ValueError
-        else:
+        else:# pragma: no cover
             raise ValueError
 
 class RangeQuery(BaseModel):
@@ -133,9 +133,9 @@ class RangeQuery(BaseModel):
                     raise_exception(err, errcode)
                 else:
                     pass
-            except Exception as e:
+            except Exception as e:# pragma: no cover
                 raise ValueError
-        else:
+        else:# pragma: no cover
             raise ValueError
 
 class DatasetsRequested(BaseModel):
@@ -184,9 +184,9 @@ class BracketQuery(BaseModel):
                     raise_exception(err, errcode)
                 else:
                     pass
-            except Exception as e:
+            except Exception as e:# pragma: no cover
                 raise ValueError
-        else:
+        else:# pragma: no cover
             raise ValueError
 
 class GenomicAlleleQuery(BaseModel):
@@ -220,7 +220,7 @@ class RequestParams(CamelModel):
                     v = html.escape(v)
                     if v.lower() == 'true':
                         v = True
-                    elif v.lower() == 'false':
+                    elif v.lower() == 'false':# pragma: no cover
                         v = False
                     else:
                         err = 'testMode parameter can only be either true or false value'

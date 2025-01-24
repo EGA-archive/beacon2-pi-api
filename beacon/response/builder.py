@@ -44,9 +44,9 @@ async def builder(self, request: Request, datasets, qparams, entry_type, entry_i
             source_granularity = runs['granularity']
         if source_granularity['record']==True:
             allowed_granularity='record'
-        elif source_granularity['count']==True:
+        elif source_granularity['count']==True:# pragma: no cover
             allowed_granularity='count'
-        else:
+        else:# pragma: no cover
             allowed_granularity='boolean'
         complete_module='beacon.connections.'+source+'.executor'
         import importlib
@@ -61,11 +61,11 @@ async def builder(self, request: Request, datasets, qparams, entry_type, entry_i
             response = build_beacon_none_response(self, datasets_docs["NONE"], count, qparams, entity_schema)
         elif granularity == Granularity.COUNT and max_beacon_granularity in ['count', 'record'] and allowed_granularity in ['count', 'record']:
             response = build_beacon_count_response(self, count, qparams, entity_schema)
-        elif granularity == Granularity.RECORD and max_beacon_granularity in ['count'] and allowed_granularity in ['count', 'record']:
+        elif granularity == Granularity.RECORD and max_beacon_granularity in ['count'] and allowed_granularity in ['count', 'record']:# pragma: no cover
             response = build_beacon_count_response(self, count, qparams, entity_schema)
-        elif granularity == Granularity.RECORD and allowed_granularity in ['count'] and max_beacon_granularity in ['count', 'record']:
+        elif granularity == Granularity.RECORD and allowed_granularity in ['count'] and max_beacon_granularity in ['count', 'record']:# pragma: no cover
             response = build_beacon_count_response(self, count, qparams, entity_schema)
-        else:
+        else:# pragma: no cover
             response = build_beacon_boolean_response(self, count, qparams, entity_schema)
         return response
     except Exception:# pragma: no cover

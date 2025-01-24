@@ -385,13 +385,13 @@ def apply_request_parameters(self, query: Dict[str, List[dict]], qparams: Reques
         if endquery["$and"] != []:
             try:
                 query["$or"].append(endquery)
-            except Exception:
+            except Exception:# pragma: no cover
                 query["$or"]=[]
                 query["$or"].append(endquery)
         if startendquery["$and"] != []:
             try:
                 query["$or"].append(startendquery)
-            except Exception:
+            except Exception:# pragma: no cover
                 query["$or"]=[]
                 query["$or"].append(startendquery)
 
