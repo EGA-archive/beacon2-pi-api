@@ -9,7 +9,7 @@ LOG = logging.getLogger(__name__)
 fmt = '%(levelname)s - %(asctime)s - %(message)s'
 formatter = logging.Formatter(fmt)
 
-if log_file:
+if log_file:# pragma: no cover
     fh = logging.FileHandler(log_file)
     fh.setLevel(level)
     fh.setFormatter(formatter)

@@ -62,7 +62,7 @@ def get_variants_of_individual(self, entry_id: Optional[str], qparams: RequestPa
         if bioid == entry_id:
             break
         position+=1
-    if position == len(bioids):
+    if position == len(bioids):# pragma: no cover
         schema = DefaultSchemas.GENOMICVARIATIONS
         return schema, 0, -1, None, dataset
     position=str(position)

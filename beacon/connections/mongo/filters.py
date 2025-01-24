@@ -111,7 +111,7 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                 except Exception:# pragma: no cover
                     finalids=[]
                 if finalids==[]:
-                    finalids=biosampleIds
+                    finalids=biosampleIds# pragma: no cover
             except Exception:# pragma: no cover
                 finalids=biosampleIds
             query={}

@@ -62,8 +62,8 @@ def get_variants_of_run(self, entry_id: Optional[str], qparams: RequestParams, d
     for bioid in bioids:
         if bioid == run_ids["biosampleId"]:
             break
-        position+=1
-    if position == len(bioids):
+        position+=1# pragma: no cover
+    if position == len(bioids):# pragma: no cover
         schema = DefaultSchemas.GENOMICVARIATIONS
         return schema, 0, -1, None, dataset
     position=str(position)

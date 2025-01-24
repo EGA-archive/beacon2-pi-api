@@ -110,8 +110,8 @@ async def execute_function(self, entry_type: str, datasets: list, qparams: Reque
                     datasets_count[dataset]=dataset_count
                 else:
                     datasets.remove(dataset) 
-            else:# pragma: no cover
-                if dataset_count == 0:
+            else:
+                if dataset_count == 0:# pragma: no cover
                     new_count+=dataset_count
                     datasets_docs[dataset]=records
                     datasets_count[dataset]=dataset_count

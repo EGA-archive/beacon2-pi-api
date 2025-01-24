@@ -667,7 +667,7 @@ class TestMain(unittest.TestCase):
                 assert resp.status == 200
             loop.run_until_complete(test_check_g_variants_endpoint_MISS_resultSetResponse_is_working())
             loop.run_until_complete(client.close())
-    def test_main_check_g_variants_endpoint_MISS_resultSetResponse_is_working(self):
+    def test_main_check_g_variants_endpoint_ALL_resultSetResponse_is_working(self):
         with loop_context() as loop:
             app = create_app()
             client = TestClient(TestServer(app), loop=loop)
@@ -2035,6 +2035,94 @@ class TestMain(unittest.TestCase):
                 assert resp.status == 200
             loop.run_until_complete(test_check_runs_variants())
             loop.run_until_complete(client.close())
+    def test_main_check_g_variants_sequence_query_fails(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_g_variants_endpoint_with_parameters_is_working():
+                resp = await client.get("/api/g_variants?start=43045703&referenceName=17&referenceBases=G&alternateBases=A")
+                assert resp.status == 400
+            loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
+            loop.run_until_complete(client.close())# pragma: no cover
+    def test_main_check_g_variants_range_query_fails(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_g_variants_endpoint_with_parameters_is_working():
+                resp = await client.get("/api/g_variants?start=345675&referenceName=2&end=345681")
+                assert resp.status == 400
+            loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
+            loop.run_until_complete(client.close())# pragma: no cover
+    def test_main_check_g_variants_bracket_query_fails(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_g_variants_endpoint_with_parameters_is_working():
+                resp = await client.get("/api/g_variants?start=43045703,43045704&end=43045704,43045705&referenceName=17")
+                assert resp.status == 400
+            loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
+            loop.run_until_complete(client.close())# pragma: no cover
+    def test_main_check_test_mode_fails(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_g_variants_endpoint_with_parameters_is_working():
+                resp = await client.get("/api/g_variants?start=43045703,43045704&end=43045704,43045705&referenceName=17&assemblyId=GRCh38&testMode=3")
+                assert resp.status == 400
+            loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
+            loop.run_until_complete(client.close())# pragma: no cover
+    def test_descendant_terms(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_runs_variants():
+                resp = await client.post("/api/individuals", json={
+                "meta": {
+                    "apiVersion": "2.0"
+                },
+                "query":{ "requestParameters": {
+                
+                    },
+                    "filters": [
+            {"id":"MONDO:0004975", "scope":"individual", "includeDescendantTerms": True}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+            }
+            )
+                assert resp.status == 200
+            loop.run_until_complete(test_check_runs_variants())
+            loop.run_until_complete(client.close())# pragma: no cover
+    def test_main_check_g_variants_range_query_chrX(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_g_variants_endpoint_with_parameters_is_working():
+                resp = await client.get("/api/g_variants?start=31121923&referenceName=X&assemblyId=GRCh38&end=31121924")
+                assert resp.status == 200
+            loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
+            loop.run_until_complete(client.close())# pragma: no cover
+    def test_main_check_g_variants_range_query_chrY(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_g_variants_endpoint_with_parameters_is_working():
+                resp = await client.get("/api/g_variants?start=31121923&referenceName=Y&assemblyId=GRCh38&end=31121924")
+                assert resp.status == 200
+            loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
+            loop.run_until_complete(client.close())# pragma: no cover
 
 if __name__ == '__main__':
     unittest.main()

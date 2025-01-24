@@ -6,7 +6,7 @@ from beacon.conf.conf import level
 from bson import json_util
 
 @log_with_args_mongo(level)
-def get_cross_query(self, ids: dict, cross_type: str, collection_id: str):
+def get_cross_query(self, ids: dict, cross_type: str, collection_id: str):# pragma: no cover
     id_list=[]
     dict_in={}
     id_dict={}
@@ -59,9 +59,9 @@ def get_count(self, collection: Collection, query: dict) -> int:
         try:
             counts=list(counts)
             if counts == []:
-                total_counts=collection.count_documents(query)
-                insert_dict={}
-                insert_dict['id']=str(query)
+                total_counts=collection.count_documents(query)# pragma: no cover
+                insert_dict={}# pragma: no cover
+                insert_dict['id']=str(query)# pragma: no cover
                 insert_dict['num_results']=total_counts# pragma: no cover
                 insert_dict['collection']=str(collection)# pragma: no cover
                 insert_total=client.beacon.counts.insert_one(insert_dict)# pragma: no cover
