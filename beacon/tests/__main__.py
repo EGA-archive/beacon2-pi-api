@@ -782,7 +782,9 @@ class TestMain(unittest.TestCase):
                     "requestedGranularity": "record"
                 }
                 })
-                eo=await resp.text()
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 20
                 assert resp.status == 200
             loop.run_until_complete(test_check_post_cross_query_biosamples_individuals_is_working())
             loop.run_until_complete(client.close())
