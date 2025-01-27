@@ -1275,6 +1275,9 @@ class TestMain(unittest.TestCase):
                     }
                 }
             )
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 4
                 assert resp.status == 200
             loop.run_until_complete(test_check_heterozygosity())
             loop.run_until_complete(client.close())
