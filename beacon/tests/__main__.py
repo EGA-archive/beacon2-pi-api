@@ -694,6 +694,9 @@ class TestMain(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
                 resp = await client.get("/api/g_variants?start=345675&referenceName=2&assemblyId=GRCh38&end=345681")
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 6
                 assert resp.status == 200
             loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
             loop.run_until_complete(client.close())
