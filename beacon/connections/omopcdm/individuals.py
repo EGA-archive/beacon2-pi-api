@@ -1,32 +1,21 @@
 from beacon.request.parameters import RequestParams
 from beacon.response.schemas import DefaultSchemas
 from beacon.connections.omopcdm.__init__ import client
-from beacon.connections.omopcdm.utils import queryExecutor, search_ontologies, materialised_view_exists
+from beacon.connections.omopcdm.utils import queryExecutor, search_ontologies, materialised_view_exists, get_datasetIds, get_datasetSingleId
 from beacon.logs.logs import log_with_args, LOG
 from beacon.conf.conf import level
 from beacon.connections.omopcdm.filters import apply_filters
 from typing import Optional
 import beacon.connections.omopcdm.mappings as mappings
 from beacon.connections.omopcdm.biosamples import get_biosamples_with_person_id
+from beacon.connections.mongo.__init__ import client as mongoclient
+
 import aiosql
 from pathlib import Path
 
 queries_file = Path(__file__).parent / "sql" / "individuals.sql"
 individual_queries = aiosql.from_path(queries_file, "psycopg2")
 
-
-def get_individual_info(offset: int=0, limit: int=10, person_id = None) -> list:
-    if person_id == None:
-        records = individual_queries.sql_get_individuals(client, offset=offset, limit=limit)
-        if not records:
-            return []
-        listId = [str(record[0]) for record in records]
-    else:
-        records = individual_queries.sql_get_individual_id(client, person_id=tuple(person_id))
-        if not records:
-            return []
-        listId = [str(record[0]) for record in records]
-    return listId
 
 @log_with_args(level)
 def get_individuals_person(self, listIds: list) -> dict:
@@ -189,6 +178,7 @@ def get_individuals(self, entry_id: Optional[str], qparams: RequestParams, datas
         limit = 50
     granularity = qparams.query.requested_granularity   # record, count, boolean
 
+
     # If filters
     if qparams.query.filters or "filters" in qparams.query.request_parameters:
         query = apply_filters(self,
@@ -196,13 +186,21 @@ def get_individuals(self, entry_id: Optional[str], qparams: RequestParams, datas
                       qparams.query.filters, 
                       scope,
                       granularity,
+                      dataset,
                       limit, 
-                      skip)
+                      skip
+                      )
         # Run query
         resultQuery = queryExecutor(query)
     else:   # Get All individuals
-        listIds = get_individual_info(skip, limit, entry_id)    # List with all Ids
-        countIds = individual_queries.count_individuals(client)   # Count individuals
+        # List with all Ids and number of Ids
+        listIds, countIds = get_datasetIds(self,
+            mongoclient.beacon.datasetsToId,
+            dataset,
+            'individualId',
+            skip,
+            limit
+        )
         if countIds ==0:
             resultQuery = []
         else:
@@ -228,11 +226,17 @@ def get_individual_with_id(self, entry_id: Optional[str], qparams: RequestParams
     include = qparams.query.include_resultset_responses
     
     # Search Id
-    listIds = get_individual_info(person_id=entry_id)
+    listIds = get_datasetSingleId(self,
+            mongoclient.beacon.datasetsToId,
+            dataset,
+            'individualId',
+            entry_id
+        )
+
     if not listIds:
         return schema, 0, 0, {}, dataset
 
-    docs = retrieveRecords(listIds)
+    docs = retrieveRecords(self, entry_id)
 
     return schema, 1, 1, docs, dataset
 
