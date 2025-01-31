@@ -3,8 +3,11 @@ import re
 from beacon.request.parameters import AlphanumericFilter, OntologyFilter
 from beacon.connections.omopcdm.utils import peek
 from beacon.connections.omopcdm.__init__ import client
+from beacon.connections.omopcdm.utils import get_datasetIds
 from beacon.logs.logs import log_with_args, LOG
 from beacon.conf.conf import level
+from beacon.connections.mongo.__init__ import client as mongoclient
+
 import aiosql
 from pathlib import Path
 
@@ -14,7 +17,7 @@ queries_file = Path(__file__).parent / "sql" / "basic_queries.sql"
 filter_queries = aiosql.from_path(queries_file, "psycopg2")
 
 @log_with_args(level)
-def apply_filters(self, filtersGet: dict, filtersPost: List[dict], scope: str, granularity : str, limit : int = 10, skip : int = 0) -> dict:
+def apply_filters(self, filtersGet: dict, filtersPost: List[dict], scope: str, granularity : str, dataset: str, limit : int = 10, skip : int = 0) -> dict:
     # Get and Post Filters as dict
     filters = []
     if filtersGet:
@@ -30,6 +33,28 @@ def apply_filters(self, filtersGet: dict, filtersPost: List[dict], scope: str, g
     
     # Create query
     query = ''
+
+    # Create final SQL queries per scope
+    if scope == "biosamples":
+        column = "specimen_id"
+        table = "specimen"
+        collectionId = "biosampleId"
+
+    else:   # Individuals
+        column = "person_id"
+        table = "person"
+        collectionId = "individualId"
+
+
+    targetIds, _ = get_datasetIds(self,
+                mongoclient.beacon.datasetsToId,
+                dataset,
+                collectionId,
+                skip,
+                limit
+            )
+    # Filter by Ids of the dataset
+    query += f"and {column} in {tuple(targetIds)}"
     for filter in filters:
         # Alphanumeric filter
         if "value" in filter:
@@ -46,15 +71,6 @@ def apply_filters(self, filtersGet: dict, filtersPost: List[dict], scope: str, g
         else:
             return query
         query += partial_query
-
-    # Create final SQL queries per scope
-    if scope == "biosamples":
-        column = "specimen_id"
-        table = "specimen"
-
-    else:   # Individuals
-        column = "person_id"
-        table = "person"
 
     # Query different on granularity
     if granularity == "boolean":
@@ -82,6 +98,7 @@ def apply_filters(self, filtersGet: dict, filtersPost: List[dict], scope: str, g
             limit {limit}
             offset {skip};
         """
+    LOG.debug(finalQuery)
     return finalQuery
 
 def search_descendants(concept_id: str) -> list:
