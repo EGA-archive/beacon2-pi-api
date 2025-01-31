@@ -24,7 +24,7 @@ biosamples={
         'run': True
     },
     'testMode': True,
-    'database': 'mongo'
+    'database': 'omopcdm'
 }
 cohorts={
     'singleEntryUrl': True,
@@ -34,7 +34,7 @@ cohorts={
         'run': True
     },
     'testMode': True,
-    'database': 'mongo'
+    'database': 'omopcdm'
 }
 datasets={
     'singleEntryUrl': True,
@@ -46,7 +46,7 @@ datasets={
         'run': True
     },
     'testMode': True,
-    'database': 'mongo'
+    'database': 'omopcdm'
 }
 g_variants={
     'granularity': {
@@ -76,7 +76,7 @@ individuals={
         'run': True
     },
     'testMode': True,
-    'database': 'mongo'
+    'database': 'omopcdm'
 }
 runs={
     'granularity': {
@@ -92,5 +92,5 @@ runs={
     'database': 'mongo'
 }
 filtering_terms={
-    'database': 'mongo'
+    'database': 'omopcdm'
 }
