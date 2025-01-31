@@ -5,7 +5,7 @@ from concurrent.futures import ThreadPoolExecutor
 from beacon.logs.logs import log_with_args, level, LOG
 from typing import Optional
 from beacon.request.parameters import RequestParams
-from beacon.connections.omopcdm.datasets import get_biosamples_of_dataset, get_individuals_of_dataset
+# from beacon.connections.omopcdm.datasets import get_biosamples_of_dataset, get_individuals_of_dataset
 from beacon.connections.omopcdm.cohorts import get_biosamples_of_cohort, get_individuals_of_cohort
 from beacon.connections.omopcdm.datasets import get_full_datasets, get_dataset_with_id
 from beacon.connections.omopcdm.cohorts import get_cohorts, get_cohort_with_id
@@ -30,10 +30,10 @@ async def execute_function(self, entry_type: str, datasets: list, qparams: Reque
             function=get_biosample_with_id
         elif entry_type == 'individuals_biosamples':
             function = get_biosamples_of_individual
-        elif entry_type == 'datasets_biosamples':
-            function=get_biosamples_of_dataset
-        elif entry_type == 'datasets_individuals':
-            function=get_individuals_of_dataset
+        # elif entry_type == 'datasets_biosamples':
+        #     function=get_biosamples_of_dataset
+        # elif entry_type == 'datasets_individuals':
+        #     function=get_individuals_of_dataset
         elif entry_type == 'cohorts_biosamples':
             function=get_biosamples_of_cohort
         elif entry_type == 'cohorts_individuals':
