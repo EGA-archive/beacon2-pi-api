@@ -12,6 +12,14 @@ database_port = 5432
 database_name = 'synthetic_data_w_measurements'
 ```
 
+## Add the backend information for each schema
+
+Go to [../../source/manage.py](../../source/manage.py) and change the `database` property to `mongo` or `omopcdm`. Depending on where you are doing the queries.
+
+## Add you dataset permissions
+
+Go to [../../permissions/datasets/](../../permissions/datasets/) and add your dataset id in one of the `.yml` files, depending on the access of your users.
+
 ## Deploy the tool
 
 ```
