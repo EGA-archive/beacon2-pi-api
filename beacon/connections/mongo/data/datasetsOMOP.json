@@ -1,0 +1,50 @@
+[
+    {
+        "createDateTime": "",
+        "dataUseConditions": {
+            "duoDataUse": [
+                {
+                    "id": "",
+                    "label": "",
+                    "version": ""
+                }
+            ]
+        },
+        "description": "",
+        "externalUrl": "",
+        "id": "omop_cdm",
+        "info": {
+            "beacon": {
+                "contact": "",
+                "mapping": "",
+                "version": "v2.0"
+            },
+            "dataset": {
+                "derived": [
+                    {
+                        "ContactPerson": {
+                            "contact": "example@example.com",
+                            "externalUrl": "",
+                            "license": {
+                                "$ref": "#/dataUseConditions/duoDataUse"
+                            }
+                        }
+                    }
+                ],
+                "origin": [
+                    {
+                        "referenceInfo": {
+                            "contact": "example@example.com",
+                            "externalUrl": "",
+                            "license": "",
+                            "managers": ""
+                        }
+                    }
+                ]
+            }
+        },
+        "name": "OMOP CDM dataset example",
+        "updateDateTime": "",
+        "version": "v1.0"
+    }
+]
