@@ -1,6 +1,9 @@
 from beacon.connections.omopcdm.__init__ import client
 from beacon.logs.logs import log_with_args, LOG
 from beacon.conf.conf import level
+from pymongo.cursor import Cursor
+from pymongo.collection import Collection
+
 import itertools
 import aiosql
 from pathlib import Path
@@ -60,3 +63,21 @@ def search_ontologies(self, dictValues, matView):
                         id = "None:No matching concept"
                     dictVariableValue[variable] = {'id':id, 'label':label}
     return dictValues
+
+@log_with_args(level)
+def get_datasetIds(self, collection: Collection, dataset: str, collectionId: str, skip: int, limit: int) -> Cursor:
+    idList= collection.find({'datasetId': dataset}, {collectionId: 1, '_id':0})
+    idList = list(idList)
+    LOG.debug(f"idlist {idList}")
+    if not idList:
+        return [], 0
+    return idList[0][collectionId][skip:limit + skip], len(idList[0][collectionId])
+
+@log_with_args(level)
+def get_datasetSingleId(self, collection: Collection, dataset: str, collectionId: str, idValue) -> Cursor:
+    # It doesn't work
+    idValue= collection.find({'datasetId': dataset, collectionId:{'$all': [idValue]}})
+    if list(idValue):
+        return True
+    return False
+     
