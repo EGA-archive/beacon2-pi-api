@@ -205,7 +205,8 @@ def apply_request_parameters(self, query: Dict[str, List[dict]], qparams: Reques
             if k == "start":
                 if isinstance(v, str):
                     v = v.split(',')
-                    isBracket=True
+                    if len(v)>1:
+                        isBracket=True
                 if equal == False:
                     filters = generate_position_filter_start_sequence_query(self, k, v)
                     for filter in filters:
@@ -214,52 +215,37 @@ def apply_request_parameters(self, query: Dict[str, List[dict]], qparams: Reques
                     filters = generate_position_filter_start(self, k, v)
                     for filter in filters:
                         startdictvalue=apply_alphanumeric_filter(self, {}, filter, collection, dataset)
-                        LOG.debug(startdictvalue)
                         startquery["$and"].append(startdictvalue)
                 else:
                     startvalue=v
-                    finalvalue=str(endvalue)+','+str(9999999999)
+                    finalvalue=str(0)+','+str(endvalue)
                     finalvalue = finalvalue.split(',')
                     filters = generate_position_filter_start(self, k, finalvalue)
                     for filter in filters:
                         startdictvalue=apply_alphanumeric_filter(self, {}, filter, collection, dataset)
-                        LOG.debug(startdictvalue)
-                        endquery["$and"].append(startdictvalue)                
+                        startquery["$and"].append(startdictvalue)            
             elif k == "end":
 
                 if isinstance(v, str):
                     v = v.split(',')
-                    filters = generate_position_filter_end(self, k, v)
-
+                    if len(v)>1:
+                        isBracket=True
+                filters = generate_position_filter_end(self, k, v)
+                if isBracket==True:
                     for filter in filters:
                         enddictvalue=apply_alphanumeric_filter(self, {}, filter, collection, dataset)
-                        LOG.debug(enddictvalue)
-                        endquery["$and"].append(enddictvalue)
+                        startquery["$and"].append(enddictvalue)
+                    query["$and"].append(startquery)    
                 elif isBracket==False:
-                    v = str(0)+','+str(startvalue)
+                    v = str(startvalue[0])+','+str(9999999999)
                     v = v.split(',')
                     filters = generate_position_filter_end(self, k, v)
 
                     for filter in filters:
                         enddictvalue=apply_alphanumeric_filter(self, {}, filter, collection, dataset)
-                        LOG.debug(enddictvalue)
-                        endquery["$and"].append(enddictvalue)
-
-                start_ids = client.beacon.genomicVariations \
-                    .find(startquery)
-                start_variantIds=[]
-                for start_record in start_ids:
-                    start_variantIds.append(start_record['identifiers']['genomicHGVSId'])
-                end_ids = client.beacon.genomicVariations \
-                    .find(endquery)
-                end_variantIds=[]
-                for end_record in end_ids:
-                    end_variantIds.append(end_record['identifiers']['genomicHGVSId'])
-
-                if isBracket == True:
-                    definitive_variantIds=list(set(start_variantIds) & set(end_variantIds))
-                elif isBracket == False:
-                    definitive_variantIds=start_variantIds+end_variantIds
+                        startquery["$and"].append(enddictvalue)
+                    query["$and"].append(startquery)    
+                
                 
             elif k == "datasets":
                 pass
@@ -314,25 +300,7 @@ def apply_request_parameters(self, query: Dict[str, List[dict]], qparams: Reques
             pass
         if subquery["$and"] != []:
             query["$and"].append(subquery)
-        total_variantIds={}
-        total_variantIds['identifiers.genomicHGVSId']={}
-        total_variantIds['identifiers.genomicHGVSId']['$in']=[]
-        if definitive_variantIds != [] and isBracket == True:
-            for variantId in definitive_variantIds:
-                total_variantIds['identifiers.genomicHGVSId']['$in'].append(variantId)
-            try:
-                query["$and"].append(total_variantIds)
-            except Exception:# pragma: no cover
-                query["$and"]=[]
-                query["$and"].append(total_variantIds)
-        elif definitive_variantIds != [] and isBracket == False:
-            for variantId in definitive_variantIds:
-                total_variantIds['identifiers.genomicHGVSId']['$nin'].append(variantId)
-            try:
-                query["$and"].append(total_variantIds)
-            except Exception:# pragma: no cover
-                query["$and"]=[]
-                query["$and"].append(total_variantIds)
-
+        elif startquery["$and"] != []:
+            query["$and"].append(startquery)
 
     return query, False
