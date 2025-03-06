@@ -54,10 +54,14 @@ def get_individual_with_id(self, entry_id: Optional[str], qparams: RequestParams
 @log_with_args(level)
 def get_variants_of_individual(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
     collection = 'g_variants'
-    targets = client.beacon.targets \
-        .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
-    position=0
-    bioids=targets[0]["biosampleIds"]
+    try:
+        targets = client.beacon.targets \
+            .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
+        position=0
+        bioids=targets[0]["biosampleIds"]
+    except Exception:
+        schema = DefaultSchemas.GENOMICVARIATIONS
+        return schema, 0, -1, None, dataset
     for bioid in bioids:
         if bioid == entry_id:
             break
