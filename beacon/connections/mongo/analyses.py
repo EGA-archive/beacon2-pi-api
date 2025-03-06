@@ -59,10 +59,14 @@ def get_variants_of_analysis(self, entry_id: Optional[str], qparams: RequestPara
     query = apply_filters(self, query, qparams.query.filters, collection, {}, dataset)
     analysis_ids = client.beacon.analyses \
         .find_one(query, {"biosampleId": 1, "_id": 0})
-    targets = client.beacon.targets \
-        .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
-    position=0
-    bioids=targets[0]["biosampleIds"]
+    try:
+        targets = client.beacon.targets \
+            .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
+        position=0
+        bioids=targets[0]["biosampleIds"]
+    except Exception:
+        schema = DefaultSchemas.GENOMICVARIATIONS
+        return schema, 0, -1, None, dataset
     for bioid in bioids:
         if bioid == analysis_ids["biosampleId"]:
             break

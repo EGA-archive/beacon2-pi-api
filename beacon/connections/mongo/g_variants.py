@@ -81,10 +81,14 @@ def get_biosamples_of_variant(self, entry_id: Optional[str], qparams: RequestPar
     queryHGVSId={"datasetId": dataset, "id": HGVSId}
     string_of_ids = client.beacon.caseLevelData \
         .find(queryHGVSId)
-    targets = client.beacon.targets \
-        .find({"datasetId": HGVSDataset}, {"biosampleIds": 1, "_id": 0})
-    targets=list(targets)
-    list_of_targets=targets[0]["biosampleIds"]
+    try:
+        targets = client.beacon.targets \
+            .find({"datasetId": HGVSDataset}, {"biosampleIds": 1, "_id": 0})
+        targets=list(targets)
+        list_of_targets=targets[0]["biosampleIds"]
+    except Exception:
+        schema = DefaultSchemas.BIOSAMPLES
+        return schema, 0, 0, [], dataset
     list_of_positions_strings= string_of_ids[0]
     biosampleIds=[]
     filters=qparams.query.filters
@@ -150,10 +154,14 @@ def get_runs_of_variant(self, entry_id: Optional[str], qparams: RequestParams, d
     queryHGVSId={"datasetId": dataset, "id": HGVSId}
     string_of_ids = client.beacon.caseLevelData \
         .find(queryHGVSId)
-    targets = client.beacon.targets \
-        .find({"datasetId": HGVSDataset}, {"biosampleIds": 1, "_id": 0})
-    targets=list(targets)
-    list_of_targets=targets[0]["biosampleIds"]
+    try:
+        targets = client.beacon.targets \
+            .find({"datasetId": HGVSDataset}, {"biosampleIds": 1, "_id": 0})
+        targets=list(targets)
+        list_of_targets=targets[0]["biosampleIds"]
+    except Exception:
+        schema = DefaultSchemas.INDIVIDUALS
+        return schema, 0, 0, [], dataset
     list_of_positions_strings= string_of_ids[0]
     biosampleIds=[]
     filters=qparams.query.filters
@@ -221,10 +229,14 @@ def get_analyses_of_variant(self, entry_id: Optional[str], qparams: RequestParam
     queryHGVSId={"datasetId": dataset, "id": HGVSId}
     string_of_ids = client.beacon.caseLevelData \
         .find(queryHGVSId)
-    targets = client.beacon.targets \
-        .find({"datasetId": HGVSDataset}, {"biosampleIds": 1, "_id": 0})
-    targets=list(targets)
-    list_of_targets=targets[0]["biosampleIds"]
+    try:
+        targets = client.beacon.targets \
+            .find({"datasetId": HGVSDataset}, {"biosampleIds": 1, "_id": 0})
+        targets=list(targets)
+        list_of_targets=targets[0]["biosampleIds"]
+    except Exception:
+        schema = DefaultSchemas.INDIVIDUALS
+        return schema, 0, 0, [], dataset
     list_of_positions_strings= string_of_ids[0]
     biosampleIds=[]
     filters=qparams.query.filters
@@ -289,11 +301,15 @@ def get_individuals_of_variant(self, entry_id: Optional[str], qparams: RequestPa
     queryHGVSId={"datasetId": HGVSDataset, "id": HGVSId}
     string_of_ids = client.beacon.caseLevelData \
         .find(queryHGVSId)
-    targets = client.beacon.targets \
-        .find({"datasetId": HGVSDataset}, {"biosampleIds": 1, "_id": 0})
-    targets=list(targets)
-    list_of_targets=targets[0]["biosampleIds"]
-    list_of_positions_strings= string_of_ids[0]
+    try:
+        targets = client.beacon.targets \
+            .find({"datasetId": HGVSDataset}, {"biosampleIds": 1, "_id": 0})
+        targets=list(targets)
+        list_of_targets=targets[0]["biosampleIds"]
+        list_of_positions_strings= string_of_ids[0]
+    except Exception:
+        schema = DefaultSchemas.INDIVIDUALS
+        return schema, 0, 0, [], dataset
     biosampleIds=[]
     filters=qparams.query.filters
     if filters != []:
