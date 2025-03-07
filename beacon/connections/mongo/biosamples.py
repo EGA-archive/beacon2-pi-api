@@ -70,7 +70,7 @@ def get_variants_of_biosample(self, entry_id: Optional[str], qparams: RequestPar
         schema = DefaultSchemas.GENOMICVARIATIONS
         return schema, 0, -1, None, dataset
     position=str(position)
-    query_cl={"$or": [{ position: "10", "datasetId": dataset},{ position: "11", "datasetId": dataset}, { position: "01", "datasetId": dataset}]}
+    query_cl={"$or": [{ position: "10", "datasetId": dataset},{ position: "11", "datasetId": dataset}, { position: "01", "datasetId": dataset}, { position: "y", "datasetId": dataset}]}
     string_of_ids = client.beacon.caseLevelData \
         .find(query_cl, {"id": 1, "_id": 0}).limit(qparams.query.pagination.limit).skip(qparams.query.pagination.skip)
     HGVSIds=list(string_of_ids)

@@ -55,6 +55,7 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                 query_cl["$or"].append({ position: "10", "datasetId": dataset})
                 query_cl["$or"].append({ position: "11", "datasetId": dataset})
                 query_cl["$or"].append({ position: "01", "datasetId": dataset})
+                query_cl["$or"].append({ position: "y", "datasetId": dataset})
             string_of_ids = client.beacon.caseLevelData \
                 .find(query_cl, {"id": 1, "_id": 0})
             HGVSIds=list(string_of_ids)
