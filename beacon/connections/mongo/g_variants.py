@@ -101,7 +101,7 @@ def get_biosamples_of_variant(self, entry_id: Optional[str], qparams: RequestPar
                 qparams.query.filters.remove(filter)
             elif filter['id']=='GENO:0000136':
                 for key, value in list_of_positions_strings.items():
-                    if key != 'datasetId' and key != 'id' and key != '_id' and value != '10' and value != '01':
+                    if key != 'datasetId' and key != 'id' and key != '_id' and value != '10' and value != '01' and value != 'y':
                         biosampleIds.append(list_of_targets[int(key)])
                 qparams.query.filters.remove(filter)
             else:
@@ -174,7 +174,7 @@ def get_runs_of_variant(self, entry_id: Optional[str], qparams: RequestParams, d
                 qparams.query.filters.remove(filter)
             elif filter['id']=='GENO:0000136':
                 for key, value in list_of_positions_strings.items():
-                    if key != 'datasetId' and key != 'id' and key != '_id' and value != '10' and value != '01':
+                    if key != 'datasetId' and key != 'id' and key != '_id' and value != '10' and value != '01' and value != 'y':
                         biosampleIds.append(list_of_targets[int(key)])
                 qparams.query.filters.remove(filter)
             else:
@@ -249,7 +249,7 @@ def get_analyses_of_variant(self, entry_id: Optional[str], qparams: RequestParam
                 qparams.query.filters.remove(filter)
             elif filter['id']=='GENO:0000136':
                 for key, value in list_of_positions_strings.items():
-                    if key != 'datasetId' and key != 'id' and key != '_id' and value != '10' and value != '01':
+                    if key != 'datasetId' and key != 'id' and key != '_id' and value != '10' and value != '01' and value != 'y':
                         biosampleIds.append(list_of_targets[int(key)])
                 qparams.query.filters.remove(filter)
             else:
@@ -321,7 +321,7 @@ def get_individuals_of_variant(self, entry_id: Optional[str], qparams: RequestPa
                 qparams.query.filters.remove(filter)
             elif filter['id']=='GENO:0000136':
                 for key, value in list_of_positions_strings.items():
-                    if key != 'datasetId' and key != 'id' and key != '_id' and value != '10' and value != '01':
+                    if key != 'datasetId' and key != 'id' and key != '_id' and value != '10' and value != '01' and value != 'y':
                         biosampleIds.append(list_of_targets[int(key)])
                 qparams.query.filters.remove(filter)
             else:
