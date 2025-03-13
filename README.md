@@ -1,6 +1,10 @@
 # Beacon v2 Production Implementation
 
-Welcome to Beacon v2 Production Implementation (B2PI). This is an application that makes an instance of Beacon v2 be production ready. To go to the beacon reference implementation (test instance) please visit [B2RI](https://github.com/EGA-archive/beacon2-ri-api). For further information on how to use this app, please visit [B2RI docs](https://b2ri-documentation-demo.ega-archive.org/)
+Welcome to Beacon v2 Production Implementation (B2PI). This is an application that makes an instance of Beacon v2 be production ready.
+
+## Documentation
+
+Please, go to [B2RI/B2PI docs website](https://b2ri-documentation-demo.ega-archive.org/) to know how to use Beacon v2 Production Implementation.
 
 ## Main changes from B2RI
 
