@@ -118,7 +118,6 @@ def apply_request_parameters(self, query: Dict[str, List[dict]], qparams: Reques
                         if filter.id == "start":
                             filter[id]=VARIANTS_PROPERTY_MAP["start"]
                             startquery=apply_alphanumeric_filter(self, {}, filter, collection, dataset)
-                            LOG.debug(startquery)
                 elif k == "end":
                     if isinstance(v, str):
                         v = v.split(',')
@@ -218,14 +217,16 @@ def apply_request_parameters(self, query: Dict[str, List[dict]], qparams: Reques
                         startquery["$and"].append(startdictvalue)
                 else:
                     startvalue=v
-                    finalvalue=str(0)+','+str(endvalue)
+                    if isinstance(endvalue, list):
+                        finalvalue=str(0)+','+str(endvalue[0])
+                    else:
+                        finalvalue=str(0)+','+str(endvalue)
                     finalvalue = finalvalue.split(',')
                     filters = generate_position_filter_start(self, k, finalvalue)
                     for filter in filters:
                         startdictvalue=apply_alphanumeric_filter(self, {}, filter, collection, dataset)
                         startquery["$and"].append(startdictvalue)            
             elif k == "end":
-
                 if isinstance(v, str):
                     v = v.split(',')
                     if len(v)>1:
@@ -240,7 +241,6 @@ def apply_request_parameters(self, query: Dict[str, List[dict]], qparams: Reques
                     v = str(startvalue[0])+','+str(9999999999)
                     v = v.split(',')
                     filters = generate_position_filter_end(self, k, v)
-
                     for filter in filters:
                         enddictvalue=apply_alphanumeric_filter(self, {}, filter, collection, dataset)
                         startquery["$and"].append(enddictvalue)
@@ -302,5 +302,4 @@ def apply_request_parameters(self, query: Dict[str, List[dict]], qparams: Reques
             query["$and"].append(subquery)
         elif startquery["$and"] != []:
             query["$and"].append(startquery)
-
     return query, False
