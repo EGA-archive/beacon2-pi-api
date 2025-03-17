@@ -22,7 +22,7 @@ async def check_request_content_type(self, request: Request):
 async def get_qparams(self, post_data, request):
     try:
         if post_data is not None:
-            qparams = RequestParams(**request)
+            qparams = RequestParams(**post_data).from_request(request)
         else:
             json_body={}
             qparams = RequestParams(**json_body).from_request(request)

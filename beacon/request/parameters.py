@@ -88,7 +88,7 @@ class RequestQuery(CamelModel):
 
 class SequenceQuery(BaseModel):
     referenceName: Union[str,int]
-    start: int
+    start: Union[int,list]
     alternateBases:str
     referenceBases: str
     clinicalRelevance: Optional[str] =None
@@ -112,8 +112,8 @@ class SequenceQuery(BaseModel):
 
 class RangeQuery(BaseModel):
     referenceName: Union[str,int]
-    start: int
-    end: int
+    start: Union[int,list]
+    end: Union[int,list]
     variantType: Optional[str] =None
     alternateBases: Optional[str] =None
     aminoacidChange: Optional[str] =None
@@ -202,48 +202,51 @@ class RequestParams(CamelModel):
 
     def from_request(self, request: Request) -> Self:
         request_params={}
-        if request.method != "POST" or not request.has_body or not request.can_read_body:            
-            for k, v in request.query.items():
-                if k == "requestedSchema":# pragma: no cover
-                    self.meta.requested_schemas = [html.escape(v)] # comprovar si és la sanitització recomanada
-                elif k == "skip":# pragma: no cover
-                    self.query.pagination.skip = int(html.escape(v))
-                elif k == "limit":
-                    self.query.pagination.limit = int(html.escape(v))
-                elif k == "includeResultsetResponses":
-                    self.query.include_resultset_responses = IncludeResultsetResponses(html.escape(v))
-                elif k == 'datasets':
-                    self.query.request_parameters[k] = html.escape(v)
-                elif k == 'filters':
-                    self.query.request_parameters[k] = html.escape(v)
-                elif k == 'testMode':
-                    v = html.escape(v)
-                    if v.lower() == 'true':
-                        v = True
-                    elif v.lower() == 'false':# pragma: no cover
-                        v = False
+        try:
+            if request.method != "POST" or not request.has_body or not request.can_read_body:            
+                for k, v in request.query.items():
+                    if k == "requestedSchema":# pragma: no cover
+                        self.meta.requested_schemas = [html.escape(v)] # comprovar si és la sanitització recomanada
+                    elif k == "skip":# pragma: no cover
+                        self.query.pagination.skip = int(html.escape(v))
+                    elif k == "limit":
+                        self.query.pagination.limit = int(html.escape(v))
+                    elif k == "includeResultsetResponses":
+                        self.query.include_resultset_responses = IncludeResultsetResponses(html.escape(v))
+                    elif k == 'datasets':
+                        self.query.request_parameters[k] = html.escape(v)
+                    elif k == 'filters':
+                        self.query.request_parameters[k] = html.escape(v)
+                    elif k == 'testMode':
+                        v = html.escape(v)
+                        if v.lower() == 'true':
+                            v = True
+                        elif v.lower() == 'false':# pragma: no cover
+                            v = False
+                        else:
+                            err = 'testMode parameter can only be either true or false value'
+                            errcode=400
+                            raise_exception(err, errcode)
+                        self.query.test_mode = v
+                    elif k in ["start", "end", "assemblyId", "referenceName", "referenceBases", "alternateBases", "variantType","variantMinLength","variantMaxLength","geneId","genomicAlleleShortForm","aminoacidChange","clinicalRelevance", "mateName"]:
+                        try:
+                            if ',' in v:# pragma: no cover
+                                v_splitted = v.split(',')
+                                request_params[k]=[int(v) for v in v_splitted]
+                            else:
+                                request_params[k]=int(v)
+                        except Exception as e:
+                            request_params[k]=v
+                        self.query.request_parameters[k] = html.escape(v)
                     else:
-                        err = 'testMode parameter can only be either true or false value'
+                        catch_req_params = {}
+                        for k, v in request.query.items():
+                            catch_req_params[k]=v
+                        err = 'set of request parameters: {} not allowed'.format(catch_req_params)
                         errcode=400
                         raise_exception(err, errcode)
-                    self.query.test_mode = v
-                elif k in ["start", "end", "assemblyId", "referenceName", "referenceBases", "alternateBases", "variantType","variantMinLength","variantMaxLength","geneId","genomicAlleleShortForm","aminoacidChange","clinicalRelevance", "mateName"]:
-                    try:
-                        if ',' in v:# pragma: no cover
-                            v_splitted = v.split(',')
-                            request_params[k]=[int(v) for v in v_splitted]
-                        else:
-                            request_params[k]=int(v)
-                    except Exception as e:
-                        request_params[k]=v
-                    self.query.request_parameters[k] = html.escape(v)
-                else:
-                    catch_req_params = {}
-                    for k, v in request.query.items():
-                        catch_req_params[k]=v
-                    err = 'set of request parameters: {} not allowed'.format(catch_req_params)
-                    errcode=400
-                    raise_exception(err, errcode)
+        except Exception:
+            request_params=request["query"]["requestParameters"]
         if request_params != {}:
             try:
                 RangeQuery(**request_params)
