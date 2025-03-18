@@ -76,7 +76,7 @@ services:
     command: mongod --port 27023 --wiredTigerCacheSizeGB 4
     #command: --wiredTigerCacheSizeGB 4 --sslMode requireSSL --tlsCertificateKeyFile test-server1.pem --tlsCAFile test-ca.pem
     hostname: mongo
-    container_name: mongoprod
+    container_name: mongoprodspain
     ports:
       - 27023:27023
     environment:
