@@ -23,3 +23,4 @@ build:
 	gunzip --stdout /vault/oriol/oriol_beacon_data/pop11_sub2/COVID_pop11_fin_2_chr22.json.gz | mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27023/beacon?authSource=admin" --collection genomicVariations
 	gunzip --stdout /vault/oriol/oriol_beacon_data/pop11_sub2/COVID_pop11_fin_2_chrX.json.gz | mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27023/beacon?authSource=admin" --collection genomicVariations
 	gunzip --stdout /vault/oriol/oriol_beacon_data/pop11_sub2/datasets.json.gz | mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27023/beacon?authSource=admin" --collection datasets
+	docker exec beaconprodspain python /beacon/connections/mongo/reindex.py
