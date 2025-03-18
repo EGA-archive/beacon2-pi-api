@@ -71,7 +71,7 @@ services:
       resources:
         limits:
           memory: 7500m
-        reservation:
+        reservations:
           memory: 2000M
     command: mongod --port 27023 --wiredTigerCacheSizeGB 4
     #command: --wiredTigerCacheSizeGB 4 --sslMode requireSSL --tlsCertificateKeyFile test-server1.pem --tlsCAFile test-ca.pem
