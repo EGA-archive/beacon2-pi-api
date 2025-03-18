@@ -68,11 +68,11 @@ services:
   dbspain:
     image: mongo:5
     deploy:
-    resources:
-      limits:
-        memory: 7500m
-      reservation:
-        memory: 2000M
+      resources:
+        limits:
+          memory: 7500m
+        reservation:
+          memory: 2000M
     command: mongod --port 27023 --wiredTigerCacheSizeGB 4
     #command: --wiredTigerCacheSizeGB 4 --sslMode requireSSL --tlsCertificateKeyFile test-server1.pem --tlsCAFile test-ca.pem
     hostname: mongo
