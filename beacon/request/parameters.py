@@ -109,6 +109,12 @@ class SequenceQuery(BaseModel):
                 raise ValueError
         else:# pragma: no cover
             raise ValueError
+    @field_validator('start')
+    @classmethod
+    def id_must_be_CURIE(cls, v: Union[int,list]) -> Union[int,list]:
+        if isinstance(v,list):
+            if len(v)>1:
+                raise ValueError
 
 class RangeQuery(BaseModel):
     referenceName: Union[str,int]
