@@ -206,6 +206,8 @@ def apply_request_parameters(self, query: Dict[str, List[dict]], qparams: Reques
                     v = v.split(',')
                     if len(v)>1:
                         isBracket=True
+                elif isinstance(v, list) and len(v) > 1:
+                    isBracket=True
                 if equal == False:
                     filters = generate_position_filter_start_sequence_query(self, k, v)
                     for filter in filters:
@@ -231,6 +233,8 @@ def apply_request_parameters(self, query: Dict[str, List[dict]], qparams: Reques
                     v = v.split(',')
                     if len(v)>1:
                         isBracket=True
+                elif isinstance(v, list) and len(v) > 1:
+                    isBracket=True
                 filters = generate_position_filter_end(self, k, v)
                 if isBracket==True:
                     for filter in filters:
