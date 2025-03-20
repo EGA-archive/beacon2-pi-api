@@ -9,6 +9,7 @@ datasetId='test'
 case_level_data=True
 exact_heterozygosity=False
 num_rows=7000000
+verbosity=False
 
 ### MongoDB parameters ###
 database_host = 'mongo'
