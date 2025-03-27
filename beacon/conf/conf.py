@@ -12,12 +12,12 @@ except Exception as e:# pragma: no cover
 
 level=logging.NOTSET
 log_file=None
-beacon_id = 'org.ega-archive.beacon-ri-demo'  # ID of the Beacon
-beacon_name = 'Beacon Reference Implementation demo'  # Name of the Beacon service
+beacon_id = 'org.ega-archive.ega-beacon'  # ID of the Beacon
+beacon_name = 'EGA Beacon'  # Name of the Beacon service
 api_version = 'v2.0.0' # Version of the Beacon implementation
-uri = 'http://beaconprod:5050/api/'
-environment = 'test'
-description = r"This Beacon is based on synthetic data hosted at the <a href='https://ega-archive.org/datasets/EGAD00001003338'>EGA</a>. The dataset contains 2504 samples including genetic data based on 1K Genomes data, and 76 individual attributes and phenotypic data derived from UKBiobank."
+uri = 'https://af-ega-beacon-demo.ega-archive.org/api/'
+environment = 'prod'
+description = r"This beacon is based on the European Genome-Phenome Archive datasets."
 version = api_version_yaml['api_version']
 welcome_url = 'https://beacon.ega-archive.org/'
 alternative_url = 'https://beacon.ega-archive.org/api'
@@ -27,7 +27,7 @@ max_beacon_granularity = "record" # boolean, count or record
 security_levels = ['PUBLIC', 'REGISTERED', 'CONTROLLED']
 documentation_url = 'https://b2ri-documentation-demo.ega-archive.org/'
 alphanumeric_terms = ['libraryStrategy', 'molecularAttributes.geneIds', 'diseases.ageOfOnset.iso8601duration', 'molecularAttributes.aminoacidChanges','phenotypicFeatures.onset.iso8601duration', 'exposures.ageAtExposure.iso8601duration', 'treatments.ageAtOnset.iso8601duration']
-cors_urls = ["http://localhost:3000","https://cancer-beacon-demo.ega-archive.org", "https://beacon-network-demo2.ega-archive.org", "https://beacon.ega-archive.org"]
+cors_urls = ["http://localhost:3000","https://cancer-beacon-demo.ega-archive.org", "https://beacon-network-demo2.ega-archive.org", "https://beacon.ega-archive.org", "https://beacon-network-test.ega-archive.org", "https://af-beacon.ega-archive.org", "https://beacon-cancer-registry-test.ega-archive.org", "https://global-beacon-network.ega-archive.org"]
 test_datasetId="synthetic_usecases_4beacon_testingV3"
 
 # Service Info

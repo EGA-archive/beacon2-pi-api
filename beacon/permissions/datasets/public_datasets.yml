@@ -1,4 +1,8 @@
 public_datasets:
-- synthetic_usecases_4beacon_testingV3
 - CINECA_synthetic_cohort_EUROPE_UK1
-- gnomad_joint_v4.1
+- CINECA_dataset
+- rd-connect_dataset
+- coadread_tcga_pan_can_atlas_2018
+- COVID_pop11_fin_2
+- EGAD00001007774
+- gnomad_exome_v2.1.1
