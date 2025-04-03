@@ -178,7 +178,7 @@ def choose_scope(self, scope, collection, filter):
             scopes=docs[0]["scopes"]
             if len(scopes)==1:
                 scope=scopes[0]
-            else:
+            elif len(scopes) > 1:
                 for scoped in scopes:
                     if str(scoped)+'s'==collection and collection != 'g_variants':
                         scope=str(scoped)
@@ -186,7 +186,7 @@ def choose_scope(self, scope, collection, filter):
                         scope=str(scoped)
                     else:
                         scope=None
-            if scope is None:
+            else:
                 individuals_keys=['disease', 'sex', 'ethnicity', 'exposure', 'geographic', 'interventions', 'procedure', 'measure', 'karyotypic', 'pedigree', 'phenotypic', 'treatment']
                 biosamples_keys=['biosample', 'collection', 'diagnostic', 'histological', 'measurement', 'obtention', 'pathological', 'sample', 'processing', 'storage', 'tumor']
                 analyses_keys=['aligner', 'analysis', 'pipeline', 'variantcaller']
