@@ -159,3 +159,71 @@ def get_docs_by_response_type(self, include: str, query: dict, dataset: str, lim
 def get_filtering_documents(self, collection: Collection, query: dict, remove_id: dict,skip: int, limit: int) -> Cursor:
     ##LOG.debug("FINAL QUERY: {}".format(query))
     return collection.find(query,remove_id).skip(skip).limit(limit).max_time_ms(100 * 1000)
+
+@log_with_args_mongo(level)
+def choose_scope(self, scope, collection, filter):
+    query_filtering={}
+    query_filtering['$and']=[]
+    if scope is None:
+        dict_id={}
+        dict_id['id']=filter.id
+        query_filtering['$and'].append(dict_id)
+        docs = get_documents(self,
+        client.beacon.filtering_terms,
+        query_filtering,
+        0,
+        1
+        )
+        try:
+            scopes=docs[0]["scopes"]
+            if len(scopes)==1:
+                scope=scopes[0]
+            else:
+                for scoped in scopes:
+                    if str(scoped)+'s'==collection and collection != 'g_variants':
+                        scope=str(scoped)
+                    elif str(scoped)=='genomicVariation' and collection=='g_variants':
+                        scope=str(scoped)
+                    else:
+                        scope=None
+            if scope is None:
+                individuals_keys=['disease', 'sex', 'ethnicity', 'exposure', 'geographic', 'interventions', 'procedure', 'measure', 'karyotypic', 'pedigree', 'phenotypic', 'treatment']
+                biosamples_keys=['biosample', 'collection', 'diagnostic', 'histological', 'measurement', 'obtention', 'pathological', 'sample', 'processing', 'storage', 'tumor']
+                analyses_keys=['aligner', 'analysis', 'pipeline', 'variantcaller']
+                cohorts_keys=['cohort', 'collectionevents', 'inclusion', 'exclusion', 'criteria']
+                datasets_keys=['create', 'datause', 'externalurl', 'update', 'dataset']
+                genomicVariations_keys=['zygosity', 'gene', 'aminoacid', 'molecular']
+                runs_keys=['library', 'layout', 'source', 'strategy', 'platform', 'model', 'rundate']
+                label=docs[0]["label"]
+                for indk in individuals_keys:
+                    if label in indk.lower():
+                        scope='individual'
+                if scope is None:
+                    for biok in biosamples_keys:
+                        if label in biok.lower():
+                            scope='biosample'
+                if scope is None:
+                    for ank in analyses_keys:
+                        if label in ank.lower():
+                            scope='analysis'
+                if scope is None:
+                    for cohk in cohorts_keys:
+                        if label in cohk.lower():
+                            scope='cohort'
+                if scope is None:
+                    for datk in datasets_keys:
+                        if label in datk.lower():
+                            scope='dataset'
+                if scope is None:
+                    for genk in genomicVariations_keys:
+                        if label in genk.lower():
+                            scope='genomicVariation'
+                if scope is None:
+                    for runk in runs_keys:
+                        if label in runk.lower():
+                            scope='run'
+                else:
+                    scope='individual'
+        except Exception:
+            scope='individual'
+    return scope

@@ -1,14 +1,13 @@
 from typing import List, Union
 import re
 from beacon.request.parameters import AlphanumericFilter, CustomFilter, OntologyFilter, Operator, Similarity
-from beacon.connections.mongo.utils import get_documents, join_query
+from beacon.connections.mongo.utils import get_documents, join_query, choose_scope
 from beacon.connections.mongo.__init__ import client
 from beacon.conf import conf
 from beacon.logs.logs import log_with_args, LOG
 from beacon.conf.conf import level
 
 CURIE_REGEX = r'^([a-zA-Z0-9]*):\/?[a-zA-Z0-9./]*$'
-
 
 @log_with_args(level)
 def cross_query(self, query: dict, scope: str, collection: str, request_parameters: dict, dataset: str):
@@ -236,7 +235,7 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                     def_list.append(new_id)
                     query={}
                     query['$or']=def_list
-        elif scope == 'analyse' and collection != 'analyses':# pragma: no cover
+        elif scope == 'analysis' and collection != 'analyses':# pragma: no cover
             mongo_collection=client.beacon.analyses
             if collection == 'g_variants':
                 original_id="biosampleId"
@@ -541,10 +540,8 @@ def apply_ontology_filter(self, query: dict, filter: OntologyFilter, collection:
     
     
     scope = filter.scope
-    if scope is None and collection != 'g_variants':
-        scope = collection[0:-1]
-    elif scope is None:
-        scope = 'genomicVariation'# pragma: no cover
+    scope=choose_scope(self, scope, collection, filter)
+
     is_filter_id_required = True
     # Search similar
     if filter.similarity != Similarity.EXACT:# pragma: no cover
@@ -786,10 +783,7 @@ def format_operator(self, operator: Operator) -> str:
 @log_with_args(level)
 def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, collection: str, dataset: str) -> dict:
     scope = filter.scope
-    if scope is None and collection != 'g_variants':
-        scope = collection[0:-1]
-    elif scope is None:
-        scope = 'genomicVariation'
+    scope=choose_scope(self, scope, collection, filter)
     formatted_value = format_value(self, filter.value)
     formatted_operator = format_operator(self, filter.operator)
     if collection == 'g_variants' and scope != 'individual' and scope != 'run':
@@ -1037,10 +1031,7 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, col
 @log_with_args(level)
 def apply_custom_filter(self, query: dict, filter: CustomFilter, collection:str, dataset: str) -> dict:
     scope = filter.scope
-    if scope is None and collection != 'g_variants':
-        scope = collection[0:-1]
-    elif scope is None:# pragma: no cover
-        scope = 'genomicVariation'
+    scope=choose_scope(self, scope, collection, filter)
     value_splitted = filter.id.split(':')
     if value_splitted[0] in conf.alphanumeric_terms:
         query_term = value_splitted[0]# pragma: no cover
