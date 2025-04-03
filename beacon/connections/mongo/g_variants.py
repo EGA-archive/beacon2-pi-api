@@ -64,11 +64,14 @@ def get_biosamples_of_variant(self, entry_id: Optional[str], qparams: RequestPar
     mongo_collection = client.beacon.biosamples
     query = {"$and": [{"variantInternalId": entry_id}]}
     query_parameters, parameters_as_filters = apply_request_parameters(self, query, qparams, dataset)
-    if parameters_as_filters == True:
+    if parameters_as_filters == True and query_parameters != {'$and': []}:
         query, parameters_as_filters = apply_request_parameters(self, query, qparams, dataset)# pragma: no cover
         query_parameters={}# pragma: no cover
-    else:
+    elif query_parameters != {'$and': []}:
         query=query_parameters
+    elif query_parameters == {'$and': []}:
+        query_parameters = {}
+        query={}
     collection='biosamples'
     HGVSIds = client.beacon.genomicVariations \
         .find(query, {"identifiers.genomicHGVSId": 1, "datasetId": 1, "_id": 0})
@@ -92,6 +95,7 @@ def get_biosamples_of_variant(self, entry_id: Optional[str], qparams: RequestPar
     list_of_positions_strings= string_of_ids[0]
     biosampleIds=[]
     filters=qparams.query.filters
+    new_filters=[]
     if filters != []:
         for filter in filters:
             if filter['id']=='GENO:0000458':
@@ -105,6 +109,7 @@ def get_biosamples_of_variant(self, entry_id: Optional[str], qparams: RequestPar
                         biosampleIds.append(list_of_targets[int(key)])
                 qparams.query.filters.remove(filter)
             else:
+                new_filters.append(filter)
                 for key, value in list_of_positions_strings.items():
                     if key != 'datasetId' and key != 'id' and key != '_id':
                         biosampleIds.append(list_of_targets[int(key)])
@@ -120,7 +125,7 @@ def get_biosamples_of_variant(self, entry_id: Optional[str], qparams: RequestPar
     except Exception:# pragma: no cover
         finalids=[]
     query = {"$and": [{"$or": finalids}]}
-    query = apply_filters(self, query, qparams.query.filters, collection, {}, dataset)
+    query = apply_filters(self, query, new_filters, collection, {}, dataset)
     schema = DefaultSchemas.BIOSAMPLES
     include = qparams.query.include_resultset_responses
     limit = qparams.query.pagination.limit
@@ -137,11 +142,14 @@ def get_runs_of_variant(self, entry_id: Optional[str], qparams: RequestParams, d
     mongo_collection = client.beacon.runs
     query = {"$and": [{"variantInternalId": entry_id}]}
     query_parameters, parameters_as_filters = apply_request_parameters(self, query, qparams, dataset)
-    if parameters_as_filters == True:
+    if parameters_as_filters == True and query_parameters != {'$and': []}:
         query, parameters_as_filters = apply_request_parameters(self, query, qparams, dataset)# pragma: no cover
         query_parameters={}# pragma: no cover
-    else:
+    elif query_parameters != {'$and': []}:
         query=query_parameters
+    elif query_parameters == {'$and': []}:
+        query_parameters = {}
+        query={}
     collection='runs'
     HGVSIds = client.beacon.genomicVariations \
         .find(query, {"identifiers.genomicHGVSId": 1, "datasetId": 1, "_id": 0})
@@ -165,6 +173,7 @@ def get_runs_of_variant(self, entry_id: Optional[str], qparams: RequestParams, d
     list_of_positions_strings= string_of_ids[0]
     biosampleIds=[]
     filters=qparams.query.filters
+    new_filters=[]
     if filters != []:
         for filter in filters:
             if filter['id']=='GENO:0000458':
@@ -182,6 +191,7 @@ def get_runs_of_variant(self, entry_id: Optional[str], qparams: RequestParams, d
                     if key != 'datasetId' and key != 'id' and key != '_id':
                         biosampleIds.append(list_of_targets[int(key)])
     else:
+        new_filters.append(filter)
         for key, value in list_of_positions_strings.items():
             if key != 'datasetId' and key != 'id' and key != '_id':
                 biosampleIds.append(list_of_targets[int(key)])
@@ -192,7 +202,7 @@ def get_runs_of_variant(self, entry_id: Optional[str], qparams: RequestParams, d
     except Exception:# pragma: no cover
         finalids=[]
     query = {"$and": [{"$or": finalids}]}
-    query = apply_filters(self, query, qparams.query.filters, collection, {}, dataset)
+    query = apply_filters(self, query, new_filters, collection, {}, dataset)
     schema = DefaultSchemas.RUNS
     include = qparams.query.include_resultset_responses
     limit = qparams.query.pagination.limit
@@ -205,18 +215,18 @@ def get_runs_of_variant(self, entry_id: Optional[str], qparams: RequestParams, d
 
 @log_with_args(level)
 def get_analyses_of_variant(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
-    LOG.debug(entry_id)
-    LOG.debug(qparams)
-    LOG.debug(dataset)
     collection = 'g_variants'
     mongo_collection = client.beacon.analyses
     query = {"$and": [{"variantInternalId": entry_id}]}
     query_parameters, parameters_as_filters = apply_request_parameters(self, query, qparams, dataset)
-    if parameters_as_filters == True:
+    if parameters_as_filters == True and query_parameters != {'$and': []}:
         query, parameters_as_filters = apply_request_parameters(self, query, qparams, dataset)# pragma: no cover
         query_parameters={}# pragma: no cover
-    else:
+    elif query_parameters != {'$and': []}:
         query=query_parameters
+    elif query_parameters == {'$and': []}:
+        query_parameters = {}
+        query={}
     collection='analyses'
     HGVSIds = client.beacon.genomicVariations \
         .find(query, {"identifiers.genomicHGVSId": 1, "datasetId": 1, "_id": 0})
@@ -240,6 +250,7 @@ def get_analyses_of_variant(self, entry_id: Optional[str], qparams: RequestParam
     list_of_positions_strings= string_of_ids[0]
     biosampleIds=[]
     filters=qparams.query.filters
+    new_filters=[]
     if filters != []:
         for filter in filters:
             if filter['id']=='GENO:0000458':
@@ -253,6 +264,7 @@ def get_analyses_of_variant(self, entry_id: Optional[str], qparams: RequestParam
                         biosampleIds.append(list_of_targets[int(key)])
                 qparams.query.filters.remove(filter)
             else:
+                new_filters.append(filter)
                 for key, value in list_of_positions_strings.items():
                     if key != 'datasetId' and key != 'id' and key != '_id':
                         biosampleIds.append(list_of_targets[int(key)])
@@ -267,7 +279,7 @@ def get_analyses_of_variant(self, entry_id: Optional[str], qparams: RequestParam
     except Exception:# pragma: no cover
         finalids=[]
     query = {"$and": [{"$or": finalids}]}
-    query = apply_filters(self, query, qparams.query.filters, collection, {}, dataset)
+    query = apply_filters(self, query, new_filters, collection, {}, dataset)
     schema = DefaultSchemas.ANALYSES
     include = qparams.query.include_resultset_responses
     limit = qparams.query.pagination.limit
@@ -284,11 +296,14 @@ def get_individuals_of_variant(self, entry_id: Optional[str], qparams: RequestPa
     mongo_collection = client.beacon.individuals
     query = {"$and": [{"variantInternalId": entry_id}]}
     query_parameters, parameters_as_filters = apply_request_parameters(self, query, qparams, dataset)
-    if parameters_as_filters == True:
+    if parameters_as_filters == True and query_parameters != {'$and': []}:
         query, parameters_as_filters = apply_request_parameters(self, query, qparams, dataset)# pragma: no cover
         query_parameters={}# pragma: no cover
-    else:
+    elif query_parameters != {'$and': []}:
         query=query_parameters
+    elif query_parameters == {'$and': []}:
+        query_parameters = {}
+        query={}
     collection='individuals'
     HGVSIds = client.beacon.genomicVariations \
         .find(query, {"identifiers.genomicHGVSId": 1, "datasetId": 1, "_id": 0})
@@ -312,19 +327,19 @@ def get_individuals_of_variant(self, entry_id: Optional[str], qparams: RequestPa
         return schema, 0, 0, [], dataset
     biosampleIds=[]
     filters=qparams.query.filters
+    new_filters=[]
     if filters != []:
         for filter in filters:
             if filter['id']=='GENO:0000458':
                 for key, value in list_of_positions_strings.items():
                     if key != 'datasetId' and key != 'id' and key != '_id' and value != '11':
                         biosampleIds.append(list_of_targets[int(key)])
-                qparams.query.filters.remove(filter)
             elif filter['id']=='GENO:0000136':
                 for key, value in list_of_positions_strings.items():
                     if key != 'datasetId' and key != 'id' and key != '_id' and value != '10' and value != '01' and value != 'y':
                         biosampleIds.append(list_of_targets[int(key)])
-                qparams.query.filters.remove(filter)
             else:
+                new_filters.append(filter)
                 for key, value in list_of_positions_strings.items():
                     if key != 'datasetId' and key != 'id' and key != '_id':
                         biosampleIds.append(list_of_targets[int(key)])
@@ -357,7 +372,7 @@ def get_individuals_of_variant(self, entry_id: Optional[str], qparams: RequestPa
         finalquery["$or"].append(query)
     superfinalquery={}
     superfinalquery["$and"]=[finalquery]
-    query = apply_filters(self, superfinalquery, qparams.query.filters, collection, {}, dataset)
+    query = apply_filters(self, superfinalquery, new_filters, collection, {}, dataset)
     schema = DefaultSchemas.INDIVIDUALS
     include = qparams.query.include_resultset_responses
     limit = qparams.query.pagination.limit
