@@ -375,7 +375,7 @@ def apply_filters(self, query: dict, filters: List[dict], collection: str, query
             partial_query = {}
             if "value" in filter:
                 filter = AlphanumericFilter(**filter)
-                partial_query = apply_alphanumeric_filter(self, partial_query, filter, collection, dataset)
+                partial_query = apply_alphanumeric_filter(self, partial_query, filter, collection, dataset, False)
             elif "includeDescendantTerms" not in filter and '.' not in filter["id"] and filter["id"].isupper():
                 filter=OntologyFilter(**filter)
                 filter.include_descendant_terms=True
@@ -389,12 +389,11 @@ def apply_filters(self, query: dict, filters: List[dict], collection: str, query
             total_query["$and"].append(partial_query)
             if total_query["$and"] == [{'$or': []}] or total_query['$and'] == []:
                 total_query = {}# pragma: no cover
-
     if request_parameters != {}:
         try:
             if collection == 'individuals':
                 HGVSIds = client.beacon.genomicVariations \
-                    .find(query, {"identifiers.genomicHGVSId": 1, "datasetId": 1, "_id": 0})
+                    .find(request_parameters, {"identifiers.genomicHGVSId": 1, "datasetId": 1, "_id": 0})
                 HGVSIds=list(HGVSIds)
                 HGVSDataset=HGVSIds[0]["datasetId"]
                 HGVSId=HGVSIds[0]["identifiers"]["genomicHGVSId"]
@@ -442,7 +441,7 @@ def apply_filters(self, query: dict, filters: List[dict], collection: str, query
                     total_query["$and"].append(finalquery)
             elif collection == 'biosamples':
                 HGVSIds = client.beacon.genomicVariations \
-                    .find(query, {"identifiers.genomicHGVSId": 1, "datasetId": 1, "_id": 0})
+                    .find(request_parameters, {"identifiers.genomicHGVSId": 1, "datasetId": 1, "_id": 0})
                 HGVSIds=list(HGVSIds)
                 HGVSDataset=HGVSIds[0]["datasetId"]
                 HGVSId=HGVSIds[0]["identifiers"]["genomicHGVSId"]
@@ -474,7 +473,7 @@ def apply_filters(self, query: dict, filters: List[dict], collection: str, query
                     total_query["$and"].append({"$or": finalids})
             elif collection == 'analyses' or collection == 'runs':
                 HGVSIds = client.beacon.genomicVariations \
-                    .find(query, {"identifiers.genomicHGVSId": 1, "datasetId": 1, "_id": 0})
+                    .find(request_parameters, {"identifiers.genomicHGVSId": 1, "datasetId": 1, "_id": 0})
                 HGVSIds=list(HGVSIds)
                 HGVSDataset=HGVSIds[0]["datasetId"]
                 HGVSId=HGVSIds[0]["identifiers"]["genomicHGVSId"]
@@ -781,12 +780,10 @@ def format_operator(self, operator: Operator) -> str:
         return "$lte"
 
 @log_with_args(level)
-def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, collection: str, dataset: str) -> dict:
-    scope = filter.scope
-    scope=choose_scope(self, scope, collection, filter)
+def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, collection: str, dataset: str, isRequestParameter: bool) -> dict:
     formatted_value = format_value(self, filter.value)
     formatted_operator = format_operator(self, filter.operator)
-    if collection == 'g_variants' and scope != 'individual' and scope != 'run':
+    if isRequestParameter == True:
         if filter.id == "identifiers.genomicHGVSId":
             list_chromosomes = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','X','Y']
             dict_regex={}
@@ -860,6 +857,8 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, col
             query[filter.id] = { formatted_operator: formatted_value }
 
     elif isinstance(formatted_value,str):
+        scope = filter.scope
+        scope=choose_scope(self, scope, collection, filter)
         if filter.id in conf.alphanumeric_terms:
             query_term = filter.id# pragma: no cover
         else:
@@ -924,6 +923,8 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, col
                 query['$nor'].append(query_id) 
         
     else:
+        scope = filter.scope
+        scope=choose_scope(self, scope, collection, filter)
         if "iso8601duration" in filter.id:
             if '>' in filter.operator:
                 age_in_number=""
