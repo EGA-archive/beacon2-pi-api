@@ -21,6 +21,6 @@
             "label": "Illumina HiSeq 3000"
         },
         "runDate": "2021-10-18",
-        "datasetId": "synthetic_usecases_4beacon_testingV3"
+        "datasetId": "test"
     }
 ]
