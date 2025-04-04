@@ -173,9 +173,10 @@ def choose_scope(self, scope, collection, filter):
         0,
         1
         )
+        fterm=docs[0]
         try:
             try:
-                scopes=docs[0]["scopes"]
+                scopes=fterm["scopes"]
             except Exception:
                 scopes=[]
             if len(scopes)==1:
@@ -196,34 +197,52 @@ def choose_scope(self, scope, collection, filter):
                 datasets_keys=['create', 'datause', 'externalurl', 'update', 'dataset']
                 genomicVariations_keys=['zygosity', 'gene', 'aminoacid', 'molecular', 'caseleveldata', 'variant']
                 runs_keys=['library', 'layout', 'source', 'strategy', 'platform', 'model', 'rundate']
+                try:
+                    label = fterm["label"]
+                except Exception as e:
+                    label= ''
                 for indk in individuals_keys:
-                    if indk in filter.id.lower():
+                    if indk in filter.id.lower() or indk in label:
+                        scope='individual'
+                    elif indk in label.lower():
                         scope='individual'
                 if scope is None:
-                    for biok in biosamples_keys:
+                    for biok in biosamples_keys or biok in label:
                         if biok in filter.id.lower():
                             scope='biosample'
+                        elif biok in label.lower():
+                            scope='biosample'
                 if scope is None:
-                    for ank in analyses_keys:
+                    for ank in analyses_keys or ank in label:
                         if ank in filter.id.lower():
                             scope='analysis'
+                        elif ank in label.lower():
+                            scope='analysis'
                 if scope is None:
-                    for cohk in cohorts_keys:
+                    for cohk in cohorts_keys or cohk in label:
                         if cohk in filter.id.lower():
                             scope='cohort'
+                        elif cohk in label.lower():
+                            scope='cohort'
                 if scope is None:
-                    for datk in datasets_keys:
+                    for datk in datasets_keys or datk in label:
                         if datk in filter.id.lower():
+                            scope='dataset'
+                        elif datk in label.lower():
                             scope='dataset'
                 if scope is None:
                     for genk in genomicVariations_keys:
                         if genk in filter.id.lower():
                             scope='genomicVariation'
+                        elif genk in label.lower():
+                            scope='genomicVariation'
                 if scope is None:
                     for runk in runs_keys:
-                        if runk in filter.id.lower():
+                        if runk in filter.id.lower() or runk in label:
                             scope='run'
-                else:
+                        elif runk in label.lower():
+                            scope='run'
+                if scope is None:
                     scope='individual'
         except Exception as e:
             scope='individual'

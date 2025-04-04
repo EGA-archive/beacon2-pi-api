@@ -567,9 +567,6 @@ def apply_ontology_filter(self, query: dict, filter: OntologyFilter, collection:
         final_term_list.append(filter.id)
         query_filtering={}
         query_filtering['$and']=[]
-        dict_scope={}
-        dict_scope['scopes']=scope
-        query_filtering['$and'].append(dict_scope)
         dict_id={}
         dict_id['id']=filter.id
         query_filtering['$and'].append(dict_id)
@@ -585,7 +582,6 @@ def apply_ontology_filter(self, query: dict, filter: OntologyFilter, collection:
         if scope == 'genomicVariation' and collection == 'g_variants' or scope == collection:
             query_filtering={}
             query_filtering['$and']=[]
-            query_filtering['$and'].append(dict_scope)
             dict_regex={}
             try:
                 dict_regex['$regex']=label
@@ -642,13 +638,9 @@ def apply_ontology_filter(self, query: dict, filter: OntologyFilter, collection:
         list_descendant.append(filter.id)
         query_filtering={}
         query_filtering['$and']=[]
-        dict_scope={}
-
-        dict_scope['scopes']=scope
         dict_id={}
         dict_id['id']=filter.id
         query_filtering['$and'].append(dict_id)
-        query_filtering['$and'].append(dict_scope)
         docs = get_documents(self,
             client.beacon.filtering_terms,
             query_filtering,
@@ -668,10 +660,7 @@ def apply_ontology_filter(self, query: dict, filter: OntologyFilter, collection:
             dict_regex['$regex']=''
         dict_id={}
         dict_id['id']=dict_regex
-        dict_scope={}
-        dict_scope['scopes']=scope
         query_filtering['$and'].append(dict_id)
-        query_filtering['$and'].append(dict_scope)
         docs_2 = get_documents(self,
             client.beacon.filtering_terms,
             query_filtering,
@@ -698,9 +687,6 @@ def apply_ontology_filter(self, query: dict, filter: OntologyFilter, collection:
     if is_filter_id_required:# pragma: no cover
         query_filtering={}
         query_filtering['$and']=[]
-        dict_scope={}
-        dict_scope['scopes']=scope
-        query_filtering['$and'].append(dict_scope)
         dict_id={}
         dict_id['id']=filter.id
         query_filtering['$and'].append(dict_id)
@@ -715,7 +701,6 @@ def apply_ontology_filter(self, query: dict, filter: OntologyFilter, collection:
             label = doc_term['label']
         query_filtering={}
         query_filtering['$and']=[]
-        query_filtering['$and'].append(dict_scope)
         dict_regex={}
         dict_regex['$regex']=label
         dict_regex['$options']='i'
