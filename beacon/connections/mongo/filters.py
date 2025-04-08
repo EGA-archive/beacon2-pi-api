@@ -587,7 +587,7 @@ def apply_ontology_filter(self, query: dict, filter: OntologyFilter, collection:
             query_filtering['$and']=[]
             dict_regex={}
             try:
-                dict_regex['$regex']=label
+                dict_regex['$regex']=":"+label
                 dict_regex['$options']='i'
             except Exception:
                 dict_regex['$regex']=''
@@ -663,7 +663,7 @@ def apply_ontology_filter(self, query: dict, filter: OntologyFilter, collection:
         query_filtering['$and']=[]
         dict_regex={}
         try:
-            dict_regex['$regex']=label
+            dict_regex['$regex']=":"+label
             dict_regex['$options']='i'
         except Exception:# pragma: no cover
             dict_regex['$regex']=''
@@ -717,7 +717,7 @@ def apply_ontology_filter(self, query: dict, filter: OntologyFilter, collection:
         query_filtering={}
         query_filtering['$and']=[]
         dict_regex={}
-        dict_regex['$regex']=label
+        dict_regex['$regex']=":"+label
         dict_regex['$options']='i'
         dict_id={}
         dict_id['id']=dict_regex
