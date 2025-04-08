@@ -801,14 +801,15 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, col
                     dict_regex['$regex']='^NC_0000'+'23'
                 elif filter.value == 'Y':
                     dict_regex['$regex']='^NC_0000'+'24'
-                else:
+                elif len(filter.value)==2:
                     dict_regex['$regex']='^NC_0000'+filter.value+'.'+'10:g'+'|'+'^NC_0000'+filter.value+'.'+'11:g'+'|'+'^NC_0000'+filter.value+'.'+'9:g'
+                else:
+                    dict_regex['$regex']='^NC_00000'+filter.value+'.'+'10:g'+'|'+'^NC_00000'+filter.value+'.'+'11:g'+'|'+'^NC_00000'+filter.value+'.'+'9:g'
             elif '&gt;' in filter.value:# pragma: no cover
                 newvalue=filter.value.replace("&gt;",">")
                 dict_regex=newvalue
             elif '.' in filter.value:# pragma: no cover
-                valuesplitted = filter.value.split('.')
-                dict_regex['$regex']=valuesplitted[0]+".*"+valuesplitted[-1]+":"
+                dict_regex['$regex']=filter.value
                 dict_regex['$options']= "si"
             query[filter.id] = dict_regex
         elif filter.id == 'molecularAttributes.aminoacidChanges':
