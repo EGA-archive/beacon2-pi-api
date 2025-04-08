@@ -114,7 +114,7 @@ def get_ontology_field_name(ontology_id:str, term_id:str, collection:str):
                     field = k
                     for key, value in result.items():
                         if key == 'label':
-                            label = value
+                            label = value.lower()
                         break
                     break
             elif isinstance(v, dict):
@@ -126,7 +126,7 @@ def get_ontology_field_name(ontology_id:str, term_id:str, collection:str):
                                     field = k + '.' + k2
                                     for key, value in v.items():
                                         if key == 'label':
-                                            label = value
+                                            label = value.lower()
                                             break
                                     break
                             elif isinstance(item_list, dict):
@@ -136,7 +136,7 @@ def get_ontology_field_name(ontology_id:str, term_id:str, collection:str):
                                             field = k + '.' + k2 + '.' + k21
                                             for key, value in item_list.items():
                                                 if key == 'label':
-                                                    label = value
+                                                    label = value.lower()
                                                     break
                                             break
                                     elif isinstance(v21,dict):
@@ -145,14 +145,14 @@ def get_ontology_field_name(ontology_id:str, term_id:str, collection:str):
                                                 field = k + '.' + k2 + '.' + k22
                                                 for key, value in v21.items():
                                                     if key == 'label':
-                                                        label = value
+                                                        label = value.lower()
                                                         break
                                                 break
                     elif v2 == ontology_id + ':' + term_id:
                         field = k + '.' + k2
                         for key, value in v.items():
                             if key == 'label':
-                                label = value
+                                label = value.lower()
                                 break
                         break
             elif isinstance(v, list):
@@ -162,7 +162,7 @@ def get_ontology_field_name(ontology_id:str, term_id:str, collection:str):
                             field = k
                             for key, value in result.items():
                                 if key == 'label':
-                                    label = value
+                                    label = value.lower()
                                     break
                             break
                     elif isinstance(item, dict):
@@ -182,7 +182,7 @@ def get_ontology_field_name(ontology_id:str, term_id:str, collection:str):
                                             field = k + '.' + k2 + '.' + k3
                                             for key, value in v2.items():
                                                 if key == 'label':
-                                                    label = value
+                                                    label = value.lower()
                                                     break
                                             break 
                                     elif isinstance(v3, dict):
@@ -192,7 +192,7 @@ def get_ontology_field_name(ontology_id:str, term_id:str, collection:str):
                                                     field = k + '.' + k2 + '.' + k3 + '.' + k4
                                                     for key, value in v3.items():
                                                         if key == 'label':
-                                                            label = value
+                                                            label = value.lower()
                                                             break
                                                     break 
                                             elif isinstance(v4, dict):
@@ -201,7 +201,7 @@ def get_ontology_field_name(ontology_id:str, term_id:str, collection:str):
                                                         field = k + '.' + k2 + '.' + k3 + '.' + k4 + '.' + k5
                                                         for key, value in v4.items():
                                                             if key == 'label':
-                                                                label = value
+                                                                label = value.lower()
                                                                 break
                                                         break 
 
