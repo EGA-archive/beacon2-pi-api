@@ -94,6 +94,7 @@ def get_biosamples_of_variant(self, entry_id: Optional[str], qparams: RequestPar
         return schema, 0, 0, [], dataset
     list_of_positions_strings= string_of_ids[0]
     biosampleIds=[]
+    biosampleIds_restricted=[]
     filters=qparams.query.filters
     new_filters=[]
     if filters != []:
@@ -101,12 +102,12 @@ def get_biosamples_of_variant(self, entry_id: Optional[str], qparams: RequestPar
             if filter['id']=='GENO:0000458':
                 for key, value in list_of_positions_strings.items():
                     if key != 'datasetId' and key != 'id' and key != '_id' and value != '11':
-                        biosampleIds.append(list_of_targets[int(key)])
+                        biosampleIds_restricted.append(list_of_targets[int(key)])
                 qparams.query.filters.remove(filter)
             elif filter['id']=='GENO:0000136':
                 for key, value in list_of_positions_strings.items():
                     if key != 'datasetId' and key != 'id' and key != '_id' and value != '10' and value != '01' and value != 'y':
-                        biosampleIds.append(list_of_targets[int(key)])
+                        biosampleIds_restricted.append(list_of_targets[int(key)])
                 qparams.query.filters.remove(filter)
             else:
                 new_filters.append(filter)
@@ -117,6 +118,12 @@ def get_biosamples_of_variant(self, entry_id: Optional[str], qparams: RequestPar
         for key, value in list_of_positions_strings.items():
             if key != 'datasetId' and key != 'id' and key != '_id':
                 biosampleIds.append(list_of_targets[int(key)])
+    if biosampleIds_restricted != [] and biosampleIds != []:
+        for biosampleId in biosampleIds:
+            if biosampleId not in biosampleIds_restricted:
+                biosampleIds.remove(biosampleId)
+    elif biosampleIds_restricted != [] and biosampleIds == []:
+        biosampleIds = biosampleIds_restricted
     finalids=biosampleIds
     try:
         finalids=[]
@@ -172,6 +179,7 @@ def get_runs_of_variant(self, entry_id: Optional[str], qparams: RequestParams, d
         return schema, 0, 0, [], dataset
     list_of_positions_strings= string_of_ids[0]
     biosampleIds=[]
+    biosampleIds_restricted=[]
     filters=qparams.query.filters
     new_filters=[]
     if filters != []:
@@ -179,22 +187,28 @@ def get_runs_of_variant(self, entry_id: Optional[str], qparams: RequestParams, d
             if filter['id']=='GENO:0000458':
                 for key, value in list_of_positions_strings.items():
                     if key != 'datasetId' and key != 'id' and key != '_id' and value != '11':
-                        biosampleIds.append(list_of_targets[int(key)])
+                        biosampleIds_restricted.append(list_of_targets[int(key)])
                 qparams.query.filters.remove(filter)
             elif filter['id']=='GENO:0000136':
                 for key, value in list_of_positions_strings.items():
                     if key != 'datasetId' and key != 'id' and key != '_id' and value != '10' and value != '01' and value != 'y':
-                        biosampleIds.append(list_of_targets[int(key)])
+                        biosampleIds_restricted.append(list_of_targets[int(key)])
                 qparams.query.filters.remove(filter)
             else:
+                new_filters.append(filter)
                 for key, value in list_of_positions_strings.items():
                     if key != 'datasetId' and key != 'id' and key != '_id':
                         biosampleIds.append(list_of_targets[int(key)])
     else:
-        new_filters.append(filter)
         for key, value in list_of_positions_strings.items():
             if key != 'datasetId' and key != 'id' and key != '_id':
                 biosampleIds.append(list_of_targets[int(key)])
+    if biosampleIds_restricted != [] and biosampleIds != []:
+        for biosampleId in biosampleIds:
+            if biosampleId not in biosampleIds_restricted:
+                biosampleIds.remove(biosampleId)
+    elif biosampleIds_restricted != [] and biosampleIds == []:
+        biosampleIds = biosampleIds_restricted
     try:
         finalids=[]
         for bioid in biosampleIds:
@@ -249,6 +263,7 @@ def get_analyses_of_variant(self, entry_id: Optional[str], qparams: RequestParam
         return schema, 0, 0, [], dataset
     list_of_positions_strings= string_of_ids[0]
     biosampleIds=[]
+    biosampleIds_restricted=[]
     filters=qparams.query.filters
     new_filters=[]
     if filters != []:
@@ -256,12 +271,12 @@ def get_analyses_of_variant(self, entry_id: Optional[str], qparams: RequestParam
             if filter['id']=='GENO:0000458':
                 for key, value in list_of_positions_strings.items():
                     if key != 'datasetId' and key != 'id' and key != '_id' and value != '11':
-                        biosampleIds.append(list_of_targets[int(key)])
+                        biosampleIds_restricted.append(list_of_targets[int(key)])
                 qparams.query.filters.remove(filter)
             elif filter['id']=='GENO:0000136':
                 for key, value in list_of_positions_strings.items():
                     if key != 'datasetId' and key != 'id' and key != '_id' and value != '10' and value != '01' and value != 'y':
-                        biosampleIds.append(list_of_targets[int(key)])
+                        biosampleIds_restricted.append(list_of_targets[int(key)])
                 qparams.query.filters.remove(filter)
             else:
                 new_filters.append(filter)
@@ -272,6 +287,12 @@ def get_analyses_of_variant(self, entry_id: Optional[str], qparams: RequestParam
         for key, value in list_of_positions_strings.items():
             if key != 'datasetId' and key != 'id' and key != '_id':
                 biosampleIds.append(list_of_targets[int(key)])
+    if biosampleIds_restricted != [] and biosampleIds != []:
+        for biosampleId in biosampleIds:
+            if biosampleId not in biosampleIds_restricted:
+                biosampleIds.remove(biosampleId)
+    elif biosampleIds_restricted != [] and biosampleIds == []:
+        biosampleIds = biosampleIds_restricted
     try:
         finalids=[]
         for bioid in biosampleIds:
@@ -326,6 +347,7 @@ def get_individuals_of_variant(self, entry_id: Optional[str], qparams: RequestPa
         schema = DefaultSchemas.INDIVIDUALS
         return schema, 0, 0, [], dataset
     biosampleIds=[]
+    biosampleIds_restricted=[]
     filters=qparams.query.filters
     new_filters=[]
     if filters != []:
@@ -333,11 +355,13 @@ def get_individuals_of_variant(self, entry_id: Optional[str], qparams: RequestPa
             if filter['id']=='GENO:0000458':
                 for key, value in list_of_positions_strings.items():
                     if key != 'datasetId' and key != 'id' and key != '_id' and value != '11':
-                        biosampleIds.append(list_of_targets[int(key)])
+                        biosampleIds_restricted.append(list_of_targets[int(key)])
+                qparams.query.filters.remove(filter)
             elif filter['id']=='GENO:0000136':
                 for key, value in list_of_positions_strings.items():
                     if key != 'datasetId' and key != 'id' and key != '_id' and value != '10' and value != '01' and value != 'y':
-                        biosampleIds.append(list_of_targets[int(key)])
+                        biosampleIds_restricted.append(list_of_targets[int(key)])
+                qparams.query.filters.remove(filter)
             else:
                 new_filters.append(filter)
                 for key, value in list_of_positions_strings.items():
@@ -347,6 +371,12 @@ def get_individuals_of_variant(self, entry_id: Optional[str], qparams: RequestPa
         for key, value in list_of_positions_strings.items():
             if key != 'datasetId' and key != 'id' and key != '_id':
                 biosampleIds.append(list_of_targets[int(key)])
+    if biosampleIds_restricted != [] and biosampleIds != []:
+        for biosampleId in biosampleIds:
+            if biosampleId not in biosampleIds_restricted:
+                biosampleIds.remove(biosampleId)
+    elif biosampleIds_restricted != [] and biosampleIds == []:
+        biosampleIds = biosampleIds_restricted
     try:
         finalquery={}
         finalquery["$or"]=[]

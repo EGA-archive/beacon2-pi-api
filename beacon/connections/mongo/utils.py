@@ -3,7 +3,7 @@ from beacon.connections.mongo.__init__ import client
 from pymongo.collection import Collection
 from beacon.logs.logs import log_with_args_mongo, LOG
 from beacon.conf.conf import level
-from bson import json_util
+from beacon.exceptions.exceptions import raise_exception
 
 @log_with_args_mongo(level)
 def get_cross_query(self, ids: dict, cross_type: str, collection_id: str):# pragma: no cover
@@ -163,87 +163,42 @@ def get_filtering_documents(self, collection: Collection, query: dict, remove_id
 def choose_scope(self, scope, collection, filter):
     query_filtering={}
     query_filtering['$and']=[]
+    dict_id={}
+    dict_id['id']=filter.id
+    query_filtering['$and'].append(dict_id)
+    docs = get_documents(self,
+    client.beacon.filtering_terms,
+    query_filtering,
+    0,
+    1
+    )
+    fterm=docs[0]
+    try:
+        scopes=fterm["scopes"]
+    except Exception:
+        scopes=[]
     if scope is None:
-        dict_id={}
-        dict_id['id']=filter.id
-        query_filtering['$and'].append(dict_id)
-        docs = get_documents(self,
-        client.beacon.filtering_terms,
-        query_filtering,
-        0,
-        1
-        )
-        fterm=docs[0]
         try:
-            try:
-                scopes=fterm["scopes"]
-            except Exception:
-                scopes=[]
-            if len(scopes)==1:
-                scope=scopes[0]
-            elif len(scopes) > 1:
+            if scopes == []:
+                scope = collection[0:-1]
+                return scope
+            else:
                 for scoped in scopes:
                     if str(scoped)+'s'==collection and collection != 'g_variants':
                         scope=str(scoped)
+                        return scope
                     elif str(scoped)=='genomicVariation' and collection=='g_variants':
                         scope=str(scoped)
-                    else:
-                        scope=None
-            else:
-                individuals_keys=['disease', 'sex', 'ethnicity', 'exposure', 'geographic', 'interventions', 'procedure', 'measure', 'karyotypic', 'pedigree', 'phenotypic', 'treatment']
-                biosamples_keys=['biosample', 'collection', 'diagnostic', 'histological', 'measurement', 'obtention', 'pathological', 'sample', 'processing', 'storage', 'tumor']
-                analyses_keys=['aligner', 'analysis', 'pipeline', 'variantcaller']
-                cohorts_keys=['cohort', 'collectionevents', 'inclusion', 'exclusion', 'criteria']
-                datasets_keys=['create', 'datause', 'externalurl', 'update', 'dataset']
-                genomicVariations_keys=['zygosity', 'gene', 'aminoacid', 'molecular', 'caseleveldata', 'variant']
-                runs_keys=['library', 'layout', 'source', 'strategy', 'platform', 'model', 'rundate']
-                try:
-                    label = fterm["label"]
-                except Exception as e:
-                    label= ''
-                for indk in individuals_keys:
-                    if indk in filter.id.lower() or indk in label:
-                        scope='individual'
-                    elif indk in label.lower():
-                        scope='individual'
-                if scope is None:
-                    for biok in biosamples_keys or biok in label:
-                        if biok in filter.id.lower():
-                            scope='biosample'
-                        elif biok in label.lower():
-                            scope='biosample'
-                if scope is None:
-                    for ank in analyses_keys or ank in label:
-                        if ank in filter.id.lower():
-                            scope='analysis'
-                        elif ank in label.lower():
-                            scope='analysis'
-                if scope is None:
-                    for cohk in cohorts_keys or cohk in label:
-                        if cohk in filter.id.lower():
-                            scope='cohort'
-                        elif cohk in label.lower():
-                            scope='cohort'
-                if scope is None:
-                    for datk in datasets_keys or datk in label:
-                        if datk in filter.id.lower():
-                            scope='dataset'
-                        elif datk in label.lower():
-                            scope='dataset'
-                if scope is None:
-                    for genk in genomicVariations_keys:
-                        if genk in filter.id.lower():
-                            scope='genomicVariation'
-                        elif genk in label.lower():
-                            scope='genomicVariation'
-                if scope is None:
-                    for runk in runs_keys:
-                        if runk in filter.id.lower() or runk in label:
-                            scope='run'
-                        elif runk in label.lower():
-                            scope='run'
-                if scope is None:
-                    scope='individual'
+                        return scope
+                if len(scopes) == 1:
+                    scope = scopes[0]
+                    return scope
+                else:
+                    raise_exception("Look at filtering terms endpoint and select a scope from one of the available scope values for this filtering term: {}".format(filter.id), 400)
         except Exception as e:
-            scope='individual'
-    return scope
+            raise_exception(e,500)
+    else:
+        for scoped in scopes:
+            if scope == scoped:
+                return scope
+        raise_exception("Scope requested in filtering term does not match any of its possible scopes. Look at filtering terms endpoint to know which scopes you can select for this filtering term: {}".format(filter.id), 400)

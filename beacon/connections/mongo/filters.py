@@ -569,7 +569,10 @@ def apply_ontology_filter(self, query: dict, filter: OntologyFilter, collection:
         query_filtering['$and']=[]
         dict_id={}
         dict_id['id']=filter.id
+        dict_scope={}
+        dict_scope['scopes']=scope
         query_filtering['$and'].append(dict_id)
+        query_filtering['$and'].append(dict_scope)
         docs = get_documents(self,
             client.beacon.filtering_terms,
             query_filtering,
@@ -590,7 +593,10 @@ def apply_ontology_filter(self, query: dict, filter: OntologyFilter, collection:
                 dict_regex['$regex']=''
             dict_id={}
             dict_id['id']=dict_regex
+            dict_scope={}
+            dict_scope['scopes']=scope
             query_filtering['$and'].append(dict_id)
+            query_filtering['$and'].append(dict_scope)
             docs_2 = get_documents(self,
                 client.beacon.filtering_terms,
                 query_filtering,
@@ -640,7 +646,10 @@ def apply_ontology_filter(self, query: dict, filter: OntologyFilter, collection:
         query_filtering['$and']=[]
         dict_id={}
         dict_id['id']=filter.id
+        dict_scope={}
+        dict_scope['scopes']=scope
         query_filtering['$and'].append(dict_id)
+        query_filtering['$and'].append(dict_scope)
         docs = get_documents(self,
             client.beacon.filtering_terms,
             query_filtering,
@@ -660,7 +669,10 @@ def apply_ontology_filter(self, query: dict, filter: OntologyFilter, collection:
             dict_regex['$regex']=''
         dict_id={}
         dict_id['id']=dict_regex
+        dict_scope={}
+        dict_scope['scopes']=scope
         query_filtering['$and'].append(dict_id)
+        query_filtering['$and'].append(dict_scope)
         docs_2 = get_documents(self,
             client.beacon.filtering_terms,
             query_filtering,
@@ -689,7 +701,10 @@ def apply_ontology_filter(self, query: dict, filter: OntologyFilter, collection:
         query_filtering['$and']=[]
         dict_id={}
         dict_id['id']=filter.id
+        dict_scope={}
+        dict_scope['scopes']=scope
         query_filtering['$and'].append(dict_id)
+        query_filtering['$and'].append(dict_scope)
         docs = get_documents(self,
         client.beacon.filtering_terms,
         query_filtering,
@@ -706,7 +721,10 @@ def apply_ontology_filter(self, query: dict, filter: OntologyFilter, collection:
         dict_regex['$options']='i'
         dict_id={}
         dict_id['id']=dict_regex
+        dict_scope={}
+        dict_scope['scopes']=scope
         query_filtering['$and'].append(dict_id)
+        query_filtering['$and'].append(dict_scope)
         docs_2 = get_documents(self,
         client.beacon.filtering_terms,
         query_filtering,
@@ -985,7 +1003,10 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, col
             dict_type['type']='custom'
             dict_id['id']=dict_regex
             query_filtering['$and'].append(dict_type)
+            dict_scope={}
+            dict_scope['scopes']=scope
             query_filtering['$and'].append(dict_id)
+            query_filtering['$and'].append(dict_scope)
             docs = get_documents(self,
                 client.beacon.filtering_terms,
                 query_filtering,

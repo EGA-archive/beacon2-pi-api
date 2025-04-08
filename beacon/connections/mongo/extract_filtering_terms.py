@@ -242,14 +242,14 @@ def find_ontology_terms_used(collection_name: str) -> List[Dict]:
     print(collection_name)
     terms_ids = []
     count = client.beacon.get_collection(collection_name).estimated_document_count()
-    if count < 10000:
+    if count < 50000:
         num_total=count
     else:
-        num_total=10000
+        num_total=50000
     i=0
-    if count > 10000:
+    if count > 50000:
         while i < count:
-            xs = client.beacon.get_collection(collection_name).find().skip(i).limit(10000)
+            xs = client.beacon.get_collection(collection_name).find().skip(i).limit(50000)
             for r in tqdm(xs, total=num_total):
                 matches = ONTOLOGY_REGEX.findall(str(r))
                 icd_matches = ICD_REGEX.findall(str(r))
@@ -262,11 +262,11 @@ def find_ontology_terms_used(collection_name: str) -> List[Dict]:
                     if term not in terms_ids:
                         terms_ids.append(term)
             i += 10000
-            if i > 30000:
+            if i > 80000:
                 break
             print(i)
     else:
-        xs = client.beacon.get_collection(collection_name).find().skip(0).limit(10000)
+        xs = client.beacon.get_collection(collection_name).find().skip(0).limit(50000)
         for r in tqdm(xs, total=num_total):
             matches = ONTOLOGY_REGEX.findall(str(r))
             icd_matches = ICD_REGEX.findall(str(r))
