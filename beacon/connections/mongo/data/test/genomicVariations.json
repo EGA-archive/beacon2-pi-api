@@ -1,1 +1,1495 @@
-[{"_id":{"$oid":"67cead5c6b1b2708798bdf04"},"identifiers":{"genomicHGVSId":"NC_00001.10:g.1234566CGTGTGTGCACAGTTTGTTCTTGGACGAGGACTCGTGAGGATCGAGGGCTGGGGACCCCGGTGTGAGCAGGATGGGGCCCTGCCCTCCCGTGGGAGTTGTGGACTCGAGCCCAGGGGCTGCCCGTCACAGCGGTGTCCCAGGTCCCTGCCATCCGATTTTACCTGGGATGTCTTCTCTGGAGTTTGGAATTGCTTGAGGAACCCTGCGTGTGCTTGGAGAGGCCAGAGGGCTTGCTGAGAACCCCATGGACAGTGGAGAGCGGGATTCGAACCAAGGGCTGGACTCCCACACCTCTGGCCT>T"},"molecularAttributes":{"geneIds":["SDF4"],"molecularEffects":[{"id":"SO:0001631","label":"upstream_gene_variant"}]},"variantInternalId":"034ef50c-fd90-11ef-a322-0242ac130003:CGTGTGTGCACAGTTTGTTCTTGGACGAGGACTCGTGAGGATCGAGGGCTGGGGACCCCGGTGTGAGCAGGATGGGGCCCTGCCCTCCCGTGGGAGTTGTGGACTCGAGCCCAGGGGCTGCCCGTCACAGCGGTGTCCCAGGTCCCTGCCATCCGATTTTACCTGGGATGTCTTCTCTGGAGTTTGGAATTGCTTGAGGAACCCTGCGTGTGCTTGGAGAGGCCAGAGGGCTTGCTGAGAACCCCATGGACAGTGGAGAGCGGGATTCGAACCAAGGGCTGGACTCCCACACCTCTGGCCT:T","variation":{"location":{"type":"SequenceLocation","sequence_id":"HGVSid:1:g.1234566CGTGTGTGCACAGTTTGTTCTTGGACGAGGACTCGTGAGGATCGAGGGCTGGGGACCCCGGTGTGAGCAGGATGGGGCCCTGCCCTCCCGTGGGAGTTGTGGACTCGAGCCCAGGGGCTGCCCGTCACAGCGGTGTCCCAGGTCCCTGCCATCCGATTTTACCTGGGATGTCTTCTCTGGAGTTTGGAATTGCTTGAGGAACCCTGCGTGTGCTTGGAGAGGCCAGAGGGCTTGCTGAGAACCCCATGGACAGTGGAGAGCGGGATTCGAACCAAGGGCTGGACTCCCACACCTCTGGCCT>T","interval":{"type":"SequenceInterval","start":{"type":"Number","value":1234566},"end":{"type":"Number","value":1234867}}},"alternateBases":"T","referenceBases":"CGTGTGTGCACAGTTTGTTCTTGGACGAGGACTCGTGAGGATCGAGGGCTGGGGACCCCGGTGTGAGCAGGATGGGGCCCTGCCCTCCCGTGGGAGTTGTGGACTCGAGCCCAGGGGCTGCCCGTCACAGCGGTGTCCCAGGTCCCTGCCATCCGATTTTACCTGGGATGTCTTCTCTGGAGTTTGGAATTGCTTGAGGAACCCTGCGTGTGCTTGGAGAGGCCAGAGGGCTTGCTGAGAACCCCATGGACAGTGGAGAGCGGGATTCGAACCAAGGGCTGGACTCCCACACCTCTGGCCT","variantType":"INDEL"},"datasetId":"test"},{"_id":{"$oid":"67cead5c6b1b2708798bdf05"},"identifiers":{"genomicHGVSId":"NC_00001.10:g.169549810C>T"},"molecularAttributes":{"aminoacidChanges":["Arg534Gln"],"geneIds":["F5"],"molecularEffects":[{"id":"ENSGLOSSARY:0000150","label":"missense_variant"}]},"variantInternalId":"034f3f30-fd90-11ef-a322-0242ac130003:C:T","variation":{"location":{"type":"SequenceLocation","sequence_id":"HGVSid:1:g.169549810C>T","interval":{"type":"SequenceInterval","start":{"type":"Number","value":169549810},"end":{"type":"Number","value":169549811}}},"alternateBases":"T","referenceBases":"C","variantType":"SNP"},"datasetId":"test"},{"_id":{"$oid":"67cead5c6b1b2708798bdf06"},"identifiers":{"genomicHGVSId":"NC_000017.10:g.43045703G>A"},"molecularAttributes":{"aminoacidChanges":["Pro1856Ser"],"geneIds":["BRCA1"],"molecularEffects":[{"id":"ENSGLOSSARY:0000150","label":"missense_variant"}]},"variantInternalId":"034f6f6e-fd90-11ef-a322-0242ac130003:G:A","variation":{"location":{"type":"SequenceLocation","sequence_id":"HGVSid:17:g.43045703G>A","interval":{"type":"SequenceInterval","start":{"type":"Number","value":43045703},"end":{"type":"Number","value":43045704}}},"alternateBases":"A","referenceBases":"G","variantType":"SNP"},"datasetId":"test"},{"_id":{"$oid":"67cead5c6b1b2708798bdf07"},"identifiers":{"genomicHGVSId":"NC_000018.10:g.55228230C>G"},"molecularAttributes":{"aminoacidChanges":["Gln670His"],"geneIds":["TCF4"],"molecularEffects":[{"id":"ENSGLOSSARY:0000150","label":"missense_variant"}]},"variantInternalId":"034f9db8-fd90-11ef-a322-0242ac130003:C:G","variation":{"location":{"type":"SequenceLocation","sequence_id":"HGVSid:18:g.55228230C>G","interval":{"type":"SequenceInterval","start":{"type":"Number","value":55228230},"end":{"type":"Number","value":55228231}}},"alternateBases":"G","referenceBases":"C","variantType":"SNP"},"datasetId":"test"},{"_id":{"$oid":"67cead5c6b1b2708798bdf08"},"identifiers":{"genomicHGVSId":"NC_000019.10:g.44908683T>C"},"molecularAttributes":{"aminoacidChanges":["Cys130Arg"],"geneIds":["APOE"],"molecularEffects":[{"id":"ENSGLOSSARY:0000150","label":"missense_variant"}]},"variantInternalId":"034fcbe4-fd90-11ef-a322-0242ac130003:T:C","variation":{"location":{"type":"SequenceLocation","sequence_id":"HGVSid:19:g.44908683T>C","interval":{"type":"SequenceInterval","start":{"type":"Number","value":44908683},"end":{"type":"Number","value":44908684}}},"alternateBases":"C","referenceBases":"T","variantType":"SNP"},"datasetId":"test"},{"_id":{"$oid":"67cead5c6b1b2708798bdf09"},"identifiers":{"genomicHGVSId":"NC_00002.10:g.345675CTGCAA>C"},"variantInternalId":"034ff57e-fd90-11ef-a322-0242ac130003:CTGCAA:C","variation":{"location":{"type":"SequenceLocation","sequence_id":"HGVSid:2:g.345675CTGCAA>C","interval":{"type":"SequenceInterval","start":{"type":"Number","value":345675},"end":{"type":"Number","value":345681}}},"alternateBases":"C","referenceBases":"CTGCAA","variantType":"INDEL"},"datasetId":"test"},{"_id":{"$oid":"67cead5c6b1b2708798bdf0a"},"identifiers":{"genomicHGVSId":"NC_00002.10:g.345676ACTGCAATTCTATTCCATTGGTCC>T"},"variantInternalId":"03501a7c-fd90-11ef-a322-0242ac130003:ACTGCAATTCTATTCCATTGGTCC:T","variation":{"location":{"type":"SequenceLocation","sequence_id":"HGVSid:2:g.345676ACTGCAATTCTATTCCATTGGTCC>T","interval":{"type":"SequenceInterval","start":{"type":"Number","value":345676},"end":{"type":"Number","value":345700}}},"alternateBases":"T","referenceBases":"ACTGCAATTCTATTCCATTGGTCC","variantType":"INDEL"},"datasetId":"test"},{"_id":{"$oid":"67cead5c6b1b2708798bdf0b"},"identifiers":{"genomicHGVSId":"NC_00002.10:g.345677T>TGCAAATGCAAATGCAAATGCAAA"},"variantInternalId":"035041d2-fd90-11ef-a322-0242ac130003:T:TGCAAATGCAAATGCAAATGCAAA","variation":{"location":{"type":"SequenceLocation","sequence_id":"HGVSid:2:g.345677T>TGCAAATGCAAATGCAAATGCAAA","interval":{"type":"SequenceInterval","start":{"type":"Number","value":345677},"end":{"type":"Number","value":345678}}},"alternateBases":"TGCAAATGCAAATGCAAATGCAAA","referenceBases":"T","variantType":"INDEL"},"datasetId":"test"},{"_id":{"$oid":"67cead5c6b1b2708798bdf0c"},"identifiers":{"genomicHGVSId":"NC_00002.10:g.345678G>ATG"},"variantInternalId":"03506bb2-fd90-11ef-a322-0242ac130003:G:ATG","variation":{"location":{"type":"SequenceLocation","sequence_id":"HGVSid:2:g.345678G>ATG","interval":{"type":"SequenceInterval","start":{"type":"Number","value":345678},"end":{"type":"Number","value":345679}}},"alternateBases":"ATG","referenceBases":"G","variantType":"INDEL"},"datasetId":"test"},{"_id":{"$oid":"67cead5c6b1b2708798bdf0d"},"identifiers":{"genomicHGVSId":"NC_00002.10:g.345679C>CAATCAATCAATCA"},"variantInternalId":"035093ee-fd90-11ef-a322-0242ac130003:C:CAATCAATCAATCA","variation":{"location":{"type":"SequenceLocation","sequence_id":"HGVSid:2:g.345679C>CAATCAATCAATCA","interval":{"type":"SequenceInterval","start":{"type":"Number","value":345679},"end":{"type":"Number","value":345680}}},"alternateBases":"CAATCAATCAATCA","referenceBases":"C","variantType":"INDEL"},"datasetId":"test"},{"_id":{"$oid":"67cead5c6b1b2708798bdf0e"},"identifiers":{"genomicHGVSId":"NC_00002.10:g.345680AATTCTATTCCAT>C"},"variantInternalId":"0350d746-fd90-11ef-a322-0242ac130003:AATTCTATTCCAT:C","variation":{"location":{"type":"SequenceLocation","sequence_id":"HGVSid:2:g.345680AATTCTATTCCAT>C","interval":{"type":"SequenceInterval","start":{"type":"Number","value":345680},"end":{"type":"Number","value":345693}}},"alternateBases":"C","referenceBases":"AATTCTATTCCAT","variantType":"INDEL"},"datasetId":"test"},{"_id":{"$oid":"67cead5c6b1b2708798bdf0f"},"identifiers":{"genomicHGVSId":"NC_00002.10:g.345684CTATT>C"},"variantInternalId":"035101e4-fd90-11ef-a322-0242ac130003:CTATT:C","variation":{"location":{"type":"SequenceLocation","sequence_id":"HGVSid:2:g.345684CTATT>C","interval":{"type":"SequenceInterval","start":{"type":"Number","value":345684},"end":{"type":"Number","value":345689}}},"alternateBases":"C","referenceBases":"CTATT","variantType":"INDEL"},"datasetId":"test"},{"_id":{"$oid":"67cead5c6b1b2708798bdf10"},"identifiers":{"genomicHGVSId":"NC_00002.10:g.345684CTATT>C"},"variantInternalId":"0351261a-fd90-11ef-a322-0242ac130003:CTATT:C","variation":{"location":{"type":"SequenceLocation","sequence_id":"HGVSid:2:g.345684CTATT>C","interval":{"type":"SequenceInterval","start":{"type":"Number","value":345684},"end":{"type":"Number","value":345689}}},"alternateBases":"C","referenceBases":"CTATT","variantType":"INDEL"},"datasetId":"test"},{"_id":{"$oid":"67cead5c6b1b2708798bdf11"},"identifiers":{"genomicHGVSId":"NC_00002.10:g.345688T>ATGTA"},"variantInternalId":"035147bc-fd90-11ef-a322-0242ac130003:T:ATGTA","variation":{"location":{"type":"SequenceLocation","sequence_id":"HGVSid:2:g.345688T>ATGTA","interval":{"type":"SequenceInterval","start":{"type":"Number","value":345688},"end":{"type":"Number","value":345689}}},"alternateBases":"ATGTA","referenceBases":"T","variantType":"INDEL"},"datasetId":"test"},{"_id":{"$oid":"67cead5c6b1b2708798bdf12"},"identifiers":{"genomicHGVSId":"NC_00002.10:g.345689CCATTGGT>A"},"variantInternalId":"0351699a-fd90-11ef-a322-0242ac130003:CCATTGGT:A","variation":{"location":{"type":"SequenceLocation","sequence_id":"HGVSid:2:g.345689CCATTGGT>A","interval":{"type":"SequenceInterval","start":{"type":"Number","value":345689},"end":{"type":"Number","value":345697}}},"alternateBases":"A","referenceBases":"CCATTGGT","variantType":"INDEL"},"datasetId":"test"},{"_id":{"$oid":"67cead5c6b1b2708798bdf13"},"identifiers":{"genomicHGVSId":"NC_00002.10:g.345689CCATTGGT>A"},"variantInternalId":"03518af6-fd90-11ef-a322-0242ac130003:CCATTGGT:A","variation":{"location":{"type":"SequenceLocation","sequence_id":"HGVSid:2:g.345689CCATTGGT>A","interval":{"type":"SequenceInterval","start":{"type":"Number","value":345689},"end":{"type":"Number","value":345697}}},"alternateBases":"A","referenceBases":"CCATTGGT","variantType":"INDEL"},"datasetId":"test"},{"_id":{"$oid":"67cead5c6b1b2708798bdf14"},"identifiers":{"genomicHGVSId":"NC_00002.10:g.345691ATTGG>A"},"variantInternalId":"0351abb2-fd90-11ef-a322-0242ac130003:ATTGG:A","variation":{"location":{"type":"SequenceLocation","sequence_id":"HGVSid:2:g.345691ATTGG>A","interval":{"type":"SequenceInterval","start":{"type":"Number","value":345691},"end":{"type":"Number","value":345696}}},"alternateBases":"A","referenceBases":"ATTGG","variantType":"INDEL"},"datasetId":"test"},{"_id":{"$oid":"67cead5c6b1b2708798bdf15"},"identifiers":{"genomicHGVSId":"NC_000021.10:g.25881690G>T"},"molecularAttributes":{"aminoacidChanges":["Phe764Leu"],"geneIds":["APP"],"molecularEffects":[{"id":"ENSGLOSSARY:0000150","label":"missense_variant"}]},"variantInternalId":"0351cc64-fd90-11ef-a322-0242ac130003:G:T","variation":{"location":{"type":"SequenceLocation","sequence_id":"HGVSid:21:g.25881690G>T","interval":{"type":"SequenceInterval","start":{"type":"Number","value":25881690},"end":{"type":"Number","value":25881691}}},"alternateBases":"T","referenceBases":"G","variantType":"SNP"},"datasetId":"test"},{"_id":{"$oid":"67cead5c6b1b2708798bdf16"},"identifiers":{"genomicHGVSId":"NC_00006.10:g.18138996C>T"},"molecularAttributes":{"aminoacidChanges":["Ala154Thr"],"geneIds":["TPMT"],"molecularEffects":[{"id":"ENSGLOSSARY:0000150","label":"missense_variant"}]},"variantInternalId":"0351f23e-fd90-11ef-a322-0242ac130003:C:T","variation":{"location":{"type":"SequenceLocation","sequence_id":"HGVSid:6:g.18138996C>T","interval":{"type":"SequenceInterval","start":{"type":"Number","value":18138996},"end":{"type":"Number","value":18138997}}},"alternateBases":"T","referenceBases":"C","variantType":"SNP"},"datasetId":"test"},{"_id":{"$oid":"67cead5c6b1b2708798bdf17"},"identifiers":{"genomicHGVSId":"NC_00007.10:g.55181319C>T"},"molecularAttributes":{"aminoacidChanges":["Asn771Tyr"],"geneIds":["EGFR"],"molecularEffects":[{"id":"ENSGLOSSARY:0000150","label":"missense_variant"}]},"variantInternalId":"03521732-fd90-11ef-a322-0242ac130003:C:T","variation":{"location":{"type":"SequenceLocation","sequence_id":"HGVSid:7:g.55181319C>T","interval":{"type":"SequenceInterval","start":{"type":"Number","value":55181319},"end":{"type":"Number","value":55181320}}},"alternateBases":"T","referenceBases":"C","variantType":"SNP"},"datasetId":"test"},{"_id":{"$oid":"67cead5c6b1b2708798bdf18"},"identifiers":{"genomicHGVSId":"NC_00007.10:g.140453135A>T"},"molecularAttributes":{"geneIds":["MKRN1"],"molecularEffects":[{"id":"SO:0001624","label":"3_prime_UTR_variant"}]},"variantInternalId":"03523bfe-fd90-11ef-a322-0242ac130003:A:T","variation":{"location":{"type":"SequenceLocation","sequence_id":"HGVSid:7:g.140453135A>T","interval":{"type":"SequenceInterval","start":{"type":"Number","value":140453135},"end":{"type":"Number","value":140453136}}},"alternateBases":"T","referenceBases":"A","variantType":"SNP"},"datasetId":"test"},{"_id":{"$oid":"67cead5c6b1b2708798bdf19"},"identifiers":{"genomicHGVSId":"NC_00008.10:g.123455C>ATGTC"},"variantInternalId":"03525ed6-fd90-11ef-a322-0242ac130003:C:ATGTC","variation":{"location":{"type":"SequenceLocation","sequence_id":"HGVSid:8:g.123455C>ATGTC","interval":{"type":"SequenceInterval","start":{"type":"Number","value":123455},"end":{"type":"Number","value":123456}}},"alternateBases":"ATGTC","referenceBases":"C","variantType":"INDEL"},"datasetId":"test"},{"_id":{"$oid":"67cead5c6b1b2708798bdf1a"},"identifiers":{"genomicHGVSId":"NC_00008.10:g.455677ATAGCT>A"},"molecularAttributes":{"geneIds":["FBXO25"],"molecularEffects":[{"id":"ENSGLOSSARY:0000161","label":"intron_variant"}]},"variantInternalId":"03527da8-fd90-11ef-a322-0242ac130003:ATAGCT:A","variation":{"location":{"type":"SequenceLocation","sequence_id":"HGVSid:8:g.455677ATAGCT>A","interval":{"type":"SequenceInterval","start":{"type":"Number","value":455677},"end":{"type":"Number","value":455683}}},"alternateBases":"A","referenceBases":"ATAGCT","variantType":"INDEL"},"datasetId":"test"},{"_id":{"$oid":"67cead5c6b1b2708798bdf1b"},"identifiers":{"genomicHGVSId":"NC_00008.10:g.455677T>A"},"molecularAttributes":{"geneIds":["FBXO25"],"molecularEffects":[{"id":"ENSGLOSSARY:0000161","label":"intron_variant"}]},"variantInternalId":"03529fcc-fd90-11ef-a322-0242ac130003:T:A","variation":{"location":{"type":"SequenceLocation","sequence_id":"HGVSid:8:g.455677T>A","interval":{"type":"SequenceInterval","start":{"type":"Number","value":455677},"end":{"type":"Number","value":455678}}},"alternateBases":"A","referenceBases":"T","variantType":"INDEL"},"datasetId":"test"},{"_id":{"$oid":"67cead5c6b1b2708798bdf1c"},"identifiers":{"genomicHGVSId":"NC_00008.10:g.456788GCCCAC>T"},"molecularAttributes":{"geneIds":["FBXO25"],"molecularEffects":[{"id":"ENSGLOSSARY:0000161","label":"intron_variant"}]},"variantInternalId":"0352c2fe-fd90-11ef-a322-0242ac130003:GCCCAC:T","variation":{"location":{"type":"SequenceLocation","sequence_id":"HGVSid:8:g.456788GCCCAC>T","interval":{"type":"SequenceInterval","start":{"type":"Number","value":456788},"end":{"type":"Number","value":456794}}},"alternateBases":"T","referenceBases":"GCCCAC","variantType":"INDEL"},"datasetId":"test"},{"_id":{"$oid":"67cead5c6b1b2708798bdf1d"},"identifiers":{"genomicHGVSId":"NC_00008.10:g.457550A>ATGC"},"molecularAttributes":{"geneIds":["FBXO25"],"molecularEffects":[{"id":"ENSGLOSSARY:0000161","label":"intron_variant"}]},"variantInternalId":"0352e4a0-fd90-11ef-a322-0242ac130003:A:ATGC","variation":{"location":{"type":"SequenceLocation","sequence_id":"HGVSid:8:g.457550A>ATGC","interval":{"type":"SequenceInterval","start":{"type":"Number","value":457550},"end":{"type":"Number","value":457551}}},"alternateBases":"ATGC","referenceBases":"A","variantType":"INDEL"},"datasetId":"test"},{"_id":{"$oid":"67cead5c6b1b2708798bdf1e"},"identifiers":{"genomicHGVSId":"NC_00008.10:g.467547A>T"},"molecularAttributes":{"geneIds":["FBXO25"],"molecularEffects":[{"id":"ENSGLOSSARY:0000161","label":"intron_variant"}]},"variantInternalId":"035307b4-fd90-11ef-a322-0242ac130003:A:T","variation":{"location":{"type":"SequenceLocation","sequence_id":"HGVSid:8:g.467547A>T","interval":{"type":"SequenceInterval","start":{"type":"Number","value":467547},"end":{"type":"Number","value":467548}}},"alternateBases":"T","referenceBases":"A","variantType":"SNP"},"datasetId":"test"},{"_id":{"$oid":"67cead5c6b1b2708798bdf1f"},"identifiers":{"genomicHGVSId":"NC_00008.10:g.467880AGCAG>A"},"molecularAttributes":{"geneIds":["FBXO25"],"molecularEffects":[{"id":"ENSGLOSSARY:0000161","label":"intron_variant"}]},"variantInternalId":"035328de-fd90-11ef-a322-0242ac130003:AGCAG:A","variation":{"location":{"type":"SequenceLocation","sequence_id":"HGVSid:8:g.467880AGCAG>A","interval":{"type":"SequenceInterval","start":{"type":"Number","value":467880},"end":{"type":"Number","value":467885}}},"alternateBases":"A","referenceBases":"AGCAG","variantType":"INDEL"},"datasetId":"test"},{"_id":{"$oid":"67cead5c6b1b2708798bdf20"},"identifiers":{"genomicHGVSId":"NC_00008.10:g.489899AGCCAT>G"},"molecularAttributes":{"geneIds":["TDRP"],"molecularEffects":[{"id":"SO:0001632","label":"downstream_gene_variant"}]},"variantInternalId":"03534a44-fd90-11ef-a322-0242ac130003:AGCCAT:G","variation":{"location":{"type":"SequenceLocation","sequence_id":"HGVSid:8:g.489899AGCCAT>G","interval":{"type":"SequenceInterval","start":{"type":"Number","value":489899},"end":{"type":"Number","value":489905}}},"alternateBases":"G","referenceBases":"AGCCAT","variantType":"INDEL"},"datasetId":"test"},{"_id":{"$oid":"67cead5c6b1b2708798bdf21"},"identifiers":{"genomicHGVSId":"NC_00008.10:g.876539TTTCTCTTGTAGCTTTTAAGA>T"},"molecularAttributes":{"geneIds":["DLGAP2"],"molecularEffects":[{"id":"ENSGLOSSARY:0000161","label":"intron_variant"}]},"variantInternalId":"03536bdc-fd90-11ef-a322-0242ac130003:TTTCTCTTGTAGCTTTTAAGA:T","variation":{"location":{"type":"SequenceLocation","sequence_id":"HGVSid:8:g.876539TTTCTCTTGTAGCTTTTAAGA>T","interval":{"type":"SequenceInterval","start":{"type":"Number","value":876539},"end":{"type":"Number","value":876560}}},"alternateBases":"T","referenceBases":"TTTCTCTTGTAGCTTTTAAGA","variantType":"INDEL"},"datasetId":"test"},{"_id":{"$oid":"67cead5c6b1b2708798bdf22"},"identifiers":{"genomicHGVSId":"NC_00008.10:g.876539TTTCT>T"},"molecularAttributes":{"geneIds":["DLGAP2"],"molecularEffects":[{"id":"ENSGLOSSARY:0000161","label":"intron_variant"}]},"variantInternalId":"03538d74-fd90-11ef-a322-0242ac130003:TTTCT:T","variation":{"location":{"type":"SequenceLocation","sequence_id":"HGVSid:8:g.876539TTTCT>T","interval":{"type":"SequenceInterval","start":{"type":"Number","value":876539},"end":{"type":"Number","value":876544}}},"alternateBases":"T","referenceBases":"TTTCT","variantType":"INDEL"},"datasetId":"test"},{"_id":{"$oid":"67cead5c6b1b2708798bdf23"},"identifiers":{"genomicHGVSId":"NC_00008.10:g.876541T>ATG"},"molecularAttributes":{"geneIds":["DLGAP2"],"molecularEffects":[{"id":"ENSGLOSSARY:0000161","label":"intron_variant"}]},"variantInternalId":"0353aebc-fd90-11ef-a322-0242ac130003:T:ATG","variation":{"location":{"type":"SequenceLocation","sequence_id":"HGVSid:8:g.876541T>ATG","interval":{"type":"SequenceInterval","start":{"type":"Number","value":876541},"end":{"type":"Number","value":876542}}},"alternateBases":"ATG","referenceBases":"T","variantType":"INDEL"},"datasetId":"test"},{"_id":{"$oid":"67cead5c6b1b2708798bdf24"},"identifiers":{"genomicHGVSId":"NC_00008.10:g.876543T>C"},"molecularAttributes":{"geneIds":["DLGAP2"],"molecularEffects":[{"id":"ENSGLOSSARY:0000161","label":"intron_variant"}]},"variantInternalId":"0353d086-fd90-11ef-a322-0242ac130003:T:C","variation":{"location":{"type":"SequenceLocation","sequence_id":"HGVSid:8:g.876543T>C","interval":{"type":"SequenceInterval","start":{"type":"Number","value":876543},"end":{"type":"Number","value":876544}}},"alternateBases":"C","referenceBases":"T","variantType":"SNP"},"datasetId":"test"},{"_id":{"$oid":"67cead5c6b1b2708798bdf25"},"identifiers":{"genomicHGVSId":"NC_00008.10:g.876544CTTG>C"},"molecularAttributes":{"geneIds":["DLGAP2"],"molecularEffects":[{"id":"ENSGLOSSARY:0000161","label":"intron_variant"}]},"variantInternalId":"0353f296-fd90-11ef-a322-0242ac130003:CTTG:C","variation":{"location":{"type":"SequenceLocation","sequence_id":"HGVSid:8:g.876544CTTG>C","interval":{"type":"SequenceInterval","start":{"type":"Number","value":876544},"end":{"type":"Number","value":876548}}},"alternateBases":"C","referenceBases":"CTTG","variantType":"INDEL"},"datasetId":"test"},{"_id":{"$oid":"67cead5c6b1b2708798bdf26"},"identifiers":{"genomicHGVSId":"NC_00008.10:g.876545T>ATGTCTTAT"},"molecularAttributes":{"geneIds":["DLGAP2"],"molecularEffects":[{"id":"ENSGLOSSARY:0000161","label":"intron_variant"}]},"variantInternalId":"0354126c-fd90-11ef-a322-0242ac130003:T:ATGTCTTAT","variation":{"location":{"type":"SequenceLocation","sequence_id":"HGVSid:8:g.876545T>ATGTCTTAT","interval":{"type":"SequenceInterval","start":{"type":"Number","value":876545},"end":{"type":"Number","value":876546}}},"alternateBases":"ATGTCTTAT","referenceBases":"T","variantType":"INDEL"},"datasetId":"test"},{"_id":{"$oid":"67cead5c6b1b2708798bdf27"},"identifiers":{"genomicHGVSId":"NC_00008.10:g.876547GTAGCTTTT>A"},"molecularAttributes":{"geneIds":["DLGAP2"],"molecularEffects":[{"id":"ENSGLOSSARY:0000161","label":"intron_variant"}]},"variantInternalId":"03543288-fd90-11ef-a322-0242ac130003:GTAGCTTTT:A","variation":{"location":{"type":"SequenceLocation","sequence_id":"HGVSid:8:g.876547GTAGCTTTT>A","interval":{"type":"SequenceInterval","start":{"type":"Number","value":876547},"end":{"type":"Number","value":876556}}},"alternateBases":"A","referenceBases":"GTAGCTTTT","variantType":"INDEL"},"datasetId":"test"},{"_id":{"$oid":"67cead5c6b1b2708798bdf28"},"identifiers":{"genomicHGVSId":"NC_00008.10:g.987653TCCTG>A"},"molecularAttributes":{"geneIds":["DLGAP2"],"molecularEffects":[{"id":"ENSGLOSSARY:0000161","label":"intron_variant"}]},"variantInternalId":"03545204-fd90-11ef-a322-0242ac130003:TCCTG:A","variation":{"location":{"type":"SequenceLocation","sequence_id":"HGVSid:8:g.987653TCCTG>A","interval":{"type":"SequenceInterval","start":{"type":"Number","value":987653},"end":{"type":"Number","value":987658}}},"alternateBases":"A","referenceBases":"TCCTG","variantType":"INDEL"},"datasetId":"test"},{"_id":{"$oid":"67cead5c6b1b2708798bdf29"},"identifiers":{"genomicHGVSId":"NC_00008.10:g.987661T>ATCGT"},"molecularAttributes":{"geneIds":["DLGAP2"],"molecularEffects":[{"id":"ENSGLOSSARY:0000161","label":"intron_variant"}]},"variantInternalId":"03548954-fd90-11ef-a322-0242ac130003:T:ATCGT","variation":{"location":{"type":"SequenceLocation","sequence_id":"HGVSid:8:g.987661T>ATCGT","interval":{"type":"SequenceInterval","start":{"type":"Number","value":987661},"end":{"type":"Number","value":987662}}},"alternateBases":"ATCGT","referenceBases":"T","variantType":"INDEL"},"datasetId":"test"},{"_id":{"$oid":"67cead5c6b1b2708798bdf2a"},"identifiers":{"genomicHGVSId":"NC_00008.10:g.5845383G>T"},"variantInternalId":"0354a902-fd90-11ef-a322-0242ac130003:G:T","variation":{"location":{"type":"SequenceLocation","sequence_id":"HGVSid:8:g.5845383G>T","interval":{"type":"SequenceInterval","start":{"type":"Number","value":5845383},"end":{"type":"Number","value":5845384}}},"alternateBases":"T","referenceBases":"G","variantType":"SNP"},"datasetId":"test"},{"_id":{"$oid":"67cead5c6b1b2708798bdf2b"},"identifiers":{"genomicHGVSId":"NC_00008.10:g.5845392C>G"},"variantInternalId":"0354c612-fd90-11ef-a322-0242ac130003:C:G","variation":{"location":{"type":"SequenceLocation","sequence_id":"HGVSid:8:g.5845392C>G","interval":{"type":"SequenceInterval","start":{"type":"Number","value":5845392},"end":{"type":"Number","value":5845393}}},"alternateBases":"G","referenceBases":"C","variantType":"SNP"},"datasetId":"test"},{"_id":{"$oid":"67cead5c6b1b2708798bdf2c"},"identifiers":{"genomicHGVSId":"NC_000023.10:g.31121923T>C"},"molecularAttributes":{"aminoacidChanges":["Met3685Val"],"geneIds":["DMD"],"molecularEffects":[{"id":"ENSGLOSSARY:0000150","label":"missense_variant"}]},"variantInternalId":"0354e336-fd90-11ef-a322-0242ac130003:T:C","variation":{"location":{"type":"SequenceLocation","sequence_id":"HGVSid:X:g.31121923T>C","interval":{"type":"SequenceInterval","start":{"type":"Number","value":31121923},"end":{"type":"Number","value":31121924}}},"alternateBases":"C","referenceBases":"T","variantType":"SNP"},"datasetId":"test"},{"_id":{"$oid":"67cead5c6b1b2708798bdf2d"},"identifiers":{"genomicHGVSId":"NC_000023.10:g.31126646T>A"},"molecularAttributes":{"aminoacidChanges":["Arg3681Ter"],"geneIds":["DMD"]},"variantInternalId":"03550366-fd90-11ef-a322-0242ac130003:T:A","variation":{"location":{"type":"SequenceLocation","sequence_id":"HGVSid:X:g.31126646T>A","interval":{"type":"SequenceInterval","start":{"type":"Number","value":31126646},"end":{"type":"Number","value":31126647}}},"alternateBases":"A","referenceBases":"T","variantType":"SNP"},"datasetId":"test"},{"_id":{"$oid":"67cead5c6b1b2708798bdf2e"},"identifiers":{"genomicHGVSId":"NC_000023.10:g.38352725C>T"},"molecularAttributes":{"aminoacidChanges":["Asn10%3D"],"geneIds":["OTC"],"molecularEffects":[{"id":"SO:0001819","label":"synonymous_variant"}]},"variantInternalId":"03552152-fd90-11ef-a322-0242ac130003:C:T","variation":{"location":{"type":"SequenceLocation","sequence_id":"HGVSid:X:g.38352725C>T","interval":{"type":"SequenceInterval","start":{"type":"Number","value":38352725},"end":{"type":"Number","value":38352726}}},"alternateBases":"T","referenceBases":"C","variantType":"SNP"},"datasetId":"test"}]
+[
+    {
+        "identifiers": {
+            "genomicHGVSId": "NC_00001.10:g.1234566CGTGTGTGCACAGTTTGTTCTTGGACGAGGACTCGTGAGGATCGAGGGCTGGGGACCCCGGTGTGAGCAGGATGGGGCCCTGCCCTCCCGTGGGAGTTGTGGACTCGAGCCCAGGGGCTGCCCGTCACAGCGGTGTCCCAGGTCCCTGCCATCCGATTTTACCTGGGATGTCTTCTCTGGAGTTTGGAATTGCTTGAGGAACCCTGCGTGTGCTTGGAGAGGCCAGAGGGCTTGCTGAGAACCCCATGGACAGTGGAGAGCGGGATTCGAACCAAGGGCTGGACTCCCACACCTCTGGCCT>T"
+        },
+        "molecularAttributes": {
+            "geneIds": [
+                "SDF4"
+            ],
+            "molecularEffects": [
+                {
+                    "id": "SO:0001631",
+                    "label": "upstream_gene_variant"
+                }
+            ]
+        },
+        "variantInternalId": "034ef50c-fd90-11ef-a322-0242ac130003:CGTGTGTGCACAGTTTGTTCTTGGACGAGGACTCGTGAGGATCGAGGGCTGGGGACCCCGGTGTGAGCAGGATGGGGCCCTGCCCTCCCGTGGGAGTTGTGGACTCGAGCCCAGGGGCTGCCCGTCACAGCGGTGTCCCAGGTCCCTGCCATCCGATTTTACCTGGGATGTCTTCTCTGGAGTTTGGAATTGCTTGAGGAACCCTGCGTGTGCTTGGAGAGGCCAGAGGGCTTGCTGAGAACCCCATGGACAGTGGAGAGCGGGATTCGAACCAAGGGCTGGACTCCCACACCTCTGGCCT:T",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:1:g.1234566CGTGTGTGCACAGTTTGTTCTTGGACGAGGACTCGTGAGGATCGAGGGCTGGGGACCCCGGTGTGAGCAGGATGGGGCCCTGCCCTCCCGTGGGAGTTGTGGACTCGAGCCCAGGGGCTGCCCGTCACAGCGGTGTCCCAGGTCCCTGCCATCCGATTTTACCTGGGATGTCTTCTCTGGAGTTTGGAATTGCTTGAGGAACCCTGCGTGTGCTTGGAGAGGCCAGAGGGCTTGCTGAGAACCCCATGGACAGTGGAGAGCGGGATTCGAACCAAGGGCTGGACTCCCACACCTCTGGCCT>T",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 1234566
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 1234867
+                    }
+                }
+            },
+            "alternateBases": "T",
+            "referenceBases": "CGTGTGTGCACAGTTTGTTCTTGGACGAGGACTCGTGAGGATCGAGGGCTGGGGACCCCGGTGTGAGCAGGATGGGGCCCTGCCCTCCCGTGGGAGTTGTGGACTCGAGCCCAGGGGCTGCCCGTCACAGCGGTGTCCCAGGTCCCTGCCATCCGATTTTACCTGGGATGTCTTCTCTGGAGTTTGGAATTGCTTGAGGAACCCTGCGTGTGCTTGGAGAGGCCAGAGGGCTTGCTGAGAACCCCATGGACAGTGGAGAGCGGGATTCGAACCAAGGGCTGGACTCCCACACCTCTGGCCT",
+            "variantType": "INDEL"
+        },
+        "datasetId": "test"
+    },
+    {
+        "identifiers": {
+            "genomicHGVSId": "NC_00001.10:g.169549810C>T"
+        },
+        "molecularAttributes": {
+            "aminoacidChanges": [
+                "Arg534Gln"
+            ],
+            "geneIds": [
+                "F5"
+            ],
+            "molecularEffects": [
+                {
+                    "id": "ENSGLOSSARY:0000150",
+                    "label": "missense_variant"
+                }
+            ]
+        },
+        "variantInternalId": "034f3f30-fd90-11ef-a322-0242ac130003:C:T",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:1:g.169549810C>T",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 169549810
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 169549811
+                    }
+                }
+            },
+            "alternateBases": "T",
+            "referenceBases": "C",
+            "variantType": "SNP"
+        },
+        "datasetId": "test"
+    },
+    {
+        "identifiers": {
+            "genomicHGVSId": "NC_000017.10:g.43045703G>A"
+        },
+        "molecularAttributes": {
+            "aminoacidChanges": [
+                "Pro1856Ser"
+            ],
+            "geneIds": [
+                "BRCA1"
+            ],
+            "molecularEffects": [
+                {
+                    "id": "ENSGLOSSARY:0000150",
+                    "label": "missense_variant"
+                }
+            ]
+        },
+        "variantInternalId": "034f6f6e-fd90-11ef-a322-0242ac130003:G:A",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:17:g.43045703G>A",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 43045703
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 43045704
+                    }
+                }
+            },
+            "alternateBases": "A",
+            "referenceBases": "G",
+            "variantType": "SNP"
+        },
+        "datasetId": "test"
+    },
+    {
+        "identifiers": {
+            "genomicHGVSId": "NC_000018.10:g.55228230C>G"
+        },
+        "molecularAttributes": {
+            "aminoacidChanges": [
+                "Gln670His"
+            ],
+            "geneIds": [
+                "TCF4"
+            ],
+            "molecularEffects": [
+                {
+                    "id": "ENSGLOSSARY:0000150",
+                    "label": "missense_variant"
+                }
+            ]
+        },
+        "variantInternalId": "034f9db8-fd90-11ef-a322-0242ac130003:C:G",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:18:g.55228230C>G",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 55228230
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 55228231
+                    }
+                }
+            },
+            "alternateBases": "G",
+            "referenceBases": "C",
+            "variantType": "SNP"
+        },
+        "datasetId": "test"
+    },
+    {
+        "identifiers": {
+            "genomicHGVSId": "NC_000019.10:g.44908683T>C"
+        },
+        "molecularAttributes": {
+            "aminoacidChanges": [
+                "Cys130Arg"
+            ],
+            "geneIds": [
+                "APOE"
+            ],
+            "molecularEffects": [
+                {
+                    "id": "ENSGLOSSARY:0000150",
+                    "label": "missense_variant"
+                }
+            ]
+        },
+        "variantInternalId": "034fcbe4-fd90-11ef-a322-0242ac130003:T:C",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:19:g.44908683T>C",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 44908683
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 44908684
+                    }
+                }
+            },
+            "alternateBases": "C",
+            "referenceBases": "T",
+            "variantType": "SNP"
+        },
+        "datasetId": "test"
+    },
+    {
+        "identifiers": {
+            "genomicHGVSId": "NC_00002.10:g.345675CTGCAA>C"
+        },
+        "variantInternalId": "034ff57e-fd90-11ef-a322-0242ac130003:CTGCAA:C",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:2:g.345675CTGCAA>C",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 345675
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 345681
+                    }
+                }
+            },
+            "alternateBases": "C",
+            "referenceBases": "CTGCAA",
+            "variantType": "INDEL"
+        },
+        "datasetId": "test"
+    },
+    {
+        "identifiers": {
+            "genomicHGVSId": "NC_00002.10:g.345676ACTGCAATTCTATTCCATTGGTCC>T"
+        },
+        "variantInternalId": "03501a7c-fd90-11ef-a322-0242ac130003:ACTGCAATTCTATTCCATTGGTCC:T",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:2:g.345676ACTGCAATTCTATTCCATTGGTCC>T",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 345676
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 345700
+                    }
+                }
+            },
+            "alternateBases": "T",
+            "referenceBases": "ACTGCAATTCTATTCCATTGGTCC",
+            "variantType": "INDEL"
+        },
+        "datasetId": "test"
+    },
+    {
+        "identifiers": {
+            "genomicHGVSId": "NC_00002.10:g.345677T>TGCAAATGCAAATGCAAATGCAAA"
+        },
+        "variantInternalId": "035041d2-fd90-11ef-a322-0242ac130003:T:TGCAAATGCAAATGCAAATGCAAA",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:2:g.345677T>TGCAAATGCAAATGCAAATGCAAA",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 345677
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 345678
+                    }
+                }
+            },
+            "alternateBases": "TGCAAATGCAAATGCAAATGCAAA",
+            "referenceBases": "T",
+            "variantType": "INDEL"
+        },
+        "datasetId": "test"
+    },
+    {
+        "identifiers": {
+            "genomicHGVSId": "NC_00002.10:g.345678G>ATG"
+        },
+        "variantInternalId": "03506bb2-fd90-11ef-a322-0242ac130003:G:ATG",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:2:g.345678G>ATG",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 345678
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 345679
+                    }
+                }
+            },
+            "alternateBases": "ATG",
+            "referenceBases": "G",
+            "variantType": "INDEL"
+        },
+        "datasetId": "test"
+    },
+    {
+        "identifiers": {
+            "genomicHGVSId": "NC_00002.10:g.345679C>CAATCAATCAATCA"
+        },
+        "variantInternalId": "035093ee-fd90-11ef-a322-0242ac130003:C:CAATCAATCAATCA",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:2:g.345679C>CAATCAATCAATCA",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 345679
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 345680
+                    }
+                }
+            },
+            "alternateBases": "CAATCAATCAATCA",
+            "referenceBases": "C",
+            "variantType": "INDEL"
+        },
+        "datasetId": "test"
+    },
+    {
+        "identifiers": {
+            "genomicHGVSId": "NC_00002.10:g.345680AATTCTATTCCAT>C"
+        },
+        "variantInternalId": "0350d746-fd90-11ef-a322-0242ac130003:AATTCTATTCCAT:C",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:2:g.345680AATTCTATTCCAT>C",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 345680
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 345693
+                    }
+                }
+            },
+            "alternateBases": "C",
+            "referenceBases": "AATTCTATTCCAT",
+            "variantType": "INDEL"
+        },
+        "datasetId": "test"
+    },
+    {
+        "identifiers": {
+            "genomicHGVSId": "NC_00002.10:g.345684CTATT>C"
+        },
+        "variantInternalId": "035101e4-fd90-11ef-a322-0242ac130003:CTATT:C",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:2:g.345684CTATT>C",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 345684
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 345689
+                    }
+                }
+            },
+            "alternateBases": "C",
+            "referenceBases": "CTATT",
+            "variantType": "INDEL"
+        },
+        "datasetId": "test"
+    },
+    {
+        "identifiers": {
+            "genomicHGVSId": "NC_00002.10:g.345684CTATT>C"
+        },
+        "variantInternalId": "0351261a-fd90-11ef-a322-0242ac130003:CTATT:C",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:2:g.345684CTATT>C",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 345684
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 345689
+                    }
+                }
+            },
+            "alternateBases": "C",
+            "referenceBases": "CTATT",
+            "variantType": "INDEL"
+        },
+        "datasetId": "test"
+    },
+    {
+        "identifiers": {
+            "genomicHGVSId": "NC_00002.10:g.345688T>ATGTA"
+        },
+        "variantInternalId": "035147bc-fd90-11ef-a322-0242ac130003:T:ATGTA",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:2:g.345688T>ATGTA",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 345688
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 345689
+                    }
+                }
+            },
+            "alternateBases": "ATGTA",
+            "referenceBases": "T",
+            "variantType": "INDEL"
+        },
+        "datasetId": "test"
+    },
+    {
+        "identifiers": {
+            "genomicHGVSId": "NC_00002.10:g.345689CCATTGGT>A"
+        },
+        "variantInternalId": "0351699a-fd90-11ef-a322-0242ac130003:CCATTGGT:A",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:2:g.345689CCATTGGT>A",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 345689
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 345697
+                    }
+                }
+            },
+            "alternateBases": "A",
+            "referenceBases": "CCATTGGT",
+            "variantType": "INDEL"
+        },
+        "datasetId": "test"
+    },
+    {
+        "identifiers": {
+            "genomicHGVSId": "NC_00002.10:g.345689CCATTGGT>A"
+        },
+        "variantInternalId": "03518af6-fd90-11ef-a322-0242ac130003:CCATTGGT:A",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:2:g.345689CCATTGGT>A",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 345689
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 345697
+                    }
+                }
+            },
+            "alternateBases": "A",
+            "referenceBases": "CCATTGGT",
+            "variantType": "INDEL"
+        },
+        "datasetId": "test"
+    },
+    {
+        "identifiers": {
+            "genomicHGVSId": "NC_00002.10:g.345691ATTGG>A"
+        },
+        "variantInternalId": "0351abb2-fd90-11ef-a322-0242ac130003:ATTGG:A",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:2:g.345691ATTGG>A",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 345691
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 345696
+                    }
+                }
+            },
+            "alternateBases": "A",
+            "referenceBases": "ATTGG",
+            "variantType": "INDEL"
+        },
+        "datasetId": "test"
+    },
+    {
+        "identifiers": {
+            "genomicHGVSId": "NC_000021.10:g.25881690G>T"
+        },
+        "molecularAttributes": {
+            "aminoacidChanges": [
+                "Phe764Leu"
+            ],
+            "geneIds": [
+                "APP"
+            ],
+            "molecularEffects": [
+                {
+                    "id": "ENSGLOSSARY:0000150",
+                    "label": "missense_variant"
+                }
+            ]
+        },
+        "variantInternalId": "0351cc64-fd90-11ef-a322-0242ac130003:G:T",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:21:g.25881690G>T",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 25881690
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 25881691
+                    }
+                }
+            },
+            "alternateBases": "T",
+            "referenceBases": "G",
+            "variantType": "SNP"
+        },
+        "datasetId": "test"
+    },
+    {
+        "identifiers": {
+            "genomicHGVSId": "NC_00006.10:g.18138996C>T"
+        },
+        "molecularAttributes": {
+            "aminoacidChanges": [
+                "Ala154Thr"
+            ],
+            "geneIds": [
+                "TPMT"
+            ],
+            "molecularEffects": [
+                {
+                    "id": "ENSGLOSSARY:0000150",
+                    "label": "missense_variant"
+                }
+            ]
+        },
+        "variantInternalId": "0351f23e-fd90-11ef-a322-0242ac130003:C:T",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:6:g.18138996C>T",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 18138996
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 18138997
+                    }
+                }
+            },
+            "alternateBases": "T",
+            "referenceBases": "C",
+            "variantType": "SNP"
+        },
+        "datasetId": "test"
+    },
+    {
+        "identifiers": {
+            "genomicHGVSId": "NC_00007.10:g.55181319C>T"
+        },
+        "molecularAttributes": {
+            "aminoacidChanges": [
+                "Asn771Tyr"
+            ],
+            "geneIds": [
+                "EGFR"
+            ],
+            "molecularEffects": [
+                {
+                    "id": "ENSGLOSSARY:0000150",
+                    "label": "missense_variant"
+                }
+            ]
+        },
+        "variantInternalId": "03521732-fd90-11ef-a322-0242ac130003:C:T",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:7:g.55181319C>T",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 55181319
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 55181320
+                    }
+                }
+            },
+            "alternateBases": "T",
+            "referenceBases": "C",
+            "variantType": "SNP"
+        },
+        "datasetId": "test"
+    },
+    {
+        "identifiers": {
+            "genomicHGVSId": "NC_00007.10:g.140453135A>T"
+        },
+        "molecularAttributes": {
+            "geneIds": [
+                "MKRN1"
+            ],
+            "molecularEffects": [
+                {
+                    "id": "SO:0001624",
+                    "label": "3_prime_UTR_variant"
+                }
+            ]
+        },
+        "variantInternalId": "03523bfe-fd90-11ef-a322-0242ac130003:A:T",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:7:g.140453135A>T",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 140453135
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 140453136
+                    }
+                }
+            },
+            "alternateBases": "T",
+            "referenceBases": "A",
+            "variantType": "SNP"
+        },
+        "datasetId": "test"
+    },
+    {
+        "identifiers": {
+            "genomicHGVSId": "NC_00008.10:g.123455C>ATGTC"
+        },
+        "variantInternalId": "03525ed6-fd90-11ef-a322-0242ac130003:C:ATGTC",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:8:g.123455C>ATGTC",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 123455
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 123456
+                    }
+                }
+            },
+            "alternateBases": "ATGTC",
+            "referenceBases": "C",
+            "variantType": "INDEL"
+        },
+        "datasetId": "test"
+    },
+    {
+        "identifiers": {
+            "genomicHGVSId": "NC_00008.10:g.455677ATAGCT>A"
+        },
+        "molecularAttributes": {
+            "geneIds": [
+                "FBXO25"
+            ],
+            "molecularEffects": [
+                {
+                    "id": "ENSGLOSSARY:0000161",
+                    "label": "intron_variant"
+                }
+            ]
+        },
+        "variantInternalId": "03527da8-fd90-11ef-a322-0242ac130003:ATAGCT:A",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:8:g.455677ATAGCT>A",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 455677
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 455683
+                    }
+                }
+            },
+            "alternateBases": "A",
+            "referenceBases": "ATAGCT",
+            "variantType": "INDEL"
+        },
+        "datasetId": "test"
+    },
+    {
+        "identifiers": {
+            "genomicHGVSId": "NC_00008.10:g.455677T>A"
+        },
+        "molecularAttributes": {
+            "geneIds": [
+                "FBXO25"
+            ],
+            "molecularEffects": [
+                {
+                    "id": "ENSGLOSSARY:0000161",
+                    "label": "intron_variant"
+                }
+            ]
+        },
+        "variantInternalId": "03529fcc-fd90-11ef-a322-0242ac130003:T:A",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:8:g.455677T>A",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 455677
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 455678
+                    }
+                }
+            },
+            "alternateBases": "A",
+            "referenceBases": "T",
+            "variantType": "INDEL"
+        },
+        "datasetId": "test"
+    },
+    {
+        "identifiers": {
+            "genomicHGVSId": "NC_00008.10:g.456788GCCCAC>T"
+        },
+        "molecularAttributes": {
+            "geneIds": [
+                "FBXO25"
+            ],
+            "molecularEffects": [
+                {
+                    "id": "ENSGLOSSARY:0000161",
+                    "label": "intron_variant"
+                }
+            ]
+        },
+        "variantInternalId": "0352c2fe-fd90-11ef-a322-0242ac130003:GCCCAC:T",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:8:g.456788GCCCAC>T",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 456788
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 456794
+                    }
+                }
+            },
+            "alternateBases": "T",
+            "referenceBases": "GCCCAC",
+            "variantType": "INDEL"
+        },
+        "datasetId": "test"
+    },
+    {
+        "identifiers": {
+            "genomicHGVSId": "NC_00008.10:g.457550A>ATGC"
+        },
+        "molecularAttributes": {
+            "geneIds": [
+                "FBXO25"
+            ],
+            "molecularEffects": [
+                {
+                    "id": "ENSGLOSSARY:0000161",
+                    "label": "intron_variant"
+                }
+            ]
+        },
+        "variantInternalId": "0352e4a0-fd90-11ef-a322-0242ac130003:A:ATGC",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:8:g.457550A>ATGC",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 457550
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 457551
+                    }
+                }
+            },
+            "alternateBases": "ATGC",
+            "referenceBases": "A",
+            "variantType": "INDEL"
+        },
+        "datasetId": "test"
+    },
+    {
+        "identifiers": {
+            "genomicHGVSId": "NC_00008.10:g.467547A>T"
+        },
+        "molecularAttributes": {
+            "geneIds": [
+                "FBXO25"
+            ],
+            "molecularEffects": [
+                {
+                    "id": "ENSGLOSSARY:0000161",
+                    "label": "intron_variant"
+                }
+            ]
+        },
+        "variantInternalId": "035307b4-fd90-11ef-a322-0242ac130003:A:T",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:8:g.467547A>T",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 467547
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 467548
+                    }
+                }
+            },
+            "alternateBases": "T",
+            "referenceBases": "A",
+            "variantType": "SNP"
+        },
+        "datasetId": "test"
+    },
+    {
+        "identifiers": {
+            "genomicHGVSId": "NC_00008.10:g.467880AGCAG>A"
+        },
+        "molecularAttributes": {
+            "geneIds": [
+                "FBXO25"
+            ],
+            "molecularEffects": [
+                {
+                    "id": "ENSGLOSSARY:0000161",
+                    "label": "intron_variant"
+                }
+            ]
+        },
+        "variantInternalId": "035328de-fd90-11ef-a322-0242ac130003:AGCAG:A",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:8:g.467880AGCAG>A",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 467880
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 467885
+                    }
+                }
+            },
+            "alternateBases": "A",
+            "referenceBases": "AGCAG",
+            "variantType": "INDEL"
+        },
+        "datasetId": "test"
+    },
+    {
+        "identifiers": {
+            "genomicHGVSId": "NC_00008.10:g.489899AGCCAT>G"
+        },
+        "molecularAttributes": {
+            "geneIds": [
+                "TDRP"
+            ],
+            "molecularEffects": [
+                {
+                    "id": "SO:0001632",
+                    "label": "downstream_gene_variant"
+                }
+            ]
+        },
+        "variantInternalId": "03534a44-fd90-11ef-a322-0242ac130003:AGCCAT:G",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:8:g.489899AGCCAT>G",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 489899
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 489905
+                    }
+                }
+            },
+            "alternateBases": "G",
+            "referenceBases": "AGCCAT",
+            "variantType": "INDEL"
+        },
+        "datasetId": "test"
+    },
+    {
+        "identifiers": {
+            "genomicHGVSId": "NC_00008.10:g.876539TTTCTCTTGTAGCTTTTAAGA>T"
+        },
+        "molecularAttributes": {
+            "geneIds": [
+                "DLGAP2"
+            ],
+            "molecularEffects": [
+                {
+                    "id": "ENSGLOSSARY:0000161",
+                    "label": "intron_variant"
+                }
+            ]
+        },
+        "variantInternalId": "03536bdc-fd90-11ef-a322-0242ac130003:TTTCTCTTGTAGCTTTTAAGA:T",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:8:g.876539TTTCTCTTGTAGCTTTTAAGA>T",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 876539
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 876560
+                    }
+                }
+            },
+            "alternateBases": "T",
+            "referenceBases": "TTTCTCTTGTAGCTTTTAAGA",
+            "variantType": "INDEL"
+        },
+        "datasetId": "test"
+    },
+    {
+        "identifiers": {
+            "genomicHGVSId": "NC_00008.10:g.876539TTTCT>T"
+        },
+        "molecularAttributes": {
+            "geneIds": [
+                "DLGAP2"
+            ],
+            "molecularEffects": [
+                {
+                    "id": "ENSGLOSSARY:0000161",
+                    "label": "intron_variant"
+                }
+            ]
+        },
+        "variantInternalId": "03538d74-fd90-11ef-a322-0242ac130003:TTTCT:T",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:8:g.876539TTTCT>T",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 876539
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 876544
+                    }
+                }
+            },
+            "alternateBases": "T",
+            "referenceBases": "TTTCT",
+            "variantType": "INDEL"
+        },
+        "datasetId": "test"
+    },
+    {
+        "identifiers": {
+            "genomicHGVSId": "NC_00008.10:g.876541T>ATG"
+        },
+        "molecularAttributes": {
+            "geneIds": [
+                "DLGAP2"
+            ],
+            "molecularEffects": [
+                {
+                    "id": "ENSGLOSSARY:0000161",
+                    "label": "intron_variant"
+                }
+            ]
+        },
+        "variantInternalId": "0353aebc-fd90-11ef-a322-0242ac130003:T:ATG",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:8:g.876541T>ATG",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 876541
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 876542
+                    }
+                }
+            },
+            "alternateBases": "ATG",
+            "referenceBases": "T",
+            "variantType": "INDEL"
+        },
+        "datasetId": "test"
+    },
+    {
+        "identifiers": {
+            "genomicHGVSId": "NC_00008.10:g.876543T>C"
+        },
+        "molecularAttributes": {
+            "geneIds": [
+                "DLGAP2"
+            ],
+            "molecularEffects": [
+                {
+                    "id": "ENSGLOSSARY:0000161",
+                    "label": "intron_variant"
+                }
+            ]
+        },
+        "variantInternalId": "0353d086-fd90-11ef-a322-0242ac130003:T:C",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:8:g.876543T>C",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 876543
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 876544
+                    }
+                }
+            },
+            "alternateBases": "C",
+            "referenceBases": "T",
+            "variantType": "SNP"
+        },
+        "datasetId": "test"
+    },
+    {
+        "identifiers": {
+            "genomicHGVSId": "NC_00008.10:g.876544CTTG>C"
+        },
+        "molecularAttributes": {
+            "geneIds": [
+                "DLGAP2"
+            ],
+            "molecularEffects": [
+                {
+                    "id": "ENSGLOSSARY:0000161",
+                    "label": "intron_variant"
+                }
+            ]
+        },
+        "variantInternalId": "0353f296-fd90-11ef-a322-0242ac130003:CTTG:C",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:8:g.876544CTTG>C",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 876544
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 876548
+                    }
+                }
+            },
+            "alternateBases": "C",
+            "referenceBases": "CTTG",
+            "variantType": "INDEL"
+        },
+        "datasetId": "test"
+    },
+    {
+        "identifiers": {
+            "genomicHGVSId": "NC_00008.10:g.876545T>ATGTCTTAT"
+        },
+        "molecularAttributes": {
+            "geneIds": [
+                "DLGAP2"
+            ],
+            "molecularEffects": [
+                {
+                    "id": "ENSGLOSSARY:0000161",
+                    "label": "intron_variant"
+                }
+            ]
+        },
+        "variantInternalId": "0354126c-fd90-11ef-a322-0242ac130003:T:ATGTCTTAT",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:8:g.876545T>ATGTCTTAT",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 876545
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 876546
+                    }
+                }
+            },
+            "alternateBases": "ATGTCTTAT",
+            "referenceBases": "T",
+            "variantType": "INDEL"
+        },
+        "datasetId": "test"
+    },
+    {
+        "identifiers": {
+            "genomicHGVSId": "NC_00008.10:g.876547GTAGCTTTT>A"
+        },
+        "molecularAttributes": {
+            "geneIds": [
+                "DLGAP2"
+            ],
+            "molecularEffects": [
+                {
+                    "id": "ENSGLOSSARY:0000161",
+                    "label": "intron_variant"
+                }
+            ]
+        },
+        "variantInternalId": "03543288-fd90-11ef-a322-0242ac130003:GTAGCTTTT:A",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:8:g.876547GTAGCTTTT>A",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 876547
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 876556
+                    }
+                }
+            },
+            "alternateBases": "A",
+            "referenceBases": "GTAGCTTTT",
+            "variantType": "INDEL"
+        },
+        "datasetId": "test"
+    },
+    {
+        "identifiers": {
+            "genomicHGVSId": "NC_00008.10:g.987653TCCTG>A"
+        },
+        "molecularAttributes": {
+            "geneIds": [
+                "DLGAP2"
+            ],
+            "molecularEffects": [
+                {
+                    "id": "ENSGLOSSARY:0000161",
+                    "label": "intron_variant"
+                }
+            ]
+        },
+        "variantInternalId": "03545204-fd90-11ef-a322-0242ac130003:TCCTG:A",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:8:g.987653TCCTG>A",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 987653
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 987658
+                    }
+                }
+            },
+            "alternateBases": "A",
+            "referenceBases": "TCCTG",
+            "variantType": "INDEL"
+        },
+        "datasetId": "test"
+    },
+    {
+        "identifiers": {
+            "genomicHGVSId": "NC_00008.10:g.987661T>ATCGT"
+        },
+        "molecularAttributes": {
+            "geneIds": [
+                "DLGAP2"
+            ],
+            "molecularEffects": [
+                {
+                    "id": "ENSGLOSSARY:0000161",
+                    "label": "intron_variant"
+                }
+            ]
+        },
+        "variantInternalId": "03548954-fd90-11ef-a322-0242ac130003:T:ATCGT",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:8:g.987661T>ATCGT",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 987661
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 987662
+                    }
+                }
+            },
+            "alternateBases": "ATCGT",
+            "referenceBases": "T",
+            "variantType": "INDEL"
+        },
+        "datasetId": "test"
+    },
+    {
+        "identifiers": {
+            "genomicHGVSId": "NC_00008.10:g.5845383G>T"
+        },
+        "variantInternalId": "0354a902-fd90-11ef-a322-0242ac130003:G:T",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:8:g.5845383G>T",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 5845383
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 5845384
+                    }
+                }
+            },
+            "alternateBases": "T",
+            "referenceBases": "G",
+            "variantType": "SNP"
+        },
+        "datasetId": "test"
+    },
+    {
+        "identifiers": {
+            "genomicHGVSId": "NC_00008.10:g.5845392C>G"
+        },
+        "variantInternalId": "0354c612-fd90-11ef-a322-0242ac130003:C:G",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:8:g.5845392C>G",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 5845392
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 5845393
+                    }
+                }
+            },
+            "alternateBases": "G",
+            "referenceBases": "C",
+            "variantType": "SNP"
+        },
+        "datasetId": "test"
+    },
+    {
+        "identifiers": {
+            "genomicHGVSId": "NC_000023.10:g.31121923T>C"
+        },
+        "molecularAttributes": {
+            "aminoacidChanges": [
+                "Met3685Val"
+            ],
+            "geneIds": [
+                "DMD"
+            ],
+            "molecularEffects": [
+                {
+                    "id": "ENSGLOSSARY:0000150",
+                    "label": "missense_variant"
+                }
+            ]
+        },
+        "variantInternalId": "0354e336-fd90-11ef-a322-0242ac130003:T:C",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:X:g.31121923T>C",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 31121923
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 31121924
+                    }
+                }
+            },
+            "alternateBases": "C",
+            "referenceBases": "T",
+            "variantType": "SNP"
+        },
+        "datasetId": "test"
+    },
+    {
+        "identifiers": {
+            "genomicHGVSId": "NC_000023.10:g.31126646T>A"
+        },
+        "molecularAttributes": {
+            "aminoacidChanges": [
+                "Arg3681Ter"
+            ],
+            "geneIds": [
+                "DMD"
+            ]
+        },
+        "variantInternalId": "03550366-fd90-11ef-a322-0242ac130003:T:A",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:X:g.31126646T>A",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 31126646
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 31126647
+                    }
+                }
+            },
+            "alternateBases": "A",
+            "referenceBases": "T",
+            "variantType": "SNP"
+        },
+        "datasetId": "test"
+    },
+    {
+        "identifiers": {
+            "genomicHGVSId": "NC_000023.10:g.38352725C>T"
+        },
+        "molecularAttributes": {
+            "aminoacidChanges": [
+                "Asn10%3D"
+            ],
+            "geneIds": [
+                "OTC"
+            ],
+            "molecularEffects": [
+                {
+                    "id": "SO:0001819",
+                    "label": "synonymous_variant"
+                }
+            ]
+        },
+        "variantInternalId": "03552152-fd90-11ef-a322-0242ac130003:C:T",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:X:g.38352725C>T",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 38352725
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 38352726
+                    }
+                }
+            },
+            "alternateBases": "T",
+            "referenceBases": "C",
+            "variantType": "SNP"
+        },
+        "datasetId": "test"
+    }
+]

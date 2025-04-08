@@ -114,3 +114,13 @@ services:
       - ./ri-tools/conf:/usr/src/app/conf
       - ./ri-tools/files/vcf/files_to_read:/usr/src/app/files/vcf/files_to_read
       - ./ri-tools/csv:/usr/src/app/csv
+
+  phenopackets-to-BFF:
+    image: ghcr.io/ega-archive/phenopackets-to-bff:latest
+    restart: always
+    hostname: phenopackets-to-BFF
+    container_name: phenopackets-to-BFF
+    volumes:
+      - ./ri-tools/phenopackets-to-BFF/:/usr/src/app/examples
+    networks:
+      - pub

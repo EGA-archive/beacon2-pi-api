@@ -25,6 +25,8 @@ def get_individuals(self, entry_id: Optional[str], qparams: RequestParams, datas
         query={}
     query = apply_filters(self, query, qparams.query.filters, collection, query_parameters, dataset)
     schema = DefaultSchemas.INDIVIDUALS
+    if query == {} and query_parameters != {} and parameters_as_filters == False:
+        return schema, 0, -1, None, dataset
     include = qparams.query.include_resultset_responses
     limit = qparams.query.pagination.limit
     skip = qparams.query.pagination.skip

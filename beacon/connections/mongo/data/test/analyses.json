@@ -12,6 +12,6 @@
         "pipelineRef": "https://doi.org/10.48511/workflowhub.workflow.111.1",
         "runId": "EGAR5000XXX",
         "variantCaller": "GATK4.0",
-        "datasetId": "synthetic_usecases_4beacon_testingV3"
+        "datasetId": "test"
     }
 ]

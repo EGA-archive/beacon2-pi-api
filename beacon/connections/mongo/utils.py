@@ -3,7 +3,7 @@ from beacon.connections.mongo.__init__ import client
 from pymongo.collection import Collection
 from beacon.logs.logs import log_with_args_mongo, LOG
 from beacon.conf.conf import level
-from bson import json_util
+from beacon.exceptions.exceptions import raise_exception
 
 @log_with_args_mongo(level)
 def get_cross_query(self, ids: dict, cross_type: str, collection_id: str):# pragma: no cover
@@ -68,7 +68,6 @@ def get_count(self, collection: Collection, query: dict) -> int:
             else:
                 total_counts=counts[0]["num_results"]
         except Exception as e:# pragma: no cover
-            LOG.debug(e)
             insert_dict={}
             insert_dict['id']=str(query)
             total_counts=0
@@ -159,3 +158,47 @@ def get_docs_by_response_type(self, include: str, query: dict, dataset: str, lim
 def get_filtering_documents(self, collection: Collection, query: dict, remove_id: dict,skip: int, limit: int) -> Cursor:
     ##LOG.debug("FINAL QUERY: {}".format(query))
     return collection.find(query,remove_id).skip(skip).limit(limit).max_time_ms(100 * 1000)
+
+@log_with_args_mongo(level)
+def choose_scope(self, scope, collection, filter):
+    query_filtering={}
+    query_filtering['$and']=[]
+    dict_id={}
+    dict_id['id']=filter.id
+    query_filtering['$and'].append(dict_id)
+    docs = get_documents(self,
+    client.beacon.filtering_terms,
+    query_filtering,
+    0,
+    1
+    )
+    fterm=docs[0]
+    try:
+        scopes=fterm["scopes"]
+    except Exception:
+        scopes=[]
+    if scope is None:
+        try:
+            if scopes == []:
+                scope = collection[0:-1]
+                return scope
+            else:
+                for scoped in scopes:
+                    if str(scoped)+'s'==collection and collection != 'g_variants':
+                        scope=str(scoped)
+                        return scope
+                    elif str(scoped)=='genomicVariation' and collection=='g_variants':
+                        scope=str(scoped)
+                        return scope
+                if len(scopes) == 1:
+                    scope = scopes[0]
+                    return scope
+                else:
+                    raise_exception("Look at filtering terms endpoint and select a scope from one of the available scope values for this filtering term: {}".format(filter.id), 400)
+        except Exception as e:
+            raise_exception(e,500)
+    else:
+        for scoped in scopes:
+            if scope == scoped:
+                return scope
+        raise_exception("Scope requested in filtering term does not match any of its possible scopes. Look at filtering terms endpoint to know which scopes you can select for this filtering term: {}".format(filter.id), 400)
