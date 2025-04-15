@@ -215,7 +215,7 @@ class FilteringTerms(EndpointView):
 class Resultset(EndpointView):
     @dataset_permissions
     @log_with_args(level)
-    async def resultset(self, post_data, request, qparams, entry_type, entry_id, datasets, headers):
+    async def resultset(self, post_data, request, qparams, entry_type, entry_id, datasets, headers, ip):
         try:
             response_obj = await builder(self, request, datasets, qparams, entry_type, entry_id)
             return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
@@ -224,6 +224,7 @@ class Resultset(EndpointView):
 
     async def get(self):
         try:
+            ip = self.request.remote
             post_data = None
             headers = None
             qparams = await get_qparams(self, post_data, self.request) 
@@ -235,7 +236,7 @@ class Resultset(EndpointView):
             entry_id = self.request.match_info.get('id', None)
             if entry_id == None:
                 entry_id = self.request.match_info.get('variantInternalId', None)
-            return await self.resultset(post_data, self.request, qparams, entry_type, entry_id, headers)
+            return await self.resultset(post_data, self.request, qparams, entry_type, entry_id, ip, headers)
         except Exception as e:# pragma: no cover
             response_obj = build_beacon_error_response(self, ErrorClass.error_code, 'prova', ErrorClass.error_response)
             return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')

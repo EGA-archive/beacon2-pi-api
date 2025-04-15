@@ -50,5 +50,14 @@ org_contact_url = 'mailto:beacon.ega@crg.eu'
 org_logo_url = 'https://legacy.ega-archive.org/images/logo.png'
 org_info = ''
 
+# Certificates
 beacon_server_crt = ''
 beacon_server_key = ''
+
+# Query Budget
+query_budget_per_user = True
+query_budget_per_ip = True
+query_budget_amount = 5
+query_budget_time = 20 #in seconds
+query_budget_database = 'mongo'
+query_budget_table = 'budget'
