@@ -28,7 +28,9 @@ def update_budget(self, username, ip):
             budget_query["ip"]=ip
             budget_query["timestamp"]=time_now
             client.beacon[query_budget_table].insert_one(budget_query)
-    else:
+    elif query_budget_per_user == True:
+        raise_exception("Authentication failed. Please, log in to see results for the query", 401)
+    elif query_budget_per_ip == True:
         budget_query["ip"]=ip
         budget_query["timestamp"]={ "$gt": start_budget_time }
         budget_returned = client.beacon[query_budget_table].find(budget_query).max_time_ms(100 * 1000)

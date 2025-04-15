@@ -243,6 +243,7 @@ class Resultset(EndpointView):
 
     async def post(self):
         try:
+            ip = self.request.remote
             request = await self.request.json() if self.request.has_body else {}
             headers = self.request.headers
             post_data = request
@@ -255,7 +256,7 @@ class Resultset(EndpointView):
             entry_id = self.request.match_info.get('id', None)
             if entry_id == None:
                 entry_id = self.request.match_info.get('variantInternalId', None)
-            return await self.resultset(post_data, request, qparams, entry_type, entry_id, headers)
+            return await self.resultset(post_data, request, qparams, entry_type, entry_id, ip, headers)
         except Exception as e:# pragma: no cover
             response_obj = build_beacon_error_response(self, ErrorClass.error_code, 'prova', ErrorClass.error_response)
             return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')
