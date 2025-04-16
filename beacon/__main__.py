@@ -225,6 +225,8 @@ class Resultset(EndpointView):
     async def get(self):
         try:
             ip = self.request.remote
+            LOG.debug(self.request.transport.get_extra_info("peername"))
+            LOG.debug(self.request.raw_headers)
             post_data = None
             headers = None
             qparams = await get_qparams(self, post_data, self.request) 
@@ -243,6 +245,8 @@ class Resultset(EndpointView):
 
     async def post(self):
         try:
+            LOG.debug(self.request.transport.get_extra_info("peername"))
+            LOG.debug(self.request.raw_headers)
             ip = self.request.remote
             request = await self.request.json() if self.request.has_body else {}
             headers = self.request.headers
