@@ -28,3 +28,4 @@ six==1.16.0
 progressbar==2.5
 tqdm==4.62.3
 obonet==0.3.1
+Django==4.1.7

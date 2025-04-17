@@ -8,3 +8,7 @@ beacon/connections/mongo/data/rd-connect
 *.vcf.gz
 beacon/connections/mongo/data/db/*
 !beacon/connections/mongo/data/db/dir.txt
+*.pyc
+__pycache__
+env
+admindatabase
