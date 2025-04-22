@@ -1,13 +1,12 @@
 from beacon.response.schemas import DefaultSchemas
 from beacon.request.parameters import RequestParams
-from beacon.request.classes import Granularity
+from beacon.request.classes import Granularity, ErrorClass
 from beacon.conf import conf
 from typing import Optional
 from beacon.logs.logs import log_with_args
 from beacon.conf.conf import level
 from beacon.source.generator import get_entry_types, get_entry_types_map
 from beacon.filtering_terms.resources import resources
-from beacon.exceptions.exceptions import raise_exception
 from beacon.utils.handovers import list_of_handovers, list_of_handovers_per_dataset
 
 def build_response(self, data, num_total_results, qparams):
@@ -62,9 +61,9 @@ def build_response_summary(self, exists, num_total_results):
                 'numTotalResults': num_total_results
             }
     except Exception as e:# pragma: no cover
-        err = str(e)
-        errcode=500
-        raise_exception(err, errcode)
+        ErrorClass.error_code=500
+        ErrorClass.error_message=str(e)
+        raise
 
 @log_with_args(level)
 def build_response_summary_by_dataset(self, exists, num_total_results, data):
@@ -80,9 +79,9 @@ def build_response_summary_by_dataset(self, exists, num_total_results, data):
                 'numTotalResults': count
             }
     except Exception as e:# pragma: no cover
-        err = str(e)
-        errcode=500
-        raise_exception(err, errcode)
+        ErrorClass.error_code=500
+        ErrorClass.error_message=str(e)
+        raise
 
 @log_with_args(level)
 def build_meta(self, qparams: RequestParams, entity_schema: Optional[DefaultSchemas], returned_granularity: Granularity):
@@ -106,9 +105,9 @@ def build_meta(self, qparams: RequestParams, entity_schema: Optional[DefaultSche
             }
             return meta
         except Exception as e:# pragma: no cover
-            err = str(e)
-            errcode=500
-            raise_exception(err, errcode)
+            ErrorClass.error_code=500
+            ErrorClass.error_message=str(e)
+            raise
 
 @log_with_args(level)
 def build_info_meta(self, entity_schema: Optional[DefaultSchemas]):
@@ -128,9 +127,9 @@ def build_info_meta(self, entity_schema: Optional[DefaultSchemas]):
             }
             return meta
         except Exception as e:
-            err = str(e)
-            errcode=500
-            raise_exception(err, errcode)
+            ErrorClass.error_code=500
+            ErrorClass.error_message=str(e)
+            raise
 
 @log_with_args(level)
 def build_response_by_dataset(self, datasets, data, dict_counts, qparams):
@@ -290,9 +289,9 @@ def build_beacon_info_response(self):
         }
         return beacon_response
     except Exception as e:# pragma: no cover
-        err = str(e)
-        errcode=500
-        raise_exception(err, errcode)
+        ErrorClass.error_code=500
+        ErrorClass.error_message=str(e)
+        raise
 
 @log_with_args(level)
 def build_configuration(self):
@@ -328,9 +327,9 @@ def build_configuration(self):
 
         return configuration_json
     except Exception as e:# pragma: no cover
-        err = str(e)
-        errcode=500
-        raise_exception(err, errcode)
+        ErrorClass.error_code=500
+        ErrorClass.error_message=str(e)
+        raise
 
 @log_with_args(level)
 def build_map(self):
@@ -355,9 +354,9 @@ def build_map(self):
 
         return beacon_map_json
     except Exception as e:# pragma: no cover
-        err = str(e)
-        errcode=500
-        raise_exception(err, errcode)
+        ErrorClass.error_code=500
+        ErrorClass.error_message=str(e)
+        raise
 
 @log_with_args(level)
 def build_entry_types(self):
@@ -379,9 +378,9 @@ def build_entry_types(self):
 
         return entry_types_json
     except Exception as e:# pragma: no cover
-        err = str(e)
-        errcode=500
-        raise_exception(err, errcode)
+        ErrorClass.error_code=500
+        ErrorClass.error_message=str(e)
+        raise
 
 @log_with_args(level)
 def build_beacon_service_info_response(self):
@@ -408,9 +407,9 @@ def build_beacon_service_info_response(self):
         }
         return beacon_response
     except Exception as e:# pragma: no cover
-        err = str(e)
-        errcode=500
-        raise_exception(err, errcode)
+        ErrorClass.error_code=500
+        ErrorClass.error_message=str(e)
+        raise
 
 @log_with_args(level)
 def build_filtering_terms_response(self, data,

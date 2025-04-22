@@ -3,7 +3,7 @@ from beacon.connections.mongo.__init__ import client
 from pymongo.collection import Collection
 from beacon.logs.logs import log_with_args_mongo, LOG
 from beacon.conf.conf import level
-from beacon.exceptions.exceptions import raise_exception
+from beacon.request.classes import ErrorClass
 
 @log_with_args_mongo(level)
 def get_cross_query(self, ids: dict, cross_type: str, collection_id: str):# pragma: no cover
@@ -194,11 +194,17 @@ def choose_scope(self, scope, collection, filter):
                     scope = scopes[0]
                     return scope
                 else:
-                    raise_exception("Look at filtering terms endpoint and select a scope from one of the available scope values for this filtering term: {}".format(filter.id), 400)
+                    ErrorClass.error_code=400
+                    ErrorClass.error_message="Look at filtering terms endpoint and select a scope from one of the available scope values for this filtering term: {}".format(filter.id)
+                    raise
         except Exception as e:
-            raise_exception(e,500)
+            ErrorClass.error_code=500
+            ErrorClass.error_message=str(e)
+            raise
     else:
         for scoped in scopes:
             if scope == scoped:
                 return scope
-        raise_exception("Scope requested in filtering term does not match any of its possible scopes. Look at filtering terms endpoint to know which scopes you can select for this filtering term: {}".format(filter.id), 400)
+        ErrorClass.error_code=400
+        ErrorClass.error_message="Scope requested in filtering term does not match any of its possible scopes. Look at filtering terms endpoint to know which scopes you can select for this filtering term: {}".format(filter.id)
+        raise

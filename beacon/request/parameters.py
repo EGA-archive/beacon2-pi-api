@@ -16,7 +16,7 @@ from aiohttp import web
 import html
 import json
 from beacon.logs.logs import log_with_args, LOG
-from beacon.exceptions.exceptions import raise_exception
+from beacon.request.classes import ErrorClass
 from beacon.request.classes import Granularity
 from beacon.conf.conf import api_version, beacon_id 
 
@@ -100,9 +100,9 @@ class SequenceQuery(BaseModel):
         if values.referenceName in ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','X','Y','MT',1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]:
             try:
                 if values.assemblyId == None:
-                    err = 'if referenceName is just the chromosome: assemblyId parameter is required'
-                    errcode=400
-                    raise_exception(err, errcode)
+                    ErrorClass.error_code=400
+                    ErrorClass.error_message='if referenceName is just the chromosome: assemblyId parameter is required'
+                    raise
                 else:
                     pass
             except Exception as e:# pragma: no cover
@@ -134,9 +134,9 @@ class RangeQuery(BaseModel):
         if values.referenceName in ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','X','Y','MT',1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]:
             try:
                 if values.assemblyId == None:
-                    err = 'if referenceName is just the chromosome: assemblyId parameter is required'
-                    errcode=400
-                    raise_exception(err, errcode)
+                    ErrorClass.error_code=400
+                    ErrorClass.error_message='if referenceName is just the chromosome: assemblyId parameter is required'
+                    raise
                 else:
                     pass
             except Exception as e:# pragma: no cover
@@ -185,9 +185,9 @@ class BracketQuery(BaseModel):
         if values.referenceName in ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','X','Y','MT',1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]:
             try:
                 if values.assemblyId == None:
-                    err = 'if referenceName is just the chromosome: assemblyId parameter is required'
-                    errcode=400
-                    raise_exception(err, errcode)
+                    ErrorClass.error_code=400
+                    ErrorClass.error_message='if referenceName is just the chromosome: assemblyId parameter is required'
+                    raise
                 else:
                     pass
             except Exception as e:# pragma: no cover
@@ -230,9 +230,9 @@ class RequestParams(CamelModel):
                         elif v.lower() == 'false':# pragma: no cover
                             v = False
                         else:
-                            err = 'testMode parameter can only be either true or false value'
-                            errcode=400
-                            raise_exception(err, errcode)
+                            ErrorClass.error_code=400
+                            ErrorClass.error_message='testMode parameter can only be either true or false value'
+                            raise
                         self.query.test_mode = v
                     elif k in ["start", "end", "assemblyId", "referenceName", "referenceBases", "alternateBases", "variantType","variantMinLength","variantMaxLength","geneId","genomicAlleleShortForm","aminoacidChange","clinicalRelevance", "mateName"]:
                         try:
@@ -248,9 +248,9 @@ class RequestParams(CamelModel):
                         catch_req_params = {}
                         for k, v in request.query.items():
                             catch_req_params[k]=v
-                        err = 'set of request parameters: {} not allowed'.format(catch_req_params)
-                        errcode=400
-                        raise_exception(err, errcode)
+                        ErrorClass.error_code=400
+                        ErrorClass.error_message='set of request parameters: {} not allowed'.format(catch_req_params)
+                        raise
         except Exception:
             request_params=request["query"]["requestParameters"]
         if request_params != {}:
@@ -289,9 +289,9 @@ class RequestParams(CamelModel):
                 return self# pragma: no cover
             except Exception as e:
                 pass
-            err = 'set of request parameters: {} not allowed'.format(request_params)
-            errcode=400
-            raise_exception(err, errcode)
+            ErrorClass.error_code=400
+            ErrorClass.error_message='set of request parameters: {} not allowed'.format(request_params)
+            raise
         return self
 
     def summary(self):
@@ -312,6 +312,6 @@ class RequestParams(CamelModel):
                 "testMode": self.query.test_mode
             }
         except Exception as e:# pragma: no cover
-            err = str(e)
-            errcode=500
-            raise_exception(err, errcode)
+            ErrorClass.error_code=500
+            ErrorClass.error_message=str(e)
+            raise

@@ -1,4 +1,4 @@
-from beacon.exceptions.exceptions import raise_exception
+from beacon.request.classes import ErrorClass
 import yaml
 
 class Permissions():
@@ -65,9 +65,9 @@ class DummyPermissions(Permissions):
             else:
                 return datasets
         except Exception as e:# pragma: no cover
-            err = str(e)
-            errcode=500
-            raise_exception(err, errcode)
+            ErrorClass.error_code=500
+            ErrorClass.error_message=str(e)
+            raise
 
     async def close(self):
         pass# pragma: no cover

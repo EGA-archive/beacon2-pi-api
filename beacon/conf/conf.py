@@ -1,14 +1,14 @@
 import logging
 import yaml
-from beacon.exceptions.exceptions import raise_exception
+from beacon.request.classes import ErrorClass
 
 try:
     with open("beacon/conf/api_version.yml") as api_version_file:
         api_version_yaml = yaml.safe_load(api_version_file)
 except Exception as e:# pragma: no cover
-    err = str(e)
-    errcode=500
-    raise_exception(err, errcode)
+    ErrorClass.error_code=500
+    ErrorClass.error_message='There are issues with the api_version.yml file. Check if it can be opened or if has any content'
+    raise
 
 level=logging.NOTSET
 log_file=None
@@ -57,7 +57,7 @@ beacon_server_key = ''
 # Query Budget
 query_budget_per_user = True
 query_budget_per_ip = True
-query_budget_amount = 5
-query_budget_time = 20 #in seconds
+query_budget_amount = 3
+query_budget_time_in_seconds = 20
 query_budget_database = 'mongo'
 query_budget_table = 'budget'

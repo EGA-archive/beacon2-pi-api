@@ -1,7 +1,7 @@
 from beacon.source.entry_types import analysis, biosample, cohort, dataset, individual, genomicVariant, run
 from beacon.source.manage import analyses, biosamples, cohorts, datasets, individuals, g_variants, runs
 from beacon.source.map_entry_types import map_analysis, analysis_single, analysis_genomicVariant, map_biosample, biosample_analysis, biosample_genomicVariant, biosample_run, biosample_single, map_cohort, cohort_analysis, cohort_individual, cohort_run, cohort_single, map_dataset, dataset_analysis, dataset_biosample, dataset_genomicVariant, dataset_individual, dataset_run, dataset_single, map_individual, individual_analysis, individual_biosample, individual_genomicVariant, individual_run, individual_single, map_run, run_analysis, run_genomicVariant, run_single, map_genomicVariant, genomicVariant_analysis, genomicVariant_biosample, genomicVariant_individual, genomicVariant_run, genomicVariant_single
-from beacon.exceptions.exceptions import raise_exception
+from beacon.request.classes import ErrorClass
 
 def get_entry_types(self):
     try:
@@ -23,9 +23,9 @@ def get_entry_types(self):
             entry_types["entryTypes"]["run"]=run# pragma: no cover
         return entry_types
     except Exception as e:# pragma: no cover
-        err = str(e)
-        errcode=500
-        raise_exception(err, errcode)
+        ErrorClass.error_code=500
+        ErrorClass.error_message=str(e)
+        raise
 
 def get_entry_types_map(self):
     try:
@@ -219,6 +219,6 @@ def get_entry_types_map(self):
             map_entry_types["endpointSets"]["run"]=map_run
         return map_entry_types
     except Exception as e:# pragma: no cover
-        err = str(e)
-        errcode=500
-        raise_exception(err, errcode)
+        ErrorClass.error_code=500
+        ErrorClass.error_message=str(e)
+        raise
