@@ -42,9 +42,14 @@ def query_id(self, query: dict, document_id) -> dict:
     return query
 
 @log_with_args_mongo(level)
-def join_query(self, collection: Collection,query: dict, original_id):
+def join_query(self, collection: Collection,query: dict, original_id, dataset: str):
     #LOG.debug(query)
     excluding_fields={"_id": 0, original_id: 1}
+    try:
+        query["$and"].append({"datasetId": dataset})
+    except Exception:
+        query["$and"]=[]
+        query["$and"].append({"datasetId": dataset})
     return collection.find(query, excluding_fields).max_time_ms(100 * 1000)
 
 @log_with_args_mongo(level)
@@ -118,6 +123,7 @@ def get_docs_by_response_type(self, include: str, query: dict, dataset: str, lim
         queryid={}
         queryid['datasetId']=dataset
         query_count["$or"].append(queryid)
+        LOG.debug(query_count)
         if query_count["$or"]!=[]:
             dataset_count = get_count(self, mongo_collection, query_count)
             if dataset_count == 0:

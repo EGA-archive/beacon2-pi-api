@@ -28,7 +28,7 @@ security_levels = ['PUBLIC', 'REGISTERED', 'CONTROLLED']
 documentation_url = 'https://b2ri-documentation-demo.ega-archive.org/'
 alphanumeric_terms = ['libraryStrategy', 'molecularAttributes.geneIds', 'diseases.ageOfOnset.iso8601duration', 'molecularAttributes.aminoacidChanges','phenotypicFeatures.onset.iso8601duration', 'exposures.ageAtExposure.iso8601duration', 'treatments.ageAtOnset.iso8601duration']
 cors_urls = ["http://localhost:3000","https://cancer-beacon-demo.ega-archive.org", "https://beacon-network-demo2.ega-archive.org", "https://beacon.ega-archive.org"]
-test_datasetId="synthetic_usecases_4beacon_testingV3"
+test_datasetId="test"
 
 # Service Info
 ga4gh_service_type_group = 'org.ga4gh'
@@ -55,8 +55,8 @@ beacon_server_crt = ''
 beacon_server_key = ''
 
 # Query Budget
-query_budget_per_user = True
-query_budget_per_ip = True
+query_budget_per_user = False
+query_budget_per_ip = False
 query_budget_amount = 3
 query_budget_time_in_seconds = 20
 query_budget_database = 'mongo'

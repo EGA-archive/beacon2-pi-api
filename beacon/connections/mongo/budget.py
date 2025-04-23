@@ -43,7 +43,7 @@ def update_budget(self, username, ip):
             budget_query["username"]="public"
             budget_query["date"]=time_now
             client.beacon[query_budget_table].insert_one(budget_query)
-    elif query_budget_per_user == True and username is None or username == 'public':
+    elif query_budget_per_user == True and username is None or query_budget_per_user == True and username == 'public':
         ErrorClass.error_code=401
         ErrorClass.error_message="Authentication failed. Please, log in to see results for the query"
         raise

@@ -1703,21 +1703,21 @@ class TestMain(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
                 resp = await client.post("/api/g_variants", json={
-                "meta": {
-                    "apiVersion": "2.0"
-                },
-                "query": { "requestParameters": {        },
-                    "filters": [
-            {"id":"GENEPIO:0001966", "scope":"run"}],
-                    "includeResultsetResponses": "HIT",
-                    "pagination": {
-                        "skip": 0,
-                        "limit": 10
+                    "meta": {
+                        "apiVersion": "2.0"
                     },
-                    "testMode": True,
-                    "requestedGranularity": "record"
+                    "query": {
+                        "requestParameters": {},
+                "filters": [{"id": "GENEPIO:0001966", "scope": "run"}],
+                        "includeResultsetResponses": "HIT",
+                        "pagination": {
+                            "skip": 0,
+                            "limit": 10
+                        },
+                        "testMode": True, 
+                        "requestedGranularity": "record"
+                    }
                 }
-            }
             )
                 assert resp.status == 200
             loop.run_until_complete(test_check_runs_variants())
