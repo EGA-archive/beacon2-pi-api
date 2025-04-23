@@ -1,5 +1,6 @@
 from beacon.request.classes import ErrorClass
 import yaml
+from beacon.logs.logs import LOG, log_with_args, level
 
 class Permissions():
     """Base class, just to agree on the interface."""
@@ -28,9 +29,10 @@ class DummyPermissions(Permissions):
     async def initialize(self):
         pass# pragma: no cover
     
-    async def get(self, username, requested_datasets=None):
-        try:
-            if username == 'public':
+    @log_with_args(level)
+    async def get_permissions(self, username, requested_datasets=None):
+        if username == 'public':
+            try:
                 with open("/beacon/permissions/datasets/public_datasets.yml", 'r') as pfile:
                     public_datasets = yaml.safe_load(pfile)
                 pfile.close()
@@ -39,35 +41,65 @@ class DummyPermissions(Permissions):
                 for pdataset in list_public_datasets:
                     datasets.append(pdataset)
                 datasets = set(datasets)       
-            else:
-                with open("/beacon/permissions/datasets/registered_datasets.yml", 'r') as file:
-                    registered_datasets = yaml.safe_load(file)
-                file.close()
-                with open("/beacon/permissions/datasets/public_datasets.yml", 'r') as pfile:
-                    public_datasets = yaml.safe_load(pfile)
-                with open("/beacon/permissions/datasets/controlled_datasets.yml", 'r') as cfile:
-                    controlled_datasets = yaml.safe_load(cfile)
-                pfile.close()
+            except Exception:
+                ErrorClass.error_code=500
+                ErrorClass.error_message="Check if public_datasets.yml file is not empty of datasets or has the public_datasets header."
+                raise
+        else:
+            with open("/beacon/permissions/datasets/registered_datasets.yml", 'r') as file:
+                registered_datasets = yaml.safe_load(file)
+            file.close()
+            with open("/beacon/permissions/datasets/public_datasets.yml", 'r') as pfile:
+                public_datasets = yaml.safe_load(pfile)
+            with open("/beacon/permissions/datasets/controlled_datasets.yml", 'r') as cfile:
+                controlled_datasets = yaml.safe_load(cfile)
+            pfile.close()
+            try:
                 list_registered_datasets = registered_datasets['registered_datasets']
+            except Exception:
+                ErrorClass.error_code=500
+                ErrorClass.error_message="registered_datasets.yml file is wrong. Check if registered_datasets header is in there."
+                raise
+            try:
                 list_public_datasets = public_datasets['public_datasets']
+            except Exception:
+                ErrorClass.error_code=500
+                ErrorClass.error_message="public_datasets.yml file is wrong. Check if public_datasets header is in there."
+                raise
+            try:
                 list_controlled_datasets = controlled_datasets[username]
-                datasets = []
+            except Exception:
+                ErrorClass.error_code=500
+                ErrorClass.error_message="Username could not be found in controlled_datasets.yml file."
+                raise
+            datasets = []
+            try:
                 for pdataset in list_public_datasets:
                     datasets.append(pdataset)
+            except Exception:
+                ErrorClass.error_code=500
+                ErrorClass.error_message="public_datasets.yml file is empty of datasets"
+                raise
+            try:
                 for rdataset in list_registered_datasets:
                     datasets.append(rdataset)
+            except Exception:
+                ErrorClass.error_code=500
+                ErrorClass.error_message="registered_datasets.yml file is empty of datasets"
+                raise
+            try:
                 for cdataset in list_controlled_datasets:
                     datasets.append(cdataset)
-                datasets = set(datasets)
-                
-            if requested_datasets:
-                return set(requested_datasets).intersection(datasets)# pragma: no cover
-            else:
-                return datasets
-        except Exception as e:# pragma: no cover
-            ErrorClass.error_code=500
-            ErrorClass.error_message=str(e)
-            raise
+            except Exception:
+                ErrorClass.error_code=500
+                ErrorClass.error_message="controlled_datasets.yml file is empty of datasets"
+                raise
+            datasets = set(datasets)
+        
+        if requested_datasets:
+            return set(requested_datasets).intersection(datasets)# pragma: no cover
+        else:
+            return datasets
 
     async def close(self):
         pass# pragma: no cover

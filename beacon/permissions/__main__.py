@@ -86,7 +86,7 @@ def dataset_permissions(func):
             
             username, list_visa_datasets = await authorization(self, request, headers)
                 
-            datasets = await PermissionsProxy.get(self, username=username, requested_datasets=requested_datasets)
+            datasets = await PermissionsProxy.get_permissions(self, username=username, requested_datasets=requested_datasets)
             dict_returned={}
             dict_returned['username']=username
             check_budget(self, username, ip)
