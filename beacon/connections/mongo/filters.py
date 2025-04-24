@@ -177,20 +177,16 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
             mongo_collection=client.beacon.runs
             if collection == 'g_variants':
                 original_id="biosampleId"
-                LOG.debug(query)
                 join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
-                LOG.debug(join_ids)
                 targets = client.beacon.targets \
                     .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
                 bioids=targets[0]["biosampleIds"]
-                LOG.debug(bioids)
                 positions_list=[]
                 for id_item in join_ids:
                     new_id={}
                     biosampleId=id_item.pop(original_id)
                     position=bioids.index(biosampleId)
                     positions_list.append(position)
-                LOG.debug(positions_list)
                 query_cl={}
                 query_cl["$or"]=[]
                 for position in positions_list:

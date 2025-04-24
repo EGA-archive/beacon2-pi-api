@@ -604,6 +604,9 @@ class TestMain(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_with_id_endpoint_is_working():
                 resp = await client.get("/api/g_variants/96c010bc-1449-11f0-83f8-0242ac120003:G:A")
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
                 assert resp.status == 200
             loop.run_until_complete(test_check_g_variants_with_id_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -614,6 +617,9 @@ class TestMain(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_runs_endpoint_is_working():
                 resp = await client.get("/api/g_variants/96c010bc-1449-11f0-83f8-0242ac120003:G:A/runs")
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
                 assert resp.status == 200
             loop.run_until_complete(test_check_g_variants_runs_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -624,6 +630,9 @@ class TestMain(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_biosamples_endpoint_is_working():
                 resp = await client.get("/api/g_variants/96c010bc-1449-11f0-83f8-0242ac120003:G:A/biosamples")
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 15
                 assert resp.status == 200
             loop.run_until_complete(test_check_g_variants_biosamples_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -634,6 +643,9 @@ class TestMain(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_analyses_endpoint_is_working():
                 resp = await client.get("/api/g_variants/96c010bc-1449-11f0-83f8-0242ac120003:G:A/analyses")
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
                 assert resp.status == 200
             loop.run_until_complete(test_check_g_variants_analyses_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -644,6 +656,9 @@ class TestMain(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_inividuals_endpoint_is_working():
                 resp = await client.get("/api/g_variants/96c010bc-1449-11f0-83f8-0242ac120003:G:A/individuals")
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 15
                 assert resp.status == 200
             loop.run_until_complete(test_check_g_variants_inividuals_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -726,7 +741,10 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
-                resp = await client.get("/api/g_variants?genomicAlleleShortForm=NC_000017.11:g.43045703G>A")
+                resp = await client.get("/api/g_variants?genomicAlleleShortForm=NC_000008.10:g.467881AGCAG>A")
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
                 assert resp.status == 200
             loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
             loop.run_until_complete(client.close())
@@ -737,6 +755,9 @@ class TestMain(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
                 resp = await client.get("/api/g_variants?aminoacidChange=Pro1856Ser&geneId=BRCA1")
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
                 assert resp.status == 200
             loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
             loop.run_until_complete(client.close())
