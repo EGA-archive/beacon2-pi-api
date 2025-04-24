@@ -183,7 +183,10 @@ def choose_scope(self, scope, collection, filter):
     0,
     1
     )
-    fterm=docs[0]
+    try:
+        fterm=docs[0]
+    except Exception:
+        scopes=[]
     try:
         scopes=fterm["scopes"]
     except Exception:
@@ -191,7 +194,13 @@ def choose_scope(self, scope, collection, filter):
     if scope is None:
         try:
             if scopes == []:
-                scope = collection[0:-1]
+                if filter.id not in ["GENO:0000136", "GENO:0000458"]:
+                    if collection == 'g_variants':
+                        scope = 'genomicVariation'
+                    else:
+                        scope = collection[0:-1]
+                else:
+                    scope = None
                 return scope
             else:
                 for scoped in scopes:

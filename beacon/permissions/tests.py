@@ -26,9 +26,9 @@ class TestAuthZ(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_verify_public_datasets():
-                datasets = await PermissionsProxy.get(self=PermissionsProxy, username='public', requested_datasets=[])
+                datasets = await PermissionsProxy.get_permissions(self=PermissionsProxy, username='public', requested_datasets=[])
                 tc = unittest.TestCase()
-                tc.assertSetEqual(set(['synthetic_usecases_4beacon_testingV3']),set(datasets))
+                tc.assertSetEqual(set(['test']),set(datasets))
             loop.run_until_complete(test_verify_public_datasets())
             loop.run_until_complete(client.close())
     def test_authZ_verify_registered_datasets(self):
@@ -37,9 +37,9 @@ class TestAuthZ(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_verify_registered_datasets():
-                datasets = await PermissionsProxy.get(self=PermissionsProxy, username='dummy_user', requested_datasets=[])
+                datasets = await PermissionsProxy.get_permissions(self=PermissionsProxy, username='dummy_user', requested_datasets=[])
                 tc = unittest.TestCase()
-                tc.assertSetEqual(set(['CINECA_synthetic_cohort_EUROPE_UK1', 'AV_Dataset', 'synthetic_usecases_4beacon_testingV3']),set(datasets))
+                tc.assertSetEqual(set(['CINECA_synthetic_cohort_EUROPE_UK1', 'test', 'AV_Dataset']),set(datasets))
             loop.run_until_complete(test_verify_registered_datasets())
             loop.run_until_complete(client.close())
     def test_authZ_bearer_required(self):

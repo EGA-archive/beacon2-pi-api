@@ -85,6 +85,7 @@ def fetch_idp(self, access_token):
         raise
     return idp_issuer, user_info, idp_client_id, idp_client_secret, idp_introspection, idp_jwks_url, algorithm, aud
 
+'''
 @log_with_args(level)
 async def introspection(self, idp_introspection, idp_client_id, idp_client_secret, access_token, list_visa_datasets):
     async with ClientSession() as session:
@@ -97,6 +98,7 @@ async def introspection(self, idp_introspection, idp_client_id, idp_client_secre
                 return True
             else:
                 return False# pragma: no cover
+'''
 
 @log_with_args(level)
 async def fetch_user_info(self, access_token, user_info, idp_issuer, list_visa_datasets):

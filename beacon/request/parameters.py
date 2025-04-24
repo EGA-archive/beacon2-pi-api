@@ -209,7 +209,7 @@ class RequestParams(CamelModel):
     def from_request(self, request: Request) -> Self:
         request_params={}
         try:
-            if request.method != "POST" or not request.has_body or not request.can_read_body:            
+            if request.method != "POST" or not request.has_body or not request.can_read_body:           
                 for k, v in request.query.items():
                     if k == "requestedSchema":# pragma: no cover
                         self.meta.requested_schemas = [html.escape(v)] # comprovar si és la sanitització recomanada
@@ -252,7 +252,13 @@ class RequestParams(CamelModel):
                         ErrorClass.error_message='set of request parameters: {} not allowed'.format(catch_req_params)
                         raise
         except Exception:
-            request_params=request["query"]["requestParameters"]
+            if ErrorClass.error_code == 400:
+                raise
+            else:
+                try:
+                    request_params=request["query"]["requestParameters"]
+                except Exception:
+                    request_params={}
         if request_params != {}:
             try:
                 RangeQuery(**request_params)
@@ -288,10 +294,9 @@ class RequestParams(CamelModel):
                 DatasetsRequested(**request_params)
                 return self# pragma: no cover
             except Exception as e:
-                pass
-            ErrorClass.error_code=400
-            ErrorClass.error_message='set of request parameters: {} not allowed'.format(request_params)
-            raise
+                ErrorClass.error_code=400
+                ErrorClass.error_message='set of request parameters: {} not allowed'.format(request_params)
+                raise
         return self
 
     def summary(self):

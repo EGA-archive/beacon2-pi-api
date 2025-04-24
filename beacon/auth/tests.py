@@ -3,11 +3,11 @@ import unittest
 import os
 import jwt
 from aiohttp import web
-from beacon.auth.__main__ import fetch_idp, validate_access_token, authentication, introspection, fetch_user_info
+from beacon.auth.__main__ import fetch_idp, validate_access_token, authentication, fetch_user_info
 from dotenv import load_dotenv
 
 # for keycloak, create aud in mappers, with custom, aud and beacon for audience
-mock_access_token = 'eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJreS1tUXNxZ0ZYeHdSUVRfRUhuQlJJUGpmbVhfRXZuUTVEbzZWUTJCazdZIn0.eyJleHAiOjE3NDU0MjczNzgsImlhdCI6MTc0NTQyNzA3OCwianRpIjoiZTliZWI2NzctMjBmYS00ODA3LThiMTAtNjlkZjJkMTI2YWVmIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL0JlYWNvbiIsImF1ZCI6ImJlYWNvbiIsInN1YiI6IjQ3ZWZmMWIxLTc2MjEtNDU3MC1hMGJiLTAxYTcxOWZiYTBhMiIsInR5cCI6IkJlYXJlciIsImF6cCI6ImJlYWNvbiIsInNlc3Npb25fc3RhdGUiOiJlM2JlMzNjOC02N2Q4LTRmNDUtYjIzNi1kM2IyNjIyZTM4ZmEiLCJhY3IiOiIxIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBlbWFpbCBtaWNyb3Byb2ZpbGUtand0Iiwic2lkIjoiZTNiZTMzYzgtNjdkOC00ZjQ1LWIyMzYtZDNiMjYyMmUzOGZhIiwidXBuIjoiamFuZSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwibmFtZSI6IkphbmUgU21pdGgiLCJncm91cHMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXSwicHJlZmVycmVkX3VzZXJuYW1lIjoiamFuZSIsImdpdmVuX25hbWUiOiJKYW5lIiwiZmFtaWx5X25hbWUiOiJTbWl0aCIsImVtYWlsIjoiamFuZS5zbWl0aEBiZWFjb24uZ2E0Z2gifQ.bN1gAvE6Y3UPte-a3Cpg2wZ-Itg4IGs0ZGcvOL9WwpzG7JKr0-rp7Fo5LpUEcAEES5t_dfi8dNQjgPWKdMK8NIc-SC7hpCRyuQTH0ybNCiVB11MYcSt5JtF0WHhAsVOE36ykEVbegZ1mKIVZUJaIk2c7JkTReqUfQd1MSw3Vz9MSnI_PtmqzyXeX75gfcsxHUuo4eGnFFZ1vp7ZhJpcRH7oABl9m80tbWpwoS7Y1TZ7RCI_GhEQwMw2crMd9wg7cqW5KZAEPfJacDgmEbPNVNI8K55QTz5BEhep1KP7L4Rz5KD3NtjBzsfQ28F8TO8gB2PTsqUnGph7Ytmmia1xgPw'
+mock_access_token = 'eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJreS1tUXNxZ0ZYeHdSUVRfRUhuQlJJUGpmbVhfRXZuUTVEbzZWUTJCazdZIn0.eyJleHAiOjE3NDU0OTQwNDcsImlhdCI6MTc0NTQ5Mzc0NywianRpIjoiY2E3M2VlZTYtMTU0ZC00ZDU0LWIwNTctM2Y3N2IyZjVmYzNkIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL0JlYWNvbiIsImF1ZCI6ImJlYWNvbiIsInN1YiI6IjQ3ZWZmMWIxLTc2MjEtNDU3MC1hMGJiLTAxYTcxOWZiYTBhMiIsInR5cCI6IkJlYXJlciIsImF6cCI6ImJlYWNvbiIsInNlc3Npb25fc3RhdGUiOiIxOTc3ZGYyZi1jMWQzLTRlZTktYWVhNS0zZTY5YWVmZTY5MWQiLCJhY3IiOiIxIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBlbWFpbCBtaWNyb3Byb2ZpbGUtand0Iiwic2lkIjoiMTk3N2RmMmYtYzFkMy00ZWU5LWFlYTUtM2U2OWFlZmU2OTFkIiwidXBuIjoiamFuZSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwibmFtZSI6IkphbmUgU21pdGgiLCJncm91cHMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXSwicHJlZmVycmVkX3VzZXJuYW1lIjoiamFuZSIsImdpdmVuX25hbWUiOiJKYW5lIiwiZmFtaWx5X25hbWUiOiJTbWl0aCIsImVtYWlsIjoiamFuZS5zbWl0aEBiZWFjb24uZ2E0Z2gifQ.NINZEflgHH5sFbYdzVqYkOucFoISqATCRYK0PsXsK7-O8-xwQCUCCr_zwG_tfo56wwVM8xvlZupMUNM7H1RMXo_M4VhtAtF07ypfsbph8Xxx0J-v6ToGKja9swh_UB2m25JN3SyBRNgmosQ1rV62UgRSLrm7acoh-jg9JIh5WebODjtrO86WAZi6X-O8Md-XAzODa2-m93t3E-mMo2gaT_aAyvcv0J_tcOIlDgokFo04amgQyuz1xHouuBHGZ_jYJ0xjDKLDaIZNvSG-ohYdkCMB4KRAs8Sko2GKyKRcKJz-g2RjV5f0tlAme-qY_l0gMZbukZE-RRLi4ovtbbbVhQ'
 mock_access_token_false = 'public'
 #dummy test anonymous
 #dummy test login
@@ -69,24 +69,6 @@ class TestAuthN(unittest.TestCase):
                 access_token_validation = validate_access_token(self, mock_access_token, IDP_ISSUER, IDP_JWKS_URL, algorithm, aud)
                 assert access_token_validation == True
             loop.run_until_complete(test_validate_access_token())
-            loop.run_until_complete(client.close())
-    def test_auth_introspection(self):
-        with loop_context() as loop:
-            app = create_test_app()
-            client = TestClient(TestServer(app), loop=loop)
-            loop.run_until_complete(client.start_server())
-            async def test_introspection():
-                load_dotenv("beacon/auth/idp_providers/lifescience.env", override=True)
-                IDP_ISSUER = os.getenv('ISSUER')
-                IDP_CLIENT_ID = os.getenv('CLIENT_ID')
-                IDP_CLIENT_SECRET = os.getenv('CLIENT_SECRET')
-                IDP_USER_INFO = os.getenv('USER_INFO')
-                IDP_INTROSPECTION = os.getenv('INTROSPECTION')
-                IDP_JWKS_URL = os.getenv('JWKS_URL')
-                list_visa_datasets=[]
-                output_introspection = await introspection(self, IDP_INTROSPECTION, IDP_CLIENT_ID, IDP_CLIENT_SECRET, mock_access_token, list_visa_datasets)
-                assert output_introspection == True
-            loop.run_until_complete(test_introspection())
             loop.run_until_complete(client.close())
     def test_auth_fetch_user_info(self):
         with loop_context() as loop:

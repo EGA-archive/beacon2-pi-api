@@ -1,6 +1,6 @@
 from beacon.request.classes import ErrorClass
 import yaml
-from beacon.logs.logs import LOG, log_with_args, level
+from beacon.logs.logs import LOG, log_with_args_initial, level
 
 class Permissions():
     """Base class, just to agree on the interface."""
@@ -29,7 +29,7 @@ class DummyPermissions(Permissions):
     async def initialize(self):
         pass# pragma: no cover
     
-    @log_with_args(level)
+    @log_with_args_initial(level)
     async def get_permissions(self, username, requested_datasets=None):
         if username == 'public':
             try:
