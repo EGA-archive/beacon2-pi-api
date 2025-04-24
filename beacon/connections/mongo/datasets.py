@@ -1,7 +1,6 @@
 from beacon.connections.mongo.__init__ import client
 from beacon.logs.logs import log_with_args_mongo
 from beacon.conf.conf import level
-from beacon.exceptions.exceptions import raise_exception
 from beacon.connections.mongo.utils import get_count, get_documents
 from typing import Optional
 from beacon.response.schemas import DefaultSchemas
@@ -9,6 +8,7 @@ from beacon.request.parameters import RequestParams
 from beacon.connections.mongo.filters import apply_filters
 from beacon.connections.mongo.utils import get_docs_by_response_type, query_id, get_cross_query
 from beacon.connections.mongo.request_parameters import apply_request_parameters
+from beacon.request.classes import ErrorClass
 
 @log_with_args_mongo(level)
 def get_datasets(self):
@@ -18,9 +18,9 @@ def get_datasets(self):
         query = collection.find(query)
         return query
     except Exception as e:# pragma: no cover
-        err = str(e)
-        errcode=500
-        raise_exception(err, errcode)
+        ErrorClass.error_code=500
+        ErrorClass.error_message=str(e)
+        raise
 
 @log_with_args_mongo(level)
 def get_full_datasets(self, entry_id: Optional[str], qparams: RequestParams):
@@ -38,9 +38,9 @@ def get_full_datasets(self, entry_id: Optional[str], qparams: RequestParams):
         )
         return response_converted, count, entity_schema
     except Exception as e:# pragma: no cover
-        err = str(e)
-        errcode=500
-        raise_exception(err, errcode)
+        ErrorClass.error_code=500
+        ErrorClass.error_message=str(e)
+        raise
 
 @log_with_args_mongo(level)
 def get_list_of_datasets(self):
@@ -49,9 +49,9 @@ def get_list_of_datasets(self):
         beacon_datasets = [ r for r in datasets ]
         return beacon_datasets
     except Exception as e:# pragma: no cover
-        err = str(e)
-        errcode=500
-        raise_exception(err, errcode)
+        ErrorClass.error_code=500
+        ErrorClass.error_message=str(e)
+        raise
 
 @log_with_args_mongo(level)
 def get_dataset_with_id(self, entry_id: Optional[str], qparams: RequestParams):

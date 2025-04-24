@@ -3,33 +3,38 @@ from beacon.connections.mongo.__init__ import client
 from pymongo.collection import Collection
 from beacon.logs.logs import log_with_args_mongo, LOG
 from beacon.conf.conf import level
-from beacon.exceptions.exceptions import raise_exception
+from beacon.request.classes import ErrorClass
 
 @log_with_args_mongo(level)
 def get_cross_query(self, ids: dict, cross_type: str, collection_id: str):# pragma: no cover
-    id_list=[]
-    dict_in={}
-    id_dict={}
-    if cross_type == 'biosampleId' or cross_type=='id':# pragma: no cover
-        list_item=ids
-        id_list.append(str(list_item))
-        dict_in["$in"]=id_list
-        id_dict[collection_id]=dict_in
-        query = id_dict
-    elif cross_type == 'individualIds' or cross_type=='biosampleIds':
-        list_individualIds=ids
-        dict_in["$in"]=list_individualIds
-        id_dict[collection_id]=dict_in
-        query = id_dict
-    else:# pragma: no cover
-        for k, v in ids.items():
-            for item in v:
-                id_list.append(item[cross_type])
-        dict_in["$in"]=id_list
-        id_dict[collection_id]=dict_in
-        query = id_dict
+    try:
+        id_list=[]
+        dict_in={}
+        id_dict={}
+        if cross_type == 'biosampleId' or cross_type=='id':# pragma: no cover
+            list_item=ids
+            id_list.append(str(list_item))
+            dict_in["$in"]=id_list
+            id_dict[collection_id]=dict_in
+            query = id_dict
+        elif cross_type == 'individualIds' or cross_type=='biosampleIds':
+            list_individualIds=ids
+            dict_in["$in"]=list_individualIds
+            id_dict[collection_id]=dict_in
+            query = id_dict
+        else:# pragma: no cover
+            for k, v in ids.items():
+                for item in v:
+                    id_list.append(item[cross_type])
+            dict_in["$in"]=id_list
+            id_dict[collection_id]=dict_in
+            query = id_dict
 
-    return query
+        return query
+    except Exception as e:
+        ErrorClass.error_code=500
+        ErrorClass.error_message=str(e)
+        raise
 
 @log_with_args_mongo(level)
 def query_id(self, query: dict, document_id) -> dict:
@@ -37,9 +42,14 @@ def query_id(self, query: dict, document_id) -> dict:
     return query
 
 @log_with_args_mongo(level)
-def join_query(self, collection: Collection,query: dict, original_id):
+def join_query(self, collection: Collection,query: dict, original_id, dataset: str):
     #LOG.debug(query)
     excluding_fields={"_id": 0, original_id: 1}
+    try:
+        query["$and"].append({"datasetId": dataset})
+    except Exception:
+        query["$and"]=[]
+        query["$and"].append({"datasetId": dataset})
     return collection.find(query, excluding_fields).max_time_ms(100 * 1000)
 
 @log_with_args_mongo(level)
@@ -172,7 +182,10 @@ def choose_scope(self, scope, collection, filter):
     0,
     1
     )
-    fterm=docs[0]
+    try:
+        fterm=docs[0]
+    except Exception:
+        scopes=[]
     try:
         scopes=fterm["scopes"]
     except Exception:
@@ -180,7 +193,13 @@ def choose_scope(self, scope, collection, filter):
     if scope is None:
         try:
             if scopes == []:
-                scope = collection[0:-1]
+                if filter.id not in ["GENO:0000136", "GENO:0000458"]:
+                    if collection == 'g_variants':
+                        scope = 'genomicVariation'
+                    else:
+                        scope = collection[0:-1]
+                else:
+                    scope = None
                 return scope
             else:
                 for scoped in scopes:
@@ -194,11 +213,17 @@ def choose_scope(self, scope, collection, filter):
                     scope = scopes[0]
                     return scope
                 else:
-                    raise_exception("Look at filtering terms endpoint and select a scope from one of the available scope values for this filtering term: {}".format(filter.id), 400)
+                    ErrorClass.error_code=400
+                    ErrorClass.error_message="Look at filtering terms endpoint and select a scope from one of the available scope values for this filtering term: {}".format(filter.id)
+                    raise
         except Exception as e:
-            raise_exception(e,500)
+            ErrorClass.error_code=500
+            ErrorClass.error_message=str(e)
+            raise
     else:
         for scoped in scopes:
             if scope == scoped:
                 return scope
-        raise_exception("Scope requested in filtering term does not match any of its possible scopes. Look at filtering terms endpoint to know which scopes you can select for this filtering term: {}".format(filter.id), 400)
+        ErrorClass.error_code=400
+        ErrorClass.error_message="Scope requested in filtering term does not match any of its possible scopes. Look at filtering terms endpoint to know which scopes you can select for this filtering term: {}".format(filter.id)
+        raise

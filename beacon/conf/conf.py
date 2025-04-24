@@ -1,14 +1,14 @@
 import logging
 import yaml
-from beacon.exceptions.exceptions import raise_exception
+from beacon.request.classes import ErrorClass
 
 try:
     with open("beacon/conf/api_version.yml") as api_version_file:
         api_version_yaml = yaml.safe_load(api_version_file)
 except Exception as e:# pragma: no cover
-    err = str(e)
-    errcode=500
-    raise_exception(err, errcode)
+    ErrorClass.error_code=500
+    ErrorClass.error_message='There are issues with the api_version.yml file. Check if it can be opened or if has any content'
+    raise
 
 level=logging.NOTSET
 log_file=None
@@ -28,7 +28,7 @@ security_levels = ['PUBLIC', 'REGISTERED', 'CONTROLLED']
 documentation_url = 'https://b2ri-documentation-demo.ega-archive.org/'
 alphanumeric_terms = ['libraryStrategy', 'molecularAttributes.geneIds', 'diseases.ageOfOnset.iso8601duration', 'molecularAttributes.aminoacidChanges','phenotypicFeatures.onset.iso8601duration', 'exposures.ageAtExposure.iso8601duration', 'treatments.ageAtOnset.iso8601duration']
 cors_urls = ["http://localhost:3000","https://cancer-beacon-demo.ega-archive.org", "https://beacon-network-demo2.ega-archive.org", "https://beacon.ega-archive.org"]
-test_datasetId="synthetic_usecases_4beacon_testingV3"
+test_datasetId="test"
 
 # Service Info
 ga4gh_service_type_group = 'org.ga4gh'
@@ -50,5 +50,14 @@ org_contact_url = 'mailto:beacon.ega@crg.eu'
 org_logo_url = 'https://legacy.ega-archive.org/images/logo.png'
 org_info = ''
 
+# Certificates
 beacon_server_crt = ''
 beacon_server_key = ''
+
+# Query Budget
+query_budget_per_user = False
+query_budget_per_ip = False
+query_budget_amount = 3
+query_budget_time_in_seconds = 20
+query_budget_database = 'mongo'
+query_budget_table = 'budget'

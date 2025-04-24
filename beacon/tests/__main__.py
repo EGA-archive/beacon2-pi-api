@@ -533,7 +533,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_datasets_with_id_endpoint_is_working():
-                resp = await client.get("/api/datasets/synthetic_usecases_4beacon_testingV3")
+                resp = await client.get("/api/datasets/test")
                 assert resp.status == 200
             loop.run_until_complete(test_check_datasets_with_id_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -543,7 +543,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_datasets_runs_endpoint_is_working():
-                resp = await client.get("/api/datasets/synthetic_usecases_4beacon_testingV3/runs")
+                resp = await client.get("/api/datasets/test/runs")
                 assert resp.status == 200
             loop.run_until_complete(test_check_datasets_runs_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -553,7 +553,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_datasets_g_variants_endpoint_is_working():
-                resp = await client.get("/api/datasets/synthetic_usecases_4beacon_testingV3/g_variants")
+                resp = await client.get("/api/datasets/test/g_variants")
                 assert resp.status == 200
             loop.run_until_complete(test_check_datasets_g_variants_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -563,7 +563,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_datasets_biosamples_endpoint_is_working():
-                resp = await client.get("/api/datasets/synthetic_usecases_4beacon_testingV3/biosamples")
+                resp = await client.get("/api/datasets/test/biosamples")
                 assert resp.status == 200
             loop.run_until_complete(test_check_datasets_biosamples_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -573,7 +573,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_datasets_analyses_endpoint_is_working():
-                resp = await client.get("/api/datasets/synthetic_usecases_4beacon_testingV3/analyses")
+                resp = await client.get("/api/datasets/test/analyses")
                 assert resp.status == 200
             loop.run_until_complete(test_check_datasets_analyses_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -583,7 +583,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_datasets_inividuals_endpoint_is_working():
-                resp = await client.get("/api/datasets/synthetic_usecases_4beacon_testingV3/individuals")
+                resp = await client.get("/api/datasets/test/individuals")
                 assert resp.status == 200
             loop.run_until_complete(test_check_datasets_inividuals_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -603,7 +603,10 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_with_id_endpoint_is_working():
-                resp = await client.get("/api/g_variants/beffb86a-d809-11ef-bdb1-0242ac130002:G:A")
+                resp = await client.get("/api/g_variants/96c010bc-1449-11f0-83f8-0242ac120003:G:A")
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
                 assert resp.status == 200
             loop.run_until_complete(test_check_g_variants_with_id_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -613,7 +616,10 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_runs_endpoint_is_working():
-                resp = await client.get("/api/g_variants/beffb86a-d809-11ef-bdb1-0242ac130002:G:A/runs")
+                resp = await client.get("/api/g_variants/96c010bc-1449-11f0-83f8-0242ac120003:G:A/runs")
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
                 assert resp.status == 200
             loop.run_until_complete(test_check_g_variants_runs_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -623,7 +629,10 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_biosamples_endpoint_is_working():
-                resp = await client.get("/api/g_variants/beffb86a-d809-11ef-bdb1-0242ac130002:G:A/biosamples")
+                resp = await client.get("/api/g_variants/96c010bc-1449-11f0-83f8-0242ac120003:G:A/biosamples")
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 15
                 assert resp.status == 200
             loop.run_until_complete(test_check_g_variants_biosamples_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -633,7 +642,10 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_analyses_endpoint_is_working():
-                resp = await client.get("/api/g_variants/beffb86a-d809-11ef-bdb1-0242ac130002:G:A/analyses")
+                resp = await client.get("/api/g_variants/96c010bc-1449-11f0-83f8-0242ac120003:G:A/analyses")
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
                 assert resp.status == 200
             loop.run_until_complete(test_check_g_variants_analyses_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -643,7 +655,10 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_inividuals_endpoint_is_working():
-                resp = await client.get("/api/g_variants/beffb86a-d809-11ef-bdb1-0242ac130002:G:A/individuals")
+                resp = await client.get("/api/g_variants/96c010bc-1449-11f0-83f8-0242ac120003:G:A/individuals")
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 15
                 assert resp.status == 200
             loop.run_until_complete(test_check_g_variants_inividuals_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -693,7 +708,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
-                resp = await client.get("/api/g_variants?start=345675&referenceName=2&assemblyId=GRCh38&end=345681")
+                resp = await client.get("/api/g_variants?start=345675&referenceName=2&assemblyId=GRCh37&end=345681")
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
                 assert responsedict["responseSummary"]["numTotalResults"] == 6
@@ -726,7 +741,10 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
-                resp = await client.get("/api/g_variants?genomicAlleleShortForm=NC_000017.11:g.43045703G>A")
+                resp = await client.get("/api/g_variants?genomicAlleleShortForm=NC_000008.10:g.467881AGCAG>A")
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
                 assert resp.status == 200
             loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
             loop.run_until_complete(client.close())
@@ -737,6 +755,9 @@ class TestMain(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
                 resp = await client.get("/api/g_variants?aminoacidChange=Pro1856Ser&geneId=BRCA1")
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
                 assert resp.status == 200
             loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
             loop.run_until_complete(client.close())
@@ -817,7 +838,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_datasets_g_variants_endpoint_is_working():
-                resp = await client.get("/api/g_variants?datasets=synthetic_usecases_4beacon_testingV3")
+                resp = await client.get("/api/g_variants?datasets=test")
                 assert resp.status == 200
             loop.run_until_complete(test_check_datasets_g_variants_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -828,7 +849,7 @@ class TestMain(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_cross_query_is_working():
                 MagicClass = MagicMock(_id='hohoho')
-                resp = cross_query(MagicClass, {'$or': [{'ethnicity.id': 'NCIT:C43851'}]}, 'individual', 'biosamples', {}, 'synthetic_usecases_4beacon_testingV3')
+                resp = cross_query(MagicClass, {'$or': [{'ethnicity.id': 'NCIT:C43851'}]}, 'individual', 'biosamples', {}, 'test')
                 assert resp != {}
             loop.run_until_complete(test_check_cross_query_is_working())
             loop.run_until_complete(client.close())
@@ -839,7 +860,7 @@ class TestMain(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_cross_query_3_is_working():
                 MagicClass = MagicMock(_id='hohoho')
-                resp = cross_query(MagicClass, {'$or': [{'ethnicity.id': 'NCIT:C43851'}]}, 'individual', 'g_variants', {}, 'synthetic_usecases_4beacon_testingV3')
+                resp = cross_query(MagicClass, {'$or': [{'ethnicity.id': 'NCIT:C43851'}]}, 'individual', 'g_variants', {}, 'test')
                 assert resp != {}
             loop.run_until_complete(test_check_cross_query_3_is_working())
             loop.run_until_complete(client.close())
@@ -850,7 +871,7 @@ class TestMain(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_cross_query_7_is_working():
                 MagicClass = MagicMock(_id='hohoho')
-                resp = cross_query(MagicClass, {'$or': [{'platformModel.id': 'OBI:0002048'}]}, 'run', 'individuals', {}, 'synthetic_usecases_4beacon_testingV3')
+                resp = cross_query(MagicClass, {'$or': [{'platformModel.id': 'OBI:0002048'}]}, 'run', 'individuals', {}, 'test')
                 assert resp != {}
             loop.run_until_complete(test_check_cross_query_7_is_working())
             loop.run_until_complete(client.close())
@@ -861,7 +882,7 @@ class TestMain(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_cross_query_8_is_working():
                 MagicClass = MagicMock(_id='hohoho')
-                resp = cross_query(MagicClass, {'$or': [{'platformModel.id': 'OBI:0002048'}]}, 'run', 'biosamples', {}, 'synthetic_usecases_4beacon_testingV3')
+                resp = cross_query(MagicClass, {'$or': [{'platformModel.id': 'OBI:0002048'}]}, 'run', 'biosamples', {}, 'test')
                 assert resp != {}
             loop.run_until_complete(test_check_cross_query_8_is_working())
             loop.run_until_complete(client.close())
@@ -872,7 +893,7 @@ class TestMain(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_cross_query_9_is_working():
                 MagicClass = MagicMock(_id='hohoho')
-                resp = cross_query(MagicClass, {'$or': [{'platformModel.id': 'OBI:0002048'}]}, 'run', 'g_variants', {}, 'synthetic_usecases_4beacon_testingV3')
+                resp = cross_query(MagicClass, {'$or': [{'platformModel.id': 'OBI:0002048'}]}, 'run', 'g_variants', {}, 'test')
                 assert resp != {}
             loop.run_until_complete(test_check_cross_query_9_is_working())
             loop.run_until_complete(client.close())
@@ -1007,8 +1028,7 @@ class TestMain(unittest.TestCase):
                     "filters": [
             {"id": "exposures.ageAtExposure.iso8601duration",
                     "operator": ">",
-                    "value": "31",
-            "scope":"individual"}],
+                    "value": "31"}],
                     "includeResultsetResponses": "HIT",
                     "pagination": {
                         "skip": 0,
@@ -1037,8 +1057,7 @@ class TestMain(unittest.TestCase):
                     "filters": [
             {"id": "exposures.ageAtExposure.iso8601duration",
                     "operator": "<",
-                    "value": "33",
-            "scope":"individual"}],
+                    "value": "33"}],
                     "includeResultsetResponses": "HIT",
                     "pagination": {
                         "skip": 0,
@@ -1067,8 +1086,7 @@ class TestMain(unittest.TestCase):
                     "filters": [
             {"id": "exposures.ageAtExposure.iso8601duration",
                     "operator": "=",
-                    "value": "34",
-            "scope":"individual"}],
+                    "value": "34"}],
                     "includeResultsetResponses": "HIT",
                     "pagination": {
                         "skip": 0,
@@ -1176,7 +1194,7 @@ class TestMain(unittest.TestCase):
                     "apiVersion": "2.0"
                 },
                 "query": { "requestParameters": {
-                "datasets": ["synthetic_usecases_4beacon_testingV3"]
+                "datasets": ["test"]
                 },
                     "filters": [                ],
                     "includeResultsetResponses": "HIT",
@@ -1259,7 +1277,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_heterozygosity():
-                resp = await client.post("/api/g_variants/beffb86a-d809-11ef-bdb1-0242ac130002:G:A/individuals", json={
+                resp = await client.post("/api/g_variants/96c1004e-1449-11f0-83f8-0242ac120003:G:ATG/individuals", json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -1280,7 +1298,7 @@ class TestMain(unittest.TestCase):
             )
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
-                assert responsedict["responseSummary"]["numTotalResults"] == 4
+                assert responsedict["responseSummary"]["numTotalResults"] == 7
                 assert resp.status == 200
             loop.run_until_complete(test_check_heterozygosity())
             loop.run_until_complete(client.close())
@@ -1290,7 +1308,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_homozygosity():
-                resp = await client.post("/api/g_variants/beffb86a-d809-11ef-bdb1-0242ac130002:G:A/individuals", json={
+                resp = await client.post("/api/g_variants/96c0d754-1449-11f0-83f8-0242ac120003:T:TGCAAATGCAAATGCAAATGCAAA/individuals", json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -1318,7 +1336,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_individuals_variants():
-                resp = await client.post("/api/g_variants/beffb86a-d809-11ef-bdb1-0242ac130002:G:A/individuals", json={
+                resp = await client.post("/api/g_variants/96c1004e-1449-11f0-83f8-0242ac120003:G:ATG/individuals", json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -1346,7 +1364,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_heterozygosity():
-                resp = await client.post("/api/g_variants/beffb86a-d809-11ef-bdb1-0242ac130002:G:A/analyses", json={
+                resp = await client.post("/api/g_variants/96c1004e-1449-11f0-83f8-0242ac120003:G:ATG/analyses", json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -1374,7 +1392,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_homozygosity():
-                resp = await client.post("/api/g_variants/beffb86a-d809-11ef-bdb1-0242ac130002:G:A/analyses", json={
+                resp = await client.post("/api/g_variants/96c0d754-1449-11f0-83f8-0242ac120003:T:TGCAAATGCAAATGCAAATGCAAA/analyses", json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -1402,7 +1420,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_analyses_variants():
-                resp = await client.post("/api/g_variants/beffb86a-d809-11ef-bdb1-0242ac130002:G:A/analyses", json={
+                resp = await client.post("/api/g_variants/96c1004e-1449-11f0-83f8-0242ac120003:G:ATG/analyses", json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -1430,7 +1448,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_heterozygosity():
-                resp = await client.post("/api/g_variants/beffb86a-d809-11ef-bdb1-0242ac130002:G:A/biosamples", json={
+                resp = await client.post("/api/g_variants/96c1004e-1449-11f0-83f8-0242ac120003:G:ATG/biosamples", json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -1458,7 +1476,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_homozygosity():
-                resp = await client.post("/api/g_variants/beffb86a-d809-11ef-bdb1-0242ac130002:G:A/biosamples", json={
+                resp = await client.post("/api/g_variants/96c0d754-1449-11f0-83f8-0242ac120003:T:TGCAAATGCAAATGCAAATGCAAA/biosamples", json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -1486,7 +1504,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_biosamples_variants():
-                resp = await client.post("/api/g_variants/beffb86a-d809-11ef-bdb1-0242ac130002:G:A/biosamples", json={
+                resp = await client.post("/api/g_variants/96c37518-1449-11f0-83f8-0242ac120003:AGCAG:A/biosamples", json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -1514,7 +1532,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_heterozygosity():
-                resp = await client.post("/api/g_variants/beffb86a-d809-11ef-bdb1-0242ac130002:G:A/runs", json={
+                resp = await client.post("/api/g_variants/96c1004e-1449-11f0-83f8-0242ac120003:G:ATG/runs", json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -1542,7 +1560,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_homozygosity():
-                resp = await client.post("/api/g_variants/beffb86a-d809-11ef-bdb1-0242ac130002:G:A/runs", json={
+                resp = await client.post("/api/g_variants/96c0d754-1449-11f0-83f8-0242ac120003:T:TGCAAATGCAAATGCAAATGCAAA/runs", json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -1570,7 +1588,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
-                resp = await client.post("/api/g_variants/beffb86a-d809-11ef-bdb1-0242ac130002:G:A/runs", json={
+                resp = await client.post("/api/g_variants/96c1004e-1449-11f0-83f8-0242ac120003:G:ATG/runs", json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -1703,21 +1721,21 @@ class TestMain(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
                 resp = await client.post("/api/g_variants", json={
-                "meta": {
-                    "apiVersion": "2.0"
-                },
-                "query": { "requestParameters": {        },
-                    "filters": [
-            {"id":"GENEPIO:0001966", "scope":"run"}],
-                    "includeResultsetResponses": "HIT",
-                    "pagination": {
-                        "skip": 0,
-                        "limit": 10
+                    "meta": {
+                        "apiVersion": "2.0"
                     },
-                    "testMode": True,
-                    "requestedGranularity": "record"
+                    "query": {
+                        "requestParameters": {},
+                "filters": [{"id": "GENEPIO:0001966", "scope": "run"}],
+                        "includeResultsetResponses": "HIT",
+                        "pagination": {
+                            "skip": 0,
+                            "limit": 10
+                        },
+                        "testMode": True, 
+                        "requestedGranularity": "record"
+                    }
                 }
-            }
             )
                 assert resp.status == 200
             loop.run_until_complete(test_check_runs_variants())

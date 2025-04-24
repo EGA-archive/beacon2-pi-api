@@ -4,7 +4,7 @@ from typing import Optional
 from beacon.response.schemas import DefaultSchemas
 from beacon.request.parameters import RequestParams
 from beacon.connections.mongo.utils import get_filtering_documents
-from beacon.exceptions.exceptions import raise_exception
+from beacon.request.classes import ErrorClass
 
 def get_filtering_terms(self, qparams: RequestParams):
     try:
@@ -22,6 +22,6 @@ def get_filtering_terms(self, qparams: RequestParams):
         )
         return schema, count, docs
     except Exception as e:# pragma: no cover
-        err = str(e)
-        errcode=500
-        raise_exception(err, errcode)
+        ErrorClass.error_code=500
+        ErrorClass.error_message=str(e)
+        raise

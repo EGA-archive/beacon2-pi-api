@@ -7,5 +7,5 @@ class Granularity(StrEnum):
 
 class ErrorClass():
     def __init__(self) -> None:# pragma: no cover
-        self.error_response=None
+        self.error_message=None
         self.error_code=None

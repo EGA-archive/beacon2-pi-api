@@ -34,7 +34,7 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
         if scope == 'individual' and collection == 'g_variants':
             mongo_collection=client.beacon.individuals
             original_id="id"
-            join_ids=list(join_query(self, mongo_collection, query, original_id))
+            join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
             targets = client.beacon.targets \
                 .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
             bioids=targets[0]["biosampleIds"]
@@ -69,7 +69,7 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
         elif scope == 'individual' and collection in ['runs','biosamples','analyses']:
             mongo_collection=client.beacon.individuals
             original_id="id"
-            join_ids=list(join_query(self, mongo_collection, query, original_id))
+            join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
             final_id="individualId"
             for id_item in join_ids:
                 new_id={}
@@ -177,7 +177,7 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
             mongo_collection=client.beacon.runs
             if collection == 'g_variants':
                 original_id="biosampleId"
-                join_ids=list(join_query(self, mongo_collection, query, original_id))
+                join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
                 targets = client.beacon.targets \
                     .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
                 bioids=targets[0]["biosampleIds"]
@@ -194,6 +194,8 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                     query_cl["$or"].append({ position: "10", "datasetId": dataset})
                     query_cl["$or"].append({ position: "11", "datasetId": dataset})
                     query_cl["$or"].append({ position: "01", "datasetId": dataset})
+                if query_cl["$or"]==[]:
+                    return query
                 string_of_ids = client.beacon.caseLevelData \
                     .find(query_cl, {"id": 1, "_id": 0})
                 HGVSIds=list(string_of_ids)
@@ -207,7 +209,7 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                 query["identifiers.genomicHGVSId"]=queryHGVS
             elif collection == 'individuals':
                 original_id="individualId"
-                join_ids=list(join_query(self, mongo_collection, query, original_id))
+                join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
                 final_id="id"
                 for id_item in join_ids:
                     new_id={}
@@ -217,7 +219,7 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                     query['$or']=def_list
             elif collection == 'analyses':
                 original_id="biosampleId"
-                join_ids=list(join_query(self, mongo_collection, query, original_id))
+                join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
                 final_id="biosampleId"
                 for id_item in join_ids:
                     new_id={}
@@ -227,7 +229,7 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                     query['$or']=def_list
             elif collection == 'biosamples':
                 original_id="biosampleId"
-                join_ids=list(join_query(self, mongo_collection, query, original_id))
+                join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
                 final_id="id"
                 for id_item in join_ids:
                     new_id={}
@@ -239,7 +241,7 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
             mongo_collection=client.beacon.analyses
             if collection == 'g_variants':
                 original_id="biosampleId"
-                join_ids=list(join_query(self, mongo_collection, query, original_id))
+                join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
                 targets = client.beacon.targets \
                     .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
                 bioids=targets[0]["biosampleIds"]
@@ -256,6 +258,8 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                     query_cl["$or"].append({ position: "10", "datasetId": dataset})
                     query_cl["$or"].append({ position: "11", "datasetId": dataset})
                     query_cl["$or"].append({ position: "01", "datasetId": dataset})
+                if query_cl["$or"]==[]:
+                    return query
                 string_of_ids = client.beacon.caseLevelData \
                     .find(query_cl, {"id": 1, "_id": 0})
                 HGVSIds=list(string_of_ids)
@@ -269,7 +273,7 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                 query["identifiers.genomicHGVSId"]=queryHGVS
             elif collection == 'individuals':
                 original_id="individualId"
-                join_ids=list(join_query(self, mongo_collection, query, original_id))
+                join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
                 final_id="id"
                 for id_item in join_ids:
                     new_id={}
@@ -279,7 +283,7 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                 query['$or']=def_list
             elif collection == 'runs':
                 original_id="biosampleId"
-                join_ids=list(join_query(self, mongo_collection, query, original_id))
+                join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
                 final_id="biosampleId"
                 for id_item in join_ids:
                     new_id={}
@@ -289,7 +293,7 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                 query['$or']=def_list
             elif collection == 'biosamples':
                 original_id="biosampleId"
-                join_ids=list(join_query(self, mongo_collection, query, original_id))
+                join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
                 final_id="id"
                 for id_item in join_ids:
                     new_id={}
@@ -301,7 +305,7 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
             mongo_collection=client.beacon.biosamples
             if collection == 'g_variants':
                 original_id="id"
-                join_ids=list(join_query(self, mongo_collection, query, original_id))
+                join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
                 targets = client.beacon.targets \
                     .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
                 bioids=targets[0]["biosampleIds"]
@@ -318,6 +322,8 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                     query_cl["$or"].append({ position: "10", "datasetId": dataset})
                     query_cl["$or"].append({ position: "11", "datasetId": dataset})
                     query_cl["$or"].append({ position: "01", "datasetId": dataset})
+                if query_cl["$or"]==[]:
+                    return query
                 string_of_ids = client.beacon.caseLevelData \
                     .find(query_cl, {"id": 1, "_id": 0})
                 HGVSIds=list(string_of_ids)
@@ -331,7 +337,7 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                 query["identifiers.genomicHGVSId"]=queryHGVS
             elif collection == 'individuals':
                 original_id="individualId"
-                join_ids=list(join_query(self, mongo_collection, query, original_id))
+                join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
                 final_id="id"
                 for id_item in join_ids:
                     new_id={}
@@ -341,7 +347,7 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                 query['$or']=def_list
             elif collection == 'analyses':
                 original_id="id"
-                join_ids=list(join_query(self, mongo_collection, query, original_id))
+                join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
                 final_id="biosampleId"
                 for id_item in join_ids:
                     new_id={}
@@ -351,7 +357,7 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                 query['$or']=def_list
             elif collection == 'runs':
                 original_id="id"
-                join_ids=list(join_query(self, mongo_collection, query, original_id))
+                join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
                 final_id="biosampleId"
                 for id_item in join_ids:
                     new_id={}
