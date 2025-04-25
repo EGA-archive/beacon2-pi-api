@@ -19,6 +19,18 @@ services:
     networks:
       - pub
 
+  admin-ui:
+    build:
+      context: .
+    container_name: admin-ui
+    ports:
+      - "8000:8000"
+    entrypoint: ['bash','/adminui/start.sh']
+    volumes:
+      - ./beacon/:/adminui/beacon
+    networks:
+      - pub
+  
   idp:
     #image: quay.io/keycloak/keycloak:12.0.0
     image: sleighzy/keycloak
