@@ -395,6 +395,7 @@ async def create_api():# pragma: no cover
         ssl_context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
         ssl_context.load_cert_chain(certfile=conf.beacon_server_crt, keyfile=conf.beacon_server_key)
 
+
     LOG.debug("Starting app")
     runner = web.AppRunner(app)
     await runner.setup()
@@ -403,6 +404,18 @@ async def create_api():# pragma: no cover
 
     while True:
         await asyncio.sleep(3600)
+
+def read_file():
+    with open("/beacon/conf/conf.py", "r") as f:
+        SMRF1 = f.readlines()
+    return SMRF1
+
+def check_file():
+    initial = read_file()
+    while True:
+        current = read_file()
+        if initial != current:
+            asyncio.run(create_api())
 
 if __name__ == '__main__':# pragma: no cover
     asyncio.run(create_api())
