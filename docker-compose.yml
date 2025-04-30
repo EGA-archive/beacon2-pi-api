@@ -6,6 +6,7 @@ networks:
 
 services:
   beaconprod:
+    restart: always
     build:
       context: .
     container_name: beaconprod
@@ -27,7 +28,7 @@ services:
       - "8000:8000"
     entrypoint: ['bash','/adminui/start.sh']
     volumes:
-      - ./beacon/:/adminui/beacon
+      - ./beacon:/adminui/beacon
     networks:
       - pub
   

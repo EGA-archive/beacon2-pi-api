@@ -19,6 +19,7 @@ from aiohttp_cors import CorsViewMixin
 from datetime import datetime
 from beacon.conf import conf
 import ssl
+import aiohttp_autoreload
 
 class EndpointView(web.View, CorsViewMixin):
     def __init__(self, request: Request):
@@ -395,7 +396,7 @@ async def create_api():# pragma: no cover
         ssl_context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
         ssl_context.load_cert_chain(certfile=conf.beacon_server_crt, keyfile=conf.beacon_server_key)
 
-
+    aiohttp_autoreload.start()
     LOG.debug("Starting app")
     runner = web.AppRunner(app)
     await runner.setup()

@@ -37,11 +37,10 @@ def default_view(request):
         form = BamForm(request.POST)
         if form.is_valid():
             reference = form.cleaned_data['Datasets']
-            with open("/beacon/conf/conf.py") as f:
+            with open("adminui/beacon/conf/conf.py") as f:
                 lines = f.readlines()
-            with open("/beacon/conf/conf.py", "w") as f:
+            with open("adminui/beacon/conf/conf.py", "w") as f:
                 new_lines =''
-                j=0
                 for line in lines:
                     if 'beacon_name' in str(line):
                         new_lines+="beacon_name="+"'"+reference+"'"+"\n"
@@ -49,8 +48,8 @@ def default_view(request):
                     else:
                         new_lines+=line
                     
-                    j+=1
                 f.write(new_lines)
+            f.close()
             return redirect("adminclient:index")
     template = "home.html"
     return render(request, template, context)
