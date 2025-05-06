@@ -29,7 +29,6 @@ class DummyPermissions(Permissions):
     async def initialize(self):
         pass# pragma: no cover
     
-    @log_with_args_initial(level)
     async def get_permissions(self, username, requested_datasets=None):
         if username == 'public':
             try:
