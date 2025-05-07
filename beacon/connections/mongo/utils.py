@@ -182,11 +182,13 @@ def choose_scope(self, scope, collection, filter):
     0,
     1
     )
+    docs = list(docs)
+    if docs == []:
+        ErrorClass.error_code=400
+        ErrorClass.error_message="The filtering term: {} is not a valid filtering term.".format(filter.id)
+        raise
     try:
         fterm=docs[0]
-    except Exception:
-        scopes=[]
-    try:
         scopes=fterm["scopes"]
     except Exception:
         scopes=[]

@@ -3,7 +3,7 @@ from beacon.logs.logs import log_with_args_mongo, LOG
 from beacon.conf.conf import level, query_budget_table
 
 @log_with_args_mongo(level)
-def get_remaining_budget_by_user(self, username, ip, start_budget_time, time_now):
+def get_remaining_budget_by_user(self, username, start_budget_time):
     try:
         client.beacon.validate_collection(query_budget_table)
     except Exception:
@@ -16,16 +16,15 @@ def get_remaining_budget_by_user(self, username, ip, start_budget_time, time_now
     return remaining_budget
 
 @log_with_args_mongo(level)
-def insert_budget(self, username, ip, start_budget_time, time_now):
+def insert_budget(self, username, ip, time_now):
     budget_query={}
     budget_query["username"]=username
-    budget_query["date"]={ "$gt": start_budget_time }
     budget_query["ip"]=ip
     budget_query["date"]=time_now
     client.beacon[query_budget_table].insert_one(budget_query)
 
 @log_with_args_mongo(level)
-def get_remaining_budget_by_ip(self, ip, start_budget_time, time_now):
+def get_remaining_budget_by_ip(self, ip, start_budget_time):
     budget_query={}
     budget_query["ip"]=ip
     budget_query["date"]={ "$gt": start_budget_time }
