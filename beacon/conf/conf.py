@@ -55,9 +55,10 @@ beacon_server_crt = ''
 beacon_server_key = ''
 
 # Query Budget
-query_budget_per_user = True
-query_budget_per_ip = True
+query_budget_per_user = False
+query_budget_per_ip = False
 query_budget_amount = 3
 query_budget_time_in_seconds = 20
 query_budget_database = 'mongo'
+query_budget_db_name = 'beacon'
 query_budget_table = 'budget'

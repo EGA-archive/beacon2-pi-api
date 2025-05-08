@@ -2,7 +2,7 @@ from beacon.logs.logs import log_with_args_mongo, LOG
 from beacon.conf.conf import query_budget_database, level
 from datetime import datetime, timedelta
 from beacon.request.classes import ErrorClass
-from beacon.conf.conf import level, query_budget_amount, query_budget_per_user, query_budget_per_ip, query_budget_time_in_seconds, query_budget_table
+from beacon.conf.conf import level, query_budget_amount, query_budget_per_user, query_budget_per_ip, query_budget_time_in_seconds
 
 @log_with_args_mongo(level)
 def check_budget(self, ip, username):
@@ -14,14 +14,14 @@ def check_budget(self, ip, username):
         time_now=datetime.now()
         start_budget_time=time_now+timedelta(seconds=-period_of_not_expired_time)
         if username is not None and username != 'public' and query_budget_per_user == True:
-            remaining_budget=module.get_remaining_budget_by_user(self, username, ip, start_budget_time)
+            remaining_budget=module.get_remaining_budget_by_user(self, username, start_budget_time)
             if len(remaining_budget)>=query_budget_amount:
                 ErrorClass.error_code=429
                 ErrorClass.error_message="Number of queries exceeded for this user: {}".format(username)
                 raise
             else:
                 return time_now
-        elif query_budget_per_ip == True:
+        elif query_budget_per_ip == True and ip is not None:
             remaining_budget=module.get_remaining_budget_by_ip(self, ip, start_budget_time)
             if len(remaining_budget)>=query_budget_amount:
                 ErrorClass.error_code=429
@@ -33,6 +33,7 @@ def check_budget(self, ip, username):
             ErrorClass.error_code=401
             ErrorClass.error_message="Authentication failed. Please, log in to see results for the query"
             raise
+        return time_now # pragma: no cover
     except Exception as e:
         raise
 

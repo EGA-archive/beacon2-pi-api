@@ -7,6 +7,7 @@ import unittest
 from beacon.permissions.tests import TestAuthZ
 from beacon.validator.tests import TestValidator
 from beacon.auth.tests import TestAuthN
+from beacon.budget.tests import TestBudget
 #from beacon.request.tests import TestRequest
 from beacon.tests.wrong_service_info import service_info_wrong
 from aiohttp.test_utils import make_mocked_request
