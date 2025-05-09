@@ -4,10 +4,11 @@ from aiohttp import web
 from beacon.__main__ import Collection, Resultset, Info, ServiceInfo, Map, Configuration, FilteringTerms, EntryTypes
 import json
 import unittest
+import beacon.conf.conf
+from beacon.request.classes import ErrorClass
 from beacon.permissions.tests import TestAuthZ
 from beacon.validator.tests import TestValidator
 from beacon.auth.tests import TestAuthN
-from beacon.budget.tests import TestBudget
 #from beacon.request.tests import TestRequest
 from beacon.tests.wrong_service_info import service_info_wrong
 from aiohttp.test_utils import make_mocked_request

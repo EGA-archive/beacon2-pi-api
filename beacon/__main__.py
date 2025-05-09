@@ -20,7 +20,7 @@ from datetime import datetime
 from beacon.conf import conf
 import ssl
 from beacon.request.parameters import RequestMeta, RequestQuery
-from beacon.budget.budget import insert_budget
+from beacon.budget.__main__ import insert_budget
 
 class EndpointView(web.View, CorsViewMixin):
     def __init__(self, request: Request):
