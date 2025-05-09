@@ -4,6 +4,8 @@ from aiohttp import web
 from beacon.__main__ import Collection, Resultset, Info, ServiceInfo, Map, Configuration, FilteringTerms, EntryTypes
 import json
 import unittest
+import beacon.conf.conf
+from beacon.request.classes import ErrorClass
 from beacon.permissions.tests import TestAuthZ
 from beacon.validator.tests import TestValidator
 from beacon.auth.tests import TestAuthN

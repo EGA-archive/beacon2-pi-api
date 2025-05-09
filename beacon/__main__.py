@@ -20,6 +20,7 @@ from datetime import datetime
 from beacon.conf import conf
 import ssl
 from beacon.request.parameters import RequestMeta, RequestQuery
+from beacon.budget.__main__ import insert_budget
 
 class EndpointView(web.View, CorsViewMixin):
     def __init__(self, request: Request):
@@ -237,9 +238,10 @@ class FilteringTerms(EndpointView):
 class Resultset(EndpointView):
     @dataset_permissions
     @log_with_args(level)
-    async def resultset(self, post_data, request, qparams, entry_type, entry_id, datasets, headers, ip):
+    async def resultset(self, post_data, request, qparams, entry_type, entry_id, datasets, ip, headers, username, time_now):
         try:
             response_obj = await builder(self, request, datasets, qparams, entry_type, entry_id)
+            insert_budget(self, username, ip, time_now)
             return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
         except Exception:# pragma: no cover
             raise

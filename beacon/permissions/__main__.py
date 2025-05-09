@@ -9,7 +9,7 @@ from beacon.auth.__main__ import authentication
 from beacon.logs.logs import log_with_args, log_with_args_mongo
 from beacon.conf.conf import level
 from beacon.source.manage import datasets
-from beacon.budget.budget import check_budget
+from beacon.budget.__main__ import check_budget
 
 source=datasets['database']
 complete_module='beacon.connections.'+source+'.datasets'
@@ -89,12 +89,12 @@ def dataset_permissions(func):
             datasets = await PermissionsProxy.get_permissions(self, username=username, requested_datasets=requested_datasets)
             dict_returned={}
             dict_returned['username']=username
-            check_budget(self, username, ip)
+            time_now = check_budget(self, ip, username)
             authorized_datasets=list(datasets)
             for visa_dataset in list_visa_datasets:
                 authorized_datasets.append(visa_dataset)# pragma: no cover
             response_datasets= await get_datasets_list(self, qparams, request, authorized_datasets)
-            return await func(self, post_data, request, qparams, entry_type, entry_id, response_datasets, ip, headers)
+            return await func(self, post_data, request, qparams, entry_type, entry_id, response_datasets, ip, headers, username, time_now)
         except Exception:# pragma: no cover
             raise
     return permission
