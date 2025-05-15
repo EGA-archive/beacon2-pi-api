@@ -298,10 +298,6 @@ def build_beacon_info_response(self):
 @log_with_args(level)
 def build_configuration(self):
     try:
-        entry_types=get_entry_types(self)
-    except Exception:# pragma: no cover
-        raise
-    try:
         meta = {
             '$schema': 'https://raw.githubusercontent.com/ga4gh-beacon/beacon-framework-v2/main/responses/sections/beaconInformationalResponseMeta.json',
             'beaconId': conf.beacon_id,
@@ -318,130 +314,134 @@ def build_configuration(self):
 
         if analysis.boolean!=False and analysis.count!=False and analysis.record!=False:
             response['entryTypes'][analysis.id]==response['entryTypes']['analysis']
-            del response['entryTypes']['analysis']
-            response['entryTypes'][analysis.id]={}
+            if analysis.id != 'analysis':
+                del response['entryTypes']['analysis']
             response['entryTypes'][analysis.id]["id"]=analysis.id
             response['entryTypes'][analysis.id]["name"]=analysis.name
-            response['entryTypes'][analysis.id]['ontologyTermForThisType']={}
             response['entryTypes'][analysis.id]['ontologyTermForThisType']['id']=analysis.ontology_id
             response['entryTypes'][analysis.id]['ontologyTermForThisType']['name']=analysis.ontology_name
             response['entryTypes'][analysis.id]['partOfSpecification']=analysis.specification
             response['entryTypes'][analysis.id]['description']=analysis.description
-            response['entryTypes'][analysis.id]['defaultSchema']={}
             response['entryTypes'][analysis.id]['defaultSchema']['id']=analysis.defaultSchema_id
             response['entryTypes'][analysis.id]['defaultSchema']['name']=analysis.defaultSchema_name
             response['entryTypes'][analysis.id]['defaultSchema']['referenceToSchemaDefinition']=analysis.defaultSchema_reference_to_schema_definition
             response['entryTypes'][analysis.id]['defaultSchema']['schemaVersion']=analysis.defaultSchema_schema_version
             response['entryTypes'][analysis.id]['additionallySupportedSchemas']=analysis.aditionally_supported_schemas
             response['entryTypes'][analysis.id]['nonFilteredQueriesAllowed']=analysis.allow_queries_without_filters
+        else:
+            del response['entryTypes']['analysis']
         if biosample.boolean!=False and biosample.count!=False and biosample.record!=False:
             response['entryTypes'][biosample.id]==response['entryTypes']['biosample']
-            del response['entryTypes']['biosample']
-            response['entryTypes'][biosample.id]={}
+            if biosample.id != 'biosample':
+                del response['entryTypes']['biosample']
             response['entryTypes'][biosample.id]["id"]=biosample.id
             response['entryTypes'][biosample.id]["name"]=biosample.name
-            response['entryTypes'][biosample.id]['ontologyTermForThisType']={}
             response['entryTypes'][biosample.id]['ontologyTermForThisType']['id']=biosample.ontology_id
             response['entryTypes'][biosample.id]['ontologyTermForThisType']['name']=biosample.ontology_name
             response['entryTypes'][biosample.id]['partOfSpecification']=biosample.specification
             response['entryTypes'][biosample.id]['description']=biosample.description
-            response['entryTypes'][biosample.id]['defaultSchema']={}
             response['entryTypes'][biosample.id]['defaultSchema']['id']=biosample.defaultSchema_id
             response['entryTypes'][biosample.id]['defaultSchema']['name']=biosample.defaultSchema_name
             response['entryTypes'][biosample.id]['defaultSchema']['referenceToSchemaDefinition']=biosample.defaultSchema_reference_to_schema_definition
             response['entryTypes'][biosample.id]['defaultSchema']['schemaVersion']=biosample.defaultSchema_schema_version
             response['entryTypes'][biosample.id]['additionallySupportedSchemas']=biosample.aditionally_supported_schemas
             response['entryTypes'][biosample.id]['nonFilteredQueriesAllowed']=biosample.allow_queries_without_filters
+        else:
+            del response['entryTypes']['biosample']
         if cohort.boolean!=False and cohort.count!=False and cohort.record!=False:
             response['entryTypes'][cohort.id]==response['entryTypes']['cohort']
-            del response['entryTypes']['cohort']
-            response['entryTypes'][cohort.id]={}
+            if cohort.id != 'cohort':
+                del response['entryTypes']['cohort']
             response['entryTypes'][cohort.id]["id"]=cohort.id
             response['entryTypes'][cohort.id]["name"]=cohort.name
-            response['entryTypes'][cohort.id]['ontologyTermForThisType']={}
             response['entryTypes'][cohort.id]['ontologyTermForThisType']['id']=cohort.ontology_id
             response['entryTypes'][cohort.id]['ontologyTermForThisType']['name']=cohort.ontology_name
             response['entryTypes'][cohort.id]['partOfSpecification']=cohort.specification
             response['entryTypes'][cohort.id]['description']=cohort.description
-            response['entryTypes'][cohort.id]['defaultSchema']={}
             response['entryTypes'][cohort.id]['defaultSchema']['id']=cohort.defaultSchema_id
             response['entryTypes'][cohort.id]['defaultSchema']['name']=cohort.defaultSchema_name
             response['entryTypes'][cohort.id]['defaultSchema']['referenceToSchemaDefinition']=cohort.defaultSchema_reference_to_schema_definition
             response['entryTypes'][cohort.id]['defaultSchema']['schemaVersion']=cohort.defaultSchema_schema_version
             response['entryTypes'][cohort.id]['additionallySupportedSchemas']=cohort.aditionally_supported_schemas
             response['entryTypes'][cohort.id]['nonFilteredQueriesAllowed']=cohort.allow_queries_without_filters
+        else:
+            del response['entryTypes']['cohort']
         if dataset.boolean!=False and dataset.count!=False and dataset.record!=False:
             response['entryTypes'][dataset.id]==response['entryTypes']['dataset']
-            del response['entryTypes']['dataset']
-            response['entryTypes'][dataset.id]={}
+            if dataset.id != 'dataset':
+                del response['entryTypes']['dataset']
             response['entryTypes'][dataset.id]["id"]=dataset.id
             response['entryTypes'][dataset.id]["name"]=dataset.name
-            response['entryTypes'][dataset.id]['ontologyTermForThisType']={}
             response['entryTypes'][dataset.id]['ontologyTermForThisType']['id']=dataset.ontology_id
             response['entryTypes'][dataset.id]['ontologyTermForThisType']['name']=dataset.ontology_name
             response['entryTypes'][dataset.id]['partOfSpecification']=dataset.specification
             response['entryTypes'][dataset.id]['description']=dataset.description
-            response['entryTypes'][dataset.id]['defaultSchema']={}
             response['entryTypes'][dataset.id]['defaultSchema']['id']=dataset.defaultSchema_id
             response['entryTypes'][dataset.id]['defaultSchema']['name']=dataset.defaultSchema_name
             response['entryTypes'][dataset.id]['defaultSchema']['referenceToSchemaDefinition']=dataset.defaultSchema_reference_to_schema_definition
             response['entryTypes'][dataset.id]['defaultSchema']['schemaVersion']=dataset.defaultSchema_schema_version
             response['entryTypes'][dataset.id]['additionallySupportedSchemas']=dataset.aditionally_supported_schemas
             response['entryTypes'][dataset.id]['nonFilteredQueriesAllowed']=dataset.allow_queries_without_filters
+        else:
+            del response['entryTypes']['dataset']
         if genomicVariant.boolean!=False and genomicVariant.count!=False and genomicVariant.record!=False:
             response['entryTypes'][genomicVariant.id]==response['entryTypes']['genomicVariant']
-            del response['entryTypes']['genomicVariant']
-            response['entryTypes'][genomicVariant.id]={}
+            if genomicVariant.id != 'genomicVariant':
+                del response['entryTypes']['genomicVariant']
             response['entryTypes'][genomicVariant.id]["id"]=genomicVariant.id
             response['entryTypes'][genomicVariant.id]["name"]=genomicVariant.name
-            response['entryTypes'][genomicVariant.id]['ontologyTermForThisType']={}
             response['entryTypes'][genomicVariant.id]['ontologyTermForThisType']['id']=genomicVariant.ontology_id
             response['entryTypes'][genomicVariant.id]['ontologyTermForThisType']['name']=genomicVariant.ontology_name
             response['entryTypes'][genomicVariant.id]['partOfSpecification']=genomicVariant.specification
             response['entryTypes'][genomicVariant.id]['description']=genomicVariant.description
-            response['entryTypes'][genomicVariant.id]['defaultSchema']={}
             response['entryTypes'][genomicVariant.id]['defaultSchema']['id']=genomicVariant.defaultSchema_id
             response['entryTypes'][genomicVariant.id]['defaultSchema']['name']=genomicVariant.defaultSchema_name
             response['entryTypes'][genomicVariant.id]['defaultSchema']['referenceToSchemaDefinition']=genomicVariant.defaultSchema_reference_to_schema_definition
             response['entryTypes'][genomicVariant.id]['defaultSchema']['schemaVersion']=genomicVariant.defaultSchema_schema_version
             response['entryTypes'][genomicVariant.id]['additionallySupportedSchemas']=genomicVariant.aditionally_supported_schemas
             response['entryTypes'][genomicVariant.id]['nonFilteredQueriesAllowed']=genomicVariant.allow_queries_without_filters
+        else:
+            del response['entryTypes']['genomicVariant']
         if individual.boolean!=False and individual.count!=False and individual.record!=False:
             response['entryTypes'][individual.id]==response['entryTypes']['individual']
-            del response['entryTypes']['individual']
-            response['entryTypes'][individual.id]={}
+            if individual.id != 'individual':
+                del response['entryTypes']['individual']
             response['entryTypes'][individual.id]["id"]=individual.id
             response['entryTypes'][individual.id]["name"]=individual.name
-            response['entryTypes'][individual.id]['ontologyTermForThisType']={}
             response['entryTypes'][individual.id]['ontologyTermForThisType']['id']=individual.ontology_id
             response['entryTypes'][individual.id]['ontologyTermForThisType']['name']=individual.ontology_name
             response['entryTypes'][individual.id]['partOfSpecification']=individual.specification
             response['entryTypes'][individual.id]['description']=individual.description
-            response['entryTypes'][individual.id]['defaultSchema']={}
             response['entryTypes'][individual.id]['defaultSchema']['id']=individual.defaultSchema_id
             response['entryTypes'][individual.id]['defaultSchema']['name']=individual.defaultSchema_name
             response['entryTypes'][individual.id]['defaultSchema']['referenceToSchemaDefinition']=individual.defaultSchema_reference_to_schema_definition
             response['entryTypes'][individual.id]['defaultSchema']['schemaVersion']=individual.defaultSchema_schema_version
             response['entryTypes'][individual.id]['additionallySupportedSchemas']=individual.aditionally_supported_schemas
             response['entryTypes'][individual.id]['nonFilteredQueriesAllowed']=individual.allow_queries_without_filters
+        else:
+            del response['entryTypes']['individual']
         if run.boolean!=False and run.count!=False and run.record!=False:
             response['entryTypes'][run.id]==response['entryTypes']['run']
-            del response['entryTypes']['run']
-            response['entryTypes'][run.id]={}
+            if run.id != 'run':
+                del response['entryTypes']['run']
             response['entryTypes'][run.id]["id"]=run.id
             response['entryTypes'][run.id]["name"]=run.name
-            response['entryTypes'][run.id]['ontologyTermForThisType']={}
             response['entryTypes'][run.id]['ontologyTermForThisType']['id']=run.ontology_id
             response['entryTypes'][run.id]['ontologyTermForThisType']['name']=run.ontology_name
             response['entryTypes'][run.id]['partOfSpecification']=run.specification
             response['entryTypes'][run.id]['description']=run.description
-            response['entryTypes'][run.id]['defaultSchema']={}
             response['entryTypes'][run.id]['defaultSchema']['id']=run.defaultSchema_id
             response['entryTypes'][run.id]['defaultSchema']['name']=run.defaultSchema_name
             response['entryTypes'][run.id]['defaultSchema']['referenceToSchemaDefinition']=run.defaultSchema_reference_to_schema_definition
             response['entryTypes'][run.id]['defaultSchema']['schemaVersion']=run.defaultSchema_schema_version
             response['entryTypes'][run.id]['additionallySupportedSchemas']=run.aditionally_supported_schemas
             response['entryTypes'][run.id]['nonFilteredQueriesAllowed']=run.allow_queries_without_filters
+        else:
+            del response['entryTypes']['run']
+        if response['entryTypes'] == {}:
+            ErrorClass.error_code=500
+            ErrorClass.error_message='Please, provide an entry type in conf to be able to have a beacon instance with at least one endpoint to query.'
+            raise
 
         configuration_json = {
             '$schema': 'https://raw.githubusercontent.com/ga4gh-beacon/beacon-framework-v2/main/responses/beaconConfigurationResponse.json',
@@ -450,9 +450,7 @@ def build_configuration(self):
         }
 
         return configuration_json
-    except Exception as e:# pragma: no cover
-        ErrorClass.error_code=500
-        ErrorClass.error_message=str(e)
+    except Exception:# pragma: no cover
         raise
 
 @log_with_args(level)
@@ -469,7 +467,324 @@ def build_map(self):
             'returnedSchemas': []
         }
 
-        response['$schema'] ='https://raw.githubusercontent.com/ga4gh-beacon/beacon-framework-v2/main/configuration/beaconMapSchema.json'
+        with open('beacon/response/templates/map.json', 'r') as template:
+            response = json.load(template)
+
+        if analysis.boolean!=False and analysis.count!=False and analysis.record!=False:
+            response["endpointSets"][analysis.id]=response["endpointSets"]['analysis']
+            response["endpointSets"][analysis.id]["entryType"]=analysis.id
+            response["endpointSets"][analysis.id]["openAPIEndpointsDefinition"]=analysis.open_api_endpoints_definition
+            response["endpointSets"][analysis.id]["rootUrl"]=conf.uri+analysis.endpoint_name
+            if analysis.singleEntryUrl == True:
+                response["endpointSets"][analysis.id]["singleEntryUrl"]=conf.uri+analysis.endpoint_name+'/{id}'
+            else:
+                del response["endpointSets"][analysis.id]["singleEntryUrl"]
+            if analysis.biosample_lookup == True:
+                response["endpointSets"][analysis.id]["endpoints"][biosample.id]=response["endpointSets"][analysis.id]["endpoints"]["biosample"]
+                if biosample.id != 'biosample':
+                    del response["endpointSets"][analysis.id]["endpoints"]["biosample"]
+                response["endpointSets"][analysis.id]["endpoints"][biosample.id]["returnedEntryType"]=biosample.id
+                response["endpointSets"][analysis.id]["endpoints"][biosample.id]["url"]=conf.uri+analysis.endpoint_name+'/{id}/'+biosample.endpoint_name
+            if analysis.cohort_lookup == True:
+                response["endpointSets"][analysis.id]["endpoints"][cohort.id]=response["endpointSets"][analysis.id]["endpoints"]["cohort"]
+                if cohort.id != 'cohort':
+                    del response["endpointSets"][analysis.id]["endpoints"]["cohort"]
+                response["endpointSets"][analysis.id]["endpoints"][cohort.id]["returnedEntryType"]=cohort.id
+                response["endpointSets"][analysis.id]["endpoints"][cohort.id]["url"]=conf.uri+analysis.endpoint_name+'/{id}/'+cohort.endpoint_name
+            if analysis.dataset_lookup == True:
+                response["endpointSets"][analysis.id]["endpoints"][dataset.id]=response["endpointSets"][analysis.id]["endpoints"]["dataset"]
+                if dataset.id != 'dataset':
+                    del response["endpointSets"][analysis.id]["endpoints"]["dataset"]
+                response["endpointSets"][analysis.id]["endpoints"][dataset.id]["returnedEntryType"]=dataset.id
+                response["endpointSets"][analysis.id]["endpoints"][dataset.id]["url"]=conf.uri+analysis.endpoint_name+'/{id}/'+dataset.endpoint_name
+            if analysis.genomicVariant_lookup == True:
+                response["endpointSets"][analysis.id]["endpoints"][genomicVariant.id]=response["endpointSets"][analysis.id]["endpoints"]["genomicVariant"]
+                if genomicVariant.id != 'genomicVariant':
+                    del response["endpointSets"][analysis.id]["endpoints"]["genomicVariant"]
+                response["endpointSets"][analysis.id]["endpoints"][genomicVariant.id]["returnedEntryType"]=genomicVariant.id
+                response["endpointSets"][analysis.id]["endpoints"][genomicVariant.id]["url"]=conf.uri+analysis.endpoint_name+'/{id}/'+genomicVariant.endpoint_name
+            if analysis.individual_lookup == True:
+                response["endpointSets"][analysis.id]["endpoints"][individual.id]=response["endpointSets"][analysis.id]["endpoints"]["individual"]
+                if individual.id != 'individual':
+                    del response["endpointSets"][analysis.id]["endpoints"]["individual"]
+                response["endpointSets"][analysis.id]["endpoints"][individual.id]["returnedEntryType"]=individual.id
+                response["endpointSets"][analysis.id]["endpoints"][individual.id]["url"]=conf.uri+analysis.endpoint_name+'/{id}/'+individual.endpoint_name
+            if analysis.run_lookup == True:
+                response["endpointSets"][analysis.id]["endpoints"][run.id]=response["endpointSets"][analysis.id]["endpoints"]["run"]
+                if run.id != 'run':
+                    del response["endpointSets"][analysis.id]["endpoints"]["run"]
+                response["endpointSets"][analysis.id]["endpoints"][run.id]["returnedEntryType"]=run.id
+                response["endpointSets"][analysis.id]["endpoints"][run.id]["url"]=conf.uri+analysis.endpoint_name+'/{id}/'+run.endpoint_name
+        if biosample.boolean!=False and biosample.count!=False and biosample.record!=False:
+            response["endpointSets"][biosample.id]=response["endpointSets"]['biosample']
+            response["endpointSets"][biosample.id]["entryType"]=biosample.id
+            response["endpointSets"][biosample.id]["openAPIEndpointsDefinition"]=biosample.open_api_endpoints_definition
+            response["endpointSets"][biosample.id]["rootUrl"]=conf.uri+biosample.endpoint_name
+            if biosample.singleEntryUrl == True:
+                response["endpointSets"][biosample.id]["singleEntryUrl"]=conf.uri+biosample.endpoint_name+'/{id}'
+            else:
+                del response["endpointSets"][biosample.id]["singleEntryUrl"]
+            if biosample.analysis_lookup == True:
+                response["endpointSets"][biosample.id]["endpoints"][analysis.id]=response["endpointSets"][biosample.id]["endpoints"]["analysis"]
+                if analysis.id != 'analysis':
+                    del response["endpointSets"][biosample.id]["endpoints"]["analysis"]
+                response["endpointSets"][biosample.id]["endpoints"][analysis.id]["returnedEntryType"]=analysis.id
+                response["endpointSets"][biosample.id]["endpoints"][analysis.id]["url"]=conf.uri+biosample.endpoint_name+'/{id}/'+analysis.endpoint_name
+            if biosample.cohort_lookup == True:
+                response["endpointSets"][biosample.id]["endpoints"][cohort.id]=response["endpointSets"][biosample.id]["endpoints"]["cohort"]
+                if cohort.id != 'cohort':
+                    del response["endpointSets"][biosample.id]["endpoints"]["cohort"]
+                response["endpointSets"][biosample.id]["endpoints"][cohort.id]["returnedEntryType"]=cohort.id
+                response["endpointSets"][biosample.id]["endpoints"][cohort.id]["url"]=conf.uri+biosample.endpoint_name+'/{id}/'+cohort.endpoint_name
+            if biosample.dataset_lookup == True:
+                response["endpointSets"][biosample.id]["endpoints"][dataset.id]=response["endpointSets"][biosample.id]["endpoints"]["dataset"]
+                if dataset.id != 'dataset':
+                    del response["endpointSets"][biosample.id]["endpoints"]["dataset"]
+                response["endpointSets"][biosample.id]["endpoints"][dataset.id]["returnedEntryType"]=dataset.id
+                response["endpointSets"][biosample.id]["endpoints"][dataset.id]["url"]=conf.uri+biosample.endpoint_name+'/{id}/'+dataset.endpoint_name
+            if biosample.genomicVariant_lookup == True:
+                response["endpointSets"][biosample.id]["endpoints"][genomicVariant.id]=response["endpointSets"][biosample.id]["endpoints"]["genomicVariant"]
+                if genomicVariant.id != 'genomicVariant':
+                    del response["endpointSets"][biosample.id]["endpoints"]["genomicVariant"]
+                response["endpointSets"][biosample.id]["endpoints"][genomicVariant.id]["returnedEntryType"]=genomicVariant.id
+                response["endpointSets"][biosample.id]["endpoints"][genomicVariant.id]["url"]=conf.uri+biosample.endpoint_name+'/{id}/'+genomicVariant.endpoint_name
+            if biosample.individual_lookup == True:
+                response["endpointSets"][biosample.id]["endpoints"][individual.id]=response["endpointSets"][biosample.id]["endpoints"]["individual"]
+                if individual.id != 'individual':
+                    del response["endpointSets"][biosample.id]["endpoints"]["individual"]
+                response["endpointSets"][biosample.id]["endpoints"][individual.id]["returnedEntryType"]=individual.id
+                response["endpointSets"][biosample.id]["endpoints"][individual.id]["url"]=conf.uri+biosample.endpoint_name+'/{id}/'+individual.endpoint_name
+            if biosample.run_lookup == True:
+                response["endpointSets"][biosample.id]["endpoints"][run.id]=response["endpointSets"][biosample.id]["endpoints"]["run"]
+                if run.id != 'run':
+                    del response["endpointSets"][biosample.id]["endpoints"]["run"]
+                response["endpointSets"][biosample.id]["endpoints"][run.id]["returnedEntryType"]=run.id
+                response["endpointSets"][biosample.id]["endpoints"][run.id]["url"]=conf.uri+biosample.endpoint_name+'/{id}/'+run.endpoint_name
+        if cohort.boolean!=False and cohort.count!=False and cohort.record!=False:
+            response["endpointSets"][cohort.id]=response["endpointSets"]['cohort']
+            response["endpointSets"][cohort.id]["entryType"]=cohort.id
+            response["endpointSets"][cohort.id]["openAPIEndpointsDefinition"]=cohort.open_api_endpoints_definition
+            response["endpointSets"][cohort.id]["rootUrl"]=conf.uri+cohort.endpoint_name
+            if cohort.singleEntryUrl == True:
+                response["endpointSets"][cohort.id]["singleEntryUrl"]=conf.uri+cohort.endpoint_name+'/{id}'
+            else:
+                del response["endpointSets"][cohort.id]["singleEntryUrl"]
+            if cohort.analysis_lookup == True:
+                response["endpointSets"][cohort.id]["endpoints"][analysis.id]=response["endpointSets"][cohort.id]["endpoints"]["analysis"]
+                if analysis.id != 'analysis':
+                    del response["endpointSets"][cohort.id]["endpoints"]["analysis"]
+                response["endpointSets"][cohort.id]["endpoints"][analysis.id]["returnedEntryType"]=analysis.id
+                response["endpointSets"][cohort.id]["endpoints"][analysis.id]["url"]=conf.uri+cohort.endpoint_name+'/{id}/'+analysis.endpoint_name
+            if cohort.biosample_lookup == True:
+                response["endpointSets"][cohort.id]["endpoints"][biosample.id]=response["endpointSets"][cohort.id]["endpoints"]["biosample"]
+                if biosample.id != 'biosample':
+                    del response["endpointSets"][cohort.id]["endpoints"]["biosample"]
+                response["endpointSets"][cohort.id]["endpoints"][biosample.id]["returnedEntryType"]=biosample.id
+                response["endpointSets"][cohort.id]["endpoints"][biosample.id]["url"]=conf.uri+cohort.endpoint_name+'/{id}/'+biosample.endpoint_name
+            if cohort.dataset_lookup == True:
+                response["endpointSets"][cohort.id]["endpoints"][dataset.id]=response["endpointSets"][cohort.id]["endpoints"]["dataset"]
+                if dataset.id != 'dataset':
+                    del response["endpointSets"][cohort.id]["endpoints"]["dataset"]
+                response["endpointSets"][cohort.id]["endpoints"][dataset.id]["returnedEntryType"]=dataset.id
+                response["endpointSets"][cohort.id]["endpoints"][dataset.id]["url"]=conf.uri+cohort.endpoint_name+'/{id}/'+dataset.endpoint_name
+            if cohort.genomicVariant_lookup == True:
+                response["endpointSets"][cohort.id]["endpoints"][genomicVariant.id]=response["endpointSets"][cohort.id]["endpoints"]["genomicVariant"]
+                if genomicVariant.id != 'genomicVariant':
+                    del response["endpointSets"][cohort.id]["endpoints"]["genomicVariant"]
+                response["endpointSets"][cohort.id]["endpoints"][genomicVariant.id]["returnedEntryType"]=genomicVariant.id
+                response["endpointSets"][cohort.id]["endpoints"][genomicVariant.id]["url"]=conf.uri+cohort.endpoint_name+'/{id}/'+genomicVariant.endpoint_name
+            if cohort.individual_lookup == True:
+                response["endpointSets"][cohort.id]["endpoints"][individual.id]=response["endpointSets"][cohort.id]["endpoints"]["individual"]
+                if individual.id != 'individual':
+                    del response["endpointSets"][cohort.id]["endpoints"]["individual"]
+                response["endpointSets"][cohort.id]["endpoints"][individual.id]["returnedEntryType"]=individual.id
+                response["endpointSets"][cohort.id]["endpoints"][individual.id]["url"]=conf.uri+cohort.endpoint_name+'/{id}/'+individual.endpoint_name
+            if cohort.run_lookup == True:
+                response["endpointSets"][cohort.id]["endpoints"][run.id]=response["endpointSets"][cohort.id]["endpoints"]["run"]
+                if run.id != 'run':
+                    del response["endpointSets"][cohort.id]["endpoints"]["run"]
+                response["endpointSets"][cohort.id]["endpoints"][run.id]["returnedEntryType"]=run.id
+                response["endpointSets"][cohort.id]["endpoints"][run.id]["url"]=conf.uri+cohort.endpoint_name+'/{id}/'+run.endpoint_name
+        if dataset.boolean!=False and dataset.count!=False and dataset.record!=False:
+            response["endpointSets"][dataset.id]=response["endpointSets"]['dataset']
+            response["endpointSets"][dataset.id]["entryType"]=dataset.id
+            response["endpointSets"][dataset.id]["openAPIEndpointsDefinition"]=dataset.open_api_endpoints_definition
+            response["endpointSets"][dataset.id]["rootUrl"]=conf.uri+dataset.endpoint_name
+            if dataset.singleEntryUrl == True:
+                response["endpointSets"][dataset.id]["singleEntryUrl"]=conf.uri+dataset.endpoint_name+'/{id}'
+            else:
+                del response["endpointSets"][dataset.id]["singleEntryUrl"]
+            if dataset.analysis_lookup == True:
+                response["endpointSets"][dataset.id]["endpoints"][analysis.id]=response["endpointSets"][dataset.id]["endpoints"]["analysis"]
+                if analysis.id != 'analysis':
+                    del response["endpointSets"][dataset.id]["endpoints"]["analysis"]
+                response["endpointSets"][dataset.id]["endpoints"][analysis.id]["returnedEntryType"]=analysis.id
+                response["endpointSets"][dataset.id]["endpoints"][analysis.id]["url"]=conf.uri+dataset.endpoint_name+'/{id}/'+analysis.endpoint_name
+            if dataset.biosample_lookup == True:
+                response["endpointSets"][dataset.id]["endpoints"][biosample.id]=response["endpointSets"][dataset.id]["endpoints"]["biosample"]
+                if biosample.id != 'biosample':
+                    del response["endpointSets"][dataset.id]["endpoints"]["biosample"]
+                response["endpointSets"][dataset.id]["endpoints"][biosample.id]["returnedEntryType"]=biosample.id
+                response["endpointSets"][dataset.id]["endpoints"][biosample.id]["url"]=conf.uri+dataset.endpoint_name+'/{id}/'+biosample.endpoint_name
+            if dataset.cohort_lookup == True:
+                response["endpointSets"][dataset.id]["endpoints"][cohort.id]=response["endpointSets"][dataset.id]["endpoints"]["cohort"]
+                if cohort.id != 'cohort':
+                    del response["endpointSets"][dataset.id]["endpoints"]["dataset"]
+                response["endpointSets"][dataset.id]["endpoints"][cohort.id]["returnedEntryType"]=cohort.id
+                response["endpointSets"][dataset.id]["endpoints"][cohort.id]["url"]=conf.uri+dataset.endpoint_name+'/{id}/'+cohort.endpoint_name
+            if dataset.genomicVariant_lookup == True:
+                response["endpointSets"][dataset.id]["endpoints"][genomicVariant.id]=response["endpointSets"][dataset.id]["endpoints"]["genomicVariant"]
+                if genomicVariant.id != 'genomicVariant':
+                    del response["endpointSets"][dataset.id]["endpoints"]["genomicVariant"]
+                response["endpointSets"][dataset.id]["endpoints"][genomicVariant.id]["returnedEntryType"]=genomicVariant.id
+                response["endpointSets"][dataset.id]["endpoints"][genomicVariant.id]["url"]=conf.uri+dataset.endpoint_name+'/{id}/'+genomicVariant.endpoint_name
+            if dataset.individual_lookup == True:
+                response["endpointSets"][dataset.id]["endpoints"][individual.id]=response["endpointSets"][dataset.id]["endpoints"]["individual"]
+                if individual.id != 'individual':
+                    del response["endpointSets"][dataset.id]["endpoints"]["individual"]
+                response["endpointSets"][dataset.id]["endpoints"][individual.id]["returnedEntryType"]=individual.id
+                response["endpointSets"][dataset.id]["endpoints"][individual.id]["url"]=conf.uri+dataset.endpoint_name+'/{id}/'+individual.endpoint_name
+            if dataset.run_lookup == True:
+                response["endpointSets"][dataset.id]["endpoints"][run.id]=response["endpointSets"][dataset.id]["endpoints"]["run"]
+                if run.id != 'run':
+                    del response["endpointSets"][dataset.id]["endpoints"]["run"]
+                response["endpointSets"][dataset.id]["endpoints"][run.id]["returnedEntryType"]=run.id
+                response["endpointSets"][dataset.id]["endpoints"][run.id]["url"]=conf.uri+dataset.endpoint_name+'/{id}/'+run.endpoint_name
+        if genomicVariant.boolean!=False and genomicVariant.count!=False and genomicVariant.record!=False:
+            response["endpointSets"][genomicVariant.id]=response["endpointSets"]['genomicVariant']
+            response["endpointSets"][genomicVariant.id]["entryType"]=genomicVariant.id
+            response["endpointSets"][genomicVariant.id]["openAPIEndpointsDefinition"]=genomicVariant.open_api_endpoints_definition
+            response["endpointSets"][genomicVariant.id]["rootUrl"]=conf.uri+genomicVariant.endpoint_name
+            if genomicVariant.singleEntryUrl == True:
+                response["endpointSets"][genomicVariant.id]["singleEntryUrl"]=conf.uri+genomicVariant.endpoint_name+'/{id}'
+            else:
+                del response["endpointSets"][genomicVariant.id]["singleEntryUrl"]
+            if genomicVariant.analysis_lookup == True:
+                response["endpointSets"][genomicVariant.id]["endpoints"][analysis.id]=response["endpointSets"][genomicVariant.id]["endpoints"]["analysis"]
+                if analysis.id != 'analysis':
+                    del response["endpointSets"][genomicVariant.id]["endpoints"]["analysis"]
+                response["endpointSets"][genomicVariant.id]["endpoints"][analysis.id]["returnedEntryType"]=analysis.id
+                response["endpointSets"][genomicVariant.id]["endpoints"][analysis.id]["url"]=conf.uri+genomicVariant.endpoint_name+'/{id}/'+analysis.endpoint_name
+            if genomicVariant.biosample_lookup == True:
+                response["endpointSets"][genomicVariant.id]["endpoints"][biosample.id]=response["endpointSets"][genomicVariant.id]["endpoints"]["biosample"]
+                if biosample.id != 'biosample':
+                    del response["endpointSets"][genomicVariant.id]["endpoints"]["biosample"]
+                response["endpointSets"][genomicVariant.id]["endpoints"][biosample.id]["returnedEntryType"]=biosample.id
+                response["endpointSets"][genomicVariant.id]["endpoints"][biosample.id]["url"]=conf.uri+genomicVariant.endpoint_name+'/{id}/'+biosample.endpoint_name
+            if genomicVariant.cohort_lookup == True:
+                response["endpointSets"][genomicVariant.id]["endpoints"][cohort.id]=response["endpointSets"][genomicVariant.id]["endpoints"]["cohort"]
+                if cohort.id != 'cohort':
+                    del response["endpointSets"][genomicVariant.id]["endpoints"]["genomicVariant"]
+                response["endpointSets"][genomicVariant.id]["endpoints"][cohort.id]["returnedEntryType"]=cohort.id
+                response["endpointSets"][genomicVariant.id]["endpoints"][cohort.id]["url"]=conf.uri+genomicVariant.endpoint_name+'/{id}/'+cohort.endpoint_name
+            if genomicVariant.dataset_lookup == True:
+                response["endpointSets"][genomicVariant.id]["endpoints"][dataset.id]=response["endpointSets"][genomicVariant.id]["endpoints"]["dataset"]
+                if dataset.id != 'dataset':
+                    del response["endpointSets"][genomicVariant.id]["endpoints"]["dataset"]
+                response["endpointSets"][genomicVariant.id]["endpoints"][dataset.id]["returnedEntryType"]=dataset.id
+                response["endpointSets"][genomicVariant.id]["endpoints"][dataset.id]["url"]=conf.uri+genomicVariant.endpoint_name+'/{id}/'+dataset.endpoint_name
+            if genomicVariant.individual_lookup == True:
+                response["endpointSets"][genomicVariant.id]["endpoints"][individual.id]=response["endpointSets"][genomicVariant.id]["endpoints"]["individual"]
+                if individual.id != 'individual':
+                    del response["endpointSets"][genomicVariant.id]["endpoints"]["individual"]
+                response["endpointSets"][genomicVariant.id]["endpoints"][individual.id]["returnedEntryType"]=individual.id
+                response["endpointSets"][genomicVariant.id]["endpoints"][individual.id]["url"]=conf.uri+genomicVariant.endpoint_name+'/{id}/'+individual.endpoint_name
+            if genomicVariant.run_lookup == True:
+                response["endpointSets"][genomicVariant.id]["endpoints"][run.id]=response["endpointSets"][genomicVariant.id]["endpoints"]["run"]
+                if run.id != 'run':
+                    del response["endpointSets"][genomicVariant.id]["endpoints"]["run"]
+                response["endpointSets"][genomicVariant.id]["endpoints"][run.id]["returnedEntryType"]=run.id
+                response["endpointSets"][genomicVariant.id]["endpoints"][run.id]["url"]=conf.uri+genomicVariant.endpoint_name+'/{id}/'+run.endpoint_name
+        if individual.boolean!=False and individual.count!=False and individual.record!=False:
+            response["endpointSets"][individual.id]=response["endpointSets"]['individual']
+            response["endpointSets"][individual.id]["entryType"]=individual.id
+            response["endpointSets"][individual.id]["openAPIEndpointsDefinition"]=individual.open_api_endpoints_definition
+            response["endpointSets"][individual.id]["rootUrl"]=conf.uri+individual.endpoint_name
+            if individual.singleEntryUrl == True:
+                response["endpointSets"][individual.id]["singleEntryUrl"]=conf.uri+individual.endpoint_name+'/{id}'
+            else:
+                del response["endpointSets"][individual.id]["singleEntryUrl"]
+            if individual.analysis_lookup == True:
+                response["endpointSets"][individual.id]["endpoints"][analysis.id]=response["endpointSets"][individual.id]["endpoints"]["analysis"]
+                if analysis.id != 'analysis':
+                    del response["endpointSets"][individual.id]["endpoints"]["analysis"]
+                response["endpointSets"][individual.id]["endpoints"][analysis.id]["returnedEntryType"]=analysis.id
+                response["endpointSets"][individual.id]["endpoints"][analysis.id]["url"]=conf.uri+individual.endpoint_name+'/{id}/'+analysis.endpoint_name
+            if individual.biosample_lookup == True:
+                response["endpointSets"][individual.id]["endpoints"][biosample.id]=response["endpointSets"][individual.id]["endpoints"]["biosample"]
+                if biosample.id != 'biosample':
+                    del response["endpointSets"][individual.id]["endpoints"]["biosample"]
+                response["endpointSets"][individual.id]["endpoints"][biosample.id]["returnedEntryType"]=biosample.id
+                response["endpointSets"][individual.id]["endpoints"][biosample.id]["url"]=conf.uri+individual.endpoint_name+'/{id}/'+biosample.endpoint_name
+            if individual.cohort_lookup == True:
+                response["endpointSets"][individual.id]["endpoints"][cohort.id]=response["endpointSets"][individual.id]["endpoints"]["cohort"]
+                if cohort.id != 'cohort':
+                    del response["endpointSets"][individual.id]["endpoints"]["individual"]
+                response["endpointSets"][individual.id]["endpoints"][cohort.id]["returnedEntryType"]=cohort.id
+                response["endpointSets"][individual.id]["endpoints"][cohort.id]["url"]=conf.uri+individual.endpoint_name+'/{id}/'+cohort.endpoint_name
+            if individual.dataset_lookup == True:
+                response["endpointSets"][individual.id]["endpoints"][dataset.id]=response["endpointSets"][individual.id]["endpoints"]["dataset"]
+                if dataset.id != 'dataset':
+                    del response["endpointSets"][individual.id]["endpoints"]["dataset"]
+                response["endpointSets"][individual.id]["endpoints"][dataset.id]["returnedEntryType"]=dataset.id
+                response["endpointSets"][individual.id]["endpoints"][dataset.id]["url"]=conf.uri+individual.endpoint_name+'/{id}/'+dataset.endpoint_name
+            if individual.genomicVariant_lookup == True:
+                response["endpointSets"][individual.id]["endpoints"][genomicVariant.id]=response["endpointSets"][individual.id]["endpoints"]["genomicVariant"]
+                if genomicVariant.id != 'genomicVariant':
+                    del response["endpointSets"][individual.id]["endpoints"]["genomicVariant"]
+                response["endpointSets"][individual.id]["endpoints"][genomicVariant.id]["returnedEntryType"]=genomicVariant.id
+                response["endpointSets"][individual.id]["endpoints"][genomicVariant.id]["url"]=conf.uri+individual.endpoint_name+'/{id}/'+genomicVariant.endpoint_name
+            if individual.run_lookup == True:
+                response["endpointSets"][individual.id]["endpoints"][run.id]=response["endpointSets"][individual.id]["endpoints"]["run"]
+                if run.id != 'run':
+                    del response["endpointSets"][individual.id]["endpoints"]["run"]
+                response["endpointSets"][individual.id]["endpoints"][run.id]["returnedEntryType"]=run.id
+                response["endpointSets"][individual.id]["endpoints"][run.id]["url"]=conf.uri+individual.endpoint_name+'/{id}/'+run.endpoint_name
+        if run.boolean!=False and run.count!=False and run.record!=False:
+            response["endpointSets"][run.id]=response["endpointSets"]['run']
+            response["endpointSets"][run.id]["entryType"]=run.id
+            response["endpointSets"][run.id]["openAPIEndpointsDefinition"]=run.open_api_endpoints_definition
+            response["endpointSets"][run.id]["rootUrl"]=conf.uri+run.endpoint_name
+            if run.singleEntryUrl == True:
+                response["endpointSets"][run.id]["singleEntryUrl"]=conf.uri+run.endpoint_name+'/{id}'
+            else:
+                del response["endpointSets"][run.id]["singleEntryUrl"]
+            if run.analysis_lookup == True:
+                response["endpointSets"][run.id]["endpoints"][analysis.id]=response["endpointSets"][run.id]["endpoints"]["analysis"]
+                if analysis.id != 'analysis':
+                    del response["endpointSets"][run.id]["endpoints"]["analysis"]
+                response["endpointSets"][run.id]["endpoints"][analysis.id]["returnedEntryType"]=analysis.id
+                response["endpointSets"][run.id]["endpoints"][analysis.id]["url"]=conf.uri+run.endpoint_name+'/{id}/'+analysis.endpoint_name
+            if run.biosample_lookup == True:
+                response["endpointSets"][run.id]["endpoints"][biosample.id]=response["endpointSets"][run.id]["endpoints"]["biosample"]
+                if biosample.id != 'biosample':
+                    del response["endpointSets"][run.id]["endpoints"]["biosample"]
+                response["endpointSets"][run.id]["endpoints"][biosample.id]["returnedEntryType"]=biosample.id
+                response["endpointSets"][run.id]["endpoints"][biosample.id]["url"]=conf.uri+run.endpoint_name+'/{id}/'+biosample.endpoint_name
+            if run.cohort_lookup == True:
+                response["endpointSets"][run.id]["endpoints"][cohort.id]=response["endpointSets"][run.id]["endpoints"]["cohort"]
+                if cohort.id != 'cohort':
+                    del response["endpointSets"][run.id]["endpoints"]["run"]
+                response["endpointSets"][run.id]["endpoints"][cohort.id]["returnedEntryType"]=cohort.id
+                response["endpointSets"][run.id]["endpoints"][cohort.id]["url"]=conf.uri+run.endpoint_name+'/{id}/'+cohort.endpoint_name
+            if run.dataset_lookup == True:
+                response["endpointSets"][run.id]["endpoints"][dataset.id]=response["endpointSets"][run.id]["endpoints"]["dataset"]
+                if dataset.id != 'dataset':
+                    del response["endpointSets"][run.id]["endpoints"]["dataset"]
+                response["endpointSets"][run.id]["endpoints"][dataset.id]["returnedEntryType"]=dataset.id
+                response["endpointSets"][run.id]["endpoints"][dataset.id]["url"]=conf.uri+run.endpoint_name+'/{id}/'+dataset.endpoint_name
+            if run.genomicVariant_lookup == True:
+                response["endpointSets"][run.id]["endpoints"][genomicVariant.id]=response["endpointSets"][run.id]["endpoints"]["genomicVariant"]
+                if genomicVariant.id != 'genomicVariant':
+                    del response["endpointSets"][run.id]["endpoints"]["genomicVariant"]
+                response["endpointSets"][run.id]["endpoints"][genomicVariant.id]["returnedEntryType"]=genomicVariant.id
+                response["endpointSets"][run.id]["endpoints"][genomicVariant.id]["url"]=conf.uri+run.endpoint_name+'/{id}/'+genomicVariant.endpoint_name
+            if run.individual_lookup == True:
+                response["endpointSets"][run.id]["endpoints"][individual.id]=response["endpointSets"][run.id]["endpoints"]["individual"]
+                if individual.id != 'individual':
+                    del response["endpointSets"][run.id]["endpoints"]["individual"]
+                response["endpointSets"][run.id]["endpoints"][individual.id]["returnedEntryType"]=individual.id
+                response["endpointSets"][run.id]["endpoints"][individual.id]["url"]=conf.uri+run.endpoint_name+'/{id}/'+individual.endpoint_name
 
         beacon_map_json = {
             'meta': meta,
