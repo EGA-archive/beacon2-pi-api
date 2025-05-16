@@ -1,10 +1,9 @@
-endpoint_name='biosamples'
+endpoint_name='biosamples' # Leave it blank ('') to deactivate the endpoint.
 open_api_endpoints_definition='https://raw.githubusercontent.com/ga4gh-beacon/beacon-v2/main/models/json/beacon-v2-default-model/biosamples/endpoints.json'
+database='mongo' # The name must match the folder's name in connection that belongs to the desired database.
 
-# Granularity accepted (if all False, endpoint will not be available)
-boolean=True
-count=True
-record=True
+# Granularity accepted: boolean, count or record
+granularity='record'
 
 # Entry type info
 id='biosample'

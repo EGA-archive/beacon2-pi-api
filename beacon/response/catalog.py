@@ -312,7 +312,7 @@ def build_configuration(self):
         response['securityAttributes']['securityLevels']=conf.security_levels
         response['maturityAttributes']['productionStatus']=conf.environment.upper()
 
-        if analysis.boolean!=False and analysis.count!=False and analysis.record!=False:
+        if analysis.endpoint_name != '':
             response['entryTypes'][analysis.id]==response['entryTypes']['analysis']
             if analysis.id != 'analysis':
                 del response['entryTypes']['analysis']
@@ -330,7 +330,7 @@ def build_configuration(self):
             response['entryTypes'][analysis.id]['nonFilteredQueriesAllowed']=analysis.allow_queries_without_filters
         else:
             del response['entryTypes']['analysis']
-        if biosample.boolean!=False and biosample.count!=False and biosample.record!=False:
+        if biosample.endpoint_name != '':
             response['entryTypes'][biosample.id]==response['entryTypes']['biosample']
             if biosample.id != 'biosample':
                 del response['entryTypes']['biosample']
@@ -348,7 +348,7 @@ def build_configuration(self):
             response['entryTypes'][biosample.id]['nonFilteredQueriesAllowed']=biosample.allow_queries_without_filters
         else:
             del response['entryTypes']['biosample']
-        if cohort.boolean!=False and cohort.count!=False and cohort.record!=False:
+        if cohort.endpoint_name!='':
             response['entryTypes'][cohort.id]==response['entryTypes']['cohort']
             if cohort.id != 'cohort':
                 del response['entryTypes']['cohort']
@@ -366,7 +366,7 @@ def build_configuration(self):
             response['entryTypes'][cohort.id]['nonFilteredQueriesAllowed']=cohort.allow_queries_without_filters
         else:
             del response['entryTypes']['cohort']
-        if dataset.boolean!=False and dataset.count!=False and dataset.record!=False:
+        if dataset.endpoint_name!='':
             response['entryTypes'][dataset.id]==response['entryTypes']['dataset']
             if dataset.id != 'dataset':
                 del response['entryTypes']['dataset']
@@ -384,7 +384,7 @@ def build_configuration(self):
             response['entryTypes'][dataset.id]['nonFilteredQueriesAllowed']=dataset.allow_queries_without_filters
         else:
             del response['entryTypes']['dataset']
-        if genomicVariant.boolean!=False and genomicVariant.count!=False and genomicVariant.record!=False:
+        if genomicVariant.endpoint_name!='':
             response['entryTypes'][genomicVariant.id]==response['entryTypes']['genomicVariant']
             if genomicVariant.id != 'genomicVariant':
                 del response['entryTypes']['genomicVariant']
@@ -402,7 +402,7 @@ def build_configuration(self):
             response['entryTypes'][genomicVariant.id]['nonFilteredQueriesAllowed']=genomicVariant.allow_queries_without_filters
         else:
             del response['entryTypes']['genomicVariant']
-        if individual.boolean!=False and individual.count!=False and individual.record!=False:
+        if individual.endpoint_name!='':
             response['entryTypes'][individual.id]==response['entryTypes']['individual']
             if individual.id != 'individual':
                 del response['entryTypes']['individual']
@@ -420,7 +420,7 @@ def build_configuration(self):
             response['entryTypes'][individual.id]['nonFilteredQueriesAllowed']=individual.allow_queries_without_filters
         else:
             del response['entryTypes']['individual']
-        if run.boolean!=False and run.count!=False and run.record!=False:
+        if run.endpoint_name!='':
             response['entryTypes'][run.id]==response['entryTypes']['run']
             if run.id != 'run':
                 del response['entryTypes']['run']
@@ -470,7 +470,7 @@ def build_map(self):
         with open('beacon/response/templates/map.json', 'r') as template:
             response = json.load(template)
 
-        if analysis.boolean!=False and analysis.count!=False and analysis.record!=False:
+        if analysis.endpoint_name!='':
             response["endpointSets"][analysis.id]=response["endpointSets"]['analysis']
             response["endpointSets"][analysis.id]["entryType"]=analysis.id
             response["endpointSets"][analysis.id]["openAPIEndpointsDefinition"]=analysis.open_api_endpoints_definition
@@ -515,7 +515,7 @@ def build_map(self):
                     del response["endpointSets"][analysis.id]["endpoints"]["run"]
                 response["endpointSets"][analysis.id]["endpoints"][run.id]["returnedEntryType"]=run.id
                 response["endpointSets"][analysis.id]["endpoints"][run.id]["url"]=conf.uri+analysis.endpoint_name+'/{id}/'+run.endpoint_name
-        if biosample.boolean!=False and biosample.count!=False and biosample.record!=False:
+        if biosample.endpoint_name!='':
             response["endpointSets"][biosample.id]=response["endpointSets"]['biosample']
             response["endpointSets"][biosample.id]["entryType"]=biosample.id
             response["endpointSets"][biosample.id]["openAPIEndpointsDefinition"]=biosample.open_api_endpoints_definition
@@ -560,7 +560,7 @@ def build_map(self):
                     del response["endpointSets"][biosample.id]["endpoints"]["run"]
                 response["endpointSets"][biosample.id]["endpoints"][run.id]["returnedEntryType"]=run.id
                 response["endpointSets"][biosample.id]["endpoints"][run.id]["url"]=conf.uri+biosample.endpoint_name+'/{id}/'+run.endpoint_name
-        if cohort.boolean!=False and cohort.count!=False and cohort.record!=False:
+        if cohort.endpoint_name!='':
             response["endpointSets"][cohort.id]=response["endpointSets"]['cohort']
             response["endpointSets"][cohort.id]["entryType"]=cohort.id
             response["endpointSets"][cohort.id]["openAPIEndpointsDefinition"]=cohort.open_api_endpoints_definition
@@ -605,7 +605,7 @@ def build_map(self):
                     del response["endpointSets"][cohort.id]["endpoints"]["run"]
                 response["endpointSets"][cohort.id]["endpoints"][run.id]["returnedEntryType"]=run.id
                 response["endpointSets"][cohort.id]["endpoints"][run.id]["url"]=conf.uri+cohort.endpoint_name+'/{id}/'+run.endpoint_name
-        if dataset.boolean!=False and dataset.count!=False and dataset.record!=False:
+        if dataset.endpoint_name!='':
             response["endpointSets"][dataset.id]=response["endpointSets"]['dataset']
             response["endpointSets"][dataset.id]["entryType"]=dataset.id
             response["endpointSets"][dataset.id]["openAPIEndpointsDefinition"]=dataset.open_api_endpoints_definition
@@ -650,7 +650,7 @@ def build_map(self):
                     del response["endpointSets"][dataset.id]["endpoints"]["run"]
                 response["endpointSets"][dataset.id]["endpoints"][run.id]["returnedEntryType"]=run.id
                 response["endpointSets"][dataset.id]["endpoints"][run.id]["url"]=conf.uri+dataset.endpoint_name+'/{id}/'+run.endpoint_name
-        if genomicVariant.boolean!=False and genomicVariant.count!=False and genomicVariant.record!=False:
+        if genomicVariant.endpoint_name!='':
             response["endpointSets"][genomicVariant.id]=response["endpointSets"]['genomicVariant']
             response["endpointSets"][genomicVariant.id]["entryType"]=genomicVariant.id
             response["endpointSets"][genomicVariant.id]["openAPIEndpointsDefinition"]=genomicVariant.open_api_endpoints_definition
@@ -695,7 +695,7 @@ def build_map(self):
                     del response["endpointSets"][genomicVariant.id]["endpoints"]["run"]
                 response["endpointSets"][genomicVariant.id]["endpoints"][run.id]["returnedEntryType"]=run.id
                 response["endpointSets"][genomicVariant.id]["endpoints"][run.id]["url"]=conf.uri+genomicVariant.endpoint_name+'/{id}/'+run.endpoint_name
-        if individual.boolean!=False and individual.count!=False and individual.record!=False:
+        if individual.endpoint_name!='':
             response["endpointSets"][individual.id]=response["endpointSets"]['individual']
             response["endpointSets"][individual.id]["entryType"]=individual.id
             response["endpointSets"][individual.id]["openAPIEndpointsDefinition"]=individual.open_api_endpoints_definition
@@ -740,7 +740,7 @@ def build_map(self):
                     del response["endpointSets"][individual.id]["endpoints"]["run"]
                 response["endpointSets"][individual.id]["endpoints"][run.id]["returnedEntryType"]=run.id
                 response["endpointSets"][individual.id]["endpoints"][run.id]["url"]=conf.uri+individual.endpoint_name+'/{id}/'+run.endpoint_name
-        if run.boolean!=False and run.count!=False and run.record!=False:
+        if run.endpoint_name!='':
             response["endpointSets"][run.id]=response["endpointSets"]['run']
             response["endpointSets"][run.id]["entryType"]=run.id
             response["endpointSets"][run.id]["openAPIEndpointsDefinition"]=run.open_api_endpoints_definition

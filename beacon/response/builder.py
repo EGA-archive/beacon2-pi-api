@@ -3,51 +3,45 @@ from beacon.response.catalog import build_beacon_record_response_by_dataset, bui
 from beacon.logs.logs import log_with_args, LOG
 from beacon.conf.conf import level, max_beacon_granularity, test_datasetId
 from beacon.request.classes import Granularity
-from beacon.source.manage import analyses, biosamples, cohorts, datasets, g_variants, individuals, runs, filtering_terms
+from beacon.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run, filtering_terms
 
 @log_with_args(level)
 async def builder(self, request: Request, datasets, qparams, entry_type, entry_id):
     granularity = qparams.query.requested_granularity
     try:
-        if '_' in entry_type and 'g_variants' not in entry_type:
+        if '_' in entry_type and genomicVariant.endpoint_name not in entry_type:
             source_entry_type = entry_type.split('_')
             source_entry_type = source_entry_type[1]
-            if source_entry_type == 'analyses':
-                source = analyses['database']
-                source_granularity = analyses['granularity']
-            elif source_entry_type == 'biosamples':
-                source = biosamples['database']
-                source_granularity = biosamples['granularity']
-            elif source_entry_type == 'individuals':
-                source = individuals['database']
-                source_granularity = individuals['granularity']
-            elif source_entry_type == 'runs':
-                source = runs['database']
-                source_granularity = runs['granularity']
-        elif entry_type == 'g_variants':
-            source = g_variants['database']
-            source_granularity = g_variants['granularity']
+            if source_entry_type == analysis.endpoint_name:
+                source = analysis.database
+                allowed_granularity = analysis.granularity
+            elif source_entry_type == biosample.endpoint_name:
+                source = biosample.database
+                allowed_granularity = biosample.granularity
+            elif source_entry_type == individual.endpoint_name:
+                source = individual.database
+                allowed_granularity = individual.granularity
+            elif source_entry_type == run.endpoint_name:
+                source = run.database
+                allowed_granularity = run.granularity
+        elif entry_type == genomicVariant.endpoint_name:
+            source = genomicVariant.database
+            allowed_granularity = genomicVariant.granularity
         elif '_' in entry_type:
-            source = g_variants['database']
-            source_granularity = g_variants['granularity']
-        elif entry_type == 'analyses':
-            source = analyses['database']
-            source_granularity = analyses['granularity']
-        elif entry_type == 'biosamples':
-            source = biosamples['database']
-            source_granularity = biosamples['granularity']
-        elif entry_type == 'individuals':
-            source = individuals['database']
-            source_granularity = individuals['granularity']
-        elif entry_type == 'runs':
-            source = runs['database']
-            source_granularity = runs['granularity']
-        if source_granularity['record']==True:
-            allowed_granularity='record'
-        elif source_granularity['count']==True:# pragma: no cover
-            allowed_granularity='count'
-        else:# pragma: no cover
-            allowed_granularity='boolean'
+            source = genomicVariant.database
+            allowed_granularity = genomicVariant.granularity
+        elif entry_type == analysis.endpoint_name:
+            source = analysis.database
+            allowed_granularity = analysis.granularity
+        elif entry_type == biosample.endpoint_name:
+            source = biosample.database
+            allowed_granularity = biosample.granularity
+        elif entry_type == individual.endpoint_name:
+            source = individual.database
+            allowed_granularity = individual.granularity
+        elif entry_type == run.endpoint_name:
+            source = run.database
+            allowed_granularity = run.granularity
         complete_module='beacon.connections.'+source+'.executor'
         import importlib
         module = importlib.import_module(complete_module, package=None)
@@ -74,10 +68,10 @@ async def builder(self, request: Request, datasets, qparams, entry_type, entry_i
 @log_with_args(level)
 async def collection_builder(self, request: Request, qparams, entry_type, entry_id):
     try:
-        if entry_type == 'datasets':
-            source = datasets['database']
-        elif entry_type == 'cohorts':
-            source = cohorts['database']
+        if entry_type == dataset.endpoint_name:
+            source = dataset.database
+        elif entry_type == cohort.endpoint_name:
+            source = cohort.database
         complete_module='beacon.connections.'+source+'.executor'
         import importlib
         module = importlib.import_module(complete_module, package=None)
@@ -141,7 +135,7 @@ async def service_info_builder(self, request: Request):
 
 @log_with_args(level)
 async def filtering_terms_builder(self, request: Request, qparams):
-    source=filtering_terms['database']
+    source=filtering_terms.database
     complete_module='beacon.connections.'+source+'.filtering_terms'
     import importlib
     module = importlib.import_module(complete_module, package=None)

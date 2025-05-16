@@ -354,7 +354,7 @@ async def create_api():# pragma: no cover
     app.add_routes([web.get('/api/configuration', Configuration)])
     app.add_routes([web.get('/api/map', Map)])
     app.add_routes([web.get('/api/filtering_terms', FilteringTerms)])
-    if dataset.boolean!=False and dataset.count!=False and dataset.record!=False:
+    if dataset.endpoint_name != '':
         app.add_routes([web.post('/api/'+dataset.endpoint_name, Collection)])
         app.add_routes([web.get('/api/'+dataset.endpoint_name, Collection)])
         if dataset.singleEntryUrl == True:
@@ -378,7 +378,7 @@ async def create_api():# pragma: no cover
         if dataset.run_lookup == True:
             app.add_routes([web.post('/api/'+dataset.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
             app.add_routes([web.get('/api/'+dataset.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
-    if cohort.boolean!=False and cohort.count!=False and cohort.record!=False:
+    if cohort.endpoint_name != '':
         app.add_routes([web.post('/api/'+cohort.endpoint_name, Collection)])
         app.add_routes([web.get('/api/'+cohort.endpoint_name, Collection)])
         if cohort.singleEntryUrl == True:
@@ -402,7 +402,7 @@ async def create_api():# pragma: no cover
         if cohort.run_lookup == True:
             app.add_routes([web.post('/api/'+cohort.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
             app.add_routes([web.get('/api/'+cohort.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
-    if analysis.boolean!=False and analysis.count!=False and analysis.record!=False:
+    if analysis.endpoint_name != '':
         app.add_routes([web.post('/api/'+analysis.endpoint_name, Resultset)])
         app.add_routes([web.get('/api/'+analysis.endpoint_name, Resultset)])
         if analysis.singleEntryUrl == True:
@@ -426,7 +426,7 @@ async def create_api():# pragma: no cover
         if analysis.run_lookup == True:
             app.add_routes([web.post('/api/'+analysis.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
             app.add_routes([web.get('/api/'+analysis.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
-    if biosample.boolean!=False and biosample.count!=False and biosample.record!=False:
+    if biosample.endpoint_name != '':
         app.add_routes([web.post('/api/'+biosample.endpoint_name, Resultset)])
         app.add_routes([web.get('/api/'+biosample.endpoint_name, Resultset)])
         if biosample.singleEntryUrl == True:
@@ -450,7 +450,7 @@ async def create_api():# pragma: no cover
         if biosample.run_lookup == True:
             app.add_routes([web.post('/api/'+biosample.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
             app.add_routes([web.get('/api/'+biosample.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
-    if genomicVariant.boolean!=False and genomicVariant.count!=False and genomicVariant.record!=False:
+    if genomicVariant.endpoint_name != '':
         app.add_routes([web.post('/api/'+genomicVariant.endpoint_name, Resultset)])
         app.add_routes([web.get('/api/'+genomicVariant.endpoint_name, Resultset)])
         if genomicVariant.singleEntryUrl == True:
@@ -474,7 +474,7 @@ async def create_api():# pragma: no cover
         if genomicVariant.run_lookup == True:
             app.add_routes([web.post('/api/'+genomicVariant.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
             app.add_routes([web.get('/api/'+genomicVariant.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
-    if individual.boolean!=False and individual.count!=False and individual.record!=False:
+    if individual.endpoint_name != '':
         app.add_routes([web.post('/api/'+individual.endpoint_name, Resultset)])
         app.add_routes([web.get('/api/'+individual.endpoint_name, Resultset)])
         if individual.singleEntryUrl == True:
@@ -498,7 +498,7 @@ async def create_api():# pragma: no cover
         if individual.run_lookup == True:
             app.add_routes([web.post('/api/'+individual.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
             app.add_routes([web.get('/api/'+individual.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
-    if run.boolean!=False and run.count!=False and run.record!=False:
+    if run.endpoint_name != '':
         app.add_routes([web.post('/api/'+run.endpoint_name, Resultset)])
         app.add_routes([web.get('/api/'+run.endpoint_name, Resultset)])
         if run.singleEntryUrl == True:
