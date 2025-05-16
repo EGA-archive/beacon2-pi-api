@@ -9,6 +9,7 @@ from beacon.connections.mongo.filters import apply_filters
 from beacon.connections.mongo.utils import get_docs_by_response_type, query_id, get_cross_query
 from beacon.connections.mongo.request_parameters import apply_request_parameters
 from beacon.request.classes import ErrorClass
+from beacon.conf import individual, analysis, genomicVariant, run, biosample
 
 @log_with_args_mongo(level)
 def get_datasets(self):
@@ -77,7 +78,7 @@ def get_dataset_with_id(self, entry_id: Optional[str], qparams: RequestParams):
 
 @log_with_args_mongo(level)
 def get_variants_of_dataset(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
-    collection = 'datasets'
+    collection = genomicVariant.endpoint_name
     mongo_collection = client.beacon.genomicVariations
     dataset_count=0
     limit = qparams.query.pagination.limit
@@ -103,7 +104,7 @@ def get_variants_of_dataset(self, entry_id: Optional[str], qparams: RequestParam
 
 @log_with_args_mongo(level)
 def get_biosamples_of_dataset(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
-    collection = 'datasets'
+    collection = biosample.endpoint_name
     mongo_collection = client.beacon.biosamples
     dataset_count=0
     limit = qparams.query.pagination.limit
@@ -129,7 +130,7 @@ def get_biosamples_of_dataset(self, entry_id: Optional[str], qparams: RequestPar
 
 @log_with_args_mongo(level)
 def get_individuals_of_dataset(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
-    collection = 'datasets'
+    collection = individual.endpoint_name
     mongo_collection = client.beacon.individuals
     dataset_count=0
     limit = qparams.query.pagination.limit
@@ -155,7 +156,7 @@ def get_individuals_of_dataset(self, entry_id: Optional[str], qparams: RequestPa
 
 @log_with_args_mongo(level)
 def get_runs_of_dataset(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
-    collection = 'datasets'
+    collection = run.endpoint_name
     mongo_collection = client.beacon.runs
     dataset_count=0
     limit = qparams.query.pagination.limit
@@ -185,7 +186,7 @@ def get_runs_of_dataset(self, entry_id: Optional[str], qparams: RequestParams, d
 
 @log_with_args_mongo(level)
 def get_analyses_of_dataset(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
-    collection = 'datasets'
+    collection = analysis.endpoint_name
     idq="biosampleId"
     mongo_collection = client.beacon.analyses
     dataset_count=0

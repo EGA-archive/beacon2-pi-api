@@ -8,10 +8,11 @@ from typing import Optional
 from beacon.connections.mongo.utils import get_count, get_documents, get_documents_for_cohorts
 from beacon.connections.mongo.utils import get_docs_by_response_type, query_id, get_cross_query
 import yaml
+from beacon.conf import cohort, individual, analysis, genomicVariant, run, biosample
 
 @log_with_args_mongo(level)
 def get_cohorts(self, entry_id: Optional[str], qparams: RequestParams):
-    collection = 'cohorts'
+    collection = cohort.endpoint_name
     limit = qparams.query.pagination.limit
     query = apply_filters(self, {}, qparams.query.filters, collection, {}, "a")
     schema = DefaultSchemas.COHORTS
@@ -29,7 +30,7 @@ def get_cohorts(self, entry_id: Optional[str], qparams: RequestParams):
 
 @log_with_args_mongo(level)
 def get_cohort_with_id(self, entry_id: Optional[str], qparams: RequestParams):
-    collection = 'cohorts'
+    collection = cohort.endpoint_name
     limit = qparams.query.pagination.limit
     query = apply_filters(self, {}, qparams.query.filters, collection, {}, "a")
     query = query_id(self, query, entry_id)
@@ -48,7 +49,7 @@ def get_cohort_with_id(self, entry_id: Optional[str], qparams: RequestParams):
 
 @log_with_args_mongo(level)
 def get_individuals_of_cohort(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
-    collection = 'cohorts'
+    collection = individual.endpoint_name
     mongo_collection = client.beacon.individuals
     dataset_count=0
     limit = qparams.query.pagination.limit
@@ -76,7 +77,7 @@ def get_individuals_of_cohort(self, entry_id: Optional[str], qparams: RequestPar
 
 @log_with_args_mongo(level)
 def get_analyses_of_cohort(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
-    collection = 'cohorts'
+    collection = analysis.endpoint_name
     mongo_collection = client.beacon.analyses
     dataset_count=0
     limit = qparams.query.pagination.limit
@@ -103,7 +104,7 @@ def get_analyses_of_cohort(self, entry_id: Optional[str], qparams: RequestParams
 
 @log_with_args_mongo(level)
 def get_variants_of_cohort(self,entry_id: Optional[str], qparams: RequestParams, dataset: str):
-    collection = 'cohorts'
+    collection = genomicVariant.endpoint_name
     mongo_collection = client.beacon.genomicVariations
     dataset_count=0
     limit = qparams.query.pagination.limit
@@ -149,7 +150,7 @@ def get_variants_of_cohort(self,entry_id: Optional[str], qparams: RequestParams,
 
 @log_with_args_mongo(level)
 def get_runs_of_cohort(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
-    collection = 'cohorts'
+    collection = run.endpoint_name
     mongo_collection = client.beacon.runs
     dataset_count=0
     limit = qparams.query.pagination.limit
@@ -176,7 +177,7 @@ def get_runs_of_cohort(self, entry_id: Optional[str], qparams: RequestParams, da
 
 @log_with_args_mongo(level)
 def get_biosamples_of_cohort(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
-    collection = 'cohorts'
+    collection = biosample.endpoint_name
     mongo_collection = client.beacon.biosamples
     dataset_count=0
     limit = qparams.query.pagination.limit
