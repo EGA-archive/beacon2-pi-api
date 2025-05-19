@@ -9,8 +9,8 @@ from beacon.conf import analysis, biosample, cohort, dataset, genomicVariant, in
 async def builder(self, request: Request, datasets, qparams, entry_type, entry_id):
     granularity = qparams.query.requested_granularity
     try:
-        if '_' in entry_type and genomicVariant.endpoint_name not in entry_type:
-            source_entry_type = entry_type.split('_')
+        if '.' in entry_type and genomicVariant.endpoint_name not in entry_type:
+            source_entry_type = entry_type.split('.')
             source_entry_type = source_entry_type[1]
             if source_entry_type == analysis.endpoint_name:
                 source = analysis.database
@@ -27,7 +27,7 @@ async def builder(self, request: Request, datasets, qparams, entry_type, entry_i
         elif entry_type == genomicVariant.endpoint_name:
             source = genomicVariant.database
             allowed_granularity = genomicVariant.granularity
-        elif '_' in entry_type:
+        elif '.' in entry_type:
             source = genomicVariant.database
             allowed_granularity = genomicVariant.granularity
         elif entry_type == analysis.endpoint_name:

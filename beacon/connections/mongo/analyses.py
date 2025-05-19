@@ -57,12 +57,6 @@ def get_analysis_with_id(self, entry_id: Optional[str], qparams: RequestParams, 
 
 @log_with_args(level)
 def get_variants_of_analysis(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
-    collection = genomicVariant.endpoint_name
-    mongo_collection = genomicVariations
-    query = {"$and": [{"id": entry_id}]}
-    query = apply_filters(self, query, qparams.query.filters, collection, {}, dataset)
-    analysis_ids = analyses \
-        .find_one(query, {"biosampleId": 1, "_id": 0})
     try:
         targets = client.beacon.targets \
             .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})

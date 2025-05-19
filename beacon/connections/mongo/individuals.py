@@ -58,6 +58,7 @@ def get_individual_with_id(self, entry_id: Optional[str], qparams: RequestParams
 @log_with_args(level)
 def get_variants_of_individual(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
     collection = genomicVariant.endpoint_name
+    mongo_collection = genomicVariations
     try:
         targets = client.beacon.targets \
             .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
@@ -86,7 +87,6 @@ def get_variants_of_individual(self, entry_id: Optional[str], qparams: RequestPa
         listHGVS.append(justid)
     queryHGVS["$in"]=listHGVS
     query["identifiers.genomicHGVSId"]=queryHGVS
-    mongo_collection = genomicVariations
     query, parameters_as_filters = apply_request_parameters(self, query, qparams, dataset)
     query = apply_filters(self, query, qparams.query.filters, collection, {}, dataset)
     schema = DefaultSchemas.GENOMICVARIATIONS

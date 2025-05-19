@@ -161,7 +161,7 @@ class Collection(EndpointView):
             qparams = await get_qparams(self, post_data, self.request) 
             path_list = self.request.path.split('/')
             if len(path_list) > 4:
-                entry_type=path_list[2]+'_'+path_list[4]# pragma: no cover
+                entry_type=path_list[2]+'.'+path_list[4]# pragma: no cover
             else:
                 entry_type=path_list[2]
             entry_id = self.request.match_info.get('id', None)
@@ -184,7 +184,7 @@ class Collection(EndpointView):
             qparams = await get_qparams(self, post_data, request) 
             path_list = self.request.path.split('/')
             if len(path_list) > 4:
-                entry_type=path_list[2]+'_'+path_list[4]# pragma: no cover
+                entry_type=path_list[2]+'.'+path_list[4]# pragma: no cover
             else:
                 entry_type=path_list[2]
             entry_id = self.request.match_info.get('id', None)
@@ -256,7 +256,7 @@ class Resultset(EndpointView):
             qparams = await get_qparams(self, post_data, self.request) 
             path_list = self.request.path.split('/')
             if len(path_list) > 4:
-                entry_type=path_list[2]+'_'+path_list[4]
+                entry_type=path_list[2]+'.'+path_list[4]
             else:
                 entry_type=path_list[2]
             entry_id = self.request.match_info.get('id', None)
@@ -281,7 +281,7 @@ class Resultset(EndpointView):
             qparams = await get_qparams(self, post_data, request) 
             path_list = self.request.path.split('/')
             if len(path_list) > 4:
-                entry_type=path_list[2]+'_'+path_list[4]# pragma: no cover
+                entry_type=path_list[2]+'.'+path_list[4]# pragma: no cover
             else:
                 entry_type=path_list[2]
             entry_id = self.request.match_info.get('id', None)

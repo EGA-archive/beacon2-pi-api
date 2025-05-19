@@ -9,7 +9,6 @@ from beacon.connections.mongo.filters import apply_filters
 from beacon.connections.mongo.request_parameters import apply_request_parameters
 from typing import Optional
 from beacon.conf import biosample, genomicVariant, analysis, run
-from beacon.connections.mongo.__init__ import biosamples, genomicVariations, analyses, runs
 
 @log_with_args(level)
 def get_biosamples(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
@@ -116,7 +115,7 @@ def get_analyses_of_biosample(self, entry_id: Optional[str], qparams: RequestPar
 @log_with_args(level)
 def get_runs_of_biosample(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
     collection = run.endpoint_name
-    mongo_collection = runs
+    mongo_collection = client.beacon.runs
     query = {"individualId": entry_id}
     query = apply_filters(self, query, qparams.query.filters, collection, {}, dataset)
     schema = DefaultSchemas.RUNS
