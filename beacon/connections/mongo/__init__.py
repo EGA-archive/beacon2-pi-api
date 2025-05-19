@@ -29,3 +29,12 @@ except Exception as e:
     ErrorClass.error_code=500
     ErrorClass.error_message=str(e)
     raise
+
+# Collections clients
+analyses=client.beacon.analyses
+biosamples=client.beacon.biosamples
+cohorts=client.beacon.cohorts
+datasets=client.beacon.datasets
+genomicVariations=client.beacon.genomicVariations
+individuals=client.beacon.individuals
+runs=client.beacon.runs

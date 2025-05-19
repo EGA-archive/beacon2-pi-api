@@ -9,11 +9,12 @@ from beacon.connections.mongo.request_parameters import apply_request_parameters
 from typing import Optional
 from bson import json_util
 from beacon.conf import genomicVariant, biosample, individual, run, analysis
+from beacon.connections.mongo.__init__ import biosamples, genomicVariations, analyses, runs, individuals
 
 @log_with_args(level)
 def get_variants(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
     collection = genomicVariant.endpoint_name
-    mongo_collection = client.beacon.genomicVariations
+    mongo_collection = genomicVariations
     parameters_as_filters=False
     query_parameters, parameters_as_filters = apply_request_parameters(self, {}, qparams, dataset)
     if parameters_as_filters == True and query_parameters != {'$and': []}:
@@ -40,7 +41,7 @@ def get_variants(self, entry_id: Optional[str], qparams: RequestParams, dataset:
 @log_with_args(level)
 def get_variant_with_id(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
     collection = genomicVariant.endpoint_name
-    mongo_collection = client.beacon.genomicVariations
+    mongo_collection = genomicVariations
     query = {"$and": [{"variantInternalId": entry_id}]}
     query_parameters, parameters_as_filters = apply_request_parameters(self, query, qparams, dataset)
     if parameters_as_filters == True:
@@ -62,7 +63,7 @@ def get_variant_with_id(self, entry_id: Optional[str], qparams: RequestParams, d
 @log_with_args(level)
 def get_biosamples_of_variant(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
     collection = biosample.endpoint_name
-    mongo_collection = client.beacon.biosamples
+    mongo_collection = biosamples
     query = {"$and": [{"variantInternalId": entry_id}]}
     query_parameters, parameters_as_filters = apply_request_parameters(self, query, qparams, dataset)
     if parameters_as_filters == True and query_parameters != {'$and': []}:
@@ -147,7 +148,7 @@ def get_biosamples_of_variant(self, entry_id: Optional[str], qparams: RequestPar
 @log_with_args(level)
 def get_runs_of_variant(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
     collection = run.endpoint_name
-    mongo_collection = client.beacon.runs
+    mongo_collection = runs
     query = {"$and": [{"variantInternalId": entry_id}]}
     query_parameters, parameters_as_filters = apply_request_parameters(self, query, qparams, dataset)
     if parameters_as_filters == True and query_parameters != {'$and': []}:
@@ -231,7 +232,7 @@ def get_runs_of_variant(self, entry_id: Optional[str], qparams: RequestParams, d
 @log_with_args(level)
 def get_analyses_of_variant(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
     collection = analysis.endpoint_name
-    mongo_collection = client.beacon.analyses
+    mongo_collection = analyses
     query = {"$and": [{"variantInternalId": entry_id}]}
     query_parameters, parameters_as_filters = apply_request_parameters(self, query, qparams, dataset)
     if parameters_as_filters == True and query_parameters != {'$and': []}:
@@ -315,7 +316,7 @@ def get_analyses_of_variant(self, entry_id: Optional[str], qparams: RequestParam
 @log_with_args(level)
 def get_individuals_of_variant(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
     collection = individual.endpoint_name
-    mongo_collection = client.beacon.individuals
+    mongo_collection = individuals
     query = {"$and": [{"variantInternalId": entry_id}]}
     query_parameters, parameters_as_filters = apply_request_parameters(self, query, qparams, dataset)
     if parameters_as_filters == True and query_parameters != {'$and': []}:

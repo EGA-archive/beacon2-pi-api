@@ -9,11 +9,12 @@ from beacon.connections.mongo.filters import apply_filters
 from beacon.connections.mongo.request_parameters import apply_request_parameters
 from typing import Optional
 from beacon.conf import run, analysis, genomicVariant
+from beacon.connections.mongo.__init__ import genomicVariations, analyses, runs
 
 @log_with_args(level)
 def get_runs(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
     collection = run.endpoint_name
-    mongo_collection = client.beacon.runs
+    mongo_collection = runs
     parameters_as_filters=False
     query_parameters, parameters_as_filters = apply_request_parameters(self, {}, qparams, dataset)
     if parameters_as_filters == True:
@@ -37,7 +38,7 @@ def get_runs(self, entry_id: Optional[str], qparams: RequestParams, dataset: str
 @log_with_args(level)
 def get_run_with_id(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
     collection = run.endpoint_name
-    mongo_collection = client.beacon.runs
+    mongo_collection = runs
     query = apply_filters(self, {}, qparams.query.filters, collection, {}, dataset)
     query = query_id(self, query, entry_id)
     schema = DefaultSchemas.RUNS
@@ -53,10 +54,10 @@ def get_run_with_id(self, entry_id: Optional[str], qparams: RequestParams, datas
 @log_with_args(level)
 def get_variants_of_run(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
     collection = genomicVariant.endpoint_name
-    mongo_collection = client.beacon.genomicVariations
+    mongo_collection = genomicVariations
     query = {"$and": [{"id": entry_id}]}
     query = apply_filters(self, query, qparams.query.filters, collection, {}, dataset)
-    run_ids = client.beacon.runs \
+    run_ids = runs \
         .find_one(query, {"biosampleId": 1, "_id": 0})
     try:
         targets = client.beacon.targets \
@@ -100,7 +101,7 @@ def get_variants_of_run(self, entry_id: Optional[str], qparams: RequestParams, d
 @log_with_args(level)
 def get_analyses_of_run(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
     collection = analysis.endpoint_name
-    mongo_collection = client.beacon.analyses
+    mongo_collection = analyses
     query = {"id": entry_id}
     query = apply_filters(self, query, qparams.query.filters, collection, {}, dataset)
     schema = DefaultSchemas.RUNS

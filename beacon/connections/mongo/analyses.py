@@ -10,11 +10,12 @@ from beacon.connections.mongo.filters import apply_filters
 from beacon.connections.mongo.request_parameters import apply_request_parameters
 from typing import Optional
 from beacon.conf import analysis, genomicVariant
+from beacon.connections.mongo.__init__ import analyses, genomicVariations
 
 @log_with_args(level)
 def get_analyses(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
     collection = analysis.endpoint_name
-    mongo_collection = client.beacon.analyses
+    mongo_collection = analyses
     parameters_as_filters=False
     query_parameters, parameters_as_filters = apply_request_parameters(self, {}, qparams, dataset)
     if parameters_as_filters == True and query_parameters != {'$and': []}:# pragma: no cover
@@ -42,7 +43,7 @@ def get_analyses(self, entry_id: Optional[str], qparams: RequestParams, dataset:
 def get_analysis_with_id(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
     collection = analysis.endpoint_name
     idq="biosampleId"
-    mongo_collection = client.beacon.analyses
+    mongo_collection = analyses
     query = apply_filters(self, {}, qparams.query.filters, collection, {}, dataset)
     query = query_id(self, query, entry_id)
     schema = DefaultSchemas.ANALYSES
@@ -57,10 +58,10 @@ def get_analysis_with_id(self, entry_id: Optional[str], qparams: RequestParams, 
 @log_with_args(level)
 def get_variants_of_analysis(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
     collection = genomicVariant.endpoint_name
-    mongo_collection = client.beacon.genomicVariations
+    mongo_collection = genomicVariations
     query = {"$and": [{"id": entry_id}]}
     query = apply_filters(self, query, qparams.query.filters, collection, {}, dataset)
-    analysis_ids = client.beacon.analyses \
+    analysis_ids = analyses \
         .find_one(query, {"biosampleId": 1, "_id": 0})
     try:
         targets = client.beacon.targets \

@@ -10,11 +10,12 @@ from beacon.connections.mongo.utils import get_docs_by_response_type, query_id, 
 from beacon.connections.mongo.request_parameters import apply_request_parameters
 from beacon.request.classes import ErrorClass
 from beacon.conf import individual, analysis, genomicVariant, run, biosample
+from beacon.connections.mongo.__init__ import datasets, biosamples, genomicVariations, analyses, runs, individuals
 
 @log_with_args_mongo(level)
 def get_datasets(self):
     try:
-        collection = client.beacon.datasets
+        collection = datasets
         query = {}
         query = collection.find(query)
         return query
@@ -26,12 +27,12 @@ def get_datasets(self):
 @log_with_args_mongo(level)
 def get_full_datasets(self, entry_id: Optional[str], qparams: RequestParams):
     try:
-        collection = client.beacon.datasets
+        collection = datasets
         if entry_id == None:
             query = {}
         else:# pragma: no cover
             query = {'id': entry_id}
-        count = get_count(self, client.beacon.datasets, query)
+        count = get_count(self, datasets, query)
         query = collection.find(query)
         entity_schema = DefaultSchemas.DATASETS
         response_converted = (
@@ -64,9 +65,9 @@ def get_dataset_with_id(self, entry_id: Optional[str], qparams: RequestParams):
         query={}
     query = query_id(self, query, entry_id)
     schema = DefaultSchemas.DATASETS
-    count = get_count(self, client.beacon.datasets, query)
+    count = get_count(self, datasets, query)
     docs = get_documents(self,
-        client.beacon.datasets,
+        datasets,
         query,
         qparams.query.pagination.skip,
         qparams.query.pagination.skip*limit
@@ -79,7 +80,7 @@ def get_dataset_with_id(self, entry_id: Optional[str], qparams: RequestParams):
 @log_with_args_mongo(level)
 def get_variants_of_dataset(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
     collection = genomicVariant.endpoint_name
-    mongo_collection = client.beacon.genomicVariations
+    mongo_collection = genomicVariations
     dataset_count=0
     limit = qparams.query.pagination.limit
     query_count={}
@@ -105,12 +106,12 @@ def get_variants_of_dataset(self, entry_id: Optional[str], qparams: RequestParam
 @log_with_args_mongo(level)
 def get_biosamples_of_dataset(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
     collection = biosample.endpoint_name
-    mongo_collection = client.beacon.biosamples
+    mongo_collection = biosamples
     dataset_count=0
     limit = qparams.query.pagination.limit
     query = apply_filters(self, {}, qparams.query.filters, collection, {}, dataset)
     query = query_id(self, query, entry_id)
-    count = get_count(self, client.beacon.datasets, query)
+    count = get_count(self, datasets, query)
     dict_in={}
     if dataset == entry_id:
         dict_in['datasetId']=entry_id
@@ -131,12 +132,12 @@ def get_biosamples_of_dataset(self, entry_id: Optional[str], qparams: RequestPar
 @log_with_args_mongo(level)
 def get_individuals_of_dataset(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
     collection = individual.endpoint_name
-    mongo_collection = client.beacon.individuals
+    mongo_collection = individuals
     dataset_count=0
     limit = qparams.query.pagination.limit
     query = apply_filters(self, {}, qparams.query.filters, collection, {}, dataset)
     query = query_id(self, query, entry_id)
-    count = get_count(self, client.beacon.datasets, query)
+    count = get_count(self, datasets, query)
     dict_in={}
     if dataset == entry_id:
         dict_in['datasetId']=entry_id
@@ -157,12 +158,12 @@ def get_individuals_of_dataset(self, entry_id: Optional[str], qparams: RequestPa
 @log_with_args_mongo(level)
 def get_runs_of_dataset(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
     collection = run.endpoint_name
-    mongo_collection = client.beacon.runs
+    mongo_collection = runs
     dataset_count=0
     limit = qparams.query.pagination.limit
     query = apply_filters(self, {}, qparams.query.filters, collection, {}, dataset)
     query = query_id(self, query, entry_id)
-    count = get_count(self, client.beacon.datasets, query)
+    count = get_count(self, datasets, query)
     dict_in={}
     dict_in={}
     if dataset == entry_id:
@@ -188,12 +189,12 @@ def get_runs_of_dataset(self, entry_id: Optional[str], qparams: RequestParams, d
 def get_analyses_of_dataset(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
     collection = analysis.endpoint_name
     idq="biosampleId"
-    mongo_collection = client.beacon.analyses
+    mongo_collection = analyses
     dataset_count=0
     limit = qparams.query.pagination.limit
     query = apply_filters(self, {}, qparams.query.filters, collection, {}, dataset)
     query = query_id(self, query, entry_id)
-    count = get_count(self, client.beacon.datasets, query)
+    count = get_count(self, datasets, query)
     dict_in={}
     dict_in={}
     if dataset == entry_id:
