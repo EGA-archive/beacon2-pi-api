@@ -222,8 +222,19 @@ def get_analyses_of_resultSet(self, entry_id: Optional[str], qparams: RequestPar
 
 @log_with_args(level)
 def get_biosamples_of_resultSet(self, entry_id: Optional[str], qparams: RequestParams, dataset: str, collection, mongo_collection, schema, idq, entry_type):
-    query = {"individualId": entry_id}
-    query, parameters_as_filters = apply_request_parameters(self, query, qparams, dataset)
+    if idq == "analysisId" or idq == 'runId':
+        if idq == 'analysisId':
+            secondary_collection = client.beacon.analyses
+        else:
+            secondary_collection = client.beacon.runs
+        items_found = secondary_collection \
+        .find({"id": entry_id, "datasetId": dataset}, {"biosampleId": 1, "_id": 0})
+        list_of_itemsfound=[]
+        for itemfound in items_found:
+            list_of_itemsfound.append(itemfound["biosampleId"])
+        query = {"id": {"$in": list_of_itemsfound}}
+    else:
+        query = {idq: entry_id}
     query = apply_filters(self, query, qparams.query.filters, collection, {}, dataset)
     include = qparams.query.include_resultset_responses
     limit = qparams.query.pagination.limit
@@ -341,7 +352,38 @@ def get_variants_of_cohort(self, entry_id: Optional[str], qparams: RequestParams
 
 @log_with_args(level)
 def get_runs_of_resultSet(self, entry_id: Optional[str], qparams: RequestParams, dataset: str, collection, mongo_collection, schema, idq, entry_type):
-    query = {"individualId": entry_id}
+    if idq == "analysisId":
+        analyses_found = client.beacon.analyses \
+        .find({"id": entry_id, "datasetId": dataset}, {"biosampleId": 1, "_id": 0})
+        list_of_analysisfound=[]
+        for analysisfound in analyses_found:
+            list_of_analysisfound.append(analysisfound["biosampleId"])
+        query = {"biosampleId": {"$in": list_of_analysisfound}}
+    else:
+        query = {idq: entry_id}
+    query = apply_filters(self, query, qparams.query.filters, collection, {}, dataset)
+    include = qparams.query.include_resultset_responses
+    limit = qparams.query.pagination.limit
+    skip = qparams.query.pagination.skip
+    if limit > 100 or limit == 0:
+        limit = 100# pragma: no cover
+    count, dataset_count, docs = get_docs_by_response_type(self, include, query, dataset, limit, skip, mongo_collection, idq)
+    return schema, count, dataset_count, docs, dataset
+
+@log_with_args(level)
+def get_individuals_of_resultSet(self, entry_id: Optional[str], qparams: RequestParams, dataset: str, collection, mongo_collection, schema, idq, entry_type):
+    if idq == "analysisId":
+            secondary_collection = client.beacon.analyses
+    elif idq == 'runId':
+        secondary_collection = client.beacon.runs
+    else:
+        secondary_collection = client.beacon.biosamples
+    items_found = secondary_collection \
+    .find({"id": entry_id, "datasetId": dataset}, {"individualId": 1, "_id": 0})
+    list_of_itemsfound=[]
+    for itemfound in items_found:
+        list_of_itemsfound.append(itemfound["individualId"])
+    query = {"id": {"$in": list_of_itemsfound}}
     query = apply_filters(self, query, qparams.query.filters, collection, {}, dataset)
     include = qparams.query.include_resultset_responses
     limit = qparams.query.pagination.limit
