@@ -6,7 +6,7 @@ from beacon.request.parameters import RequestParams
 from beacon.connections.mongo.datasets import get_full_datasets, get_dataset_with_id
 from beacon.connections.mongo.cohorts import get_cohorts, get_cohort_with_id
 from beacon.conf import analysis, biosample, cohort, dataset as dtaset, genomicVariant, individual, run
-from beacon.connections.mongo.resultSets import get_resultSet, get_resultSet_with_id, get_variants_of_resultSet, get_resultSet_of_variants, get_analyses_of_resultSet, get_biosamples_of_resultSet, get_resultSet_of_dataset, get_variants_of_dataset, get_resultSet_of_cohort, get_variants_of_cohort
+from beacon.connections.mongo.resultSets import get_resultSet, get_resultSet_with_id, get_variants_of_resultSet, get_resultSet_of_variants, get_analyses_of_resultSet, get_biosamples_of_resultSet, get_resultSet_of_dataset, get_variants_of_dataset, get_resultSet_of_cohort, get_variants_of_cohort, get_runs_of_resultSet
 from beacon.conf import individual, genomicVariant, biosample, run, dataset as dtaset
 from beacon.connections.mongo.__init__ import biosamples, genomicVariations, individuals, analyses, runs, datasets, cohorts
 from beacon.response.schemas import DefaultSchemas
@@ -64,11 +64,9 @@ async def execute_function(self, entry_type: str, datasets: list, qparams: Reque
         schema=DefaultSchemas.RUNS
         idq="biosampleId"
     else:
-        LOG.debug('aquiiiiiiiiii')
         entry_type_splitted = entry_type.split('.')
         entry_type = entry_type_splitted[1]
         pre_entry_type = entry_type_splitted[0]
-        LOG.debug(entry_type)
         if pre_entry_type == dtaset.endpoint_name and entry_type == analysis.endpoint_name:
             function = get_resultSet_of_dataset
             collection=analysis.endpoint_name
@@ -129,12 +127,30 @@ async def execute_function(self, entry_type: str, datasets: list, qparams: Reque
             mongo_collection=genomicVariations
             schema=DefaultSchemas.GENOMICVARIATIONS
             idq="caseLevelData.biosampleId"
-        elif pre_entry_type == genomicVariant.endpoint_name:
+        elif pre_entry_type == genomicVariant.endpoint_name and entry_type == individual.endpoint_name:
             function = get_resultSet_of_variants
-            collection=genomicVariant.endpoint_name
-            mongo_collection=genomicVariations
-            schema=DefaultSchemas.GENOMICVARIATIONS
-            idq="caseLevelData.biosampleId"
+            collection=individual.endpoint_name
+            mongo_collection=individuals
+            schema=DefaultSchemas.INDIVIDUALS
+            idq="id"
+        elif pre_entry_type == genomicVariant.endpoint_name and entry_type == biosample.endpoint_name:
+            function = get_resultSet_of_variants
+            collection=biosample.endpoint_name
+            mongo_collection=biosamples
+            schema=DefaultSchemas.BIOSAMPLES
+            idq="id"
+        elif pre_entry_type == genomicVariant.endpoint_name and entry_type == analysis.endpoint_name:
+            function = get_resultSet_of_variants
+            collection=analysis.endpoint_name
+            mongo_collection=analyses
+            schema=DefaultSchemas.ANALYSES
+            idq="biosampleId"
+        elif pre_entry_type == genomicVariant.endpoint_name and entry_type == run.endpoint_name:
+            function = get_resultSet_of_variants
+            collection=run.endpoint_name
+            mongo_collection=runs
+            schema=DefaultSchemas.RUNS
+            idq="biosampleId"
         elif entry_type == genomicVariant.endpoint_name:
             function = get_variants_of_resultSet
             collection=genomicVariant.endpoint_name
@@ -153,6 +169,12 @@ async def execute_function(self, entry_type: str, datasets: list, qparams: Reque
             mongo_collection=biosamples
             schema=DefaultSchemas.BIOSAMPLES
             idq="id"
+        elif entry_type == run.endpoint_name:
+            function = get_runs_of_resultSet
+            collection=run.endpoint_name
+            mongo_collection=runs
+            schema=DefaultSchemas.RUNS
+            idq="biosampleId"
 
     loop = asyncio.get_running_loop()
 
@@ -188,7 +210,7 @@ async def execute_function(self, entry_type: str, datasets: list, qparams: Reque
     
     else:
         with ThreadPoolExecutor() as pool:
-            done, pending = await asyncio.wait(fs=[loop.run_in_executor(pool, function, self, entry_id, qparams, dataset, collection, mongo_collection, schema, idq) for dataset in datasets],
+            done, pending = await asyncio.wait(fs=[loop.run_in_executor(pool, function, self, entry_id, qparams, dataset, collection, mongo_collection, schema, idq, entry_type) for dataset in datasets],
             return_when=asyncio.ALL_COMPLETED
             )
         for task in done:

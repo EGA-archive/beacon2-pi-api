@@ -10,15 +10,9 @@ from beacon.permissions.tests import TestAuthZ
 from beacon.validator.tests import TestValidator
 from beacon.auth.tests import TestAuthN
 #from beacon.request.tests import TestRequest
-from beacon.tests.wrong_service_info import service_info_wrong
-from aiohttp.test_utils import make_mocked_request
-from beacon.response.catalog import build_beacon_error_response
-from bson import json_util
 from beacon.logs.logs import LOG
-from beacon.connections.mongo.filters import cross_query, apply_filters
-from beacon.connections.mongo.g_variants import get_analyses_of_variant
+from beacon.connections.mongo.filters import cross_query
 from unittest.mock import MagicMock
-from beacon.request.parameters import RequestMeta, RequestQuery, Pagination, RequestParams
 
 def create_app():
     app = web.Application()
