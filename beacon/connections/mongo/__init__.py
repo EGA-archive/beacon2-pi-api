@@ -30,11 +30,20 @@ except Exception as e:
     ErrorClass.error_message=str(e)
     raise
 
+# Mongo dbname
+dbname='beacon'
+
 # Collections clients
-analyses=client.beacon.analyses
-biosamples=client.beacon.biosamples
-cohorts=client.beacon.cohorts
-datasets=client.beacon.datasets
-genomicVariations=client.beacon.genomicVariations
-individuals=client.beacon.individuals
-runs=client.beacon.runs
+analyses=client[dbname].analyses
+biosamples=client[dbname].biosamples
+cohorts=client[dbname].cohorts
+datasets=client[dbname].datasets
+genomicVariations=client[dbname].genomicVariations
+individuals=client[dbname].individuals
+runs=client[dbname].runs
+filtering_terms=client[dbname].filtering_terms
+caseLevelData=client[dbname].caseLevelData
+targets=client[dbname].targets
+synonyms=client[dbname].synonyms
+similarities=client[dbname].similarities
+counts=client[dbname].counts

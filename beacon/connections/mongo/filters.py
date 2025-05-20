@@ -2,7 +2,7 @@ from typing import List, Union
 import re
 from beacon.request.parameters import AlphanumericFilter, CustomFilter, OntologyFilter, Operator, Similarity
 from beacon.connections.mongo.utils import get_documents, join_query, choose_scope
-from beacon.connections.mongo.__init__ import client
+from beacon.connections.mongo.__init__ import client, genomicVariations, individuals, datasets, cohorts, analyses, biosamples, runs, targets as targets_, caseLevelData, filtering_terms, similarities, synonyms as synonyms_
 from beacon.conf import conf
 from beacon.logs.logs import log_with_args, LOG
 from beacon.conf.conf import level
@@ -18,7 +18,7 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
         if request_parameters != {}:
             listHGVS=[]
             queryHGVS={}
-            HGVSIds = client.beacon.genomicVariations.find(request_parameters, {"identifiers.genomicHGVSId": 1, "_id": 0})
+            HGVSIds = genomicVariations.find(request_parameters, {"identifiers.genomicHGVSId": 1, "_id": 0})
             HGVSIds=list(HGVSIds)
             for HGVSId in HGVSIds:
                 justid=HGVSId["identifiers"]["genomicHGVSId"]
@@ -33,10 +33,10 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
     else:
         def_list=[]                
         if scope == 'individual' and collection == genomicVariant.endpoint_name:
-            mongo_collection=client.beacon.individuals
+            mongo_collection=individuals
             original_id="id"
             join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
-            targets = client.beacon.targets \
+            targets = targets_ \
                 .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
             bioids=targets[0]["biosampleIds"]
             positions_list=[]
@@ -56,7 +56,7 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                 query_cl["$or"].append({ position: "11", "datasetId": dataset})
                 query_cl["$or"].append({ position: "01", "datasetId": dataset})
                 query_cl["$or"].append({ position: "y", "datasetId": dataset})
-            string_of_ids = client.beacon.caseLevelData \
+            string_of_ids = caseLevelData \
                 .find(query_cl, {"id": 1, "_id": 0})
             HGVSIds=list(string_of_ids)
             query={}
@@ -68,7 +68,7 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
             queryHGVS["$in"]=listHGVS
             query["identifiers.genomicHGVSId"]=queryHGVS
         elif scope == 'individual' and collection in [run.endpoint_name,biosample.endpoint_name,analysis.endpoint_name]:
-            mongo_collection=client.beacon.individuals
+            mongo_collection=individuals
             original_id="id"
             join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
             final_id="individualId"
@@ -79,16 +79,16 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
             query={}
             query['$or']=def_list
         elif scope == 'genomicVariation' and collection == individual.endpoint_name:
-            HGVSIds = client.beacon.genomicVariations \
+            HGVSIds = genomicVariations \
                 .find(query, {"identifiers.genomicHGVSId": 1, "_id": 0})
             HGVSIds=list(HGVSIds)
             list_of_variants_found=[]
             for variant_found in HGVSIds:
                 list_of_variants_found.append(variant_found["identifiers"]["genomicHGVSId"])
             queryHGVSId={"datasetId": dataset, "id": {"$in": list_of_variants_found}}
-            string_of_ids = client.beacon.caseLevelData \
+            string_of_ids = caseLevelData \
                 .find(queryHGVSId)
-            targets = client.beacon.targets \
+            targets = targets_ \
                 .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
             targets=list(targets)
             list_of_targets=targets[0]["biosampleIds"]
@@ -103,7 +103,7 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                 for finalid in biosampleIds:
                     query = {"id": finalid}
                     finalquery["$or"].append(query)
-                individual_id = client.beacon.biosamples \
+                individual_id = biosamples \
                     .find(finalquery, {"individualId": 1, "_id": 0})
                 try:
                     finalids=[]
@@ -121,16 +121,16 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                 finalquery = {"id": finalid}
                 query["$or"].append(finalquery)
         elif scope == 'genomicVariation' and collection == biosample.endpoint_name:
-            HGVSIds = client.beacon.genomicVariations \
+            HGVSIds = genomicVariations \
                 .find(query, {"identifiers.genomicHGVSId": 1, "_id": 0})
             HGVSIds=list(HGVSIds)
             list_of_variants_found=[]
             for variant_found in HGVSIds:
                 list_of_variants_found.append(variant_found["identifiers"]["genomicHGVSId"])
             queryHGVSId={"datasetId": dataset, "id": {"$in": list_of_variants_found}}
-            string_of_ids = client.beacon.caseLevelData \
+            string_of_ids = caseLevelData \
                 .find(queryHGVSId)
-            targets = client.beacon.targets \
+            targets = targets_ \
                 .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
             targets=list(targets)
             list_of_targets=targets[0]["biosampleIds"]
@@ -148,16 +148,16 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                 finalids=[]
             query = {"$and": [{"$or": finalids}]}
         elif scope == 'genomicVariation' and collection in [analysis.endpoint_name,run.endpoint_name]:
-            HGVSIds = client.beacon.genomicVariations \
+            HGVSIds = genomicVariations \
                 .find(query, {"identifiers.genomicHGVSId": 1, "_id": 0})
             HGVSIds=list(HGVSIds)
             list_of_variants_found=[]
             for variant_found in HGVSIds:
                 list_of_variants_found.append(variant_found["identifiers"]["genomicHGVSId"])
             queryHGVSId={"datasetId": dataset, "id": {"$in": list_of_variants_found}}
-            string_of_ids = client.beacon.caseLevelData \
+            string_of_ids = caseLevelData \
                 .find(queryHGVSId)
-            targets = client.beacon.targets \
+            targets = targets_ \
                 .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
             targets=list(targets)
             list_of_targets=targets[0]["biosampleIds"]
@@ -175,11 +175,11 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                 finalids=[]
             query = {"$and": [{"$or": finalids}]}
         elif scope == 'run' and collection != run.endpoint_name:
-            mongo_collection=client.beacon.runs
+            mongo_collection=runs
             if collection == genomicVariant.endpoint_name:
                 original_id="biosampleId"
                 join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
-                targets = client.beacon.targets \
+                targets = targets_ \
                     .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
                 bioids=targets[0]["biosampleIds"]
                 positions_list=[]
@@ -197,7 +197,7 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                     query_cl["$or"].append({ position: "01", "datasetId": dataset})
                 if query_cl["$or"]==[]:
                     return query
-                string_of_ids = client.beacon.caseLevelData \
+                string_of_ids = caseLevelData \
                     .find(query_cl, {"id": 1, "_id": 0})
                 HGVSIds=list(string_of_ids)
                 query={}
@@ -239,11 +239,11 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                     query={}
                     query['$or']=def_list
         elif scope == 'analysis' and collection != analysis.endpoint_name:# pragma: no cover
-            mongo_collection=client.beacon.analyses
+            mongo_collection=analyses
             if collection == genomicVariant.endpoint_name:
                 original_id="biosampleId"
                 join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
-                targets = client.beacon.targets \
+                targets = targets_ \
                     .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
                 bioids=targets[0]["biosampleIds"]
                 positions_list=[]
@@ -261,7 +261,7 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                     query_cl["$or"].append({ position: "01", "datasetId": dataset})
                 if query_cl["$or"]==[]:
                     return query
-                string_of_ids = client.beacon.caseLevelData \
+                string_of_ids = caseLevelData \
                     .find(query_cl, {"id": 1, "_id": 0})
                 HGVSIds=list(string_of_ids)
                 query={}
@@ -303,11 +303,11 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                 query={}
                 query['$or']=def_list
         elif scope == 'biosample' and collection != biosample.endpoint_name:
-            mongo_collection=client.beacon.biosamples
+            mongo_collection=biosamples
             if collection == genomicVariant.endpoint_name:
                 original_id="id"
                 join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
-                targets = client.beacon.targets \
+                targets = targets_ \
                     .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
                 bioids=targets[0]["biosampleIds"]
                 positions_list=[]
@@ -325,7 +325,7 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                     query_cl["$or"].append({ position: "01", "datasetId": dataset})
                 if query_cl["$or"]==[]:
                     return query
-                string_of_ids = client.beacon.caseLevelData \
+                string_of_ids = caseLevelData \
                     .find(query_cl, {"id": 1, "_id": 0})
                 HGVSIds=list(string_of_ids)
                 query={}
@@ -399,7 +399,7 @@ def apply_filters(self, query: dict, filters: List[dict], collection: str, query
     if request_parameters != {}:
         try:
             if collection == individual.endpoint_name:
-                HGVSIds = client.beacon.genomicVariations \
+                HGVSIds = genomicVariations \
                     .find(request_parameters, {"identifiers.genomicHGVSId": 1, "datasetId": 1, "_id": 0})
                 HGVSIds=list(HGVSIds)
                 HGVSDataset=HGVSIds[0]["datasetId"]
@@ -407,9 +407,9 @@ def apply_filters(self, query: dict, filters: List[dict], collection: str, query
                 if dataset != HGVSDataset:# pragma: no cover
                     return {}
                 queryHGVSId={"datasetId": dataset, "id": HGVSId}
-                string_of_ids = client.beacon.caseLevelData \
+                string_of_ids = caseLevelData \
                     .find(queryHGVSId)
-                targets = client.beacon.targets \
+                targets = targets_ \
                     .find({"datasetId": HGVSDataset}, {"biosampleIds": 1, "_id": 0})
                 targets=list(targets)
                 list_of_targets=targets[0]["biosampleIds"]
@@ -424,7 +424,7 @@ def apply_filters(self, query: dict, filters: List[dict], collection: str, query
                     for finalid in biosampleIds:
                         query = {"id": finalid}
                         finalquery["$or"].append(query)
-                    individual_id = client.beacon.biosamples \
+                    individual_id = biosamples \
                         .find(finalquery, {"individualId": 1, "_id": 0})
                     try:
                         finalids=[]
@@ -447,7 +447,7 @@ def apply_filters(self, query: dict, filters: List[dict], collection: str, query
                     total_query["$and"]=[]
                     total_query["$and"].append(finalquery)
             elif collection == biosample.endpoint_name:
-                HGVSIds = client.beacon.genomicVariations \
+                HGVSIds = genomicVariations \
                     .find(request_parameters, {"identifiers.genomicHGVSId": 1, "datasetId": 1, "_id": 0})
                 HGVSIds=list(HGVSIds)
                 HGVSDataset=HGVSIds[0]["datasetId"]
@@ -455,9 +455,9 @@ def apply_filters(self, query: dict, filters: List[dict], collection: str, query
                 if dataset != HGVSDataset:# pragma: no cover
                     return {}
                 queryHGVSId={"datasetId": dataset, "id": HGVSId}
-                string_of_ids = client.beacon.caseLevelData \
+                string_of_ids = caseLevelData \
                     .find(queryHGVSId)
-                targets = client.beacon.targets \
+                targets = targets_ \
                     .find({"datasetId": HGVSDataset}, {"biosampleIds": 1, "_id": 0})
                 targets=list(targets)
                 list_of_targets=targets[0]["biosampleIds"]
@@ -479,7 +479,7 @@ def apply_filters(self, query: dict, filters: List[dict], collection: str, query
                     total_query["$and"]=[]
                     total_query["$and"].append({"$or": finalids})
             elif collection == analysis.endpoint_name or collection == run.endpoint_name:
-                HGVSIds = client.beacon.genomicVariations \
+                HGVSIds = genomicVariations \
                     .find(request_parameters, {"identifiers.genomicHGVSId": 1, "datasetId": 1, "_id": 0})
                 HGVSIds=list(HGVSIds)
                 HGVSDataset=HGVSIds[0]["datasetId"]
@@ -487,9 +487,9 @@ def apply_filters(self, query: dict, filters: List[dict], collection: str, query
                 if dataset != HGVSDataset:# pragma: no cover
                     return {}
                 queryHGVSId={"datasetId": dataset, "id": HGVSId}
-                string_of_ids = client.beacon.caseLevelData \
+                string_of_ids = caseLevelData \
                     .find(queryHGVSId)
-                targets = client.beacon.targets \
+                targets = targets_ \
                     .find({"datasetId": HGVSDataset}, {"biosampleIds": 1, "_id": 0})
                 targets=list(targets)
                 list_of_targets=targets[0]["biosampleIds"]
@@ -530,7 +530,7 @@ def apply_ontology_filter(self, query: dict, filter: OntologyFilter, collection:
     query_synonyms={}
     query_synonyms['id']=filter.id
     synonyms=get_documents(self,
-        client.beacon.synonyms,
+        synonyms_,
         query_synonyms,
         0,
         1
@@ -556,15 +556,15 @@ def apply_ontology_filter(self, query: dict, filter: OntologyFilter, collection:
         try:
             if filter.similarity == Similarity.HIGH:
                 similarity_high=[]
-                ontology_dict=client.beacon.similarities.find({"id": filter.id})
+                ontology_dict=similarities.find({"id": filter.id})
                 final_term_list = ontology_dict[0]["similarity_high"]
             elif filter.similarity == Similarity.MEDIUM:
                 similarity_medium=[]
-                ontology_dict=client.beacon.similarities.find({"id": filter.id})
+                ontology_dict=similarities.find({"id": filter.id})
                 final_term_list = ontology_dict[0]["similarity_medium"]
             elif filter.similarity == Similarity.LOW:
                 similarity_low=[]
-                ontology_dict=client.beacon.similarities.find({"id": filter.id})
+                ontology_dict=similarities.find({"id": filter.id})
                 final_term_list = ontology_dict[0]["similarity_low"]
         except Exception:
             pass
@@ -581,7 +581,7 @@ def apply_ontology_filter(self, query: dict, filter: OntologyFilter, collection:
         query_filtering['$and'].append(dict_id)
         query_filtering['$and'].append(dict_scope)
         docs = get_documents(self,
-            client.beacon.filtering_terms,
+            filtering_terms,
             query_filtering,
             0,
             1
@@ -605,7 +605,7 @@ def apply_ontology_filter(self, query: dict, filter: OntologyFilter, collection:
             query_filtering['$and'].append(dict_id)
             query_filtering['$and'].append(dict_scope)
             docs_2 = get_documents(self,
-                client.beacon.filtering_terms,
+                filtering_terms,
                 query_filtering,
                 0,
                 1
@@ -634,7 +634,7 @@ def apply_ontology_filter(self, query: dict, filter: OntologyFilter, collection:
         ontology=filter.id.replace("\n","")
         list_descendant = []
         try:
-            ontology_dict=client.beacon.similarities.find({"id": ontology})
+            ontology_dict=similarities.find({"id": ontology})
             list_descendant = ontology_dict[0]["descendants"]
             for descendant in list_descendant:
                 final_term_list.append(descendant)
@@ -658,7 +658,7 @@ def apply_ontology_filter(self, query: dict, filter: OntologyFilter, collection:
         query_filtering['$and'].append(dict_id)
         query_filtering['$and'].append(dict_scope)
         docs = get_documents(self,
-            client.beacon.filtering_terms,
+            filtering_terms,
             query_filtering,
             0,
             1
@@ -681,7 +681,7 @@ def apply_ontology_filter(self, query: dict, filter: OntologyFilter, collection:
         query_filtering['$and'].append(dict_id)
         query_filtering['$and'].append(dict_scope)
         docs_2 = get_documents(self,
-            client.beacon.filtering_terms,
+            filtering_terms,
             query_filtering,
             0,
             1
@@ -713,7 +713,7 @@ def apply_ontology_filter(self, query: dict, filter: OntologyFilter, collection:
         query_filtering['$and'].append(dict_id)
         query_filtering['$and'].append(dict_scope)
         docs = get_documents(self,
-        client.beacon.filtering_terms,
+        filtering_terms,
         query_filtering,
         0,
         1
@@ -733,7 +733,7 @@ def apply_ontology_filter(self, query: dict, filter: OntologyFilter, collection:
         query_filtering['$and'].append(dict_id)
         query_filtering['$and'].append(dict_scope)
         docs_2 = get_documents(self,
-        client.beacon.filtering_terms,
+        filtering_terms,
         query_filtering,
         0,
         1
@@ -1016,7 +1016,7 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, col
             query_filtering['$and'].append(dict_id)
             query_filtering['$and'].append(dict_scope)
             docs = get_documents(self,
-                client.beacon.filtering_terms,
+                filtering_terms,
                 query_filtering,
                 0,
                 1

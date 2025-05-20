@@ -7,7 +7,7 @@ from beacon.connections.mongo.filters import apply_filters
 from beacon.request.parameters import RequestParams
 from typing import Optional
 from beacon.connections.mongo.utils import get_docs_by_response_type, query_id
-from beacon.connections.mongo import client, genomicVariations
+from beacon.connections.mongo.__init__ import client, genomicVariations, targets as targets_, caseLevelData, biosamples, runs, cohorts, analyses, datasets
 from beacon.connections.mongo.utils import get_count, get_documents_for_cohorts
 
 @log_with_args(level)
@@ -65,7 +65,7 @@ def get_variants_of_resultSet(self, entry_id: Optional[str], qparams: RequestPar
             .find_one(query, {"biosampleId": 1, "_id": 0})
         entry_id = initial_ids["biosampleId"]
     try:
-        targets = client.beacon.targets \
+        targets = targets_ \
             .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
         position=0
         bioids=targets[0]["biosampleIds"]
@@ -79,7 +79,7 @@ def get_variants_of_resultSet(self, entry_id: Optional[str], qparams: RequestPar
         return schema, 0, -1, None, dataset
     position=str(position)
     query_cl={"$or": [{ position: "10", "datasetId": dataset},{ position: "11", "datasetId": dataset}, { position: "01", "datasetId": dataset}, { position: "y", "datasetId": dataset}]}
-    string_of_ids = client.beacon.caseLevelData \
+    string_of_ids = caseLevelData \
         .find(query_cl, {"id": 1, "_id": 0}).limit(qparams.query.pagination.limit).skip(qparams.query.pagination.skip)
     HGVSIds=list(string_of_ids)
     query={}
@@ -120,10 +120,10 @@ def get_resultSet_of_variants(self, entry_id: Optional[str], qparams: RequestPar
         return schema, 0, 0, [], dataset
     HGVSId=HGVSIds[0]["identifiers"]["genomicHGVSId"]
     queryHGVSId={"datasetId": HGVSDataset, "id": HGVSId}
-    string_of_ids = client.beacon.caseLevelData \
+    string_of_ids = caseLevelData \
         .find(queryHGVSId)
     try:
-        targets = client.beacon.targets \
+        targets = targets_ \
             .find({"datasetId": HGVSDataset}, {"biosampleIds": 1, "_id": 0})
         targets=list(targets)
         list_of_targets=targets[0]["biosampleIds"]
@@ -177,7 +177,7 @@ def get_resultSet_of_variants(self, entry_id: Optional[str], qparams: RequestPar
             for finalid in biosampleIds:
                 query = {"id": finalid}
                 finalquery["$or"].append(query)
-            individual_id = client.beacon.biosamples \
+            individual_id = biosamples \
                 .find(finalquery, {"individualId": 1, "_id": 0})
             try:
                 finalids=[]
@@ -224,9 +224,9 @@ def get_analyses_of_resultSet(self, entry_id: Optional[str], qparams: RequestPar
 def get_biosamples_of_resultSet(self, entry_id: Optional[str], qparams: RequestParams, dataset: str, collection, mongo_collection, schema, idq, entry_type):
     if idq == "analysisId" or idq == 'runId':
         if idq == 'analysisId':
-            secondary_collection = client.beacon.analyses
+            secondary_collection = analyses
         else:
-            secondary_collection = client.beacon.runs
+            secondary_collection = runs
         items_found = secondary_collection \
         .find({"id": entry_id, "datasetId": dataset}, {"biosampleId": 1, "_id": 0})
         list_of_itemsfound=[]
@@ -272,7 +272,7 @@ def get_resultSet_of_dataset(self, entry_id: Optional[str], qparams: RequestPara
     limit = qparams.query.pagination.limit
     query = apply_filters(self, {}, qparams.query.filters, collection, {}, dataset)
     query = query_id(self, query, entry_id)
-    count = get_count(self, client.beacon.datasets, query)
+    count = get_count(self, datasets, query)
     dict_in={}
     dict_in={}
     if dataset == entry_id:
@@ -293,7 +293,7 @@ def get_resultSet_of_cohort(self, entry_id: Optional[str], qparams: RequestParam
     dataset_count=0
     limit = qparams.query.pagination.limit
     include = qparams.query.include_resultset_responses
-    dataset_found = client.beacon.cohorts \
+    dataset_found = cohorts \
         .find({"id": entry_id}, {"datasetId": 1, "_id": 0})
     dataset_found=list(dataset_found)
     dict_in={}
@@ -303,7 +303,7 @@ def get_resultSet_of_cohort(self, entry_id: Optional[str], qparams: RequestParam
     else:
         return schema, 0, 0, None, dataset# pragma: no cover
     query = apply_filters(self, dict_in, qparams.query.filters, collection, {}, dataset)
-    count = get_count(self, client.beacon.cohorts, query)
+    count = get_count(self, cohorts, query)
     skip = qparams.query.pagination.skip
     if limit > 100 or limit == 0:
         limit = 100# pragma: no cover
@@ -315,7 +315,7 @@ def get_variants_of_cohort(self, entry_id: Optional[str], qparams: RequestParams
     dataset_count=0
     limit = qparams.query.pagination.limit
     include = qparams.query.include_resultset_responses
-    dataset_found = client.beacon.cohorts \
+    dataset_found = cohorts \
         .find({"id": entry_id}, {"datasetId": 1, "_id": 0})
     dataset_found=list(dataset_found)
     dict_in={}
@@ -325,11 +325,11 @@ def get_variants_of_cohort(self, entry_id: Optional[str], qparams: RequestParams
     else:
         return schema, 0, 0, None, dataset# pragma: no cover
     query = apply_filters(self, dict_in, qparams.query.filters, collection, {}, dataset)
-    count = get_count(self, client.beacon.cohorts, query)
+    count = get_count(self, cohorts, query)
     query_count={}
     query_count["$or"]=[]
     docs = get_documents_for_cohorts(self,
-        client.beacon.cohorts,
+        cohorts,
         query,
         qparams.query.pagination.skip,
         qparams.query.pagination.skip*limit
@@ -353,7 +353,7 @@ def get_variants_of_cohort(self, entry_id: Optional[str], qparams: RequestParams
 @log_with_args(level)
 def get_runs_of_resultSet(self, entry_id: Optional[str], qparams: RequestParams, dataset: str, collection, mongo_collection, schema, idq, entry_type):
     if idq == "analysisId":
-        analyses_found = client.beacon.analyses \
+        analyses_found = analyses \
         .find({"id": entry_id, "datasetId": dataset}, {"biosampleId": 1, "_id": 0})
         list_of_analysisfound=[]
         for analysisfound in analyses_found:
@@ -373,11 +373,11 @@ def get_runs_of_resultSet(self, entry_id: Optional[str], qparams: RequestParams,
 @log_with_args(level)
 def get_individuals_of_resultSet(self, entry_id: Optional[str], qparams: RequestParams, dataset: str, collection, mongo_collection, schema, idq, entry_type):
     if idq == "analysisId":
-            secondary_collection = client.beacon.analyses
+            secondary_collection = analyses
     elif idq == 'runId':
-        secondary_collection = client.beacon.runs
+        secondary_collection = runs
     else:
-        secondary_collection = client.beacon.biosamples
+        secondary_collection = biosamples
     items_found = secondary_collection \
     .find({"id": entry_id, "datasetId": dataset}, {"individualId": 1, "_id": 0})
     list_of_itemsfound=[]

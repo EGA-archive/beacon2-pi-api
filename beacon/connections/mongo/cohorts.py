@@ -17,7 +17,7 @@ def get_cohorts(self, entry_id: Optional[str], qparams: RequestParams):
     limit = qparams.query.pagination.limit
     query = apply_filters(self, {}, qparams.query.filters, collection, {}, "a")
     schema = DefaultSchemas.COHORTS
-    count = get_count(self, client.beacon.cohorts, query)
+    count = get_count(self, cohorts, query)
     docs = get_documents(self,
         cohorts,
         query,

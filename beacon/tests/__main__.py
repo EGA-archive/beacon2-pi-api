@@ -349,7 +349,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_datasets_endpoint_is_working():
-                resp = await client.get("/api/datasets")
+                resp = await client.get("/api/"+dataset.endpoint_name)
                 assert resp.status == 200
             loop.run_until_complete(test_check_datasets_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -359,7 +359,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_post_datasets_endpoint_is_working():
-                resp = await client.post("/api/datasets")
+                resp = await client.post("/api/"+dataset.endpoint_name)
                 assert resp.status == 200
             loop.run_until_complete(test_check_post_datasets_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -369,7 +369,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_is_working():
-                resp = await client.get("/api/g_variants")
+                resp = await client.get("/api/"+genomicVariant.endpoint_name)
                 assert resp.status == 200
             loop.run_until_complete(test_check_g_variants_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -379,7 +379,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_analyses_with_limit_endpoint_is_working():
-                resp = await client.get("/api/analyses?limit=200")
+                resp = await client.get("/api/"+analysis.endpoint_name+"?limit=200")
                 assert resp.status == 200
             loop.run_until_complete(test_check_analyses_with_limit_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -389,7 +389,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_analyses_endpoint_is_working():
-                resp = await client.get("/api/analyses")
+                resp = await client.get("/api/"+analysis.endpoint_name)
                 assert resp.status == 200
             loop.run_until_complete(test_check_analyses_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -399,7 +399,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_analyses_with_id_endpoint_is_working():
-                resp = await client.get("/api/analyses/EGA-testing")
+                resp = await client.get("/api/"+analysis.endpoint_name+"/EGA-testing")
                 assert resp.status == 200
             loop.run_until_complete(test_check_analyses_with_id_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -409,7 +409,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_analyses_g_variants_endpoint_is_working():
-                resp = await client.get("/api/analyses/EGA-testing/g_variants")
+                resp = await client.get("/api/"+analysis.endpoint_name+"/EGA-testing/"+genomicVariant.endpoint_name)
                 assert resp.status == 200
             loop.run_until_complete(test_check_analyses_g_variants_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -419,7 +419,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_analyses_runs_endpoint_is_working():
-                resp = await client.get("/api/analyses/EGA-testing/runs")
+                resp = await client.get("/api/"+analysis.endpoint_name+"/EGA-testing/"+run.endpoint_name)
                 assert resp.status == 200
             loop.run_until_complete(test_check_analyses_runs_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -429,7 +429,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_analyses_individuals_endpoint_is_working():
-                resp = await client.get("/api/analyses/EGA-testing/individuals")
+                resp = await client.get("/api/"+analysis.endpoint_name+"/EGA-testing/"+individual.endpoint_name)
                 assert resp.status == 200
             loop.run_until_complete(test_check_analyses_individuals_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -439,7 +439,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_analyses_biosmples_endpoint_is_working():
-                resp = await client.get("/api/analyses/EGA-testing/biosamples")
+                resp = await client.get("/api/"+analysis.endpoint_name+"/EGA-testing/"+biosample.endpoint_name)
                 assert resp.status == 200
             loop.run_until_complete(test_check_analyses_biosmples_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -449,7 +449,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_biosamples_endpoint_is_working():
-                resp = await client.get("/api/biosamples")
+                resp = await client.get("/api/"+biosample.endpoint_name)
                 assert resp.status == 200
             loop.run_until_complete(test_check_biosamples_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -459,7 +459,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_biosamples_with_limit_endpoint_is_working():
-                resp = await client.get("/api/biosamples?limit=200")
+                resp = await client.get("/api/"+biosample.endpoint_name+"?limit=200")
                 assert resp.status == 200
             loop.run_until_complete(test_check_biosamples_with_limit_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -469,7 +469,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_biosamples_with_id_endpoint_is_working():
-                resp = await client.get("/api/biosamples/SAMPLE3")
+                resp = await client.get("/api/"+biosample.endpoint_name+"/SAMPLE3")
                 assert resp.status == 200
             loop.run_until_complete(test_check_biosamples_with_id_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -479,7 +479,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_biosamples_g_variants_endpoint_is_working():
-                resp = await client.get("/api/biosamples/SAMPLE3/g_variants")
+                resp = await client.get("/api/"+biosample.endpoint_name+"/SAMPLE3/"+genomicVariant.endpoint_name)
                 assert resp.status == 200
             loop.run_until_complete(test_check_biosamples_g_variants_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -489,7 +489,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_biosamples_runs_endpoint_is_working():
-                resp = await client.get("/api/biosamples/SAMPLE1/runs")
+                resp = await client.get("/api/"+biosample.endpoint_name+"/SAMPLE1/"+run.endpoint_name)
                 assert resp.status == 200
             loop.run_until_complete(test_check_biosamples_runs_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -499,7 +499,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_biosamples_analyses_endpoint_is_working():
-                resp = await client.get("/api/biosamples/SAMPLE1/analyses")
+                resp = await client.get("/api/"+biosample.endpoint_name+"/SAMPLE1/"+analysis.endpoint_name)
                 assert resp.status == 200
             loop.run_until_complete(test_check_biosamples_analyses_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -509,7 +509,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_individuals_endpoint_is_working():
-                resp = await client.get("/api/individuals")
+                resp = await client.get("/api/"+individual.endpoint_name)
                 assert resp.status == 200
             loop.run_until_complete(test_check_individuals_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -519,7 +519,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_individuals_with_limit_endpoint_is_working():
-                resp = await client.get("/api/individuals?limit=200")
+                resp = await client.get("/api/"+individual.endpoint_name+"?limit=200")
                 assert resp.status == 200
             loop.run_until_complete(test_check_individuals_with_limit_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -529,7 +529,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_individuals_with_id_endpoint_is_working():
-                resp = await client.get("/api/individuals/SAMPLE2")
+                resp = await client.get("/api/"+individual.endpoint_name+"/SAMPLE2")
                 assert resp.status == 200
             loop.run_until_complete(test_check_individuals_with_id_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -539,7 +539,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_individuals_g_variants_endpoint_is_working():
-                resp = await client.get("/api/individuals/SAMPLE2/g_variants")
+                resp = await client.get("/api/"+individual.endpoint_name+"/SAMPLE2/"+genomicVariant.endpoint_name)
                 assert resp.status == 200
             loop.run_until_complete(test_check_individuals_g_variants_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -549,7 +549,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_individuals_biosamples_endpoint_is_working():
-                resp = await client.get("/api/individuals/SAMPLE2/biosamples")
+                resp = await client.get("/api/"+individual.endpoint_name+"/SAMPLE2/"+biosample.endpoint_name)
                 assert resp.status == 200
             loop.run_until_complete(test_check_individuals_biosamples_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -559,7 +559,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_endpoint_is_working():
-                resp = await client.get("/api/runs")
+                resp = await client.get("/api/"+run.endpoint_name)
                 assert resp.status == 200
             loop.run_until_complete(test_check_runs_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -569,7 +569,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_with_limit_endpoint_is_working():
-                resp = await client.get("/api/runs?limit=200")
+                resp = await client.get("/api/"+run.endpoint_name+"?limit=200")
                 assert resp.status == 200
             loop.run_until_complete(test_check_runs_with_limit_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -579,7 +579,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_with_id_endpoint_is_working():
-                resp = await client.get("/api/runs/EGA-testing")
+                resp = await client.get("/api/"+run.endpoint_name+"/EGA-testing")
                 assert resp.status == 200
             loop.run_until_complete(test_check_runs_with_id_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -589,7 +589,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_g_variants_endpoint_is_working():
-                resp = await client.get("/api/runs/EGA-testing/g_variants")
+                resp = await client.get("/api/"+run.endpoint_name+"/EGA-testing/"+genomicVariant.endpoint_name)
                 assert resp.status == 200
             loop.run_until_complete(test_check_runs_g_variants_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -599,7 +599,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_analyses_endpoint_is_working():
-                resp = await client.get("/api/runs/EGA-testing/analyses")
+                resp = await client.get("/api/"+run.endpoint_name+"/EGA-testing/"+analysis.endpoint_name)
                 assert resp.status == 200
             loop.run_until_complete(test_check_runs_analyses_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -609,7 +609,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_biosamples_endpoint_is_working():
-                resp = await client.get("/api/runs/EGA-testing/biosamples")
+                resp = await client.get("/api/"+run.endpoint_name+"/EGA-testing/"+biosample.endpoint_name)
                 assert resp.status == 200
             loop.run_until_complete(test_check_runs_biosamples_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -619,7 +619,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_individuals_endpoint_is_working():
-                resp = await client.get("/api/runs/EGA-testing/individuals")
+                resp = await client.get("/api/"+run.endpoint_name+"/EGA-testing/"+individual.endpoint_name)
                 assert resp.status == 200
             loop.run_until_complete(test_check_runs_individuals_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -629,7 +629,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_cohorts_endpoint_is_working():
-                resp = await client.get("/api/cohorts")
+                resp = await client.get("/api/"+cohort.endpoint_name)
                 assert resp.status == 200
             loop.run_until_complete(test_check_cohorts_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -639,7 +639,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_cohorts_with_limit_endpoint_is_working():
-                resp = await client.get("/api/cohorts?limit=200")
+                resp = await client.get("/api/"+cohort.endpoint_name+"?limit=200")
                 assert resp.status == 200
             loop.run_until_complete(test_check_cohorts_with_limit_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -649,7 +649,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_cohorts_with_id_endpoint_is_working():
-                resp = await client.get("/api/cohorts/EGA-testing")
+                resp = await client.get("/api/"+cohort.endpoint_name+"/EGA-testing")
                 assert resp.status == 200
             loop.run_until_complete(test_check_cohorts_with_id_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -659,7 +659,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_cohorts_runs_endpoint_is_working():
-                resp = await client.get("/api/cohorts/EGA-testing/runs")
+                resp = await client.get("/api/"+cohort.endpoint_name+"/EGA-testing/"+run.endpoint_name)
                 assert resp.status == 200
             loop.run_until_complete(test_check_cohorts_runs_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -669,7 +669,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_cohorts_biosamples_endpoint_is_working():
-                resp = await client.get("/api/cohorts/EGA-testing/biosamples")
+                resp = await client.get("/api/"+cohort.endpoint_name+"/EGA-testing/"+biosample.endpoint_name)
                 assert resp.status == 200
             loop.run_until_complete(test_check_cohorts_biosamples_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -679,7 +679,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_cohorts_analyses_endpoint_is_working():
-                resp = await client.get("/api/cohorts/EGA-testing/analyses")
+                resp = await client.get("/api/"+cohort.endpoint_name+"/EGA-testing/"+analysis.endpoint_name)
                 assert resp.status == 200
             loop.run_until_complete(test_check_cohorts_analyses_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -689,7 +689,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_cohorts_inividuals_endpoint_is_working():
-                resp = await client.get("/api/cohorts/EGA-testing/individuals")
+                resp = await client.get("/api/"+cohort.endpoint_name+"/EGA-testing/"+individual.endpoint_name)
                 assert resp.status == 200
             loop.run_until_complete(test_check_cohorts_inividuals_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -699,7 +699,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_cohorts_g_variants_endpoint_is_working():
-                resp = await client.get("/api/cohorts/EGA-testing/g_variants")
+                resp = await client.get("/api/"+cohort.endpoint_name+"/EGA-testing/"+genomicVariant.endpoint_name)
                 assert resp.status == 200
             loop.run_until_complete(test_check_cohorts_g_variants_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -709,7 +709,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_datasets_with_limit_endpoint_is_working():
-                resp = await client.get("/api/datasets?limit=200")
+                resp = await client.get("/api/"+dataset.endpoint_name+"?limit=200")
                 assert resp.status == 200
             loop.run_until_complete(test_check_datasets_with_limit_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -719,7 +719,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_datasets_with_id_endpoint_is_working():
-                resp = await client.get("/api/datasets/test")
+                resp = await client.get("/api/"+dataset.endpoint_name+"/test")
                 assert resp.status == 200
             loop.run_until_complete(test_check_datasets_with_id_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -729,7 +729,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_datasets_runs_endpoint_is_working():
-                resp = await client.get("/api/datasets/test/runs")
+                resp = await client.get("/api/"+dataset.endpoint_name+"/test/"+run.endpoint_name)
                 assert resp.status == 200
             loop.run_until_complete(test_check_datasets_runs_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -739,7 +739,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_datasets_g_variants_endpoint_is_working():
-                resp = await client.get("/api/datasets/test/g_variants")
+                resp = await client.get("/api/"+dataset.endpoint_name+"/test/"+genomicVariant.endpoint_name)
                 assert resp.status == 200
             loop.run_until_complete(test_check_datasets_g_variants_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -749,7 +749,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_datasets_biosamples_endpoint_is_working():
-                resp = await client.get("/api/datasets/test/biosamples")
+                resp = await client.get("/api/"+dataset.endpoint_name+"/test/"+biosample.endpoint_name)
                 assert resp.status == 200
             loop.run_until_complete(test_check_datasets_biosamples_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -759,7 +759,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_datasets_analyses_endpoint_is_working():
-                resp = await client.get("/api/datasets/test/analyses")
+                resp = await client.get("/api/"+dataset.endpoint_name+"/test/"+analysis.endpoint_name)
                 assert resp.status == 200
             loop.run_until_complete(test_check_datasets_analyses_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -769,7 +769,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_datasets_inividuals_endpoint_is_working():
-                resp = await client.get("/api/datasets/test/individuals")
+                resp = await client.get("/api/"+dataset.endpoint_name+"/test/"+individual.endpoint_name)
                 assert resp.status == 200
             loop.run_until_complete(test_check_datasets_inividuals_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -779,7 +779,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_with_limit_endpoint_is_working():
-                resp = await client.get("/api/g_variants?limit=200")
+                resp = await client.get("/api/"+genomicVariant.endpoint_name+"?limit=200")
                 assert resp.status == 200
             loop.run_until_complete(test_check_g_variants_with_limit_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -789,7 +789,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_with_id_endpoint_is_working():
-                resp = await client.get("/api/g_variants/96c010bc-1449-11f0-83f8-0242ac120003:G:A")
+                resp = await client.get("/api/"+genomicVariant.endpoint_name+"/96c010bc-1449-11f0-83f8-0242ac120003:G:A")
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
                 assert responsedict["responseSummary"]["numTotalResults"] == 1
@@ -802,7 +802,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_runs_endpoint_is_working():
-                resp = await client.get("/api/g_variants/96c010bc-1449-11f0-83f8-0242ac120003:G:A/runs")
+                resp = await client.get("/api/"+genomicVariant.endpoint_name+"/96c010bc-1449-11f0-83f8-0242ac120003:G:A/"+run.endpoint_name)
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
                 assert responsedict["responseSummary"]["numTotalResults"] == 1
@@ -815,7 +815,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_biosamples_endpoint_is_working():
-                resp = await client.get("/api/g_variants/96c010bc-1449-11f0-83f8-0242ac120003:G:A/biosamples")
+                resp = await client.get("/api/"+genomicVariant.endpoint_name+"/96c010bc-1449-11f0-83f8-0242ac120003:G:A/"+biosample.endpoint_name)
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
                 assert responsedict["responseSummary"]["numTotalResults"] == 15
@@ -828,7 +828,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_analyses_endpoint_is_working():
-                resp = await client.get("/api/g_variants/96c010bc-1449-11f0-83f8-0242ac120003:G:A/analyses")
+                resp = await client.get("/api/"+genomicVariant.endpoint_name+"/96c010bc-1449-11f0-83f8-0242ac120003:G:A/"+analysis.endpoint_name)
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
                 assert responsedict["responseSummary"]["numTotalResults"] == 1
@@ -841,7 +841,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_inividuals_endpoint_is_working():
-                resp = await client.get("/api/g_variants/96c010bc-1449-11f0-83f8-0242ac120003:G:A/individuals")
+                resp = await client.get("/api/"+genomicVariant.endpoint_name+"/96c010bc-1449-11f0-83f8-0242ac120003:G:A/"+individual.endpoint_name)
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
                 assert responsedict["responseSummary"]["numTotalResults"] == 15
@@ -854,7 +854,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_NONE_resultSetResponse_is_working():
-                resp = await client.get("/api/g_variants?includeResultsetResponses=NONE")
+                resp = await client.get("/api/"+genomicVariant.endpoint_name+"?includeResultsetResponses=NONE")
                 assert resp.status == 200
             loop.run_until_complete(test_check_g_variants_endpoint_NONE_resultSetResponse_is_working())
             loop.run_until_complete(client.close())
@@ -864,7 +864,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_MISS_resultSetResponse_is_working():
-                resp = await client.get("/api/g_variants?includeResultsetResponses=MISS")
+                resp = await client.get("/api/"+genomicVariant.endpoint_name+"?includeResultsetResponses=MISS")
                 assert resp.status == 200
             loop.run_until_complete(test_check_g_variants_endpoint_MISS_resultSetResponse_is_working())
             loop.run_until_complete(client.close())
@@ -874,7 +874,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_ALL_resultSetResponse_is_working():
-                resp = await client.get("/api/g_variants?includeResultsetResponses=ALL")
+                resp = await client.get("/api/"+genomicVariant.endpoint_name+"?includeResultsetResponses=ALL")
                 assert resp.status == 200
             loop.run_until_complete(test_check_g_variants_endpoint_ALL_resultSetResponse_is_working())
             loop.run_until_complete(client.close())
@@ -884,7 +884,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
-                resp = await client.get("/api/g_variants?start=43045703&referenceName=17&assemblyId=GRCh38&referenceBases=G&alternateBases=A")
+                resp = await client.get("/api/"+genomicVariant.endpoint_name+"?start=43045703&referenceName=17&assemblyId=GRCh38&referenceBases=G&alternateBases=A")
                 assert resp.status == 200
             loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
             loop.run_until_complete(client.close())
@@ -894,7 +894,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
-                resp = await client.get("/api/g_variants?start=345675&referenceName=2&assemblyId=GRCh37&end=345681")
+                resp = await client.get("/api/"+genomicVariant.endpoint_name+"?start=345675&referenceName=2&assemblyId=GRCh37&end=345681")
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
                 assert responsedict["responseSummary"]["numTotalResults"] == 6
@@ -907,7 +907,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
-                resp = await client.get("/api/g_variants?geneId=BRCA1")
+                resp = await client.get("/api/"+genomicVariant.endpoint_name+"?geneId=BRCA1")
                 assert resp.status == 200
             loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
             loop.run_until_complete(client.close())
@@ -917,7 +917,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
-                resp = await client.get("/api/g_variants?start=43045703,43045704&end=43045704,43045705&referenceName=17&assemblyId=GRCh38")
+                resp = await client.get("/api/"+genomicVariant.endpoint_name+"?start=43045703,43045704&end=43045704,43045705&referenceName=17&assemblyId=GRCh38")
                 assert resp.status == 200
             loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
             loop.run_until_complete(client.close())
@@ -927,7 +927,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
-                resp = await client.get("/api/g_variants?genomicAlleleShortForm=NC_000008.10:g.467881AGCAG>A")
+                resp = await client.get("/api/"+genomicVariant.endpoint_name+"?genomicAlleleShortForm=NC_000008.10:g.467881AGCAG>A")
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
                 assert responsedict["responseSummary"]["numTotalResults"] == 1
@@ -940,7 +940,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
-                resp = await client.get("/api/g_variants?aminoacidChange=Pro1856Ser&geneId=BRCA1")
+                resp = await client.get("/api/"+genomicVariant.endpoint_name+"?aminoacidChange=Pro1856Ser&geneId=BRCA1")
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
                 assert responsedict["responseSummary"]["numTotalResults"] == 1
@@ -953,7 +953,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_post_cross_query_g_variants_individuals_is_working():
-                resp = await client.post("/api/g_variants", json={"meta": {
+                resp = await client.post("/api/"+genomicVariant.endpoint_name, json={"meta": {
                     "apiVersion": "2.0"
                 },
                 "query": { "requestParameters": {        },
@@ -977,7 +977,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_post_cross_query_biosamples_individuals_is_working():
-                resp = await client.post("/api/biosamples", json={"meta": {
+                resp = await client.post("/api/"+biosample.endpoint_name, json={"meta": {
                     "apiVersion": "2.0"
                 },
                 "query": { "requestParameters": {        },
@@ -1004,7 +1004,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_request_parameters_fail():
-                resp = await client.get("/api/g_variants?star=12448")
+                resp = await client.get("/api/"+genomicVariant.endpoint_name+"?star=12448")
                 assert resp.status == 400
             loop.run_until_complete(test_check_request_parameters_fail())
             loop.run_until_complete(client.close())# pragma: no cover
@@ -1014,7 +1014,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_wrong_combination_request_parameters():
-                resp = await client.get("/api/g_variants?start=12448")
+                resp = await client.get("/api/"+genomicVariant.endpoint_name+"?start=12448")
                 assert resp.status == 400
             loop.run_until_complete(test_wrong_combination_request_parameters())
             loop.run_until_complete(client.close())# pragma: no cover
@@ -1024,7 +1024,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_datasets_g_variants_endpoint_is_working():
-                resp = await client.get("/api/g_variants?datasets=test")
+                resp = await client.get("/api/"+genomicVariant.endpoint_name+"?datasets=test")
                 assert resp.status == 200
             loop.run_until_complete(test_check_datasets_g_variants_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -1089,7 +1089,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_alphanumeric_equal_query_is_working():
-                resp = await client.post("/api/individuals", json={
+                resp = await client.post("/api/"+individual.endpoint_name, json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -1118,7 +1118,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_alphanumeric_like_query_is_working():
-                resp = await client.post("/api/individuals", json={
+                resp = await client.post("/api/"+individual.endpoint_name, json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -1148,7 +1148,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_alphanumeric_not_like_query_is_working():
-                resp = await client.post("/api/individuals", json={
+                resp = await client.post("/api/"+individual.endpoint_name, json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -1177,7 +1177,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_alphanumeric_not_query_is_working():
-                resp = await client.post("/api/individuals", json={
+                resp = await client.post("/api/"+individual.endpoint_name, json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -1206,7 +1206,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_iso8601duration_gt_query_is_working():
-                resp = await client.post("/api/individuals", json={
+                resp = await client.post("/api/"+individual.endpoint_name, json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -1235,7 +1235,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_iso8601duration_ls_query_is_working():
-                resp = await client.post("/api/individuals", json={
+                resp = await client.post("/api/"+individual.endpoint_name, json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -1264,7 +1264,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_iso8601duration_eq_query_is_working():
-                resp = await client.post("/api/individuals", json={
+                resp = await client.post("/api/"+individual.endpoint_name, json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -1292,7 +1292,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_measurement_value_query_is_working():
-                resp = await client.post("/api/individuals", json={
+                resp = await client.post("/api/"+individual.endpoint_name, json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -1324,7 +1324,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_custom_query_is_working():
-                resp = await client.post("/api/biosamples", json={
+                resp = await client.post("/api/"+biosample.endpoint_name, json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -1355,7 +1355,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_range_query_with_variant_min_and_max_lengths_working():
-                resp = await client.get("/api/g_variants?start=345675&referenceName=2&assemblyId=GRCh38&end=345681&variantMinLength=0&variantMaxLength=10&testMode=true")
+                resp = await client.get("/api/"+genomicVariant.endpoint_name+"?start=345675&referenceName=2&assemblyId=GRCh38&end=345681&variantMinLength=0&variantMaxLength=10&testMode=true")
                 assert resp.status == 200
             loop.run_until_complete(test_check_range_query_with_variant_min_and_max_lengths_working())
             loop.run_until_complete(client.close())
@@ -1365,7 +1365,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_filters_as_request_parameter_working():
-                resp = await client.get("/api/individuals?filters=NCIT:C16576&testMode=true")
+                resp = await client.get("/api/"+individual.endpoint_name+"?filters=NCIT:C16576&testMode=true")
                 assert resp.status == 200
             loop.run_until_complete(test_check_filters_as_request_parameter_working())
             loop.run_until_complete(client.close())
@@ -1375,7 +1375,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_datasets_list_query_is_working():
-                resp = await client.post("/api/individuals", json={
+                resp = await client.post("/api/"+individual.endpoint_name, json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -1403,7 +1403,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_range_query_with_variant_assemblyId_GRCh38_working():
-                resp = await client.get("/api/g_variants?start=16050074&end=16050075&assemblyId=GRCh38&referenceName=22")
+                resp = await client.get("/api/"+genomicVariant.endpoint_name+"?start=16050074&end=16050075&assemblyId=GRCh38&referenceName=22")
                 assert resp.status == 200
             loop.run_until_complete(test_check_range_query_with_variant_assemblyId_GRCh38_working())
             loop.run_until_complete(client.close())
@@ -1413,7 +1413,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_range_query_with_variant_assemblyId_GRCh37_working():
-                resp = await client.get("/api/g_variants?start=16050074&end=16050075&assemblyId=GRCh37&referenceName=22")
+                resp = await client.get("/api/"+genomicVariant.endpoint_name+"?start=16050074&end=16050075&assemblyId=GRCh37&referenceName=22")
                 assert resp.status == 200
             loop.run_until_complete(test_check_range_query_with_variant_assemblyId_GRCh37_working())
             loop.run_until_complete(client.close())
@@ -1423,7 +1423,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_range_query_with_variant_assemblyId_NCBI36_working():
-                resp = await client.get("/api/g_variants?start=16050074&end=16050075&assemblyId=NCBI36&referenceName=22")
+                resp = await client.get("/api/"+genomicVariant.endpoint_name+"?start=16050074&end=16050075&assemblyId=NCBI36&referenceName=22")
                 assert resp.status == 200
             loop.run_until_complete(test_check_range_query_with_variant_assemblyId_NCBI36_working())
             loop.run_until_complete(client.close())
@@ -1433,7 +1433,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_NONE_count_query_is_working():
-                resp = await client.post("/api/individuals", json={
+                resp = await client.post("/api/"+individual.endpoint_name, json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -1463,7 +1463,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_heterozygosity():
-                resp = await client.post("/api/g_variants/96c1004e-1449-11f0-83f8-0242ac120003:G:ATG/individuals", json={
+                resp = await client.post("/api/"+genomicVariant.endpoint_name+"/96c1004e-1449-11f0-83f8-0242ac120003:G:ATG/"+individual.endpoint_name, json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -1494,7 +1494,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_homozygosity():
-                resp = await client.post("/api/g_variants/96c0d754-1449-11f0-83f8-0242ac120003:T:TGCAAATGCAAATGCAAATGCAAA/individuals", json={
+                resp = await client.post("/api/"+genomicVariant.endpoint_name+"/96c0d754-1449-11f0-83f8-0242ac120003:T:TGCAAATGCAAATGCAAATGCAAA/"+individual.endpoint_name, json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -1522,7 +1522,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_individuals_variants():
-                resp = await client.post("/api/g_variants/96c1004e-1449-11f0-83f8-0242ac120003:G:ATG/individuals", json={
+                resp = await client.post("/api/"+genomicVariant.endpoint_name+"/96c1004e-1449-11f0-83f8-0242ac120003:G:ATG/"+individual.endpoint_name, json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -1550,7 +1550,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_heterozygosity():
-                resp = await client.post("/api/g_variants/96c1004e-1449-11f0-83f8-0242ac120003:G:ATG/analyses", json={
+                resp = await client.post("/api/"+genomicVariant.endpoint_name+"/96c1004e-1449-11f0-83f8-0242ac120003:G:ATG/"+analysis.endpoint_name+"", json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -1578,7 +1578,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_homozygosity():
-                resp = await client.post("/api/g_variants/96c0d754-1449-11f0-83f8-0242ac120003:T:TGCAAATGCAAATGCAAATGCAAA/analyses", json={
+                resp = await client.post("/api/"+genomicVariant.endpoint_name+"/96c0d754-1449-11f0-83f8-0242ac120003:T:TGCAAATGCAAATGCAAATGCAAA/"+analysis.endpoint_name+"", json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -1606,7 +1606,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_analyses_variants():
-                resp = await client.post("/api/g_variants/96c1004e-1449-11f0-83f8-0242ac120003:G:ATG/analyses", json={
+                resp = await client.post("/api/"+genomicVariant.endpoint_name+"/96c1004e-1449-11f0-83f8-0242ac120003:G:ATG/"+analysis.endpoint_name+"", json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -1634,7 +1634,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_heterozygosity():
-                resp = await client.post("/api/g_variants/96c1004e-1449-11f0-83f8-0242ac120003:G:ATG/biosamples", json={
+                resp = await client.post("/api/"+genomicVariant.endpoint_name+"/96c1004e-1449-11f0-83f8-0242ac120003:G:ATG/"+biosample.endpoint_name, json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -1662,7 +1662,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_homozygosity():
-                resp = await client.post("/api/g_variants/96c0d754-1449-11f0-83f8-0242ac120003:T:TGCAAATGCAAATGCAAATGCAAA/biosamples", json={
+                resp = await client.post("/api/"+genomicVariant.endpoint_name+"/96c0d754-1449-11f0-83f8-0242ac120003:T:TGCAAATGCAAATGCAAATGCAAA/"+biosample.endpoint_name, json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -1690,7 +1690,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_biosamples_variants():
-                resp = await client.post("/api/g_variants/96c37518-1449-11f0-83f8-0242ac120003:AGCAG:A/biosamples", json={
+                resp = await client.post("/api/"+genomicVariant.endpoint_name+"/96c37518-1449-11f0-83f8-0242ac120003:AGCAG:A/"+biosample.endpoint_name, json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -1718,7 +1718,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_heterozygosity():
-                resp = await client.post("/api/g_variants/96c1004e-1449-11f0-83f8-0242ac120003:G:ATG/runs", json={
+                resp = await client.post("/api/"+genomicVariant.endpoint_name+"/96c1004e-1449-11f0-83f8-0242ac120003:G:ATG/"+run.endpoint_name, json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -1746,7 +1746,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_homozygosity():
-                resp = await client.post("/api/g_variants/96c0d754-1449-11f0-83f8-0242ac120003:T:TGCAAATGCAAATGCAAATGCAAA/runs", json={
+                resp = await client.post("/api/"+genomicVariant.endpoint_name+"/96c0d754-1449-11f0-83f8-0242ac120003:T:TGCAAATGCAAATGCAAATGCAAA/"+run.endpoint_name, json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -1774,7 +1774,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
-                resp = await client.post("/api/g_variants/96c1004e-1449-11f0-83f8-0242ac120003:G:ATG/runs", json={
+                resp = await client.post("/api/"+genomicVariant.endpoint_name+"/96c1004e-1449-11f0-83f8-0242ac120003:G:ATG/"+run.endpoint_name, json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -1802,7 +1802,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_individuals_variants():
-                resp = await client.post("/api/individuals", json={
+                resp = await client.post("/api/"+individual.endpoint_name, json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -1828,7 +1828,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_biosamples_variants():
-                resp = await client.post("/api/biosamples", json={
+                resp = await client.post("/api/"+biosample.endpoint_name, json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -1854,7 +1854,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_analyses_variants():
-                resp = await client.post("/api/analyses", json={
+                resp = await client.post("/api/"+analysis.endpoint_name+"", json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -1880,7 +1880,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
-                resp = await client.post("/api/runs", json={
+                resp = await client.post("/api/"+run.endpoint_name, json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -1906,7 +1906,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
-                resp = await client.post("/api/g_variants", json={
+                resp = await client.post("/api/"+genomicVariant.endpoint_name, json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -1932,7 +1932,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
-                resp = await client.post("/api/individuals", json={
+                resp = await client.post("/api/"+individual.endpoint_name, json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -1960,7 +1960,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
-                resp = await client.post("/api/analyses", json={
+                resp = await client.post("/api/"+analysis.endpoint_name+"", json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -1988,7 +1988,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
-                resp = await client.post("/api/biosamples", json={
+                resp = await client.post("/api/"+biosample.endpoint_name, json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -2016,7 +2016,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
-                resp = await client.post("/api/g_variants", json={
+                resp = await client.post("/api/"+genomicVariant.endpoint_name, json={
             "meta": {
                 "apiVersion": "2.0"
             },
@@ -2044,7 +2044,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
-                resp = await client.post("/api/individuals", json={
+                resp = await client.post("/api/"+individual.endpoint_name, json={
             "meta": {
                 "apiVersion": "2.0"
             },
@@ -2072,7 +2072,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
-                resp = await client.post("/api/analyses", json={
+                resp = await client.post("/api/"+analysis.endpoint_name+"", json={
             "meta": {
                 "apiVersion": "2.0"
             },
@@ -2100,7 +2100,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
-                resp = await client.post("/api/runs", json={
+                resp = await client.post("/api/"+run.endpoint_name, json={
             "meta": {
                 "apiVersion": "2.0"
             },
@@ -2128,7 +2128,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
-                resp = await client.post("/api/individuals", json={
+                resp = await client.post("/api/"+individual.endpoint_name, json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -2159,7 +2159,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
-                resp = await client.post("/api/biosamples", json={
+                resp = await client.post("/api/"+biosample.endpoint_name, json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -2190,7 +2190,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
-                resp = await client.post("/api/analyses", json={
+                resp = await client.post("/api/"+analysis.endpoint_name+"", json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -2221,7 +2221,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
-                resp = await client.post("/api/g_variants", json={
+                resp = await client.post("/api/"+genomicVariant.endpoint_name, json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -2253,7 +2253,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
-                resp = await client.get("/api/g_variants?start=43045703&referenceName=17&referenceBases=G&alternateBases=A")
+                resp = await client.get("/api/"+genomicVariant.endpoint_name+"?start=43045703&referenceName=17&referenceBases=G&alternateBases=A")
                 assert resp.status == 400
             loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
             loop.run_until_complete(client.close())# pragma: no cover
@@ -2263,7 +2263,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
-                resp = await client.get("/api/g_variants?start=345675&referenceName=2&end=345681")
+                resp = await client.get("/api/"+genomicVariant.endpoint_name+"?start=345675&referenceName=2&end=345681")
                 assert resp.status == 400
             loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
             loop.run_until_complete(client.close())# pragma: no cover
@@ -2273,7 +2273,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
-                resp = await client.get("/api/g_variants?start=43045703,43045704&end=43045704,43045705&referenceName=17")
+                resp = await client.get("/api/"+genomicVariant.endpoint_name+"?start=43045703,43045704&end=43045704,43045705&referenceName=17")
                 assert resp.status == 400
             loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
             loop.run_until_complete(client.close())# pragma: no cover
@@ -2283,7 +2283,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
-                resp = await client.get("/api/g_variants?start=43045703,43045704&end=43045704,43045705&referenceName=17&assemblyId=GRCh38&testMode=3")
+                resp = await client.get("/api/"+genomicVariant.endpoint_name+"?start=43045703,43045704&end=43045704,43045705&referenceName=17&assemblyId=GRCh38&testMode=3")
                 assert resp.status == 400
             loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
             loop.run_until_complete(client.close())# pragma: no cover
@@ -2293,7 +2293,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
-                resp = await client.post("/api/individuals", json={
+                resp = await client.post("/api/"+individual.endpoint_name, json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -2321,7 +2321,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
-                resp = await client.get("/api/g_variants?start=31121923&referenceName=X&assemblyId=GRCh38&end=31121924")
+                resp = await client.get("/api/"+genomicVariant.endpoint_name+"?start=31121923&referenceName=X&assemblyId=GRCh38&end=31121924")
                 assert resp.status == 200
             loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
             loop.run_until_complete(client.close())# pragma: no cover
@@ -2331,7 +2331,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
-                resp = await client.get("/api/g_variants?start=31121923&referenceName=Y&assemblyId=GRCh38&end=31121924")
+                resp = await client.get("/api/"+genomicVariant.endpoint_name+"?start=31121923&referenceName=Y&assemblyId=GRCh38&end=31121924")
                 assert resp.status == 200
             loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
             loop.run_until_complete(client.close())# pragma: no cover

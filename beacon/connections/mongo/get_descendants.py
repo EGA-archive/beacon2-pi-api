@@ -6,35 +6,20 @@ import urllib.request
 from urllib.error import HTTPError
 import progressbar
 from pymongo.mongo_client import MongoClient
-import os
+from beacon.connections.mongo.__init__ import client, dbname, filtering_terms
+import sys
 
+
+current = os.path.dirname(os.path.realpath(__file__))
+
+
+parent = os.path.dirname(current)
+
+
+sys.path.append(parent)
 
 
 import conf
-
-
-if conf.database_cluster:
-    uri = "mongodb+srv://{}:{}@{}/?tls=true&authMechanism=SCRAM-SHA-256&retrywrites=false&maxIdleTimeMS=120000".format(
-        conf.database_user,
-        conf.database_password,
-        conf.database_host
-    )
-else:
-    uri = "mongodb://{}:{}@{}:{}/{}?authSource={}".format(
-        conf.database_user,
-        conf.database_password,
-        conf.database_host,
-        conf.database_port,
-        conf.database_name,
-        conf.database_auth_source
-    )
-
-if os.path.isfile(conf.database_certificate):
-    uri += '&tls=true&tlsCertificateKeyFile={}'.format(conf.database_certificate)
-    if os.path.isfile(conf.database_cafile):
-        uri += '&tlsCAFile={}'.format(conf.database_cafile)
-
-client = MongoClient(uri)
 
 class MyProgressBar:
     def __init__(self):
@@ -90,14 +75,14 @@ def load_ontology(ontology_id: str):
 
 def get_descendants_and_similarities():
     try:
-        client.beacon.drop_collection("similarities")
+        client[dbname].drop_collection("similarities")
     except Exception:
-        client.beacon.create_collection(name="similarities")
+        client[dbname].create_collection(name="similarities")
     try:
-        client.beacon.validate_collection("similarities")
+        client[dbname].validate_collection("similarities")
     except Exception:
-        db=client.beacon.create_collection(name="similarities")
-    filtering_docs=client.beacon.filtering_terms.find({"type": "ontology"})
+        db=client[dbname].create_collection(name="similarities")
+    filtering_docs=client[dbname].filtering_terms.find({"type": "ontology"})
     array_of_ontologies=[]
     for ft_doc in filtering_docs:
         if ft_doc["id"] not in array_of_ontologies:
@@ -170,7 +155,7 @@ def get_descendants_and_similarities():
         dict['similarity_medium']=similarity_medium
         dict['similarity_low']=similarity_low
         
-        client.beacon.similarities.insert_one(dict)
+        client[dbname].similarities.insert_one(dict)
         print("succesfully retrieved descendants from {}".format(ontology))
         
     
