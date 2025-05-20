@@ -1,25 +1,10 @@
 import obonet
 import networkx
 import os
-from typing import List, Dict, Optional
 import urllib.request
 from urllib.error import HTTPError
 import progressbar
-from pymongo.mongo_client import MongoClient
 from beacon.connections.mongo.__init__ import client, dbname, filtering_terms
-import sys
-
-
-current = os.path.dirname(os.path.realpath(__file__))
-
-
-parent = os.path.dirname(current)
-
-
-sys.path.append(parent)
-
-
-import conf
 
 class MyProgressBar:
     def __init__(self):
