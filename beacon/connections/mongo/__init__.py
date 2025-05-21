@@ -1,6 +1,7 @@
 from pymongo.mongo_client import MongoClient
 from beacon.connections.mongo import conf
 from beacon.request.classes import ErrorClass
+from beacon.conf.conf import query_budget_database, query_budget_db_name, query_budget_table
 
 try:
 
@@ -47,3 +48,9 @@ targets=client[dbname].targets
 synonyms=client[dbname].synonyms
 similarities=client[dbname].similarities
 counts=client[dbname].counts
+
+if query_budget_database == 'mongo':
+    try:
+        client[query_budget_db_name].validate_collection(query_budget_table)
+    except Exception:
+        db=client[query_budget_db_name].create_collection(name=query_budget_table)

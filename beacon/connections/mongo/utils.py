@@ -2,7 +2,8 @@ from pymongo.cursor import Cursor
 from beacon.connections.mongo.__init__ import client, counts as counts_, filtering_terms
 from pymongo.collection import Collection
 from beacon.logs.logs import log_with_args_mongo, LOG
-from beacon.conf.conf import level, alphanumeric_terms
+from beacon.conf.conf import level
+from beacon.conf.filtering_terms import alphanumeric_terms
 from beacon.request.classes import ErrorClass
 
 @log_with_args_mongo(level)

@@ -23,6 +23,7 @@ from beacon.conf import conf
 import ssl
 from beacon.request.parameters import RequestMeta, RequestQuery
 from beacon.budget.__main__ import insert_budget
+from beacon.validator.configuration import check_configuration
 
 class EndpointView(web.View, CorsViewMixin):
     def __init__(self, request: Request):
@@ -330,32 +331,6 @@ async def _graceful_shutdown_ctx(app):# pragma: no cover
 
     if thread is not None:
         thread.join()
-
-def check_configuration():
-    if analysis.endpoint_name != '' and analysis.granularity not in ['boolean', 'count', 'record']:
-        raise Exception("analysis granularity must be one string between boolean, count or record")
-    if biosample.endpoint_name != '' and biosample.granularity not in ['boolean', 'count', 'record']:
-        raise Exception("biosample granularity must be one string between boolean, count or record")
-    if cohort.endpoint_name != '' and cohort.granularity not in ['boolean', 'count', 'record']:
-        raise Exception("cohort granularity must be one string between boolean, count or record")
-    if dataset.endpoint_name != '' and dataset.granularity not in ['boolean', 'count', 'record']:
-        raise Exception("dataset granularity must be one string between boolean, count or record")
-    if genomicVariant.endpoint_name != '' and genomicVariant.granularity not in ['boolean', 'count', 'record']:
-        raise Exception("genomicVariant granularity must be one string between boolean, count or record")
-    if individual.endpoint_name != '' and individual.granularity not in ['boolean', 'count', 'record']:
-        raise Exception("individual granularity must be one string between boolean, count or record")
-    if run.endpoint_name != '' and run.granularity not in ['boolean', 'count', 'record']:
-        raise Exception("run granularity must be one string between boolean, count or record")
-    if conf.uri.startswith('http://'):
-        LOG.warning('The uri of your beacon is not https. Please change to https as soon as you can.')
-    elif conf.uri.startswith('https://'):
-        pass
-    else:
-        raise Exception("The uri of your beacon must start with http protocol.")
-    if conf.uri.endswith('/api/'):
-        pass
-    else:
-        raise Exception("The uri of your beacon must end with /api/, including the final slash after api.")
 
 async def create_api():# pragma: no cover
     check_configuration()

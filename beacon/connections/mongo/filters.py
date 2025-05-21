@@ -4,6 +4,7 @@ from beacon.request.parameters import AlphanumericFilter, CustomFilter, Ontology
 from beacon.connections.mongo.utils import get_documents, join_query, choose_scope
 from beacon.connections.mongo.__init__ import client, genomicVariations, individuals, datasets, cohorts, analyses, biosamples, runs, targets as targets_, caseLevelData, filtering_terms, similarities, synonyms as synonyms_
 from beacon.conf import conf
+from beacon.conf.filtering_terms import alphanumeric_terms
 from beacon.logs.logs import log_with_args, LOG
 from beacon.conf.conf import level
 from beacon.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run
@@ -870,7 +871,7 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, col
     elif isinstance(formatted_value,str):
         scope = filter.scope
         scope=choose_scope(self, scope, collection, filter)
-        if filter.id in conf.alphanumeric_terms:
+        if filter.id in alphanumeric_terms:
             query_term = filter.id# pragma: no cover
         else:
             query_term = filter.id + '.' + 'label'
@@ -1048,7 +1049,7 @@ def apply_custom_filter(self, query: dict, filter: CustomFilter, collection:str,
     scope = filter.scope
     scope=choose_scope(self, scope, collection, filter)
     value_splitted = filter.id.split(':')
-    if value_splitted[0] in conf.alphanumeric_terms:
+    if value_splitted[0] in alphanumeric_terms:
         query_term = value_splitted[0]# pragma: no cover
     else:
         query_term = value_splitted[0] + '.label'
