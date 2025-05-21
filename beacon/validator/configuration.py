@@ -3,6 +3,7 @@ from beacon.conf import conf
 from beacon.logs.logs import LOG
 import os
 import re
+import logging
 
 def contains_special_characters(string):
     for char in string:
@@ -386,3 +387,35 @@ def check_configuration():
         raise Exception('The run.genomicVariant_lookup must be of type bool.')
     if not isinstance(run.individual_lookup, bool):
         raise Exception('The run.individual_lookup must be of type bool.')
+    if conf.level not in [logging.NOTSET, logging.INFO, logging.DEBUG, logging.WARNING, logging.ERROR, logging.FATAL, logging.CRITICAL]:
+        raise Exception('The config parameter level must be one possible logging library level (NOTSET, DEBUG, INFO, etc...')
+    if not isinstance(conf.log_file, str):
+        if conf.log_file != None:
+            raise Exception('The config parameter log_file must be a string with the path to the dir where to store the logs or a variable None for not storing any log')
+    if not isinstance(conf.beacon_name, str):
+        raise Exception('The beacon_name config parameter must be a string')
+    if not isinstance(conf.beacon_id, str):
+        raise Exception('The beacon_id config parameter must be a string')
+    if not isinstance(conf.api_version, str):
+        raise Exception('The api_version config parameter must be a string')
+    if not isinstance(conf.description, str):
+        raise Exception('The description config parameter must be a string')
+    if not isinstance(conf.welcome_url, str):
+        raise Exception('The welcome_url config parameter must be a string')
+    if not isinstance(conf.alternative_url, str):
+        raise Exception('The alternative_url config parameter must be a string')
+    if not isinstance(conf.create_datetime, str):
+        raise Exception('The create_datetime config parameter must be a string')
+    if not isinstance(conf.update_datetime, str):
+        raise Exception('The update_datetime config parameter must be a string')
+    if not isinstance(conf.documentation_url, str):
+        raise Exception('The documentation_url config parameter must be a string')
+    if not conf.welcome_url.startswith('http://'):
+        if not conf.welcome_url.startswith('https://'):
+            raise Exception('The url {} in cors_urls variable must start with http protocol'.format(conf.welcome_url))
+    if not conf.alternative_url.startswith('http://'):
+        if not conf.alternative_url.startswith('https://'):
+            raise Exception('The url {} in cors_urls variable must start with http protocol'.format(conf.alternative_url))
+    if not conf.documentation_url.startswith('http://'):
+        if not conf.documentation_url.startswith('https://'):
+            raise Exception('The url {} in cors_urls variable must start with http protocol'.format(conf.documentation_url))
