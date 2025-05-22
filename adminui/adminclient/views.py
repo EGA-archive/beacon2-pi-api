@@ -36,15 +36,20 @@ def default_view(request):
     if request.method == 'POST':
         form = BamForm(request.POST)
         if form.is_valid():
-            reference = form.cleaned_data['Datasets']
+            beaconName = form.cleaned_data['BeaconName']
+            beaconId = form.cleaned_data['BeaconId']
+            environment = form.cleaned_data['Environment']
             with open("adminui/beacon/conf/conf.py") as f:
                 lines = f.readlines()
             with open("adminui/beacon/conf/conf.py", "w") as f:
                 new_lines =''
                 for line in lines:
                     if 'beacon_name' in str(line):
-                        new_lines+="beacon_name="+"'"+reference+"'"+"\n"
-                        #lines.insert(j, "beacon_name = provaaaaa")
+                        new_lines+="beacon_name="+"'"+beaconName+"'"+"\n"
+                    elif 'beacon_id' in str(line):
+                        new_lines+="beacon_id="+"'"+beaconId+"'"+"\n"
+                    elif 'environment' in str(line):
+                        new_lines+="environment="+"'"+environment+"'"+"\n"
                     else:
                         new_lines+=line
                     
