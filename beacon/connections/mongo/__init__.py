@@ -1,6 +1,7 @@
 from pymongo.mongo_client import MongoClient
 from beacon.connections.mongo import conf
 from beacon.request.classes import ErrorClass
+from beacon.conf.conf import query_budget_database, query_budget_db_name, query_budget_table
 
 try:
 
@@ -29,3 +30,27 @@ except Exception as e:
     ErrorClass.error_code=500
     ErrorClass.error_message=str(e)
     raise
+
+# Mongo dbname
+dbname='beacon'
+
+# Collections clients
+analyses=client[dbname].analyses
+biosamples=client[dbname].biosamples
+cohorts=client[dbname].cohorts
+datasets=client[dbname].datasets
+genomicVariations=client[dbname].genomicVariations
+individuals=client[dbname].individuals
+runs=client[dbname].runs
+filtering_terms=client[dbname].filtering_terms
+caseLevelData=client[dbname].caseLevelData
+targets=client[dbname].targets
+synonyms=client[dbname].synonyms
+similarities=client[dbname].similarities
+counts=client[dbname].counts
+
+if query_budget_database == 'mongo':
+    try:
+        client[query_budget_db_name].validate_collection(query_budget_table)
+    except Exception:
+        db=client[query_budget_db_name].create_collection(name=query_budget_table)

@@ -1,64 +1,16 @@
 import os.path
-from typing import List, Dict, Optional
+from typing import List, Dict
 import re
-from pymongo.mongo_client import MongoClient
 import progressbar
 from bson.objectid import ObjectId
 from tqdm import tqdm
 from bson.json_util import dumps
 import json
-
-import sys
 import os
-
-
-current = os.path.dirname(os.path.realpath(__file__))
-
-
-parent = os.path.dirname(current)
-
-
-sys.path.append(parent)
-
-
-import conf
-
+from beacon.connections.mongo.__init__ import dbname, filtering_terms as filtering_terms_, client
 
 ONTOLOGY_REGEX = re.compile(r"([_A-Za-z0-9]+):([_A-Za-z0-9^\-]+)")
 ICD_REGEX = re.compile(r"(ICD[_A-Za-z0-9]+):([_A-Za-z0-9^\./-]+)")
-
-
-if conf.database_cluster:
-    uri = "mongodb+srv://{}:{}@{}/?tls=true&authMechanism=SCRAM-SHA-256&retrywrites=false&maxIdleTimeMS=120000".format(
-        conf.database_user,
-        conf.database_password,
-        conf.database_host
-    )
-else:
-    uri = "mongodb://{}:{}@{}:{}/{}?authSource={}".format(
-        conf.database_user,
-        conf.database_password,
-        conf.database_host,
-        conf.database_port,
-        conf.database_name,
-        conf.database_auth_source
-    )
-
-if os.path.isfile(conf.database_certificate):
-    uri += '&tls=true&tlsCertificateKeyFile={}'.format(conf.database_certificate)
-    if os.path.isfile(conf.database_cafile):
-        uri += '&tlsCAFile={}'.format(conf.database_cafile)
-
-client = MongoClient(uri)
-'''
-
-client = MongoClient(
-client = MongoClient(
-    #"mongodb://127.0.0.1:27017/"
-    "mongodb://root:example@mongo:27017/beacon?authSource=admin"
-
-)
-'''
 
 class MyProgressBar:
     def __init__(self):
@@ -102,7 +54,7 @@ def get_ontology_field_name(ontology_id:str, term_id:str, collection:str):
         fieldquery={}
         fieldquery[field]=ontology_id + ":" + term_id
         query['$or'].append(fieldquery)
-    results = client.beacon.get_collection(collection).find(query).limit(1)
+    results = client[dbname].get_collection(collection).find(query).limit(1)
     results = list(results)
     results = dumps(results)
     results = json.loads(results)
@@ -227,7 +179,7 @@ def get_ontology_field_name(ontology_id:str, term_id:str, collection:str):
 
 
 def insert_all_ontology_terms_used():
-    collections = client.beacon.list_collection_names()
+    collections = client[dbname].list_collection_names()
     if 'filtering_terms' in collections:
         collections.remove('filtering_terms')
     print("Collections:", collections)
@@ -236,12 +188,12 @@ def insert_all_ontology_terms_used():
             terms_ids = find_ontology_terms_used(c_name)
             terms = get_filtering_object(terms_ids, c_name)
             if len(terms) > 0:
-                client.beacon.filtering_terms.insert_many(terms)
+                filtering_terms_.insert_many(terms)
 
 def find_ontology_terms_used(collection_name: str) -> List[Dict]:
     print(collection_name)
     terms_ids = []
-    count = client.beacon.get_collection(collection_name).estimated_document_count()
+    count = client[dbname].get_collection(collection_name).estimated_document_count()
     if count < 50000:
         num_total=count
     else:
@@ -249,7 +201,7 @@ def find_ontology_terms_used(collection_name: str) -> List[Dict]:
     i=0
     if count > 50000:
         while i < count:
-            xs = client.beacon.get_collection(collection_name).find().skip(i).limit(50000)
+            xs = client[dbname].get_collection(collection_name).find().skip(i).limit(50000)
             for r in tqdm(xs, total=num_total):
                 matches = ONTOLOGY_REGEX.findall(str(r))
                 icd_matches = ICD_REGEX.findall(str(r))
@@ -266,7 +218,7 @@ def find_ontology_terms_used(collection_name: str) -> List[Dict]:
                 break
             print(i)
     else:
-        xs = client.beacon.get_collection(collection_name).find().skip(0).limit(50000)
+        xs = client[dbname].get_collection(collection_name).find().skip(0).limit(50000)
         for r in tqdm(xs, total=num_total):
             matches = ONTOLOGY_REGEX.findall(str(r))
             icd_matches = ICD_REGEX.findall(str(r))
@@ -349,7 +301,7 @@ def get_filtering_object(terms_ids: list, collection_name: str):
 
 
 def get_alphanumeric_term_count(collection_name: str, key: str) -> int:
-    return len(client.beacon\
+    return len(client[dbname]\
         .get_collection(collection_name)\
         .distinct(key))
 
@@ -383,7 +335,7 @@ def get_properties_of_document(document, prefix="") -> List[str]:
     return properties
 
 def merge_ontology_terms():
-    filtering_terms = client.beacon.filtering_terms.find({"type": "ontology"})
+    filtering_terms = filtering_terms_.find({"type": "ontology"})
     array_of_ids=[]
     repeated_ids=[]
     new_terms=[]
@@ -395,7 +347,7 @@ def merge_ontology_terms():
             repeated_ids.append(new_id)
     #print("repeated_ids are {}".format(repeated_ids))
     for repeated_id in repeated_ids:
-        repeated_terms = client.beacon.filtering_terms.find({"id": repeated_id, "type": "ontology"})
+        repeated_terms = filtering_terms_.find({"id": repeated_id, "type": "ontology"})
         array_of_scopes=[]
         for repeated_term in repeated_terms:
             #print(repeated_term)
@@ -413,13 +365,13 @@ def merge_ontology_terms():
                 #'count': get_ontology_term_count(collection_name, onto),
                 'scopes': array_of_scopes        
                         })
-        client.beacon.filtering_terms.delete_many({"id": repeated_id})
+        filtering_terms_.delete_many({"id": repeated_id})
     if new_terms != []:
-        client.beacon.filtering_terms.insert_many(new_terms)
+        filtering_terms_.insert_many(new_terms)
         
     
 def merge_alphanumeric_terms():
-    filtering_terms = client.beacon.filtering_terms.find({"type": "alphanumeric"})
+    filtering_terms = filtering_terms_.find({"type": "alphanumeric"})
     array_of_ids=[]
     repeated_ids=[]
     new_terms=[]
@@ -431,7 +383,7 @@ def merge_alphanumeric_terms():
             repeated_ids.append(new_id)
     #print("repeated_ids are {}".format(repeated_ids))
     for repeated_id in repeated_ids:
-        repeated_terms = client.beacon.filtering_terms.find({"id": repeated_id, "type": "alphanumeric"})
+        repeated_terms = filtering_terms_.find({"id": repeated_id, "type": "alphanumeric"})
         array_of_scopes=[]
         for repeated_term in repeated_terms:
             #print(repeated_term)
@@ -447,12 +399,12 @@ def merge_alphanumeric_terms():
                 #'count': get_ontology_term_count(collection_name, onto),
                 'scopes': array_of_scopes        
                         })
-        client.beacon.filtering_terms.delete_many({"id": repeated_id})
+        filtering_terms_.delete_many({"id": repeated_id})
     if new_terms != []:
-        client.beacon.filtering_terms.insert_many(new_terms)
+        filtering_terms_.insert_many(new_terms)
     
 def merge_custom_terms():
-    filtering_terms = client.beacon.filtering_terms.find({"type": "custom"})
+    filtering_terms = filtering_terms_.find({"type": "custom"})
     array_of_ids=[]
     repeated_ids=[]
     new_terms=[]
@@ -464,7 +416,7 @@ def merge_custom_terms():
             repeated_ids.append(new_id)
     #print("repeated_ids are {}".format(repeated_ids))
     for repeated_id in repeated_ids:
-        repeated_terms = client.beacon.filtering_terms.find({"id": repeated_id, "type": "custom"})
+        repeated_terms = filtering_terms_.find({"id": repeated_id, "type": "custom"})
         array_of_scopes=[]
         for repeated_term in repeated_terms:
             #print(repeated_term)
@@ -480,9 +432,9 @@ def merge_custom_terms():
                 #'count': get_ontology_term_count(collection_name, onto),
                 'scopes': array_of_scopes        
                         })
-        client.beacon.filtering_terms.delete_many({"id": repeated_id})
+        filtering_terms_.delete_many({"id": repeated_id})
     if new_terms != []:
-        client.beacon.filtering_terms.insert_many(new_terms)
+        filtering_terms_.insert_many(new_terms)
 
 
 

@@ -1,8 +1,9 @@
 from pymongo.cursor import Cursor
-from beacon.connections.mongo.__init__ import client
+from beacon.connections.mongo.__init__ import client, counts as counts_, filtering_terms
 from pymongo.collection import Collection
 from beacon.logs.logs import log_with_args_mongo, LOG
 from beacon.conf.conf import level
+from beacon.conf.filtering_terms import alphanumeric_terms
 from beacon.request.classes import ErrorClass
 
 @log_with_args_mongo(level)
@@ -65,7 +66,7 @@ def get_count(self, collection: Collection, query: dict) -> int:
     if not query:
         return collection.estimated_document_count()
     else:
-        counts=client.beacon.counts.find({"id": str(query), "collection": str(collection)})
+        counts=counts_.find({"id": str(query), "collection": str(collection)})
         try:
             counts=list(counts)
             if counts == []:
@@ -74,7 +75,7 @@ def get_count(self, collection: Collection, query: dict) -> int:
                 insert_dict['id']=str(query)# pragma: no cover
                 insert_dict['num_results']=total_counts# pragma: no cover
                 insert_dict['collection']=str(collection)# pragma: no cover
-                insert_total=client.beacon.counts.insert_one(insert_dict)# pragma: no cover
+                insert_total=counts_.insert_one(insert_dict)# pragma: no cover
             else:
                 total_counts=counts[0]["num_results"]
         except Exception as e:# pragma: no cover
@@ -83,7 +84,7 @@ def get_count(self, collection: Collection, query: dict) -> int:
             total_counts=0
             insert_dict['num_results']=total_counts# pragma: no cover
             insert_dict['collection']=str(collection)# pragma: no cover
-            insert_total=client.beacon.counts.insert_one(insert_dict)
+            insert_total=counts_.insert_one(insert_dict)
         return total_counts
 
 @log_with_args_mongo(level)
@@ -177,13 +178,13 @@ def choose_scope(self, scope, collection, filter):
     dict_id['id']=filter.id
     query_filtering['$and'].append(dict_id)
     docs = get_documents(self,
-    client.beacon.filtering_terms,
+    filtering_terms,
     query_filtering,
     0,
     1
     )
     docs = list(docs)
-    if docs == []:
+    if docs == [] and filter.id not in alphanumeric_terms:
         ErrorClass.error_code=400
         ErrorClass.error_message="The filtering term: {} is not a valid filtering term.".format(filter.id)
         raise

@@ -5,9 +5,9 @@ from beacon.conf.conf import level, query_budget_table, query_budget_db_name
 @log_with_args_mongo(level)
 def get_remaining_budget_by_user(self, username, start_budget_time):
     try:
-        client.beacon.validate_collection(query_budget_table)
+        client[query_budget_db_name].validate_collection(query_budget_table)
     except Exception:
-        client.beacon.create_collection(name=query_budget_table)
+        client[query_budget_db_name].create_collection(name=query_budget_table)
     budget_query={}
     budget_query["username"]=username
     budget_query["date"]={ "$gt": start_budget_time }

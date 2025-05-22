@@ -91,7 +91,7 @@ Remember to do this step every time you import new data!!
 You can create the necessary indexes running the following Python script:
 
 ```bash
-docker exec beaconprod python /beacon/connections/mongo/reindex.py
+docker exec beaconprod python -m beacon.connections.mongo.reindex
 ```
 
 #### Fetch the ontologies and extract the filtering terms
@@ -101,7 +101,7 @@ docker exec beaconprod python /beacon/connections/mongo/reindex.py
 You can automatically fetch the ontologies and extract the filtering terms running the following script:
 
 ```bash
- docker exec beaconprod python beacon/connections/mongo/extract_filtering_terms.py
+docker exec beaconprod python -m beacon.connections.mongo.extract_filtering_terms
 ```
 
 #### Get descendant and semantic similarity terms
@@ -113,7 +113,7 @@ You can automatically fetch the ontologies and extract the filtering terms runni
 2. Run the following script:
 
 ```bash
- docker exec beaconprod python beacon/connections/mongo/get_descendants.py
+docker exec beaconprod python -m beacon.connections.mongo.get_descendants
 ```
 
 #### Check the logs

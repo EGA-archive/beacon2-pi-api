@@ -8,10 +8,10 @@ from beacon.logs.logs import LOG
 from beacon.auth.__main__ import authentication
 from beacon.logs.logs import log_with_args, log_with_args_mongo
 from beacon.conf.conf import level
-from beacon.source.manage import datasets
 from beacon.budget.__main__ import check_budget
+from beacon.conf import dataset
 
-source=datasets['database']
+source=dataset.database
 complete_module='beacon.connections.'+source+'.datasets'
 import importlib
 module = importlib.import_module(complete_module, package=None)
