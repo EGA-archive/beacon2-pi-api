@@ -222,8 +222,8 @@ def get_analyses_of_resultSet(self, entry_id: Optional[str], qparams: RequestPar
 
 @log_with_args(level)
 def get_biosamples_of_resultSet(self, entry_id: Optional[str], qparams: RequestParams, dataset: str, collection, mongo_collection, schema, idq, entry_type):
-    if idq == "analysisId" or idq == 'runId':
-        if idq == 'analysisId':
+    if entry_type == analysis.endpoint_name or entry_type == run.endpoint_name:
+        if entry_type == analysis.endpoint_name:
             secondary_collection = analyses
         else:
             secondary_collection = runs
@@ -352,7 +352,7 @@ def get_variants_of_cohort(self, entry_id: Optional[str], qparams: RequestParams
 
 @log_with_args(level)
 def get_runs_of_resultSet(self, entry_id: Optional[str], qparams: RequestParams, dataset: str, collection, mongo_collection, schema, idq, entry_type):
-    if idq == "analysisId":
+    if entry_type == analysis.endpoint_name:
         analyses_found = analyses \
         .find({"id": entry_id, "datasetId": dataset}, {"biosampleId": 1, "_id": 0})
         list_of_analysisfound=[]
@@ -372,9 +372,9 @@ def get_runs_of_resultSet(self, entry_id: Optional[str], qparams: RequestParams,
 
 @log_with_args(level)
 def get_individuals_of_resultSet(self, entry_id: Optional[str], qparams: RequestParams, dataset: str, collection, mongo_collection, schema, idq, entry_type):
-    if idq == "analysisId":
+    if entry_type == analysis.endpoint_name or entry_type == run.endpoint_name:
+        if entry_type == analysis.endpoint_name:
             secondary_collection = analyses
-    elif idq == 'runId':
         secondary_collection = runs
     else:
         secondary_collection = biosamples

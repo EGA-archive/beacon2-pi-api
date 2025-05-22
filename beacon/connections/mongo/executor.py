@@ -18,211 +18,69 @@ async def execute_function(self, entry_type: str, datasets: list, qparams: Reque
     datasets_docs={}
     datasets_count={}
     new_count=0
-    if entry_type == genomicVariant.endpoint_name:
-        if entry_id == None:
-            function=get_resultSet
-        else:
-            function=get_resultSet_with_id
+    try:
+        entry_type_splitted = entry_type.split('.')
+        entry_type = entry_type_splitted[1]
+        pre_entry_type = entry_type_splitted[0]
+    except Exception:
+        pre_entry_type = None
+    if entry_type==genomicVariant.endpoint_name:
         collection=genomicVariant.endpoint_name
         mongo_collection=genomicVariations
         schema=DefaultSchemas.GENOMICVARIATIONS
         idq="caseLevelData.biosampleId"
-    elif entry_type == individual.endpoint_name:
-        if entry_id == None:
-            function=get_resultSet
-        else:
-            function=get_resultSet_with_id
-        collection=individual.endpoint_name
-        mongo_collection=individuals
-        schema=DefaultSchemas.INDIVIDUALS
-        idq="id"
-    elif entry_type == analysis.endpoint_name:
-        if entry_id == None:
-            function=get_resultSet
-        else:
-            function=get_resultSet_with_id
+    elif entry_type==analysis.endpoint_name:
         collection=analysis.endpoint_name
         mongo_collection=analyses
         schema=DefaultSchemas.ANALYSES
         idq="biosampleId"
-    elif entry_type == biosample.endpoint_name:
-        if entry_id == None:
-            function=get_resultSet
-        else:
-            function=get_resultSet_with_id
+    elif entry_type==biosample.endpoint_name:
         collection=biosample.endpoint_name
         mongo_collection=biosamples
         schema=DefaultSchemas.BIOSAMPLES
         idq="id"
-    elif entry_type == run.endpoint_name:
-        if entry_id == None:
-            function=get_resultSet
-        else:
-            function=get_resultSet_with_id
+    elif entry_type==individual.endpoint_name:
+        collection=individual.endpoint_name
+        mongo_collection=individuals
+        schema=DefaultSchemas.INDIVIDUALS
+        idq="id"
+    elif entry_type==run.endpoint_name:
         collection=run.endpoint_name
         mongo_collection=runs
         schema=DefaultSchemas.RUNS
         idq="biosampleId"
+    if pre_entry_type == None:
+        if entry_id == None:
+            function=get_resultSet
+        else:
+            function=get_resultSet_with_id
     else:
-        entry_type_splitted = entry_type.split('.')
-        entry_type = entry_type_splitted[1]
-        pre_entry_type = entry_type_splitted[0]
-        if pre_entry_type == dtaset.endpoint_name and entry_type == analysis.endpoint_name:
-            function = get_resultSet_of_dataset
-            collection=analysis.endpoint_name
-            mongo_collection=analyses
-            schema=DefaultSchemas.ANALYSES
-            idq="biosampleId"
-        elif pre_entry_type == dtaset.endpoint_name and entry_type == biosample.endpoint_name:
-            function = get_resultSet_of_dataset
-            collection=biosample.endpoint_name
-            mongo_collection=biosamples
-            schema=DefaultSchemas.BIOSAMPLES
-            idq="id"
-        elif pre_entry_type == dtaset.endpoint_name and entry_type == individual.endpoint_name:
-            function = get_resultSet_of_dataset
-            collection=individual.endpoint_name
-            mongo_collection=individuals
-            schema=DefaultSchemas.INDIVIDUALS
-            idq="id"
-        elif pre_entry_type == dtaset.endpoint_name and entry_type == run.endpoint_name:
-            function = get_resultSet_of_dataset
-            collection=run.endpoint_name
-            mongo_collection=runs
-            schema=DefaultSchemas.RUNS
-            idq="biosampleId"
-        elif pre_entry_type == dtaset.endpoint_name and entry_type == genomicVariant.endpoint_name:
+        if pre_entry_type == dtaset.endpoint_name and entry_type == genomicVariant.endpoint_name:
             function = get_variants_of_dataset
-            collection=genomicVariant.endpoint_name
-            mongo_collection=genomicVariations
-            schema=DefaultSchemas.GENOMICVARIATIONS
-            idq="caseLevelData.biosampleId"
-        elif pre_entry_type == cohort.endpoint_name and entry_type == analysis.endpoint_name:
-            function = get_resultSet_of_cohort
-            collection=analysis.endpoint_name
-            mongo_collection=analyses
-            schema=DefaultSchemas.ANALYSES
-            idq="biosampleId"
-        elif pre_entry_type == cohort.endpoint_name and entry_type == biosample.endpoint_name:
-            function = get_resultSet_of_cohort
-            collection=biosample.endpoint_name
-            mongo_collection=biosamples
-            schema=DefaultSchemas.BIOSAMPLES
-            idq="id"
-        elif pre_entry_type == cohort.endpoint_name and entry_type == individual.endpoint_name:
-            function = get_resultSet_of_cohort
-            collection=individual.endpoint_name
-            mongo_collection=individuals
-            schema=DefaultSchemas.INDIVIDUALS
-            idq="id"
-        elif pre_entry_type == cohort.endpoint_name and entry_type == run.endpoint_name:
-            function = get_resultSet_of_cohort
-            collection=run.endpoint_name
-            mongo_collection=runs
-            schema=DefaultSchemas.RUNS
-            idq="biosampleId"
+        elif pre_entry_type == dtaset.endpoint_name:
+            function = get_resultSet_of_dataset
         elif pre_entry_type == cohort.endpoint_name and entry_type == genomicVariant.endpoint_name:
             function = get_variants_of_cohort
-            collection=genomicVariant.endpoint_name
-            mongo_collection=genomicVariations
-            schema=DefaultSchemas.GENOMICVARIATIONS
-            idq="caseLevelData.biosampleId"
-        elif pre_entry_type == genomicVariant.endpoint_name and entry_type == individual.endpoint_name:
+        elif pre_entry_type == cohort.endpoint_name:
+            function = get_resultSet_of_cohort
+        elif pre_entry_type == genomicVariant.endpoint_name:
             function = get_resultSet_of_variants
-            collection=individual.endpoint_name
-            mongo_collection=individuals
-            schema=DefaultSchemas.INDIVIDUALS
-            idq="id"
-        elif pre_entry_type == genomicVariant.endpoint_name and entry_type == biosample.endpoint_name:
-            function = get_resultSet_of_variants
-            collection=biosample.endpoint_name
-            mongo_collection=biosamples
-            schema=DefaultSchemas.BIOSAMPLES
-            idq="id"
-        elif pre_entry_type == genomicVariant.endpoint_name and entry_type == analysis.endpoint_name:
-            function = get_resultSet_of_variants
-            collection=analysis.endpoint_name
-            mongo_collection=analyses
-            schema=DefaultSchemas.ANALYSES
-            idq="biosampleId"
-        elif pre_entry_type == genomicVariant.endpoint_name and entry_type == run.endpoint_name:
-            function = get_resultSet_of_variants
-            collection=run.endpoint_name
-            mongo_collection=runs
-            schema=DefaultSchemas.RUNS
-            idq="biosampleId"
         elif entry_type == genomicVariant.endpoint_name:
             function = get_variants_of_resultSet
-            collection=genomicVariant.endpoint_name
-            mongo_collection=genomicVariations
-            schema=DefaultSchemas.GENOMICVARIATIONS
-            idq="caseLevelData.biosampleId"
         elif entry_type == analysis.endpoint_name:
             function = get_analyses_of_resultSet
-            collection=analysis.endpoint_name
-            mongo_collection=analyses
-            schema=DefaultSchemas.ANALYSES
-            idq="biosampleId"
-        elif pre_entry_type == individual.endpoint_name and entry_type == biosample.endpoint_name:
+        elif entry_type == biosample.endpoint_name:
             function = get_biosamples_of_resultSet
-            collection=biosample.endpoint_name
-            mongo_collection=biosamples
-            schema=DefaultSchemas.BIOSAMPLES
-            idq="individualId"
-        elif pre_entry_type == analysis.endpoint_name and entry_type == biosample.endpoint_name:
-            function = get_biosamples_of_resultSet
-            collection=biosample.endpoint_name
-            mongo_collection=biosamples
-            schema=DefaultSchemas.BIOSAMPLES
-            idq="analysisId"
-        elif pre_entry_type == run.endpoint_name and entry_type == biosample.endpoint_name:
-            function = get_biosamples_of_resultSet
-            collection=biosample.endpoint_name
-            mongo_collection=biosamples
-            schema=DefaultSchemas.BIOSAMPLES
-            idq="runId"
-        elif pre_entry_type == individual.endpoint_name and entry_type == run.endpoint_name:
+        elif entry_type == run.endpoint_name:
             function = get_runs_of_resultSet
-            collection=run.endpoint_name
-            mongo_collection=runs
-            schema=DefaultSchemas.RUNS
-            idq="individualId"
-        elif pre_entry_type == biosample.endpoint_name and entry_type == run.endpoint_name:
-            function = get_runs_of_resultSet
-            collection=run.endpoint_name
-            mongo_collection=runs
-            schema=DefaultSchemas.RUNS
-            idq="biosampleId"
-        elif pre_entry_type == analysis.endpoint_name and entry_type == run.endpoint_name:
-            function = get_runs_of_resultSet
-            collection=run.endpoint_name
-            mongo_collection=runs
-            schema=DefaultSchemas.RUNS
-            idq="analysisId"
-        elif pre_entry_type == analysis.endpoint_name and entry_type == individual.endpoint_name:
+        elif entry_type == individual.endpoint_name:
             function = get_individuals_of_resultSet
-            collection=individual.endpoint_name
-            mongo_collection=individuals
-            schema=DefaultSchemas.INDIVIDUALS
-            idq="analysisId"
-        elif pre_entry_type == run.endpoint_name and entry_type == individual.endpoint_name:
-            function = get_individuals_of_resultSet
-            collection=individual.endpoint_name
-            mongo_collection=individuals
-            schema=DefaultSchemas.INDIVIDUALS
-            idq="runId"
-        elif pre_entry_type == biosample.endpoint_name and entry_type == individual.endpoint_name:
-            function = get_individuals_of_resultSet
-            collection=individual.endpoint_name
-            mongo_collection=individuals
-            schema=DefaultSchemas.INDIVIDUALS
-            idq="biosampleId"
 
     loop = asyncio.get_running_loop()
 
     if datasets != [] and include != 'NONE':
         with ThreadPoolExecutor() as pool:
-            done, pending = await asyncio.wait(fs=[loop.run_in_executor(pool, function, self, entry_id, qparams, dataset, collection, mongo_collection, schema, idq, entry_type) for dataset in datasets],
+            done, pending = await asyncio.wait(fs=[loop.run_in_executor(pool, function, self, entry_id, qparams, dataset, collection, mongo_collection, schema, idq, pre_entry_type) for dataset in datasets],
             return_when=asyncio.ALL_COMPLETED
             )
         for task in done:
@@ -252,7 +110,7 @@ async def execute_function(self, entry_type: str, datasets: list, qparams: Reque
     
     else:
         with ThreadPoolExecutor() as pool:
-            done, pending = await asyncio.wait(fs=[loop.run_in_executor(pool, function, self, entry_id, qparams, dataset, collection, mongo_collection, schema, idq, entry_type) for dataset in datasets],
+            done, pending = await asyncio.wait(fs=[loop.run_in_executor(pool, function, self, entry_id, qparams, dataset, collection, mongo_collection, schema, idq, pre_entry_type) for dataset in datasets],
             return_when=asyncio.ALL_COMPLETED
             )
         for task in done:
