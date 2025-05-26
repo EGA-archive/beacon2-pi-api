@@ -21,6 +21,7 @@ services:
       - pub
 
   admin-ui:
+    restart: always
     build:
       context: .
     container_name: admin-ui
@@ -29,6 +30,7 @@ services:
     entrypoint: ['bash','/adminui/start.sh']
     volumes:
       - ./beacon:/adminui/beacon
+      - ./adminui:/adminui
     networks:
       - pub
   
