@@ -628,7 +628,7 @@ def build_configuration(self):
         with open('beacon/response/templates/configuration.json', 'r') as template:
             response = json.load(template)
 
-        response['securityAttributes']['defaultGranularity']=conf.max_beacon_granularity
+        response['securityAttributes']['defaultGranularity']=conf.default_beacon_granularity
         response['securityAttributes']['securityLevels']=conf.security_levels
         response['maturityAttributes']['productionStatus']=conf.environment.upper()
 

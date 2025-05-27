@@ -64,8 +64,8 @@ def check_configuration():
         raise Exception('The database {} for analysis records needs to match a directory name in the beacon/connections folder'.format(analysis.database))
     if conf.environment not in ['dev', 'test', 'prod', 'DEV', 'TEST', 'PROD']:
         raise Exception('The environment variable in conf must be one between test, dev, prod')
-    if conf.max_beacon_granularity not in ['boolean', 'count', 'record']:
-        raise Exception("Configuration parameter max_beacon_granularity must be one string between boolean, count or record")
+    if conf.default_beacon_granularity not in ['boolean', 'count', 'record']:
+        raise Exception("Configuration parameter default_beacon_granularity must be one string between boolean, count or record")
     if not isinstance(conf.security_levels, list):
         raise Exception("Configuration parameter security_levels must be of type array")
     for security_level in conf.security_levels:

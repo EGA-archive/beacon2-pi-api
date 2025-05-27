@@ -9,7 +9,7 @@ from pydantic import (
 )
 from strenum import StrEnum
 from typing import List, Optional, Union
-from beacon.conf.conf import api_version, max_beacon_granularity
+from beacon.conf.conf import api_version, default_beacon_granularity
 from humps.main import camelize
 from aiohttp.web_request import Request
 from aiohttp import web
@@ -83,7 +83,7 @@ class RequestQuery(CamelModel):
     pagination: Pagination = Pagination()
     request_parameters: Union[list,dict] = {}
     test_mode: bool = False
-    requested_granularity: Granularity = Granularity(max_beacon_granularity)
+    requested_granularity: Granularity = Granularity(default_beacon_granularity)
     scope: str = None
 
 class SequenceQuery(BaseModel):
