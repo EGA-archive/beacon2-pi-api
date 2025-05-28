@@ -250,7 +250,7 @@ class Resultset(EndpointView):
             raise
 
     async def get(self):
-        try:
+        try: # Crear funció comuna
             ip = self.request.remote
             post_data = None
             headers = None

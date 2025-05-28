@@ -208,9 +208,10 @@ class RequestParams(CamelModel):
 
     def from_request(self, request: Request) -> Self:
         request_params={}
-        try:
+        try: # Hem de comentar!!! Si és un get no mirar body. Si és un POST mirar també el query string.
+            # Si hi ha 2 valors repetits (1 a string i 1 a body) retornar Bad Request.
             if request.method != "POST" or not request.has_body or not request.can_read_body:           
-                for k, v in request.query.items():
+                for k, v in request.query.items(): # html.escape inicial
                     if k == "requestedSchema":# pragma: no cover
                         self.meta.requested_schemas = [html.escape(v)] # comprovar si és la sanitització recomanada
                     elif k == "skip":# pragma: no cover

@@ -70,7 +70,7 @@ async def get_datasets_list(self, qparams, request: Request, authorized_datasets
 def dataset_permissions(func):
     @log_with_args(level)
     async def permission(self, post_data, request: Request, qparams, entry_type, entry_id, ip, headers):
-        try:
+        try: # arrancar amb testMode i si és True saltar la resta
             if post_data is not None:
                 v = post_data.get('datasets')
             else:

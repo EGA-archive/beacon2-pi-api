@@ -20,7 +20,7 @@ async def check_request_content_type(self, request: Request):
 
 @log_with_args(level)
 async def get_qparams(self, post_data, request):
-    try:
+    try: # Agrupar GET i POST en un únic pas de comprovació de la request
         if post_data is not None:
             qparams = RequestParams(**post_data).from_request(request)
         else:
