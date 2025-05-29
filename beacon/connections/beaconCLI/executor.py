@@ -8,7 +8,7 @@ from beacon.connections.beaconCLI.g_variants import get_variants
 
 @log_with_args(level)
 async def execute_function(self, entry_type: str, datasets: list, qparams: RequestParams, entry_id: Optional[str]):
-    include = qparams.query.include_resultset_responses
+    include = qparams.query.includeResultsetResponses
     limit = qparams.query.pagination.limit
     datasets_docs={}
     datasets_count={}

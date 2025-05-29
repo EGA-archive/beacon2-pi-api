@@ -7,7 +7,7 @@ from beacon.conf import analysis, biosample, cohort, dataset, genomicVariant, in
 
 @log_with_args(level)
 async def builder(self, request: Request, datasets, qparams, entry_type, entry_id):
-    granularity = qparams.query.requested_granularity
+    granularity = qparams.query.requestedGranularity
     try:
         if '.' in entry_type and genomicVariant.endpoint_name not in entry_type:
             source_entry_type = entry_type.split('.')
@@ -45,7 +45,7 @@ async def builder(self, request: Request, datasets, qparams, entry_type, entry_i
         complete_module='beacon.connections.'+source+'.executor'
         import importlib
         module = importlib.import_module(complete_module, package=None)
-        testMode = qparams.query.test_mode
+        testMode = qparams.query.testMode
         if testMode == True:
             datasets = [test_datasetId]
         datasets_docs, datasets_count, count, entity_schema, include, datasets = await module.execute_function(self, entry_type, datasets, qparams, entry_id)

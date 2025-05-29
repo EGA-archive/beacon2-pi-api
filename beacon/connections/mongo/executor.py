@@ -15,7 +15,7 @@ from aiohttp import web
 
 @log_with_args(level)
 async def execute_function(self, entry_type: str, datasets: list, qparams: RequestParams, entry_id: Optional[str]):
-    include = qparams.query.include_resultset_responses
+    include = qparams.query.includeResultsetResponses
     limit = qparams.query.pagination.limit
     datasets_docs={}
     datasets_count={}
@@ -28,7 +28,7 @@ async def execute_function(self, entry_type: str, datasets: list, qparams: Reque
         pre_entry_type = None
     if entry_type==genomicVariant.endpoint_name:
         try:
-            if genomicVariant.allow_queries_without_filters == False and qparams.query.filters == [] and qparams.query.request_parameters == []:
+            if genomicVariant.allow_queries_without_filters == False and qparams.query.filters == [] and qparams.query.requestParameters == []:
                 ErrorClass.error_code=400
                 ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(genomicVariant.endpoint_name)
                 raise web.HTTPBadRequest
@@ -42,7 +42,7 @@ async def execute_function(self, entry_type: str, datasets: list, qparams: Reque
         idq="caseLevelData.biosampleId"
     elif entry_type==analysis.endpoint_name:
         try:
-            if analysis.allow_queries_without_filters == False and qparams.query.filters == [] and qparams.query.request_parameters == []:
+            if analysis.allow_queries_without_filters == False and qparams.query.filters == [] and qparams.query.requestParameters == []:
                 ErrorClass.error_code=400
                 ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(analysis.endpoint_name)
                 raise web.HTTPBadRequest
@@ -56,7 +56,7 @@ async def execute_function(self, entry_type: str, datasets: list, qparams: Reque
         idq="biosampleId"
     elif entry_type==biosample.endpoint_name:
         try:
-            if biosample.allow_queries_without_filters == False and qparams.query.filters == [] and qparams.query.request_parameters == []:
+            if biosample.allow_queries_without_filters == False and qparams.query.filters == [] and qparams.query.requestParameters == []:
                 ErrorClass.error_code=400
                 ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(biosample.endpoint_name)
                 raise web.HTTPBadRequest
@@ -70,7 +70,7 @@ async def execute_function(self, entry_type: str, datasets: list, qparams: Reque
         idq="id"
     elif entry_type==individual.endpoint_name:
         try:
-            if individual.allow_queries_without_filters == False and qparams.query.filters == [] and qparams.query.request_parameters == []:
+            if individual.allow_queries_without_filters == False and qparams.query.filters == [] and qparams.query.requestParameters == []:
                 ErrorClass.error_code=400
                 ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(individual.endpoint_name)
                 raise web.HTTPBadRequest
@@ -84,7 +84,7 @@ async def execute_function(self, entry_type: str, datasets: list, qparams: Reque
         idq="id"
     elif entry_type==run.endpoint_name:
         try:
-            if run.allow_queries_without_filters == False and qparams.query.filters == [] and qparams.query.request_parameters == []:
+            if run.allow_queries_without_filters == False and qparams.query.filters == [] and qparams.query.requestParameters == []:
                 ErrorClass.error_code=400
                 ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(run.endpoint_name)
                 raise web.HTTPBadRequest

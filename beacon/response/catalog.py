@@ -336,7 +336,7 @@ def generate_endpoints(self, response_type, key_response):
 def build_response(self, data, num_total_results, qparams):
     """"Fills the `response` part with the correct format in `results`"""
     limit = qparams.query.pagination.limit
-    include = qparams.query.include_resultset_responses
+    include = qparams.query.includeResultsetResponses
     if include == 'NONE':
             response = {
             'id': '', # TODO: Set the name of the dataset/cohort

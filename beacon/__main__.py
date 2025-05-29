@@ -21,7 +21,7 @@ from aiohttp_cors import CorsViewMixin
 from datetime import datetime
 from beacon.conf import conf
 import ssl
-from beacon.request.parameters import RequestMeta, RequestQuery
+from beacon.request.parameters import RequestMeta, RequestQuery, Pagination
 from beacon.budget.__main__ import insert_budget
 from beacon.validator.configuration import check_configuration
 
@@ -171,10 +171,10 @@ class Collection(EndpointView):
             return await self.collection(self.request, qparams, entry_type, entry_id)
         except Exception as e:# pragma: no cover
             response_obj = build_beacon_error_response(self, ErrorClass.error_code, {
-                "apiVersion": RequestMeta().api_version,
-                "requestedSchemas": RequestMeta().requested_schemas,
-                "pagination": {"skip": 0,"limit": 10 },
-                "requestedGranularity": RequestQuery().requested_granularity,
+                "apiVersion": RequestMeta().apiVersion,
+                "requestedSchemas": RequestMeta().requestedSchemas,
+                "pagination": RequestQuery().pagination,
+                "requestedGranularity": RequestQuery().requestedGranularity,
             }, ErrorClass.error_message)
             return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')
 
@@ -194,10 +194,10 @@ class Collection(EndpointView):
             return await self.collection(request, qparams, entry_type, entry_id)
         except Exception as e:# pragma: no cover
             response_obj = build_beacon_error_response(self, ErrorClass.error_code, {
-                "apiVersion": RequestMeta().api_version,
-                "requestedSchemas": RequestMeta().requested_schemas,
-                "pagination": {"skip": 0,"limit": 10 },
-                "requestedGranularity": RequestQuery().requested_granularity,
+                "apiVersion": RequestMeta().apiVersion,
+                "requestedSchemas": RequestMeta().requestedSchemas,
+                "pagination": RequestQuery().pagination,
+                "requestedGranularity": RequestQuery().requestedGranularity,
             }, ErrorClass.error_message)
             return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')
         
@@ -217,10 +217,10 @@ class FilteringTerms(EndpointView):
             return await self.filteringTerms(self.request, qparams)
         except Exception as e:# pragma: no cover
             response_obj = build_beacon_error_response(self, ErrorClass.error_code, {
-                "apiVersion": RequestMeta().api_version,
-                "requestedSchemas": RequestMeta().requested_schemas,
-                "pagination": {"skip": 0,"limit": 10 },
-                "requestedGranularity": RequestQuery().requested_granularity,
+                "apiVersion": RequestMeta().apiVersion,
+                "requestedSchemas": RequestMeta().requestedSchemas,
+                "pagination": RequestQuery().pagination,
+                "requestedGranularity": RequestQuery().requestedGranularity,
             }, ErrorClass.error_message)
             return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')
 
@@ -231,10 +231,10 @@ class FilteringTerms(EndpointView):
             return await self.filteringTerms(self.request, qparams)
         except Exception as e:# pragma: no cover
             response_obj = build_beacon_error_response(self, ErrorClass.error_code, {
-                "apiVersion": RequestMeta().api_version,
-                "requestedSchemas": RequestMeta().requested_schemas,
-                "pagination": {"skip": 0,"limit": 10 },
-                "requestedGranularity": RequestQuery().requested_granularity,
+                "apiVersion": RequestMeta().apiVersion,
+                "requestedSchemas": RequestMeta().requestedSchemas,
+                "pagination": RequestQuery().pagination,
+                "requestedGranularity": RequestQuery().requestedGranularity,
             }, ErrorClass.error_message)
             return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')
 
@@ -266,10 +266,10 @@ class Resultset(EndpointView):
             return await self.resultset(post_data, self.request, qparams, entry_type, entry_id, ip, headers)
         except Exception as e:# pragma: no cover
             response_obj = build_beacon_error_response(self, ErrorClass.error_code, {
-                "apiVersion": RequestMeta().api_version,
-                "requestedSchemas": RequestMeta().requested_schemas,
-                "pagination": {"skip": 0,"limit": 10 },
-                "requestedGranularity": RequestQuery().requested_granularity,
+                "apiVersion": RequestMeta().apiVersion,
+                "requestedSchemas": RequestMeta().requestedSchemas,
+                "pagination": RequestQuery().pagination,
+                "requestedGranularity": RequestQuery().requestedGranularity,
             }, ErrorClass.error_message)
             return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')
 
@@ -291,10 +291,10 @@ class Resultset(EndpointView):
             return await self.resultset(post_data, request, qparams, entry_type, entry_id, ip, headers)
         except Exception as e:# pragma: no cover
             response_obj = build_beacon_error_response(self, ErrorClass.error_code, {
-                "apiVersion": RequestMeta().api_version,
-                "requestedSchemas": RequestMeta().requested_schemas,
-                "pagination": {"skip": 0,"limit": 10 },
-                "requestedGranularity": RequestQuery().requested_granularity,
+                "apiVersion": RequestMeta().apiVersion,
+                "requestedSchemas": RequestMeta().requestedSchemas,
+                "pagination": RequestQuery().pagination,
+                "requestedGranularity": RequestQuery().requestedGranularity,
             }, ErrorClass.error_message)
             return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')
         

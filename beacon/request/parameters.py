@@ -67,24 +67,19 @@ class CustomFilter(CamelModel):
     scope: Optional[str] =None
 
 
+class SchemasPerEntity(CamelModel):
+    entityType: Optional[str]
+    schema: Optional[str]
+
+
 class Pagination(CamelModel):
     skip: int = 0
     limit: int = 10
 
 
 class RequestMeta(CamelModel):
-    requested_schemas: List[str] = []
-    api_version: str = api_version
-
-
-class RequestQuery(CamelModel):
-    filters: List[dict] = []
-    include_resultset_responses: IncludeResultsetResponses = IncludeResultsetResponses.HIT
-    pagination: Pagination = Pagination()
-    request_parameters: Union[list,dict] = {}
-    test_mode: bool = False
-    requested_granularity: Granularity = Granularity(default_beacon_granularity)
-    scope: str = None
+    requestedSchemas: List[SchemasPerEntity] = []
+    apiVersion: str = 'v2.0.0'
 
 class SequenceQuery(BaseModel):
     referenceName: Union[str,int]
@@ -94,6 +89,7 @@ class SequenceQuery(BaseModel):
     clinicalRelevance: Optional[str] =None
     mateName: Optional[str] =None
     assemblyId: Optional[str] =None
+    datasets: Optional[list]=[]
     @model_validator(mode='after')
     @classmethod
     def referenceName_must_have_assemblyId_if_not_HGVSId(cls, values):
@@ -128,6 +124,7 @@ class RangeQuery(BaseModel):
     clinicalRelevance: Optional[str] =None
     mateName: Optional[str] =None
     assemblyId: Optional[str] =None
+    datasets: Optional[list]=[]
     @model_validator(mode='after')
     @classmethod
     def referenceName_must_have_assemblyId_if_not_HGVSId_2(cls, values):
@@ -144,9 +141,6 @@ class RangeQuery(BaseModel):
         else:# pragma: no cover
             raise ValueError
 
-class DatasetsRequested(BaseModel):
-    datasets: list
-
 class GeneIdQuery(BaseModel):
     geneId: str
     variantType: Optional[str] =None
@@ -154,6 +148,7 @@ class GeneIdQuery(BaseModel):
     aminoacidChange: Optional[str] =None
     variantMinLength: Optional[int] =None
     variantMaxLength: Optional[int] =None
+    datasets: Optional[list]=[]
 
 class BracketQuery(BaseModel):
     referenceName: Union[str,int]
@@ -163,6 +158,7 @@ class BracketQuery(BaseModel):
     clinicalRelevance: Optional[str] =None
     mateName: Optional[str] =None
     assemblyId: Optional[str] =None
+    datasets: Optional[list]=[]
     @field_validator('start')
     @classmethod
     def start_must_be_array_of_integers(cls, v: list) -> list:
@@ -197,108 +193,65 @@ class BracketQuery(BaseModel):
 
 class GenomicAlleleQuery(BaseModel):
     genomicAlleleShortForm: str
+    datasets: Optional[list]=[]
 
 class AminoacidChangeQuery(BaseModel):
     aminoacidChange: str
     geneId: str
+    datasets: Optional[list]=[]
+
+class DatasetsRequested(BaseModel):
+    datasets: list[str]
+
+class RequestQuery(CamelModel):
+    filters: List[dict] = []
+    includeResultsetResponses: IncludeResultsetResponses = IncludeResultsetResponses.HIT
+    pagination: Pagination = Pagination()
+    requestParameters: Optional[Union[SequenceQuery,RangeQuery,BracketQuery,AminoacidChangeQuery,GeneIdQuery,GenomicAlleleQuery,DatasetsRequested]] = {}
+    testMode: bool = False
+    requestedGranularity: Granularity = Granularity(default_beacon_granularity)
 
 class RequestParams(CamelModel):
     meta: RequestMeta = RequestMeta()
     query: RequestQuery = RequestQuery()
 
     def from_request(self, request: Request) -> Self:
-        request_params={}
-        try: # Hem de comentar!!! Si és un get no mirar body. Si és un POST mirar també el query string.
-            # Si hi ha 2 valors repetits (1 a string i 1 a body) retornar Bad Request.
-            if request.method != "POST" or not request.has_body or not request.can_read_body:           
-                for k, v in request.query.items(): # html.escape inicial
-                    if k == "requestedSchema":# pragma: no cover
-                        self.meta.requested_schemas = [html.escape(v)] # comprovar si és la sanitització recomanada
-                    elif k == "skip":# pragma: no cover
-                        self.query.pagination.skip = int(html.escape(v))
-                    elif k == "limit":
-                        self.query.pagination.limit = int(html.escape(v))
-                    elif k == "includeResultsetResponses":
-                        self.query.include_resultset_responses = IncludeResultsetResponses(html.escape(v))
-                    elif k == 'datasets':
-                        self.query.request_parameters[k] = html.escape(v)
-                    elif k == 'filters':
-                        self.query.request_parameters[k] = html.escape(v)
-                    elif k == 'testMode':
-                        v = html.escape(v)
-                        if v.lower() == 'true':
-                            v = True
-                        elif v.lower() == 'false':# pragma: no cover
-                            v = False
-                        else:
-                            ErrorClass.error_code=400
-                            ErrorClass.error_message='testMode parameter can only be either true or false value'
-                            raise
-                        self.query.test_mode = v
-                    elif k in ["start", "end", "assemblyId", "referenceName", "referenceBases", "alternateBases", "variantType","variantMinLength","variantMaxLength","geneId","genomicAlleleShortForm","aminoacidChange","clinicalRelevance", "mateName"]:
-                        try:
-                            if ',' in v:# pragma: no cover
-                                v_splitted = v.split(',')
-                                request_params[k]=[int(v) for v in v_splitted]
-                            else:
-                                request_params[k]=int(v)
-                        except Exception as e:
-                            request_params[k]=v
-                        self.query.request_parameters[k] = html.escape(v)
-                    else:
-                        catch_req_params = {}
-                        for k, v in request.query.items():
-                            catch_req_params[k]=v
-                        ErrorClass.error_code=400
-                        ErrorClass.error_message='set of request parameters: {} not allowed'.format(catch_req_params)
-                        raise
-        except Exception:
-            if ErrorClass.error_code == 400:
-                raise
+        catch_req_params={}
+        for k, v in request.query.items():
+            if k == 'filters':
+                self.query.filters = v
+            elif k == 'includeResultsetResponses':
+                self.query.includeResultsetResponses = v
+            elif k == 'skip':
+                self.query.pagination.skip = v
+            elif k == 'limit':
+                self.query.pagination.limit = v
+            elif k == 'testMode':
+                self.query.testMode = v
+            elif k == 'requestedGranularity':
+                self.query.requestedGranularity = v
             else:
-                try:
-                    request_params=request["query"]["requestParameters"]
-                except Exception:
-                    request_params={}
-        if request_params != {}:
-            try:
-                RangeQuery(**request_params)
-                return self
-            except Exception as e:
-                pass
-            try:
-                SequenceQuery(**request_params)
-                return self# pragma: no cover
-            except Exception as e:
-                pass
-            try:
-                BracketQuery(**request_params)
-                return self# pragma: no cover
-            except Exception as e:
-                pass
-            try:
-                GeneIdQuery(**request_params)
-                return self# pragma: no cover
-            except Exception as e:
-                pass
-            try:
-                AminoacidChangeQuery(**request_params)
-                return self# pragma: no cover
-            except Exception as e:
-                pass
-            try:
-                GenomicAlleleQuery(**request_params)
-                return self# pragma: no cover
-            except Exception as e:
-                pass
-            try:
-                DatasetsRequested(**request_params)
-                return self# pragma: no cover
-            except Exception as e:
-                ErrorClass.error_code=400
-                ErrorClass.error_message='set of request parameters: {} not allowed'.format(request_params)
-                raise
+                catch_req_params[k]=v
+        LOG.debug(catch_req_params)
+        self.query.requestParameters=catch_req_params
+        try:
+            self.meta.apiVersion = request["meta"]["apiVersion"]
+        except Exception:
+            pass
+        try:
+            self.meta.requestedSchemas = request["meta"]["requestedSchemas"]
+        except Exception:
+            pass
+        try:
+            self.query.requestParameters = request["query"]["requestParameters"]
+        except Exception:
+            pass
+        try:
+            self.query.filters = request["query"]["filters"]
+        except Exception:
+            pass
         return self
+        
 
     def summary(self):
         try:
@@ -311,11 +264,11 @@ class RequestParams(CamelModel):
                 "apiVersion": self.meta.api_version,
                 "requestedSchemas": self.meta.requested_schemas,
                 "filters": list_of_filters,
-                "requestParameters": self.query.request_parameters,
-                "includeResultsetResponses": self.query.include_resultset_responses,
+                "requestParameters": self.query.requestParameters,
+                "includeResultsetResponses": self.query.includeResultsetResponses,
                 "pagination": self.query.pagination.dict(),
-                "requestedGranularity": self.query.requested_granularity,
-                "testMode": self.query.test_mode
+                "requestedGranularity": self.query.requestedGranularity,
+                "testMode": self.query.testMode
             }
         except Exception as e:# pragma: no cover
             ErrorClass.error_code=500

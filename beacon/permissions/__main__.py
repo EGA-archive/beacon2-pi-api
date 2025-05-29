@@ -44,7 +44,7 @@ async def get_datasets_list(self, qparams, request: Request, authorized_datasets
         specific_datasets_unauthorized = []
         search_and_authorized_datasets = []
         try:
-            specific_datasets = qparams.query.request_parameters['datasets']
+            specific_datasets = qparams.query.requestParameters['datasets']
         except Exception as e:
             specific_datasets = []
         # Get response

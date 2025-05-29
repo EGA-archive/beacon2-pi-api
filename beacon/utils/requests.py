@@ -4,6 +4,7 @@ from aiohttp import web
 from beacon.request.parameters import RequestParams
 from beacon.logs.logs import log_with_args, LOG
 from beacon.conf.conf import level
+from beacon.request.classes import ErrorClass
 
 @log_with_args(level)
 async def check_request_content_type(self, request: Request):
@@ -20,12 +21,20 @@ async def check_request_content_type(self, request: Request):
 
 @log_with_args(level)
 async def get_qparams(self, post_data, request):
-    try: # Agrupar GET i POST en un únic pas de comprovació de la request
-        if post_data is not None:
-            qparams = RequestParams(**post_data).from_request(request)
-        else:
-            json_body={}
-            qparams = RequestParams(**json_body).from_request(request)
-        return qparams
+    LOG.debug(request)
+    if post_data is not None:
+        qparams = RequestParams(**post_data).from_request(request)
+    else:
+        json_body={}
+        qparams = RequestParams(**json_body).from_request(request)
+    LOG.debug(qparams)
+    return qparams
+    '''
     except Exception as e:# pragma: no cover
-        raise
+        catch_req_params = {}
+        for k, v in request.items():
+            catch_req_params[k]=v
+        ErrorClass.error_code=400
+        ErrorClass.error_message='set of meta/query parameters: {} not allowed'.format(catch_req_params)
+        raise web.HTTPBadRequest
+    '''
