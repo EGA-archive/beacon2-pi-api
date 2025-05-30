@@ -216,24 +216,6 @@ class RequestParams(CamelModel):
     query: RequestQuery = RequestQuery()
 
     def from_request(self, request: Request) -> Self:
-        catch_req_params={}
-        for k, v in request.query.items():
-            if k == 'filters':
-                self.query.filters = v
-            elif k == 'includeResultsetResponses':
-                self.query.includeResultsetResponses = v
-            elif k == 'skip':
-                self.query.pagination.skip = v
-            elif k == 'limit':
-                self.query.pagination.limit = v
-            elif k == 'testMode':
-                self.query.testMode = v
-            elif k == 'requestedGranularity':
-                self.query.requestedGranularity = v
-            else:
-                catch_req_params[k]=v
-        LOG.debug(catch_req_params)
-        self.query.requestParameters=catch_req_params
         try:
             self.meta.apiVersion = request["meta"]["apiVersion"]
         except Exception:
@@ -255,15 +237,10 @@ class RequestParams(CamelModel):
 
     def summary(self):
         try:
-            list_of_filters=[]
-            for item in self.query.filters:
-                for k,v in item.items():
-                    if v not in list_of_filters:
-                        list_of_filters.append(html.escape(v))
             return {
-                "apiVersion": self.meta.api_version,
-                "requestedSchemas": self.meta.requested_schemas,
-                "filters": list_of_filters,
+                "apiVersion": self.meta.apiVersion,
+                "requestedSchemas": self.meta.requestedSchemas,
+                "filters": self.query.filters,
                 "requestParameters": self.query.requestParameters,
                 "includeResultsetResponses": self.query.includeResultsetResponses,
                 "pagination": self.query.pagination.dict(),

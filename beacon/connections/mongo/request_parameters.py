@@ -100,6 +100,8 @@ def apply_request_parameters(self, query: Dict[str, List[dict]], qparams: Reques
         if k == 'end':
             equal=True
             endvalue=v
+        if k == 'start':
+            startvalue=v
     for k, v in qparams.query.requestParameters.items():
         if k == "start":
             if isinstance(v, str):

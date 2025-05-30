@@ -158,7 +158,7 @@ class Collection(EndpointView):
 
     async def get(self):
         try:
-            post_data = None
+            post_data = {}
             qparams = await get_qparams(self, post_data, self.request) 
             path_list = self.request.path.split('/')
             if len(path_list) > 4:
@@ -173,7 +173,7 @@ class Collection(EndpointView):
             response_obj = build_beacon_error_response(self, ErrorClass.error_code, {
                 "apiVersion": RequestMeta().apiVersion,
                 "requestedSchemas": RequestMeta().requestedSchemas,
-                "pagination": RequestQuery().pagination,
+                "pagination": RequestQuery().pagination.dict(),
                 "requestedGranularity": RequestQuery().requestedGranularity,
             }, ErrorClass.error_message)
             return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')
@@ -182,7 +182,7 @@ class Collection(EndpointView):
         try:
             request = await self.request.json() if self.request.has_body else {}
             post_data = request
-            qparams = await get_qparams(self, post_data, request) 
+            qparams = await get_qparams(self, post_data, self.request) 
             path_list = self.request.path.split('/')
             if len(path_list) > 4:
                 entry_type=path_list[2]+'.'+path_list[4]# pragma: no cover
@@ -196,7 +196,7 @@ class Collection(EndpointView):
             response_obj = build_beacon_error_response(self, ErrorClass.error_code, {
                 "apiVersion": RequestMeta().apiVersion,
                 "requestedSchemas": RequestMeta().requestedSchemas,
-                "pagination": RequestQuery().pagination,
+                "pagination": RequestQuery().pagination.dict(),
                 "requestedGranularity": RequestQuery().requestedGranularity,
             }, ErrorClass.error_message)
             return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')
@@ -212,28 +212,28 @@ class FilteringTerms(EndpointView):
 
     async def get(self):
         try:
-            post_data = None
+            post_data = {}
             qparams = await get_qparams(self, post_data, self.request) 
             return await self.filteringTerms(self.request, qparams)
         except Exception as e:# pragma: no cover
             response_obj = build_beacon_error_response(self, ErrorClass.error_code, {
                 "apiVersion": RequestMeta().apiVersion,
                 "requestedSchemas": RequestMeta().requestedSchemas,
-                "pagination": RequestQuery().pagination,
+                "pagination": RequestQuery().pagination.dict(),
                 "requestedGranularity": RequestQuery().requestedGranularity,
             }, ErrorClass.error_message)
             return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')
 
     async def post(self):
         try:
-            post_data = None
+            post_data = {}
             qparams = await get_qparams(self, post_data, self.request) 
             return await self.filteringTerms(self.request, qparams)
         except Exception as e:# pragma: no cover
             response_obj = build_beacon_error_response(self, ErrorClass.error_code, {
                 "apiVersion": RequestMeta().apiVersion,
                 "requestedSchemas": RequestMeta().requestedSchemas,
-                "pagination": RequestQuery().pagination,
+                "pagination": RequestQuery().pagination.dict(),
                 "requestedGranularity": RequestQuery().requestedGranularity,
             }, ErrorClass.error_message)
             return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')
@@ -252,7 +252,7 @@ class Resultset(EndpointView):
     async def get(self):
         try: # Crear funció comuna
             ip = self.request.remote
-            post_data = None
+            post_data = {}
             headers = None
             qparams = await get_qparams(self, post_data, self.request) 
             path_list = self.request.path.split('/')
@@ -268,7 +268,7 @@ class Resultset(EndpointView):
             response_obj = build_beacon_error_response(self, ErrorClass.error_code, {
                 "apiVersion": RequestMeta().apiVersion,
                 "requestedSchemas": RequestMeta().requestedSchemas,
-                "pagination": RequestQuery().pagination,
+                "pagination": RequestQuery().pagination.dict(),
                 "requestedGranularity": RequestQuery().requestedGranularity,
             }, ErrorClass.error_message)
             return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')
@@ -279,7 +279,7 @@ class Resultset(EndpointView):
             request = await self.request.json() if self.request.has_body else {}
             headers = self.request.headers
             post_data = request
-            qparams = await get_qparams(self, post_data, request) 
+            qparams = await get_qparams(self, post_data, self.request) 
             path_list = self.request.path.split('/')
             if len(path_list) > 4:
                 entry_type=path_list[2]+'.'+path_list[4]# pragma: no cover
@@ -293,7 +293,7 @@ class Resultset(EndpointView):
             response_obj = build_beacon_error_response(self, ErrorClass.error_code, {
                 "apiVersion": RequestMeta().apiVersion,
                 "requestedSchemas": RequestMeta().requestedSchemas,
-                "pagination": RequestQuery().pagination,
+                "pagination": RequestQuery().pagination.dict(),
                 "requestedGranularity": RequestQuery().requestedGranularity,
             }, ErrorClass.error_message)
             return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')
