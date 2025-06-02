@@ -10,6 +10,7 @@ from beacon.logs.logs import log_with_args, log_with_args_mongo
 from beacon.conf.conf import level
 from beacon.budget.__main__ import check_budget
 from beacon.conf import dataset
+import yaml
 
 source=dataset.database
 complete_module='beacon.connections.'+source+'.datasets'
@@ -85,8 +86,13 @@ def dataset_permissions(func):
                 requested_datasets = v.split(sep=',')
             
             username, list_visa_datasets = await authorization(self, request, headers)
-                
-            datasets = await PermissionsProxy.get_permissions(self, username=username, requested_datasets=requested_datasets)
+            if qparams.query.testMode == True:
+                with open("/beacon/permissions/datasets/test_datasets.yml", 'r') as pfile:
+                    test_datasets = yaml.safe_load(pfile)
+                pfile.close()
+                datasets= test_datasets['test_datasets']
+            else:
+                datasets = await PermissionsProxy.get_permissions(self, username=username, requested_datasets=requested_datasets)
             dict_returned={}
             dict_returned['username']=username
             time_now = check_budget(self, ip, username)
