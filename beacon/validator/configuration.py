@@ -4,6 +4,7 @@ from beacon.logs.logs import LOG
 import os
 import re
 import logging
+import yaml
 
 def contains_special_characters(string):
     for char in string:
@@ -419,3 +420,32 @@ def check_configuration():
     if not conf.documentation_url.startswith('http://'):
         if not conf.documentation_url.startswith('https://'):
             raise Exception('The url {} in cors_urls variable must start with http protocol'.format(conf.documentation_url))
+    try:
+        with open("/beacon/permissions/datasets/test_datasets.yml", 'r') as pfile:
+            test_datasets = yaml.safe_load(pfile)
+        pfile.close()
+        try_datasets= test_datasets['test_datasets']
+    except Exception:
+        raise Exception("test_datasets.yml file doesn't have the key test_datasets")
+    try:
+        with open("/beacon/permissions/datasets/public_datasets.yml", 'r') as pfile:
+            public_datasets = yaml.safe_load(pfile)
+        pfile.close()
+        try_datasets= public_datasets['public_datasets']
+    except Exception:
+        raise Exception("public_datasets.yml file doesn't have the key public_datasets")
+    try:
+        with open("/beacon/permissions/datasets/registered_datasets.yml", 'r') as pfile:
+            registered_datasets = yaml.safe_load(pfile)
+        pfile.close()
+        try_datasets= registered_datasets['registered_datasets']
+    except Exception:
+        raise Exception("registered_datasets.yml file doesn't have the key registered_datasets")
+    try:
+        with open("/beacon/permissions/datasets/controlled_datasets.yml", 'r') as pfile:
+            controlled_datasets = yaml.safe_load(pfile)
+        pfile.close()
+        for k,v in controlled_datasets.items():
+            pass
+    except Exception:
+        raise Exception("controlled_datasets.yml doesn't have usernames")
