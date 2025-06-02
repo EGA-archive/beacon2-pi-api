@@ -22,6 +22,11 @@ async def check_request_content_type(self, request: Request):
 
 @log_with_args(level)
 async def get_qparams(self, post_data, request):
+    '''
+    The function will catch all the parameters string and see if they also exist in a json body of the request. If a parameter is found in both places, the json body will
+    have priority over the parameter string. After that, the params request will be validated against a pydantic class RequestParams and an object class will be returned
+    as the query parameters that will be used for processing the query.
+    '''
     try:
         catch_query_params={}
         catch_query={}

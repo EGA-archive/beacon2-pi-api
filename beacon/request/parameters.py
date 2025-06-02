@@ -78,7 +78,7 @@ class Pagination(CamelModel):
 
 
 class RequestMeta(CamelModel):
-    requestedSchemas: List[SchemasPerEntity] = []
+    requestedSchemas: Optional[List[SchemasPerEntity]] = []
     apiVersion: str = 'v2.0.0'
 
 class SequenceQuery(BaseModel):
@@ -214,10 +214,10 @@ class DatasetsRequested(BaseModel):
     datasets: list[str]
 
 class RequestQuery(CamelModel):
-    filters: List[dict] = []
+    filters: List[Union[AlphanumericFilter,OntologyFilter,CustomFilter]] = []
     includeResultsetResponses: IncludeResultsetResponses = IncludeResultsetResponses.HIT
     pagination: Pagination = Pagination()
-    requestParameters: Optional[Union[SequenceQuery,RangeQuery,BracketQuery,AminoacidChangeQuery,GeneIdQuery,GenomicAlleleQuery,DatasetsRequested]] = {}
+    requestParameters: Union[SequenceQuery,RangeQuery,BracketQuery,AminoacidChangeQuery,GeneIdQuery,GenomicAlleleQuery,DatasetsRequested] = {}
     testMode: bool = False
     requestedGranularity: Granularity = Granularity(default_beacon_granularity)
 
@@ -226,8 +226,12 @@ class RequestParams(CamelModel):
     query: RequestQuery = RequestQuery()
 
     def from_request(self, request: Request) -> Self:
+        '''
+        Return an instance of RequestParams class and also trigger the initialistion of filters, requestedSchemas and requestParameters classes, that are the ones that have a 
+        Union of other classes.
+        '''
         try:
-            self.meta.apiVersion = request["meta"]["apiVersion"]
+            self.query.filters = request["query"]["filters"]
         except Exception:
             pass
         try:
@@ -238,14 +242,11 @@ class RequestParams(CamelModel):
             self.query.requestParameters = request["query"]["requestParameters"]
         except Exception:
             pass
-        try:
-            self.query.filters = request["query"]["filters"]
-        except Exception:
-            pass
         return self
         
 
     def summary(self):
+        "Return a summary of all the query parameters from the request in a json format to be returnend in recieved request summary."
         try:
             return {
                 "apiVersion": self.meta.apiVersion,
