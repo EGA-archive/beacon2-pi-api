@@ -138,8 +138,18 @@ class RangeQuery(BaseModel):
                     pass
             except Exception as e:# pragma: no cover
                 raise ValueError
-        else:# pragma: no cover
-            raise ValueError
+        start=values.start
+        end=values.end
+        if isinstance(start, list):
+            start = start[0]
+        if isinstance(end, list):
+            end = end [0]
+        if int(start) > int(end):
+            ErrorClass.error_code=400
+            ErrorClass.error_message="start's value can not be greater than end's value"
+            raise
+
+
 
 class GeneIdQuery(BaseModel):
     geneId: str
