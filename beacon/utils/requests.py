@@ -65,12 +65,15 @@ async def get_qparams(self, post_data, request):
         if catch_meta["meta"]!={}:
             post_data["meta"]=catch_meta["meta"]
         if catch_query["query"]!={}:
-            for k, v in post_data["query"].items():
-                if post_data["query"].get(k) == None:
-                    post_data["query"][k]=v
-                elif k == 'filters':
-                    for item in v:
-                        post_data["query"]["filters"].append(v)
+            if post_data.get('query') != None:
+                for k, v in post_data["query"].items():
+                    if post_data["query"].get(k) == None:
+                        post_data["query"][k]=v
+                    elif k == 'filters':
+                        for item in v:
+                            post_data["query"]["filters"].append(v)
+            else:
+                post_data["query"]=catch_query["query"]
         if catch_query_params!={}:
             try:
                 for k, v in catch_query_params.items():
