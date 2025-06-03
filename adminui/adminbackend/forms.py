@@ -15,6 +15,7 @@ class BamForm(forms.Form):
                     linestring=str(line)
                     splitted_line=linestring.split("=")
                     placeholder=splitted_line[1].replace("'", '')
+                    placeholder=placeholder.replace('"','')
                     if isinstance(placeholder, str):
                         placeholder.strip()
                     if "#" in placeholder:
@@ -26,6 +27,7 @@ class BamForm(forms.Form):
                     linestring=str(line)
                     splitted_line=linestring.split("=")
                     placeholder=splitted_line[1].replace("'", '')
+                    placeholder=placeholder.replace('"','')
                     if isinstance(placeholder, str):
                         placeholder.strip()
                     if "#" in placeholder:
@@ -37,6 +39,7 @@ class BamForm(forms.Form):
                     linestring=str(line)
                     splitted_line=linestring.split("=")
                     placeholder=splitted_line[1].replace("'", '')
+                    placeholder=placeholder.replace('"','')
                     if isinstance(placeholder, str):
                         placeholder.strip()
                     if "#" in placeholder:
@@ -48,6 +51,7 @@ class BamForm(forms.Form):
                     linestring=str(line)
                     splitted_line=linestring.split("=")
                     placeholder=splitted_line[1].replace("'", '')
+                    placeholder=placeholder.replace('"','')
                     if isinstance(placeholder, str):
                         placeholder.strip()
                     if "#" in placeholder:
@@ -59,6 +63,7 @@ class BamForm(forms.Form):
                     linestring=str(line)
                     splitted_line=linestring.split("=")
                     placeholder=splitted_line[1].replace("'", '')
+                    placeholder=placeholder.replace('"','')
                     if isinstance(placeholder, str):
                         placeholder.strip()
                     if "#" in placeholder:
@@ -70,6 +75,7 @@ class BamForm(forms.Form):
                     linestring=str(line)
                     splitted_line=linestring.split("=")
                     placeholder=splitted_line[1].replace("'", '')
+                    placeholder=placeholder.replace('"','')
                     if isinstance(placeholder, str):
                         placeholder.strip()
                     if "#" in placeholder:
@@ -81,6 +87,7 @@ class BamForm(forms.Form):
                     linestring=str(line)
                     splitted_line=linestring.split("=")
                     placeholder=splitted_line[1].replace("'", '')
+                    placeholder=placeholder.replace('"','')
                     if isinstance(placeholder, str):
                         placeholder.strip()
                     if "#" in placeholder:
@@ -92,6 +99,7 @@ class BamForm(forms.Form):
                     linestring=str(line)
                     splitted_line=linestring.split("=")
                     placeholder=splitted_line[1].replace("'", '')
+                    placeholder=placeholder.replace('"','')
                     if isinstance(placeholder, str):
                         placeholder.strip()
                     if "#" in placeholder:
@@ -103,6 +111,7 @@ class BamForm(forms.Form):
                     linestring=str(line)
                     splitted_line=linestring.split("=")
                     placeholder=splitted_line[1].replace("'", '')
+                    placeholder=placeholder.replace('"','')
                     if isinstance(placeholder, str):
                         placeholder.strip()
                     if "#" in placeholder:
@@ -114,6 +123,7 @@ class BamForm(forms.Form):
                     linestring=str(line)
                     splitted_line=linestring.split("=")
                     placeholder=splitted_line[1].replace("'", '')
+                    placeholder=placeholder.replace('"','')
                     if isinstance(placeholder, str):
                         placeholder.strip()
                     if "#" in placeholder:
@@ -125,6 +135,7 @@ class BamForm(forms.Form):
                     linestring=str(line)
                     splitted_line=linestring.split("=")
                     placeholder=splitted_line[1].replace("'", '')
+                    placeholder=placeholder.replace('"','')
                     if isinstance(placeholder, str):
                         placeholder.strip()
                     if "#" in placeholder:
