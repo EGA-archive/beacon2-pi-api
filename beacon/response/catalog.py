@@ -1,5 +1,5 @@
 from beacon.response.schemas import DefaultSchemas
-from beacon.request.parameters import RequestParams
+from beacon.request.parameters import RequestParams, RequestMeta, RequestQuery
 from beacon.request.classes import Granularity, ErrorClass
 from beacon.conf import conf
 from typing import Optional
@@ -553,10 +553,16 @@ def build_beacon_none_response(self, data,
         raise
 
 @log_with_args(level)
-def build_beacon_error_response(self, errorCode, qparams, errorMessage):
+def build_beacon_error_response(self, errorCode, errorMessage):
     try:
+
         beacon_response = {
-            'meta': build_meta(self, qparams, None, Granularity.RECORD),
+            'meta': build_meta(self,         {
+                "apiVersion": RequestMeta().apiVersion,
+                "requestedSchemas": RequestMeta().requestedSchemas,
+                "pagination": RequestQuery().pagination.dict(),
+                "requestedGranularity": RequestQuery().requestedGranularity,
+            }, None, Granularity.RECORD),
             'error': {
                 'errorCode': str(errorCode),
                 'errorMessage': str(errorMessage)

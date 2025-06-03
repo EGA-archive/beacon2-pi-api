@@ -105,3 +105,18 @@ async def get_qparams(self, post_data, request):
         ErrorClass.error_code=400
         ErrorClass.error_message='set of meta/query parameters: {} not allowed'.format(post_data)
         raise web.HTTPBadRequest
+    
+@log_with_args(level)
+async def deconstruct_request(self, request):
+        ip = request.remote
+        post_data = await request.json() if request.has_body else {}
+        headers = request.headers
+        path_list = request.path.split('/')
+        if len(path_list) > 4:
+            entry_type=path_list[2]+'.'+path_list[4]# pragma: no cover
+        else:
+            entry_type=path_list[2]
+        entry_id = request.match_info.get('id', None)
+        if entry_id == None:
+            entry_id = request.match_info.get('variantInternalId', None)
+        return entry_id, entry_type, ip, post_data, headers
