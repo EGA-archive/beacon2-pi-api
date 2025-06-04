@@ -13,15 +13,17 @@ LOG.addHandler(sh)
 def formatting_field(self, line):
     linestring=str(line)
     splitted_line=linestring.split("=")
-    placeholder=splitted_line[1].replace("'", '')
-    placeholder=placeholder.replace('"','')
+    placeholder=splitted_line[1].replace('"', '')
     placeholder=str(placeholder)
-    if isinstance(placeholder, str):
-        placeholder=placeholder.strip()
+    placeholder=placeholder.strip()
     if "#" in placeholder:
         placeholder_def=placeholder.split('#')
         placeholder=placeholder_def[0]
         placeholder=placeholder.strip()
+    if placeholder.startswith("'"):
+        placeholder=placeholder[1:]
+    if placeholder.endswith("'"):
+        placeholder=placeholder[0:-1]
     return placeholder
 
 
@@ -86,3 +88,21 @@ class BamForm(forms.Form):
     OrgWelcomeUrl = forms.CharField(help_text='Organization Welcome Url')
     OrgContactUrl = forms.CharField(help_text='Organization Contact Url')
     OrgLogoUrl = forms.CharField(help_text='Organization Logo Url')
+    granularity_choices = [
+        ('boolean', 'Boolean'),
+        ('count', 'Count'),
+        ('record', 'Record'),
+    ]
+    granularity= forms.ChoiceField(
+        widget=forms.RadioSelect,
+        choices=granularity_choices, 
+    )
+    security_level_choices = [
+        ('public', 'Public'),
+        ('registered', 'Registered'),
+        ('controlled', 'Controlled'),
+    ]
+    SecurityLevel= forms.MultipleChoiceField(
+        choices=security_level_choices, 
+        widget=forms.CheckboxSelectMultiple
+    )

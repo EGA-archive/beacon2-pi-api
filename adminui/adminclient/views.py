@@ -30,25 +30,25 @@ def default_view(request):
                 new_lines =''
                 for line in lines:
                     if 'beacon_name' in str(line):
-                        new_lines+="beacon_name="+"'"+beaconName+"'"+"\n"
+                        new_lines+="beacon_name="+'"'+beaconName+'"'+"\n"
                     elif 'beacon_id' in str(line):
-                        new_lines+="beacon_id="+"'"+beaconId+"'"+"\n"
+                        new_lines+="beacon_id="+'"'+beaconId+'"'+"\n"
                     elif 'environment' in str(line):
-                        new_lines+="environment="+"'"+environment+"'"+"\n"
+                        new_lines+="environment="+'"'+environment+'"'+"\n"
                     elif 'org_id' in str(line):
-                        new_lines+="org_id="+"'"+org_id+"'"+"\n"
+                        new_lines+="org_id="+'"'+org_id+'"'+"\n"
                     elif 'org_name' in str(line):
-                        new_lines+="org_name="+"'"+org_name+"'"+"\n"
+                        new_lines+="org_name="+'"'+org_name+'"'+"\n"
                     elif 'org_description' in str(line):
-                        new_lines+="org_description="+"'"+org_description+"'"+"\n"
+                        new_lines+="org_description="+'"'+org_description+'"'+"\n"
                     elif 'org_address' in str(line):
-                        new_lines+="org_address="+"'"+org_address+"'"+"\n"
+                        new_lines+="org_address="+'"'+org_address+'"'+"\n"
                     elif 'org_welcome_url' in str(line):
-                        new_lines+="org_welcome_url="+"'"+org_welcome_url+"'"+"\n"
+                        new_lines+="org_welcome_url="+'"'+org_welcome_url+'"'+"\n"
                     elif 'org_contact_url' in str(line):
-                        new_lines+="org_contact_url="+"'"+org_contact_url+"'"+"\n"
+                        new_lines+="org_contact_url="+'"'+org_contact_url+'"'+"\n"
                     elif 'org_logo_url' in str(line):
-                        new_lines+="org_logo_url="+"'"+org_logo_url+"'"+"\n"
+                        new_lines+="org_logo_url="+'"'+org_logo_url+'"'+"\n"
                     else:
                         new_lines+=line
                     

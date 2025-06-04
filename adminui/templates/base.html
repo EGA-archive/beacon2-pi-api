@@ -22,6 +22,7 @@
             {% for f in form %}
             <p>{{f.help_text|safe}} {{f}} </p>
             {% endfor %}
+            <span id="active-label"></span>
           </div>
           <div>
             <button type="submit" class="btn btn-danger mb-3">Save</button>
