@@ -10,6 +10,7 @@ from beacon.logs.logs import log_with_args, log_with_args_mongo
 from beacon.conf.conf import level
 from beacon.budget.__main__ import check_budget
 from beacon.conf import dataset
+import yaml
 
 source=dataset.database
 complete_module='beacon.connections.'+source+'.datasets'
@@ -44,7 +45,7 @@ async def get_datasets_list(self, qparams, request: Request, authorized_datasets
         specific_datasets_unauthorized = []
         search_and_authorized_datasets = []
         try:
-            specific_datasets = qparams.query.request_parameters['datasets']
+            specific_datasets = qparams.query.requestParameters['datasets']
         except Exception as e:
             specific_datasets = []
         # Get response
@@ -70,7 +71,7 @@ async def get_datasets_list(self, qparams, request: Request, authorized_datasets
 def dataset_permissions(func):
     @log_with_args(level)
     async def permission(self, post_data, request: Request, qparams, entry_type, entry_id, ip, headers):
-        try:
+        try: # arrancar amb testMode i si és True saltar la resta
             if post_data is not None:
                 v = post_data.get('datasets')
             else:
@@ -85,8 +86,13 @@ def dataset_permissions(func):
                 requested_datasets = v.split(sep=',')
             
             username, list_visa_datasets = await authorization(self, request, headers)
-                
-            datasets = await PermissionsProxy.get_permissions(self, username=username, requested_datasets=requested_datasets)
+            if qparams.query.testMode == True:
+                with open("/beacon/permissions/datasets/test_datasets.yml", 'r') as pfile:
+                    test_datasets = yaml.safe_load(pfile)
+                pfile.close()
+                datasets= test_datasets['test_datasets']
+            else:
+                datasets = await PermissionsProxy.get_permissions(self, username=username, requested_datasets=requested_datasets)
             dict_returned={}
             dict_returned['username']=username
             time_now = check_budget(self, ip, username)

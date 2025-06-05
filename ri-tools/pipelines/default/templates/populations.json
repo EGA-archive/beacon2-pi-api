@@ -1,0 +1,15 @@
+{
+    "numberOfPopulations": 1,
+    "source": "The Genome Aggregation Database (gnomAD)",
+    "sourceReference": "gnomad.broadinstitute.org/",
+    "populations": [
+        {
+            "population": "Totals",
+            "alleleFrequency": "AF",
+            "alleleCount": "AC",
+            "alleleCountHomozygous": "AC_hom",
+            "alleleCountHeterozygous": "AC_het",
+            "alleleNumber": "AN"
+        }
+    ]
+}

@@ -1,5 +1,5 @@
 from beacon.response.schemas import DefaultSchemas
-from beacon.request.parameters import RequestParams
+from beacon.request.parameters import RequestParams, RequestMeta, RequestQuery
 from beacon.request.classes import Granularity, ErrorClass
 from beacon.conf import conf
 from typing import Optional
@@ -336,7 +336,7 @@ def generate_endpoints(self, response_type, key_response):
 def build_response(self, data, num_total_results, qparams):
     """"Fills the `response` part with the correct format in `results`"""
     limit = qparams.query.pagination.limit
-    include = qparams.query.include_resultset_responses
+    include = qparams.query.includeResultsetResponses
     if include == 'NONE':
             response = {
             'id': '', # TODO: Set the name of the dataset/cohort
@@ -553,10 +553,16 @@ def build_beacon_none_response(self, data,
         raise
 
 @log_with_args(level)
-def build_beacon_error_response(self, errorCode, qparams, errorMessage):
+def build_beacon_error_response(self, errorCode, errorMessage):
     try:
+
         beacon_response = {
-            'meta': build_meta(self, qparams, None, Granularity.RECORD),
+            'meta': build_meta(self,         {
+                "apiVersion": RequestMeta().apiVersion,
+                "requestedSchemas": RequestMeta().requestedSchemas,
+                "pagination": RequestQuery().pagination.dict(),
+                "requestedGranularity": RequestQuery().requestedGranularity,
+            }, None, Granularity.RECORD),
             'error': {
                 'errorCode': str(errorCode),
                 'errorMessage': str(errorMessage)
@@ -628,7 +634,7 @@ def build_configuration(self):
         with open('beacon/response/templates/configuration.json', 'r') as template:
             response = json.load(template)
 
-        response['securityAttributes']['defaultGranularity']=conf.max_beacon_granularity
+        response['securityAttributes']['defaultGranularity']=conf.default_beacon_granularity
         response['securityAttributes']['securityLevels']=conf.security_levels
         response['maturityAttributes']['productionStatus']=conf.environment.upper()
 

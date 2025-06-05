@@ -84,7 +84,7 @@ def generate_position_filter_start_sequence_query(self, key: str, value: List[in
 @log_with_args(level)
 def apply_request_parameters(self, query: Dict[str, List[dict]], qparams: RequestParams, dataset: str):
     collection = 'g_variants'
-    if len(qparams.query.request_parameters) > 0 and "$and" not in query:
+    if len(qparams.query.requestParameters) > 0 and "$and" not in query:
         query["$and"] = []
     subquery={}
     subquery["$and"] = []
@@ -96,11 +96,13 @@ def apply_request_parameters(self, query: Dict[str, List[dict]], qparams: Reques
     endquery["$and"]=[]
     equal=False
     isBracket=False
-    for k, v in qparams.query.request_parameters.items():
+    for k, v in qparams.query.requestParameters.items():
         if k == 'end':
             equal=True
             endvalue=v
-    for k, v in qparams.query.request_parameters.items():
+        if k == 'start':
+            startvalue=v
+    for k, v in qparams.query.requestParameters.items():
         if k == "start":
             if isinstance(v, str):
                 v = v.split(',')

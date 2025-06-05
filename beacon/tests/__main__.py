@@ -1,4 +1,3 @@
-
 from aiohttp.test_utils import TestClient, TestServer, loop_context
 from aiohttp import web
 from beacon.__main__ import Collection, Resultset, Info, ServiceInfo, Map, Configuration, FilteringTerms, EntryTypes
@@ -956,7 +955,7 @@ class TestMain(unittest.TestCase):
                 resp = await client.post("/api/"+genomicVariant.endpoint_name, json={"meta": {
                     "apiVersion": "2.0"
                 },
-                "query": { "requestParameters": {        },
+                "query": {
                     "filters": [
             {"id":"NCIT:C16576", "scope":"individual"}],
                     "includeResultsetResponses": "HIT",
@@ -980,7 +979,7 @@ class TestMain(unittest.TestCase):
                 resp = await client.post("/api/"+biosample.endpoint_name, json={"meta": {
                     "apiVersion": "2.0"
                 },
-                "query": { "requestParameters": {        },
+                "query": {
                     "filters": [
             {"id":"NCIT:C16576", "scope":"individual"}],
                     "includeResultsetResponses": "HIT",
@@ -1093,7 +1092,7 @@ class TestMain(unittest.TestCase):
                 "meta": {
                     "apiVersion": "2.0"
                 },
-                "query": { "requestParameters": {        },
+                "query": {
                     "filters": [
             {"id": "ethnicity",
                     "operator": "=",
@@ -1122,7 +1121,7 @@ class TestMain(unittest.TestCase):
                 "meta": {
                     "apiVersion": "2.0"
                 },
-                "query": { "requestParameters": {        },
+                "query": {
                     "filters": [
             {"id": "ethnicity",
                     "operator": "=",
@@ -1152,7 +1151,7 @@ class TestMain(unittest.TestCase):
                 "meta": {
                     "apiVersion": "2.0"
                 },
-                "query": { "requestParameters": {        },
+                "query": {
                     "filters": [
             {"id": "ethnicity",
                     "operator": "!",
@@ -1181,7 +1180,7 @@ class TestMain(unittest.TestCase):
                 "meta": {
                     "apiVersion": "2.0"
                 },
-                "query": { "requestParameters": {        },
+                "query": {
                     "filters": [
             {"id": "ethnicity",
                     "operator": "!",
@@ -1210,7 +1209,7 @@ class TestMain(unittest.TestCase):
                 "meta": {
                     "apiVersion": "2.0"
                 },
-                "query": { "requestParameters": {        },
+                "query": {
                     "filters": [
             {"id": "exposures.ageAtExposure.iso8601duration",
                     "operator": ">",
@@ -1239,7 +1238,7 @@ class TestMain(unittest.TestCase):
                 "meta": {
                     "apiVersion": "2.0"
                 },
-                "query": { "requestParameters": {        },
+                "query": {
                     "filters": [
             {"id": "exposures.ageAtExposure.iso8601duration",
                     "operator": "<",
@@ -1268,7 +1267,7 @@ class TestMain(unittest.TestCase):
                 "meta": {
                     "apiVersion": "2.0"
                 },
-                "query": { "requestParameters": {        },
+                "query": {
                     "filters": [
             {"id": "exposures.ageAtExposure.iso8601duration",
                     "operator": "=",
@@ -1296,7 +1295,7 @@ class TestMain(unittest.TestCase):
                 "meta": {
                     "apiVersion": "2.0"
                 },
-                "query": { "requestParameters": {        },
+                "query": {
                     "filters": [
                             {
                         "id": "anatomical entity",
@@ -1328,7 +1327,7 @@ class TestMain(unittest.TestCase):
                 "meta": {
                     "apiVersion": "2.0"
                 },
-                "query": { "requestParameters": {        },
+                "query": {
                     "filters": [
                             {
                         "id": "sampleOriginType:ovary"
@@ -1437,7 +1436,7 @@ class TestMain(unittest.TestCase):
                 "meta": {
                     "apiVersion": "2.0"
                 },
-                "query": { "requestParameters": {        },
+                "query": {
                     "filters": [
             {"id": "ethnicity",
                     "operator": "=",
@@ -1467,9 +1466,7 @@ class TestMain(unittest.TestCase):
                     "meta": {
                         "apiVersion": "2.0"
                     },
-                    "query":{ "requestParameters": {
-                    
-                        },
+                    "query":{
                         "filters": [
                 {"id":"GENO:0000458"}],
                         "includeResultsetResponses": "HIT",
@@ -1498,9 +1495,7 @@ class TestMain(unittest.TestCase):
                     "meta": {
                         "apiVersion": "2.0"
                     },
-                    "query":{ "requestParameters": {
-                    
-                        },
+                    "query":{
                         "filters": [
                 {"id":"GENO:0000136"}],
                         "includeResultsetResponses": "HIT",
@@ -1526,9 +1521,7 @@ class TestMain(unittest.TestCase):
                     "meta": {
                         "apiVersion": "2.0"
                     },
-                    "query":{ "requestParameters": {
-                    
-                        },
+                    "query":{
                         "filters": [ {"id": "NCIT:C16576", "scope": "individual"}
                 ],
                         "includeResultsetResponses": "HIT",
@@ -1554,9 +1547,7 @@ class TestMain(unittest.TestCase):
                     "meta": {
                         "apiVersion": "2.0"
                     },
-                    "query":{ "requestParameters": {
-                    
-                        },
+                    "query":{
                         "filters": [
                 {"id":"GENO:0000458"}],
                         "includeResultsetResponses": "HIT",
@@ -1582,9 +1573,7 @@ class TestMain(unittest.TestCase):
                     "meta": {
                         "apiVersion": "2.0"
                     },
-                    "query":{ "requestParameters": {
-                    
-                        },
+                    "query":{
                         "filters": [
                 {"id":"GENO:0000136"}],
                         "includeResultsetResponses": "HIT",
@@ -1610,9 +1599,7 @@ class TestMain(unittest.TestCase):
                     "meta": {
                         "apiVersion": "2.0"
                     },
-                    "query":{ "requestParameters": {
-                    
-                        },
+                    "query":{
                         "filters": [ {"id": "NCIT:C16576", "scope": "individual"}
                 ],
                         "includeResultsetResponses": "HIT",
@@ -1638,9 +1625,7 @@ class TestMain(unittest.TestCase):
                     "meta": {
                         "apiVersion": "2.0"
                     },
-                    "query":{ "requestParameters": {
-                    
-                        },
+                    "query":{
                         "filters": [
                 {"id":"GENO:0000458"}],
                         "includeResultsetResponses": "HIT",
@@ -1666,9 +1651,7 @@ class TestMain(unittest.TestCase):
                     "meta": {
                         "apiVersion": "2.0"
                     },
-                    "query":{ "requestParameters": {
-                    
-                        },
+                    "query":{
                         "filters": [
                 {"id":"GENO:0000136"}],
                         "includeResultsetResponses": "HIT",
@@ -1694,9 +1677,7 @@ class TestMain(unittest.TestCase):
                     "meta": {
                         "apiVersion": "2.0"
                     },
-                    "query":{ "requestParameters": {
-                    
-                        },
+                    "query":{
                         "filters": [ {"id": "NCIT:C16576", "scope": "individual"}
                 ],
                         "includeResultsetResponses": "HIT",
@@ -1722,9 +1703,7 @@ class TestMain(unittest.TestCase):
                     "meta": {
                         "apiVersion": "2.0"
                     },
-                    "query":{ "requestParameters": {
-                    
-                        },
+                    "query":{
                         "filters": [
                 {"id":"GENO:0000458"}],
                         "includeResultsetResponses": "HIT",
@@ -1750,9 +1729,7 @@ class TestMain(unittest.TestCase):
                     "meta": {
                         "apiVersion": "2.0"
                     },
-                    "query":{ "requestParameters": {
-                    
-                        },
+                    "query":{
                         "filters": [
                 {"id":"GENO:0000136"}],
                         "includeResultsetResponses": "HIT",
@@ -1778,9 +1755,7 @@ class TestMain(unittest.TestCase):
                     "meta": {
                         "apiVersion": "2.0"
                     },
-                    "query":{ "requestParameters": {
-                    
-                        },
+                    "query":{
                         "filters": [ {"id": "NCIT:C16576", "scope": "individual"}
                 ],
                         "includeResultsetResponses": "HIT",
@@ -1806,7 +1781,7 @@ class TestMain(unittest.TestCase):
                 "meta": {
                     "apiVersion": "2.0"
                 },
-                "query": { "requestParameters": {        },
+                "query": {
                     "filters": [
             {"id":"ENSGLOSSARY:0000150", "scope":"genomicVariation"}],
                     "includeResultsetResponses": "HIT",
@@ -1832,7 +1807,7 @@ class TestMain(unittest.TestCase):
                 "meta": {
                     "apiVersion": "2.0"
                 },
-                "query": { "requestParameters": {        },
+                "query": {
                     "filters": [
             {"id":"ENSGLOSSARY:0000150", "scope":"genomicVariation"}],
                     "includeResultsetResponses": "HIT",
@@ -1858,7 +1833,7 @@ class TestMain(unittest.TestCase):
                 "meta": {
                     "apiVersion": "2.0"
                 },
-                "query": { "requestParameters": {        },
+                "query": {
                     "filters": [
             {"id":"ENSGLOSSARY:0000150", "scope":"genomicVariation"}],
                     "includeResultsetResponses": "HIT",
@@ -1884,7 +1859,7 @@ class TestMain(unittest.TestCase):
                 "meta": {
                     "apiVersion": "2.0"
                 },
-                "query": { "requestParameters": {        },
+                "query": {
                     "filters": [
             {"id":"ENSGLOSSARY:0000150", "scope":"genomicVariation"}],
                     "includeResultsetResponses": "HIT",
@@ -1911,7 +1886,6 @@ class TestMain(unittest.TestCase):
                         "apiVersion": "2.0"
                     },
                     "query": {
-                        "requestParameters": {},
                 "filters": [{"id": "GENEPIO:0001966", "scope": "run"}],
                         "includeResultsetResponses": "HIT",
                         "pagination": {
@@ -1936,9 +1910,7 @@ class TestMain(unittest.TestCase):
                 "meta": {
                     "apiVersion": "2.0"
                 },
-                "query":{ "requestParameters": {
-                
-                    },
+                "query":{
                     "filters": [
             {"id":"GENEPIO:0001966", "scope":"run"}],
                     "includeResultsetResponses": "HIT",
@@ -1964,9 +1936,7 @@ class TestMain(unittest.TestCase):
                 "meta": {
                     "apiVersion": "2.0"
                 },
-                "query":{ "requestParameters": {
-                
-                    },
+                "query":{
                     "filters": [
             {"id":"GENEPIO:0001966", "scope":"run"}],
                     "includeResultsetResponses": "HIT",
@@ -1992,9 +1962,7 @@ class TestMain(unittest.TestCase):
                 "meta": {
                     "apiVersion": "2.0"
                 },
-                "query":{ "requestParameters": {
-                
-                    },
+                "query":{
                     "filters": [
             {"id":"GENEPIO:0001966", "scope":"run"}],
                     "includeResultsetResponses": "HIT",
@@ -2020,9 +1988,7 @@ class TestMain(unittest.TestCase):
             "meta": {
                 "apiVersion": "2.0"
             },
-            "query":{ "requestParameters": {
-            
-                },
+            "query":{
                 "filters": [
         {"id":"EFO:0009655", "scope":"biosample"}],
                 "includeResultsetResponses": "HIT",
@@ -2048,9 +2014,7 @@ class TestMain(unittest.TestCase):
             "meta": {
                 "apiVersion": "2.0"
             },
-            "query":{ "requestParameters": {
-            
-                },
+            "query":{
                 "filters": [
         {"id":"EFO:0009655", "scope":"biosample"}],
                 "includeResultsetResponses": "HIT",
@@ -2076,9 +2040,7 @@ class TestMain(unittest.TestCase):
             "meta": {
                 "apiVersion": "2.0"
             },
-            "query":{ "requestParameters": {
-            
-                },
+            "query":{
                 "filters": [
         {"id":"EFO:0009655", "scope":"biosample"}],
                 "includeResultsetResponses": "HIT",
@@ -2104,9 +2066,7 @@ class TestMain(unittest.TestCase):
             "meta": {
                 "apiVersion": "2.0"
             },
-            "query":{ "requestParameters": {
-            
-                },
+            "query":{
                 "filters": [
         {"id":"EFO:0009655", "scope":"biosample"}],
                 "includeResultsetResponses": "HIT",
@@ -2297,9 +2257,7 @@ class TestMain(unittest.TestCase):
                 "meta": {
                     "apiVersion": "2.0"
                 },
-                "query":{ "requestParameters": {
-                
-                    },
+                "query":{
                     "filters": [
             {"id":"MONDO:0004975", "scope":"individual", "includeDescendantTerms": True}],
                     "includeResultsetResponses": "HIT",

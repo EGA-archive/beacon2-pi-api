@@ -25,7 +25,7 @@ def get_resultSet(self, entry_id: Optional[str], qparams: RequestParams, dataset
     query = apply_filters(self, query, qparams.query.filters, collection, query_parameters, dataset)
     if query == {} and query_parameters != {} and parameters_as_filters == False:
         return schema, 0, -1, None, dataset
-    include = qparams.query.include_resultset_responses
+    include = qparams.query.includeResultsetResponses
     limit = qparams.query.pagination.limit
     skip = qparams.query.pagination.skip
     if limit > 100 or limit == 0:
@@ -48,7 +48,7 @@ def get_resultSet_with_id(self, entry_id: Optional[str], qparams: RequestParams,
     query = apply_filters(self, query, qparams.query.filters, collection, {}, dataset)
     if collection != genomicVariant.endpoint_name:
         query = query_id(self, query, entry_id)
-    include = qparams.query.include_resultset_responses
+    include = qparams.query.includeResultsetResponses
     limit = qparams.query.pagination.limit
     skip = qparams.query.pagination.skip
     if limit > 100 or limit == 0:
@@ -92,7 +92,7 @@ def get_variants_of_resultSet(self, entry_id: Optional[str], qparams: RequestPar
     query["identifiers.genomicHGVSId"]=queryHGVS
     query, parameters_as_filters = apply_request_parameters(self, query, qparams, dataset)
     query = apply_filters(self, query, qparams.query.filters, collection, {}, dataset)
-    include = qparams.query.include_resultset_responses
+    include = qparams.query.includeResultsetResponses
     limit = qparams.query.pagination.limit
     skip = qparams.query.pagination.skip
     if limit > 100 or limit == 0:
@@ -197,7 +197,7 @@ def get_resultSet_of_variants(self, entry_id: Optional[str], qparams: RequestPar
         superfinalquery={}
         superfinalquery["$and"]=[finalquery]
     query = apply_filters(self, superfinalquery, new_filters, collection, {}, dataset)
-    include = qparams.query.include_resultset_responses
+    include = qparams.query.includeResultsetResponses
     limit = qparams.query.pagination.limit
     skip = qparams.query.pagination.skip
     if limit > 100 or limit == 0:
@@ -212,7 +212,7 @@ def get_analyses_of_resultSet(self, entry_id: Optional[str], qparams: RequestPar
     else:
         query = {"biosampleId": entry_id}
     query = apply_filters(self, query, qparams.query.filters, collection, {}, dataset)
-    include = qparams.query.include_resultset_responses
+    include = qparams.query.includeResultsetResponses
     limit = qparams.query.pagination.limit
     skip = qparams.query.pagination.skip
     if limit > 100 or limit == 0:
@@ -236,7 +236,7 @@ def get_biosamples_of_resultSet(self, entry_id: Optional[str], qparams: RequestP
     else:
         query = {idq: entry_id}
     query = apply_filters(self, query, qparams.query.filters, collection, {}, dataset)
-    include = qparams.query.include_resultset_responses
+    include = qparams.query.includeResultsetResponses
     limit = qparams.query.pagination.limit
     skip = qparams.query.pagination.skip
     if limit > 100 or limit == 0:
@@ -258,7 +258,7 @@ def get_variants_of_dataset(self, entry_id: Optional[str], qparams: RequestParam
     else:
         return schema, 0, 0, None, dataset# pragma: no cover
     query = apply_filters(self, query_count, qparams.query.filters, collection, {}, dataset)
-    include = qparams.query.include_resultset_responses
+    include = qparams.query.includeResultsetResponses
     limit = qparams.query.pagination.limit
     skip = qparams.query.pagination.skip
     if limit > 100 or limit == 0:
@@ -280,7 +280,7 @@ def get_resultSet_of_dataset(self, entry_id: Optional[str], qparams: RequestPara
     else:
         return schema, 0, 0, None, dataset# pragma: no cover
     query = apply_filters(self, dict_in, qparams.query.filters, collection, {}, dataset)
-    include = qparams.query.include_resultset_responses
+    include = qparams.query.includeResultsetResponses
     limit = qparams.query.pagination.limit
     skip = qparams.query.pagination.skip
     if limit > 100 or limit == 0:
@@ -292,7 +292,7 @@ def get_resultSet_of_dataset(self, entry_id: Optional[str], qparams: RequestPara
 def get_resultSet_of_cohort(self, entry_id: Optional[str], qparams: RequestParams, dataset: str, collection, mongo_collection, schema, idq, entry_type):
     dataset_count=0
     limit = qparams.query.pagination.limit
-    include = qparams.query.include_resultset_responses
+    include = qparams.query.includeResultsetResponses
     dataset_found = cohorts \
         .find({"id": entry_id}, {"datasetId": 1, "_id": 0})
     dataset_found=list(dataset_found)
@@ -314,7 +314,7 @@ def get_resultSet_of_cohort(self, entry_id: Optional[str], qparams: RequestParam
 def get_variants_of_cohort(self, entry_id: Optional[str], qparams: RequestParams, dataset: str, collection, mongo_collection, schema, idq, entry_type):
     dataset_count=0
     limit = qparams.query.pagination.limit
-    include = qparams.query.include_resultset_responses
+    include = qparams.query.includeResultsetResponses
     dataset_found = cohorts \
         .find({"id": entry_id}, {"datasetId": 1, "_id": 0})
     dataset_found=list(dataset_found)
@@ -362,7 +362,7 @@ def get_runs_of_resultSet(self, entry_id: Optional[str], qparams: RequestParams,
     else:
         query = {idq: entry_id}
     query = apply_filters(self, query, qparams.query.filters, collection, {}, dataset)
-    include = qparams.query.include_resultset_responses
+    include = qparams.query.includeResultsetResponses
     limit = qparams.query.pagination.limit
     skip = qparams.query.pagination.skip
     if limit > 100 or limit == 0:
@@ -385,7 +385,7 @@ def get_individuals_of_resultSet(self, entry_id: Optional[str], qparams: Request
         list_of_itemsfound.append(itemfound["individualId"])
     query = {"id": {"$in": list_of_itemsfound}}
     query = apply_filters(self, query, qparams.query.filters, collection, {}, dataset)
-    include = qparams.query.include_resultset_responses
+    include = qparams.query.includeResultsetResponses
     limit = qparams.query.pagination.limit
     skip = qparams.query.pagination.skip
     if limit > 100 or limit == 0:

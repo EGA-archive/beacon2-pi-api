@@ -10,10 +10,12 @@ from beacon.connections.mongo.resultSets import get_resultSet, get_resultSet_wit
 from beacon.conf import individual, genomicVariant, biosample, run, dataset as dtaset
 from beacon.connections.mongo.__init__ import biosamples, genomicVariations, individuals, analyses, runs, datasets, cohorts
 from beacon.response.schemas import DefaultSchemas
+from beacon.request.classes import ErrorClass
+from aiohttp import web
 
 @log_with_args(level)
 async def execute_function(self, entry_type: str, datasets: list, qparams: RequestParams, entry_id: Optional[str]):
-    include = qparams.query.include_resultset_responses
+    include = qparams.query.includeResultsetResponses
     limit = qparams.query.pagination.limit
     datasets_docs={}
     datasets_count={}
@@ -25,26 +27,71 @@ async def execute_function(self, entry_type: str, datasets: list, qparams: Reque
     except Exception:
         pre_entry_type = None
     if entry_type==genomicVariant.endpoint_name:
+        try:
+            if genomicVariant.allow_queries_without_filters == False and qparams.query.filters == [] and qparams.query.requestParameters == []:
+                ErrorClass.error_code=400
+                ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(genomicVariant.endpoint_name)
+                raise web.HTTPBadRequest
+        except Exception:
+            ErrorClass.error_code=400
+            ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(genomicVariant.endpoint_name)
+            raise web.HTTPBadRequest
         collection=genomicVariant.endpoint_name
         mongo_collection=genomicVariations
         schema=DefaultSchemas.GENOMICVARIATIONS
         idq="caseLevelData.biosampleId"
     elif entry_type==analysis.endpoint_name:
+        try:
+            if analysis.allow_queries_without_filters == False and qparams.query.filters == [] and qparams.query.requestParameters == []:
+                ErrorClass.error_code=400
+                ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(analysis.endpoint_name)
+                raise web.HTTPBadRequest
+        except Exception:
+            ErrorClass.error_code=400
+            ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(analysis.endpoint_name)
+            raise web.HTTPBadRequest
         collection=analysis.endpoint_name
         mongo_collection=analyses
         schema=DefaultSchemas.ANALYSES
         idq="biosampleId"
     elif entry_type==biosample.endpoint_name:
+        try:
+            if biosample.allow_queries_without_filters == False and qparams.query.filters == [] and qparams.query.requestParameters == []:
+                ErrorClass.error_code=400
+                ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(biosample.endpoint_name)
+                raise web.HTTPBadRequest
+        except Exception:
+            ErrorClass.error_code=400
+            ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(biosample.endpoint_name)
+            raise web.HTTPBadRequest
         collection=biosample.endpoint_name
         mongo_collection=biosamples
         schema=DefaultSchemas.BIOSAMPLES
         idq="id"
     elif entry_type==individual.endpoint_name:
+        try:
+            if individual.allow_queries_without_filters == False and qparams.query.filters == [] and qparams.query.requestParameters == []:
+                ErrorClass.error_code=400
+                ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(individual.endpoint_name)
+                raise web.HTTPBadRequest
+        except Exception:
+            ErrorClass.error_code=400
+            ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(individual.endpoint_name)
+            raise web.HTTPBadRequest
         collection=individual.endpoint_name
         mongo_collection=individuals
         schema=DefaultSchemas.INDIVIDUALS
         idq="id"
     elif entry_type==run.endpoint_name:
+        try:
+            if run.allow_queries_without_filters == False and qparams.query.filters == [] and qparams.query.requestParameters == []:
+                ErrorClass.error_code=400
+                ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(run.endpoint_name)
+                raise web.HTTPBadRequest
+        except Exception:
+            ErrorClass.error_code=400
+            ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(run.endpoint_name)
+            raise web.HTTPBadRequest
         collection=run.endpoint_name
         mongo_collection=runs
         schema=DefaultSchemas.RUNS
