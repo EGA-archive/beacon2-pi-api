@@ -1,0 +1,32 @@
+test:
+  public:
+    default_entry_types_granularity: record
+
+CINECA_synthetic_cohort_EUROPE_UK1:
+  registered:
+    default_entry_types_granularity: record
+
+AV_Dataset:
+  controlled:
+    default_entry_types_granularity: record
+    user-list:
+      - username: app-user3
+
+controlled_dataset_2:
+  public:
+    default_entry_types_granularity: count
+    entry_types_exceptions:
+      - individual: boolean
+  registered:
+    default_entry_types_granularity: count
+  controlled:
+    default_entry_types_granularity: count
+    entry_types_exceptions:
+      - individual: boolean
+    user-list:
+      - username: app-user3
+        default_entry_types_granularity: count
+        entry_types_exceptions:
+          - individual: record
+
+# Agafar com a identificador d'usuari el que digui la OIDC spec.
