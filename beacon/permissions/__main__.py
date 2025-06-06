@@ -90,7 +90,7 @@ def query_permissions(func):
             else:
                 username, list_visa_datasets = await authorization(self)
                 datasets = await PermissionsProxy.get_permissions(self, username=username, requested_datasets=requested_datasets)
-                time_now = check_budget(self, RequestAttributes.ip, username)
+                time_now = check_budget(self, username)
                 authorized_datasets=list(datasets)
                 for visa_dataset in list_visa_datasets:
                     authorized_datasets.append(visa_dataset)# pragma: no cover

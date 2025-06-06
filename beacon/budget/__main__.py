@@ -5,7 +5,7 @@ from beacon.request.classes import ErrorClass, RequestAttributes
 from beacon.conf.conf import level, query_budget_amount, query_budget_per_user, query_budget_per_ip, query_budget_time_in_seconds
 
 @log_with_args_mongo(level)
-def check_budget(self, ip, username):
+def check_budget(self, username):
     try:
         complete_module='beacon.connections.'+query_budget_database+'.budget'
         import importlib
@@ -21,11 +21,11 @@ def check_budget(self, ip, username):
                 raise
             else:
                 return time_now
-        elif query_budget_per_ip == True and ip is not None:
-            remaining_budget=module.get_remaining_budget_by_ip(self, ip, start_budget_time)
+        elif query_budget_per_ip == True and RequestAttributes.ip is not None:
+            remaining_budget=module.get_remaining_budget_by_ip(self, start_budget_time)
             if len(remaining_budget)>=query_budget_amount:
                 ErrorClass.error_code=429
-                ErrorClass.error_message="Number of queries exceeded for this ip: {}".format(ip)
+                ErrorClass.error_message="Number of queries exceeded for this ip: {}".format(RequestAttributes.ip)
                 raise
             else:
                 return time_now

@@ -10,6 +10,7 @@ import os
 import time
 import signal
 from threading import Thread
+from beacon.request.classes import RequestAttributes
 
 def create_test_app():
     app = web.Application()
@@ -60,12 +61,13 @@ class TestBudget(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             MagicClass = MagicMock(_id='hohoho')
             async def test_insert_and_check_budget_by_user():
-                time_now = check_budget(self=MagicClass, ip="172.0.0.1", username="jane")
-                insert_budget(self=MagicClass, username="jane", ip="172.0.0.1", time_now=time_now)
-                insert_budget(self=MagicClass, username="jane", ip="172.0.0.1", time_now=time_now)
-                insert_budget(self=MagicClass, username="jane", ip="172.0.0.1", time_now=time_now)
+                RequestAttributes.ip="172.0.0.1"
+                time_now = check_budget(self=MagicClass, username="jane")
+                insert_budget(self=MagicClass, username="jane", time_now=time_now)
+                insert_budget(self=MagicClass, username="jane", time_now=time_now)
+                insert_budget(self=MagicClass, username="jane", time_now=time_now)
                 try:
-                    resp = check_budget(self=MagicClass, ip="172.0.0.1", username="jane")
+                    resp = check_budget(self=MagicClass, username="jane")
                 except Exception:
                     pass
                 assert ErrorClass.error_code == 429
@@ -83,7 +85,8 @@ class TestBudget(unittest.TestCase):
             MagicClass = MagicMock(_id='hohoho')
             async def test_insert_and_check_budget_by_unauthorized_user():
                 try:
-                    resp = check_budget(self=MagicClass, ip=None, username="public")
+                    RequestAttributes.ip=None
+                    resp = check_budget(self=MagicClass, username="public")
                 except Exception:
                     pass
                 assert ErrorClass.error_code == 401
@@ -99,12 +102,13 @@ class TestBudget(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             MagicClass = MagicMock(_id='hohoho')
             async def test_insert_and_check_budget_by_ip():
-                time_now = check_budget(self=MagicClass, ip="172.0.0.1", username="public")
-                insert_budget(self=MagicClass, username="public", ip="172.0.0.1", time_now=time_now)
-                insert_budget(self=MagicClass, username="public", ip="172.0.0.1", time_now=time_now)
-                insert_budget(self=MagicClass, username="public", ip="172.0.0.1", time_now=time_now)
+                RequestAttributes.ip="172.0.0.1"
+                time_now = check_budget(self=MagicClass, username="public")
+                insert_budget(self=MagicClass, username="public", time_now=time_now)
+                insert_budget(self=MagicClass, username="public", time_now=time_now)
+                insert_budget(self=MagicClass, username="public", time_now=time_now)
                 try:
-                    resp = check_budget(self=MagicClass, ip="172.0.0.1", username="public")
+                    resp = check_budget(self=MagicClass, username="public")
                 except Exception:
                     pass
                 assert ErrorClass.error_code == 429

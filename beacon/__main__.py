@@ -31,7 +31,11 @@ class EndpointView(web.View, CorsViewMixin):
         self._id = generate_txid(self)
         ErrorClass.error_code = None
         ErrorClass.error_message = None
-        RequestAttributes.pre_entry_type = None
+        RequestAttributes.ip = None
+        RequestAttributes.headers=None
+        RequestAttributes.entry_type=None
+        RequestAttributes.entry_id=None
+        RequestAttributes.pre_entry_type=None
 
 class ServiceInfo(EndpointView):
     @log_with_args(level)

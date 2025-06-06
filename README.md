@@ -162,7 +162,6 @@ You can use POST to make the previous query. With a `request.json` file like thi
 	    "referenceName": "22",
         "assemblyId": "GRCh37"
         },
-        "filters": [],
         "includeResultsetResponses": "HIT",
         "pagination": {
             "skip": 0,
@@ -194,7 +193,6 @@ curl \
 	    "referenceName": "22",
         "assemblyId": "GRCh37"
         },
-        "filters": [],
         "includeResultsetResponses": "HIT",
         "pagination": {
             "skip": 0,
