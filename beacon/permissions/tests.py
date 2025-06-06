@@ -7,7 +7,9 @@ from .plugins import DummyPermissions as PermissionsProxy
 from aiohttp.test_utils import make_mocked_request
 from beacon.auth.tests import mock_access_token
 from beacon.permissions.__main__ import authorization
+from beacon.logs.logs import LOG
 from unittest.mock import MagicMock
+from beacon.request.classes import RequestAttributes
 
 #dummy test anonymous
 #dummy test login
@@ -63,8 +65,8 @@ class TestAuthZ(unittest.TestCase):
             MagicClass = MagicMock(_id='hohoho')
             async def test_authorization():
                 headers={'Authorization': 'Bearer ' + mock_access_token}
-                req = make_mocked_request('GET', '/', headers=headers)
-                username, list_visa_datasets = await authorization(self=MagicClass, request=req, headers=headers)
+                RequestAttributes.headers= headers
+                username, list_visa_datasets = await authorization(self=MagicClass)
                 assert username == 'jane'
             loop.run_until_complete(test_authorization())
             loop.run_until_complete(client.close())

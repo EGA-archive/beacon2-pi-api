@@ -1,16 +1,15 @@
 
 from typing import Optional
 from aiohttp import web
-from aiohttp.web import FileField
-from aiohttp.web_request import Request
 from .plugins import DummyPermissions as PermissionsProxy
 from beacon.logs.logs import LOG
 from beacon.auth.__main__ import authentication
-from beacon.logs.logs import log_with_args, log_with_args_mongo
+from beacon.logs.logs import log_with_args
 from beacon.conf.conf import level
 from beacon.budget.__main__ import check_budget
 from beacon.conf import dataset
 import yaml
+from beacon.request.classes import RequestAttributes, ErrorClass
 
 source=dataset.database
 complete_module='beacon.connections.'+source+'.datasets'
@@ -18,9 +17,9 @@ import importlib
 module = importlib.import_module(complete_module, package=None)
 
 @log_with_args(level)
-async def authorization(self, request, headers):
+async def authorization(self):
     try:
-        auth = headers.get('Authorization')
+        auth = RequestAttributes.headers.get('Authorization')
         if not auth or not auth.lower().startswith('bearer '):
             raise web.HTTPUnauthorized()
         list_visa_datasets=[]
@@ -40,7 +39,7 @@ async def authorization(self, request, headers):
     return username, list_visa_datasets
 
 @log_with_args(level)
-async def get_datasets_list(self, qparams, request: Request, authorized_datasets):
+async def get_datasets_list(self, qparams, authorized_datasets):
     try:
         specific_datasets_unauthorized = []
         search_and_authorized_datasets = []
@@ -68,39 +67,35 @@ async def get_datasets_list(self, qparams, request: Request, authorized_datasets
         raise
     return response_datasets
 
-def dataset_permissions(func):
+def query_permissions(func):
     @log_with_args(level)
-    async def permission(self, post_data, request: Request, qparams, entry_type, entry_id, ip, headers):
-        try: # arrancar amb testMode i si és True saltar la resta
-            if post_data is not None:
-                v = post_data.get('datasets')
-            else:
-                v = None
-            if v is None:
+    async def permission(self, qparams):
+        try:
+            time_now=None
+            username = 'public'
+            try:
+                requested_datasets = qparams.query.requestParameters["datasets"]
+            except Exception:
                 requested_datasets = []
-            elif isinstance(v, list):# pragma: no cover
-                requested_datasets = v
-            elif isinstance(v, FileField):# pragma: no cover
-                requested_datasets = []
-            else:# pragma: no cover
-                requested_datasets = v.split(sep=',')
-            
-            username, list_visa_datasets = await authorization(self, request, headers)
             if qparams.query.testMode == True:
                 with open("/beacon/permissions/datasets/test_datasets.yml", 'r') as pfile:
                     test_datasets = yaml.safe_load(pfile)
                 pfile.close()
-                datasets= test_datasets['test_datasets']
+                authorized_datasets= test_datasets['test_datasets']
+                for requested_dataset in requested_datasets:
+                    if requested_dataset not in authorized_datasets:
+                        ErrorClass.error_code=400
+                        ErrorClass.error_message='requested dataset: {} not a test dataset'.format(requested_dataset)
+                        raise web.HTTPBadRequest
             else:
+                username, list_visa_datasets = await authorization(self)
                 datasets = await PermissionsProxy.get_permissions(self, username=username, requested_datasets=requested_datasets)
-            dict_returned={}
-            dict_returned['username']=username
-            time_now = check_budget(self, ip, username)
-            authorized_datasets=list(datasets)
-            for visa_dataset in list_visa_datasets:
-                authorized_datasets.append(visa_dataset)# pragma: no cover
-            response_datasets= await get_datasets_list(self, qparams, request, authorized_datasets)
-            return await func(self, post_data, request, qparams, entry_type, entry_id, response_datasets, ip, headers, username, time_now)
+                time_now = check_budget(self, username)
+                authorized_datasets=list(datasets)
+                for visa_dataset in list_visa_datasets:
+                    authorized_datasets.append(visa_dataset)# pragma: no cover
+            response_datasets= await get_datasets_list(self, qparams, authorized_datasets)
+            return await func(self, qparams, response_datasets, username, time_now)
         except Exception:# pragma: no cover
             raise
     return permission
