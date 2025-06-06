@@ -29,6 +29,11 @@ async def get_qparams(self, post_data, request): # anomenar query string en com
     returned to have a variable called qparams with the query parameters that will be used for processing the query.
     '''
     try:
+        try:
+            if post_data["query"]["requestParameters"] == {}:
+                ErrorClass.error_message='requestParameters can not be empty, remove the requestParameters property from the body if you do not want to apply any'
+        except Exception:
+            pass
         catch_query_params={}
         catch_query={}
         catch_query["query"]={}
@@ -99,12 +104,15 @@ async def get_qparams(self, post_data, request): # anomenar query string en com
                     post_data["query"]["requestParameters"]=catch_query_params 
                 else:
                     post_data["query"]={}
-                    post_data["query"]["requestParameters"]=catch_query_params 
+                    post_data["query"]["requestParameters"]=catch_query_params
+        
+
         qparams = RequestParams(**post_data).from_request(post_data)
         return qparams
     except Exception as e:# pragma: no cover
         ErrorClass.error_code=400
-        ErrorClass.error_message='set of meta/query parameters: {} not allowed'.format(post_data)
+        if ErrorClass.error_message is None:
+            ErrorClass.error_message='set of meta/query parameters: {} not allowed'.format(post_data)
         raise web.HTTPBadRequest
     
 @log_with_args(level)
