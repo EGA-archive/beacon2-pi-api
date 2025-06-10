@@ -1,6 +1,12 @@
-from beacon.request.classes import ErrorClass
+from beacon.request.classes import ErrorClass, RequestAttributes
 import yaml
-from beacon.logs.logs import LOG, log_with_args_initial, level
+from beacon.logs.logs import LOG
+
+class DatasetPermission:
+    def __init__(self, dataset, default_granularity):
+        self.dataset = dataset
+        self.granularity = default_granularity
+
 
 class Permissions():
     """Base class, just to agree on the interface."""
@@ -30,75 +36,51 @@ class DummyPermissions(Permissions):
         pass# pragma: no cover
     
     async def get_permissions(self, username, requested_datasets=None):
-        if username == 'public':
-            try:
-                with open("/beacon/permissions/datasets/public_datasets.yml", 'r') as pfile:
-                    public_datasets = yaml.safe_load(pfile)
-                pfile.close()
-                list_public_datasets = public_datasets['public_datasets']
-                datasets = []
-                for pdataset in list_public_datasets:
-                    datasets.append(pdataset)
-                datasets = set(datasets)       
-            except Exception:
-                ErrorClass.error_code=500
-                ErrorClass.error_message="Check if public_datasets.yml file is not empty of datasets or has the public_datasets header."
-                raise
-        else:
-            with open("/beacon/permissions/datasets/registered_datasets.yml", 'r') as file:
-                registered_datasets = yaml.safe_load(file)
-            file.close()
-            with open("/beacon/permissions/datasets/public_datasets.yml", 'r') as pfile:
-                public_datasets = yaml.safe_load(pfile)
-            with open("/beacon/permissions/datasets/controlled_datasets.yml", 'r') as cfile:
-                controlled_datasets = yaml.safe_load(cfile)
+        datasets = []
+        try:
+            with open("/beacon/permissions/datasets/datasets_permissions.yml", 'r') as pfile:
+                datasets_permissions = yaml.safe_load(pfile)
             pfile.close()
-            try:
-                list_registered_datasets = registered_datasets['registered_datasets']
-            except Exception:
-                ErrorClass.error_code=500
-                ErrorClass.error_message="registered_datasets.yml file is wrong. Check if registered_datasets header is in there."
-                raise
-            try:
-                list_public_datasets = public_datasets['public_datasets']
-            except Exception:
-                ErrorClass.error_code=500
-                ErrorClass.error_message="public_datasets.yml file is wrong. Check if public_datasets header is in there."
-                raise
-            try:
-                list_controlled_datasets = controlled_datasets[username]
-            except Exception:
-                ErrorClass.error_code=500
-                ErrorClass.error_message="Username could not be found in controlled_datasets.yml file."
-                raise
-            datasets = []
-            try:
-                for pdataset in list_public_datasets:
-                    datasets.append(pdataset)
-            except Exception:
-                ErrorClass.error_code=500
-                ErrorClass.error_message="public_datasets.yml file is empty of datasets"
-                raise
-            try:
-                for rdataset in list_registered_datasets:
-                    datasets.append(rdataset)
-            except Exception:
-                ErrorClass.error_code=500
-                ErrorClass.error_message="registered_datasets.yml file is empty of datasets"
-                raise
-            try:
-                for cdataset in list_controlled_datasets:
-                    datasets.append(cdataset)
-            except Exception:
-                ErrorClass.error_code=500
-                ErrorClass.error_message="controlled_datasets.yml file is empty of datasets"
-                raise
-            datasets = set(datasets)
-        
-        if requested_datasets:
-            return set(requested_datasets).intersection(datasets)# pragma: no cover
-        else:
+            for dataset, security_level_dict in datasets_permissions.items():
+                default_granularity = None
+                granularity_exceptions = None
+                user_granularity_exceptions = None
+                LOG.debug('the requested datasets are {}'.format(requested_datasets))
+                LOG.debug('yesss')
+                for security_level, dataset_properties in security_level_dict.items():
+                    if username == 'public' and security_level == 'public':
+                        default_granularity = dataset_properties.get('default_entry_types_granularity')
+                        granularity_exceptions = dataset_properties.get('entry_types_exceptions')
+                    elif username != 'public' and security_level == 'registered':
+                        default_granularity = dataset_properties.get('default_entry_types_granularity')
+                        granularity_exceptions = dataset_properties.get('entry_types_exceptions')
+                    elif username != 'public' and security_level == 'controlled':
+                        default_granularity = dataset_properties.get('default_entry_types_granularity')
+                        granularity_exceptions = dataset_properties.get('entry_types_exceptions')
+                        user_exceptions = dataset_properties.get('user-list')
+                        if user_exceptions != None:
+                            for user_exception in user_exceptions:
+                                if user_exception['user_e-mail'] == username:
+                                    user_default_granularity = user_exceptions.get('default_entry_types_granularity')
+                                    if user_default_granularity != None:
+                                        default_granularity = user_default_granularity
+                                    user_granularity_exceptions = user_exceptions.get('entry_types_exceptions')
+                if user_granularity_exceptions != None:
+                    for entry_type_id, entry_type_granularity in user_granularity_exceptions[0].items():
+                        if entry_type_id == RequestAttributes.entry_type_id:
+                            default_granularity = entry_type_granularity
+                elif granularity_exceptions != None:
+                    for entry_type_id, entry_type_granularity in granularity_exceptions[0].items():
+                        if entry_type_id == RequestAttributes.entry_type_id:
+                            default_granularity = entry_type_granularity
+                if default_granularity != None:
+                    datasetInstance = DatasetPermission(dataset, default_granularity)
+                    datasets.append(datasetInstance)
             return datasets
+        except Exception:
+            ErrorClass.error_code=500
+            ErrorClass.error_message="Check if datasets_permissions.yml file is not empty of datasets or has any header missing."
+            raise
 
     async def close(self):
         pass# pragma: no cover

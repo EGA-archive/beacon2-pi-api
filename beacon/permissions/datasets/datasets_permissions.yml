@@ -1,16 +1,16 @@
 test:
   public:
-    default_entry_types_granularity: record
+    default_entry_types_granularity: count
 
 CINECA_synthetic_cohort_EUROPE_UK1:
-  registered:
-    default_entry_types_granularity: record
+  public:
+    default_entry_types_granularity: count
 
 AV_Dataset:
   controlled:
     default_entry_types_granularity: record
     user-list:
-      - username: app-user3
+      - user_e-mail: app-user3@example.com
 
 controlled_dataset_2:
   public:
@@ -24,7 +24,7 @@ controlled_dataset_2:
     entry_types_exceptions:
       - individual: boolean
     user-list:
-      - username: app-user3
+      - user_e-mail: app-user3@example.com
         default_entry_types_granularity: count
         entry_types_exceptions:
           - individual: record

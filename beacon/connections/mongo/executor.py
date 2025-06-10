@@ -127,7 +127,7 @@ async def execute_function(self, datasets: list, qparams: RequestParams):
 
     if datasets != [] and include != 'NONE':
         with ThreadPoolExecutor() as pool:
-            done, pending = await asyncio.wait(fs=[loop.run_in_executor(pool, function, self, qparams, dataset, collection, mongo_collection, schema, idq) for dataset in datasets],
+            done, pending = await asyncio.wait(fs=[loop.run_in_executor(pool, function, self, qparams, dataset.dataset, collection, mongo_collection, schema, idq) for dataset in datasets],
             return_when=asyncio.ALL_COMPLETED
             )
         for task in done:
@@ -157,7 +157,7 @@ async def execute_function(self, datasets: list, qparams: RequestParams):
     
     else:
         with ThreadPoolExecutor() as pool:
-            done, pending = await asyncio.wait(fs=[loop.run_in_executor(pool, function, self, qparams, dataset, collection, mongo_collection, schema, idq) for dataset in datasets],
+            done, pending = await asyncio.wait(fs=[loop.run_in_executor(pool, function, self, qparams, dataset.dataset, collection, mongo_collection, schema, idq) for dataset in datasets],
             return_when=asyncio.ALL_COMPLETED
             )
         for task in done:

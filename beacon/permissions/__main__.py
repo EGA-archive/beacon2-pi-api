@@ -1,11 +1,11 @@
 
 from typing import Optional
 from aiohttp import web
-from .plugins import DummyPermissions as PermissionsProxy
+from .plugins import DummyPermissions as PermissionsProxy, DatasetPermission
 from beacon.logs.logs import LOG
 from beacon.auth.__main__ import authentication
 from beacon.logs.logs import log_with_args
-from beacon.conf.conf import level
+from beacon.conf.conf import level, default_beacon_granularity
 from beacon.budget.__main__ import check_budget
 from beacon.conf import dataset
 import yaml
@@ -41,28 +41,18 @@ async def authorization(self):
 @log_with_args(level)
 async def get_datasets_list(self, qparams, authorized_datasets):
     try:
-        specific_datasets_unauthorized = []
-        search_and_authorized_datasets = []
         try:
             specific_datasets = qparams.query.requestParameters['datasets']
         except Exception as e:
             specific_datasets = []
+        beacon_datasets = module.get_list_of_datasets(self)# pragma: no cover
+        LOG.debug('the datasets are {}'.format(beacon_datasets))
         # Get response
         if specific_datasets != []:
-            for element in authorized_datasets:# pragma: no cover
-                if element in specific_datasets:
-                    search_and_authorized_datasets.append(element)
-            for elemento in specific_datasets:# pragma: no cover
-                if elemento not in search_and_authorized_datasets:
-                    specific_datasets_unauthorized.append(elemento)
-            beacon_datasets = module.get_list_of_datasets(self)# pragma: no cover
-            response_datasets = [ r['id'] for r in beacon_datasets if r['id'] in search_and_authorized_datasets]# pragma: no cover
-
+            for element in authorized_datasets:
+                response_datasets =  [element.dataset for element in authorized_datasets if element.dataset in r['id'] for r in beacon_datasets and element.dataset in specific_datasets]
         else:
-            beacon_datasets = module.get_list_of_datasets(self)
-            specific_datasets = [ r['id'] for r in beacon_datasets if r['id'] not in authorized_datasets]
-            response_datasets = [ r['id'] for r in beacon_datasets if r['id'] in authorized_datasets]
-            specific_datasets_unauthorized.append(specific_datasets)
+            response_datasets =  [element for element in authorized_datasets if element.dataset in [r['id'] for r in beacon_datasets]]
     except Exception:# pragma: no cover
         raise
     return response_datasets
@@ -89,12 +79,12 @@ def query_permissions(func):
                         raise web.HTTPBadRequest
             else:
                 username, list_visa_datasets = await authorization(self)
-                datasets = await PermissionsProxy.get_permissions(self, username=username, requested_datasets=requested_datasets)
+                datasets_permissions = await PermissionsProxy.get_permissions(self, username=username, requested_datasets=requested_datasets)
+                LOG.debug(datasets_permissions)
                 time_now = check_budget(self, username)
-                authorized_datasets=list(datasets)
                 for visa_dataset in list_visa_datasets:
-                    authorized_datasets.append(visa_dataset)# pragma: no cover
-            response_datasets= await get_datasets_list(self, qparams, authorized_datasets)
+                    datasets_permissions.append(DatasetPermission(visa_dataset, default_beacon_granularity))
+            response_datasets= await get_datasets_list(self, qparams, datasets_permissions)
             return await func(self, qparams, response_datasets, username, time_now)
         except Exception:# pragma: no cover
             raise
