@@ -35,18 +35,21 @@ class DummyPermissions(Permissions):
     async def initialize(self):
         pass# pragma: no cover
     
-    async def get_permissions(self, username, requested_datasets=None):
+    async def get_permissions(self, username, requested_datasets=None, testMode=False):
         datasets = []
         try:
-            with open("/beacon/permissions/datasets/datasets_permissions.yml", 'r') as pfile:
-                datasets_permissions = yaml.safe_load(pfile)
-            pfile.close()
+            if testMode == False:
+                with open("/beacon/permissions/datasets/datasets_permissions.yml", 'r') as pfile:
+                    datasets_permissions = yaml.safe_load(pfile)
+                pfile.close()
+            elif testMode == True:
+                with open("/beacon/tests/datasets/test_datasets.yml", 'r') as pfile:
+                    datasets_permissions = yaml.safe_load(pfile)
+                pfile.close()
             for dataset, security_level_dict in datasets_permissions.items():
                 default_granularity = None
                 granularity_exceptions = None
                 user_granularity_exceptions = None
-                LOG.debug('the requested datasets are {}'.format(requested_datasets))
-                LOG.debug('yesss')
                 for security_level, dataset_properties in security_level_dict.items():
                     if username == 'public' and security_level == 'public':
                         default_granularity = dataset_properties.get('default_entry_types_granularity')

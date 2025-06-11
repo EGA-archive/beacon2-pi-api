@@ -1,0 +1,3 @@
+test:
+  public:
+    default_entry_types_granularity: count

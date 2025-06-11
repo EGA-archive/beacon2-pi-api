@@ -1,5 +1,5 @@
 from aiohttp.web_request import Request
-from beacon.response.catalog import build_beacon_record_response_by_dataset, build_beacon_count_response, build_beacon_collection_response, build_beacon_info_response, build_map, build_configuration, build_entry_types, build_beacon_service_info_response, build_filtering_terms_response, build_beacon_boolean_response, build_beacon_none_response
+from beacon.response.catalog import build_beacon_record_response_by_dataset, build_beacon_count_response, build_beacon_collection_response, build_beacon_info_response, build_map, build_configuration, build_entry_types, build_beacon_service_info_response, build_filtering_terms_response, build_beacon_boolean_response
 from beacon.logs.logs import log_with_args, LOG
 from beacon.conf.conf import level
 from beacon.request.classes import Granularity, RequestAttributes
@@ -12,15 +12,10 @@ async def builder(self, datasets, qparams):
         complete_module='beacon.connections.'+RequestAttributes.source+'.executor'
         import importlib
         module = importlib.import_module(complete_module, package=None)
-        LOG.debug(datasets)
         datasets_docs, datasets_count, count, entity_schema, include, datasets = await module.execute_function(self, datasets, qparams)
-        if granularity == Granularity.RECORD and RequestAttributes.allowed_granularity=='record':
+        if qparams.query.includeResultsetResponses != 'NONE':
             response = build_beacon_record_response_by_dataset(self, datasets, datasets_docs, datasets_count, count, qparams, entity_schema)
-        elif granularity == Granularity.COUNT and RequestAttributes.allowed_granularity in ['count', 'record']:
-            response = build_beacon_count_response(self, count, qparams, entity_schema)
-        elif granularity == Granularity.RECORD and RequestAttributes.allowed_granularity in ['count', 'record']:# pragma: no cover
-            response = build_beacon_count_response(self, count, qparams, entity_schema)
-        elif granularity == Granularity.RECORD and RequestAttributes.allowed_granularity in ['count']:# pragma: no cover
+        elif qparams.query.includeResultsetResponses == 'NONE' and RequestAttributes.allowed_granularity=='count':
             response = build_beacon_count_response(self, count, qparams, entity_schema)
         else:# pragma: no cover
             response = build_beacon_boolean_response(self, count, qparams, entity_schema)

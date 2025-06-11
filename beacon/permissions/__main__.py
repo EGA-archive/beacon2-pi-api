@@ -31,7 +31,6 @@ async def authorization(self):
             username = 'public'# pragma: no cover
         else:
             username = user.get('preferred_username')
-
     except Exception as e:
         list_visa_datasets = []
         username = 'public'
@@ -46,11 +45,9 @@ async def get_datasets_list(self, qparams, authorized_datasets):
         except Exception as e:
             specific_datasets = []
         beacon_datasets = module.get_list_of_datasets(self)# pragma: no cover
-        LOG.debug('the datasets are {}'.format(beacon_datasets))
         # Get response
         if specific_datasets != []:
-            for element in authorized_datasets:
-                response_datasets =  [element.dataset for element in authorized_datasets if element.dataset in r['id'] for r in beacon_datasets and element.dataset in specific_datasets]
+            response_datasets =  [element for element in authorized_datasets if element.dataset in [r['id'] for r in beacon_datasets] and element.dataset in specific_datasets]
         else:
             response_datasets =  [element for element in authorized_datasets if element.dataset in [r['id'] for r in beacon_datasets]]
     except Exception:# pragma: no cover
@@ -68,19 +65,19 @@ def query_permissions(func):
             except Exception:
                 requested_datasets = []
             if qparams.query.testMode == True:
-                with open("/beacon/permissions/datasets/test_datasets.yml", 'r') as pfile:
+                with open("/beacon/tests/datasets/test_datasets.yml", 'r') as pfile:
                     test_datasets = yaml.safe_load(pfile)
                 pfile.close()
-                authorized_datasets= test_datasets['test_datasets']
                 for requested_dataset in requested_datasets:
-                    if requested_dataset not in authorized_datasets:
+                    if test_datasets.get(requested_dataset) == None:
                         ErrorClass.error_code=400
                         ErrorClass.error_message='requested dataset: {} not a test dataset'.format(requested_dataset)
                         raise web.HTTPBadRequest
+                datasets_permissions = await PermissionsProxy.get_permissions(self, username=username, requested_datasets=requested_datasets, testMode=True)
+                response_datasets= await get_datasets_list(self, qparams, datasets_permissions)
             else:
                 username, list_visa_datasets = await authorization(self)
-                datasets_permissions = await PermissionsProxy.get_permissions(self, username=username, requested_datasets=requested_datasets)
-                LOG.debug(datasets_permissions)
+                datasets_permissions = await PermissionsProxy.get_permissions(self, username=username, requested_datasets=requested_datasets, testMode=False)
                 time_now = check_budget(self, username)
                 for visa_dataset in list_visa_datasets:
                     datasets_permissions.append(DatasetPermission(visa_dataset, default_beacon_granularity))

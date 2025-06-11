@@ -1,6 +1,6 @@
 test:
   public:
-    default_entry_types_granularity: count
+    default_entry_types_granularity: record
 
 CINECA_synthetic_cohort_EUROPE_UK1:
   public:

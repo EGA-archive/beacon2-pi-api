@@ -1,6 +1,6 @@
 from beacon.response.schemas import DefaultSchemas
 from beacon.request.parameters import RequestParams, RequestMeta, RequestQuery
-from beacon.request.classes import Granularity, ErrorClass
+from beacon.request.classes import Granularity, ErrorClass, RequestAttributes
 from beacon.conf import conf
 from typing import Optional
 from beacon.logs.logs import log_with_args
@@ -457,85 +457,61 @@ def build_info_meta(self, entity_schema: Optional[DefaultSchemas]):
 def build_response_by_dataset(self, datasets, data, dict_counts, qparams):
     try:
         list_of_responses=[]
-        total_results_none=[]
-        resultsCount_none=0
-        exists_none=False
         for dataset in datasets:
-            if qparams.query.includeResultsetResponses == 'NONE':
-                if dataset.granularity == 'record':
-                    total_results_none.append(data[dataset.dataset])
-                    resultsCount_none+=dict_counts[dataset.dataset]
-                    exists_none=True
-                elif dataset.granularity == 'count':
-                    resultsCount_none+=dict_counts[dataset.dataset]
-                    exists_none=True
-                else:
-                    exists_none=True
+            if dataset.granularity == 'record' and RequestAttributes.allowed_granularity=='record':
+                for handover in list_of_handovers_per_dataset:
+                    if handover["dataset"]==dataset.dataset:# pragma: no cover
+                        response = {
+                            'id': dataset.dataset, # TODO: Set the name of the dataset/cohort
+                            'setType': 'dataset', # TODO: Set the type of collection
+                            'exists': dict_counts[dataset.dataset] > 0,
+                            'resultsCount': dict_counts[dataset.dataset],
+                            'results': data[dataset.dataset],
+                            # 'info': None,
+                            'resultsHandover': handover["handover"]  # build_results_handover
+                        }
+                    else:
+                        response = {
+                            'id': dataset.dataset, # TODO: Set the name of the dataset/cohort
+                            'setType': 'dataset', # TODO: Set the type of collection
+                            'exists': dict_counts[dataset.dataset] > 0,
+                            'resultsCount': dict_counts[dataset.dataset],
+                            'results': data[dataset.dataset]
+                        }
+            elif dataset.granularity == 'count' and RequestAttributes.allowed_granularity in ['count', 'record']:
+                for handover in list_of_handovers_per_dataset:
+                    if handover["dataset"]==dataset.dataset:# pragma: no cover
+                        response = {
+                            'id': dataset.dataset, # TODO: Set the name of the dataset/cohort
+                            'setType': 'dataset', # TODO: Set the type of collection
+                            'exists': dict_counts[dataset.dataset] > 0,
+                            'resultsCount': dict_counts[dataset.dataset],
+                            # 'info': None,
+                            'resultsHandover': handover["handover"]  # build_results_handover
+                        }
+                    else:
+                        response = {
+                            'id': dataset.dataset, # TODO: Set the name of the dataset/cohort
+                            'setType': 'dataset', # TODO: Set the type of collection
+                            'exists': dict_counts[dataset.dataset] > 0,
+                            'resultsCount': dict_counts[dataset.dataset]
+                        }
             else:
-                if dataset.granularity == 'record':
-                    for handover in list_of_handovers_per_dataset:
-                        if handover["dataset"]==dataset.dataset:# pragma: no cover
-                            response = {
-                                'id': dataset.dataset, # TODO: Set the name of the dataset/cohort
-                                'setType': 'dataset', # TODO: Set the type of collection
-                                'exists': dict_counts[dataset.dataset] > 0,
-                                'resultsCount': dict_counts[dataset.dataset],
-                                'results': data[dataset.dataset],
-                                # 'info': None,
-                                'resultsHandover': handover["handover"]  # build_results_handover
-                            }
-                        else:
-                            response = {
-                                'id': dataset.dataset, # TODO: Set the name of the dataset/cohort
-                                'setType': 'dataset', # TODO: Set the type of collection
-                                'exists': dict_counts[dataset.dataset] > 0,
-                                'resultsCount': dict_counts[dataset.dataset],
-                                'results': data[dataset.dataset]
-                            }
-                elif dataset.granularity == 'count':
-                    for handover in list_of_handovers_per_dataset:
-                        if handover["dataset"]==dataset.dataset:# pragma: no cover
-                            response = {
-                                'id': dataset.dataset, # TODO: Set the name of the dataset/cohort
-                                'setType': 'dataset', # TODO: Set the type of collection
-                                'exists': dict_counts[dataset.dataset] > 0,
-                                'resultsCount': dict_counts[dataset.dataset],
-                                # 'info': None,
-                                'resultsHandover': handover["handover"]  # build_results_handover
-                            }
-                        else:
-                            response = {
-                                'id': dataset.dataset, # TODO: Set the name of the dataset/cohort
-                                'setType': 'dataset', # TODO: Set the type of collection
-                                'exists': dict_counts[dataset.dataset] > 0,
-                                'resultsCount': dict_counts[dataset.dataset]
-                            }
-                elif dataset.granularity == 'boolean':
-                    for handover in list_of_handovers_per_dataset:
-                        if handover["dataset"]==dataset.dataset:# pragma: no cover
-                            response = {
-                                'id': dataset.dataset, # TODO: Set the name of the dataset/cohort
-                                'setType': 'dataset', # TODO: Set the type of collection
-                                'exists': dict_counts[dataset.dataset] > 0,
-                                # 'info': None,
-                                'resultsHandover': handover["handover"]  # build_results_handover
-                            }
-                        else:
-                            response = {
-                                'id': dataset.dataset, # TODO: Set the name of the dataset/cohort
-                                'setType': 'dataset', # TODO: Set the type of collection
-                                'exists': dict_counts[dataset.dataset] > 0
-                            }
-            if qparams.query.includeResultsetResponses == 'NONE':
-                response = {
-                    'id': '', # TODO: Set the name of the dataset/cohort
-                    'setType': '', # TODO: Set the type of collection
-                    'exists': exists_none,
-                    'resultsCount': resultsCount_none,
-                    'results': total_results_none,
-                    # 'info': None,
-                    'resultsHandover': list_of_handovers,  # build_results_handover
-                }
+                for handover in list_of_handovers_per_dataset:
+                    if handover["dataset"]==dataset.dataset:# pragma: no cover
+                        response = {
+                            'id': dataset.dataset, # TODO: Set the name of the dataset/cohort
+                            'setType': 'dataset', # TODO: Set the type of collection
+                            'exists': dict_counts[dataset.dataset] > 0,
+                            # 'info': None,
+                            'resultsHandover': handover["handover"]  # build_results_handover
+                        }
+                    else:
+                        response = {
+                            'id': dataset.dataset, # TODO: Set the name of the dataset/cohort
+                            'setType': 'dataset', # TODO: Set the type of collection
+                            'exists': dict_counts[dataset.dataset] > 0
+                        }
 
             list_of_responses.append(response)
 

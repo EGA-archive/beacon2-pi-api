@@ -55,9 +55,17 @@ async def get_qparams(self, post_data, request): # anomenar query string en com
             elif k == 'includeResultsetResponses':
                 catch_query["query"]["includeResultsetResponses"] = v
             elif k == 'skip':
-                catch_query["query"]["skip"] = v
+                try:
+                    catch_query["query"]["pagination"]["skip"] = v
+                except Exception:
+                    catch_query["query"]["pagination"]= {}
+                    catch_query["query"]["pagination"]["skip"] = v
             elif k == 'limit':
-                catch_query["query"]["limit"] = v
+                try:
+                    catch_query["query"]["pagination"]["limit"] = v
+                except Exception:
+                    catch_query["query"]["pagination"]= {}
+                    catch_query["query"]["pagination"]["limit"] = v
             elif k == 'testMode':
                 catch_query["query"]["testMode"] = v
             elif k == 'requestedSchemas':
