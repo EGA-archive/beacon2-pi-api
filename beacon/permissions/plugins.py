@@ -58,16 +58,16 @@ class DummyPermissions(Permissions):
                         default_granularity = dataset_properties.get('default_entry_types_granularity')
                         granularity_exceptions = dataset_properties.get('entry_types_exceptions')
                     elif username != 'public' and security_level == 'controlled':
-                        default_granularity = dataset_properties.get('default_entry_types_granularity')
-                        granularity_exceptions = dataset_properties.get('entry_types_exceptions')
                         user_exceptions = dataset_properties.get('user-list')
                         if user_exceptions != None:
                             for user_exception in user_exceptions:
                                 if user_exception['user_e-mail'] == username:
-                                    user_default_granularity = user_exceptions.get('default_entry_types_granularity')
+                                    user_default_granularity = user_exception.get('default_entry_types_granularity')
+                                    default_granularity = dataset_properties.get('default_entry_types_granularity')
+                                    granularity_exceptions = dataset_properties.get('entry_types_exceptions')
                                     if user_default_granularity != None:
                                         default_granularity = user_default_granularity
-                                    user_granularity_exceptions = user_exceptions.get('entry_types_exceptions')
+                                    user_granularity_exceptions = user_exception.get('entry_types_exceptions')
                 if user_granularity_exceptions != None:
                     for entry_type_id, entry_type_granularity in user_granularity_exceptions[0].items():
                         if entry_type_id == RequestAttributes.entry_type_id:
