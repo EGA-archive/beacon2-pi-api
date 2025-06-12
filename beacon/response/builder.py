@@ -13,13 +13,9 @@ async def builder(self, datasets, qparams):
         import importlib
         module = importlib.import_module(complete_module, package=None)
         datasets_docs, datasets_count, count, entity_schema, include, datasets = await module.execute_function(self, datasets, qparams)
-        if qparams.query.includeResultsetResponses != 'NONE' and RequestAttributes.allowed_granularity=='record' and granularity == 'record':
+        if qparams.query.includeResultsetResponses != 'NONE':
             response = build_beacon_record_response_by_dataset(self, datasets, datasets_docs, datasets_count, count, qparams, entity_schema)
-        elif qparams.query.includeResultsetResponses == 'NONE' and RequestAttributes.allowed_granularity=='count' and granularity in ['count', 'record']:
-            response = build_beacon_count_response(self, count, qparams, entity_schema)
-        elif qparams.query.includeResultsetResponses != 'NONE' and RequestAttributes.allowed_granularity=='count' and granularity in ['count', 'record']:
-            response = build_beacon_count_response(self, count, qparams, entity_schema)
-        elif qparams.query.includeResultsetResponses != 'NONE' and RequestAttributes.allowed_granularity in ['count', 'record'] and granularity == 'count':
+        elif qparams.query.includeResultsetResponses == 'NONE' and RequestAttributes.allowed_granularity in ['count','record'] and granularity in ['count', 'record']:
             response = build_beacon_count_response(self, count, qparams, entity_schema)
         else:# pragma: no cover
             response = build_beacon_boolean_response(self, count, qparams, entity_schema)

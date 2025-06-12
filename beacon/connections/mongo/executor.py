@@ -125,7 +125,7 @@ async def execute_function(self, datasets: list, qparams: RequestParams):
 
     loop = asyncio.get_running_loop()
 
-    if datasets != [] and include != 'NONE':
+    if datasets != []:
         with ThreadPoolExecutor() as pool:
             done, pending = await asyncio.wait(fs=[loop.run_in_executor(pool, function, self, qparams, dataset.dataset, collection, mongo_collection, schema, idq) for dataset in datasets],
             return_when=asyncio.ALL_COMPLETED
@@ -139,35 +139,22 @@ async def execute_function(self, datasets: list, qparams: RequestParams):
                     datasets_count[dataset]=dataset_count
                 else:
                     datasets = [x for x in datasets if x.dataset != dataset] # pragma: no cover
-            elif include == 'HIT':
-                if dataset_count != -1 and dataset_count != 0:
-                    new_count+=dataset_count
-                    datasets_docs[dataset]=records
-                    datasets_count[dataset]=dataset_count
-                else:
-                    datasets = [x for x in datasets if x.dataset != dataset] # pragma: no cover
-            else:
+            elif include == 'MISS':
                 if dataset_count == 0:# pragma: no cover
                     new_count+=dataset_count
                     datasets_docs[dataset]=records
                     datasets_count[dataset]=dataset_count
                 else:
                     datasets = [x for x in datasets if x.dataset != dataset] # pragma: no cover
+            else:
+                if dataset_count != -1 and dataset_count != 0:
+                    new_count+=dataset_count
+                    datasets_docs[dataset]=records
+                    datasets_count[dataset]=dataset_count
+                else:
+                    datasets = [x for x in datasets if x.dataset != dataset] # pragma: no cover
         count=new_count
-    
-    else:
-        with ThreadPoolExecutor() as pool:
-            done, pending = await asyncio.wait(fs=[loop.run_in_executor(pool, function, self, qparams, dataset.dataset, collection, mongo_collection, schema, idq) for dataset in datasets],
-            return_when=asyncio.ALL_COMPLETED
-            )
-        for task in done:
-            entity_schema, count, dataset_count, records, dataset = task.result()
-        datasets_docs["NONE"]=records
-        if limit == 0 or new_count < limit:
-            pass
-        else:
-            count = limit# pragma: no cover
-        datasets_count["NONE"]=count
+
     return datasets_docs, datasets_count, count, entity_schema, include, datasets
 
 @log_with_args(level)
