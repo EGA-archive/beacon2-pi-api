@@ -425,8 +425,8 @@ def check_configuration():
         for dataset_name, configuration in datasets.items():
             if not isinstance(configuration, bool):
                 for security_level, securityconf in configuration.items():
-                    if security_level not in ['test', 'public', 'registered', 'controlled', 'isSynthetic']:
-                        raise Exception("keys for datasets have to be test, public, registered, controlled for security level and isSynthetic for nature of the dataset")
+                    if security_level not in ['public', 'registered', 'controlled']:
+                        raise Exception("keys for datasets have to be public, registered, controlled for security level")
                     if not isinstance(securityconf, bool):
                         for parameters, paramsvalues in securityconf.items():
                             if parameters not in ['default_entry_types_granularity', 'entry_types_exceptions', 'user-list']:
@@ -437,5 +437,17 @@ def check_configuration():
                                         for confuser, valueuser in user.items():
                                             if confuser not in ['user_e-mail', 'default_entry_types_granularity', 'entry_types_exceptions']:
                                                 raise Exception("entries for user settings in user-list must be be default_entry_types_granularity, entry_types_exceptions or user_e-mail")
+    except Exception:
+        raise
+    try:
+        with open("/beacon/conf/datasets/datasets_conf.yml", 'r') as pfile:
+            datasets = yaml.safe_load(pfile)
+        pfile.close()
+        for dataset_name, configuration in datasets.items():
+            for property, value in configuration.items():
+                if property not in ['isTest', 'isSynthetic']:
+                    raise Exception("keys for datasets properties in datasets_conf.yml have to be isTest or isSynthetic")
+                if not isinstance(value, bool):
+                    raise Exception("values for datasets properties in datasets_conf.yml have to be boolean")  
     except Exception:
         raise
