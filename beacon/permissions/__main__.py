@@ -65,16 +65,16 @@ def query_permissions(func):
             except Exception:
                 requested_datasets = []
             if qparams.query.testMode == True:
-                with open("/beacon/tests/datasets/test_datasets.yml", 'r') as pfile:
-                    test_datasets = yaml.safe_load(pfile)
-                pfile.close()
+                datasets_permissions = await PermissionsProxy.get_permissions(self, username=username, requested_datasets=requested_datasets, testMode=True)
+                response_datasets= await get_datasets_list(self, qparams, datasets_permissions)
+                response_datasets_names=[]
+                for response_dataset in response_datasets:
+                    response_datasets_names.append(response_dataset.dataset)
                 for requested_dataset in requested_datasets:
-                    if test_datasets.get(requested_dataset) == None:
+                    if requested_dataset not in response_datasets_names:
                         ErrorClass.error_code=400
                         ErrorClass.error_message='requested dataset: {} not a test dataset'.format(requested_dataset)
                         raise web.HTTPBadRequest
-                datasets_permissions = await PermissionsProxy.get_permissions(self, username=username, requested_datasets=requested_datasets, testMode=True)
-                response_datasets= await get_datasets_list(self, qparams, datasets_permissions)
             else:
                 username, list_visa_datasets = await authorization(self)
                 datasets_permissions = await PermissionsProxy.get_permissions(self, username=username, requested_datasets=requested_datasets, testMode=False)

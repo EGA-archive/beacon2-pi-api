@@ -38,18 +38,27 @@ class DummyPermissions(Permissions):
     async def get_permissions(self, username, requested_datasets=None, testMode=False):
         datasets = []
         try:
-            if testMode == False:
-                with open("/beacon/permissions/datasets/datasets_permissions.yml", 'r') as pfile:
-                    datasets_permissions = yaml.safe_load(pfile)
-                pfile.close()
-            elif testMode == True:
-                with open("/beacon/tests/datasets/test_datasets.yml", 'r') as pfile:
-                    datasets_permissions = yaml.safe_load(pfile)
-                pfile.close()
+            with open("/beacon/permissions/datasets/datasets_permissions.yml", 'r') as pfile:
+                datasets_permissions = yaml.safe_load(pfile)
+            pfile.close()
+            if testMode == True:
+                with open("/beacon/conf/datasets/datasets_conf.yml", 'r') as confile:
+                    datasets_conf = yaml.safe_load(confile)
+                confile.close()
+                test_datasets=[]
+                for confdataset, confvalue in datasets_conf.items():
+                    for key, value in confvalue.items():
+                        if key == 'isTest':
+                            if value == True:
+                                test_datasets.append(confdataset)
             for dataset, security_level_dict in datasets_permissions.items():
+                if testMode == True:
+                    if dataset not in test_datasets:
+                        continue
                 default_granularity = None
                 granularity_exceptions = None
                 user_granularity_exceptions = None
+
                 for security_level, dataset_properties in security_level_dict.items():
                     if username == 'public' and security_level == 'public':
                         default_granularity = dataset_properties.get('default_entry_types_granularity')

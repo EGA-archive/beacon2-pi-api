@@ -1,14 +1,14 @@
 test:
   public:
-    default_entry_types_granularity: record
-    entry_types_exceptions:
-      - cohort: boolean
-
-CINECA_synthetic_cohort_EUROPE_UK1:
-  registered:
     default_entry_types_granularity: count
     entry_types_exceptions:
       - individual: boolean
+
+CINECA_synthetic_cohort_EUROPE_UK1:
+  registered:
+    default_entry_types_granularity: record
+    entry_types_exceptions:
+      - cohort: boolean
 
 AV_Dataset:
   controlled:
@@ -20,5 +20,8 @@ AV_Dataset:
         default_entry_types_granularity: count
         entry_types_exceptions:
           - individual: record
+      
+
+
 
 # Agafar com a identificador d'usuari el que digui la OIDC spec.

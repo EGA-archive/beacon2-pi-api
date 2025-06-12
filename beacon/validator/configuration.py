@@ -78,8 +78,6 @@ def check_configuration():
         if not cors_url.startswith('http://'):
             if not cors_url.startswith('https://'):
                 raise Exception('The url {} in cors_urls variable must start with http protocol'.format(cors_url))
-    if not isinstance(conf.test_datasetId, str):
-        raise Exception("The config parameter test_datasetId must be of type string.")
     if not isinstance(run.endpoint_name, str):
         raise Exception('The run.endpoint_name variable must be of type string')
     if contains_special_characters(run.endpoint_name):
@@ -421,40 +419,23 @@ def check_configuration():
         if not conf.documentation_url.startswith('https://'):
             raise Exception('The url {} in cors_urls variable must start with http protocol'.format(conf.documentation_url))
     try:
-        with open("/beacon/tests/datasets/test_datasets.yml", 'r') as pfile:
-            datasets = yaml.safe_load(pfile)
-        pfile.close()
-        for dataset_name, configuration in datasets.items():
-            for security_level, securityconf in configuration.items():
-                if security_level not in ['public', 'registered', 'controlled']:
-                    raise Exception("keys for datasets have to be public, registered or controlled")
-                for parameters, paramsvalues in securityconf.items():
-                    if parameters not in ['default_entry_types_granularity', 'entry_types_exceptions', 'user-list']:
-                        raise Exception("entries for dataset settings have to be default_entry_types_granularity, entry_types_exceptions or user-list")
-                    if dataset == 'controlled':
-                        if parameters == 'user-list':
-                            for user in parameters:
-                                for confuser, valueuser in user.items():
-                                    if confuser not in ['user_e-mail', 'default_entry_types_granularity', 'entry_types_exceptions']:
-                                        raise Exception("entries for user settings in user-list must be be default_entry_types_granularity, entry_types_exceptions or user_e-mail")
-    except Exception:
-        raise
-    try:
         with open("/beacon/permissions/datasets/datasets_permissions.yml", 'r') as pfile:
             datasets = yaml.safe_load(pfile)
         pfile.close()
         for dataset_name, configuration in datasets.items():
-            for security_level, securityconf in configuration.items():
-                if security_level not in ['public', 'registered', 'controlled']:
-                    raise Exception("keys for datasets have to be public, registered or controlled")
-                for parameters, paramsvalues in securityconf.items():
-                    if parameters not in ['default_entry_types_granularity', 'entry_types_exceptions', 'user-list']:
-                        raise Exception("entries for dataset settings have to be default_entry_types_granularity, entry_types_exceptions or user-list")
-                    if dataset == 'controlled':
-                        if parameters == 'user-list':
-                            for user in parameters:
-                                for confuser, valueuser in user.items():
-                                    if confuser not in ['user_e-mail', 'default_entry_types_granularity', 'entry_types_exceptions']:
-                                        raise Exception("entries for user settings in user-list must be be default_entry_types_granularity, entry_types_exceptions or user_e-mail")
+            if not isinstance(configuration, bool):
+                for security_level, securityconf in configuration.items():
+                    if security_level not in ['test', 'public', 'registered', 'controlled', 'isSynthetic']:
+                        raise Exception("keys for datasets have to be test, public, registered, controlled for security level and isSynthetic for nature of the dataset")
+                    if not isinstance(securityconf, bool):
+                        for parameters, paramsvalues in securityconf.items():
+                            if parameters not in ['default_entry_types_granularity', 'entry_types_exceptions', 'user-list']:
+                                raise Exception("entries for dataset settings have to be default_entry_types_granularity, entry_types_exceptions or user-list")
+                            if dataset == 'controlled':
+                                if parameters == 'user-list':
+                                    for user in parameters:
+                                        for confuser, valueuser in user.items():
+                                            if confuser not in ['user_e-mail', 'default_entry_types_granularity', 'entry_types_exceptions']:
+                                                raise Exception("entries for user settings in user-list must be be default_entry_types_granularity, entry_types_exceptions or user_e-mail")
     except Exception:
         raise
