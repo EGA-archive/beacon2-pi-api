@@ -255,7 +255,7 @@ JWKS_URL='https://login.elixir-czech.org/oidc/jwk'
 
 For Keycloak IDP, an "aud" parameter will need to be added to the token's mappers, matching the Audience for the Keycloak realm.
 
-## Dataset configuration
+## Dataset configuration
 
 To state if a dataset is test or not or if is synthetic or not, you have to modify the [datasets_conf.yml](https://github.com/EGA-archive/beacon-production-prototype/tree/main/beacon/conf/datasets/datasets_conf.yml), writing the name of the dataset you want to declare and the two possible variables **isTest** and **isSynthetic** with a boolean value.
 
