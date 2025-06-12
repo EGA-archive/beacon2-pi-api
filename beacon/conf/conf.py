@@ -27,7 +27,6 @@ default_beacon_granularity = "record" # boolean, count or record
 security_levels = ['PUBLIC', 'REGISTERED', 'CONTROLLED']
 documentation_url = 'https://b2ri-documentation-demo.ega-archive.org/'
 cors_urls = ["http://localhost:3000","https://cancer-beacon-demo.ega-archive.org", "https://beacon-network-demo2.ega-archive.org", "https://beacon.ega-archive.org"]
-test_datasetId="test" # Hauria de ser una matriu
 
 # Service Info
 ga4gh_service_type_group = 'org.ga4gh'

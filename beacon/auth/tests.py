@@ -7,7 +7,7 @@ from beacon.auth.__main__ import fetch_idp, validate_access_token, authenticatio
 from dotenv import load_dotenv
 
 # for keycloak, create aud in mappers, with custom, aud and beacon for audience
-mock_access_token = 'eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJreS1tUXNxZ0ZYeHdSUVRfRUhuQlJJUGpmbVhfRXZuUTVEbzZWUTJCazdZIn0.eyJleHAiOjE3NDkyMTE3NTMsImlhdCI6MTc0OTIxMTQ1MywianRpIjoiMDhlNjIzMGUtN2RlNS00NTEwLWIxODYtMTQ3MjE4Yjg4ZDNkIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL0JlYWNvbiIsImF1ZCI6ImJlYWNvbiIsInN1YiI6IjQ3ZWZmMWIxLTc2MjEtNDU3MC1hMGJiLTAxYTcxOWZiYTBhMiIsInR5cCI6IkJlYXJlciIsImF6cCI6ImJlYWNvbiIsInNlc3Npb25fc3RhdGUiOiJiZWMzNzkwNC03MzIzLTQ1YTUtYmQzMy05YTdkMTRhYzA2MDciLCJhY3IiOiIxIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBlbWFpbCBtaWNyb3Byb2ZpbGUtand0Iiwic2lkIjoiYmVjMzc5MDQtNzMyMy00NWE1LWJkMzMtOWE3ZDE0YWMwNjA3IiwidXBuIjoiamFuZSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwibmFtZSI6IkphbmUgU21pdGgiLCJncm91cHMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXSwicHJlZmVycmVkX3VzZXJuYW1lIjoiamFuZSIsImdpdmVuX25hbWUiOiJKYW5lIiwiZmFtaWx5X25hbWUiOiJTbWl0aCIsImVtYWlsIjoiamFuZS5zbWl0aEBiZWFjb24uZ2E0Z2gifQ.l9Z8V5qmuXfZ8cYfkN6rYgRiRIe0ZZ6J-f_Z-b9N3v687Y1zVNIxlY7aF9dPqBKd3IdiReeexA6ZZDIFV7L5geBm2-do4_GcFTg2oU7OX228SH7QnMsU9dzy0iCkyhsWQeWcQNB-up2iP6sb0jrtKbYLqZmwTemL0SuxAQBXp-c6emRvojzUI4g4DBCgF14NFWRiPnLk5cyAa6fNHe8gAGb0afDskRQ5hE-Ba9gFbwr_slRMdf4pOqVkJylP3EzyJHjcbro35kx1G3pXxqkWln3OQVgCjVO_SDLDVPkDN4eQddZWAyvQ_eQ6rKR3LOCYMT92W-tekuMsxKUX3UBrJA'
+mock_access_token = 'eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJreS1tUXNxZ0ZYeHdSUVRfRUhuQlJJUGpmbVhfRXZuUTVEbzZWUTJCazdZIn0.eyJleHAiOjE3NDk2NTQyODgsImlhdCI6MTc0OTY1Mzk4OCwianRpIjoiMzIyMDhiMDItYTlhMi00Y2UzLWFmYWUtZDNhZDM3YmVlZWMxIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL0JlYWNvbiIsImF1ZCI6ImJlYWNvbiIsInN1YiI6IjQ3ZWZmMWIxLTc2MjEtNDU3MC1hMGJiLTAxYTcxOWZiYTBhMiIsInR5cCI6IkJlYXJlciIsImF6cCI6ImJlYWNvbiIsInNlc3Npb25fc3RhdGUiOiI2NTljMzgxZC1mMDExLTQ1ZGMtOTg4Yy0yODliNjc3MjQyN2YiLCJhY3IiOiIxIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBlbWFpbCBtaWNyb3Byb2ZpbGUtand0Iiwic2lkIjoiNjU5YzM4MWQtZjAxMS00NWRjLTk4OGMtMjg5YjY3NzI0MjdmIiwidXBuIjoiamFuZSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwibmFtZSI6IkphbmUgU21pdGgiLCJncm91cHMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXSwicHJlZmVycmVkX3VzZXJuYW1lIjoiamFuZSIsImdpdmVuX25hbWUiOiJKYW5lIiwiZmFtaWx5X25hbWUiOiJTbWl0aCIsImVtYWlsIjoiamFuZS5zbWl0aEBiZWFjb24uZ2E0Z2gifQ.j7Y-1m9l1iJVEFPaHsd6bih8HcwxH7o0lv_ORqNz7Vx0u9AfEa7df4IPSHVLoU-35W9D3hCC1s2W1B3hnozui8fh83DFyykGf_3GjaMFUZHXDgsCs7TmN8eJnmOk6ZRryH6FPQprXtye6OMJlpmX-5HOPw-MqkbY6rKiTD3P_SnsL5lFKJPqqm_gweEWJ-3X7Xo8ugLkoYeogGKCSmx59JW_fL5TuQq4Vn3EMKQY6zW8hLYX7vjqB9IYYsa8m9b_36kawFu4dHhhNk1e57Tfrro2HWi-nR6Y6l9GYKqWjeqwPO97uwc3lBnPD8QlpUkUv9MkHNcZjD3QR8rV_gElPw'
 mock_access_token_false = 'public'
 #dummy test anonymous
 #dummy test login
@@ -85,7 +85,7 @@ class TestAuthN(unittest.TestCase):
                 IDP_JWKS_URL = os.getenv('JWKS_URL')
                 list_visa_datasets=[]
                 user, list_visa_datasets = await fetch_user_info(self, mock_access_token, IDP_USER_INFO, IDP_ISSUER, list_visa_datasets)
-                assert user.get('preferred_username') == 'jane'
+                assert user.get('email') == 'jane.smith@beacon.ga4gh'
             loop.run_until_complete(test_fetch_user_info())
             loop.run_until_complete(client.close())
     def test_auth_authentication(self):
@@ -95,7 +95,7 @@ class TestAuthN(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_authentication():
                 user, list_visa_datasets = await authentication(self, mock_access_token)
-                assert user.get('preferred_username') == 'jane'
+                assert user.get('email') == 'jane.smith@beacon.ga4gh'
             loop.run_until_complete(test_authentication())
             loop.run_until_complete(client.close())
     def test_auth_authentication_false(self):

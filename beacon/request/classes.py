@@ -17,3 +17,6 @@ class RequestAttributes():
         self.entry_type=None
         self.entry_id=None
         self.pre_entry_type=None
+        self.source=None
+        self.allowed_granularity=None
+        self.entry_type_id=None

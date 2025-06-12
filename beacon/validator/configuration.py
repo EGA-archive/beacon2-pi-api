@@ -78,8 +78,6 @@ def check_configuration():
         if not cors_url.startswith('http://'):
             if not cors_url.startswith('https://'):
                 raise Exception('The url {} in cors_urls variable must start with http protocol'.format(cors_url))
-    if not isinstance(conf.test_datasetId, str):
-        raise Exception("The config parameter test_datasetId must be of type string.")
     if not isinstance(run.endpoint_name, str):
         raise Exception('The run.endpoint_name variable must be of type string')
     if contains_special_characters(run.endpoint_name):
@@ -421,31 +419,35 @@ def check_configuration():
         if not conf.documentation_url.startswith('https://'):
             raise Exception('The url {} in cors_urls variable must start with http protocol'.format(conf.documentation_url))
     try:
-        with open("/beacon/permissions/datasets/test_datasets.yml", 'r') as pfile:
-            test_datasets = yaml.safe_load(pfile)
+        with open("/beacon/permissions/datasets/datasets_permissions.yml", 'r') as pfile:
+            datasets = yaml.safe_load(pfile)
         pfile.close()
-        try_datasets= test_datasets['test_datasets']
+        for dataset_name, configuration in datasets.items():
+            if not isinstance(configuration, bool):
+                for security_level, securityconf in configuration.items():
+                    if security_level not in ['public', 'registered', 'controlled']:
+                        raise Exception("keys for datasets have to be public, registered, controlled for security level")
+                    if not isinstance(securityconf, bool):
+                        for parameters, paramsvalues in securityconf.items():
+                            if parameters not in ['default_entry_types_granularity', 'entry_types_exceptions', 'user-list']:
+                                raise Exception("entries for dataset settings have to be default_entry_types_granularity, entry_types_exceptions or user-list")
+                            if dataset == 'controlled':
+                                if parameters == 'user-list':
+                                    for user in parameters:
+                                        for confuser, valueuser in user.items():
+                                            if confuser not in ['user_e-mail', 'default_entry_types_granularity', 'entry_types_exceptions']:
+                                                raise Exception("entries for user settings in user-list must be be default_entry_types_granularity, entry_types_exceptions or user_e-mail")
     except Exception:
-        raise Exception("test_datasets.yml file doesn't have the key test_datasets")
+        raise
     try:
-        with open("/beacon/permissions/datasets/public_datasets.yml", 'r') as pfile:
-            public_datasets = yaml.safe_load(pfile)
+        with open("/beacon/conf/datasets/datasets_conf.yml", 'r') as pfile:
+            datasets = yaml.safe_load(pfile)
         pfile.close()
-        try_datasets= public_datasets['public_datasets']
+        for dataset_name, configuration in datasets.items():
+            for property, value in configuration.items():
+                if property not in ['isTest', 'isSynthetic']:
+                    raise Exception("keys for datasets properties in datasets_conf.yml have to be isTest or isSynthetic")
+                if not isinstance(value, bool):
+                    raise Exception("values for datasets properties in datasets_conf.yml have to be boolean")  
     except Exception:
-        raise Exception("public_datasets.yml file doesn't have the key public_datasets")
-    try:
-        with open("/beacon/permissions/datasets/registered_datasets.yml", 'r') as pfile:
-            registered_datasets = yaml.safe_load(pfile)
-        pfile.close()
-        try_datasets= registered_datasets['registered_datasets']
-    except Exception:
-        raise Exception("registered_datasets.yml file doesn't have the key registered_datasets")
-    try:
-        with open("/beacon/permissions/datasets/controlled_datasets.yml", 'r') as pfile:
-            controlled_datasets = yaml.safe_load(pfile)
-        pfile.close()
-        for k,v in controlled_datasets.items():
-            pass
-    except Exception:
-        raise Exception("controlled_datasets.yml doesn't have usernames")
+        raise

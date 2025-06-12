@@ -93,7 +93,10 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                 .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
             targets=list(targets)
             list_of_targets=targets[0]["biosampleIds"]
-            list_of_positions_strings= string_of_ids[0]
+            try:
+                list_of_positions_strings= string_of_ids[0]
+            except Exception:
+                return query
             biosampleIds=[]
             for key, value in list_of_positions_strings.items():
                 if key != 'datasetId' and key != 'id' and key != '_id':
@@ -135,7 +138,10 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                 .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
             targets=list(targets)
             list_of_targets=targets[0]["biosampleIds"]
-            list_of_positions_strings= string_of_ids[0]
+            try:
+                list_of_positions_strings= string_of_ids[0]
+            except Exception:
+                return query
             biosampleIds=[]
             for key, value in list_of_positions_strings.items():
                 if key != 'datasetId' and key != 'id' and key != '_id':
@@ -162,7 +168,10 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                 .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
             targets=list(targets)
             list_of_targets=targets[0]["biosampleIds"]
-            list_of_positions_strings= string_of_ids[0]
+            try:
+                list_of_positions_strings= string_of_ids[0]
+            except Exception:
+                return query
             biosampleIds=[]
             for key, value in list_of_positions_strings.items():
                 if key != 'datasetId' and key != 'id' and key != '_id':
@@ -414,7 +423,10 @@ def apply_filters(self, query: dict, filters: List[dict], collection: str, query
                     .find({"datasetId": HGVSDataset}, {"biosampleIds": 1, "_id": 0})
                 targets=list(targets)
                 list_of_targets=targets[0]["biosampleIds"]
-                list_of_positions_strings= string_of_ids[0]
+                try:
+                    list_of_positions_strings= string_of_ids[0]
+                except Exception:
+                    return query
                 biosampleIds=[]
                 for key, value in list_of_positions_strings.items():
                     if key != 'datasetId' and key != 'id' and key != '_id':
@@ -462,7 +474,10 @@ def apply_filters(self, query: dict, filters: List[dict], collection: str, query
                     .find({"datasetId": HGVSDataset}, {"biosampleIds": 1, "_id": 0})
                 targets=list(targets)
                 list_of_targets=targets[0]["biosampleIds"]
-                list_of_positions_strings= string_of_ids[0]
+                try:
+                    list_of_positions_strings= string_of_ids[0]
+                except Exception:
+                    return query
                 biosampleIds=[]
                 for key, value in list_of_positions_strings.items():
                     if key != 'datasetId' and key != 'id' and key != '_id':
@@ -494,7 +509,10 @@ def apply_filters(self, query: dict, filters: List[dict], collection: str, query
                     .find({"datasetId": HGVSDataset}, {"biosampleIds": 1, "_id": 0})
                 targets=list(targets)
                 list_of_targets=targets[0]["biosampleIds"]
-                list_of_positions_strings= string_of_ids[0]
+                try:
+                    list_of_positions_strings= string_of_ids[0]
+                except Exception:
+                    return query
                 biosampleIds=[]
                 for key, value in list_of_positions_strings.items():
                     if key != 'datasetId' and key != 'id' and key != '_id':

@@ -6,6 +6,7 @@ from beacon.logs.logs import log_with_args, LOG
 from beacon.conf.conf import level
 from beacon.request.classes import ErrorClass, RequestAttributes
 import html
+from beacon.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run
 
 @log_with_args(level)
 async def check_request_content_type(self, request: Request):
@@ -54,9 +55,17 @@ async def get_qparams(self, post_data, request): # anomenar query string en com
             elif k == 'includeResultsetResponses':
                 catch_query["query"]["includeResultsetResponses"] = v
             elif k == 'skip':
-                catch_query["query"]["skip"] = v
+                try:
+                    catch_query["query"]["pagination"]["skip"] = v
+                except Exception:
+                    catch_query["query"]["pagination"]= {}
+                    catch_query["query"]["pagination"]["skip"] = v
             elif k == 'limit':
-                catch_query["query"]["limit"] = v
+                try:
+                    catch_query["query"]["pagination"]["limit"] = v
+                except Exception:
+                    catch_query["query"]["pagination"]= {}
+                    catch_query["query"]["pagination"]["limit"] = v
             elif k == 'testMode':
                 catch_query["query"]["testMode"] = v
             elif k == 'requestedSchemas':
@@ -132,5 +141,48 @@ async def deconstruct_request(self, request):
         if entry_id == None:
             entry_id = request.match_info.get('variantInternalId', None)
         RequestAttributes.entry_id=entry_id
+        if '.' in RequestAttributes.entry_type and genomicVariant.endpoint_name not in RequestAttributes.entry_type:
+            source_entry_type = RequestAttributes.entry_type.split('.')
+            source_entry_type = source_entry_type[1]
+            if source_entry_type == analysis.endpoint_name:
+                RequestAttributes.source = analysis.database
+                RequestAttributes.allowed_granularity = analysis.granularity
+                RequestAttributes.entry_type_id = analysis.id
+            elif source_entry_type == biosample.endpoint_name:
+                RequestAttributes.source = biosample.database
+                RequestAttributes.allowed_granularity = biosample.granularity
+                RequestAttributes.entry_type_id = biosample.id
+            elif source_entry_type == individual.endpoint_name:
+                RequestAttributes.source = individual.database
+                RequestAttributes.allowed_granularity = individual.granularity
+                RequestAttributes.entry_type_id = individual.id
+            elif source_entry_type == run.endpoint_name:
+                RequestAttributes.source = run.database
+                RequestAttributes.allowed_granularity = run.granularity
+                RequestAttributes.entry_type_id = run.id
+        elif RequestAttributes.entry_type == genomicVariant.endpoint_name:
+            RequestAttributes.source = genomicVariant.database
+            RequestAttributes.allowed_granularity = genomicVariant.granularity
+            RequestAttributes.entry_type_id = genomicVariant.id
+        elif '.' in RequestAttributes.entry_type:
+            RequestAttributes.source = genomicVariant.database
+            RequestAttributes.allowed_granularity = genomicVariant.granularity
+            RequestAttributes.entry_type_id = genomicVariant.id
+        elif RequestAttributes.entry_type == analysis.endpoint_name:
+            RequestAttributes.source = analysis.database
+            RequestAttributes.allowed_granularity = analysis.granularity
+            RequestAttributes.entry_type_id = analysis.id
+        elif RequestAttributes.entry_type == biosample.endpoint_name:
+            RequestAttributes.source = biosample.database
+            RequestAttributes.allowed_granularity = biosample.granularity
+            RequestAttributes.entry_type_id = biosample.id
+        elif RequestAttributes.entry_type == individual.endpoint_name:
+            RequestAttributes.source = individual.database
+            RequestAttributes.allowed_granularity = individual.granularity
+            RequestAttributes.entry_type_id = individual.id
+        elif RequestAttributes.entry_type == run.endpoint_name:
+            RequestAttributes.source = run.database
+            RequestAttributes.allowed_granularity = run.granularity
+            RequestAttributes.entry_type_id = run.id
         qparams = await get_qparams(self, post_data, self.request)
         return qparams
