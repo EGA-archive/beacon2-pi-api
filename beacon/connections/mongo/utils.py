@@ -89,17 +89,7 @@ def get_count(self, collection: Collection, query: dict) -> int:
 
 @log_with_args_mongo(level)
 def get_docs_by_response_type(self, include: str, query: dict, dataset: str, limit: int, skip: int, mongo_collection, idq: str):
-    if include == 'NONE':
-        count = get_count(self, mongo_collection, query)
-        dataset_count=0
-        docs = get_documents(
-        self,
-        mongo_collection,
-        query,
-        skip*limit,
-        limit
-        )
-    elif include == 'ALL':
+    if include == 'ALL':
         count=0
         query_count=query
         i=1
@@ -117,7 +107,29 @@ def get_docs_by_response_type(self, include: str, query: dict, dataset: str, lim
                 limit
             )
             docs=list(docs)
-    elif include == 'HIT':
+    elif include == 'MISS':
+        count=0
+        query_count=query
+        i=1
+        query_count["$or"]=[]
+        queryid={}
+        queryid['datasetId']=dataset
+        query_count["$or"].append(queryid)
+        if query_count["$or"]!=[]:
+            dataset_count = get_count(self, mongo_collection, query_count)
+            docs = get_documents(
+                self,
+                mongo_collection,
+                query_count,
+                skip*limit,
+                limit
+            )
+            docs=list(docs)
+        else:
+            dataset_count=0# pragma: no cover
+        if dataset_count !=0:
+            return count, -1, None
+    else:
         count=0
         query_count=query
         query_count["$or"]=[]
@@ -140,28 +152,6 @@ def get_docs_by_response_type(self, include: str, query: dict, dataset: str, lim
         else:
             dataset_count=0# pragma: no cover
         if dataset_count==0:
-            return count, -1, None
-    elif include == 'MISS':
-        count=0
-        query_count=query
-        i=1
-        query_count["$or"]=[]
-        queryid={}
-        queryid['datasetId']=dataset
-        query_count["$or"].append(queryid)
-        if query_count["$or"]!=[]:
-            dataset_count = get_count(self, mongo_collection, query_count)
-            docs = get_documents(
-                self,
-                mongo_collection,
-                query_count,
-                skip*limit,
-                limit
-            )
-            docs=list(docs)
-        else:
-            dataset_count=0# pragma: no cover
-        if dataset_count !=0:
             return count, -1, None
     return count, dataset_count, docs
 
