@@ -70,6 +70,18 @@ class BamForm(forms.Form):
                 elif 'org_logo_url' in str(line):
                     placeholder = formatting_field(self, line)
                     self.initial['OrgLogoUrl'] = placeholder
+                elif 'security_levels' in str(line):
+                    placeholder = formatting_field(self, line)
+                    placeholder=placeholder.replace("'","")
+                    placeholder=placeholder.replace("[","")
+                    placeholder=placeholder.replace("]","")
+                    placeholder=placeholder.replace(" ","")
+                    placeholder=placeholder.lower()
+                    placeholder=placeholder.split(",")
+                    self.initial['SecurityLevel'] = placeholder
+                elif 'default_beacon_granularity' in str(line):
+                    placeholder = formatting_field(self, line)
+                    self.initial['granularity'] = placeholder
                 elif str(line).startswith('version'):
                     with open("beacon/conf/api_version.yml") as api_version_file:
                         api_version_yaml = yaml.safe_load(api_version_file)
@@ -106,3 +118,4 @@ class BamForm(forms.Form):
         choices=security_level_choices, 
         widget=forms.CheckboxSelectMultiple
     )
+    

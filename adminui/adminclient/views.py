@@ -8,10 +8,22 @@ from adminbackend.forms import BamForm
 from beacon.connections.mongo import conf
 from beacon.conf import conf as basic_conf
 
+import logging
+
+LOG = logging.getLogger(__name__)
+fmt = '%(levelname)s - %(asctime)s - %(message)s'
+formatter = logging.Formatter(fmt)
+sh = logging.StreamHandler()
+sh.setLevel('NOTSET')
+sh.setFormatter(formatter)
+LOG.addHandler(sh)
+
 def default_view(request):
     form =BamForm()
     context = {'form': form}
+    LOG.warning('muaaa')
     if request.method == 'POST':
+        print('heeey')
         form = BamForm(request.POST)
         if form.is_valid():
             beaconName = form.cleaned_data['BeaconName']
@@ -24,6 +36,8 @@ def default_view(request):
             org_welcome_url = form.cleaned_data['OrgWelcomeUrl']
             org_contact_url = form.cleaned_data['OrgContactUrl']
             org_logo_url = form.cleaned_data['OrgLogoUrl']
+            granularity = form.cleaned_data['granularity']
+            security_level = form.cleaned_data['SecurityLevel']
             with open("adminui/beacon/conf/conf.py") as f:
                 lines = f.readlines()
             with open("adminui/beacon/conf/conf.py", "w") as f:
@@ -49,11 +63,19 @@ def default_view(request):
                         new_lines+="org_contact_url="+'"'+org_contact_url+'"'+"\n"
                     elif 'org_logo_url' in str(line):
                         new_lines+="org_logo_url="+'"'+org_logo_url+'"'+"\n"
+                    elif 'security_levels' in str(line):
+                        new_lines+="security_levels="+str(security_level)+"\n"
+                    elif 'default_beacon_granularity' in str(line):
+                        new_lines+="default_beacon_granularity="+'"'+granularity+'"'+"\n"
                     else:
                         new_lines+=line
                     
                 f.write(new_lines)
             f.close()
             return redirect("adminclient:index")
+        else:
+            print('whaaat')
+            LOG.warning('probleeem')
+            LOG.warning(form)
     template = "home.html"
     return render(request, template, context)
