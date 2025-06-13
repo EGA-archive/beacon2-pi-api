@@ -1,6 +1,6 @@
 from beacon.response.schemas import DefaultSchemas
 from beacon.request.parameters import RequestParams, RequestMeta, RequestQuery
-from beacon.request.classes import Granularity, ErrorClass
+from beacon.request.classes import Granularity, ErrorClass, RequestAttributes
 from beacon.conf import conf
 from typing import Optional
 from beacon.logs.logs import log_with_args
@@ -337,17 +337,7 @@ def build_response(self, data, num_total_results, qparams):
     """"Fills the `response` part with the correct format in `results`"""
     limit = qparams.query.pagination.limit
     include = qparams.query.includeResultsetResponses
-    if include == 'NONE':
-            response = {
-            'id': '', # TODO: Set the name of the dataset/cohort
-            'setType': '', # TODO: Set the type of collection
-            'exists': num_total_results > 0,
-            'resultsCount': num_total_results,
-            'results': data,
-            # 'info': None,
-            'resultsHandover': list_of_handovers,  # build_results_handover
-        }
-    elif limit != 0 and limit < num_total_results:# pragma: no cover
+    if limit != 0 and limit < num_total_results:# pragma: no cover
         response = {
             'id': '', # TODO: Set the name of the dataset/cohort
             'setType': '', # TODO: Set the type of collection
@@ -456,27 +446,64 @@ def build_info_meta(self, entity_schema: Optional[DefaultSchemas]):
 @log_with_args(level)
 def build_response_by_dataset(self, datasets, data, dict_counts, qparams):
     try:
+        granularity = qparams.query.requestedGranularity
         list_of_responses=[]
         for dataset in datasets:
-            for handover in list_of_handovers_per_dataset:
-                if handover["dataset"]==dataset:# pragma: no cover
-                    response = {
-                        'id': dataset, # TODO: Set the name of the dataset/cohort
-                        'setType': 'dataset', # TODO: Set the type of collection
-                        'exists': dict_counts[dataset] > 0,
-                        'resultsCount': dict_counts[dataset],
-                        'results': data[dataset],
-                        # 'info': None,
-                        'resultsHandover': handover["handover"]  # build_results_handover
-                    }
-                else:
-                    response = {
-                        'id': dataset, # TODO: Set the name of the dataset/cohort
-                        'setType': 'dataset', # TODO: Set the type of collection
-                        'exists': dict_counts[dataset] > 0,
-                        'resultsCount': dict_counts[dataset],
-                        'results': data[dataset]
-                    }
+            if dataset.granularity == 'record' and RequestAttributes.allowed_granularity=='record' and granularity =='record':
+                for handover in list_of_handovers_per_dataset:
+                    if handover["dataset"]==dataset.dataset:# pragma: no cover
+                        response = {
+                            'id': dataset.dataset, # TODO: Set the name of the dataset/cohort
+                            'setType': 'dataset', # TODO: Set the type of collection
+                            'exists': dict_counts[dataset.dataset] > 0,
+                            'resultsCount': dict_counts[dataset.dataset],
+                            'results': data[dataset.dataset],
+                            # 'info': None,
+                            'resultsHandover': handover["handover"]  # build_results_handover
+                        }
+                    else:
+                        response = {
+                            'id': dataset.dataset, # TODO: Set the name of the dataset/cohort
+                            'setType': 'dataset', # TODO: Set the type of collection
+                            'exists': dict_counts[dataset.dataset] > 0,
+                            'resultsCount': dict_counts[dataset.dataset],
+                            'results': data[dataset.dataset]
+                        }
+            elif dataset.granularity != 'boolean' and RequestAttributes.allowed_granularity == 'count' and granularity != 'boolean' or dataset.granularity != 'boolean' and RequestAttributes.allowed_granularity != 'boolean' and granularity == 'count':
+                for handover in list_of_handovers_per_dataset:
+                    if handover["dataset"]==dataset.dataset:# pragma: no cover
+                        response = {
+                            'id': dataset.dataset, # TODO: Set the name of the dataset/cohort
+                            'setType': 'dataset', # TODO: Set the type of collection
+                            'exists': dict_counts[dataset.dataset] > 0,
+                            'resultsCount': dict_counts[dataset.dataset],
+                            # 'info': None,
+                            'resultsHandover': handover["handover"]  # build_results_handover
+                        }
+                    else:
+                        response = {
+                            'id': dataset.dataset, # TODO: Set the name of the dataset/cohort
+                            'setType': 'dataset', # TODO: Set the type of collection
+                            'exists': dict_counts[dataset.dataset] > 0,
+                            'resultsCount': dict_counts[dataset.dataset]
+                        }
+            else:
+                for handover in list_of_handovers_per_dataset:
+                    if handover["dataset"]==dataset.dataset:# pragma: no cover
+                        response = {
+                            'id': dataset.dataset, # TODO: Set the name of the dataset/cohort
+                            'setType': 'dataset', # TODO: Set the type of collection
+                            'exists': dict_counts[dataset.dataset] > 0,
+                            # 'info': None,
+                            'resultsHandover': handover["handover"]  # build_results_handover
+                        }
+                    else:
+                        response = {
+                            'id': dataset.dataset, # TODO: Set the name of the dataset/cohort
+                            'setType': 'dataset', # TODO: Set the type of collection
+                            'exists': dict_counts[dataset.dataset] > 0
+                        }
+
             list_of_responses.append(response)
 
         return list_of_responses
@@ -490,8 +517,16 @@ def build_beacon_record_response_by_dataset(self, datasets, data,
                                     qparams: RequestParams,
                                     entity_schema: DefaultSchemas):
     try:
+        if RequestAttributes.allowed_granularity == 'boolean':
+            granul_returned = 'boolean'
+        elif RequestAttributes.allowed_granularity in ['count', 'record'] and qparams.query.requestedGranularity == 'boolean':
+            granul_returned = 'boolean'
+        elif RequestAttributes.allowed_granularity == 'record' and qparams.query.requestedGranularity == 'record':
+            granul_returned = 'record'
+        else:
+            granul_returned = 'count'
         beacon_response = {
-            'meta': build_meta(self, qparams, entity_schema, Granularity.RECORD),
+            'meta': build_meta(self, qparams, entity_schema, granul_returned),
             'responseSummary': build_response_summary_by_dataset(self, num_total_results > 0, num_total_results, data),
             'response': {
                 'resultSets': build_response_by_dataset(self, datasets, data, dict_counts, qparams)
@@ -528,24 +563,6 @@ def build_beacon_count_response(self,
             'meta': build_meta(self, qparams, entity_schema, Granularity.COUNT),
             'responseSummary': build_response_summary(self, num_total_results > 0, num_total_results),
             # TODO: 'extendedInfo': build_extended_info(),
-            'beaconHandovers': list_of_handovers,
-        }
-        return beacon_response
-    except Exception:# pragma: no cover
-        raise
-
-@log_with_args(level)
-def build_beacon_none_response(self, data,
-                                    num_total_results,
-                                    qparams: RequestParams,
-                                    entity_schema: DefaultSchemas):
-    try:
-        beacon_response = {
-            'meta': build_meta(self, qparams, entity_schema, Granularity.RECORD),
-            'responseSummary': build_response_summary_by_dataset(self, num_total_results > 0, num_total_results, data),
-            'response': {
-                'resultSets': [build_response(self, data, num_total_results, qparams)]
-            },
             'beaconHandovers': list_of_handovers,
         }
         return beacon_response

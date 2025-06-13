@@ -6,7 +6,7 @@ from beacon.response.schemas import DefaultSchemas
 from beacon.request.parameters import RequestParams
 from beacon.connections.mongo.utils import get_docs_by_response_type, query_id, get_cross_query
 from beacon.connections.mongo.request_parameters import apply_request_parameters
-from beacon.request.classes import ErrorClass
+from beacon.request.classes import ErrorClass, RequestAttributes
 from beacon.connections.mongo.__init__ import datasets
 
 @log_with_args_mongo(level)
@@ -22,13 +22,13 @@ def get_datasets(self):
         raise
 
 @log_with_args_mongo(level)
-def get_full_datasets(self, entry_id: Optional[str], qparams: RequestParams):
+def get_full_datasets(self, qparams: RequestParams):
     try:
         collection = datasets
-        if entry_id == None:
+        if RequestAttributes.entry_id == None:
             query = {}
         else:# pragma: no cover
-            query = {'id': entry_id}
+            query = {'id': RequestAttributes.entry_id}
         count = get_count(self, datasets, query)
         query = collection.find(query)
         entity_schema = DefaultSchemas.DATASETS
@@ -53,14 +53,14 @@ def get_list_of_datasets(self):
         raise
 
 @log_with_args_mongo(level)
-def get_dataset_with_id(self, entry_id: Optional[str], qparams: RequestParams):
+def get_dataset_with_id(self, qparams: RequestParams):
     limit = qparams.query.pagination.limit
-    query_parameters, parameters_as_filters = apply_request_parameters(self, {}, qparams, entry_id)
+    query_parameters, parameters_as_filters = apply_request_parameters(self, {}, qparams, RequestAttributes.entry_id)
     if parameters_as_filters == True:
-        query, parameters_as_filters = apply_request_parameters(self, {}, qparams, entry_id)# pragma: no cover
+        query, parameters_as_filters = apply_request_parameters(self, {}, qparams, RequestAttributes.entry_id)# pragma: no cover
     else:
         query={}
-    query = query_id(self, query, entry_id)
+    query = query_id(self, query, RequestAttributes.entry_id)
     schema = DefaultSchemas.DATASETS
     count = get_count(self, datasets, query)
     docs = get_documents(self,

@@ -2293,6 +2293,193 @@ class TestMain(unittest.TestCase):
                 assert resp.status == 200
             loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
             loop.run_until_complete(client.close())# pragma: no cover
+    def test_main_check_limit_query_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_limit_query_is_working():
+                resp = await client.post("/api/"+individual.endpoint_name, json={
+                "meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": { "requestParameters": {
+                "datasets": ["test"]
+                },
+                    "filters": [                ],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 15
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+            }
+            )
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert len(responsedict["response"]["resultSets"][0]["results"]) == 15
+                assert resp.status == 200
+            loop.run_until_complete(test_check_limit_query_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_record_resultSet_query_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_record_resultSet_query_is_working():
+                resp = await client.post("/api/"+individual.endpoint_name, json={
+                "meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": { "requestParameters": {
+                "datasets": ["test"]
+                },
+                    "filters": [                ],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+            }
+            )
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert len(responsedict["response"]["resultSets"][0]["results"]) == 10
+                assert resp.status == 200
+            loop.run_until_complete(test_check_record_resultSet_query_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_count_resultSet_query_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_count_resultSet_query_is_working():
+                resp = await client.post("/api/"+individual.endpoint_name, json={
+                "meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": { "requestParameters": {
+                "datasets": ["test"]
+                },
+                    "filters": [                ],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "count"
+                }
+            }
+            )
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["response"]["resultSets"][0].get("results") == None
+                assert responsedict["response"]["resultSets"][0]["resultsCount"] == 20
+                assert resp.status == 200
+            loop.run_until_complete(test_check_count_resultSet_query_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_boolean_resultSet_query_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_boolean_resultSet_query_is_working():
+                resp = await client.post("/api/"+individual.endpoint_name, json={
+                "meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": { "requestParameters": {
+                "datasets": ["test"]
+                },
+                    "filters": [                ],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "boolean"
+                }
+            }
+            )
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["response"]["resultSets"][0].get("results") == None
+                assert responsedict["response"]["resultSets"][0].get("resultsCount") == None
+                assert responsedict["response"]["resultSets"][0]["exists"] == True
+                assert resp.status == 200
+            loop.run_until_complete(test_check_boolean_resultSet_query_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_boolean_query_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_boolean_query_is_working():
+                resp = await client.post("/api/"+individual.endpoint_name, json={
+                "meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": { "requestParameters": {
+                "datasets": ["test"]
+                },
+                    "filters": [                ],
+                    "includeResultsetResponses": "NONE",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "boolean"
+                }
+            }
+            )
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict.get("response") == None
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"].get("numTotalResults") == None
+                assert resp.status == 200
+            loop.run_until_complete(test_check_boolean_query_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_counts_query_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_counts_query_is_working():
+                resp = await client.post("/api/"+individual.endpoint_name, json={
+                "meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": { "requestParameters": {
+                "datasets": ["test"]
+                },
+                    "filters": [                ],
+                    "includeResultsetResponses": "NONE",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "count"
+                }
+            }
+            )
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict.get("response") == None
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 20
+                assert resp.status == 200
+            loop.run_until_complete(test_check_counts_query_is_working())
+            loop.run_until_complete(client.close())
 
 if __name__ == '__main__':
     unittest.main()

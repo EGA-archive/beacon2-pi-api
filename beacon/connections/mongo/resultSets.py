@@ -1,7 +1,7 @@
 from beacon.logs.logs import log_with_args, LOG
 from beacon.conf.conf import level
 from beacon.conf import genomicVariant, analysis, run, biosample
-from beacon.request.classes import ErrorClass
+from beacon.request.classes import RequestAttributes
 from beacon.connections.mongo.request_parameters import apply_request_parameters
 from beacon.connections.mongo.filters import apply_filters
 from beacon.request.parameters import RequestParams
@@ -11,7 +11,7 @@ from beacon.connections.mongo.__init__ import client, genomicVariations, targets
 from beacon.connections.mongo.utils import get_count, get_documents_for_cohorts
 
 @log_with_args(level)
-def get_resultSet(self, entry_id: Optional[str], qparams: RequestParams, dataset: str, collection, mongo_collection, schema, idq, entry_type):
+def get_resultSet(self, qparams: RequestParams, dataset: str, collection, mongo_collection, schema, idq):
     parameters_as_filters=False
     query_parameters, parameters_as_filters = apply_request_parameters(self, {}, qparams, dataset)
     if parameters_as_filters == True and query_parameters != {'$and': []}:
@@ -34,9 +34,9 @@ def get_resultSet(self, entry_id: Optional[str], qparams: RequestParams, dataset
     return schema, count, dataset_count, docs, dataset
 
 @log_with_args(level)
-def get_resultSet_with_id(self, entry_id: Optional[str], qparams: RequestParams, dataset: str, collection, mongo_collection, schema, idq, entry_type):
+def get_resultSet_with_id(self, qparams: RequestParams, dataset: str, collection, mongo_collection, schema, idq):
     if collection == genomicVariant.endpoint_name:
-        query = {"$and": [{"variantInternalId": entry_id}]}
+        query = {"$and": [{"variantInternalId": RequestAttributes.entry_id}]}
         query_parameters, parameters_as_filters = apply_request_parameters(self, query, qparams, dataset)
         if parameters_as_filters == True:
             query, parameters_as_filters = apply_request_parameters(self, {}, qparams, dataset)# pragma: no cover
@@ -47,7 +47,7 @@ def get_resultSet_with_id(self, entry_id: Optional[str], qparams: RequestParams,
         query, parameters_as_filters = apply_request_parameters(self, {}, qparams, dataset)
     query = apply_filters(self, query, qparams.query.filters, collection, {}, dataset)
     if collection != genomicVariant.endpoint_name:
-        query = query_id(self, query, entry_id)
+        query = query_id(self, query, RequestAttributes.entry_id)
     include = qparams.query.includeResultsetResponses
     limit = qparams.query.pagination.limit
     skip = qparams.query.pagination.skip
@@ -57,13 +57,13 @@ def get_resultSet_with_id(self, entry_id: Optional[str], qparams: RequestParams,
     return schema, count, dataset_count, docs, dataset
 
 @log_with_args(level)
-def get_variants_of_resultSet(self, entry_id: Optional[str], qparams: RequestParams, dataset: str, collection, mongo_collection, schema, idq, entry_type):
+def get_variants_of_resultSet(self, qparams: RequestParams, dataset: str, collection, mongo_collection, schema, idq):
     if collection == analysis.endpoint_name or collection == run.endpoint_name:
-        query = {"$and": [{"id": entry_id}]}
+        query = {"$and": [{"id": RequestAttributes.entry_id}]}
         query = apply_filters(self, query, qparams.query.filters, collection, {}, dataset)
         initial_ids = collection \
             .find_one(query, {"biosampleId": 1, "_id": 0})
-        entry_id = initial_ids["biosampleId"]
+        RequestAttributes.entry_id = initial_ids["biosampleId"]
     try:
         targets = targets_ \
             .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
@@ -72,7 +72,7 @@ def get_variants_of_resultSet(self, entry_id: Optional[str], qparams: RequestPar
     except Exception:
         return schema, 0, -1, None, dataset
     for bioid in bioids:
-        if bioid == entry_id:
+        if bioid == RequestAttributes.entry_id:
             break
         position+=1
     if position == len(bioids):# pragma: no cover
@@ -101,8 +101,8 @@ def get_variants_of_resultSet(self, entry_id: Optional[str], qparams: RequestPar
     return schema, count, dataset_count, docs, dataset
 
 @log_with_args(level)
-def get_resultSet_of_variants(self, entry_id: Optional[str], qparams: RequestParams, dataset: str, collection, mongo_collection, schema, idq, entry_type):
-    query = {"$and": [{"variantInternalId": entry_id}]}
+def get_resultSet_of_variants(self, qparams: RequestParams, dataset: str, collection, mongo_collection, schema, idq):
+    query = {"$and": [{"variantInternalId": RequestAttributes.entry_id}]}
     query_parameters, parameters_as_filters = apply_request_parameters(self, query, qparams, dataset)
     if parameters_as_filters == True and query_parameters != {'$and': []}:
         query, parameters_as_filters = apply_request_parameters(self, query, qparams, dataset)# pragma: no cover
@@ -206,11 +206,11 @@ def get_resultSet_of_variants(self, entry_id: Optional[str], qparams: RequestPar
     return schema, count, dataset_count, docs, dataset
 
 @log_with_args(level)
-def get_analyses_of_resultSet(self, entry_id: Optional[str], qparams: RequestParams, dataset: str, collection, mongo_collection, schema, idq, entry_type):
+def get_analyses_of_resultSet(self, qparams: RequestParams, dataset: str, collection, mongo_collection, schema, idq):
     if collection == run.endpoint_name:
-        query = {"id": entry_id}
+        query = {"id": RequestAttributes.entry_id}
     else:
-        query = {"biosampleId": entry_id}
+        query = {"biosampleId": RequestAttributes.entry_id}
     query = apply_filters(self, query, qparams.query.filters, collection, {}, dataset)
     include = qparams.query.includeResultsetResponses
     limit = qparams.query.pagination.limit
@@ -221,20 +221,20 @@ def get_analyses_of_resultSet(self, entry_id: Optional[str], qparams: RequestPar
     return schema, count, dataset_count, docs, dataset
 
 @log_with_args(level)
-def get_biosamples_of_resultSet(self, entry_id: Optional[str], qparams: RequestParams, dataset: str, collection, mongo_collection, schema, idq, entry_type):
-    if entry_type == analysis.endpoint_name or entry_type == run.endpoint_name:
-        if entry_type == analysis.endpoint_name:
+def get_biosamples_of_resultSet(self, qparams: RequestParams, dataset: str, collection, mongo_collection, schema, idq):
+    if RequestAttributes.entry_type == analysis.endpoint_name or RequestAttributes.entry_type == run.endpoint_name:
+        if RequestAttributes.entry_type == analysis.endpoint_name:
             secondary_collection = analyses
         else:
             secondary_collection = runs
         items_found = secondary_collection \
-        .find({"id": entry_id, "datasetId": dataset}, {"biosampleId": 1, "_id": 0})
+        .find({"id": RequestAttributes.entry_id, "datasetId": dataset}, {"biosampleId": 1, "_id": 0})
         list_of_itemsfound=[]
         for itemfound in items_found:
             list_of_itemsfound.append(itemfound["biosampleId"])
         query = {"id": {"$in": list_of_itemsfound}}
     else:
-        query = {idq: entry_id}
+        query = {idq: RequestAttributes.entry_id}
     query = apply_filters(self, query, qparams.query.filters, collection, {}, dataset)
     include = qparams.query.includeResultsetResponses
     limit = qparams.query.pagination.limit
@@ -245,13 +245,13 @@ def get_biosamples_of_resultSet(self, entry_id: Optional[str], qparams: RequestP
     return schema, count, dataset_count, docs, dataset
 
 @log_with_args(level)
-def get_variants_of_dataset(self, entry_id: Optional[str], qparams: RequestParams, dataset: str, collection, mongo_collection, schema, idq, entry_type):
+def get_variants_of_dataset(self, qparams: RequestParams, dataset: str, collection, mongo_collection, schema, idq):
     dataset_count=0
     limit = qparams.query.pagination.limit
     query_count={}
     idq="caseLevelData.biosampleId"
     query_count["$or"]=[]
-    if dataset == entry_id:
+    if dataset == RequestAttributes.entry_id:
         queryid={}
         queryid["datasetId"]=dataset
         query_count["$or"].append(queryid)
@@ -267,16 +267,16 @@ def get_variants_of_dataset(self, entry_id: Optional[str], qparams: RequestParam
     return schema, count, dataset_count, docs, dataset
 
 @log_with_args(level)
-def get_resultSet_of_dataset(self, entry_id: Optional[str], qparams: RequestParams, dataset: str, collection, mongo_collection, schema, idq, entry_type):
+def get_resultSet_of_dataset(self, qparams: RequestParams, dataset: str, collection, mongo_collection, schema, idq):
     dataset_count=0
     limit = qparams.query.pagination.limit
     query = apply_filters(self, {}, qparams.query.filters, collection, {}, dataset)
-    query = query_id(self, query, entry_id)
+    query = query_id(self, query, RequestAttributes.entry_id)
     count = get_count(self, datasets, query)
     dict_in={}
     dict_in={}
-    if dataset == entry_id:
-        dict_in['datasetId']=entry_id
+    if dataset == RequestAttributes.entry_id:
+        dict_in['datasetId']=RequestAttributes.entry_id
     else:
         return schema, 0, 0, None, dataset# pragma: no cover
     query = apply_filters(self, dict_in, qparams.query.filters, collection, {}, dataset)
@@ -289,12 +289,12 @@ def get_resultSet_of_dataset(self, entry_id: Optional[str], qparams: RequestPara
     return schema, count, dataset_count, docs, dataset
 
 @log_with_args(level)
-def get_resultSet_of_cohort(self, entry_id: Optional[str], qparams: RequestParams, dataset: str, collection, mongo_collection, schema, idq, entry_type):
+def get_resultSet_of_cohort(self, qparams: RequestParams, dataset: str, collection, mongo_collection, schema, idq):
     dataset_count=0
     limit = qparams.query.pagination.limit
     include = qparams.query.includeResultsetResponses
     dataset_found = cohorts \
-        .find({"id": entry_id}, {"datasetId": 1, "_id": 0})
+        .find({"id": RequestAttributes.entry_id}, {"datasetId": 1, "_id": 0})
     dataset_found=list(dataset_found)
     dict_in={}
     dataset_found=dataset_found[0]["datasetId"]
@@ -311,12 +311,12 @@ def get_resultSet_of_cohort(self, entry_id: Optional[str], qparams: RequestParam
     return schema, count, dataset_count, docs, dataset
 
 @log_with_args(level)
-def get_variants_of_cohort(self, entry_id: Optional[str], qparams: RequestParams, dataset: str, collection, mongo_collection, schema, idq, entry_type):
+def get_variants_of_cohort(self, qparams: RequestParams, dataset: str, collection, mongo_collection, schema, idq):
     dataset_count=0
     limit = qparams.query.pagination.limit
     include = qparams.query.includeResultsetResponses
     dataset_found = cohorts \
-        .find({"id": entry_id}, {"datasetId": 1, "_id": 0})
+        .find({"id": RequestAttributes.entry_id}, {"datasetId": 1, "_id": 0})
     dataset_found=list(dataset_found)
     dict_in={}
     dataset_found=dataset_found[0]["datasetId"]
@@ -336,8 +336,8 @@ def get_variants_of_cohort(self, entry_id: Optional[str], qparams: RequestParams
     )
     for doc in docs:
         if doc["datasetId"] == dataset:
-            entry_id = dataset
-    if dataset == entry_id:
+            RequestAttributes.entry_id = dataset
+    if dataset == RequestAttributes.entry_id:
         queryid={}
         queryid["datasetId"]=dataset
         query_count["$or"].append(queryid)
@@ -351,16 +351,16 @@ def get_variants_of_cohort(self, entry_id: Optional[str], qparams: RequestParams
     return schema, count, dataset_count, docs, dataset
 
 @log_with_args(level)
-def get_runs_of_resultSet(self, entry_id: Optional[str], qparams: RequestParams, dataset: str, collection, mongo_collection, schema, idq, entry_type):
-    if entry_type == analysis.endpoint_name:
+def get_runs_of_resultSet(self, qparams: RequestParams, dataset: str, collection, mongo_collection, schema, idq):
+    if RequestAttributes.entry_type == analysis.endpoint_name:
         analyses_found = analyses \
-        .find({"id": entry_id, "datasetId": dataset}, {"biosampleId": 1, "_id": 0})
+        .find({"id": RequestAttributes.entry_id, "datasetId": dataset}, {"biosampleId": 1, "_id": 0})
         list_of_analysisfound=[]
         for analysisfound in analyses_found:
             list_of_analysisfound.append(analysisfound["biosampleId"])
         query = {"biosampleId": {"$in": list_of_analysisfound}}
     else:
-        query = {idq: entry_id}
+        query = {idq: RequestAttributes.entry_id}
     query = apply_filters(self, query, qparams.query.filters, collection, {}, dataset)
     include = qparams.query.includeResultsetResponses
     limit = qparams.query.pagination.limit
@@ -371,15 +371,15 @@ def get_runs_of_resultSet(self, entry_id: Optional[str], qparams: RequestParams,
     return schema, count, dataset_count, docs, dataset
 
 @log_with_args(level)
-def get_individuals_of_resultSet(self, entry_id: Optional[str], qparams: RequestParams, dataset: str, collection, mongo_collection, schema, idq, entry_type):
-    if entry_type == analysis.endpoint_name or entry_type == run.endpoint_name:
-        if entry_type == analysis.endpoint_name:
+def get_individuals_of_resultSet(self, qparams: RequestParams, dataset: str, collection, mongo_collection, schema, idq):
+    if RequestAttributes.entry_type == analysis.endpoint_name or RequestAttributes.entry_type == run.endpoint_name:
+        if RequestAttributes.entry_type == analysis.endpoint_name:
             secondary_collection = analyses
         secondary_collection = runs
     else:
         secondary_collection = biosamples
     items_found = secondary_collection \
-    .find({"id": entry_id, "datasetId": dataset}, {"individualId": 1, "_id": 0})
+    .find({"id": RequestAttributes.entry_id, "datasetId": dataset}, {"individualId": 1, "_id": 0})
     list_of_itemsfound=[]
     for itemfound in items_found:
         list_of_itemsfound.append(itemfound["individualId"])

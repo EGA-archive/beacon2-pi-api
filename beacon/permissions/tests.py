@@ -7,7 +7,9 @@ from .plugins import DummyPermissions as PermissionsProxy
 from aiohttp.test_utils import make_mocked_request
 from beacon.auth.tests import mock_access_token
 from beacon.permissions.__main__ import authorization
+from beacon.logs.logs import LOG
 from unittest.mock import MagicMock
+from beacon.request.classes import RequestAttributes
 
 #dummy test anonymous
 #dummy test login
@@ -26,9 +28,13 @@ class TestAuthZ(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_verify_public_datasets():
+                RequestAttributes.entry_type_id='individual'
                 datasets = await PermissionsProxy.get_permissions(self=PermissionsProxy, username='public', requested_datasets=[])
+                list_datasets_names=[]
+                for dataset in datasets:
+                    list_datasets_names.append(dataset.dataset)
                 tc = unittest.TestCase()
-                tc.assertSetEqual(set(['test']),set(datasets))
+                tc.assertSetEqual(set(['test']),set(list_datasets_names))
             loop.run_until_complete(test_verify_public_datasets())
             loop.run_until_complete(client.close())
     def test_authZ_verify_registered_datasets(self):
@@ -37,9 +43,28 @@ class TestAuthZ(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_verify_registered_datasets():
-                datasets = await PermissionsProxy.get_permissions(self=PermissionsProxy, username='dummy_user', requested_datasets=[])
+                RequestAttributes.entry_type_id='individual'
+                datasets = await PermissionsProxy.get_permissions(self=PermissionsProxy, username='dummy_user@example.com', requested_datasets=[])
+                list_datasets_names=[]
+                for dataset in datasets:
+                    list_datasets_names.append(dataset.dataset)
                 tc = unittest.TestCase()
-                tc.assertSetEqual(set(['CINECA_synthetic_cohort_EUROPE_UK1', 'test', 'AV_Dataset']),set(datasets))
+                tc.assertSetEqual(set(['CINECA_synthetic_cohort_EUROPE_UK1']),set(list_datasets_names))
+            loop.run_until_complete(test_verify_registered_datasets())
+            loop.run_until_complete(client.close())
+    def test_authZ_verify_controlled_datasets(self):
+        with loop_context() as loop:
+            app = create_test_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_verify_registered_datasets():
+                RequestAttributes.entry_type_id='individual'
+                datasets = await PermissionsProxy.get_permissions(self=PermissionsProxy, username='jane.smith@beacon.ga4gh', requested_datasets=[])
+                list_datasets_names=[]
+                for dataset in datasets:
+                    list_datasets_names.append(dataset.dataset)
+                tc = unittest.TestCase()
+                tc.assertSetEqual(set(['AV_Dataset', 'CINECA_synthetic_cohort_EUROPE_UK1']),set(list_datasets_names))
             loop.run_until_complete(test_verify_registered_datasets())
             loop.run_until_complete(client.close())
     def test_authZ_bearer_required(self):
@@ -63,8 +88,8 @@ class TestAuthZ(unittest.TestCase):
             MagicClass = MagicMock(_id='hohoho')
             async def test_authorization():
                 headers={'Authorization': 'Bearer ' + mock_access_token}
-                req = make_mocked_request('GET', '/', headers=headers)
-                username, list_visa_datasets = await authorization(self=MagicClass, request=req, headers=headers)
+                RequestAttributes.headers= headers
+                username, list_visa_datasets = await authorization(self=MagicClass)
                 assert username == 'jane'
             loop.run_until_complete(test_authorization())
             loop.run_until_complete(client.close())

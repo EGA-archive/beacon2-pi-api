@@ -10,9 +10,10 @@ from beacon.connections.mongo.utils import get_docs_by_response_type, query_id, 
 import yaml
 from beacon.conf import cohort, individual, analysis, genomicVariant, run, biosample
 from beacon.connections.mongo.__init__ import cohorts
+from beacon.request.classes import RequestAttributes
 
 @log_with_args_mongo(level)
-def get_cohorts(self, entry_id: Optional[str], qparams: RequestParams):
+def get_cohorts(self, qparams: RequestParams):
     collection = cohort.endpoint_name
     limit = qparams.query.pagination.limit
     query = apply_filters(self, {}, qparams.query.filters, collection, {}, "a")
@@ -30,11 +31,11 @@ def get_cohorts(self, entry_id: Optional[str], qparams: RequestParams):
     return response_converted, count, schema
 
 @log_with_args_mongo(level)
-def get_cohort_with_id(self, entry_id: Optional[str], qparams: RequestParams):
+def get_cohort_with_id(self, qparams: RequestParams):
     collection = cohort.endpoint_name
     limit = qparams.query.pagination.limit
     query = apply_filters(self, {}, qparams.query.filters, collection, {}, "a")
-    query = query_id(self, query, entry_id)
+    query = query_id(self, query, RequestAttributes.entry_id)
     schema = DefaultSchemas.COHORTS
     count = get_count(self, cohorts, query)
     docs = get_documents(self,

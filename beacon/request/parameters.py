@@ -227,8 +227,7 @@ class RequestParams(CamelModel):
 
     def from_request(self, request: Request) -> Self:
         '''
-        Return an instance of RequestParams class and also trigger the initialistion of filters, requestedSchemas and requestParameters classes, that are the ones that have a 
-        Union of other classes.
+        Return an instance of RequestParams class and also trigger the initialistion of the ones that belong to Union or List subclasses.
         '''
         try:
             self.query.filters = request["query"]["filters"]

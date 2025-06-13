@@ -162,7 +162,6 @@ You can use POST to make the previous query. With a `request.json` file like thi
 	    "referenceName": "22",
         "assemblyId": "GRCh37"
         },
-        "filters": [],
         "includeResultsetResponses": "HIT",
         "pagination": {
             "skip": 0,
@@ -194,7 +193,6 @@ curl \
 	    "referenceName": "22",
         "assemblyId": "GRCh37"
         },
-        "filters": [],
         "includeResultsetResponses": "HIT",
         "pagination": {
             "skip": 0,
@@ -257,9 +255,39 @@ JWKS_URL='https://login.elixir-czech.org/oidc/jwk'
 
 For Keycloak IDP, an "aud" parameter will need to be added to the token's mappers, matching the Audience for the Keycloak realm.
 
+## Dataset configuration
+
+To state if a dataset is test or not or if is synthetic or not, you have to modify the [datasets_conf.yml](https://github.com/EGA-archive/beacon-production-prototype/tree/main/beacon/conf/datasets/datasets_conf.yml), writing the name of the dataset you want to declare and the two possible variables **isTest** and **isSynthetic** with a boolean value.
+
 ## Making a dataset public/registered/controlled
 
-In order to assign the security level for a dataset in your beacon, please go to [permissions/datasets](https://github.com/EGA-archive/beacon-production-prototype/tree/main/beacon/permissions/datasets) and add your dataset into the .yml corresponding file you wish to assign the permissions for it.
+In order to assign the security level for a dataset in your beacon, please go to [datasets_permissions.yml](https://github.com/EGA-archive/beacon-production-prototype/tree/main/beacon/permissions/datasets/datasets_permissions.yml) and add your dataset you wish to assign the permissions for it. The 3 possible options to allow for the dataset are public, registered or controlled, which needs to be in the first item under the dataset name. Public means that authentication is not required, registered means authentication required and controlled means authentication required and with specific permissions for the authenticated user. After that, depending on the security level you assigned to the dataset, you can set a **default_entry_types_granularity**, which will set which is the maximum granularity allowed for this dataset, except for the **entry_types_exceptions**, that can assign a particular granularity for a particular entry type. Beware that the entry type needs to match the entry type id you set for each of the entry type files in their respective conf file: id of analysis, individual, etc. 
+```
+CINECA_synthetic_cohort_EUROPE_UK1:
+  public:
+    default_entry_types_granularity: record
+    entry_types_exceptions:
+      - cohort: boolean
+
+random_dataset:
+  registered:
+    default_entry_types_granularity: count
+    entry_types_exceptions:
+      - individual: boolean
+```
+If you have assigned a controlled security level then you can assign a particular granularity per user and per entry type per user. You can do that by creating a **user-list** array with items that belong to each user and that need to have the following structure:
+```
+AV_Dataset:
+  controlled:
+    default_entry_types_granularity: record
+    entry_types_exceptions:
+      - individual: boolean
+    user-list:
+      - user_e-mail: jane.smith@beacon.ga4gh
+        default_entry_types_granularity: count
+        entry_types_exceptions:
+          - individual: record
+``` 
 
 ## Managing configuration
 
@@ -268,6 +296,8 @@ You can edit some parameters for your Beacon v2 API that are in [conf.py](https:
 ```bash
 docker compose restart beaconprod
 ```
+
+Also, to manage the specific entry types conf, yo uwill need to edit the files related to each entry type in the conf folder, e.g.
 
 ## Managing source
 
