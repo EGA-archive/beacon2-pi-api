@@ -8,3 +8,4 @@ beacon/connections/mongo/data/rd-connect
 *.vcf.gz
 beacon/connections/mongo/data/db/*
 !beacon/connections/mongo/data/db/dir.txt
+*.sqlite3

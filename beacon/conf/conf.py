@@ -36,13 +36,8 @@ ga4gh_service_type_version = '1.0'
 # Organization info
 org_id = 'EGA'  # Id of the organization
 org_name = 'European Genome-Phenome Archive (EGA)'  # Full name
-org_description = ('The European Genome-phenome Archive (EGA) '
-                   'is a service for permanent archiving and sharing '
-                   'of all types of personally identifiable genetic '
-                   'and phenotypic data resulting from biomedical research projects.')
-org_adress = ('C/ Dr. Aiguader, 88'
-              'PRBB Building'
-              '08003 Barcelona, Spain')
+org_description = 'The European Genome-phenome Archive (EGA) is a service for permanent archiving and sharing of all types of personally identifiable genetic and phenotypic data resulting from biomedical research projects.'
+org_adress = 'C/ Dr. Aiguader, 88, PRBB Building 08003 Barcelona, Spain'
 org_welcome_url = 'https://ega-archive.org/'
 org_contact_url = 'mailto:beacon.ega@crg.eu'
 org_logo_url = 'https://legacy.ega-archive.org/images/logo.png'
