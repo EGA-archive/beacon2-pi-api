@@ -4,9 +4,8 @@ from django.http import HttpResponseRedirect, HttpResponseBadRequest
 import logging
 from pymongo.mongo_client import MongoClient
 from django.urls import resolve
-from adminbackend.forms import BamForm
-from beacon.connections.mongo import conf
-from beacon.conf import conf as basic_conf
+from adminbackend.forms.beacon import BamForm
+from adminbackend.forms.entry_types import EntryTypesForm
 
 import logging
 
@@ -21,9 +20,7 @@ LOG.addHandler(sh)
 def default_view(request):
     form =BamForm()
     context = {'form': form}
-    LOG.warning('muaaa')
     if request.method == 'POST':
-        print('heeey')
         form = BamForm(request.POST)
         if form.is_valid():
             beaconName = form.cleaned_data['BeaconName']
@@ -73,9 +70,32 @@ def default_view(request):
                 f.write(new_lines)
             f.close()
             return redirect("adminclient:index")
-        else:
-            print('whaaat')
-            LOG.warning('probleeem')
-            LOG.warning(form)
     template = "home.html"
+    return render(request, template, context)
+
+def entry_types(request):
+    entry_types_list=['analysis', 'biosample', 'cohort', 'dataset', 'genomicVariant', 'individual', 'run']
+    form =EntryTypesForm()
+    context = {'form': form}
+    if request.method == 'POST':
+        form = EntryTypesForm(request.POST)
+        if form.is_valid():
+            entryTypes = form.cleaned_data['EntryTypes']
+            for entry_type in entry_types_list:
+                if entry_type not in entryTypes:
+                    with open("adminui/beacon/conf/" + entry_type + ".py") as f:
+                        lines = f.readlines()
+                    with open("adminui/beacon/conf/"+ entry_type + ".py", "w") as f:
+                        new_lines =''
+                        for line in lines:
+                            if 'endpoint_name' in str(line):
+                                new_lines+=""+"\n"
+                            else:
+                                new_lines+=line
+                            
+                        f.write(new_lines)
+                    f.close()
+
+            return redirect("adminclient:entry_types")
+    template = "general_configuration/entry_types.html"
     return render(request, template, context)
