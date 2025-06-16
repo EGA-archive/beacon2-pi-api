@@ -24,6 +24,7 @@ import ssl
 from beacon.request.parameters import RequestMeta, RequestQuery, Pagination
 from beacon.budget.__main__ import insert_budget
 from beacon.validator.configuration import check_configuration
+import aiohttp_autoreload
 
 class EndpointView(web.View, CorsViewMixin):
     def __init__(self, request: Request):
@@ -462,7 +463,8 @@ async def create_api():# pragma: no cover
     if (os.path.isfile(conf.beacon_server_key)) and (os.path.isfile(conf.beacon_server_crt)):
         ssl_context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
         ssl_context.load_cert_chain(certfile=conf.beacon_server_crt, keyfile=conf.beacon_server_key)
-
+    
+    aiohttp_autoreload.start()
     LOG.debug("Starting app")
     runner = web.AppRunner(app)
     await runner.setup()

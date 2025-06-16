@@ -1,0 +1,170 @@
+input {
+    width: 300px;
+}
+
+input[type="radio"]{
+  cursor: pointer;
+  height: 10px;
+  display: none;
+}
+
+input[type="checkbox"]{
+  cursor: pointer;
+  height: 10px;
+  display: none;
+}
+
+#id_granularity
+{
+  border: 1px solid black;
+  border-radius: 40px;
+  position: relative;
+  height:20px;
+  display:flex;
+  justify-content:space-around;
+  width: 525px;
+  z-index:1;
+}
+
+label[for=id_granularity_0]{
+display:inline-block; width: 33%;color: white;height: 100%;position: absolute; top: 0px;left: 0px;text-align: center;cursor: pointer;
+}
+
+label[for=id_granularity_1]{
+  display:inline-block; width: 33%; height: 100%;position: absolute; top: 0px;left:33%;text-align: center;cursor: pointer;
+}
+
+label[for=id_granularity_2]{
+  display:inline-block; width: 33%;height: 100%;position: absolute; top: 0px;left:66%;text-align: center;cursor: pointer;
+}
+
+#id_granularity::before{
+  content: '';
+  position: absolute;
+  left:0;
+  top: 0;
+  width: 34%;
+  height: 95%;
+  background: black;
+  border: 1px solid black;
+  border-radius: 12px;
+  transition: .5s left ease;
+  z-index: -1;
+}
+
+#id_granularity:has(#id_granularity_0:checked)::before{
+  left: 0%;
+}
+
+#id_granularity:has(#id_granularity_0:checked) label[for=id_granularity_0]{
+  color:white;
+}
+
+#id_granularity:has(#id_granularity_0:checked) label[for=id_granularity_1]{
+  color:black;
+}
+
+#id_granularity:has(#id_granularity_0:checked) label[for=id_granularity_2]{
+  color:black;
+}
+
+#id_granularity:has(#id_granularity_1:checked)::before{
+  left: 33%;
+}
+
+#id_granularity:has(#id_granularity_1:checked) label[for=id_granularity_1]{
+  color:white;
+}
+
+#id_granularity:has(#id_granularity_1:checked) label[for=id_granularity_0]{
+  color:black;
+}
+
+#id_granularity:has(#id_granularity_2:checked) label[for=id_granularity_2]{
+  color:black;
+}
+
+#id_granularity:has(#id_granularity_2:checked)::before{
+  left: 66%;
+}
+
+#id_granularity:has(#id_granularity_2:checked) label[for=id_granularity_2]{
+  color:white;
+}
+
+#id_granularity:has(#id_granularity_2:checked) label[for=id_granularity_0]{
+  color:black;
+}
+
+#id_granularity:has(#id_granularity_2:checked) label[for=id_granularity_1]{
+  color:black;
+}
+
+#id_SecurityLevel
+{
+  position: relative;
+  height:20px;
+  display:flex;
+  justify-content:space-around;
+  width: 500px;
+  z-index:1;
+}
+
+label[for=id_SecurityLevel_0]{
+display:inline-block; width: 33%;height: 100%;position: absolute; top: 0px;cursor: pointer;left:0px;text-align: center;border:1px solid black;border-radius: 40px;
+}
+
+label[for=id_SecurityLevel_1]{
+  display:inline-block; width: 33%; height: 100%;position: absolute; top: 0px;cursor: pointer;left:36%;text-align: center;border:1px solid black;border-radius: 40px;
+}
+
+label[for=id_SecurityLevel_2]{
+  display:inline-block; width: 33%;height: 100%;position: absolute; top: 0px;cursor: pointer;left:72%;text-align: center;border:1px solid black;border-radius: 40px;
+}
+
+
+#id_SecurityLevel:has(#id_SecurityLevel_0:checked) label[for=id_SecurityLevel_0]{
+  content: '';
+  color: white !important;
+  position: absolute;
+  left:0;
+  top: 0;
+  width: 33%;
+  height: 95%;
+  background: black;
+  border: 1px solid black;
+  border-radius: 12px;
+  transition: .5s left ease;
+  z-index: -1;
+  text-align: center;
+}
+
+#id_SecurityLevel:has(#id_SecurityLevel_1:checked) label[for=id_SecurityLevel_1]{
+  content: '';
+  color: white !important;
+  position: absolute;
+  left:36%;
+  top: 0;
+  width: 33%;
+  height: 95%;
+  background: black;
+  border: 1px solid black;
+  border-radius: 12px;
+  transition: .5s left ease;
+  z-index: -1;
+  text-align: center;
+}
+
+#id_SecurityLevel:has(#id_SecurityLevel_2:checked) label[for=id_SecurityLevel_2]{
+  content: '';
+  color: white !important;
+  position: absolute;
+  left:72%;
+  top: 0;
+  background: black;
+  border: 1px solid black;
+  border-radius: 12px;
+  transition: .5s left ease;
+  z-index: -1;
+  text-align: center;
+}
