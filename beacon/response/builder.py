@@ -16,7 +16,7 @@ async def builder(self, datasets, qparams):
         if qparams.query.includeResultsetResponses != 'NONE':
             response = build_beacon_record_response_by_dataset(self, datasets, datasets_docs, datasets_count, count, qparams, entity_schema)
         elif qparams.query.includeResultsetResponses == 'NONE' and RequestAttributes.allowed_granularity in ['count','record'] and granularity in ['count', 'record']:
-            response = build_beacon_count_response(self, count, qparams, entity_schema)
+            response = build_beacon_count_response(self, datasets, datasets_docs, datasets_count, count, qparams, entity_schema)
         else:# pragma: no cover
             response = build_beacon_boolean_response(self, count, qparams, entity_schema)
         return response
