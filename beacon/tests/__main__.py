@@ -2380,6 +2380,7 @@ class TestMain(unittest.TestCase):
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
                 assert responsedict["response"]["resultSets"][0].get("results") == None
+                assert responsedict["responseSummary"]["numTotalResults"] == 20
                 assert responsedict["response"]["resultSets"][0]["resultsCount"] == 20
                 assert resp.status == 200
             loop.run_until_complete(test_check_count_resultSet_query_is_working())
