@@ -22,6 +22,10 @@ async def check_request_content_type(self, request: Request):
 
 @log_with_args(level)
 def parse_query_string(self, request):
+    '''
+    Here we process the query string dictionary, which comes in a multidict (request.query) with each of the parameters as key of the dict and we transform it in a dictionary
+    that validates against a beacon v2 json body request.
+    '''
     query_string_body={}
     query_string_body["query"]={}
     query_string_body["query"]["requestParameters"]={}
@@ -77,19 +81,11 @@ def parse_query_string(self, request):
     return query_string_body
 
 @log_with_args(level)
-def merge_two_dicts(x, y):
-    z = x.copy()
-    z.update(y)
-    return z
-
-
-
-@log_with_args(level)
 async def get_qparams(self, request): # anomenar query string en comptes de qparams
     # Bad Request not priority
     '''
-    The function will catch all the parameters in the query string and see if they also exist in a json body of the request. If a parameter is found in both places, the json body will
-    have priority over the parameter string. After that, the params request will be validated against a pydantic class RequestParams and an instance of the object class will be 
+    The function will catch all the parameters in the query string and see if they also exist in a json body of the request. If a parameter is found in both places and is different, we
+    will return a Bad Request. After that, the params request will be validated against a pydantic class RequestParams and an instance of the object class will be 
     returned to have a variable called qparams with the query parameters that will be used for processing the query.
     '''
     try:
@@ -139,6 +135,10 @@ async def get_qparams(self, request): # anomenar query string en comptes de qpa
     
 @log_with_args(level)
 def set_entry_type_configuration(self):
+    '''
+    On the action of checking if there is a match between the endpoint queried an entry type in configuration, we then grab the database (source), max_granularity (allowed_granularity)
+    and id name of the records of the entry type to keep them in the RequestAttributes object for later.
+    '''
     if RequestAttributes.entry_type == genomicVariant.endpoint_name:
         RequestAttributes.source = genomicVariant.database
         RequestAttributes.allowed_granularity = genomicVariant.granularity
@@ -162,10 +162,12 @@ def set_entry_type_configuration(self):
     
 @log_with_args(level)
 def set_entry_type(self, request):
+    '''
+    We receive an absolute url with a host and a port, the endpoint queried and the query string. We check that the url and host match with the beacon uri in conf and then
+    we keep the name of the endpoint checking if it matches an entry type in configuration and the internal id queried, if there is one.
+    '''
     try:
         abs_url_with_query_string=str(request.url)
-        LOG.warning(abs_url_with_query_string)
-        LOG.warning(uri)
         abs_url=abs_url_with_query_string.split('?')
         abs_url=abs_url[0]
         if uri.endswith('/'):
@@ -195,6 +197,10 @@ def set_entry_type(self, request):
     
 @log_with_args(level)
 async def deconstruct_request(self, request):
+    '''
+    Here we grab the attributes that come from a request: ip, headers, entry_type related attributes and request parameters in four different steps, the order of which is
+    declared first is not relevant.
+    '''
     # headers, path, query string, body
     # analitzar entry type en una sola funció
     RequestAttributes.ip=request.remote
