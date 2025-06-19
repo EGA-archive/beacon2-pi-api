@@ -68,6 +68,12 @@ def parse_query_string(self, request):
                 query_string_body["query"]["requestParameters"][k]=[int(v)]
         else:
             query_string_body["query"]["requestParameters"][k]=v
+    if query_string_body["query"]["requestParameters"]=={}:
+        query_string_body["query"].pop("requestParameters")
+    if query_string_body["meta"]=={}:
+        query_string_body.pop("meta")
+    if query_string_body["query"]=={}:
+        query_string_body.pop("query")
     return query_string_body
 
 @log_with_args(level)
@@ -158,6 +164,8 @@ def set_entry_type_configuration(self):
 def set_entry_type(self, request):
     try:
         abs_url_with_query_string=str(request.url)
+        LOG.warning(abs_url_with_query_string)
+        LOG.warning(uri)
         abs_url=abs_url_with_query_string.split('?')
         abs_url=abs_url[0]
         if uri.endswith('/'):

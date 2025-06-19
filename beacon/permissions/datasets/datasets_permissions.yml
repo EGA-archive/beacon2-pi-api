@@ -2,7 +2,7 @@ test:
   public:
     default_entry_types_granularity: record
     entry_types_exceptions:
-      - individual: boolean
+      - individual: record
 
 CINECA_synthetic_cohort_EUROPE_UK1:
   public:
