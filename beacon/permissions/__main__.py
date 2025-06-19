@@ -65,7 +65,7 @@ def query_permissions(func):
             except Exception:
                 requested_datasets = []
             if qparams.query.testMode == True:
-                datasets_permissions = await PermissionsProxy.get_permissions(self, username=username, requested_datasets=requested_datasets, testMode=True)
+                datasets_permissions = await PermissionsProxy.get_permissions(self, username=username, requested_datasets=requested_datasets, testMode=qparams.query.testMode)
                 response_datasets= await get_datasets_list(self, qparams, datasets_permissions)
                 response_datasets_names=[]
                 for response_dataset in response_datasets:
@@ -77,7 +77,7 @@ def query_permissions(func):
                         raise web.HTTPBadRequest
             else:
                 username, list_visa_datasets = await authorization(self)
-                datasets_permissions = await PermissionsProxy.get_permissions(self, username=username, requested_datasets=requested_datasets, testMode=False)
+                datasets_permissions = await PermissionsProxy.get_permissions(self, username=username, requested_datasets=requested_datasets, testMode=qparams.query.testMode)
                 time_now = check_budget(self, username)
                 for visa_dataset in list_visa_datasets:
                     datasets_permissions.append(DatasetPermission(visa_dataset, default_beacon_granularity))

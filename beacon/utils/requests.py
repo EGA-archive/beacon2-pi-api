@@ -3,7 +3,7 @@ from aiohttp.web_request import Request
 from aiohttp import web
 from beacon.request.parameters import RequestParams
 from beacon.logs.logs import log_with_args, LOG
-from beacon.conf.conf import level
+from beacon.conf.conf import level, uri, uri_subpath
 from beacon.request.classes import ErrorClass, RequestAttributes
 import html
 from beacon.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run
@@ -18,11 +18,68 @@ async def check_request_content_type(self, request: Request):
         return post_data
     except Exception:# pragma: no cover
         raise
-        
 
 
 @log_with_args(level)
-async def get_qparams(self, post_data, request): # anomenar query string en comptes de qparams
+def parse_query_string(self, request):
+    query_string_body={}
+    query_string_body["query"]={}
+    query_string_body["query"]["requestParameters"]={}
+    query_string_body["meta"]={}
+    for k, v in request.query.items():
+        v = html.escape(v)
+        if k == 'filters':
+            v_list=[]
+            if ',' in v:
+                v_list =v.split(',')# pragma: no cover
+            else:
+                v_list.append(v)
+            for id in v_list:
+                v_dict={}
+                v_dict['id']=id
+            query_string_body["query"]["filters"] = [v_dict]
+        elif k == 'includeResultsetResponses':
+            query_string_body["query"]["includeResultsetResponses"] = v
+        elif k == 'skip':
+            try:
+                query_string_body["query"]["pagination"]["skip"] = v
+            except Exception:
+                query_string_body["query"]["pagination"]= {}
+                query_string_body["query"]["pagination"]["skip"] = v
+        elif k == 'limit':
+            try:
+                query_string_body["query"]["pagination"]["limit"] = v
+            except Exception:
+                query_string_body["query"]["pagination"]= {}
+                query_string_body["query"]["pagination"]["limit"] = v
+        elif k == 'testMode':
+            query_string_body["query"]["testMode"] = v
+        elif k == 'requestedSchemas':
+            query_string_body["meta"]["requestedSchemas"] = v
+        elif k == 'requestedGranularity':
+            query_string_body["query"]["requestedGranularity"] = v
+        elif k == 'datasets':
+            query_string_body["query"]["requestParameters"][k]=[v]
+        elif k in ["start", "end"]:
+            if ',' in v:# pragma: no cover
+                v_splitted = v.split(',')
+                query_string_body["query"]["requestParameters"][k]=[int(v) for v in v_splitted]
+            else:
+                query_string_body["query"]["requestParameters"][k]=[int(v)]
+        else:
+            query_string_body["query"]["requestParameters"][k]=v
+    return query_string_body
+
+@log_with_args(level)
+def merge_two_dicts(x, y):
+    z = x.copy()
+    z.update(y)
+    return z
+
+
+
+@log_with_args(level)
+async def get_qparams(self, request): # anomenar query string en comptes de qparams
     # Bad Request not priority
     '''
     The function will catch all the parameters in the query string and see if they also exist in a json body of the request. If a parameter is found in both places, the json body will
@@ -30,93 +87,43 @@ async def get_qparams(self, post_data, request): # anomenar query string en com
     returned to have a variable called qparams with the query parameters that will be used for processing the query.
     '''
     try:
+        post_data = await request.json() if request.has_body else {}
         try:
             if post_data["query"]["requestParameters"] == {}:
                 ErrorClass.error_message='requestParameters can not be empty, remove the requestParameters property from the body if you do not want to apply any'
         except Exception:
             pass
-        catch_query_params={}
-        catch_query={}
-        catch_query["query"]={}
-        catch_meta={}
-        catch_meta["meta"]={}
-        for k, v in request.query.items():
-            v = html.escape(v)
-            if k == 'filters':
-                v_list=[]
-                if ',' in v:
-                    v_list =v.split(',')# pragma: no cover
-                else:
-                    v_list.append(v)
-                for id in v_list:
-                    v_dict={}
-                    v_dict['id']=id
-                catch_query["query"]["filters"] = [v_dict]
-            elif k == 'includeResultsetResponses':
-                catch_query["query"]["includeResultsetResponses"] = v
-            elif k == 'skip':
-                try:
-                    catch_query["query"]["pagination"]["skip"] = v
-                except Exception:
-                    catch_query["query"]["pagination"]= {}
-                    catch_query["query"]["pagination"]["skip"] = v
-            elif k == 'limit':
-                try:
-                    catch_query["query"]["pagination"]["limit"] = v
-                except Exception:
-                    catch_query["query"]["pagination"]= {}
-                    catch_query["query"]["pagination"]["limit"] = v
-            elif k == 'testMode':
-                catch_query["query"]["testMode"] = v
-            elif k == 'requestedSchemas':
-                catch_meta["meta"]["requestedSchemas"] = v
-            elif k == 'requestedGranularity':
-                catch_query["query"]["requestedGranularity"] = v
-            elif k == 'datasets':
-                catch_query_params[k]=[v]
-            elif k in ["start", "end"]:
-                if ',' in v:# pragma: no cover
-                    v_splitted = v.split(',')
-                    catch_query_params[k]=[int(v) for v in v_splitted]
-                else:
-                    catch_query_params[k]=[int(v)]
+        query_string_body = parse_query_string(self, request)
+        final_body=post_data
+        for k, v in query_string_body.items():
+            if post_data.get(k) == None:
+                final_body[k]=v
             else:
-                catch_query_params[k]=v
-        if catch_meta["meta"]!={}:
-            post_data["meta"]=catch_meta["meta"]
-        if catch_query["query"]!={}:
-            if post_data.get('query') != None:
-                for k, v in post_data["query"].items():
-                    if post_data["query"].get(k) == None:
-                        post_data["query"][k]=v
-                    elif k == 'filters':
-                        for item in v:
-                            post_data["query"]["filters"].append(v)
-            else:
-                post_data["query"]=catch_query["query"]
-        if catch_query_params!={}:
-            try:
-                for k, v in catch_query_params.items():
-                    try:
-                        if post_data["query"]["requestParameters"].get(k) == None:
-                            post_data["query"]["requestParameters"][k]=v
-                    except Exception:
-                        try:
-                            post_data["query"]["requestParameters"]={}
-                            post_data["query"]["requestParameters"][k]=v
-                        except Exception:
-                            post_data["query"]={}
-                            post_data["query"]["requestParameters"]={}
-                            post_data["query"]["requestParameters"][k]=v
-            except Exception:
-                if catch_query != {}:
-                    post_data["query"]["requestParameters"]=catch_query_params 
-                else:
-                    post_data["query"]={}
-                    post_data["query"]["requestParameters"]=catch_query_params
-        
-
-        qparams = RequestParams(**post_data).from_request(post_data)
+                for k1, v1 in v.items():
+                    if post_data[k].get(k1)==None:
+                        final_body[k][k1]=v1
+                    elif isinstance(v1, dict):
+                        for k2, v2 in v1.items():
+                            if post_data[k][k1].get(k2)==None:
+                                final_body[k][k1][k2]=v2
+                            elif isinstance(v2, list):
+                                if post_data[k][k1][k2]!=v2:
+                                    ErrorClass.error_message='two parameters conflict from string: {} and from json body query: {}'.format(v2, post_data[k][k1][k2])
+                                    raise web.HTTPBadRequest
+                            elif isinstance(v2, dict):
+                                for k3, v3 in v2.items():
+                                    if post_data[k][k1][k2].get(k3)==None:
+                                        final_body[k][k1][k2][k3]=v3
+                                    elif post_data[k][k1][k2][k3]!=v3:
+                                        ErrorClass.error_message='two parameters conflict from string: {} and from json body query: {}'.format(v3, post_data[k][k1][k2][k3])
+                                        raise web.HTTPBadRequest
+                            elif post_data[k][k1][k2]!=v2:
+                                ErrorClass.error_message='two parameters conflict from string: {} and from json body query: {}'.format(v2, post_data[k][k1][k2])
+                                raise web.HTTPBadRequest
+                    elif post_data[k][k1]!=v1:
+                        ErrorClass.error_message='two parameters conflict from string: {} and from json body query: {}'.format(v1, post_data[k][k1])
+                        raise web.HTTPBadRequest
+        qparams = RequestParams(**final_body).from_request(final_body)
         return qparams
     except Exception as e:# pragma: no cover
         ErrorClass.error_code=400
@@ -125,64 +132,65 @@ async def get_qparams(self, post_data, request): # anomenar query string en com
         raise web.HTTPBadRequest
     
 @log_with_args(level)
-async def deconstruct_request(self, request):
-        ip = request.remote
-        RequestAttributes.ip=ip
-        post_data = await request.json() if request.has_body else {}
-        headers = request.headers
-        RequestAttributes.headers=headers
-        path_list = request.path.split('/')
-        if len(path_list) > 4:
-            entry_type=path_list[2]+'.'+path_list[4]# pragma: no cover
+def set_entry_type_configuration(self):
+    if RequestAttributes.entry_type == genomicVariant.endpoint_name:
+        RequestAttributes.source = genomicVariant.database
+        RequestAttributes.allowed_granularity = genomicVariant.granularity
+        RequestAttributes.entry_type_id = genomicVariant.id
+    elif RequestAttributes.entry_type == analysis.endpoint_name:
+        RequestAttributes.source = analysis.database
+        RequestAttributes.allowed_granularity = analysis.granularity
+        RequestAttributes.entry_type_id = analysis.id
+    elif RequestAttributes.entry_type == biosample.endpoint_name:
+        RequestAttributes.source = biosample.database
+        RequestAttributes.allowed_granularity = biosample.granularity
+        RequestAttributes.entry_type_id = biosample.id
+    elif RequestAttributes.entry_type == individual.endpoint_name:
+        RequestAttributes.source = individual.database
+        RequestAttributes.allowed_granularity = individual.granularity
+        RequestAttributes.entry_type_id = individual.id
+    elif RequestAttributes.entry_type == run.endpoint_name:
+        RequestAttributes.source = run.database
+        RequestAttributes.allowed_granularity = run.granularity
+        RequestAttributes.entry_type_id = run.id
+    
+@log_with_args(level)
+def set_entry_type(self, request):
+    try:
+        abs_url_with_query_string=str(request.url)
+        abs_url=abs_url_with_query_string.split('?')
+        abs_url=abs_url[0]
+        if uri.endswith('/'):
+            starting_endpoint = len(uri) + len(uri_subpath) -1
+            def_uri=uri + uri_subpath
         else:
-            entry_type=path_list[2]
-        RequestAttributes.entry_type=entry_type
-        entry_id = request.match_info.get('id', None)
-        if entry_id == None:
-            entry_id = request.match_info.get('variantInternalId', None)
-        RequestAttributes.entry_id=entry_id
-        if '.' in RequestAttributes.entry_type and genomicVariant.endpoint_name not in RequestAttributes.entry_type:
-            source_entry_type = RequestAttributes.entry_type.split('.')
-            source_entry_type = source_entry_type[1]
-            if source_entry_type == analysis.endpoint_name:
-                RequestAttributes.source = analysis.database
-                RequestAttributes.allowed_granularity = analysis.granularity
-                RequestAttributes.entry_type_id = analysis.id
-            elif source_entry_type == biosample.endpoint_name:
-                RequestAttributes.source = biosample.database
-                RequestAttributes.allowed_granularity = biosample.granularity
-                RequestAttributes.entry_type_id = biosample.id
-            elif source_entry_type == individual.endpoint_name:
-                RequestAttributes.source = individual.database
-                RequestAttributes.allowed_granularity = individual.granularity
-                RequestAttributes.entry_type_id = individual.id
-            elif source_entry_type == run.endpoint_name:
-                RequestAttributes.source = run.database
-                RequestAttributes.allowed_granularity = run.granularity
-                RequestAttributes.entry_type_id = run.id
-        elif RequestAttributes.entry_type == genomicVariant.endpoint_name:
-            RequestAttributes.source = genomicVariant.database
-            RequestAttributes.allowed_granularity = genomicVariant.granularity
-            RequestAttributes.entry_type_id = genomicVariant.id
-        elif '.' in RequestAttributes.entry_type:
-            RequestAttributes.source = genomicVariant.database
-            RequestAttributes.allowed_granularity = genomicVariant.granularity
-            RequestAttributes.entry_type_id = genomicVariant.id
-        elif RequestAttributes.entry_type == analysis.endpoint_name:
-            RequestAttributes.source = analysis.database
-            RequestAttributes.allowed_granularity = analysis.granularity
-            RequestAttributes.entry_type_id = analysis.id
-        elif RequestAttributes.entry_type == biosample.endpoint_name:
-            RequestAttributes.source = biosample.database
-            RequestAttributes.allowed_granularity = biosample.granularity
-            RequestAttributes.entry_type_id = biosample.id
-        elif RequestAttributes.entry_type == individual.endpoint_name:
-            RequestAttributes.source = individual.database
-            RequestAttributes.allowed_granularity = individual.granularity
-            RequestAttributes.entry_type_id = individual.id
-        elif RequestAttributes.entry_type == run.endpoint_name:
-            RequestAttributes.source = run.database
-            RequestAttributes.allowed_granularity = run.granularity
-            RequestAttributes.entry_type_id = run.id
-        qparams = await get_qparams(self, post_data, self.request)
-        return qparams
+            starting_endpoint = len(uri) + len(uri_subpath)
+            def_uri = uri + uri_subpath
+        if abs_url[:starting_endpoint] != def_uri :
+            ErrorClass.error_code=400
+            if ErrorClass.error_message is None:
+                ErrorClass.error_message='configuration variable uri: {} not the same as where the beacon is hosted'.format(uri)
+            raise web.HTTPBadRequest
+        path_list = abs_url[starting_endpoint:].split('/')
+        if len(path_list) > 3:
+            RequestAttributes.pre_entry_type=path_list[1]
+            RequestAttributes.entry_type=path_list[3]
+            set_entry_type_configuration(self)
+            RequestAttributes.entry_id=request.match_info.get('id', None)
+        else:
+            RequestAttributes.entry_type=path_list[1]
+            set_entry_type_configuration(self)
+            RequestAttributes.entry_id=request.match_info.get('id', None)
+    except Exception:
+        raise
+
+    
+@log_with_args(level)
+async def deconstruct_request(self, request):
+    # headers, path, query string, body
+    # analitzar entry type en una sola funció
+    RequestAttributes.ip=request.remote
+    RequestAttributes.headers=request.headers
+    set_entry_type(self, request)
+    qparams = await get_qparams(self, self.request)
+    return qparams
