@@ -3,7 +3,7 @@ from beacon.request.parameters import RequestParams, RequestMeta, RequestQuery
 from beacon.request.classes import Granularity, ErrorClass, RequestAttributes
 from beacon.conf import conf
 from typing import Optional
-from beacon.logs.logs import log_with_args
+from beacon.logs.logs import log_with_args, LOG
 from beacon.conf.conf import level
 from beacon.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run
 from beacon.filtering_terms.resources import resources
@@ -378,17 +378,28 @@ def build_response_summary(self, exists, num_total_results):
         raise
 
 @log_with_args(level)
-def build_response_summary_by_dataset(self, exists, num_total_results, data):
+def build_response_summary_by_dataset(self, datasets, data, dict_counts, qparams):
     try:
-        count=num_total_results
-        if count == 0:
+        count=0
+        non_counted=0
+        granularity = qparams.query.requestedGranularity
+        for dataset in datasets:
+            if dataset.granularity != 'boolean' and RequestAttributes.allowed_granularity != 'boolean' and granularity != 'boolean':
+                count +=dict_counts[dataset.dataset]
+            else:
+                non_counted+=dict_counts[dataset.dataset]
+        if count == 0 and non_counted >0:
             return {
-                'exists': count > 0
+                'exists': True
             }
-        else:
+        elif count > 0:
             return {
                 'exists': count > 0,
                 'numTotalResults': count
+            }
+        else:
+            return {
+                'exists': False
             }
     except Exception as e:# pragma: no cover
         ErrorClass.error_code=500
@@ -469,7 +480,7 @@ def build_response_by_dataset(self, datasets, data, dict_counts, qparams):
                             'resultsCount': dict_counts[dataset.dataset],
                             'results': data[dataset.dataset]
                         }
-            elif dataset.granularity != 'boolean' and RequestAttributes.allowed_granularity == 'count' and granularity != 'boolean' or dataset.granularity != 'boolean' and RequestAttributes.allowed_granularity != 'boolean' and granularity == 'count':
+            elif dataset.granularity != 'boolean' and RequestAttributes.allowed_granularity != 'boolean' and granularity != 'boolean':
                 for handover in list_of_handovers_per_dataset:
                     if handover["dataset"]==dataset.dataset:# pragma: no cover
                         response = {
@@ -527,7 +538,7 @@ def build_beacon_record_response_by_dataset(self, datasets, data,
             granul_returned = 'count'
         beacon_response = {
             'meta': build_meta(self, qparams, entity_schema, granul_returned),
-            'responseSummary': build_response_summary_by_dataset(self, num_total_results > 0, num_total_results, data),
+            'responseSummary': build_response_summary_by_dataset(self, datasets, data, dict_counts, qparams),
             'response': {
                 'resultSets': build_response_by_dataset(self, datasets, data, dict_counts, qparams)
             },
@@ -554,15 +565,15 @@ def build_beacon_boolean_response(self,
         raise
 
 @log_with_args(level)
-def build_beacon_count_response(self,
+def build_beacon_count_response(self, datasets, data,
+                                    dict_counts,
                                     num_total_results,
                                     qparams: RequestParams,
                                     entity_schema: DefaultSchemas):
     try:
         beacon_response = {
-            'meta': build_meta(self, qparams, entity_schema, Granularity.COUNT),
-            'responseSummary': build_response_summary(self, num_total_results > 0, num_total_results),
-            # TODO: 'extendedInfo': build_extended_info(),
+            'meta': build_meta(self, qparams, entity_schema, 'count'),
+            'responseSummary': build_response_summary_by_dataset(self, datasets, data, dict_counts, qparams),
             'beaconHandovers': list_of_handovers,
         }
         return beacon_response
