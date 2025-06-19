@@ -8,7 +8,19 @@ input[type="radio"]{
   display: none;
 }
 
-input[type="checkbox"]{
+#id_SecurityLevel_0{
+  cursor: pointer;
+  height: 10px;
+  display: none;
+}
+
+#id_SecurityLevel_1{
+  cursor: pointer;
+  height: 10px;
+  display: none;
+}
+
+#id_SecurityLevel_2{
   cursor: pointer;
   height: 10px;
   display: none;

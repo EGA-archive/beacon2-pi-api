@@ -4,9 +4,18 @@ from django.http import HttpResponseRedirect, HttpResponseBadRequest
 import logging
 from pymongo.mongo_client import MongoClient
 from django.urls import resolve
-from adminbackend.forms import BamForm
-from beacon.connections.mongo import conf
-from beacon.conf import conf as basic_conf
+from adminbackend.forms.beacon import BamForm
+from adminbackend.forms.entry_types import EntryTypesForm
+
+import logging
+
+LOG = logging.getLogger(__name__)
+fmt = '%(levelname)s - %(asctime)s - %(message)s'
+formatter = logging.Formatter(fmt)
+sh = logging.StreamHandler()
+sh.setLevel('NOTSET')
+sh.setFormatter(formatter)
+LOG.addHandler(sh)
 
 def default_view(request):
     form =BamForm()
@@ -24,6 +33,8 @@ def default_view(request):
             org_welcome_url = form.cleaned_data['OrgWelcomeUrl']
             org_contact_url = form.cleaned_data['OrgContactUrl']
             org_logo_url = form.cleaned_data['OrgLogoUrl']
+            granularity = form.cleaned_data['granularity']
+            security_level = form.cleaned_data['SecurityLevel']
             with open("adminui/beacon/conf/conf.py") as f:
                 lines = f.readlines()
             with open("adminui/beacon/conf/conf.py", "w") as f:
@@ -49,6 +60,10 @@ def default_view(request):
                         new_lines+="org_contact_url="+'"'+org_contact_url+'"'+"\n"
                     elif 'org_logo_url' in str(line):
                         new_lines+="org_logo_url="+'"'+org_logo_url+'"'+"\n"
+                    elif 'security_levels' in str(line):
+                        new_lines+="security_levels="+str(security_level)+"\n"
+                    elif 'default_beacon_granularity' in str(line):
+                        new_lines+="default_beacon_granularity="+'"'+granularity+'"'+"\n"
                     else:
                         new_lines+=line
                     
@@ -56,4 +71,31 @@ def default_view(request):
             f.close()
             return redirect("adminclient:index")
     template = "home.html"
+    return render(request, template, context)
+
+def entry_types(request):
+    entry_types_list=['analysis', 'biosample', 'cohort', 'dataset', 'genomicVariant', 'individual', 'run']
+    form =EntryTypesForm()
+    context = {'form': form}
+    if request.method == 'POST':
+        form = EntryTypesForm(request.POST)
+        if form.is_valid():
+            entryTypes = form.cleaned_data['EntryTypes']
+            for entry_type in entry_types_list:
+                if entry_type not in entryTypes:
+                    with open("adminui/beacon/conf/" + entry_type + ".py") as f:
+                        lines = f.readlines()
+                    with open("adminui/beacon/conf/"+ entry_type + ".py", "w") as f:
+                        new_lines =''
+                        for line in lines:
+                            if 'endpoint_name' in str(line):
+                                new_lines+=""+"\n"
+                            else:
+                                new_lines+=line
+                            
+                        f.write(new_lines)
+                    f.close()
+
+            return redirect("adminclient:entry_types")
+    template = "general_configuration/entry_types.html"
     return render(request, template, context)
