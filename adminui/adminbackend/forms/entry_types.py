@@ -39,29 +39,21 @@ def get_entry_types(entry_type):
                     active_entry_type=entry_type
                     active_endpoint_name=placeholder
             elif 'analysis_lookup' in str(line):
-                if 'True' in str(line):
-                    lookups.append('analysis')
+                lookups.append('analysis')
             elif 'biosample_lookup' in str(line):
-                if 'True' in str(line):
-                    lookups.append('biosample')
+                lookups.append('biosample')
             elif 'cohort_lookup' in str(line):
-                if 'True' in str(line):
-                    lookups.append('cohort')
+                lookups.append('cohort')
             elif 'dataset_lookup' in str(line):
-                if 'True' in str(line):
-                    lookups.append('dataset')
+                lookups.append('dataset')
             elif 'genomicVariant_lookup' in str(line):
-                if 'True' in str(line):
-                    lookups.append('genomicVariant')
+                lookups.append('genomicVariant')
             elif 'individual_lookup' in str(line):
-                if 'True' in str(line):
-                    lookups.append('individual')
+                lookups.append('individual')
             elif 'run_lookup' in str(line):
-                if 'True' in str(line):
-                    lookups.append('run')
+                lookups.append('run')
             elif 'singleEntryUrl' in str(line):
-                if 'True' in str(line):
-                    lookups.append(entry_type)
+                lookups.append(entry_type)
     return active_entry_type, active_endpoint_name, lookups
 
 def generate_endpoints(choices, first_endpoint_name,second_endpoint_name,second_entry_type, lookups):
@@ -291,6 +283,7 @@ class EntryTypesForm(forms.Form):
                     placeholder = formatting_field(line)
                     if placeholder == 'True':
                         run_initial_choices.append(self.initial['RunEndpointName']+"/{id}")
+        
         for endpoint in endpoint_names:
             if endpoint == analysis_endpoint_name:
                 analysis_initial_choices=initialize_lookup_endpoints('analysis',entry_types,analysis_endpoint_name,analysis_endpoint_name,biosample_endpoint_name,cohort_endpoint_name,dataset_endpoint_name, genomicVariant_endpoint_name, individual_endpoint_name, run_endpoint_name,analysis_initial_choices)
@@ -313,6 +306,7 @@ class EntryTypesForm(forms.Form):
             elif endpoint == run_endpoint_name:
                 run_initial_choices=initialize_lookup_endpoints('run',entry_types,run_endpoint_name,analysis_endpoint_name,biosample_endpoint_name,cohort_endpoint_name,dataset_endpoint_name, genomicVariant_endpoint_name, individual_endpoint_name, run_endpoint_name,run_initial_choices)
                 self.initial['RunEndpoints'] = run_initial_choices
+
     def clean(self):
         cleaned_data = super(EntryTypesForm, self).clean()
         analysis = cleaned_data.get("Analysis")

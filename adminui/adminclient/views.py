@@ -80,15 +80,21 @@ def entry_types(request):
         form = EntryTypesForm(request.POST)
         if form.is_valid():
             analysis=form.cleaned_data['Analysis']
+            analysis_endpoint_name = form.cleaned_data['AnalysisEndpointName']
             biosample=form.cleaned_data['Biosample']
+            biosample_endpoint_name = form.cleaned_data['BiosampleEndpointName']
             cohort=form.cleaned_data['Cohort']
+            cohort_endpoint_name = form.cleaned_data['CohortEndpointName']
             dataset=form.cleaned_data['Dataset']
+            dataset_endpoint_name = form.cleaned_data['DatasetEndpointName']
             genomicVariant=form.cleaned_data['GenomicVariant']
+            genomicVariant_endpoint_name = form.cleaned_data['GenomicVariantEndpointName']
             individual=form.cleaned_data['Individual']
+            individual_endpoint_name = form.cleaned_data['IndividualEndpointName']
             run=form.cleaned_data['Run']
+            run_endpoint_name = form.cleaned_data['RunEndpointName']
             if analysis != None:
                 analysis_endpoints=form.cleaned_data['AnalysisEndpoints']
-                analysis_endpoint_name = form.cleaned_data['AnalysisEndpointName']
                 analysis_non_filtered = form.cleaned_data['AnalysisNonFiltered']
                 with open("adminui/beacon/conf/" + 'analysis' + ".py") as f:
                     lines = f.readlines()
@@ -105,26 +111,105 @@ def entry_types(request):
                                 new_line=line.replace("False",str(analysis_non_filtered))
                                 new_lines+=new_line
                         elif 'singleEntryUrl' in str(line):
-                            if analysis_endpoint_name + '/{id}' in analysis_endpoints:
+                            endpoint_to_look=analysis_endpoint_name + '/{id}'
+                            if endpoint_to_look in analysis_endpoints:
                                 if 'False' in str(line):
                                     new_line=line.replace("False","True")
                                     new_lines+=new_line
+                                else:
+                                    new_lines+=line
                             else:
                                 if 'True' in str(line):
                                     new_line=line.replace("True","False")
                                     new_lines+=new_line
-                        elif 'singleEntryUrl' in str(line):
-                            if analysis_endpoint_name + '/{id}' in analysis_endpoints:
+                                else:
+                                    new_lines+=line
+                        elif 'biosample_lookup' in str(line):
+                            endpoint_to_look=analysis_endpoint_name + '/{id}/'+biosample_endpoint_name
+                            if endpoint_to_look in analysis_endpoints:
                                 if 'False' in str(line):
                                     new_line=line.replace("False","True")
                                     new_lines+=new_line
+                                else:
+                                    new_lines+=line
                             else:
                                 if 'True' in str(line):
                                     new_line=line.replace("True","False")
                                     new_lines+=new_line
+                                else:
+                                    new_lines+=line
+                        elif 'cohort_lookup' in str(line):
+                            endpoint_to_look=analysis_endpoint_name + '/{id}/'+cohort_endpoint_name
+                            if endpoint_to_look in analysis_endpoints:
+                                if 'False' in str(line):
+                                    new_line=line.replace("False","True")
+                                    new_lines+=new_line
+                                else:
+                                    new_lines+=line
+                            else:
+                                if 'True' in str(line):
+                                    new_line=line.replace("True","False")
+                                    new_lines+=new_line
+                                else:
+                                    new_lines+=line
+                        elif 'dataset_lookup' in str(line):
+                            endpoint_to_look = analysis_endpoint_name + '/{id}/'+dataset_endpoint_name
+                            if endpoint_to_look in analysis_endpoints:
+                                if 'False' in str(line):
+                                    new_line=line.replace("False","True")
+                                    new_lines+=new_line
+                                else:
+                                    new_lines+=line
+                            else:
+                                if 'True' in str(line):
+                                    new_line=line.replace("True","False")
+                                    new_lines+=new_line
+                                else:
+                                    new_lines+=line
+                        elif 'genomicVariant_lookup' in str(line):
+                            endpoint_to_look=analysis_endpoint_name + '/{id}/'+genomicVariant_endpoint_name
+                            if endpoint_to_look in analysis_endpoints:
+                                if 'False' in str(line):
+                                    new_line=line.replace("False","True")
+                                    new_lines+=new_line
+                                else:
+                                    new_lines+=line
+                            else:
+                                if 'True' in str(line):
+                                    new_line=line.replace("True","False")
+                                    new_lines+=new_line
+                                else:
+                                    new_lines+=line
+                        elif 'individual_lookup' in str(line):
+                            endpoint_to_look=analysis_endpoint_name + '/{id}/'+individual_endpoint_name
+                            if endpoint_to_look in analysis_endpoints:
+                                if 'False' in str(line):
+                                    new_line=line.replace("False","True")
+                                    new_lines+=new_line
+                                else:
+                                    new_lines+=line
+                            else:
+                                if 'True' in str(line):
+                                    new_line=line.replace("True","False")
+                                    new_lines+=new_line
+                                else:
+                                    new_lines+=line
+                        elif 'run_lookup' in str(line):
+                            endpoint_to_look=analysis_endpoint_name + '/{id}/'+run_endpoint_name
+                            if endpoint_to_look in analysis_endpoints:
+                                if 'False' in str(line):
+                                    new_line=line.replace("False","True")
+                                    new_lines+=new_line
+                                else:
+                                    new_lines+=line
+                            else:
+                                if 'True' in str(line):
+                                    new_line=line.replace("True","False")
+                                    new_lines+=new_line
+                                else:
+                                    new_lines+=line
                         else:
                             new_lines+=line
-                        
                     f.write(new_lines)
                 f.close()
 
