@@ -74,28 +74,65 @@ def default_view(request):
     return render(request, template, context)
 
 def entry_types(request):
-    entry_types_list=['analysis', 'biosample', 'cohort', 'dataset', 'genomicVariant', 'individual', 'run']
     form =EntryTypesForm()
     context = {'form': form}
     if request.method == 'POST':
         form = EntryTypesForm(request.POST)
         if form.is_valid():
-            entryTypes = form.cleaned_data['EntryTypes']
-            for entry_type in entry_types_list:
-                if entry_type not in entryTypes:
-                    with open("adminui/beacon/conf/" + entry_type + ".py") as f:
-                        lines = f.readlines()
-                    with open("adminui/beacon/conf/"+ entry_type + ".py", "w") as f:
-                        new_lines =''
-                        for line in lines:
-                            if 'endpoint_name' in str(line):
-                                new_lines+=""+"\n"
+            analysis=form.cleaned_data['Analysis']
+            biosample=form.cleaned_data['Biosample']
+            cohort=form.cleaned_data['Cohort']
+            dataset=form.cleaned_data['Dataset']
+            genomicVariant=form.cleaned_data['GenomicVariant']
+            individual=form.cleaned_data['Individual']
+            run=form.cleaned_data['Run']
+            if analysis != None:
+                analysis_endpoints=form.cleaned_data['AnalysisEndpoints']
+                analysis_endpoint_name = form.cleaned_data['AnalysisEndpointName']
+                analysis_non_filtered = form.cleaned_data['AnalysisNonFiltered']
+                with open("adminui/beacon/conf/" + 'analysis' + ".py") as f:
+                    lines = f.readlines()
+                with open("adminui/beacon/conf/"+ 'analysis' + ".py", "w") as f:
+                    new_lines =''
+                    for line in lines:
+                        if 'endpoint_name' in str(line):
+                            new_lines+="endpoint_name="+'"'+analysis_endpoint_name+'"'+"\n"
+                        elif 'allow_queries_without_filters' in str(line):
+                            if "True" in str(line):
+                                new_line=line.replace("True",str(analysis_non_filtered))
+                                new_lines+=new_line
+                            elif "False" in str(line):
+                                new_line=line.replace("False",str(analysis_non_filtered))
+                                new_lines+=new_line
+                        elif 'singleEntryUrl' in str(line):
+                            if analysis_endpoint_name + '/{id}' in analysis_endpoints:
+                                if 'False' in str(line):
+                                    new_line=line.replace("False","True")
+                                    new_lines+=new_line
                             else:
-                                new_lines+=line
-                            
-                        f.write(new_lines)
-                    f.close()
+                                if 'True' in str(line):
+                                    new_line=line.replace("True","False")
+                                    new_lines+=new_line
+                        elif 'singleEntryUrl' in str(line):
+                            if analysis_endpoint_name + '/{id}' in analysis_endpoints:
+                                if 'False' in str(line):
+                                    new_line=line.replace("False","True")
+                                    new_lines+=new_line
+                            else:
+                                if 'True' in str(line):
+                                    new_line=line.replace("True","False")
+                                    new_lines+=new_line
+                        else:
+                            new_lines+=line
+                        
+                    f.write(new_lines)
+                f.close()
 
+
+        
             return redirect("adminclient:entry_types")
+        else:
+            context = {'form': form}
+            
     template = "general_configuration/entry_types.html"
     return render(request, template, context)
