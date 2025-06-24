@@ -830,7 +830,7 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, col
                 elif len(filter.value)==2:
                     dict_regex['$regex']='^NC_0000'+filter.value+'.'+'10:g'+'|'+'^NC_0000'+filter.value+'.'+'11:g'+'|'+'^NC_0000'+filter.value+'.'+'9:g'
                 else:
-                    dict_regex['$regex']='^NC_00000'+filter.value+'.'+'10:g'+'|'+'^NC_00000'+filter.value+'.'+'11:g'+'|'+'^NC_00000'+filter.value+'.'+'9:g'
+                    dict_regex['$regex']='^NC_0000'+filter.value+'.'+'10:g'+'|'+'^NC_0000'+filter.value+'.'+'11:g'+'|'+'^NC_0000'+filter.value+'.'+'9:g'+'^NC_00000'+filter.value+'.'+'10:g'+'|'+'^NC_00000'+filter.value+'.'+'11:g'+'|'+'^NC_00000'+filter.value+'.'+'9:g'
             elif '&gt;' in filter.value:# pragma: no cover
                 newvalue=filter.value.replace("&gt;",">")
                 dict_regex=newvalue
