@@ -5,9 +5,8 @@ import json
 import unittest
 import beacon.conf.conf as conf
 from beacon.request.classes import ErrorClass
-from beacon.permissions.tests import TestAuthZ
-from beacon.validator.tests import TestValidator
-from beacon.auth.tests import TestAuthN
+#from beacon.permissions.tests import TestAuthZ
+#from beacon.auth.tests import TestAuthN
 #from beacon.request.tests import TestRequest
 from beacon.logs.logs import LOG
 from beacon.connections.mongo.filters import cross_query
@@ -207,7 +206,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_slash_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_slash_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"")
@@ -217,7 +216,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_post_slash_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_post_slash_endpoint_is_working():
                 resp = await client.post(conf.uri_subpath+"")
@@ -227,7 +226,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_info_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_info_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/info")
@@ -237,7 +236,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_post_info_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_post_info_endpoint_is_working():
                 resp = await client.post(conf.uri_subpath+"/info")
@@ -247,7 +246,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_service_info_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_service_info_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/service-info")
@@ -257,7 +256,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_post_service_info_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_post_service_info_endpoint_is_working():
                 resp = await client.post(conf.uri_subpath+"/service-info")
@@ -267,7 +266,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_entry_types_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_entry_types_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/entry_types")
@@ -277,7 +276,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_post_entry_types_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_post_entry_types_endpoint_is_working():
                 resp = await client.post(conf.uri_subpath+"/entry_types")
@@ -287,7 +286,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_configuration_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_configuration_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/configuration")
@@ -297,7 +296,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_post_configuration_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_post_configuration_endpoint_is_working():
                 resp = await client.post(conf.uri_subpath+"/configuration")
@@ -307,7 +306,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_map_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_map_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/map")
@@ -317,7 +316,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_post_map_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_post_map_endpoint_is_working():
                 resp = await client.post(conf.uri_subpath+"/map")
@@ -327,7 +326,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_filtering_terms_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_filtering_terms_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/filtering_terms")
@@ -337,7 +336,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_post_filtering_terms_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_post_filtering_terms_endpoint_is_working():
                 resp = await client.post(conf.uri_subpath+"/filtering_terms")
@@ -347,7 +346,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_datasets_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_datasets_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+dataset.endpoint_name)
@@ -357,7 +356,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_post_datasets_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_post_datasets_endpoint_is_working():
                 resp = await client.post(conf.uri_subpath+"/"+dataset.endpoint_name)
@@ -367,7 +366,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_g_variants_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name)
@@ -377,7 +376,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_analyses_with_limit_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_analyses_with_limit_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+analysis.endpoint_name+"?limit=200")
@@ -387,7 +386,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_analyses_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_analyses_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+analysis.endpoint_name)
@@ -397,7 +396,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_analyses_with_id_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_analyses_with_id_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+analysis.endpoint_name+"/EGA-testing")
@@ -407,7 +406,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_analyses_g_variants_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_analyses_g_variants_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+analysis.endpoint_name+"/EGA-testing/"+genomicVariant.endpoint_name)
@@ -417,7 +416,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_analyses_runs_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_analyses_runs_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+analysis.endpoint_name+"/EGA-testing/"+run.endpoint_name)
@@ -427,7 +426,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_analyses_individuals_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_analyses_individuals_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+analysis.endpoint_name+"/EGA-testing/"+individual.endpoint_name)
@@ -437,7 +436,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_analyses_biosamples_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_analyses_biosmples_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+analysis.endpoint_name+"/EGA-testing/"+biosample.endpoint_name)
@@ -447,7 +446,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_biosamples_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_biosamples_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+biosample.endpoint_name)
@@ -457,7 +456,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_biosamples_with_limit_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_biosamples_with_limit_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+biosample.endpoint_name+"?limit=200")
@@ -467,7 +466,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_biosamples_with_id_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_biosamples_with_id_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+biosample.endpoint_name+"/SAMPLE3")
@@ -477,7 +476,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_biosamples_g_variants_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_biosamples_g_variants_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+biosample.endpoint_name+"/SAMPLE3/"+genomicVariant.endpoint_name)
@@ -487,7 +486,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_biosamples_runs_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_biosamples_runs_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+biosample.endpoint_name+"/SAMPLE1/"+run.endpoint_name)
@@ -497,7 +496,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_biosamples_analyses_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_biosamples_analyses_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+biosample.endpoint_name+"/SAMPLE1/"+analysis.endpoint_name)
@@ -507,7 +506,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_individuals_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_individuals_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+individual.endpoint_name)
@@ -517,7 +516,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_individuals_with_limit_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_individuals_with_limit_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+individual.endpoint_name+"?limit=200")
@@ -527,7 +526,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_individuals_with_id_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_individuals_with_id_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+individual.endpoint_name+"/SAMPLE2")
@@ -537,7 +536,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_individuals_g_variants_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_individuals_g_variants_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+individual.endpoint_name+"/SAMPLE2/"+genomicVariant.endpoint_name)
@@ -547,7 +546,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_individuals_biosamples_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_individuals_biosamples_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+individual.endpoint_name+"/SAMPLE2/"+biosample.endpoint_name)
@@ -557,7 +556,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_runs_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+run.endpoint_name)
@@ -567,7 +566,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_runs_with_limit_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_with_limit_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+run.endpoint_name+"?limit=200")
@@ -577,7 +576,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_runs_with_id_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_with_id_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+run.endpoint_name+"/EGA-testing")
@@ -587,7 +586,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_runs_g_variants_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_g_variants_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+run.endpoint_name+"/EGA-testing/"+genomicVariant.endpoint_name)
@@ -597,7 +596,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_runs_analyses_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_analyses_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+run.endpoint_name+"/EGA-testing/"+analysis.endpoint_name)
@@ -607,7 +606,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_runs_biosamples_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_biosamples_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+run.endpoint_name+"/EGA-testing/"+biosample.endpoint_name)
@@ -617,7 +616,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_runs_individuals_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_individuals_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+run.endpoint_name+"/EGA-testing/"+individual.endpoint_name)
@@ -627,7 +626,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_cohorts_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_cohorts_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+cohort.endpoint_name)
@@ -637,7 +636,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_cohorts_with_limit_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_cohorts_with_limit_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+cohort.endpoint_name+"?limit=200")
@@ -647,7 +646,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_cohorts_with_id_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_cohorts_with_id_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+cohort.endpoint_name+"/EGA-testing")
@@ -657,7 +656,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_cohorts_runs_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_cohorts_runs_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+cohort.endpoint_name+"/EGA-testing/"+run.endpoint_name)
@@ -667,7 +666,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_cohorts_biosamples_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_cohorts_biosamples_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+cohort.endpoint_name+"/EGA-testing/"+biosample.endpoint_name)
@@ -677,17 +676,18 @@ class TestMain(unittest.TestCase):
     def test_main_check_cohorts_analyses_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_cohorts_analyses_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+cohort.endpoint_name+"/EGA-testing/"+analysis.endpoint_name)
+                text = await resp.text()
                 assert resp.status == 200
             loop.run_until_complete(test_check_cohorts_analyses_endpoint_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_cohorts_individuals_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_cohorts_inividuals_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+cohort.endpoint_name+"/EGA-testing/"+individual.endpoint_name)
@@ -697,7 +697,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_cohorts_g_variants_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_cohorts_g_variants_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+cohort.endpoint_name+"/EGA-testing/"+genomicVariant.endpoint_name)
@@ -707,7 +707,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_datasets_with_limit_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_datasets_with_limit_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+dataset.endpoint_name+"?limit=200")
@@ -717,7 +717,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_datasets_with_id_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_datasets_with_id_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+dataset.endpoint_name+"/test")
@@ -727,7 +727,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_datasets_runs_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_datasets_runs_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+dataset.endpoint_name+"/test/"+run.endpoint_name)
@@ -737,7 +737,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_datasets_g_variants_2_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_datasets_g_variants_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+dataset.endpoint_name+"/test/"+genomicVariant.endpoint_name)
@@ -747,7 +747,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_datasets_biosamples_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_datasets_biosamples_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+dataset.endpoint_name+"/test/"+biosample.endpoint_name)
@@ -757,7 +757,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_datasets_analyses_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_datasets_analyses_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+dataset.endpoint_name+"/test/"+analysis.endpoint_name)
@@ -767,7 +767,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_datasets_individuals_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_datasets_inividuals_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+dataset.endpoint_name+"/test/"+individual.endpoint_name)
@@ -777,7 +777,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_g_variants_with_limit_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_with_limit_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?limit=200")
@@ -787,7 +787,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_g_variants_with_id_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_with_id_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/96c010bc-1449-11f0-83f8-0242ac120003:G:A")
@@ -800,7 +800,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_g_variants_runs_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_runs_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/96c010bc-1449-11f0-83f8-0242ac120003:G:A/"+run.endpoint_name)
@@ -813,7 +813,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_g_variants_biosamples_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_biosamples_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/96c010bc-1449-11f0-83f8-0242ac120003:G:A/"+biosample.endpoint_name)
@@ -826,7 +826,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_g_variants_analyses_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_analyses_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/96c010bc-1449-11f0-83f8-0242ac120003:G:A/"+analysis.endpoint_name)
@@ -839,7 +839,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_g_variants_individuals_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_inividuals_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/96c010bc-1449-11f0-83f8-0242ac120003:G:A/"+individual.endpoint_name)
@@ -852,7 +852,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_g_variants_endpoint_NONE_resultSetResponse_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_NONE_resultSetResponse_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?includeResultsetResponses=NONE")
@@ -862,7 +862,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_g_variants_endpoint_MISS_resultSetResponse_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_MISS_resultSetResponse_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?includeResultsetResponses=MISS")
@@ -872,7 +872,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_g_variants_endpoint_ALL_resultSetResponse_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_ALL_resultSetResponse_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?includeResultsetResponses=ALL")
@@ -882,7 +882,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_g_variants_sequence_query(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=43045703&referenceName=17&assemblyId=GRCh38&referenceBases=G&alternateBases=A")
@@ -892,7 +892,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_g_variants_range_query(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=345675&referenceName=2&assemblyId=GRCh37&end=345681")
@@ -905,7 +905,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_g_variants_geneId_query(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?geneId=BRCA1")
@@ -915,7 +915,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_g_variants_bracket_query(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=43045703,43045704&end=43045704,43045705&referenceName=17&assemblyId=GRCh38")
@@ -925,7 +925,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_g_variants_genomic_allele_query(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?genomicAlleleShortForm=NC_000008.10:g.467881AGCAG>A")
@@ -938,7 +938,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_g_variants_aminoacidChange_query(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?aminoacidChange=Pro1856Ser&geneId=BRCA1")
@@ -951,7 +951,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_post_cross_query_individuals_g_variants_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_post_cross_query_g_variants_individuals_is_working():
                 resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name, json={"meta": {
@@ -975,7 +975,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_post_cross_query_individuals_biosamples_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_post_cross_query_biosamples_individuals_is_working():
                 resp = await client.post(conf.uri_subpath+"/"+biosample.endpoint_name, json={"meta": {
@@ -1002,7 +1002,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_request_parameters_fail(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_request_parameters_fail():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?star=12448")
@@ -1012,7 +1012,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_wrong_combination_request_parameters(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_wrong_combination_request_parameters():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=12448")
@@ -1022,7 +1022,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_datasets_g_variants_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_datasets_g_variants_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?datasets=test")
@@ -1032,7 +1032,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_cross_query_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_cross_query_is_working():
                 MagicClass = MagicMock(_id='hohoho')
@@ -1043,7 +1043,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_cross_query_3_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_cross_query_3_is_working():
                 MagicClass = MagicMock(_id='hohoho')
@@ -1054,7 +1054,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_cross_query_7_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_cross_query_7_is_working():
                 MagicClass = MagicMock(_id='hohoho')
@@ -1065,7 +1065,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_cross_query_8_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_cross_query_8_is_working():
                 MagicClass = MagicMock(_id='hohoho')
@@ -1076,7 +1076,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_cross_query_9_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_cross_query_9_is_working():
                 MagicClass = MagicMock(_id='hohoho')
@@ -1087,7 +1087,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_alphanumeric_equal_query_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_alphanumeric_equal_query_is_working():
                 resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
@@ -1116,7 +1116,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_alphanumeric_like_query_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_alphanumeric_like_query_is_working():
                 resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
@@ -1146,7 +1146,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_alphanumeric_not_like_query_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_alphanumeric_not_like_query_is_working():
                 resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
@@ -1175,7 +1175,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_alphanumeric_not_query_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_alphanumeric_not_query_is_working():
                 resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
@@ -1204,7 +1204,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_iso8601duration_gt_query_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_iso8601duration_gt_query_is_working():
                 resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
@@ -1233,7 +1233,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_iso8601duration_ls_query_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_iso8601duration_ls_query_is_working():
                 resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
@@ -1262,7 +1262,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_iso8601duration_eq_query_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_iso8601duration_eq_query_is_working():
                 resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
@@ -1290,7 +1290,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_measurement_value_query_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_measurement_value_query_is_working():
                 resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
@@ -1322,7 +1322,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_custom_query_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_custom_query_is_working():
                 resp = await client.post(conf.uri_subpath+"/"+biosample.endpoint_name, json={
@@ -1353,7 +1353,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_range_query_with_variant_min_and_max_lengths_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_range_query_with_variant_min_and_max_lengths_working():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=345675&referenceName=2&assemblyId=GRCh38&end=345681&variantMinLength=0&variantMaxLength=10&testMode=true")
@@ -1363,7 +1363,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_filters_as_request_parameter_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_filters_as_request_parameter_working():
                 resp = await client.get(conf.uri_subpath+"/"+individual.endpoint_name+"?filters=NCIT:C16576&testMode=true")
@@ -1373,7 +1373,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_datasets_list_query_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_datasets_list_query_is_working():
                 resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
@@ -1401,7 +1401,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_range_query_with_variant_assemblyId_GRCh38_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_range_query_with_variant_assemblyId_GRCh38_working():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=16050074&end=16050075&assemblyId=GRCh38&referenceName=22")
@@ -1411,7 +1411,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_range_query_with_variant_assemblyId_GRCh37_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_range_query_with_variant_assemblyId_GRCh37_working():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=16050074&end=16050075&assemblyId=GRCh37&referenceName=22")
@@ -1421,7 +1421,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_range_query_with_variant_assemblyId_NCBI36_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_range_query_with_variant_assemblyId_NCBI36_working():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=16050074&end=16050075&assemblyId=NCBI36&referenceName=22")
@@ -1431,7 +1431,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_NONE_count_query_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_NONE_count_query_is_working():
                 resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
@@ -1461,7 +1461,7 @@ class TestMain(unittest.TestCase):
     def test_individuals_variants_with_heterozygosity(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_heterozygosity():
                 resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/96c1004e-1449-11f0-83f8-0242ac120003:G:ATG/"+individual.endpoint_name, json={
@@ -1490,7 +1490,7 @@ class TestMain(unittest.TestCase):
     def test_individuals_variants_with_homozygosity(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_homozygosity():
                 resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/96c0d754-1449-11f0-83f8-0242ac120003:T:TGCAAATGCAAATGCAAATGCAAA/"+individual.endpoint_name, json={
@@ -1516,7 +1516,7 @@ class TestMain(unittest.TestCase):
     def test_individuals_variants_with_filter(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_individuals_variants():
                 resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/96c1004e-1449-11f0-83f8-0242ac120003:G:ATG/"+individual.endpoint_name, json={
@@ -1542,7 +1542,7 @@ class TestMain(unittest.TestCase):
     def test_analyses_variants_with_heterozygosity(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_heterozygosity():
                 resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/96c1004e-1449-11f0-83f8-0242ac120003:G:ATG/"+analysis.endpoint_name+"", json={
@@ -1568,7 +1568,7 @@ class TestMain(unittest.TestCase):
     def test_analyses_variants_with_homozygosity(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_homozygosity():
                 resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/96c0d754-1449-11f0-83f8-0242ac120003:T:TGCAAATGCAAATGCAAATGCAAA/"+analysis.endpoint_name+"", json={
@@ -1594,7 +1594,7 @@ class TestMain(unittest.TestCase):
     def test_analyses_variants_with_filter(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_analyses_variants():
                 resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/96c1004e-1449-11f0-83f8-0242ac120003:G:ATG/"+analysis.endpoint_name+"", json={
@@ -1620,7 +1620,7 @@ class TestMain(unittest.TestCase):
     def test_biosamples_variants_with_heterozygosity(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_heterozygosity():
                 resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/96c1004e-1449-11f0-83f8-0242ac120003:G:ATG/"+biosample.endpoint_name, json={
@@ -1646,7 +1646,7 @@ class TestMain(unittest.TestCase):
     def test_biosamples_variants_with_homozygosity(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_homozygosity():
                 resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/96c0d754-1449-11f0-83f8-0242ac120003:T:TGCAAATGCAAATGCAAATGCAAA/"+biosample.endpoint_name, json={
@@ -1672,7 +1672,7 @@ class TestMain(unittest.TestCase):
     def test_biosamples_variants_with_filter(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_biosamples_variants():
                 resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/96c37518-1449-11f0-83f8-0242ac120003:AGCAG:A/"+biosample.endpoint_name, json={
@@ -1698,7 +1698,7 @@ class TestMain(unittest.TestCase):
     def test_runs_variants_with_heterozygosity(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_heterozygosity():
                 resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/96c1004e-1449-11f0-83f8-0242ac120003:G:ATG/"+run.endpoint_name, json={
@@ -1724,7 +1724,7 @@ class TestMain(unittest.TestCase):
     def test_runs_variants_with_homozygosity(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_homozygosity():
                 resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/96c0d754-1449-11f0-83f8-0242ac120003:T:TGCAAATGCAAATGCAAATGCAAA/"+run.endpoint_name, json={
@@ -1750,8 +1750,7 @@ class TestMain(unittest.TestCase):
     def test_runs_variants_with_filter(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
-            conf.uri='http://127.0.0.1:36375'
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
                 resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/96c1004e-1449-11f0-83f8-0242ac120003:G:ATG/"+run.endpoint_name, json={
@@ -1774,10 +1773,11 @@ class TestMain(unittest.TestCase):
                 assert resp.status == 200
             loop.run_until_complete(test_check_runs_variants())
             loop.run_until_complete(client.close())
+    '''
     def test_individuals_with_variant_filter(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_individuals_variants():
                 resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
@@ -1803,7 +1803,7 @@ class TestMain(unittest.TestCase):
     def test_biosamples_with_variant_filter(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_biosamples_variants():
                 resp = await client.post(conf.uri_subpath+"/"+biosample.endpoint_name, json={
@@ -1829,7 +1829,7 @@ class TestMain(unittest.TestCase):
     def test_analyses_with_variant_filter(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_analyses_variants():
                 resp = await client.post(conf.uri_subpath+"/"+analysis.endpoint_name+"", json={
@@ -1855,7 +1855,7 @@ class TestMain(unittest.TestCase):
     def test_runs_with_variant_filter(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
                 resp = await client.post(conf.uri_subpath+"/"+run.endpoint_name, json={
@@ -1878,10 +1878,11 @@ class TestMain(unittest.TestCase):
                 assert resp.status == 200
             loop.run_until_complete(test_check_runs_variants())
             loop.run_until_complete(client.close())
+    '''
     def test_variants_with_run_filter(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
                 resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name, json={
@@ -1906,7 +1907,7 @@ class TestMain(unittest.TestCase):
     def test_individuals_with_run_filter(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
                 resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
@@ -1932,7 +1933,7 @@ class TestMain(unittest.TestCase):
     def test_analyses_with_run_filter(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
                 resp = await client.post(conf.uri_subpath+"/"+analysis.endpoint_name+"", json={
@@ -1958,7 +1959,7 @@ class TestMain(unittest.TestCase):
     def test_biosamples_with_run_filter(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
                 resp = await client.post(conf.uri_subpath+"/"+biosample.endpoint_name, json={
@@ -1984,7 +1985,7 @@ class TestMain(unittest.TestCase):
     def test_variants_with_biosample_filter(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
                 resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name, json={
@@ -2010,7 +2011,7 @@ class TestMain(unittest.TestCase):
     def test_individuals_with_biosample_filter(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
                 resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
@@ -2036,7 +2037,7 @@ class TestMain(unittest.TestCase):
     def test_analyses_with_biosample_filter(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
                 resp = await client.post(conf.uri_subpath+"/"+analysis.endpoint_name+"", json={
@@ -2062,7 +2063,7 @@ class TestMain(unittest.TestCase):
     def test_runs_with_biosample_filter(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
                 resp = await client.post(conf.uri_subpath+"/"+run.endpoint_name, json={
@@ -2088,7 +2089,7 @@ class TestMain(unittest.TestCase):
     def test_individuals_with_request_parameters(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
                 resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
@@ -2119,7 +2120,7 @@ class TestMain(unittest.TestCase):
     def test_biosamples_with_request_parameters(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
                 resp = await client.post(conf.uri_subpath+"/"+biosample.endpoint_name, json={
@@ -2150,7 +2151,7 @@ class TestMain(unittest.TestCase):
     def test_analyses_with_request_parameters(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
                 resp = await client.post(conf.uri_subpath+"/"+analysis.endpoint_name+"", json={
@@ -2178,10 +2179,11 @@ class TestMain(unittest.TestCase):
                 assert resp.status == 200
             loop.run_until_complete(test_check_runs_variants())
             loop.run_until_complete(client.close())
+    '''
     def test_variants_with_request_parameters_and_filters(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
                 resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name, json={
@@ -2210,10 +2212,11 @@ class TestMain(unittest.TestCase):
                 assert resp.status == 200
             loop.run_until_complete(test_check_runs_variants())
             loop.run_until_complete(client.close())
+    '''
     def test_main_check_g_variants_sequence_query_fails(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=43045703&referenceName=17&referenceBases=G&alternateBases=A")
@@ -2223,7 +2226,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_g_variants_range_query_fails(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=345675&referenceName=2&end=345681")
@@ -2233,7 +2236,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_g_variants_bracket_query_fails(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=43045703,43045704&end=43045704,43045705&referenceName=17")
@@ -2243,7 +2246,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_test_mode_fails(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=43045703,43045704&end=43045704,43045705&referenceName=17&assemblyId=GRCh38&testMode=3")
@@ -2253,7 +2256,7 @@ class TestMain(unittest.TestCase):
     def test_descendant_terms(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
                 resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
@@ -2279,7 +2282,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_g_variants_range_query_chrX(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=31121923&referenceName=X&assemblyId=GRCh38&end=31121924")
@@ -2289,7 +2292,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_g_variants_range_query_chrY(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=31121923&referenceName=Y&assemblyId=GRCh38&end=31121924")
@@ -2299,7 +2302,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_limit_query_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_limit_query_is_working():
                 resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
@@ -2329,7 +2332,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_record_resultSet_query_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_record_resultSet_query_is_working():
                 resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
@@ -2359,7 +2362,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_count_resultSet_query_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_count_resultSet_query_is_working():
                 resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
@@ -2391,7 +2394,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_boolean_resultSet_query_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_boolean_resultSet_query_is_working():
                 resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
@@ -2423,7 +2426,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_boolean_query_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_boolean_query_is_working():
                 resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
@@ -2455,7 +2458,7 @@ class TestMain(unittest.TestCase):
     def test_main_check_counts_query_is_working(self):
         with loop_context() as loop:
             app = create_app()
-            client = TestClient(TestServer(app, port=36375), loop=loop)
+            client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_counts_query_is_working():
                 resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
