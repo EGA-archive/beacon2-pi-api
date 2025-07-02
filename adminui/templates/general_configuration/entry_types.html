@@ -18,9 +18,14 @@
       <form method="post" onsubmit="openLoader()">
         {% csrf_token %}
           <div>
+            
             {% for f in form %}
-            <p>{{f.help_text|safe}} {{f}} </p>
-            {% endfor %}
+            {% if f.errors %}
+              <p>{{f.help_text|safe}} {{f}} {{f.errors|escape}}</p>
+            {% else %}
+            <p>{{f.help_text|safe}} {{f}}</p>
+            {% endif %}
+            {% endfor %}'
             <span id="actives-label"></span>
           </div>
           <div>

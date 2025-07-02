@@ -90,10 +90,16 @@ def apply_request_parameters(self, query: Dict[str, List[dict]], qparams: Reques
     subquery["$and"] = []
     subqueryor={}
     subqueryor["$or"] = []
+    referencedict={}
+    referencedict["$or"] = []
     startquery={}
     startquery["$and"]=[]
+    startrangequery={}
+    startrangequery["$and"]=[]
     endquery={}
     endquery["$and"]=[]
+    length_query={}
+    length_query["$and"]=[]
     equal=False
     isBracket=False
     for k, v in qparams.query.requestParameters.items():
@@ -121,15 +127,29 @@ def apply_request_parameters(self, query: Dict[str, List[dict]], qparams: Reques
                     startquery["$and"].append(startdictvalue)
             else:
                 startvalue=v
-                if isinstance(endvalue, list):
-                    finalvalue=str(0)+','+str(endvalue[0])
+                if isinstance(startvalue, list):
+                    finalvalue=str(0)+','+str(startvalue[0]-1)
                 else:
-                    finalvalue=str(0)+','+str(endvalue)
+                    finalvalue=str(0)+','+str(startvalue-1)
                 finalvalue = finalvalue.split(',')
                 filters = generate_position_filter_start(self, k, finalvalue)
                 for filter in filters:
                     startdictvalue=apply_alphanumeric_filter(self, {}, filter, collection, dataset, True)
-                    startquery["$and"].append(startdictvalue)            
+                    length_query["$and"].append(startdictvalue)
+                if isinstance(endvalue, list) and isinstance(startvalue, list):
+                    finalvalue=str(startvalue[0])+','+str(endvalue[0])
+                if isinstance(startvalue, list):
+                    finalvalue=str(startvalue[0])+','+str(endvalue[0])
+                elif isinstance(endvalue, list):
+                    finalvalue=str(startvalue)+','+str(endvalue[0])
+                else:
+                    finalvalue=str(startvalue)+','+str(endvalue)
+                finalvalue = finalvalue.split(',')
+                filters = generate_position_filter_start(self, k, finalvalue)
+                for filter in filters:
+                    startdict=apply_alphanumeric_filter(self, {}, filter, collection, dataset, True)
+                    startrangequery["$and"].append(startdict)  
+                subqueryor["$or"].append(startrangequery)            
         elif k == "end":
             if isinstance(v, str):
                 v = v.split(',')
@@ -144,13 +164,31 @@ def apply_request_parameters(self, query: Dict[str, List[dict]], qparams: Reques
                     startquery["$and"].append(enddictvalue)
                 query["$and"].append(startquery)    
             elif isBracket==False:
-                v = str(startvalue[0])+','+str(9999999999)
-                v = v.split(',')
-                filters = generate_position_filter_end(self, k, v)
+                if isinstance(v, list) and isinstance(startvalue, list):
+                    startvalue=startvalue[0]
+                    v = str(v[0])
+                    stage2v = str(startvalue)+','+v
+                elif isinstance(v, list):
+                    v = str(v[0])
+                    stage2v = str(startvalue)+','+v
+                elif isinstance(startvalue, list):
+                    startvalue=startvalue[0]
+                    stage2v = str(startvalue)+','+str(v)
+                else:
+                    stage2v = str(startvalue)+','+str(v)
+                stage2v = stage2v.split(',')
+                filters = generate_position_filter_end(self, k, stage2v)
                 for filter in filters:
                     enddictvalue=apply_alphanumeric_filter(self, {}, filter, collection, dataset, True)
-                    startquery["$and"].append(enddictvalue)
-                query["$and"].append(startquery)    
+                    endquery["$and"].append(enddictvalue)
+                subqueryor["$or"].append(endquery)
+                stage2v = str(int(v)+1)+','+str(9999999999)
+                stage2v =stage2v.split(',')
+                filters = generate_position_filter_end(self, k, stage2v)
+                for filter in filters:
+                    enddictvalue=apply_alphanumeric_filter(self, {}, filter, collection, dataset, True)
+                    length_query["$and"].append(enddictvalue)    
+                length_query["$and"].append({'length': {'$gte': int(v)-int(startvalue)}}) 
             
             
         elif k == "datasets":
@@ -173,7 +211,7 @@ def apply_request_parameters(self, query: Dict[str, List[dict]], qparams: Reques
                 raise web.HTTPNotFound    
         elif k == "mateName" or k == 'referenceName':
             try:
-                subqueryor["$or"].append(apply_alphanumeric_filter(self, {}, AlphanumericFilter(
+                referencedict["$or"].append(apply_alphanumeric_filter(self, {}, AlphanumericFilter(
                     id=VARIANTS_PROPERTY_MAP[k],
                     value=v
                 ), collection, dataset, True))
@@ -199,9 +237,16 @@ def apply_request_parameters(self, query: Dict[str, List[dict]], qparams: Reques
                 v_dict['id']=id
                 qparams.query.filters.append(v_dict)        
             return query, True
+    if length_query["$and"]!=[]:
+        subqueryor["$or"].append(length_query) 
     try:
         if subqueryor["$or"] != []:
             subquery["$and"].append(subqueryor)
+    except Exception:# pragma: no cover
+        pass
+    try:
+        if referencedict["$or"] != []:
+            query["$and"].append(referencedict)
     except Exception:# pragma: no cover
         pass
     if subquery["$and"] != []:

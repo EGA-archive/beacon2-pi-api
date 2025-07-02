@@ -177,18 +177,16 @@ def set_entry_type(self, request):
             starting_endpoint = len(uri) + len(uri_subpath)
             def_uri = uri + uri_subpath
         if abs_url[:starting_endpoint] != def_uri :
-            ErrorClass.error_code=400
-            if ErrorClass.error_message is None:
-                ErrorClass.error_message='configuration variable uri: {} not the same as where the beacon is hosted'.format(uri)
-            raise web.HTTPBadRequest
+            LOG.warning('configuration variable uri: {} not the same as where the beacon is hosted'.format(uri))
         path_list = abs_url[starting_endpoint:].split('/')
-        if len(path_list) > 3:
-            RequestAttributes.pre_entry_type=path_list[1]
-            RequestAttributes.entry_type=path_list[3]
+        path_list = list(filter(None, path_list))
+        if len(path_list) > 2:
+            RequestAttributes.pre_entry_type=path_list[0]
+            RequestAttributes.entry_type=path_list[2]
             set_entry_type_configuration(self)
             RequestAttributes.entry_id=request.match_info.get('id', None)
         else:
-            RequestAttributes.entry_type=path_list[1]
+            RequestAttributes.entry_type=path_list[0]
             set_entry_type_configuration(self)
             RequestAttributes.entry_id=request.match_info.get('id', None)
     except Exception:
