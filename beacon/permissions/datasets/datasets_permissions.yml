@@ -2,10 +2,28 @@ test:
   public:
     default_entry_types_granularity: record
     entry_types_exceptions:
-      - individual: boolean
+      - individual: record
+
+gnomad_exome_v2.1.1:
+  registered:
+    default_entry_types_granularity: record
+    entry_types_exceptions:
+      - individual: record
+
+gnomad_joint_v4.1:
+  registered:
+    default_entry_types_granularity: record
+    entry_types_exceptions:
+      - individual: record
+
+EGAD00001007774:
+  registered:
+    default_entry_types_granularity: record
+    entry_types_exceptions:
+      - individual: record
 
 CINECA_synthetic_cohort_EUROPE_UK1:
-  public:
+  registered:
     default_entry_types_granularity: count
     entry_types_exceptions:
       - cohort: boolean

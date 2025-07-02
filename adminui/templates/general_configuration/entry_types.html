@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="htmx-config" content='{"selfRequestsOnly":false}'>
+  <title>Admin UI</title>
+  <script type="text/javascript" src="{% static '/adminui/js/htmx.min.js' %}"></script>
+  <link rel="stylesheet" href="media/mystyle.css">
+</head>
+
+<body>
+  <body class="bg-custom-powder-light" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'> <!-- NEW - hx-headers added -->
+
+      <form method="post" onsubmit="openLoader()">
+        {% csrf_token %}
+          <div>
+            
+            {% for f in form %}
+            {% if f.errors %}
+              <p>{{f.help_text|safe}} {{f}} {{f.errors|escape}}</p>
+            {% else %}
+            <p>{{f.help_text|safe}} {{f}}</p>
+            {% endif %}
+            {% endfor %}'
+            <span id="actives-label"></span>
+          </div>
+          <div>
+            <button type="submit" class="btn btn-danger mb-3">Save</button>
+          </div>
+      </form>
+</body>

@@ -34,11 +34,13 @@ def check_configuration():
     elif conf.uri.startswith('https://'):
         pass
     else:
-        raise Exception("The uri of your beacon must start with http protocol.")
-    if conf.uri.endswith('/api/'):
+        raise Exception("The uri of your beacon must start with https protocol.")
+    if conf.uri_subpath.startswith('/'):
         pass
     else:
-        raise Exception("The uri of your beacon must end with /api/, including the final slash after api.")
+        raise Exception("The uri_subpath has to start with slash / or leave it empty")
+    if conf.uri_subpath.endswith('/'):
+        raise Exception("The uri_subpath can't end with trailing slash /, leave it empty if you don't want to add any subpath.")
     if not isinstance(conf.query_budget_amount, int) or conf.query_budget_amount<0:
         raise Exception("The amount of query budget attempts allowed must be a natural number.")
     if not isinstance(conf.query_budget_time_in_seconds, int) or conf.query_budget_time_in_seconds<0:

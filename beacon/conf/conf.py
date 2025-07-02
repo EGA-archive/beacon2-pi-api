@@ -15,7 +15,8 @@ log_file=None
 beacon_id = 'org.ega-archive.beacon-ri-demo'  # ID of the Beacon
 beacon_name = 'Beacon Reference Implementation demo'  # Name of the Beacon service
 api_version = 'v2.0.0' # Version of the Beacon implementation
-uri = 'http://beaconprod:5050/api/'
+uri = 'http://localhost:5050'
+uri_subpath = '/api'
 environment = 'test'
 description = r"This Beacon is based on synthetic data hosted at the <a href='https://ega-archive.org/datasets/EGAD00001003338'>EGA</a>. The dataset contains 2504 samples including genetic data based on 1K Genomes data, and 76 individual attributes and phenotypic data derived from UKBiobank."
 version = api_version_yaml['api_version']
