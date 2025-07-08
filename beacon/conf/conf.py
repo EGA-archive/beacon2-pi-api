@@ -56,3 +56,11 @@ query_budget_time_in_seconds = 20
 query_budget_database = 'mongo'
 query_budget_db_name = 'beacon'
 query_budget_table = 'budget'
+
+
+# Query Rounding
+exclude_start_count=0 # If exclude_start_count is 0, no modification of the count will be applied. If it's different than 0, count will always be this number when count is smaller than this number.
+exclude_end_count=0 # If exclude_end_count is different than 0, then, count will always be shaded between the exclude_start_count and exclude_end_count
+round_to_tenths=False # If true, the rounding will be done to the immediate superior tenth greater than the exclude_start_count or exclude_end_count in case this second one is not 0
+round_to_hundredths=False # If true, the rounding will be done to the immediate superior hundredth greater than the exclude_start_count or exclude_end_count in case this second one is not 0
+imprecise_count=1*1 # Give a math expression as how you want to modify the intial count, e.g. +1, 1*3, 1*2+1000, etc.
