@@ -386,7 +386,15 @@ def build_response_summary_by_dataset(self, datasets, data, dict_counts, qparams
         granularity = qparams.query.requestedGranularity
         for dataset in datasets:
             if dataset.granularity != 'boolean' and RequestAttributes.allowed_granularity != 'boolean' and granularity != 'boolean':
-                count +=dict_counts[dataset.dataset]
+                if conf.imprecise_count !=0:
+                    if dict_counts[dataset.dataset] < conf.imprecise_count:
+                        count+=conf.imprecise_count
+                elif conf.round_to_tens == True:
+                    count+=math.ceil(dict_counts[dataset.dataset] / 10.0) * 10
+                elif conf.round_to_hundreds == True:
+                    count+=math.ceil(dict_counts[dataset.dataset] / 100.0) * 100
+                else:
+                    count +=dict_counts[dataset.dataset]
             else:
                 non_counted+=dict_counts[dataset.dataset]
         if count == 0 and non_counted >0:
