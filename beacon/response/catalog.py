@@ -9,6 +9,7 @@ from beacon.conf import analysis, biosample, cohort, dataset, genomicVariant, in
 from beacon.filtering_terms.resources import resources
 from beacon.utils.handovers import list_of_handovers, list_of_handovers_per_dataset
 import json
+import math
 
 @log_with_args(level)
 def generate_endpoints(self, response_type, key_response):
@@ -19,9 +20,9 @@ def generate_endpoints(self, response_type, key_response):
         response[key_response][analysis.id]=response[key_response]['analysis']
         response[key_response][analysis.id]["entryType"]=analysis.id
         response[key_response][analysis.id]["openAPIEndpointsDefinition"]=analysis.open_api_endpoints_definition
-        response[key_response][analysis.id]["rootUrl"]=conf.uri+analysis.endpoint_name
+        response[key_response][analysis.id]["rootUrl"]=conf.complete_url+'/'+analysis.endpoint_name
         if analysis.singleEntryUrl == True:
-            response[key_response][analysis.id]["singleEntryUrl"]=conf.uri+analysis.endpoint_name+'/{id}'
+            response[key_response][analysis.id]["singleEntryUrl"]=conf.complete_url+'/'+analysis.endpoint_name+'/{id}'
         else:
             del response[key_response][analysis.id]["singleEntryUrl"]
         if analysis.biosample_lookup == True:
@@ -29,44 +30,44 @@ def generate_endpoints(self, response_type, key_response):
             if biosample.id != 'biosample':
                 del response[key_response][analysis.id]["endpoints"]["biosample"]
             response[key_response][analysis.id]["endpoints"][biosample.id]["returnedEntryType"]=biosample.id
-            response[key_response][analysis.id]["endpoints"][biosample.id]["url"]=conf.uri+analysis.endpoint_name+'/{id}/'+biosample.endpoint_name
+            response[key_response][analysis.id]["endpoints"][biosample.id]["url"]=conf.complete_url+'/'+analysis.endpoint_name+'/{id}/'+biosample.endpoint_name
         if analysis.cohort_lookup == True:
             response[key_response][analysis.id]["endpoints"][cohort.id]=response[key_response][analysis.id]["endpoints"]["cohort"]
             if cohort.id != 'cohort':
                 del response[key_response][analysis.id]["endpoints"]["cohort"]
             response[key_response][analysis.id]["endpoints"][cohort.id]["returnedEntryType"]=cohort.id
-            response[key_response][analysis.id]["endpoints"][cohort.id]["url"]=conf.uri+analysis.endpoint_name+'/{id}/'+cohort.endpoint_name
+            response[key_response][analysis.id]["endpoints"][cohort.id]["url"]=conf.complete_url+'/'+analysis.endpoint_name+'/{id}/'+cohort.endpoint_name
         if analysis.dataset_lookup == True:
             response[key_response][analysis.id]["endpoints"][dataset.id]=response[key_response][analysis.id]["endpoints"]["dataset"]
             if dataset.id != 'dataset':
                 del response[key_response][analysis.id]["endpoints"]["dataset"]
             response[key_response][analysis.id]["endpoints"][dataset.id]["returnedEntryType"]=dataset.id
-            response[key_response][analysis.id]["endpoints"][dataset.id]["url"]=conf.uri+analysis.endpoint_name+'/{id}/'+dataset.endpoint_name
+            response[key_response][analysis.id]["endpoints"][dataset.id]["url"]=conf.complete_url+'/'+analysis.endpoint_name+'/{id}/'+dataset.endpoint_name
         if analysis.genomicVariant_lookup == True:
             response[key_response][analysis.id]["endpoints"][genomicVariant.id]=response[key_response][analysis.id]["endpoints"]["genomicVariant"]
             if genomicVariant.id != 'genomicVariant':
                 del response[key_response][analysis.id]["endpoints"]["genomicVariant"]
             response[key_response][analysis.id]["endpoints"][genomicVariant.id]["returnedEntryType"]=genomicVariant.id
-            response[key_response][analysis.id]["endpoints"][genomicVariant.id]["url"]=conf.uri+analysis.endpoint_name+'/{id}/'+genomicVariant.endpoint_name
+            response[key_response][analysis.id]["endpoints"][genomicVariant.id]["url"]=conf.complete_url+'/'+analysis.endpoint_name+'/{id}/'+genomicVariant.endpoint_name
         if analysis.individual_lookup == True:
             response[key_response][analysis.id]["endpoints"][individual.id]=response[key_response][analysis.id]["endpoints"]["individual"]
             if individual.id != 'individual':
                 del response[key_response][analysis.id]["endpoints"]["individual"]
             response[key_response][analysis.id]["endpoints"][individual.id]["returnedEntryType"]=individual.id
-            response[key_response][analysis.id]["endpoints"][individual.id]["url"]=conf.uri+analysis.endpoint_name+'/{id}/'+individual.endpoint_name
+            response[key_response][analysis.id]["endpoints"][individual.id]["url"]=conf.complete_url+'/'+analysis.endpoint_name+'/{id}/'+individual.endpoint_name
         if analysis.run_lookup == True:
             response[key_response][analysis.id]["endpoints"][run.id]=response[key_response][analysis.id]["endpoints"]["run"]
             if run.id != 'run':
                 del response[key_response][analysis.id]["endpoints"]["run"]
             response[key_response][analysis.id]["endpoints"][run.id]["returnedEntryType"]=run.id
-            response[key_response][analysis.id]["endpoints"][run.id]["url"]=conf.uri+analysis.endpoint_name+'/{id}/'+run.endpoint_name
+            response[key_response][analysis.id]["endpoints"][run.id]["url"]=conf.complete_url+'/'+analysis.endpoint_name+'/{id}/'+run.endpoint_name
     if biosample.endpoint_name!='':
         response[key_response][biosample.id]=response[key_response]['biosample']
         response[key_response][biosample.id]["entryType"]=biosample.id
         response[key_response][biosample.id]["openAPIEndpointsDefinition"]=biosample.open_api_endpoints_definition
-        response[key_response][biosample.id]["rootUrl"]=conf.uri+biosample.endpoint_name
+        response[key_response][biosample.id]["rootUrl"]=conf.complete_url+'/'+biosample.endpoint_name
         if biosample.singleEntryUrl == True:
-            response[key_response][biosample.id]["singleEntryUrl"]=conf.uri+biosample.endpoint_name+'/{id}'
+            response[key_response][biosample.id]["singleEntryUrl"]=conf.complete_url+'/'+biosample.endpoint_name+'/{id}'
         else:
             del response[key_response][biosample.id]["singleEntryUrl"]
         if biosample.analysis_lookup == True:
@@ -74,44 +75,44 @@ def generate_endpoints(self, response_type, key_response):
             if analysis.id != 'analysis':
                 del response[key_response][biosample.id]["endpoints"]["analysis"]
             response[key_response][biosample.id]["endpoints"][analysis.id]["returnedEntryType"]=analysis.id
-            response[key_response][biosample.id]["endpoints"][analysis.id]["url"]=conf.uri+biosample.endpoint_name+'/{id}/'+analysis.endpoint_name
+            response[key_response][biosample.id]["endpoints"][analysis.id]["url"]=conf.complete_url+'/'+biosample.endpoint_name+'/{id}/'+analysis.endpoint_name
         if biosample.cohort_lookup == True:
             response[key_response][biosample.id]["endpoints"][cohort.id]=response[key_response][biosample.id]["endpoints"]["cohort"]
             if cohort.id != 'cohort':
                 del response[key_response][biosample.id]["endpoints"]["cohort"]
             response[key_response][biosample.id]["endpoints"][cohort.id]["returnedEntryType"]=cohort.id
-            response[key_response][biosample.id]["endpoints"][cohort.id]["url"]=conf.uri+biosample.endpoint_name+'/{id}/'+cohort.endpoint_name
+            response[key_response][biosample.id]["endpoints"][cohort.id]["url"]=conf.complete_url+'/'+biosample.endpoint_name+'/{id}/'+cohort.endpoint_name
         if biosample.dataset_lookup == True:
             response[key_response][biosample.id]["endpoints"][dataset.id]=response[key_response][biosample.id]["endpoints"]["dataset"]
             if dataset.id != 'dataset':
                 del response[key_response][biosample.id]["endpoints"]["dataset"]
             response[key_response][biosample.id]["endpoints"][dataset.id]["returnedEntryType"]=dataset.id
-            response[key_response][biosample.id]["endpoints"][dataset.id]["url"]=conf.uri+biosample.endpoint_name+'/{id}/'+dataset.endpoint_name
+            response[key_response][biosample.id]["endpoints"][dataset.id]["url"]=conf.complete_url+'/'+biosample.endpoint_name+'/{id}/'+dataset.endpoint_name
         if biosample.genomicVariant_lookup == True:
             response[key_response][biosample.id]["endpoints"][genomicVariant.id]=response[key_response][biosample.id]["endpoints"]["genomicVariant"]
             if genomicVariant.id != 'genomicVariant':
                 del response[key_response][biosample.id]["endpoints"]["genomicVariant"]
             response[key_response][biosample.id]["endpoints"][genomicVariant.id]["returnedEntryType"]=genomicVariant.id
-            response[key_response][biosample.id]["endpoints"][genomicVariant.id]["url"]=conf.uri+biosample.endpoint_name+'/{id}/'+genomicVariant.endpoint_name
+            response[key_response][biosample.id]["endpoints"][genomicVariant.id]["url"]=conf.complete_url+'/'+biosample.endpoint_name+'/{id}/'+genomicVariant.endpoint_name
         if biosample.individual_lookup == True:
             response[key_response][biosample.id]["endpoints"][individual.id]=response[key_response][biosample.id]["endpoints"]["individual"]
             if individual.id != 'individual':
                 del response[key_response][biosample.id]["endpoints"]["individual"]
             response[key_response][biosample.id]["endpoints"][individual.id]["returnedEntryType"]=individual.id
-            response[key_response][biosample.id]["endpoints"][individual.id]["url"]=conf.uri+biosample.endpoint_name+'/{id}/'+individual.endpoint_name
+            response[key_response][biosample.id]["endpoints"][individual.id]["url"]=conf.complete_url+'/'+biosample.endpoint_name+'/{id}/'+individual.endpoint_name
         if biosample.run_lookup == True:
             response[key_response][biosample.id]["endpoints"][run.id]=response[key_response][biosample.id]["endpoints"]["run"]
             if run.id != 'run':
                 del response[key_response][biosample.id]["endpoints"]["run"]
             response[key_response][biosample.id]["endpoints"][run.id]["returnedEntryType"]=run.id
-            response[key_response][biosample.id]["endpoints"][run.id]["url"]=conf.uri+biosample.endpoint_name+'/{id}/'+run.endpoint_name
+            response[key_response][biosample.id]["endpoints"][run.id]["url"]=conf.complete_url+'/'+biosample.endpoint_name+'/{id}/'+run.endpoint_name
     if cohort.endpoint_name!='':
         response[key_response][cohort.id]=response[key_response]['cohort']
         response[key_response][cohort.id]["entryType"]=cohort.id
         response[key_response][cohort.id]["openAPIEndpointsDefinition"]=cohort.open_api_endpoints_definition
-        response[key_response][cohort.id]["rootUrl"]=conf.uri+cohort.endpoint_name
+        response[key_response][cohort.id]["rootUrl"]=conf.complete_url+'/'+cohort.endpoint_name
         if cohort.singleEntryUrl == True:
-            response[key_response][cohort.id]["singleEntryUrl"]=conf.uri+cohort.endpoint_name+'/{id}'
+            response[key_response][cohort.id]["singleEntryUrl"]=conf.complete_url+'/'+cohort.endpoint_name+'/{id}'
         else:
             del response[key_response][cohort.id]["singleEntryUrl"]
         if cohort.analysis_lookup == True:
@@ -119,44 +120,44 @@ def generate_endpoints(self, response_type, key_response):
             if analysis.id != 'analysis':
                 del response[key_response][cohort.id]["endpoints"]["analysis"]
             response[key_response][cohort.id]["endpoints"][analysis.id]["returnedEntryType"]=analysis.id
-            response[key_response][cohort.id]["endpoints"][analysis.id]["url"]=conf.uri+cohort.endpoint_name+'/{id}/'+analysis.endpoint_name
+            response[key_response][cohort.id]["endpoints"][analysis.id]["url"]=conf.complete_url+'/'+cohort.endpoint_name+'/{id}/'+analysis.endpoint_name
         if cohort.biosample_lookup == True:
             response[key_response][cohort.id]["endpoints"][biosample.id]=response[key_response][cohort.id]["endpoints"]["biosample"]
             if biosample.id != 'biosample':
                 del response[key_response][cohort.id]["endpoints"]["biosample"]
             response[key_response][cohort.id]["endpoints"][biosample.id]["returnedEntryType"]=biosample.id
-            response[key_response][cohort.id]["endpoints"][biosample.id]["url"]=conf.uri+cohort.endpoint_name+'/{id}/'+biosample.endpoint_name
+            response[key_response][cohort.id]["endpoints"][biosample.id]["url"]=conf.complete_url+'/'+cohort.endpoint_name+'/{id}/'+biosample.endpoint_name
         if cohort.dataset_lookup == True:
             response[key_response][cohort.id]["endpoints"][dataset.id]=response[key_response][cohort.id]["endpoints"]["dataset"]
             if dataset.id != 'dataset':
                 del response[key_response][cohort.id]["endpoints"]["dataset"]
             response[key_response][cohort.id]["endpoints"][dataset.id]["returnedEntryType"]=dataset.id
-            response[key_response][cohort.id]["endpoints"][dataset.id]["url"]=conf.uri+cohort.endpoint_name+'/{id}/'+dataset.endpoint_name
+            response[key_response][cohort.id]["endpoints"][dataset.id]["url"]=conf.complete_url+'/'+cohort.endpoint_name+'/{id}/'+dataset.endpoint_name
         if cohort.genomicVariant_lookup == True:
             response[key_response][cohort.id]["endpoints"][genomicVariant.id]=response[key_response][cohort.id]["endpoints"]["genomicVariant"]
             if genomicVariant.id != 'genomicVariant':
                 del response[key_response][cohort.id]["endpoints"]["genomicVariant"]
             response[key_response][cohort.id]["endpoints"][genomicVariant.id]["returnedEntryType"]=genomicVariant.id
-            response[key_response][cohort.id]["endpoints"][genomicVariant.id]["url"]=conf.uri+cohort.endpoint_name+'/{id}/'+genomicVariant.endpoint_name
+            response[key_response][cohort.id]["endpoints"][genomicVariant.id]["url"]=conf.complete_url+'/'+cohort.endpoint_name+'/{id}/'+genomicVariant.endpoint_name
         if cohort.individual_lookup == True:
             response[key_response][cohort.id]["endpoints"][individual.id]=response[key_response][cohort.id]["endpoints"]["individual"]
             if individual.id != 'individual':
                 del response[key_response][cohort.id]["endpoints"]["individual"]
             response[key_response][cohort.id]["endpoints"][individual.id]["returnedEntryType"]=individual.id
-            response[key_response][cohort.id]["endpoints"][individual.id]["url"]=conf.uri+cohort.endpoint_name+'/{id}/'+individual.endpoint_name
+            response[key_response][cohort.id]["endpoints"][individual.id]["url"]=conf.complete_url+'/'+cohort.endpoint_name+'/{id}/'+individual.endpoint_name
         if cohort.run_lookup == True:
             response[key_response][cohort.id]["endpoints"][run.id]=response[key_response][cohort.id]["endpoints"]["run"]
             if run.id != 'run':
                 del response[key_response][cohort.id]["endpoints"]["run"]
             response[key_response][cohort.id]["endpoints"][run.id]["returnedEntryType"]=run.id
-            response[key_response][cohort.id]["endpoints"][run.id]["url"]=conf.uri+cohort.endpoint_name+'/{id}/'+run.endpoint_name
+            response[key_response][cohort.id]["endpoints"][run.id]["url"]=conf.complete_url+'/'+cohort.endpoint_name+'/{id}/'+run.endpoint_name
     if dataset.endpoint_name!='':
         response[key_response][dataset.id]=response[key_response]['dataset']
         response[key_response][dataset.id]["entryType"]=dataset.id
         response[key_response][dataset.id]["openAPIEndpointsDefinition"]=dataset.open_api_endpoints_definition
-        response[key_response][dataset.id]["rootUrl"]=conf.uri+dataset.endpoint_name
+        response[key_response][dataset.id]["rootUrl"]=conf.complete_url+'/'+dataset.endpoint_name
         if dataset.singleEntryUrl == True:
-            response[key_response][dataset.id]["singleEntryUrl"]=conf.uri+dataset.endpoint_name+'/{id}'
+            response[key_response][dataset.id]["singleEntryUrl"]=conf.complete_url+'/'+dataset.endpoint_name+'/{id}'
         else:
             del response[key_response][dataset.id]["singleEntryUrl"]
         if dataset.analysis_lookup == True:
@@ -164,44 +165,44 @@ def generate_endpoints(self, response_type, key_response):
             if analysis.id != 'analysis':
                 del response[key_response][dataset.id]["endpoints"]["analysis"]
             response[key_response][dataset.id]["endpoints"][analysis.id]["returnedEntryType"]=analysis.id
-            response[key_response][dataset.id]["endpoints"][analysis.id]["url"]=conf.uri+dataset.endpoint_name+'/{id}/'+analysis.endpoint_name
+            response[key_response][dataset.id]["endpoints"][analysis.id]["url"]=conf.complete_url+'/'+dataset.endpoint_name+'/{id}/'+analysis.endpoint_name
         if dataset.biosample_lookup == True:
             response[key_response][dataset.id]["endpoints"][biosample.id]=response[key_response][dataset.id]["endpoints"]["biosample"]
             if biosample.id != 'biosample':
                 del response[key_response][dataset.id]["endpoints"]["biosample"]
             response[key_response][dataset.id]["endpoints"][biosample.id]["returnedEntryType"]=biosample.id
-            response[key_response][dataset.id]["endpoints"][biosample.id]["url"]=conf.uri+dataset.endpoint_name+'/{id}/'+biosample.endpoint_name
+            response[key_response][dataset.id]["endpoints"][biosample.id]["url"]=conf.complete_url+'/'+dataset.endpoint_name+'/{id}/'+biosample.endpoint_name
         if dataset.cohort_lookup == True:
             response[key_response][dataset.id]["endpoints"][cohort.id]=response[key_response][dataset.id]["endpoints"]["cohort"]
             if cohort.id != 'cohort':
                 del response[key_response][dataset.id]["endpoints"]["dataset"]
             response[key_response][dataset.id]["endpoints"][cohort.id]["returnedEntryType"]=cohort.id
-            response[key_response][dataset.id]["endpoints"][cohort.id]["url"]=conf.uri+dataset.endpoint_name+'/{id}/'+cohort.endpoint_name
+            response[key_response][dataset.id]["endpoints"][cohort.id]["url"]=conf.complete_url+'/'+dataset.endpoint_name+'/{id}/'+cohort.endpoint_name
         if dataset.genomicVariant_lookup == True:
             response[key_response][dataset.id]["endpoints"][genomicVariant.id]=response[key_response][dataset.id]["endpoints"]["genomicVariant"]
             if genomicVariant.id != 'genomicVariant':
                 del response[key_response][dataset.id]["endpoints"]["genomicVariant"]
             response[key_response][dataset.id]["endpoints"][genomicVariant.id]["returnedEntryType"]=genomicVariant.id
-            response[key_response][dataset.id]["endpoints"][genomicVariant.id]["url"]=conf.uri+dataset.endpoint_name+'/{id}/'+genomicVariant.endpoint_name
+            response[key_response][dataset.id]["endpoints"][genomicVariant.id]["url"]=conf.complete_url+'/'+dataset.endpoint_name+'/{id}/'+genomicVariant.endpoint_name
         if dataset.individual_lookup == True:
             response[key_response][dataset.id]["endpoints"][individual.id]=response[key_response][dataset.id]["endpoints"]["individual"]
             if individual.id != 'individual':
                 del response[key_response][dataset.id]["endpoints"]["individual"]
             response[key_response][dataset.id]["endpoints"][individual.id]["returnedEntryType"]=individual.id
-            response[key_response][dataset.id]["endpoints"][individual.id]["url"]=conf.uri+dataset.endpoint_name+'/{id}/'+individual.endpoint_name
+            response[key_response][dataset.id]["endpoints"][individual.id]["url"]=conf.complete_url+'/'+dataset.endpoint_name+'/{id}/'+individual.endpoint_name
         if dataset.run_lookup == True:
             response[key_response][dataset.id]["endpoints"][run.id]=response[key_response][dataset.id]["endpoints"]["run"]
             if run.id != 'run':
                 del response[key_response][dataset.id]["endpoints"]["run"]
             response[key_response][dataset.id]["endpoints"][run.id]["returnedEntryType"]=run.id
-            response[key_response][dataset.id]["endpoints"][run.id]["url"]=conf.uri+dataset.endpoint_name+'/{id}/'+run.endpoint_name
+            response[key_response][dataset.id]["endpoints"][run.id]["url"]=conf.complete_url+'/'+dataset.endpoint_name+'/{id}/'+run.endpoint_name
     if genomicVariant.endpoint_name!='':
         response[key_response][genomicVariant.id]=response[key_response]['genomicVariant']
         response[key_response][genomicVariant.id]["entryType"]=genomicVariant.id
         response[key_response][genomicVariant.id]["openAPIEndpointsDefinition"]=genomicVariant.open_api_endpoints_definition
-        response[key_response][genomicVariant.id]["rootUrl"]=conf.uri+genomicVariant.endpoint_name
+        response[key_response][genomicVariant.id]["rootUrl"]=conf.complete_url+'/'+genomicVariant.endpoint_name
         if genomicVariant.singleEntryUrl == True:
-            response[key_response][genomicVariant.id]["singleEntryUrl"]=conf.uri+genomicVariant.endpoint_name+'/{id}'
+            response[key_response][genomicVariant.id]["singleEntryUrl"]=conf.complete_url+'/'+genomicVariant.endpoint_name+'/{id}'
         else:
             del response[key_response][genomicVariant.id]["singleEntryUrl"]
         if genomicVariant.analysis_lookup == True:
@@ -209,44 +210,44 @@ def generate_endpoints(self, response_type, key_response):
             if analysis.id != 'analysis':
                 del response[key_response][genomicVariant.id]["endpoints"]["analysis"]
             response[key_response][genomicVariant.id]["endpoints"][analysis.id]["returnedEntryType"]=analysis.id
-            response[key_response][genomicVariant.id]["endpoints"][analysis.id]["url"]=conf.uri+genomicVariant.endpoint_name+'/{id}/'+analysis.endpoint_name
+            response[key_response][genomicVariant.id]["endpoints"][analysis.id]["url"]=conf.complete_url+'/'+genomicVariant.endpoint_name+'/{id}/'+analysis.endpoint_name
         if genomicVariant.biosample_lookup == True:
             response[key_response][genomicVariant.id]["endpoints"][biosample.id]=response[key_response][genomicVariant.id]["endpoints"]["biosample"]
             if biosample.id != 'biosample':
                 del response[key_response][genomicVariant.id]["endpoints"]["biosample"]
             response[key_response][genomicVariant.id]["endpoints"][biosample.id]["returnedEntryType"]=biosample.id
-            response[key_response][genomicVariant.id]["endpoints"][biosample.id]["url"]=conf.uri+genomicVariant.endpoint_name+'/{id}/'+biosample.endpoint_name
+            response[key_response][genomicVariant.id]["endpoints"][biosample.id]["url"]=conf.complete_url+'/'+genomicVariant.endpoint_name+'/{id}/'+biosample.endpoint_name
         if genomicVariant.cohort_lookup == True:
             response[key_response][genomicVariant.id]["endpoints"][cohort.id]=response[key_response][genomicVariant.id]["endpoints"]["cohort"]
             if cohort.id != 'cohort':
                 del response[key_response][genomicVariant.id]["endpoints"]["genomicVariant"]
             response[key_response][genomicVariant.id]["endpoints"][cohort.id]["returnedEntryType"]=cohort.id
-            response[key_response][genomicVariant.id]["endpoints"][cohort.id]["url"]=conf.uri+genomicVariant.endpoint_name+'/{id}/'+cohort.endpoint_name
+            response[key_response][genomicVariant.id]["endpoints"][cohort.id]["url"]=conf.complete_url+'/'+genomicVariant.endpoint_name+'/{id}/'+cohort.endpoint_name
         if genomicVariant.dataset_lookup == True:
             response[key_response][genomicVariant.id]["endpoints"][dataset.id]=response[key_response][genomicVariant.id]["endpoints"]["dataset"]
             if dataset.id != 'dataset':
                 del response[key_response][genomicVariant.id]["endpoints"]["dataset"]
             response[key_response][genomicVariant.id]["endpoints"][dataset.id]["returnedEntryType"]=dataset.id
-            response[key_response][genomicVariant.id]["endpoints"][dataset.id]["url"]=conf.uri+genomicVariant.endpoint_name+'/{id}/'+dataset.endpoint_name
+            response[key_response][genomicVariant.id]["endpoints"][dataset.id]["url"]=conf.complete_url+'/'+genomicVariant.endpoint_name+'/{id}/'+dataset.endpoint_name
         if genomicVariant.individual_lookup == True:
             response[key_response][genomicVariant.id]["endpoints"][individual.id]=response[key_response][genomicVariant.id]["endpoints"]["individual"]
             if individual.id != 'individual':
                 del response[key_response][genomicVariant.id]["endpoints"]["individual"]
             response[key_response][genomicVariant.id]["endpoints"][individual.id]["returnedEntryType"]=individual.id
-            response[key_response][genomicVariant.id]["endpoints"][individual.id]["url"]=conf.uri+genomicVariant.endpoint_name+'/{id}/'+individual.endpoint_name
+            response[key_response][genomicVariant.id]["endpoints"][individual.id]["url"]=conf.complete_url+'/'+genomicVariant.endpoint_name+'/{id}/'+individual.endpoint_name
         if genomicVariant.run_lookup == True:
             response[key_response][genomicVariant.id]["endpoints"][run.id]=response[key_response][genomicVariant.id]["endpoints"]["run"]
             if run.id != 'run':
                 del response[key_response][genomicVariant.id]["endpoints"]["run"]
             response[key_response][genomicVariant.id]["endpoints"][run.id]["returnedEntryType"]=run.id
-            response[key_response][genomicVariant.id]["endpoints"][run.id]["url"]=conf.uri+genomicVariant.endpoint_name+'/{id}/'+run.endpoint_name
+            response[key_response][genomicVariant.id]["endpoints"][run.id]["url"]=conf.complete_url+'/'+genomicVariant.endpoint_name+'/{id}/'+run.endpoint_name
     if individual.endpoint_name!='':
         response[key_response][individual.id]=response[key_response]['individual']
         response[key_response][individual.id]["entryType"]=individual.id
         response[key_response][individual.id]["openAPIEndpointsDefinition"]=individual.open_api_endpoints_definition
-        response[key_response][individual.id]["rootUrl"]=conf.uri+individual.endpoint_name
+        response[key_response][individual.id]["rootUrl"]=conf.complete_url+'/'+individual.endpoint_name
         if individual.singleEntryUrl == True:
-            response[key_response][individual.id]["singleEntryUrl"]=conf.uri+individual.endpoint_name+'/{id}'
+            response[key_response][individual.id]["singleEntryUrl"]=conf.complete_url+'/'+individual.endpoint_name+'/{id}'
         else:
             del response[key_response][individual.id]["singleEntryUrl"]
         if individual.analysis_lookup == True:
@@ -254,44 +255,44 @@ def generate_endpoints(self, response_type, key_response):
             if analysis.id != 'analysis':
                 del response[key_response][individual.id]["endpoints"]["analysis"]
             response[key_response][individual.id]["endpoints"][analysis.id]["returnedEntryType"]=analysis.id
-            response[key_response][individual.id]["endpoints"][analysis.id]["url"]=conf.uri+individual.endpoint_name+'/{id}/'+analysis.endpoint_name
+            response[key_response][individual.id]["endpoints"][analysis.id]["url"]=conf.complete_url+'/'+individual.endpoint_name+'/{id}/'+analysis.endpoint_name
         if individual.biosample_lookup == True:
             response[key_response][individual.id]["endpoints"][biosample.id]=response[key_response][individual.id]["endpoints"]["biosample"]
             if biosample.id != 'biosample':
                 del response[key_response][individual.id]["endpoints"]["biosample"]
             response[key_response][individual.id]["endpoints"][biosample.id]["returnedEntryType"]=biosample.id
-            response[key_response][individual.id]["endpoints"][biosample.id]["url"]=conf.uri+individual.endpoint_name+'/{id}/'+biosample.endpoint_name
+            response[key_response][individual.id]["endpoints"][biosample.id]["url"]=conf.complete_url+'/'+individual.endpoint_name+'/{id}/'+biosample.endpoint_name
         if individual.cohort_lookup == True:
             response[key_response][individual.id]["endpoints"][cohort.id]=response[key_response][individual.id]["endpoints"]["cohort"]
             if cohort.id != 'cohort':
                 del response[key_response][individual.id]["endpoints"]["individual"]
             response[key_response][individual.id]["endpoints"][cohort.id]["returnedEntryType"]=cohort.id
-            response[key_response][individual.id]["endpoints"][cohort.id]["url"]=conf.uri+individual.endpoint_name+'/{id}/'+cohort.endpoint_name
+            response[key_response][individual.id]["endpoints"][cohort.id]["url"]=conf.complete_url+'/'+individual.endpoint_name+'/{id}/'+cohort.endpoint_name
         if individual.dataset_lookup == True:
             response[key_response][individual.id]["endpoints"][dataset.id]=response[key_response][individual.id]["endpoints"]["dataset"]
             if dataset.id != 'dataset':
                 del response[key_response][individual.id]["endpoints"]["dataset"]
             response[key_response][individual.id]["endpoints"][dataset.id]["returnedEntryType"]=dataset.id
-            response[key_response][individual.id]["endpoints"][dataset.id]["url"]=conf.uri+individual.endpoint_name+'/{id}/'+dataset.endpoint_name
+            response[key_response][individual.id]["endpoints"][dataset.id]["url"]=conf.complete_url+'/'+individual.endpoint_name+'/{id}/'+dataset.endpoint_name
         if individual.genomicVariant_lookup == True:
             response[key_response][individual.id]["endpoints"][genomicVariant.id]=response[key_response][individual.id]["endpoints"]["genomicVariant"]
             if genomicVariant.id != 'genomicVariant':
                 del response[key_response][individual.id]["endpoints"]["genomicVariant"]
             response[key_response][individual.id]["endpoints"][genomicVariant.id]["returnedEntryType"]=genomicVariant.id
-            response[key_response][individual.id]["endpoints"][genomicVariant.id]["url"]=conf.uri+individual.endpoint_name+'/{id}/'+genomicVariant.endpoint_name
+            response[key_response][individual.id]["endpoints"][genomicVariant.id]["url"]=conf.complete_url+'/'+individual.endpoint_name+'/{id}/'+genomicVariant.endpoint_name
         if individual.run_lookup == True:
             response[key_response][individual.id]["endpoints"][run.id]=response[key_response][individual.id]["endpoints"]["run"]
             if run.id != 'run':
                 del response[key_response][individual.id]["endpoints"]["run"]
             response[key_response][individual.id]["endpoints"][run.id]["returnedEntryType"]=run.id
-            response[key_response][individual.id]["endpoints"][run.id]["url"]=conf.uri+individual.endpoint_name+'/{id}/'+run.endpoint_name
+            response[key_response][individual.id]["endpoints"][run.id]["url"]=conf.complete_url+'/'+individual.endpoint_name+'/{id}/'+run.endpoint_name
     if run.endpoint_name!='':
         response[key_response][run.id]=response[key_response]['run']
         response[key_response][run.id]["entryType"]=run.id
         response[key_response][run.id]["openAPIEndpointsDefinition"]=run.open_api_endpoints_definition
-        response[key_response][run.id]["rootUrl"]=conf.uri+run.endpoint_name
+        response[key_response][run.id]["rootUrl"]=conf.complete_url+'/'+run.endpoint_name
         if run.singleEntryUrl == True:
-            response[key_response][run.id]["singleEntryUrl"]=conf.uri+run.endpoint_name+'/{id}'
+            response[key_response][run.id]["singleEntryUrl"]=conf.complete_url+'/'+run.endpoint_name+'/{id}'
         else:
             del response[key_response][run.id]["singleEntryUrl"]
         if run.analysis_lookup == True:
@@ -299,37 +300,37 @@ def generate_endpoints(self, response_type, key_response):
             if analysis.id != 'analysis':
                 del response[key_response][run.id]["endpoints"]["analysis"]
             response[key_response][run.id]["endpoints"][analysis.id]["returnedEntryType"]=analysis.id
-            response[key_response][run.id]["endpoints"][analysis.id]["url"]=conf.uri+run.endpoint_name+'/{id}/'+analysis.endpoint_name
+            response[key_response][run.id]["endpoints"][analysis.id]["url"]=conf.complete_url+'/'+run.endpoint_name+'/{id}/'+analysis.endpoint_name
         if run.biosample_lookup == True:
             response[key_response][run.id]["endpoints"][biosample.id]=response[key_response][run.id]["endpoints"]["biosample"]
             if biosample.id != 'biosample':
                 del response[key_response][run.id]["endpoints"]["biosample"]
             response[key_response][run.id]["endpoints"][biosample.id]["returnedEntryType"]=biosample.id
-            response[key_response][run.id]["endpoints"][biosample.id]["url"]=conf.uri+run.endpoint_name+'/{id}/'+biosample.endpoint_name
+            response[key_response][run.id]["endpoints"][biosample.id]["url"]=conf.complete_url+'/'+run.endpoint_name+'/{id}/'+biosample.endpoint_name
         if run.cohort_lookup == True:
             response[key_response][run.id]["endpoints"][cohort.id]=response[key_response][run.id]["endpoints"]["cohort"]
             if cohort.id != 'cohort':
                 del response[key_response][run.id]["endpoints"]["run"]
             response[key_response][run.id]["endpoints"][cohort.id]["returnedEntryType"]=cohort.id
-            response[key_response][run.id]["endpoints"][cohort.id]["url"]=conf.uri+run.endpoint_name+'/{id}/'+cohort.endpoint_name
+            response[key_response][run.id]["endpoints"][cohort.id]["url"]=conf.complete_url+'/'+run.endpoint_name+'/{id}/'+cohort.endpoint_name
         if run.dataset_lookup == True:
             response[key_response][run.id]["endpoints"][dataset.id]=response[key_response][run.id]["endpoints"]["dataset"]
             if dataset.id != 'dataset':
                 del response[key_response][run.id]["endpoints"]["dataset"]
             response[key_response][run.id]["endpoints"][dataset.id]["returnedEntryType"]=dataset.id
-            response[key_response][run.id]["endpoints"][dataset.id]["url"]=conf.uri+run.endpoint_name+'/{id}/'+dataset.endpoint_name
+            response[key_response][run.id]["endpoints"][dataset.id]["url"]=conf.complete_url+'/'+run.endpoint_name+'/{id}/'+dataset.endpoint_name
         if run.genomicVariant_lookup == True:
             response[key_response][run.id]["endpoints"][genomicVariant.id]=response[key_response][run.id]["endpoints"]["genomicVariant"]
             if genomicVariant.id != 'genomicVariant':
                 del response[key_response][run.id]["endpoints"]["genomicVariant"]
             response[key_response][run.id]["endpoints"][genomicVariant.id]["returnedEntryType"]=genomicVariant.id
-            response[key_response][run.id]["endpoints"][genomicVariant.id]["url"]=conf.uri+run.endpoint_name+'/{id}/'+genomicVariant.endpoint_name
+            response[key_response][run.id]["endpoints"][genomicVariant.id]["url"]=conf.complete_url+'/'+run.endpoint_name+'/{id}/'+genomicVariant.endpoint_name
         if run.individual_lookup == True:
             response[key_response][run.id]["endpoints"][individual.id]=response[key_response][run.id]["endpoints"]["individual"]
             if individual.id != 'individual':
                 del response[key_response][run.id]["endpoints"]["individual"]
             response[key_response][run.id]["endpoints"][individual.id]["returnedEntryType"]=individual.id
-            response[key_response][run.id]["endpoints"][individual.id]["url"]=conf.uri+run.endpoint_name+'/{id}/'+individual.endpoint_name
+            response[key_response][run.id]["endpoints"][individual.id]["url"]=conf.complete_url+'/'+run.endpoint_name+'/{id}/'+individual.endpoint_name
     return response
 
 @log_with_args(level)
@@ -471,6 +472,7 @@ def build_response_by_dataset(self, datasets, data, dict_counts, qparams):
                             'results': data[dataset.dataset],
                             # 'info': None,
                             'resultsHandover': handover["handover"]  # build_results_handover
+                            
                         }
                     else:
                         response = {
@@ -480,6 +482,19 @@ def build_response_by_dataset(self, datasets, data, dict_counts, qparams):
                             'resultsCount': dict_counts[dataset.dataset],
                             'results': data[dataset.dataset]
                         }
+                if conf.imprecise_count !=0:
+                    if dict_counts[dataset.dataset] < conf.imprecise_count:
+                        response['resultsCount']=conf.imprecise_count
+                        response['countAdjustedTo']=[conf.imprecise_count]
+                        response['countPrecision']='imprecise'
+                elif conf.round_to_tens == True:
+                    response['resultsCount']=math.ceil(dict_counts[dataset.dataset] / 10.0) * 10
+                    response['countAdjustedTo']=['immediate ten']
+                    response['countPrecision']='rounded'
+                elif conf.round_to_hundreds == True:
+                    response['resultsCount']=math.ceil(dict_counts[dataset.dataset] / 100.0) * 100
+                    response['countAdjustedTo']=['immediate hundred']
+                    response['countPrecision']='rounded'
             elif dataset.granularity != 'boolean' and RequestAttributes.allowed_granularity != 'boolean' and granularity != 'boolean':
                 for handover in list_of_handovers_per_dataset:
                     if handover["dataset"]==dataset.dataset:# pragma: no cover

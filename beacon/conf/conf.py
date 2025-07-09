@@ -15,8 +15,9 @@ log_file=None
 beacon_id = 'org.ega-archive.beacon-ri-demo'  # ID of the Beacon
 beacon_name = 'Beacon Reference Implementation demo'  # Name of the Beacon service
 api_version = 'v2.0.0' # Version of the Beacon implementation
-uri = 'http://localhost:5050'
+uri = 'http://beaconprod:5050'
 uri_subpath = '/api'
+complete_url = uri + uri_subpath
 environment = 'test'
 description = r"This Beacon is based on synthetic data hosted at the <a href='https://ega-archive.org/datasets/EGAD00001003338'>EGA</a>. The dataset contains 2504 samples including genetic data based on 1K Genomes data, and 76 individual attributes and phenotypic data derived from UKBiobank."
 version = api_version_yaml['api_version']
@@ -27,7 +28,7 @@ update_datetime = ''
 default_beacon_granularity = "record" # boolean, count or record
 security_levels = ['PUBLIC', 'REGISTERED', 'CONTROLLED']
 documentation_url = 'https://b2ri-documentation-demo.ega-archive.org/'
-cors_urls = ["http://localhost:3000","https://cancer-beacon-demo.ega-archive.org", "https://beacon-network-demo2.ega-archive.org", "https://beacon.ega-archive.org"]
+cors_urls = ["http://localhost:3003", "http://localhost:3000"]
 
 # Service Info
 ga4gh_service_type_group = 'org.ga4gh'
@@ -57,10 +58,7 @@ query_budget_database = 'mongo'
 query_budget_db_name = 'beacon'
 query_budget_table = 'budget'
 
-
 # Query Rounding
-exclude_start_count=0 # If exclude_start_count is 0, no modification of the count will be applied. If it's different than 0, count will always be this number when count is smaller than this number.
-exclude_end_count=0 # If exclude_end_count is different than 0, then, count will always be shaded between the exclude_start_count and exclude_end_count
-round_to_tenths=False # If true, the rounding will be done to the immediate superior tenth greater than the exclude_start_count or exclude_end_count in case this second one is not 0
-round_to_hundredths=False # If true, the rounding will be done to the immediate superior hundredth greater than the exclude_start_count or exclude_end_count in case this second one is not 0
-imprecise_count=1*1 # Give a math expression as how you want to modify the intial count, e.g. +1, 1*3, 1*2+1000, etc.
+round_to_tens=False # If true, the rounding will be done to the immediate superior tenth greater than the exclude_start_count or exclude_end_count in case this second one is not 0
+round_to_hundreds=False # If true, the rounding will be done to the immediate superior hundredth greater than the exclude_start_count or exclude_end_count in case this second one is not 0
+imprecise_count=0 # If exclude_start_count is 0, no modification of the count will be applied. If it's different than 0, count will always be this number when count is smaller than this number.
