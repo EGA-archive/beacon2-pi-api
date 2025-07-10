@@ -76,24 +76,36 @@ def default_view(request):
 def entry_types(request):
     form =EntryTypesForm()
     context = {'form': form}
+    LOG.warning('hahahahha')
     if request.method == 'POST':
+        LOG.warning('there is a traaaaaain')
         form = EntryTypesForm(request.POST)
         if form.is_valid():
+            LOG.warning('is leaving todaaaay')
             analysis=form.cleaned_data['Analysis']
             analysis_endpoint_name = form.cleaned_data['AnalysisEndpointName']
+            analysis_granularity = form.cleaned_data['analysis_granularity']
             biosample=form.cleaned_data['Biosample']
             biosample_endpoint_name = form.cleaned_data['BiosampleEndpointName']
+            biosample_granularity = form.cleaned_data['biosample_granularity']
             cohort=form.cleaned_data['Cohort']
             cohort_endpoint_name = form.cleaned_data['CohortEndpointName']
+            cohort_granularity = form.cleaned_data['cohort_granularity']
             dataset=form.cleaned_data['Dataset']
             dataset_endpoint_name = form.cleaned_data['DatasetEndpointName']
+            dataset_granularity = form.cleaned_data['dataset_granularity']
             genomicVariant=form.cleaned_data['GenomicVariant']
             genomicVariant_endpoint_name = form.cleaned_data['GenomicVariantEndpointName']
+            genomicVariation_granularity = form.cleaned_data['genomicVariation_granularity']
             individual=form.cleaned_data['Individual']
             individual_endpoint_name = form.cleaned_data['IndividualEndpointName']
+            individual_granularity = form.cleaned_data['individual_granularity']
             run=form.cleaned_data['Run']
             run_endpoint_name = form.cleaned_data['RunEndpointName']
+            run_granularity = form.cleaned_data['run_granularity']
+            LOG.warning('eyaaaahhh')
             if analysis != None:
+                LOG.warning('ryyyzzmm')
                 analysis_endpoints=form.cleaned_data['AnalysisEndpoints']
                 analysis_non_filtered = form.cleaned_data['AnalysisNonFiltered']
                 with open("adminui/beacon/conf/" + 'analysis' + ".py") as f:
@@ -208,6 +220,10 @@ def entry_types(request):
                                     new_lines+=new_line
                                 else:
                                     new_lines+=line
+                        elif 'granularity' in str(line):
+                            LOG.warning(str(line))
+                            LOG.warning(analysis_granularity)
+                            new_lines+="granularity="+'"'+analysis_granularity+'"'+"\n"
                         else:
                             new_lines+=line
                     f.write(new_lines)
@@ -217,6 +233,7 @@ def entry_types(request):
         
             return redirect("adminclient:entry_types")
         else:
+            LOG.warning('whaaaaat')
             context = {'form': form}
             
     template = "general_configuration/entry_types.html"

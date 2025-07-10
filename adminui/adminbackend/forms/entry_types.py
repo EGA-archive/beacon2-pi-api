@@ -139,6 +139,9 @@ class EntryTypesForm(forms.Form):
                     placeholder = formatting_field(line)
                     if placeholder == 'True':
                         analysis_initial_choices.append(self.initial['AnalysisEndpointName']+"/{id}")
+                elif 'granularity' in str(line):
+                    placeholder = formatting_field(line)
+                    self.initial['analysis_granularity'] = placeholder
         with open("adminui/beacon/conf/biosample.py") as f:
             lines = f.readlines()
         with open("adminui/beacon/conf/biosample.py", "r") as f:
@@ -339,6 +342,11 @@ class EntryTypesForm(forms.Form):
             self.add_error('RunEndpointName', 'If run is checked, analysis endpoint name can not be empty')
     
     entry_type_choices = [("analysis", "analysis"), ("biosample", "biosample"), ("cohort", "cohort"), ("dataset", "dataset"), ("genomicVariant", "genomicVariant"), ("individual", "individual"), ("run", "run")]
+    granularity_choices = [
+    ('boolean', 'Boolean'),
+    ('count', 'Count'),
+    ('record', 'Record'),
+    ]
     analysis_entry_type, analysis_endpoint_name, analysis_lookups =get_entry_types('analysis')
     biosample_entry_type, biosample_endpoint_name, biosample_lookups =get_entry_types('biosample')
     cohort_entry_type, cohort_endpoint_name, cohort_lookups =get_entry_types('cohort')
@@ -361,6 +369,10 @@ class EntryTypesForm(forms.Form):
         choices=analysis_choices, 
         widget=forms.CheckboxSelectMultiple
     )
+    analysis_granularity= forms.ChoiceField(
+        widget=forms.RadioSelect,
+        choices=granularity_choices, 
+    )
     Biosample = forms.BooleanField(required=False, help_text='/'+biosample_endpoint_name)
     BiosampleEndpointName = forms.CharField(required=False,help_text='Endpoint Name')
     BiosampleNonFiltered = forms.BooleanField(required=False, help_text='Biosample Non-Filtered Queries')
@@ -375,6 +387,10 @@ class EntryTypesForm(forms.Form):
     BiosampleEndpoints = forms.MultipleChoiceField(
         choices=biosample_choices, 
         widget=forms.CheckboxSelectMultiple
+    )
+    biosample_granularity= forms.ChoiceField(
+        widget=forms.RadioSelect,
+        choices=granularity_choices, 
     )
     Cohort = forms.BooleanField(required=False, help_text='/'+cohort_endpoint_name)
     CohortEndpointName = forms.CharField(required=False,help_text='Endpoint Name')
@@ -391,6 +407,10 @@ class EntryTypesForm(forms.Form):
         choices=cohort_choices, 
         widget=forms.CheckboxSelectMultiple
     )
+    cohort_granularity= forms.ChoiceField(
+        widget=forms.RadioSelect,
+        choices=granularity_choices, 
+    )
     Dataset = forms.BooleanField(required=False, help_text='/'+dataset_endpoint_name)
     DatasetEndpointName = forms.CharField(required=False,help_text='Endpoint Name')
     DatasetNonFiltered = forms.BooleanField(required=False, help_text='Dataset Non-Filtered Queries')
@@ -405,6 +425,10 @@ class EntryTypesForm(forms.Form):
     DatasetEndpoints = forms.MultipleChoiceField(
         choices=dataset_choices, 
         widget=forms.CheckboxSelectMultiple
+    )
+    dataset_granularity= forms.ChoiceField(
+        widget=forms.RadioSelect,
+        choices=granularity_choices, 
     )
     GenomicVariant = forms.BooleanField(required=False, help_text='/'+genomicVariant_endpoint_name)
     GenomicVariantEndpointName = forms.CharField(required=False,help_text='Endpoint Name')
@@ -421,6 +445,10 @@ class EntryTypesForm(forms.Form):
         choices=genomicVariant_choices, 
         widget=forms.CheckboxSelectMultiple
     )
+    genomicVariation_granularity= forms.ChoiceField(
+        widget=forms.RadioSelect,
+        choices=granularity_choices, 
+    )
     Individual = forms.BooleanField(required=False, help_text='/'+individual_endpoint_name)
     IndividualEndpointName = forms.CharField(required=False,help_text='Endpoint Name')
     IndividualNonFiltered = forms.BooleanField(required=False, help_text='Individual Non-Filtered Queries')
@@ -436,6 +464,10 @@ class EntryTypesForm(forms.Form):
         choices=individual_choices, 
         widget=forms.CheckboxSelectMultiple
     )
+    individual_granularity= forms.ChoiceField(
+        widget=forms.RadioSelect,
+        choices=granularity_choices, 
+    )
     Run = forms.BooleanField(required=False, help_text='/'+run_endpoint_name)
     RunEndpointName = forms.CharField(required=False,help_text='Endpoint Name')
     RunNonFiltered = forms.BooleanField(required=False, help_text='Run Non-Filtered Queries')
@@ -450,4 +482,8 @@ class EntryTypesForm(forms.Form):
     RunEndpoints = forms.MultipleChoiceField(
         choices=run_choices, 
         widget=forms.CheckboxSelectMultiple
+    )
+    run_granularity= forms.ChoiceField(
+        widget=forms.RadioSelect,
+        choices=granularity_choices, 
     )

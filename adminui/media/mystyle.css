@@ -180,3 +180,605 @@ label[for=id_SecurityLevel_2]{
   z-index: -1;
   text-align: center;
 }
+
+#id_analysis_granularity
+{
+  border: 1px solid black;
+  border-radius: 40px;
+  position: relative;
+  height:20px;
+  display:flex;
+  justify-content:space-around;
+  width: 525px;
+  z-index:1;
+}
+
+label[for=id_analysis_granularity_0]{
+display:inline-block; width: 33%;color: white;height: 100%;position: absolute; top: 0px;left: 0px;text-align: center;cursor: pointer;
+}
+
+label[for=id_analysis_granularity_1]{
+  display:inline-block; width: 33%; height: 100%;position: absolute; top: 0px;left:33%;text-align: center;cursor: pointer;
+}
+
+label[for=id_analysis_granularity_2]{
+  display:inline-block; width: 33%;height: 100%;position: absolute; top: 0px;left:66%;text-align: center;cursor: pointer;
+}
+
+#id_analysis_granularity::before{
+  content: '';
+  position: absolute;
+  left:0;
+  top: 0;
+  width: 34%;
+  height: 95%;
+  background: black;
+  border: 1px solid black;
+  border-radius: 12px;
+  transition: .5s left ease;
+  z-index: -1;
+}
+
+#id_analysis_granularity:has(#id_analysis_granularity_0:checked)::before{
+  left: 0%;
+}
+
+#id_analysis_granularity:has(#id_analysis_granularity_0:checked) label[for=id_analysis_granularity_0]{
+  color:white;
+}
+
+#id_analysis_granularity:has(#id_analysis_granularity_0:checked) label[for=id_analysis_granularity_1]{
+  color:black;
+}
+
+#id_analysis_granularity:has(#id_analysis_granularity_0:checked) label[for=id_analysis_granularity_2]{
+  color:black;
+}
+
+#id_analysis_granularity:has(#id_analysis_granularity_1:checked)::before{
+  left: 33%;
+}
+
+#id_analysis_granularity:has(#id_analysis_granularity_1:checked) label[for=id_analysis_granularity_1]{
+  color:white;
+}
+
+#id_analysis_granularity:has(#id_analysis_granularity_1:checked) label[for=id_analysis_granularity_0]{
+  color:black;
+}
+
+#id_analysis_granularity:has(#id_analysis_granularity_2:checked) label[for=id_analysis_granularity_2]{
+  color:black;
+}
+
+#id_analysis_granularity:has(#id_analysis_granularity_2:checked)::before{
+  left: 66%;
+}
+
+#id_analysis_granularity:has(#id_analysis_granularity_2:checked) label[for=id_analysis_granularity_2]{
+  color:white;
+}
+
+#id_analysis_granularity:has(#id_analysis_granularity_2:checked) label[for=id_analysis_granularity_0]{
+  color:black;
+}
+
+#id_analysis_granularity:has(#id_analysis_granularity_2:checked) label[for=id_analysis_granularity_1]{
+  color:black;
+}
+
+#id_biosample_granularity
+{
+  border: 1px solid black;
+  border-radius: 40px;
+  position: relative;
+  height:20px;
+  display:flex;
+  justify-content:space-around;
+  width: 525px;
+  z-index:1;
+}
+
+label[for=id_biosample_granularity_0]{
+display:inline-block; width: 33%;color: white;height: 100%;position: absolute; top: 0px;left: 0px;text-align: center;cursor: pointer;
+}
+
+label[for=id_biosample_granularity_1]{
+  display:inline-block; width: 33%; height: 100%;position: absolute; top: 0px;left:33%;text-align: center;cursor: pointer;
+}
+
+label[for=id_biosample_granularity_2]{
+  display:inline-block; width: 33%;height: 100%;position: absolute; top: 0px;left:66%;text-align: center;cursor: pointer;
+}
+
+#id_biosample_granularity::before{
+  content: '';
+  position: absolute;
+  left:0;
+  top: 0;
+  width: 34%;
+  height: 95%;
+  background: black;
+  border: 1px solid black;
+  border-radius: 12px;
+  transition: .5s left ease;
+  z-index: -1;
+}
+
+#id_biosample_granularity:has(#id_biosample_granularity_0:checked)::before{
+  left: 0%;
+}
+
+#id_biosample_granularity:has(#id_biosample_granularity_0:checked) label[for=id_biosample_granularity_0]{
+  color:white;
+}
+
+#id_biosample_granularity:has(#id_biosample_granularity_0:checked) label[for=id_biosample_granularity_1]{
+  color:black;
+}
+
+#id_biosample_granularity:has(#id_biosample_granularity_0:checked) label[for=id_biosample_granularity_2]{
+  color:black;
+}
+
+#id_biosample_granularity:has(#id_biosample_granularity_1:checked)::before{
+  left: 33%;
+}
+
+#id_biosample_granularity:has(#id_biosample_granularity_1:checked) label[for=id_biosample_granularity_1]{
+  color:white;
+}
+
+#id_biosample_granularity:has(#id_biosample_granularity_1:checked) label[for=id_biosample_granularity_0]{
+  color:black;
+}
+
+#id_biosample_granularity:has(#id_biosample_granularity_2:checked) label[for=id_biosample_granularity_2]{
+  color:black;
+}
+
+#id_biosample_granularity:has(#id_biosample_granularity_2:checked)::before{
+  left: 66%;
+}
+
+#id_biosample_granularity:has(#id_biosample_granularity_2:checked) label[for=id_biosample_granularity_2]{
+  color:white;
+}
+
+#id_biosample_granularity:has(#id_biosample_granularity_2:checked) label[for=id_biosample_granularity_0]{
+  color:black;
+}
+
+#id_biosample_granularity:has(#id_biosample_granularity_2:checked) label[for=id_biosample_granularity_1]{
+  color:black;
+}
+
+#id_cohort_granularity
+{
+  border: 1px solid black;
+  border-radius: 40px;
+  position: relative;
+  height:20px;
+  display:flex;
+  justify-content:space-around;
+  width: 525px;
+  z-index:1;
+}
+
+label[for=id_cohort_granularity_0]{
+display:inline-block; width: 33%;color: white;height: 100%;position: absolute; top: 0px;left: 0px;text-align: center;cursor: pointer;
+}
+
+label[for=id_cohort_granularity_1]{
+  display:inline-block; width: 33%; height: 100%;position: absolute; top: 0px;left:33%;text-align: center;cursor: pointer;
+}
+
+label[for=id_cohort_granularity_2]{
+  display:inline-block; width: 33%;height: 100%;position: absolute; top: 0px;left:66%;text-align: center;cursor: pointer;
+}
+
+#id_cohort_granularity::before{
+  content: '';
+  position: absolute;
+  left:0;
+  top: 0;
+  width: 34%;
+  height: 95%;
+  background: black;
+  border: 1px solid black;
+  border-radius: 12px;
+  transition: .5s left ease;
+  z-index: -1;
+}
+
+#id_cohort_granularity:has(#id_cohort_granularity_0:checked)::before{
+  left: 0%;
+}
+
+#id_cohort_granularity:has(#id_cohort_granularity_0:checked) label[for=id_cohort_granularity_0]{
+  color:white;
+}
+
+#id_cohort_granularity:has(#id_cohort_granularity_0:checked) label[for=id_cohort_granularity_1]{
+  color:black;
+}
+
+#id_cohort_granularity:has(#id_cohort_granularity_0:checked) label[for=id_cohort_granularity_2]{
+  color:black;
+}
+
+#id_cohort_granularity:has(#id_cohort_granularity_1:checked)::before{
+  left: 33%;
+}
+
+#id_cohort_granularity:has(#id_cohort_granularity_1:checked) label[for=id_cohort_granularity_1]{
+  color:white;
+}
+
+#id_cohort_granularity:has(#id_cohort_granularity_1:checked) label[for=id_cohort_granularity_0]{
+  color:black;
+}
+
+#id_cohort_granularity:has(#id_cohort_granularity_2:checked) label[for=id_cohort_granularity_2]{
+  color:black;
+}
+
+#id_cohort_granularity:has(#id_cohort_granularity_2:checked)::before{
+  left: 66%;
+}
+
+#id_cohort_granularity:has(#id_cohort_granularity_2:checked) label[for=id_cohort_granularity_2]{
+  color:white;
+}
+
+#id_cohort_granularity:has(#id_cohort_granularity_2:checked) label[for=id_cohort_granularity_0]{
+  color:black;
+}
+
+#id_cohort_granularity:has(#id_cohort_granularity_2:checked) label[for=id_cohort_granularity_1]{
+  color:black;
+}
+
+#id_dataset_granularity
+{
+  border: 1px solid black;
+  border-radius: 40px;
+  position: relative;
+  height:20px;
+  display:flex;
+  justify-content:space-around;
+  width: 525px;
+  z-index:1;
+}
+
+label[for=id_dataset_granularity_0]{
+display:inline-block; width: 33%;color: white;height: 100%;position: absolute; top: 0px;left: 0px;text-align: center;cursor: pointer;
+}
+
+label[for=id_dataset_granularity_1]{
+  display:inline-block; width: 33%; height: 100%;position: absolute; top: 0px;left:33%;text-align: center;cursor: pointer;
+}
+
+label[for=id_dataset_granularity_2]{
+  display:inline-block; width: 33%;height: 100%;position: absolute; top: 0px;left:66%;text-align: center;cursor: pointer;
+}
+
+#id_dataset_granularity::before{
+  content: '';
+  position: absolute;
+  left:0;
+  top: 0;
+  width: 34%;
+  height: 95%;
+  background: black;
+  border: 1px solid black;
+  border-radius: 12px;
+  transition: .5s left ease;
+  z-index: -1;
+}
+
+#id_dataset_granularity:has(#id_dataset_granularity_0:checked)::before{
+  left: 0%;
+}
+
+#id_dataset_granularity:has(#id_dataset_granularity_0:checked) label[for=id_dataset_granularity_0]{
+  color:white;
+}
+
+#id_dataset_granularity:has(#id_dataset_granularity_0:checked) label[for=id_dataset_granularity_1]{
+  color:black;
+}
+
+#id_dataset_granularity:has(#id_dataset_granularity_0:checked) label[for=id_dataset_granularity_2]{
+  color:black;
+}
+
+#id_dataset_granularity:has(#id_dataset_granularity_1:checked)::before{
+  left: 33%;
+}
+
+#id_dataset_granularity:has(#id_dataset_granularity_1:checked) label[for=id_dataset_granularity_1]{
+  color:white;
+}
+
+#id_dataset_granularity:has(#id_dataset_granularity_1:checked) label[for=id_dataset_granularity_0]{
+  color:black;
+}
+
+#id_dataset_granularity:has(#id_dataset_granularity_2:checked) label[for=id_dataset_granularity_2]{
+  color:black;
+}
+
+#id_dataset_granularity:has(#id_dataset_granularity_2:checked)::before{
+  left: 66%;
+}
+
+#id_dataset_granularity:has(#id_dataset_granularity_2:checked) label[for=id_dataset_granularity_2]{
+  color:white;
+}
+
+#id_dataset_granularity:has(#id_dataset_granularity_2:checked) label[for=id_dataset_granularity_0]{
+  color:black;
+}
+
+#id_dataset_granularity:has(#id_dataset_granularity_2:checked) label[for=id_dataset_granularity_1]{
+  color:black;
+}
+
+#id_genomicVariation_granularity
+{
+  border: 1px solid black;
+  border-radius: 40px;
+  position: relative;
+  height:20px;
+  display:flex;
+  justify-content:space-around;
+  width: 525px;
+  z-index:1;
+}
+
+label[for=id_genomicVariation_granularity_0]{
+display:inline-block; width: 33%;color: white;height: 100%;position: absolute; top: 0px;left: 0px;text-align: center;cursor: pointer;
+}
+
+label[for=id_genomicVariation_granularity_1]{
+  display:inline-block; width: 33%; height: 100%;position: absolute; top: 0px;left:33%;text-align: center;cursor: pointer;
+}
+
+label[for=id_genomicVariation_granularity_2]{
+  display:inline-block; width: 33%;height: 100%;position: absolute; top: 0px;left:66%;text-align: center;cursor: pointer;
+}
+
+#id_genomicVariation_granularity::before{
+  content: '';
+  position: absolute;
+  left:0;
+  top: 0;
+  width: 34%;
+  height: 95%;
+  background: black;
+  border: 1px solid black;
+  border-radius: 12px;
+  transition: .5s left ease;
+  z-index: -1;
+}
+
+#id_genomicVariation_granularity:has(#id_genomicVariation_granularity_0:checked)::before{
+  left: 0%;
+}
+
+#id_genomicVariation_granularity:has(#id_genomicVariation_granularity_0:checked) label[for=id_genomicVariation_granularity_0]{
+  color:white;
+}
+
+#id_genomicVariation_granularity:has(#id_genomicVariation_granularity_0:checked) label[for=id_genomicVariation_granularity_1]{
+  color:black;
+}
+
+#id_genomicVariation_granularity:has(#id_genomicVariation_granularity_0:checked) label[for=id_genomicVariation_granularity_2]{
+  color:black;
+}
+
+#id_genomicVariation_granularity:has(#id_genomicVariation_granularity_1:checked)::before{
+  left: 33%;
+}
+
+#id_genomicVariation_granularity:has(#id_genomicVariation_granularity_1:checked) label[for=id_genomicVariation_granularity_1]{
+  color:white;
+}
+
+#id_genomicVariation_granularity:has(#id_genomicVariation_granularity_1:checked) label[for=id_genomicVariation_granularity_0]{
+  color:black;
+}
+
+#id_genomicVariation_granularity:has(#id_genomicVariation_granularity_2:checked) label[for=id_genomicVariation_granularity_2]{
+  color:black;
+}
+
+#id_genomicVariation_granularity:has(#id_genomicVariation_granularity_2:checked)::before{
+  left: 66%;
+}
+
+#id_genomicVariation_granularity:has(#id_genomicVariation_granularity_2:checked) label[for=id_genomicVariation_granularity_2]{
+  color:white;
+}
+
+#id_genomicVariation_granularity:has(#id_genomicVariation_granularity_2:checked) label[for=id_genomicVariation_granularity_0]{
+  color:black;
+}
+
+#id_genomicVariation_granularity:has(#id_genomicVariation_granularity_2:checked) label[for=id_genomicVariation_granularity_1]{
+  color:black;
+}
+
+#id_individual_granularity
+{
+  border: 1px solid black;
+  border-radius: 40px;
+  position: relative;
+  height:20px;
+  display:flex;
+  justify-content:space-around;
+  width: 525px;
+  z-index:1;
+}
+
+label[for=id_individual_granularity_0]{
+display:inline-block; width: 33%;color: white;height: 100%;position: absolute; top: 0px;left: 0px;text-align: center;cursor: pointer;
+}
+
+label[for=id_individual_granularity_1]{
+  display:inline-block; width: 33%; height: 100%;position: absolute; top: 0px;left:33%;text-align: center;cursor: pointer;
+}
+
+label[for=id_individual_granularity_2]{
+  display:inline-block; width: 33%;height: 100%;position: absolute; top: 0px;left:66%;text-align: center;cursor: pointer;
+}
+
+#id_individual_granularity::before{
+  content: '';
+  position: absolute;
+  left:0;
+  top: 0;
+  width: 34%;
+  height: 95%;
+  background: black;
+  border: 1px solid black;
+  border-radius: 12px;
+  transition: .5s left ease;
+  z-index: -1;
+}
+
+#id_individual_granularity:has(#id_individual_granularity_0:checked)::before{
+  left: 0%;
+}
+
+#id_individual_granularity:has(#id_individual_granularity_0:checked) label[for=id_individual_granularity_0]{
+  color:white;
+}
+
+#id_individual_granularity:has(#id_individual_granularity_0:checked) label[for=id_individual_granularity_1]{
+  color:black;
+}
+
+#id_individual_granularity:has(#id_individual_granularity_0:checked) label[for=id_individual_granularity_2]{
+  color:black;
+}
+
+#id_individual_granularity:has(#id_individual_granularity_1:checked)::before{
+  left: 33%;
+}
+
+#id_individual_granularity:has(#id_individual_granularity_1:checked) label[for=id_individual_granularity_1]{
+  color:white;
+}
+
+#id_individual_granularity:has(#id_individual_granularity_1:checked) label[for=id_individual_granularity_0]{
+  color:black;
+}
+
+#id_individual_granularity:has(#id_individual_granularity_2:checked) label[for=id_individual_granularity_2]{
+  color:black;
+}
+
+#id_individual_granularity:has(#id_individual_granularity_2:checked)::before{
+  left: 66%;
+}
+
+#id_individual_granularity:has(#id_individual_granularity_2:checked) label[for=id_individual_granularity_2]{
+  color:white;
+}
+
+#id_individual_granularity:has(#id_individual_granularity_2:checked) label[for=id_individual_granularity_0]{
+  color:black;
+}
+
+#id_individual_granularity:has(#id_individual_granularity_2:checked) label[for=id_individual_granularity_1]{
+  color:black;
+}
+
+#id_run_granularity
+{
+  border: 1px solid black;
+  border-radius: 40px;
+  position: relative;
+  height:20px;
+  display:flex;
+  justify-content:space-around;
+  width: 525px;
+  z-index:1;
+}
+
+label[for=id_run_granularity_0]{
+display:inline-block; width: 33%;color: white;height: 100%;position: absolute; top: 0px;left: 0px;text-align: center;cursor: pointer;
+}
+
+label[for=id_run_granularity_1]{
+  display:inline-block; width: 33%; height: 100%;position: absolute; top: 0px;left:33%;text-align: center;cursor: pointer;
+}
+
+label[for=id_run_granularity_2]{
+  display:inline-block; width: 33%;height: 100%;position: absolute; top: 0px;left:66%;text-align: center;cursor: pointer;
+}
+
+#id_run_granularity::before{
+  content: '';
+  position: absolute;
+  left:0;
+  top: 0;
+  width: 34%;
+  height: 95%;
+  background: black;
+  border: 1px solid black;
+  border-radius: 12px;
+  transition: .5s left ease;
+  z-index: -1;
+}
+
+#id_run_granularity:has(#id_run_granularity_0:checked)::before{
+  left: 0%;
+}
+
+#id_run_granularity:has(#id_run_granularity_0:checked) label[for=id_run_granularity_0]{
+  color:white;
+}
+
+#id_run_granularity:has(#id_run_granularity_0:checked) label[for=id_run_granularity_1]{
+  color:black;
+}
+
+#id_run_granularity:has(#id_run_granularity_0:checked) label[for=id_run_granularity_2]{
+  color:black;
+}
+
+#id_run_granularity:has(#id_run_granularity_1:checked)::before{
+  left: 33%;
+}
+
+#id_run_granularity:has(#id_run_granularity_1:checked) label[for=id_run_granularity_1]{
+  color:white;
+}
+
+#id_run_granularity:has(#id_run_granularity_1:checked) label[for=id_run_granularity_0]{
+  color:black;
+}
+
+#id_run_granularity:has(#id_run_granularity_2:checked) label[for=id_run_granularity_2]{
+  color:black;
+}
+
+#id_run_granularity:has(#id_run_granularity_2:checked)::before{
+  left: 66%;
+}
+
+#id_run_granularity:has(#id_run_granularity_2:checked) label[for=id_run_granularity_2]{
+  color:white;
+}
+
+#id_run_granularity:has(#id_run_granularity_2:checked) label[for=id_run_granularity_0]{
+  color:black;
+}
+
+#id_run_granularity:has(#id_run_granularity_2:checked) label[for=id_run_granularity_1]{
+  color:black;
+}
