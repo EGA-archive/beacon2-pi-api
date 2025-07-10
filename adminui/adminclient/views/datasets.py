@@ -6,6 +6,7 @@ from pymongo.mongo_client import MongoClient
 from django.urls import resolve
 from beacon.connections.mongo.__init__ import client
 from adminbackend.forms.datasets import DatasetsForm
+import yaml
 
 import logging
 
@@ -75,17 +76,38 @@ def default_view(request):
             entry_types_included.append('g_variants')
         dataset_dict["entry_types_included"]=entry_types_included
         dataset_list.append(dataset_dict)
-        if request.method == 'POST':
-            form = DatasetsForm(request.POST)
-            if form.is_valid():
-                dataID = form.cleaned_data['DatasetID']
+    with open("adminui/beacon/conf/datasets/datasets_conf.yml") as f:
+        datasets_test=yaml.safe_load(f)
+    if request.method == 'POST':
+        form = DatasetsForm(request.POST)
+        if form.is_valid():
+            dataID = form.cleaned_data['DatasetID']
+            if 'Test Mode' in request.POST:
                 LOG.warning(request.POST)
-                if 'Test Mode' in request.POST:
-                    LOG.warning('Test mode')
-                    LOG.warning(dataID)
-                elif 'Delete Dataset' in request.POST:
-                    LOG.warning('Delete dataset')
-                    LOG.warning(dataID)
-    context={"datasets_found": dataset_list}
+                with open("adminui/beacon/conf/datasets/datasets_conf.yml") as f:
+                    datasets_conf=yaml.safe_load(f)
+                test_datasets=[]
+                for key2, value2 in request.POST.items():
+                    if value2 == 'on':
+                        try:
+                            datasets_conf[key2]['isTest']=True
+                        except Exception:
+                            datasets_conf[key2]={}
+                            datasets_conf[key2]['isTest']=True
+                        test_datasets.append(key2)
+                for key, value in datasets_conf.items():
+                    if key not in test_datasets:
+                        try:
+                            datasets_conf[key]['isTest']=False
+                        except Exception:
+                            datasets_conf[key]={}
+                            datasets_conf[key]['isTest']=False
+                with open('adminui/beacon/conf/datasets/datasets_conf.yml', 'w') as outfile:
+                    yaml.dump(datasets_conf, outfile)
+            elif 'Delete Dataset' in request.POST:
+                LOG.warning('Delete dataset')
+                LOG.warning(dataID)
+            return redirect("adminclient:datasets")
+    context={"datasets_found": dataset_list, "datasets_test": datasets_test}
     template = "general_configuration/datasets.html"
     return render(request, template, context)

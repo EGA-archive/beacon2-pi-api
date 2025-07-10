@@ -23,14 +23,32 @@
                 {% csrf_token %}
                 <div>               
                     <input hidden type="text" id="id_DatasetID" name="DatasetID" value="{{value}}">
-                    <button type="submit" class="btn btn-danger mb-3" name="Test Mode" value="Test Mode">Test Mode</button>
+
+                    {% if value in datasets_test %}
+                        {% for key2, value2 in datasets_test.items %}
+                            {% if key2 == value %}
+                                {% for key3, value3 in value2.items %}
+                                    {% if key3 == 'isTest' and value3 == True %}
+                                        <input type="checkbox" class="btn btn-danger mb-3" id="id_{{value}}" name="{{value}}" checked>Test Mode</input>
+                                    {% elif key3 == 'isTest' %}
+                                    <input type="checkbox" class="btn btn-danger mb-3" id="id_{{value}}" name="{{value}}">Test Mode</input>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <input type="checkbox" class="btn btn-danger mb-3" id="id_{{value}}" name="{{value}}">Test Mode</input>
+                    {% endif %}
+
                     <button type="submit" class="btn btn-danger mb-3" name="Delete Dataset" value="Delete Dataset">Delete Dataset</button>
                 </div>
-            </form>
+            
 
             {% endif %}
         {% endfor %}
 
     </div>
     {% endfor %}
+    <button type="submit" class="btn btn-danger mb-3" name="Test Mode" value="Test Mode">Save</button>
+    </form>
 </body>

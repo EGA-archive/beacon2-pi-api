@@ -27,6 +27,6 @@ def formatting_field(self, line):
     return placeholder
 
 
-class DatasetsForm(forms.Form):         
+class DatasetsForm(forms.Form):
     DatasetID = forms.CharField()
     
