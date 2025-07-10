@@ -782,3 +782,7 @@ label[for=id_run_granularity_2]{
 #id_run_granularity:has(#id_run_granularity_2:checked) label[for=id_run_granularity_1]{
   color:black;
 }
+
+.dataset{
+  border: 1px solid black;
+}

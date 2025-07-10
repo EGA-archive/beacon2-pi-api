@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="htmx-config" content='{"selfRequestsOnly":false}'>
+  <title>Admin UI</title>
+  <script type="text/javascript" src="{% static '/adminui/js/htmx.min.js' %}"></script>
+  <link rel="stylesheet" href="media/mystyle.css">
+</head>
+
+<body>
+  <body class="bg-custom-powder-light" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'> <!-- NEW - hx-headers added -->
+    {% for dataset in datasets_found %}
+    <div class="dataset">
+        {% for key, value in dataset.items %}
+            <div><span>{{key}}: </span><span>{{value}}</span></div>
+            {% if key == 'id' %}
+            <form method="post" onsubmit="openLoader()">
+                {% csrf_token %}
+                <div>               
+                    <input hidden type="text" id="id_DatasetID" name="DatasetID" value="{{value}}">
+                    <button type="submit" class="btn btn-danger mb-3" name="Test Mode" value="Test Mode">Test Mode</button>
+                    <button type="submit" class="btn btn-danger mb-3" name="Delete Dataset" value="Delete Dataset">Delete Dataset</button>
+                </div>
+            </form>
+
+            {% endif %}
+        {% endfor %}
+
+    </div>
+    {% endfor %}
+</body>
