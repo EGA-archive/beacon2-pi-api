@@ -26,6 +26,8 @@ def default_view(request):
     runs=client["beacon"].runs
     g_variants=client["beacon"].genomicVariations
     individuals=client["beacon"].individuals
+    caseLevelData=client["beacon"].caseLevelData
+    targets=client["beacon"].targets
     all_datasets=datasets.find({})
     dataset_list=[]
     for dataset in all_datasets:
@@ -83,7 +85,6 @@ def default_view(request):
         if form.is_valid():
             dataID = form.cleaned_data['DatasetID']
             if 'Test Mode' in request.POST:
-                LOG.warning(request.POST)
                 with open("adminui/beacon/conf/datasets/datasets_conf.yml") as f:
                     datasets_conf=yaml.safe_load(f)
                 test_datasets=[]
@@ -105,8 +106,15 @@ def default_view(request):
                 with open('adminui/beacon/conf/datasets/datasets_conf.yml', 'w') as outfile:
                     yaml.dump(datasets_conf, outfile)
             elif 'Delete Dataset' in request.POST:
-                LOG.warning('Delete dataset')
-                LOG.warning(dataID)
+                analyses.delete_many({"datasetId": dataID})
+                biosamples.delete_many({"datasetId": dataID})
+                caseLevelData.delete_many({"datasetId": dataID})
+                cohorts.delete_many({"datasetId": dataID})
+                datasets.delete_many({"id": dataID})
+                g_variants.delete_many({"datasetId": dataID})
+                individuals.delete_many({"datasetId": dataID})
+                runs.delete_many({"datasetId": dataID})
+                targets.delete_many({"datasetId": dataID})
             return redirect("adminclient:datasets")
     context={"datasets_found": dataset_list, "datasets_test": datasets_test}
     template = "general_configuration/datasets.html"
