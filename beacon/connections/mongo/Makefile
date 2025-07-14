@@ -1,12 +1,26 @@
-DATA_PATH = /data/test
-
 build:
-	docker exec mongoprod mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --file $(DATA_PATH)/datasets.json --collection datasets
-	docker exec mongoprod mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --file $(DATA_PATH)/individuals.json --collection individuals
-	docker exec mongoprod mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --file $(DATA_PATH)/cohorts.json --collection cohorts
-	docker exec mongoprod mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --file $(DATA_PATH)/analyses.json --collection analyses
-	docker exec mongoprod mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --file $(DATA_PATH)/biosamples.json --collection biosamples
-	docker exec mongoprod mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --file $(DATA_PATH)/genomicVariations.json --collection genomicVariations
-	docker exec mongoprod mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --file $(DATA_PATH)/runs.json --collection runs
-	docker exec mongoprod mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --file $(DATA_PATH)/targets.json --collection targets
-	docker exec mongoprod mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --file $(DATA_PATH)/caseLevelData.json --collection caseLevelData
+	gunzip --stdout /vault/oriol/oriol_beacon_data/gnomAD38/chr1.json.gz | mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --collection genomicVariations
+	gunzip --stdout /vault/oriol/oriol_beacon_data/gnomAD38/chr2.json.gz | mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --collection genomicVariations
+	gunzip --stdout /vault/oriol/oriol_beacon_data/gnomAD38/chr3.json.gz | mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --collection genomicVariations
+	gunzip --stdout /vault/oriol/oriol_beacon_data/gnomAD38/chr4.json.gz | mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --collection genomicVariations
+	gunzip --stdout /vault/oriol/oriol_beacon_data/gnomAD38/chr5.json.gz | mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --collection genomicVariations
+	gunzip --stdout /vault/oriol/oriol_beacon_data/gnomAD38/chr6.json.gz | mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --collection genomicVariations
+	gunzip --stdout /vault/oriol/oriol_beacon_data/gnomAD38/chr7.json.gz | mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --collection genomicVariations
+	gunzip --stdout /vault/oriol/oriol_beacon_data/gnomAD38/chr8.json.gz | mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --collection genomicVariations
+	gunzip --stdout /vault/oriol/oriol_beacon_data/gnomAD38/chr9.json.gz | mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --collection genomicVariations
+	gunzip --stdout /vault/oriol/oriol_beacon_data/gnomAD38/chr10.json.gz | mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --collection genomicVariations
+	gunzip --stdout /vault/oriol/oriol_beacon_data/gnomAD38/chr11.json.gz | mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --collection genomicVariations
+	gunzip --stdout /vault/oriol/oriol_beacon_data/gnomAD38/chr12.json.gz | mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --collection genomicVariations
+	gunzip --stdout /vault/oriol/oriol_beacon_data/gnomAD38/chr13.json.gz | mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --collection genomicVariations
+	gunzip --stdout /vault/oriol/oriol_beacon_data/gnomAD38/chr14.json.gz | mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --collection genomicVariations
+	gunzip --stdout /vault/oriol/oriol_beacon_data/gnomAD38/chr15.json.gz | mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --collection genomicVariations
+	gunzip --stdout /vault/oriol/oriol_beacon_data/gnomAD38/chr16.json.gz | mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --collection genomicVariations
+	gunzip --stdout /vault/oriol/oriol_beacon_data/gnomAD38/chr17_chr18.json.gz | mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --collection genomicVariations
+	gunzip --stdout /vault/oriol/oriol_beacon_data/gnomAD38/chr19.json.gz | mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --collection genomicVariations
+	gunzip --stdout /vault/oriol/oriol_beacon_data/gnomAD38/chr20.json.gz | mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --collection genomicVariations
+	gunzip --stdout /vault/oriol/oriol_beacon_data/gnomAD38/chr21.json.gz | mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --collection genomicVariations
+	gunzip --stdout /vault/oriol/oriol_beacon_data/gnomAD38/chr22.json.gz | mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --collection genomicVariations
+	gunzip --stdout /vault/oriol/oriol_beacon_data/gnomAD38/chrX.json.gz | mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --collection genomicVariations
+	gunzip --stdout /vault/oriol/oriol_beacon_data/gnomAD38/chrY.json.gz | mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --collection genomicVariations
+	gunzip --stdout /vault/oriol/oriol_beacon_data/gnomAD38/gnomAD38_datasets.json.gz | mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --collection datasets
+

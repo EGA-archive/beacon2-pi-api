@@ -180,6 +180,10 @@ def set_entry_type(self, request):
             LOG.warning('configuration variable uri: {} not the same as where the beacon is hosted'.format(uri))
         path_list = abs_url[starting_endpoint:].split('/')
         path_list = list(filter(None, path_list))
+        if path_list == []:
+            ErrorClass.error_code=500
+            ErrorClass.error_message='the {} parameter from conf.py is not the same as the root one received in request: {}. Configure you uri accordingly.'.format(uri, abs_url)
+            raise web.HTTPInternalServerError
         if len(path_list) > 2:
             RequestAttributes.pre_entry_type=path_list[0]
             RequestAttributes.entry_type=path_list[2]
@@ -201,8 +205,11 @@ async def deconstruct_request(self, request):
     '''
     # headers, path, query string, body
     # analitzar entry type en una sola funció
-    RequestAttributes.ip=request.remote
-    RequestAttributes.headers=request.headers
-    set_entry_type(self, request)
-    qparams = await get_qparams(self, self.request)
-    return qparams
+    try:
+        RequestAttributes.ip=request.remote
+        RequestAttributes.headers=request.headers
+        set_entry_type(self, request)
+        qparams = await get_qparams(self, self.request)
+        return qparams
+    except Exception:
+        raise

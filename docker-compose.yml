@@ -82,8 +82,13 @@ services:
 
   db:
     image: mongo:5
-    command: --wiredTigerCacheSizeGB 4
-    #command: --wiredTigerCacheSizeGB 4 --sslMode requireSSL --tlsCertificateKeyFile test-server1.pem --tlsCAFile test-ca.pem
+    deploy:
+      resources:
+        limits:
+          memory: 7500m
+        reservations:
+          memory: 2000M
+    command: --wiredTigerCacheSizeGB 2
     hostname: mongo
     container_name: mongoprod
     ports:
