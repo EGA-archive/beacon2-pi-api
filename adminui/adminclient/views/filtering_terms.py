@@ -19,10 +19,11 @@ sh.setFormatter(formatter)
 LOG.addHandler(sh)
 
 def default_view(request):
+    headers = ['id', 'label', 'type', 'synonyms', 'similarities', 'scope']
     filtering_terms=client["beacon"].filtering_terms
     synonyms=client["beacon"].synonyms
     similarities=client["beacon"].similarities
-    all_filtering_terms=filtering_terms.find({})
+    all_filtering_terms=filtering_terms.find({}).limit(0)
     all_similarities=similarities.find({})
     all_synonyms=synonyms.find({})
     final_fterm={}
@@ -42,6 +43,6 @@ def default_view(request):
         if form.is_valid():
 
             return redirect("adminclient:filtering_terms")
-    context={"filtering_terms": list(all_filtering_terms)}
+    context={"filtering_terms": final_fterms_list, "headers": headers}
     template = "general_configuration/filtering_terms.html"
     return render(request, template, context)

@@ -1,4 +1,5 @@
 {% load static %}
+{% load register %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,9 +13,35 @@
   <link rel="stylesheet" href="media/mystyle.css">
 </head>
 
-<body>
-  <body class="bg-custom-powder-light" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'> <!-- NEW - hx-headers added -->
-    <div>{{filtering_terms}}</div>
-    <button type="submit" class="btn btn-danger mb-3" name="Test Mode" value="Test Mode">Save</button>
-    </form>
+<body class="bg-custom-powder-light" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'> <!-- NEW - hx-headers added -->
+                      <div class="row center">
+                    {% if filtering_terms %}
+                    <table id="EGAtable center" style="margin-left: 150px;">
+                      <tbody style="border: 2px solid #7B1B58;">
+                      <tr class="center">
+                        <th scope="col">ID</th>
+                        <th scope="col">Label</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Synonyms</th>
+                        <th scope="col">Ascendant/Similarity</th>
+                        <th scope="col">Scope</th>
+                      </tr>
+                      {% for fterm in filtering_terms %}
+                      <tr class="center">
+                      
+                      {% for h in headers  %}
+                      {% with h as key %}
+                      <td>{{ fterm|get_dict_item:key }}</td>
+                      {% endwith %}
+                      {% endfor %}
+
+                      </tr>
+                      {% endfor %}
+
+          
+                </tbody>
+                </table>
+                    {% endif %}
+                  
+                  </div>
 </body>
