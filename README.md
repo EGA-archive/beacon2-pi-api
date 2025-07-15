@@ -401,15 +401,7 @@ run_lookup=True # True if your beacon enables endpoint analyses/{id}/runs
 
 The most importants are the variable **endpoint_name**, which will change the name of the endpoint that will show the response for analysis type of records, the **granularity**, which will change the maximum granularity allowed for this particular entry type, the **allow_queries_without_filters**, which will allow queries without filters if True to that particular endpoint and the ones that are below *Map configuration* which will activate or deactivate the different endpoints related to this entry type. See explanation next to each of the variables to know more.
 
-### Execute the changes
-
-After editing any comfiguration variable, save the file and restart the API to apply the changes by executing the next command:
-
-```bash
-docker compose restart beaconprod
-```
-
-## Test Mode
+### Test Mode
 
 For verifying your beacon, there are datasets that you can reproduce from the real data ones, that can serve as test but with fake data. When verifying your beacon, the verifiers will test those datasets. Also, for unit testing, there is a test dataset we use. For declaring your dataset a test dataset, you have to edit the [datasets_conf.yml](https://github.com/EGA-archive/beacon2-pi-api/blob/main/beacon/conf/datasets/datasets_conf.yml) file and add an isTest: true parameter under the dataset desired, like this example:
 
@@ -419,6 +411,14 @@ CINECA_synthetic_cohort_EUROPE_UK1:
 test:
   isSynthetic: true
   isTest: true
+```
+
+### Execute the changes
+
+After editing any comfiguration variable, save the file and restart the API to apply the changes by executing the next command:
+
+```bash
+docker compose restart beaconprod
 ```
 
 ## Tests report
