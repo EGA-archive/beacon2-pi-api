@@ -409,12 +409,16 @@ After editing any comfiguration variable, save the file and restart the API to a
 docker compose restart beaconprod
 ```
 
-## Managing source
+## Test Mode
 
-You can edit some parameters concerning entry types developed for your Beacon in [manage.py](https://github.com/EGA-archive/beacon-production-prototype/tree/main/beacon/source/manage.py). For that, change to True the entry types you want to have developed and shown with data for your beacon and execute the next command:
+For verifying your beacon, there are datasets that you can reproduce from the real data ones, that can serve as test but with fake data. When verifying your beacon, the verifiers will test those datasets. Also, for unit testing, there is a test dataset we use. For declaring your dataset a test dataset, you have to edit the [datasets_conf.yml](https://github.com/EGA-archive/beacon2-pi-api/blob/main/beacon/conf/datasets/datasets_conf.yml) file and add an isTest: true parameter under the dataset desired, like this example:
 
 ```bash
-docker compose restart beaconprod
+CINECA_synthetic_cohort_EUROPE_UK1:
+  isTest: false
+test:
+  isSynthetic: true
+  isTest: true
 ```
 
 ## Tests report
