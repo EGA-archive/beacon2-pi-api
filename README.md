@@ -294,13 +294,120 @@ AV_Dataset:
 
 ## Managing configuration
 
-You can edit some parameters for your Beacon v2 API that are in [conf.py](https://github.com/EGA-archive/beacon-production-prototype/tree/main/beacon/conf/conf.py). For that, edit the variables you see fit, save the file and restart the API by executing the next command:
+### Generic configuration
+
+The beacon needs some configuration in order to show the correct mappings or information. In order to do that, the next variables inside [conf.py](https://github.com/EGA-archive/beacon-production-prototype/tree/main/beacon/conf/conf.py) can be modified for that purpose, being **uri** a critical one for showing the correct domain in the mappings of your beacon. The **uri_subpath** will be added behind this **uri** variable, in case there is an extension of the domain for your beacon.
+
+```bash
+beacon_id = 'org.ega-archive.beacon-ri-demo'  # ID of the Beacon
+beacon_name = 'Beacon Reference Implementation demo'  # Name of the Beacon service
+api_version = 'v2.0.0' # Version of the Beacon implementation
+uri = 'http://localhost:5050'
+uri_subpath = '/api'
+complete_url = uri + uri_subpath
+environment = 'test'
+description = r"This Beacon is based on synthetic data hosted at the <a href='https://ega-archive.org/datasets/EGAD00001003338'>EGA</a>. The dataset contains 2504 samples including genetic data based on 1K Genomes data, and 76 individual attributes and phenotypic data derived from UKBiobank."
+version = api_version_yaml['api_version']
+welcome_url = 'https://beacon.ega-archive.org/'
+alternative_url = 'https://beacon.ega-archive.org/api'
+create_datetime = '2021-11-29T12:00:00.000000'
+update_datetime = ''
+default_beacon_granularity = "record" # boolean, count or record
+security_levels = ['PUBLIC', 'REGISTERED', 'CONTROLLED']
+documentation_url = 'https://b2ri-documentation-demo.ega-archive.org/'
+cors_urls = ["http://localhost:3003", "http://localhost:3000"]
+
+# Service Info
+ga4gh_service_type_group = 'org.ga4gh'
+ga4gh_service_type_artifact = 'beacon'
+ga4gh_service_type_version = '1.0'
+
+# Organization info
+org_id = 'EGA'  # Id of the organization
+org_name = 'European Genome-Phenome Archive (EGA)'  # Full name
+org_description = 'The European Genome-phenome Archive (EGA) is a service for permanent archiving and sharing of all types of personally identifiable genetic and phenotypic data resulting from biomedical research projects.'
+org_adress = 'C/ Dr. Aiguader, 88, PRBB Building 08003 Barcelona, Spain'
+org_welcome_url = 'https://ega-archive.org/'
+org_contact_url = 'mailto:beacon.ega@crg.eu'
+org_logo_url = 'https://legacy.ega-archive.org/images/logo.png'
+org_info = ''
+``` 
+
+### Budget configuration
+
+If you wish to put a limit on how many queries can a user or a certain IP make to your beacon, that is now possible. In order to do that, edit the the variables under *Query budget* inside [conf.py](https://github.com/EGA-archive/beacon-production-prototype/tree/main/beacon/conf/conf.py). 
+
+```bash
+# Query Budget
+query_budget_per_user = False
+query_budget_per_ip = False
+query_budget_amount = 3
+query_budget_time_in_seconds = 20
+query_budget_database = 'mongo'
+query_budget_db_name = 'beacon'
+query_budget_table = 'budget'
+```
+
+The variables **query_budget_per_user** and **query_budget_per_ip** are boolean, and if True, they will restrict the queries per user and ip. These depend on **query_budget_amount** which will tell the amount allowed per user/ip and **query_budge_time_in_seconds** which will be the period of time that this amount of queries attempt will last. Bear in mind that activating query budget per user means that if a user is not authenticated, the query will fail unless the query budget per ip is also activated. Both ip and user budgets can be activated at the same time, having preference per user but if unauthenticated, ip queries will also be valid.
+
+### Query rounding
+
+The last thing you can configure inside [conf.py](https://github.com/EGA-archive/beacon-production-prototype/tree/main/beacon/conf/conf.py) is query rounding, editing the variables under that name.
+
+```bash
+# Query Rounding
+imprecise_count=0 # If imprecise_count is 0, no modification of the count will be applied. If it's different than 0, count will always be this number when count is smaller than this number.
+round_to_tens=False # If true, the rounding will be done to the immediate superior tenth if the imprecise_count is 0
+round_to_hundreds=False # If true, the rounding will be done to the immediate superior hundredth if the imprecise_count is 0 and the round_to_tens is false
+```
+
+The variable **imprecise_count** will override all the others and will tell beacon to round the counts to a number equal or greater than the one assigned to this variable. After that, the **round_to_tens** is the variable that will have priority if true, and will round a count to the immediate superior tenth. The last one **round_to_hundreds** will do the same as the one before but rounding to the immedate superior hundredth.
+
+### Entry types configuration
+
+Beacon v2 PI API lets you change the configuration of each of the entry types. For doing that, you have to edit the entry types configuration for each entry type (e.g. [analysis.py](https://github.com/EGA-archive/beacon-production-prototype/tree/main/beacon/conf/analysis.py)) and there you will find the next variables:
+
+```bash
+endpoint_name="analyses"
+open_api_endpoints_definition='https://raw.githubusercontent.com/ga4gh-beacon/beacon-v2/main/models/json/beacon-v2-default-model/analyses/endpoints.json'
+database='mongo' # The name must match the folder's name in connection that belongs to the desired database.
+
+# Granularity accepted: boolean, count or record
+granularity='record'
+
+# Entry type configuration
+id='analysis'
+name='Bioinformatics analysis'
+ontology_id='edam:operation_2945'
+ontology_name='Analysis'
+specification='Beacon v2.0.0'
+description='Apply analytical methods to existing data of a specific type.'
+defaultSchema_id='beacon-analysis-v2.0.0'
+defaultSchema_name='Default schema for a bioinformatics analysis'
+defaultSchema_reference_to_schema_definition='https://raw.githubusercontent.com/ga4gh-beacon/beacon-v2/main/models/json/beacon-v2-default-model/analyses/defaultSchema.json'
+defaultSchema_schema_version='v2.0.0'
+aditionally_supported_schemas=[]
+allow_queries_without_filters=True
+
+# Map configuration
+singleEntryUrl=True # True if your beacon enables endpoint analyses/{id}
+biosample_lookup=True # True if your beacon enables endpoint analyses/{id}/biosamples
+cohort_lookup=True # True if your beacon enables endpoint analyses/{id}/cohorts
+dataset_lookup=True # True if your beacon enables endpoint analyses/{id}/datasets
+genomicVariant_lookup=True # True if your beacon enables endpoint analyses/{id}/g_variants
+individual_lookup=True # True if your beacon enables endpoint analyses/{id}/individuals
+run_lookup=True # True if your beacon enables endpoint analyses/{id}/runs
+```
+
+The most importants are the variable **endpoint_name**, which will change the name of the endpoint that will show the response for analysis type of records, the **granularity**, which will change the maximum granularity allowed for this particular entry type, the **allow_queries_without_filters**, which will allow queries without filters if True to that particular endpoint and the ones that are below *Map configuration* which will activate or deactivate the different endpoints related to this entry type. See explanation next to each of the variables to know more.
+
+### Execute the changes
+
+After editing any comfiguration variable, save the file and restart the API to apply the changes by executing the next command:
 
 ```bash
 docker compose restart beaconprod
 ```
-
-Also, to manage the specific entry types conf, yo uwill need to edit the files related to each entry type in the conf folder, e.g.
 
 ## Managing source
 
