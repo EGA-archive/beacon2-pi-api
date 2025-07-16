@@ -399,7 +399,7 @@ individual_lookup=True # True if your beacon enables endpoint analyses/{id}/indi
 run_lookup=True # True if your beacon enables endpoint analyses/{id}/runs
 ```
 
-The most importants are the variable **endpoint_name**, which will change the name of the endpoint that will show the response for analysis type of records, the **granularity**, which will change the maximum granularity allowed for this particular entry type, the **allow_queries_without_filters**, which will allow queries without filters if True to that particular endpoint and the ones that are below *Map configuration* which will activate or deactivate the different endpoints related to this entry type. See explanation next to each of the variables to know more.
+The most importants are the variable **endpoint_name**, which will change the name of the endpoint that will show the response for analysis type of records, the **granularity**, which will change the maximum granularity allowed for this particular entry type, the **allow_queries_without_filters**, which will allow queries without filters if True to that particular endpoint. Also, **defaultSchema_id** says which is the version of the schema of the records that are stored in this entry type and when receiving a requestedSchema different than this id, the beacon will respond with a bad request, as other schemas are not supported. The variables that are below *Map configuration* which will activate or deactivate the different endpoints related to this entry type. See explanation next to each of the variables to know more.
 
 ### Test Mode
 
