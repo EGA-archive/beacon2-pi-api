@@ -2490,6 +2490,62 @@ class TestMain(unittest.TestCase):
                 assert resp.status == 200
             loop.run_until_complete(test_check_counts_query_is_working())
             loop.run_until_complete(client.close())
+    def test_main_check_requestedSchemas(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_requestedSchemas():
+                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
+                "meta": {
+                    "apiVersion": "2.0",
+                    "requestedSchemas": [{"schema": "beacon-individual-v2.0.0"}]
+                },
+                "query": { "requestParameters": {
+                "datasets": ["test"]
+                },
+                    "filters": [                ],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "boolean"
+                }
+            }
+            )
+                assert resp.status == 200
+            loop.run_until_complete(test_check_requestedSchemas())
+            loop.run_until_complete(client.close())
+    def test_main_check_requestedSchemas_fails(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_requestedSchemas_fails():
+                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
+                "meta": {
+                    "apiVersion": "2.0",
+                    "requestedSchemas": [{"schema": "beacon-individua-v2.0.0"}]
+                },
+                "query": { "requestParameters": {
+                "datasets": ["test"]
+                },
+                    "filters": [                ],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "boolean"
+                }
+            }
+            )
+                assert resp.status == 400
+            loop.run_until_complete(test_check_requestedSchemas_fails())
+            loop.run_until_complete(client.close())
 
 if __name__ == '__main__':
     unittest.main()
