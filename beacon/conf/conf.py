@@ -15,7 +15,7 @@ log_file=None
 beacon_id = 'org.ega-archive.beacon-ri-demo'  # ID of the Beacon
 beacon_name = 'Beacon Reference Implementation demo'  # Name of the Beacon service
 api_version = 'v2.0.0' # Version of the Beacon implementation
-uri = 'http://localhost:5050'
+uri = 'http://localhost:50501'
 uri_subpath = '/api'
 complete_url = uri + uri_subpath
 environment = 'test'
@@ -59,6 +59,6 @@ query_budget_db_name = 'beacon'
 query_budget_table = 'budget'
 
 # Query Rounding
-round_to_tens=False # If true, the rounding will be done to the immediate superior tenth greater than the exclude_start_count or exclude_end_count in case this second one is not 0
-round_to_hundreds=False # If true, the rounding will be done to the immediate superior hundredth greater than the exclude_start_count or exclude_end_count in case this second one is not 0
-imprecise_count=0 # If exclude_start_count is 0, no modification of the count will be applied. If it's different than 0, count will always be this number when count is smaller than this number.
+imprecise_count=0 # If imprecise_count is 0, no modification of the count will be applied. If it's different than 0, count will always be this number when count is smaller than this number.
+round_to_tens=False # If true, the rounding will be done to the immediate superior tenth if the imprecise_count is 0
+round_to_hundreds=False # If true, the rounding will be done to the immediate superior hundredth if the imprecise_count is 0 and the round_to_tens is false

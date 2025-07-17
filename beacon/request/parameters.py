@@ -10,13 +10,14 @@ from pydantic import (
 from strenum import StrEnum
 from typing import List, Optional, Union
 from beacon.conf.conf import api_version, default_beacon_granularity
+from beacon.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run
 from humps.main import camelize
 from aiohttp.web_request import Request
 from aiohttp import web
 import html
 import json
 from beacon.logs.logs import log_with_args, LOG
-from beacon.request.classes import ErrorClass
+from beacon.request.classes import ErrorClass, RequestAttributes
 from beacon.request.classes import Granularity
 from beacon.conf.conf import api_version, beacon_id 
 
@@ -68,8 +69,8 @@ class CustomFilter(CamelModel):
 
 
 class SchemasPerEntity(CamelModel):
-    entityType: Optional[str]
-    schema: Optional[str]
+    entityType: Optional[str] = ""
+    schema: Optional[str] = ""
 
 
 class Pagination(CamelModel):
@@ -241,6 +242,54 @@ class RequestParams(CamelModel):
             self.query.requestParameters = request["query"]["requestParameters"]
         except Exception:
             pass
+        if self.meta.requestedSchemas != []:
+            schemaCounter=0
+            if RequestAttributes.entry_type_id == analysis.id:
+                for requestedSchema in self.meta.requestedSchemas:
+                    if analysis.defaultSchema_id not in requestedSchema["schema"]:
+                        pass
+                    else:
+                        schemaCounter+=1
+            elif RequestAttributes.entry_type_id == biosample.id:
+                for requestedSchema in self.meta.requestedSchemas:
+                    if biosample.defaultSchema_id not in requestedSchema["schema"]:
+                        pass
+                    else:
+                        schemaCounter+=1
+            elif RequestAttributes.entry_type_id == cohort.id:
+                for requestedSchema in self.meta.requestedSchemas:
+                    if cohort.defaultSchema_id not in requestedSchema["schema"]:
+                        pass
+                    else:
+                        schemaCounter+=1
+            elif RequestAttributes.entry_type_id == dataset.id:
+                for requestedSchema in self.meta.requestedSchemas:
+                    if dataset.defaultSchema_id not in requestedSchema["schema"]:
+                        pass
+                    else:
+                        schemaCounter+=1
+            elif RequestAttributes.entry_type_id == genomicVariant.id:
+                for requestedSchema in self.meta.requestedSchemas:
+                    if genomicVariant.defaultSchema_id not in requestedSchema["schema"]:
+                        pass
+                    else:
+                        schemaCounter+=1
+            elif RequestAttributes.entry_type_id == individual.id:
+                for requestedSchema in self.meta.requestedSchemas:
+                    if individual.defaultSchema_id not in requestedSchema["schema"]:
+                        pass
+                    else:
+                        schemaCounter+=1
+            elif RequestAttributes.entry_type_id == run.id:
+                for requestedSchema in self.meta.requestedSchemas:
+                    if run.defaultSchema_id not in requestedSchema["schema"]:
+                        pass
+                    else:
+                        schemaCounter+=1
+            if schemaCounter==0:
+                ErrorClass.error_code=400
+                ErrorClass.error_message="schema requested: {} not supported".format(requestedSchema)
+                raise
         return self
         
 

@@ -1,3 +1,5 @@
+CINECA_synthetic_cohort_EUROPE_UK1:
+  isTest: false
 test:
-  isTest: True
-  isSynthetic: True
+  isSynthetic: true
+  isTest: true

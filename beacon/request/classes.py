@@ -12,11 +12,12 @@ class ErrorClass():
 
 class RequestAttributes():
     def __init__(self) -> None:# pragma: no cover, explicar cada component què significa i una explicació del que és la classe
-        self.ip=None
-        self.headers=None
-        self.entry_type=None
-        self.entry_id=None
-        self.pre_entry_type=None # root? base?
-        self.source=None # database del entry type
-        self.allowed_granularity=None
-        self.entry_type_id=None
+        self.ip=None # ip from the request client
+        self.headers=None # headers in the request (e.g. authorization token...)
+        self.entry_type=None # the entry type for the returning response
+        self.entry_id=None # the internal id requested if there is one (e.g. entry_type/{id})
+        self.pre_entry_type=None # in case of a cross query, the entry type where the {id} is taken from
+        self.source=None # database where the returning entry type is stored
+        self.allowed_granularity=None # the maximum granularity allowed for the returning entry type
+        self.entry_type_id=None # the name of a single record of the returning entry type (e.g. individual for individuals)
+        self.qparams=None # the query parameters collected from the request

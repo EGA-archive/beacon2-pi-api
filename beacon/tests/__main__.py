@@ -511,6 +511,10 @@ class TestMain(unittest.TestCase):
             async def test_check_individuals_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+individual.endpoint_name)
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                from beacon.utils.handovers import handover_1
+                assert responsedict["response"]["resultSets"][0]["resultsHandover"] == handover_1
             loop.run_until_complete(test_check_individuals_endpoint_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_individuals_with_limit_endpoint_is_working(self):
@@ -680,7 +684,6 @@ class TestMain(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_cohorts_analyses_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+cohort.endpoint_name+"/EGA-testing/"+analysis.endpoint_name)
-                text = await resp.text()
                 assert resp.status == 200
             loop.run_until_complete(test_check_cohorts_analyses_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -2486,6 +2489,62 @@ class TestMain(unittest.TestCase):
                 assert responsedict["responseSummary"]["numTotalResults"] == 20
                 assert resp.status == 200
             loop.run_until_complete(test_check_counts_query_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_requestedSchemas(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_requestedSchemas():
+                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
+                "meta": {
+                    "apiVersion": "2.0",
+                    "requestedSchemas": [{"schema": "beacon-individual-v2.0.0"}]
+                },
+                "query": { "requestParameters": {
+                "datasets": ["test"]
+                },
+                    "filters": [                ],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "boolean"
+                }
+            }
+            )
+                assert resp.status == 200
+            loop.run_until_complete(test_check_requestedSchemas())
+            loop.run_until_complete(client.close())
+    def test_main_check_requestedSchemas_fails(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_requestedSchemas_fails():
+                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
+                "meta": {
+                    "apiVersion": "2.0",
+                    "requestedSchemas": [{"schema": "beacon-individua-v2.0.0"}]
+                },
+                "query": { "requestParameters": {
+                "datasets": ["test"]
+                },
+                    "filters": [                ],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "boolean"
+                }
+            }
+            )
+                assert resp.status == 400
+            loop.run_until_complete(test_check_requestedSchemas_fails())
             loop.run_until_complete(client.close())
 
 if __name__ == '__main__':

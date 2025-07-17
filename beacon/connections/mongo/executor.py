@@ -154,8 +154,12 @@ async def execute_function(self, datasets: list, qparams: RequestParams):
                 else:
                     datasets = [x for x in datasets if x.dataset != dataset] # pragma: no cover
         count=new_count
-
-    return datasets_docs, datasets_count, count, entity_schema, include, datasets
+    try:
+        return datasets_docs, datasets_count, count, entity_schema, include, datasets
+    except Exception:
+        ErrorClass.error_code=400
+        ErrorClass.error_message="No datasets found. Check out the permissions if a response was expected."
+        raise web.HTTPBadRequest
 
 @log_with_args(level)
 async def execute_collection_function(self, qparams: RequestParams):

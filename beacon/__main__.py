@@ -198,7 +198,7 @@ class FilteringTerms(EndpointView):
     async def post(self):
         try:
             qparams = await deconstruct_request(self, self.request)
-            return await self.filteringTerms( qparams)
+            return await self.filteringTerms(qparams)
         except Exception as e:# pragma: no cover
             response_obj = build_beacon_error_response(self, ErrorClass.error_code, ErrorClass.error_message)
             return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')

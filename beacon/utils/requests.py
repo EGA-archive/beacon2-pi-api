@@ -81,7 +81,7 @@ def parse_query_string(self, request):
     return query_string_body
 
 @log_with_args(level)
-async def get_qparams(self, request): # anomenar query string en comptes de qparams
+async def get_qparams(self, request, query_string_body): # anomenar query string en comptes de qparams
     # Bad Request not priority
     '''
     The function will catch all the parameters in the query string and see if they also exist in a json body of the request. If a parameter is found in both places and is different, we
@@ -95,7 +95,6 @@ async def get_qparams(self, request): # anomenar query string en comptes de qpa
                 ErrorClass.error_message='requestParameters can not be empty, remove the requestParameters property from the body if you do not want to apply any'
         except Exception:
             pass
-        query_string_body = parse_query_string(self, request)
         final_body=post_data
         for k, v in query_string_body.items():
             if post_data.get(k) == None:
@@ -170,12 +169,8 @@ def set_entry_type(self, request):
         abs_url_with_query_string=str(request.url)
         abs_url=abs_url_with_query_string.split('?')
         abs_url=abs_url[0]
-        if uri.endswith('/'):
-            starting_endpoint = len(uri) + len(uri_subpath) -1
-            def_uri=uri + uri_subpath
-        else:
-            starting_endpoint = len(uri) + len(uri_subpath)
-            def_uri = uri + uri_subpath
+        starting_endpoint = len(uri) + len(uri_subpath)
+        def_uri = uri + uri_subpath
         if abs_url[:starting_endpoint] != def_uri :
             LOG.warning('configuration variable uri: {} not the same as where the beacon is hosted'.format(uri))
         path_list = abs_url[starting_endpoint:].split('/')
@@ -192,6 +187,14 @@ def set_entry_type(self, request):
     except Exception:
         raise
 
+@log_with_args(level)
+def set_ip(self, request):
+    RequestAttributes.ip=request.remote
+
+@log_with_args(level)
+def set_headers(self, request):
+    RequestAttributes.headers=request.headers
+
     
 @log_with_args(level)
 async def deconstruct_request(self, request):
@@ -201,8 +204,9 @@ async def deconstruct_request(self, request):
     '''
     # headers, path, query string, body
     # analitzar entry type en una sola funció
-    RequestAttributes.ip=request.remote
-    RequestAttributes.headers=request.headers
+    set_ip(self, request)
+    set_headers(self, request)
     set_entry_type(self, request)
-    qparams = await get_qparams(self, self.request)
+    query_string_body = parse_query_string(self, request)
+    qparams = await get_qparams(self, self.request, query_string_body)
     return qparams

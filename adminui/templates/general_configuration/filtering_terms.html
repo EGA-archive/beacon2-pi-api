@@ -1,0 +1,82 @@
+{% load static %}
+{% load register %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="htmx-config" content='{"selfRequestsOnly":false}'>
+  <title>Admin UI</title>
+  <script type="text/javascript" src="{% static '/adminui/js/htmx.min.js' %}"></script>
+  <link rel="stylesheet" href="media/mystyle.css">
+</head>
+
+<body class="bg-custom-powder-light" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'> <!-- NEW - hx-headers added -->
+                      <div class="row center">
+                <form method="post" onsubmit="openLoader()">
+                  {% csrf_token %}
+                  <input hidden type="text" id="id_FilteringTermID" name="FilteringTermID" value="Delete All">
+                <button type="submit" class="btn btn-danger mb-3" name="Delete All" value="Delete All">Delete All</button>
+                </form>
+                    {% if filtering_terms %}
+                    <table id="EGAtable center" style="margin-left: 150px;">
+                      <tbody style="border: 2px solid #7B1B58;">
+                      <tr class="center">
+                        <th scope="col">ID</th>
+                        <th scope="col">Label</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Synonyms</th>
+                        <th scope="col">Ascendant/Similarity</th>
+                        <th scope="col">Scopes</th>
+                        <th scope="col"></th>
+                      </tr>
+                      {% for fterm in filtering_terms %}
+                      <tr class="center">
+                      
+                        {% for h in headers  %}
+                          {% with h as key %}
+                          <td>{{ fterm|get_dict_item:key }}</td>
+                          {% endwith %}
+                        {% endfor %}
+                        {% for k, v in fterm.items %}
+
+                          {% if k == 'id' %}
+                                                  <form method="post" onsubmit="openLoader()">
+                                                    {% csrf_token %}
+                        <input hidden type="text" id="id_FilteringTermID" name="FilteringTermID" value="{{v}}">
+                          <td><button type="submit" class="btn btn-danger mb-3" name="Delete Filtering Term" value="Delete Filtering Term">Delete</button></td>
+                                                  </form>
+                          {% endif %}
+                        {% endfor %}
+                      </tr>
+                      {% endfor %}          
+                </tbody>
+                </table>
+                    {% endif %}
+                    <table id="EGAtable center" style="margin-left: 150px;">
+                      <tbody style="border: 2px solid #7B1B58;">
+                      <tr class="center">
+                        <th scope="col">ID</th>
+                        <th scope="col">Label</th>
+                        <th scope="col">Ascendant/Similarity</th>
+                      </tr>
+                      {% for fterm in filtering_terms %}
+                      <tr class="center">
+                      
+                      {% for h in similarities_headers  %}
+                      {% with h as key %}
+                      <td>{{ fterm|get_dict_item:key }}</td>
+                      {% endwith %}
+                      {% endfor %}
+
+                      </tr>
+                      {% endfor %}
+
+          
+                </tbody>
+                </table>
+                </form>
+                  </div>
+</body>
