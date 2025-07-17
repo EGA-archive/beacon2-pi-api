@@ -38,9 +38,9 @@ genomicVariations.create_index([("variation.alternateBases", 1),("variation.refe
 genomicVariations.create_index([("datasetId", 1)]) # splits all the docs into datasets faster
 genomicVariations.create_index([("variantInternalId", 1)]) # enables the g_variants/{id}/endpoint query to do it faster
 #genomicVariations.create_index([("variation.location.interval.start.value", 1)])
-genomicVariations.create_index([("variation.location.interval.end.value", 1)])
-genomicVariations.create_index([("identifiers.genomicHGVSId", 1)])
-genomicVariations.create_index([("molecularAttributes.geneIds", 1), ("variation.variantType", 1)])
+#genomicVariations.create_index([("variation.location.interval.end.value", 1)])
+#genomicVariations.create_index([("identifiers.genomicHGVSId", 1)])
+#genomicVariations.create_index([("molecularAttributes.geneIds", 1), ("variation.variantType", 1)])
 caseLevelData.create_index([("id", 1), ("datasetId", 1)])
 caseLevelData.create_index([("datasetId", 1)])
 
