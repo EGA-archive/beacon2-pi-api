@@ -793,7 +793,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_with_id_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/96c010bc-1449-11f0-83f8-0242ac120003:G:A")
+                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/40897ed8-6311-11f0-a5d6-0242ac130006:G:A")
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
                 assert responsedict["responseSummary"]["numTotalResults"] == 1
@@ -806,7 +806,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_runs_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/96c010bc-1449-11f0-83f8-0242ac120003:G:A/"+run.endpoint_name)
+                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/40897ed8-6311-11f0-a5d6-0242ac130006:G:A/"+run.endpoint_name)
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
                 assert responsedict["responseSummary"]["numTotalResults"] == 1
@@ -819,7 +819,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_biosamples_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/96c010bc-1449-11f0-83f8-0242ac120003:G:A/"+biosample.endpoint_name)
+                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/40897ed8-6311-11f0-a5d6-0242ac130006:G:A/"+biosample.endpoint_name)
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
                 assert responsedict["responseSummary"]["numTotalResults"] == 15
@@ -832,7 +832,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_analyses_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/96c010bc-1449-11f0-83f8-0242ac120003:G:A/"+analysis.endpoint_name)
+                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/40897ed8-6311-11f0-a5d6-0242ac130006:G:A/"+analysis.endpoint_name)
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
                 assert responsedict["responseSummary"]["numTotalResults"] == 1
@@ -845,7 +845,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_inividuals_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/96c010bc-1449-11f0-83f8-0242ac120003:G:A/"+individual.endpoint_name)
+                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/40897ed8-6311-11f0-a5d6-0242ac130006:G:A/"+individual.endpoint_name)
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
                 assert responsedict["responseSummary"]["numTotalResults"] == 15
@@ -1467,7 +1467,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_heterozygosity():
-                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/96c1004e-1449-11f0-83f8-0242ac120003:G:ATG/"+individual.endpoint_name, json={
+                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/408aadbc-6311-11f0-a5d6-0242ac130006:G:ATG/"+individual.endpoint_name, json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -1496,7 +1496,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_homozygosity():
-                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/96c0d754-1449-11f0-83f8-0242ac120003:T:TGCAAATGCAAATGCAAATGCAAA/"+individual.endpoint_name, json={
+                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/408a7f86-6311-11f0-a5d6-0242ac130006:T:TGCAAATGCAAATGCAAATGCAAA/"+individual.endpoint_name, json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -1522,7 +1522,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_individuals_variants():
-                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/96c1004e-1449-11f0-83f8-0242ac120003:G:ATG/"+individual.endpoint_name, json={
+                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/408aadbc-6311-11f0-a5d6-0242ac130006:G:ATG/"+individual.endpoint_name, json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -1548,7 +1548,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_heterozygosity():
-                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/96c1004e-1449-11f0-83f8-0242ac120003:G:ATG/"+analysis.endpoint_name+"", json={
+                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/408aadbc-6311-11f0-a5d6-0242ac130006:G:ATG/"+analysis.endpoint_name+"", json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -1574,7 +1574,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_homozygosity():
-                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/96c0d754-1449-11f0-83f8-0242ac120003:T:TGCAAATGCAAATGCAAATGCAAA/"+analysis.endpoint_name+"", json={
+                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/408a7f86-6311-11f0-a5d6-0242ac130006:T:TGCAAATGCAAATGCAAATGCAAA/"+analysis.endpoint_name+"", json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -1600,7 +1600,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_analyses_variants():
-                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/96c1004e-1449-11f0-83f8-0242ac120003:G:ATG/"+analysis.endpoint_name+"", json={
+                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/408aadbc-6311-11f0-a5d6-0242ac130006:G:ATG/"+analysis.endpoint_name+"", json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -1626,7 +1626,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_heterozygosity():
-                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/96c1004e-1449-11f0-83f8-0242ac120003:G:ATG/"+biosample.endpoint_name, json={
+                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/408aadbc-6311-11f0-a5d6-0242ac130006:G:ATG/"+biosample.endpoint_name, json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -1652,7 +1652,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_homozygosity():
-                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/96c0d754-1449-11f0-83f8-0242ac120003:T:TGCAAATGCAAATGCAAATGCAAA/"+biosample.endpoint_name, json={
+                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/408a7f86-6311-11f0-a5d6-0242ac130006:T:TGCAAATGCAAATGCAAATGCAAA/"+biosample.endpoint_name, json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -1678,7 +1678,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_biosamples_variants():
-                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/96c37518-1449-11f0-83f8-0242ac120003:AGCAG:A/"+biosample.endpoint_name, json={
+                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/408d7952-6311-11f0-a5d6-0242ac130006:AGCAG:A/"+biosample.endpoint_name, json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -1704,7 +1704,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_heterozygosity():
-                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/96c1004e-1449-11f0-83f8-0242ac120003:G:ATG/"+run.endpoint_name, json={
+                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/408aadbc-6311-11f0-a5d6-0242ac130006:G:ATG/"+run.endpoint_name, json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -1730,7 +1730,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_homozygosity():
-                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/96c0d754-1449-11f0-83f8-0242ac120003:T:TGCAAATGCAAATGCAAATGCAAA/"+run.endpoint_name, json={
+                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/408a7f86-6311-11f0-a5d6-0242ac130006:T:TGCAAATGCAAATGCAAATGCAAA/"+run.endpoint_name, json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -1756,7 +1756,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
-                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/96c1004e-1449-11f0-83f8-0242ac120003:G:ATG/"+run.endpoint_name, json={
+                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/408aadbc-6311-11f0-a5d6-0242ac130006:G:ATG/"+run.endpoint_name, json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
