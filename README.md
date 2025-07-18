@@ -65,6 +65,8 @@ After that, you will need to configure the IPs in the different conf files to ma
 
 #### Load the data
 
+**To avoid having duplicated records, make sure to have run the reindex script before loading data, this will make the import of the data run slower but will avoit the duplications. Also, if you want to import new data faster and you are sure data won't be duplicated, you can drop the indexes of the database to make imports faster.**
+
 To load the database (mongo) just copy your files in the data folder. Then, locate yourself in the mongo folder:
 
 ```bash

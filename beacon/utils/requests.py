@@ -158,6 +158,20 @@ def set_entry_type_configuration(self):
         RequestAttributes.source = run.database
         RequestAttributes.allowed_granularity = run.granularity
         RequestAttributes.entry_type_id = run.id
+    elif RequestAttributes.entry_type == cohort.endpoint_name:
+        RequestAttributes.source = cohort.database
+        RequestAttributes.allowed_granularity = cohort.granularity
+        RequestAttributes.entry_type_id = cohort.id
+    elif RequestAttributes.entry_type == dataset.endpoint_name:
+        RequestAttributes.source = dataset.database
+        RequestAttributes.allowed_granularity = dataset.granularity
+        RequestAttributes.entry_type_id = dataset.id
+    elif RequestAttributes.entry_type == 'filtering_terms':
+        pass
+    else:
+        ErrorClass.error_code=500
+        ErrorClass.error_message='no entry type detected, check your uri from conf file to make sure is correct'
+        raise web.HTTPInternalServerError
     
 @log_with_args(level)
 def set_entry_type(self, request):
@@ -175,13 +189,27 @@ def set_entry_type(self, request):
             LOG.warning('configuration variable uri: {} not the same as where the beacon is hosted'.format(uri))
         path_list = abs_url[starting_endpoint:].split('/')
         path_list = list(filter(None, path_list))
+        if path_list == []:
+            ErrorClass.error_code=500
+            ErrorClass.error_message='the {} parameter from conf.py is not the same as the root one received in request: {}. Configure you uri accordingly.'.format(uri, abs_url)
+            raise web.HTTPInternalServerError
         if len(path_list) > 2:
-            RequestAttributes.pre_entry_type=path_list[0]
-            RequestAttributes.entry_type=path_list[2]
+            try:
+                RequestAttributes.pre_entry_type=path_list[0]
+                RequestAttributes.entry_type=path_list[2]
+            except Exception:
+                ErrorClass.error_code=500
+                ErrorClass.error_message='path received is wrong, check your uri: {} from conf file to make sure is correct'.format(uri)
+                raise web.HTTPInternalServerError
             set_entry_type_configuration(self)
             RequestAttributes.entry_id=request.match_info.get('id', None)
         else:
-            RequestAttributes.entry_type=path_list[0]
+            try:
+                RequestAttributes.entry_type=path_list[0]
+            except Exception:
+                ErrorClass.error_code=500
+                ErrorClass.error_message='path received is wrong, check your uri: {} from conf file to make sure is correct'.format(uri)
+                raise web.HTTPInternalServerError
             set_entry_type_configuration(self)
             RequestAttributes.entry_id=request.match_info.get('id', None)
     except Exception:
@@ -204,9 +232,13 @@ async def deconstruct_request(self, request):
     '''
     # headers, path, query string, body
     # analitzar entry type en una sola funció
-    set_ip(self, request)
-    set_headers(self, request)
-    set_entry_type(self, request)
-    query_string_body = parse_query_string(self, request)
-    qparams = await get_qparams(self, self.request, query_string_body)
-    return qparams
+    try:
+        set_ip(self, request)
+        set_headers(self, request)
+        set_entry_type(self, request)
+        query_string_body = parse_query_string(self, request)
+        qparams = await get_qparams(self, self.request, query_string_body)
+        return qparams
+    except Exception:
+        raise
+    

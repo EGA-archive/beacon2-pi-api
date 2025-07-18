@@ -34,11 +34,11 @@ except Exception:
     db=client[dbname].create_collection(name="similarities")
 
 genomicVariations.create_index([("length", 1), ("variation.location.interval.start.value", 1),("variation.location.interval.end.value", 1)]) # for range queries
-#genomicVariations.create_index([("variation.alternateBases", 1),("variation.referenceBases", 1),("variation.location.interval.start.value", 1), ("variation.location.interval.end.value", 1)]) # for sequence queries
-genomicVariations.create_index([("variation.alternateBases", 1),("variation.referenceBases", 1),("variation.location.interval.start.value", 1), ("variation.location.interval.end.value", 1), ("datasetId", 1)], unique=True) # for sequence queries
+genomicVariations.create_index([("variation.alternateBases", 1),("variation.referenceBases", 1),("variation.location.interval.start.value", 1), ("variation.location.interval.end.value", 1)]) # for sequence queries
+#genomicVariations.create_index([("variation.alternateBases", 1),("variation.referenceBases", 1),("variation.location.interval.start.value", 1), ("variation.location.interval.end.value", 1), ("datasetId", 1)], unique=True) # for sequence queries
 genomicVariations.create_index([("datasetId", 1)]) # splits all the docs into datasets faster
 genomicVariations.create_index([("variantInternalId", 1)]) # enables the g_variants/{id}/endpoint query to do it faster
-genomicVariations.create_index([("identifiers.genomicHGVSId", 1)])
+genomicVariations.create_index([("identifiers.genomicHGVSId", 1), (("datasetId", 1))], unique=True)
 genomicVariations.create_index([("molecularAttributes.geneIds", 1), ("variation.variantType", 1)])
 caseLevelData.create_index([("id", 1), ("datasetId", 1)], unique=True)
 caseLevelData.create_index([("datasetId", 1)])
