@@ -83,11 +83,16 @@
                 </tbody>
                 </table>
                 </form>
-                      <form method="post" onsubmit="openLoader()">
+      <form method="post" onsubmit="openLoader()">
         {% csrf_token %}
           <div>
-            {% for f in form %}
+            {% for f in form2 %}
+            {% if f.help_text == 'Synonym' %}
             <p>{{f.help_text|safe}} {{f}} </p>
+            <button type="submit" class="btn btn-danger mb-3">+</button>
+            {% else %}
+            <p>{{f.help_text|safe}} {{f}} </p>
+            {% endif %}
             {% endfor %}
             <span id="active-label"></span>
           </div>

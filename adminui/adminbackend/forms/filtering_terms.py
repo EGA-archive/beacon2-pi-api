@@ -1,4 +1,4 @@
-from django import forms, models
+from django import forms
 import yaml
 import logging
 
@@ -26,7 +26,6 @@ def formatting_field(self, line):
         placeholder=placeholder[0:-1]
     return placeholder
 
-
 class FilteringTermsForm(forms.Form):
     FilteringTermID = forms.CharField(required=False)
     FilteringTermsList = forms.FileField(required=False)
@@ -36,5 +35,4 @@ class AddFilteringTerm(forms.Form):
     type_choices = [("Ontology", "Ontology"), ("Alphanumeric", "Alphanumeric")]
     FilteringTermType = forms.ChoiceField(choices=type_choices, help_text="Type", required=True)
     FilteringTermLabel = forms.CharField(required=True)
-    FilteringTermSynonym = models.ManyToManyField(AcademicDegree)
-    
+    Synonym = forms.CharField(help_text='Synonym')
