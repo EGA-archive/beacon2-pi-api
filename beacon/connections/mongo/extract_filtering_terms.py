@@ -436,6 +436,21 @@ def merge_custom_terms():
     if new_terms != []:
         filtering_terms_.insert_many(new_terms)
 
+def insert_zygosity_terms():
+    heterozygous={"id": "GENO:0000458",
+     "label": "simple heterozygous",
+     "type": "ontology",
+     "scopes": ["genomicVariation"]}
+    homozygous={"id": "GENO:0000136",
+     "label": "homozygous",
+     "type": "ontology",
+     "scopes": ["genomicVariation"]}
+    zygosity_terms=[]
+    zygosity_terms.append(heterozygous)
+    zygosity_terms.append(homozygous)
+    filtering_terms_.insert_many(zygosity_terms)
+    
+
 
 
 
@@ -443,3 +458,4 @@ insert_all_ontology_terms_used()
 merge_ontology_terms()
 merge_alphanumeric_terms()
 merge_custom_terms()
+insert_zygosity_terms()

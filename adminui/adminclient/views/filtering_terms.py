@@ -5,8 +5,9 @@ import logging
 from pymongo.mongo_client import MongoClient
 from django.urls import resolve
 from beacon.connections.mongo.__init__ import client
-from adminbackend.forms.filtering_terms import FilteringTermsForm
+from adminbackend.forms.filtering_terms import FilteringTermsForm, AddFilteringTerm
 import yaml
+import json
 
 import logging
 
@@ -19,6 +20,7 @@ sh.setFormatter(formatter)
 LOG.addHandler(sh)
 
 def default_view(request):
+    form2 = AddFilteringTerm(request.POST)
     headers = ['id', 'label', 'type', 'synonyms', 'similarities', 'scopes']
     similarities_headers = ['id', 'label', 'similarities']
     filtering_terms=client["beacon"].filtering_terms
@@ -37,15 +39,20 @@ def default_view(request):
         final_fterms_list.append(final_fterm)
     
     if request.method == 'POST':
-        form = FilteringTermsForm(request.POST)
+        form = FilteringTermsForm(request.POST, request.FILES)
         if form.is_valid():
             filteringTermID = form.cleaned_data['FilteringTermID']
             if 'Delete Filtering Term' in request.POST:
                 filtering_terms.delete_many({"id": filteringTermID})
             elif 'Delete All' in request.POST:
                 filtering_terms.delete_many({})
-
+            elif 'Upload a List' in request.POST:
+                hola = json.load(request.FILES["FilteringTermsList"])
+                filtering_terms.insert_many(hola)
+        elif form2.is_valid(request.POST,extra=request.POST.get('extra_field_count')):
+            filteringTermID = form.cleaned_data['FilteringTermID']
+            
         return redirect("adminclient:filtering_terms")
-    context={"filtering_terms": final_fterms_list, "headers": headers, "all_similarities": list(all_similarities), "similarities_headers": similarities_headers}
+    context={"filtering_terms": final_fterms_list, "headers": headers, "all_similarities": list(all_similarities), "similarities_headers": similarities_headers, "form2": form2}
     template = "general_configuration/filtering_terms.html"
     return render(request, template, context)

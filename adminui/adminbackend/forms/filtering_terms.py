@@ -26,7 +26,13 @@ def formatting_field(self, line):
         placeholder=placeholder[0:-1]
     return placeholder
 
-
 class FilteringTermsForm(forms.Form):
-    FilteringTermID = forms.CharField()
-    
+    FilteringTermID = forms.CharField(required=False)
+    FilteringTermsList = forms.FileField(required=False)
+
+class AddFilteringTerm(forms.Form):
+    FilteringTermID = forms.CharField(required=True)
+    type_choices = [("Ontology", "Ontology"), ("Alphanumeric", "Alphanumeric")]
+    FilteringTermType = forms.ChoiceField(choices=type_choices, help_text="Type", required=True)
+    FilteringTermLabel = forms.CharField(required=True)
+    Synonym = forms.CharField(help_text='Synonym')

@@ -20,6 +20,11 @@
                   <input hidden type="text" id="id_FilteringTermID" name="FilteringTermID" value="Delete All">
                 <button type="submit" class="btn btn-danger mb-3" name="Delete All" value="Delete All">Delete All</button>
                 </form>
+                <form method="post" enctype="multipart/form-data" onsubmit="openLoader()">
+                  {% csrf_token %}
+                  <input type="file" id="id_FilteringTermsList" name="FilteringTermsList" value="Upload a List">
+                <button type="submit" class="btn btn-danger mb-3" name="Upload a List" value="Upload a List">Upload a List</button>
+                </form>
                     {% if filtering_terms %}
                     <table id="EGAtable center" style="margin-left: 150px;">
                       <tbody style="border: 2px solid #7B1B58;">
@@ -78,5 +83,22 @@
                 </tbody>
                 </table>
                 </form>
+      <form method="post" onsubmit="openLoader()">
+        {% csrf_token %}
+          <div>
+            {% for f in form2 %}
+            {% if f.help_text == 'Synonym' %}
+            <p>{{f.help_text|safe}} {{f}} </p>
+            <button type="submit" class="btn btn-danger mb-3">+</button>
+            {% else %}
+            <p>{{f.help_text|safe}} {{f}} </p>
+            {% endif %}
+            {% endfor %}
+            <span id="active-label"></span>
+          </div>
+          <div>
+            <button type="submit" class="btn btn-danger mb-3">Save</button>
+          </div>
+      </form>
                   </div>
 </body>

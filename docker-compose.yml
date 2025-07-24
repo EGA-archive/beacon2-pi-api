@@ -130,6 +130,7 @@ services:
       - ./ri-tools/files/vcf/files_to_read:/usr/src/app/files/vcf/files_to_read
       - ./ri-tools/csv:/usr/src/app/csv
       - ./ri-tools/pipelines:/usr/src/app/pipelines
+      - ./ri-tools/files/updated_json:/usr/src/app/files/updated_json
 
   phenopackets-to-BFF:
     image: ghcr.io/ega-archive/phenopackets-to-bff:latest
