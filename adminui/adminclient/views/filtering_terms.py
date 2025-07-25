@@ -40,7 +40,16 @@ def default_view(request):
     
     if request.method == 'POST':
         form = FilteringTermsForm(request.POST, request.FILES)
-        if form.is_valid():
+        if form2.is_valid():
+            filteringTermID = form2.cleaned_data['FilteringTermID']
+            synonym_cleaned = form2.cleaned_data['Synonym']
+            LOG.warning(filteringTermID)
+            LOG.warning(synonym_cleaned)
+            if 'Add Synonym' in request.POST:
+                LOG.warning('adding synonym')
+                synonyms.insert_many([{"id":filteringTermID, "synonym": synonym_cleaned}])
+        elif form.is_valid():
+            LOG.warning('here I am')
             filteringTermID = form.cleaned_data['FilteringTermID']
             if 'Delete Filtering Term' in request.POST:
                 filtering_terms.delete_many({"id": filteringTermID})
@@ -49,10 +58,13 @@ def default_view(request):
             elif 'Upload a List' in request.POST:
                 hola = json.load(request.FILES["FilteringTermsList"])
                 filtering_terms.insert_many(hola)
-        elif form2.is_valid(request.POST,extra=request.POST.get('extra_field_count')):
-            filteringTermID = form.cleaned_data['FilteringTermID']
-            
-        return redirect("adminclient:filtering_terms")
+            return redirect("adminclient:filtering_terms")
+        else:
+            LOG.warning('not valid!')
+    elif request.method == 'GET':
+        if form2.is_valid():
+            pass
+        
     context={"filtering_terms": final_fterms_list, "headers": headers, "all_similarities": list(all_similarities), "similarities_headers": similarities_headers, "form2": form2}
     template = "general_configuration/filtering_terms.html"
     return render(request, template, context)

@@ -88,8 +88,15 @@
           <div>
             {% for f in form2 %}
             {% if f.help_text == 'Synonym' %}
-            <p>{{f.help_text|safe}} {{f}} </p>
-            <button type="submit" class="btn btn-danger mb-3">+</button>
+            <div id="synonym"></div>
+<input type="text" hx-swap-oob="outerHTML:#id_Synonym" id="id_Synonym" 
+        name="Synonym">
+  <button hx-get="/synonyms" hx-swap="innerHTML" hx-target="#synonym" hx-include="[name='Synonym'], [name='Synonym_FilteringTermID']">
+    +
+  </button>
+              
+              
+
             {% else %}
             <p>{{f.help_text|safe}} {{f}} </p>
             {% endif %}
