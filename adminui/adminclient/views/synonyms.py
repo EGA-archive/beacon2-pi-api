@@ -34,10 +34,10 @@ def default_view(request):
             synonym_found=synonym_queried[1]
 
 
-    synonyms=client["beacon"].synonyms
-    synonyms.insert_one({"id": ft_found, "synonym": synonym_found})
+    presynonyms=client["beacon"].presynonyms
+    presynonyms.insert_one({"id": ft_found, "synonym": synonym_found})
     
-    synonyms_found=synonyms.find({"id": ft_found })
+    synonyms_found=presynonyms.find({"id": ft_found })
     
     synonyms_list=[]
     for synonym_found in synonyms_found:

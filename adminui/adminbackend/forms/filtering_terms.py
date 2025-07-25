@@ -31,8 +31,8 @@ class FilteringTermsForm(forms.Form):
     FilteringTermsList = forms.FileField(required=False)
 
 class AddFilteringTerm(forms.Form):
-    Synonym_FilteringTermID = forms.CharField(required=True)
+    Synonym_FilteringTermID = forms.CharField(required=True, help_text="Id")
     type_choices = [("Ontology", "Ontology"), ("Alphanumeric", "Alphanumeric")]
     FilteringTermType = forms.ChoiceField(choices=type_choices, help_text="Type", required=True)
-    FilteringTermLabel = forms.CharField(required=True)
+    FilteringTermLabel = forms.CharField(required=True, help_text="Label")
     Synonym = forms.CharField(help_text='Synonym', required=False)
