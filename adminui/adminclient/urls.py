@@ -1,6 +1,6 @@
 from django.urls import path
 #from .views import HomePageView
-from .views import views, datasets, filtering_terms, synonyms
+from .views import views, datasets, filtering_terms, synonyms, descendants
 app_name = 'adminclients'
 
 urlpatterns = [
@@ -8,5 +8,6 @@ urlpatterns = [
     path('entry_types', views.entry_types, name='entry_types'),
     path('datasets', datasets.default_view, name='datasets'),
     path('filtering_terms', filtering_terms.default_view, name='filtering_terms'),
-    path('synonyms', synonyms.default_view, name='synonyms')
+    path('synonyms', synonyms.default_view, name='synonyms'),
+    path('descendants', descendants.default_view, name='descendants')
 ]

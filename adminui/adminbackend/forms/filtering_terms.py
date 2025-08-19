@@ -34,5 +34,12 @@ class AddFilteringTerm(forms.Form):
     Synonym_FilteringTermID = forms.CharField(required=True, help_text="Id")
     type_choices = [("Ontology", "Ontology"), ("Alphanumeric", "Alphanumeric")]
     FilteringTermType = forms.ChoiceField(choices=type_choices, help_text="Type", required=True)
-    FilteringTermLabel = forms.CharField(required=True, help_text="Label")
+    FilteringTermLabel = forms.CharField(required=False, help_text="Label")
     Synonym = forms.CharField(help_text='Synonym', required=False)
+    Descendant = forms.CharField(help_text='Descendant', required=False)
+    scopes_choices=[('individual', 'individual'), ('biosample', 'biosample'), ('analysis', 'analysis'), ('cohort', 'cohort'), ('genomicVariation', 'genomicVariation'), ('run', 'run'), ('dataset', 'dataset')]
+    Scope = forms.MultipleChoiceField(
+        choices=scopes_choices, 
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )

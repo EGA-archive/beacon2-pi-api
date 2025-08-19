@@ -94,6 +94,14 @@
   <button hx-get="/synonyms" hx-swap="innerHTML" hx-target="#synonym" hx-include="[name='Synonym'], [name='Synonym_FilteringTermID']">
     +
   </button>
+
+              {% elif f.help_text == 'Descendant' %}
+            <span>Descendant terms added: <div id="descendant"></div></span>
+<span>Descendant: <input type="text" hx-swap-oob="outerHTML:#id_Descendant" id="id_Descendant" 
+        name="Descendant"></span>
+  <button hx-get="/descendants" hx-swap="innerHTML" hx-target="#descendant" hx-include="[name='Descendant'], [name='Synonym_FilteringTermID']">
+    +
+  </button>
               
               
 
