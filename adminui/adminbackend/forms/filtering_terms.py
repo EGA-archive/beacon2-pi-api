@@ -29,6 +29,8 @@ def formatting_field(self, line):
 class FilteringTermsForm(forms.Form):
     FilteringTermID = forms.CharField(required=False)
     FilteringTermsList = forms.FileField(required=False)
+    ScanDB = forms.CharField(required=False)
+    SearchAscendant = forms.CharField(required=False)
 
 class AddFilteringTerm(forms.Form):
     Synonym_FilteringTermID = forms.CharField(required=True, help_text="Id")
@@ -41,5 +43,6 @@ class AddFilteringTerm(forms.Form):
     Scope = forms.MultipleChoiceField(
         choices=scopes_choices, 
         widget=forms.CheckboxSelectMultiple,
-        required=False
+        required=False,
+        help_text="Scope"
     )

@@ -8,8 +8,8 @@ from beacon.connections.mongo.__init__ import client
 from adminbackend.forms.filtering_terms import FilteringTermsForm, AddFilteringTerm
 import yaml
 import json
-
 import logging
+import subprocess
 
 LOG = logging.getLogger(__name__)
 fmt = '%(levelname)s - %(asctime)s - %(message)s'
@@ -84,6 +84,10 @@ def default_view(request):
             elif 'Upload a List' in request.POST:
                 hola = json.load(request.FILES["FilteringTermsList"])
                 filtering_terms.insert_many(hola)
+            elif 'SearchAscendant' in request.POST:
+                bash_string = 'python -m beacon.connections.mongo.get_descendants'
+                bash = subprocess.check_output([bash_string], shell=True)
+
             presynonyms.delete_many({})
             predescendants.delete_many({})
             return redirect("adminclient:filtering_terms")

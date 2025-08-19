@@ -17,6 +17,16 @@
                       <div class="row center">
                 <form method="post" onsubmit="openLoader()">
                   {% csrf_token %}
+                  <input hidden type="text" id="id_ScanDB" name="ScanDB" value="Scan DB">
+                <button type="submit" class="btn btn-danger mb-3" name="Scan DB" value="Scan DB">Scan DB for Terms</button>
+                </form>
+                <form method="post" onsubmit="openLoader()">
+                  {% csrf_token %}
+                  <input hidden type="text" id="id_SearchAscendant" name="SearchAscendant" value="SearchAscendant">
+                <button type="submit" class="btn btn-danger mb-3" name="SearchAscendant" value="SearchAscendant">Search Ascendant Terms</button>
+                </form>
+                <form method="post" onsubmit="openLoader()">
+                  {% csrf_token %}
                   <input hidden type="text" id="id_FilteringTermID" name="FilteringTermID" value="Delete All">
                 <button type="submit" class="btn btn-danger mb-3" name="Delete All" value="Delete All">Delete All</button>
                 </form>
