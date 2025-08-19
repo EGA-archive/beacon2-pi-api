@@ -185,6 +185,8 @@ def set_entry_type(self, request):
         abs_url=abs_url[0]
         starting_endpoint = len(uri) + len(uri_subpath)
         def_uri = uri + uri_subpath
+        if 'https' not in abs_url and 'https' in def_uri:
+            abs_url = abs_url.replace('http', 'https')
         if abs_url[:starting_endpoint] != def_uri :
             LOG.warning('configuration variable uri: {} not the same as where the beacon is hosted'.format(uri))
         path_list = abs_url[starting_endpoint:].split('/')
