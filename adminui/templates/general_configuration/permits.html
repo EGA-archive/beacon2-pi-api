@@ -14,16 +14,63 @@
 
 <body>
   <body class="bg-custom-powder-light" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'> <!-- NEW - hx-headers added -->
+    {% for dataset in datasets_found %}
+      {% with 'id' as key %}
+      <td>{{ dataset|get_dict_item:key }}</td>
+      {% endwith %}
       <form method="post" onsubmit="openLoader()">
-        {% csrf_token %}
-          <div>
-            {% for f in form %}
-            <p>{{f.help_text|safe}} {{f}} </p>
+          {% csrf_token %}
+            <div>
+              {% for f in form %}
+              {% if f.help_text == 'Granularity' or f.help_text == 'Security Level' %}
+              <p>{{f.help_text|safe}} {{f}} </p>
+              {% endif %}
+              {% endfor %}
+              <span id="active-label"></span>
+            </div>
+
+
+      {% for k, v in dataset.items %}
+        {% if k == 'exceptions' %}
+          {% for kexc, vexc in v.items %}
+          <p>Exceptions: {{kexc}} {{vexc}}</p>
+          {% endfor %}
+        {% elif k == 'users' %}
+          {% for user in v %}
+            {% for kusr, vusr in user.items %}
+              {% if kusr == 'user_e-mail' %}
+              <p>User: {{vusr}}</p>
+                    <form method="post" onsubmit="openLoader()">
+                    {% csrf_token %}
+                      <div>
+                        {% for uf in userform %}
+                        <p>{{uf.help_text|safe}} {{uf}} </p>
+                        {% endfor %}
+                        <span id="active-label"></span>
+                      </div>
+                      <div>
+                        <button type="submit" class="btn btn-danger mb-3">Save</button>
+                      </div>
+                  </form>
+              {% elif kusr == 'default_entry_types_granularity' %}
+              <p>User Granularity: {{vusr}}</p>
+              {% elif kusr == 'entry_types_exceptions' %}
+                {% for grusr in vusr %}
+                  {% for kgrusr, vgrusr in grusr.items %}
+                  <p>User exceptions: {{kgrusr}} {{vgrusr}}</p>
+                  {% endfor %}
+                {% endfor %}
+              {% endif %}
             {% endfor %}
-            <span id="active-label"></span>
-          </div>
-          <div>
-            <button type="submit" class="btn btn-danger mb-3">Save</button>
-          </div>
-      </form>
+          {% endfor %}
+        {% endif %}
+      {% endfor %}
+            <div>
+              <button type="submit" class="btn btn-danger mb-3">Save</button>
+            </div>
+        </form>
+
+
+    
+    {% endfor %}  
 </body>

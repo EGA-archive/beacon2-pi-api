@@ -32,10 +32,7 @@ class PermitsForm(forms.Form):
         super(PermitsForm, self).__init__(*args, **kwargs)
         # assign a (computed, I assume) default value to the choice field
         self.fields['DatasetID'].widget.attrs['readonly'] = True
-        self.fields['User'].widget.attrs['readonly'] = True
-
     DatasetID= forms.CharField(help_text='DatasetId')
-    User= forms.EmailField(help_text='User')
     granularity_choices = [
         ('boolean', 'Boolean'),
         ('count', 'Count'),
@@ -43,50 +40,99 @@ class PermitsForm(forms.Form):
     ]
     granularity= forms.ChoiceField(
         widget=forms.RadioSelect,
-        choices=granularity_choices
+        choices=granularity_choices,
+        help_text='Granularity'
     )
     security_level_choices = [
         ('public', 'Public'),
         ('registered', 'Registered'),
         ('controlled', 'Controlled'),
     ]
-    SecurityLevel= forms.MultipleChoiceField(
+    SecurityLevel= forms.ChoiceField(
         choices=security_level_choices, 
-        widget=forms.CheckboxSelectMultiple
+        widget=forms.RadioSelect,
+        help_text='Security Level'
     )
-    individuals= forms.ChoiceField(
+    individualgranularity= forms.ChoiceField(
+        choices=granularity_choices,
+        required=False,
+        help_text='Individual'
+    )
+    datasetgranularity= forms.ChoiceField(
+        choices=granularity_choices,
+        required=False,
+        help_text='Dataset'
+    )
+    analysisgranularity= forms.ChoiceField(
+        choices=granularity_choices,
+        required=False,
+        help_text='Analysis'
+    )
+    biosamplegranularity= forms.ChoiceField(
+        choices=granularity_choices,
+        required=False,
+        help_text='Biosample'
+    )
+    cohortgranularity= forms.ChoiceField(
+        choices=granularity_choices,
+        required=False,
+        help_text='Cohort'
+    )
+    genomicVariationgranularity = forms.ChoiceField(
+        choices=granularity_choices,
+        required=False,
+        help_text='Genomic Variant'
+    )
+    rungranularity= forms.ChoiceField(
+        choices=granularity_choices,
+        required=False,
+        help_text='Run'
+    )
+
+class UserPermitsForm(forms.Form):
+    User= forms.CharField(help_text='User')
+    granularity_choices = [
+        ('boolean', 'Boolean'),
+        ('count', 'Count'),
+        ('record', 'Record'),
+    ]
+    granularity= forms.ChoiceField(
         widget=forms.RadioSelect,
         choices=granularity_choices,
-        required=False
+        help_text='Granularity'
     )
-    datasets= forms.ChoiceField(
-        widget=forms.RadioSelect,
+    userindividualgranularity= forms.ChoiceField(
         choices=granularity_choices,
-        required=False
+        required=False,
+        help_text='Individual'
     )
-    analyses= forms.ChoiceField(
-        widget=forms.RadioSelect,
+    userdatasetgranularity= forms.ChoiceField(
         choices=granularity_choices,
-        required=False
+        required=False,
+        help_text='Dataset'
     )
-    biosamples= forms.ChoiceField(
-        widget=forms.RadioSelect,
+    useranalysisgranularity= forms.ChoiceField(
         choices=granularity_choices,
-        required=False
+        required=False,
+        help_text='Analysis'
     )
-    cohorts= forms.ChoiceField(
-        widget=forms.RadioSelect,
+    userbiosamplegranularity= forms.ChoiceField(
         choices=granularity_choices,
-        required=False
+        required=False,
+        help_text='Biosample'
     )
-    genomicVariations= forms.ChoiceField(
-        widget=forms.RadioSelect,
+    usercohortgranularity= forms.ChoiceField(
         choices=granularity_choices,
-        required=False
+        required=False,
+        help_text='Cohort'
     )
-    runs= forms.ChoiceField(
-        widget=forms.RadioSelect,
+    usergenomicVariationgranularity = forms.ChoiceField(
         choices=granularity_choices,
-        required=False
+        required=False,
+        help_text='GenomicVariant'
     )
-    
+    userrungranularity= forms.ChoiceField(
+        choices=granularity_choices,
+        required=False,
+        help_text='Run'
+    )
