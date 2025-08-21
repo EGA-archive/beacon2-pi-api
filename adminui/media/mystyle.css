@@ -786,3 +786,97 @@ label[for=id_run_granularity_2]{
 .dataset{
   border: 1px solid black;
 }
+
+#id_usergranularity
+{
+  border: 1px solid black;
+  border-radius: 40px;
+  position: relative;
+  height:20px;
+  display:flex;
+  justify-content:space-around;
+  width: 525px;
+  z-index:1;
+}
+
+label[for=id_usergranularity_0]{
+display:inline-block; width: 33%;color: white;height: 100%;position: absolute; top: 0px;left: 0px;text-align: center;cursor: pointer;
+}
+
+label[for=id_usergranularity_1]{
+  display:inline-block; width: 33%; height: 100%;position: absolute; top: 0px;left:33%;text-align: center;cursor: pointer;
+}
+
+label[for=id_usergranularity_2]{
+  display:inline-block; width: 33%;height: 100%;position: absolute; top: 0px;left:66%;text-align: center;cursor: pointer;
+}
+
+#id_usergranularity::before{
+  content: '';
+  position: absolute;
+  left:0;
+  top: 0;
+  width: 34%;
+  height: 95%;
+  background: black;
+  border: 1px solid black;
+  border-radius: 12px;
+  transition: .5s left ease;
+  z-index: -1;
+}
+
+#id_usergranularity:has(#id_usergranularity_0:checked)::before{
+  left: 0%;
+}
+
+#id_usergranularity:has(#id_usergranularity_0:checked) label[for=id_usergranularity_0]{
+  color:white;
+}
+
+#id_usergranularity:has(#id_usergranularity_0:checked) label[for=id_usergranularity_1]{
+  color:black;
+}
+
+#id_usergranularity:has(#id_usergranularity_0:checked) label[for=id_usergranularity_2]{
+  color:black;
+}
+
+#id_usergranularity:has(#id_usergranularity_1:checked)::before{
+  left: 33%;
+}
+
+#id_usergranularity:has(#id_usergranularity_1:checked) label[for=id_usergranularity_1]{
+  color:white;
+}
+
+#id_usergranularity:has(#id_usergranularity_1:checked) label[for=id_usergranularity_0]{
+  color:black;
+}
+
+#id_usergranularity:has(#id_usergranularity_2:checked) label[for=id_usergranularity_2]{
+  color:black;
+}
+
+#id_usergranularity:has(#id_usergranularity_2:checked)::before{
+  left: 66%;
+}
+
+#id_usergranularity:has(#id_usergranularity_2:checked) label[for=id_usergranularity_2]{
+  color:white;
+}
+
+#id_usergranularity:has(#id_usergranularity_2:checked) label[for=id_usergranularity_0]{
+  color:black;
+}
+
+#id_usergranularity:has(#id_usergranularity_2:checked) label[for=id_usergranularity_1]{
+  color:black;
+}
+
+.hidden{
+  display: none;
+}
+
+.appear{
+  display:contents;
+}

@@ -16,22 +16,37 @@
   <body class="bg-custom-powder-light" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'> <!-- NEW - hx-headers added -->
     {% for dataset in datasets_found %}
       {% with 'id' as key %}
-      <td>{{ dataset|get_dict_item:key }}</td>
-      {% endwith %}
-      <form method="post" onsubmit="openLoader()">
+      <td>{{ dataset|get_dict_item:key }}</td><span><button hx-on:click="htmx.toggleClass('#{{dataset|get_dict_item:key}}', 'hidden')">Edit Dataset</button></span>
+      
+      <form id='{{dataset|get_dict_item:key}}' method="post" onsubmit="openLoader()" class="hidden">
+        <input hidden type="text" id="id_DatasetID" name="DatasetID" value="{{dataset|get_dict_item:key}}" readonly>
+        {% endwith %}
           {% csrf_token %}
             <div>
               {% for f in form %}
-              {% if f.help_text == 'Granularity' or f.help_text == 'Security Level' %}
+              {% if f.help_text != 'DatasetId' %}
+              {% if f.errors %}
+              <p>{{f.help_text|safe}} {{f}} {{f.errors|escape}}</p>
+              {% else %}
               <p>{{f.help_text|safe}} {{f}} </p>
+              {% endif %}
+
               {% endif %}
               {% endfor %}
               <span id="active-label"></span>
             </div>
+            <div>
+              <button type="submit" class="btn btn-danger mb-3" name="Save" value="Save">Save Dataset Changes</button>
+            </div>
+        </form>
 
 
       {% for k, v in dataset.items %}
-        {% if k == 'exceptions' %}
+        {% if k == 'security_level' %}
+        <p>Security Level: {{v}}</p>
+        {% elif k == 'granularity' %}
+        <p>Granularity: {{v}}</p>
+        {% elif k == 'exceptions' %}
           {% for kexc, vexc in v.items %}
           <p>Exceptions: {{kexc}} {{vexc}}</p>
           {% endfor %}
@@ -39,20 +54,33 @@
           {% for user in v %}
             {% for kusr, vusr in user.items %}
               {% if kusr == 'user_e-mail' %}
-              <p>User: {{vusr}}</p>
-                    <form method="post" onsubmit="openLoader()">
+              <span>User: {{vusr}}</span><span><button hx-on:click="htmx.toggleClass('#userform_{{vusr|slugify}}', 'hidden')">Edit User</button></span>
+                    <form id='userform_{{vusr|slugify}}' method="post" onsubmit="openLoader()" class="hidden">
                     {% csrf_token %}
                       <div>
                         {% for uf in userform %}
-                        <p>{{uf.help_text|safe}} {{uf}} </p>
+                          {% if uf.help_text == 'User' %}
+                            <input type="text" id="id_UserEmail" name="UserEmail" value="{{vusr}}" readonly>
+                          {% elif uf.help_text == 'DatasetId' %}
+                            {% with 'id' as key %}                            
+                            <input type="text" id="id_DatasetID" name="DatasetID" value="{{dataset|get_dict_item:key}}" readonly>
+                            {% endwith %}
+                          {% else %}
+                            <p>{{uf.help_text|safe}} {{uf}} </p>
+                          {% endif %}
                         {% endfor %}
                         <span id="active-label"></span>
                       </div>
                       <div>
-                        <button type="submit" class="btn btn-danger mb-3">Save</button>
+                        <button type="submit" class="btn btn-danger mb-3" name="User" value="User">Save User Changes</button>
+                        <button type="submit" class="btn btn-danger mb-3" name="Remove" value="Remove">Remove User</button>
+                        <button hx-on:click="htmx.toggleClass('#userform_{{vusr|slugify}}', 'hidden')">Cancel Changes</button>
                       </div>
                   </form>
-              {% elif kusr == 'default_entry_types_granularity' %}
+              {% endif %}
+            {% endfor %}
+            {% for kusr, vusr in user.items %}
+              {% if kusr == 'default_entry_types_granularity' %}
               <p>User Granularity: {{vusr}}</p>
               {% elif kusr == 'entry_types_exceptions' %}
                 {% for grusr in vusr %}
@@ -61,14 +89,13 @@
                   {% endfor %}
                 {% endfor %}
               {% endif %}
+              
             {% endfor %}
+            
           {% endfor %}
         {% endif %}
       {% endfor %}
-            <div>
-              <button type="submit" class="btn btn-danger mb-3">Save</button>
-            </div>
-        </form>
+
 
 
     

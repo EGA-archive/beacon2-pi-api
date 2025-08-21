@@ -33,25 +33,33 @@ class PermitsForm(forms.Form):
         # assign a (computed, I assume) default value to the choice field
         self.fields['DatasetID'].widget.attrs['readonly'] = True
     DatasetID= forms.CharField(help_text='DatasetId')
+    datasetgranularity_choices = [
+        ('boolean', 'Boolean'),
+        ('count', 'Count'),
+        ('record', 'Record'),
+    ]
     granularity_choices = [
+        ('-', '-'),
         ('boolean', 'Boolean'),
         ('count', 'Count'),
         ('record', 'Record'),
     ]
     granularity= forms.ChoiceField(
         widget=forms.RadioSelect,
-        choices=granularity_choices,
-        help_text='Granularity'
+        choices=datasetgranularity_choices,
+        help_text='Granularity',
+        required=False
     )
     security_level_choices = [
         ('public', 'Public'),
         ('registered', 'Registered'),
-        ('controlled', 'Controlled'),
+        ('controlled', 'Controlled')
     ]
     SecurityLevel= forms.ChoiceField(
         choices=security_level_choices, 
         widget=forms.RadioSelect,
-        help_text='Security Level'
+        help_text='Security Level',
+        required=False
     )
     individualgranularity= forms.ChoiceField(
         choices=granularity_choices,
@@ -90,16 +98,28 @@ class PermitsForm(forms.Form):
     )
 
 class UserPermitsForm(forms.Form):
-    User= forms.CharField(help_text='User')
-    granularity_choices = [
+    def __init__(self, *args, **kwargs):
+        super(UserPermitsForm, self).__init__(*args, **kwargs)
+        # assign a (computed, I assume) default value to the choice field
+        self.initial['usergranularity'] = 'count'
+    DatasetID= forms.CharField(help_text='DatasetId')
+    UserEmail= forms.CharField(help_text='User')
+    usergranularity_choices = [
         ('boolean', 'Boolean'),
         ('count', 'Count'),
         ('record', 'Record'),
     ]
-    granularity= forms.ChoiceField(
+    granularity_choices = [
+        ('-', '-'),
+        ('boolean', 'Boolean'),
+        ('count', 'Count'),
+        ('record', 'Record'),
+    ]
+    usergranularity= forms.ChoiceField(
         widget=forms.RadioSelect,
-        choices=granularity_choices,
-        help_text='Granularity'
+        choices=usergranularity_choices,
+        help_text='Granularity',
+        required=False
     )
     userindividualgranularity= forms.ChoiceField(
         choices=granularity_choices,
