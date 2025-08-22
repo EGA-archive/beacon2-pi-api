@@ -1,6 +1,6 @@
 from django.urls import path
 #from .views import HomePageView
-from .views import views, datasets, filtering_terms, synonyms, descendants, permits, budget, rounding_counts
+from .views import views, datasets, filtering_terms, synonyms, descendants, permits, budget, rounding_counts, connections
 app_name = 'adminclients'
 
 urlpatterns = [
@@ -12,5 +12,6 @@ urlpatterns = [
     path('descendants', descendants.default_view, name='descendants'),
     path('permits', permits.default_view, name='permits'),
     path('budget', budget.default_view, name='budget'),
-    path('rounding_counts', rounding_counts.default_view, name='rounding_counts')
+    path('rounding_counts', rounding_counts.default_view, name='rounding_counts'),
+    path('connections', connections.default_view, name='connections')
 ]
