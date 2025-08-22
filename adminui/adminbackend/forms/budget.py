@@ -1,6 +1,7 @@
 from django import forms
 import yaml
 import logging
+import os
 
 LOG = logging.getLogger(__name__)
 fmt = '%(levelname)s - %(asctime)s - %(message)s'
@@ -67,8 +68,11 @@ class BudgetForm(forms.Form):
     BudgetIP = forms.BooleanField(required=False,help_text='Limit Queries per IP address')
     BudgetAmount = forms.IntegerField(help_text="Max. number of queries")
     BudgetTime = forms.IntegerField(help_text='Time for reset')
-    database_choices=[('mongo', 'mongo'), ('beaconCLI', 'beaconCLI')]
-    BudgetDB = forms.ChoiceField(choices=database_choices,help_text='Database Engine')
+    dirs = os.listdir("adminui/beacon/connections")
+    list_databases=[]
+    for dir in dirs:
+        list_databases.append((dir, dir))
+    BudgetDB = forms.ChoiceField(choices=list_databases,help_text='Database Engine')
     BudgetDBName = forms.CharField(help_text='Database Name where budget is stored inside Database Engine')
     BudgetTable = forms.CharField(help_text='Table Name where budget is stored inside Database Name')
     

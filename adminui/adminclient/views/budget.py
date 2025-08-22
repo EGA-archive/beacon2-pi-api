@@ -5,9 +5,13 @@ import logging
 from pymongo.mongo_client import MongoClient
 from django.urls import resolve
 from adminbackend.forms.budget import BudgetForm
-from adminbackend.forms.entry_types import EntryTypesForm
+from beacon.conf.conf import query_budget_database
 
 import logging
+
+complete_module='beacon.connections.'+query_budget_database
+import importlib
+module = importlib.import_module(complete_module, package=None)
 
 LOG = logging.getLogger(__name__)
 fmt = '%(levelname)s - %(asctime)s - %(message)s'
@@ -22,6 +26,17 @@ def default_view(request):
     context = {'form': form}
     if request.method == 'POST':
         form = BudgetForm(request.POST)
+        if 'Test Budget Connection' in request.POST:
+            if 'mongo' in query_budget_database:
+                try:
+                    client = module.client.server_info()
+                    client = "Ok and running in a mongo " + client["version"] + "version"
+                except Exception:
+                    client = 'Connection could not be established'
+            #client = module.client.admin.command('ismaster')
+            template = "general_configuration/budget.html"
+            context = {'form': form, 'client': client}
+            return render(request, template, context)
         if form.is_valid():
             budgetUser = form.cleaned_data['BudgetUser']
             budgetIP = form.cleaned_data['BudgetIP']
