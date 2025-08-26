@@ -2,6 +2,7 @@ from django import forms
 import yaml
 import logging
 import os
+from beacon.conf.conf import uri
 
 LOG = logging.getLogger(__name__)
 fmt = '%(levelname)s - %(asctime)s - %(message)s'
@@ -89,7 +90,7 @@ class ConnectionsForm(forms.Form):
     Auth = forms.CharField(help_text='Auth database name', required=False)
     Certificate = forms.CharField(help_text='Path to certificate', required=False)
     CAFile = forms.CharField(help_text='Path to CAFile', required=False)
-    Cluster = forms.CharField(help_text='Cluster', required=False)
+    Cluster = forms.BooleanField(help_text='Cluster', required=False)
 
 class ChooseConnection(forms.Form):
     dirs = os.listdir("adminui/beacon/connections")
@@ -101,5 +102,8 @@ class ChooseConnection(forms.Form):
     Connection = forms.ChoiceField(choices=list_of_dirs)
 
 class LinkConnection(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super(LinkConnection,self).__init__(*args,**kwargs)
+        self.initial['Connection'] = uri
     Connection = forms.URLField()
     

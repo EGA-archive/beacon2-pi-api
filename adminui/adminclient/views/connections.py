@@ -29,7 +29,6 @@ def default_view(request):
     context = {'form': form, 'formchoose': formchoose}
     if request.method == 'POST':
         formchoose= ChooseConnection()
-        LOG.warning(request.POST)
         try:
             if request.POST['ChooseConnection']:
                 Database = request.POST['Connection']
@@ -41,10 +40,78 @@ def default_view(request):
                 context = {'form': form, 'formchoose': formchoose}
                 return render(request, template, context)
         except Exception:
-            try:
-                form = ConnectionsForm(request.POST,dire=request.POST['Host'])
-                
-                if form.is_valid():
+            try:    
+                    
+                if 'Test Connection' in request.POST:
+                    try:
+                        form = ConnectionsForm(request.POST,dire=request.POST['Host'])
+                        if form.is_valid():
+                            Host = form.cleaned_data['Host']
+                            Port = form.cleaned_data['Port']
+                            User = form.cleaned_data['User']
+                            Password = form.cleaned_data['Password']
+                            Name = form.cleaned_data['Name']
+                            Auth = form.cleaned_data['Auth']
+                            Certificate = form.cleaned_data['Certificate']
+                            CAFile = form.cleaned_data['CAFile']
+                            Cluster = form.cleaned_data['Cluster']
+
+
+                            try:
+                                if Cluster:# pragma: no cover
+                                    uri = "mongodb+srv://{}:{}@{}/?tls=true&authMechanism=SCRAM-SHA-256&retrywrites=false&maxIdleTimeMS=120000".format(
+                                        User,
+                                        Password,
+                                        Host
+                                    )
+                                else:
+                                    uri = "mongodb://{}:{}@{}:{}/{}?authSource={}".format(
+                                        User,
+                                        Password,
+                                        Host,
+                                        Port,
+                                        Name,
+                                        Auth
+                                    )
+
+                                if Certificate != '' and CAFile != '':# pragma: no cover
+                                    uri += '&tls=true&tlsCertificateKeyFile={}&tlsCAFile={}'.format(Certificate, CAFile)
+                            except Exception:
+                                uri = "mongodb://{}:{}@{}:{}/{}?authSource={}".format(
+                                        User,
+                                        Password,
+                                        Host,
+                                        Port,
+                                        Name,
+                                        Auth
+                                    )
+
+
+                        
+                            
+                            try:
+                                client = MongoClient(uri)
+                                client = module.client.server_info()
+                                client = "Ok and running in a mongo " + client["version"] + "version"
+                            except Exception:
+                                client = 'Connection could not be established'
+                            #client = module.client.admin.command('ismaster')
+                    except Exception:
+                        linkform = LinkConnection(request.POST)
+                        if linkform.is_valid():
+                            Connection = linkform.cleaned_data['Connection']
+                            try:
+                                client = subprocess.check_output("curl -s -o /dev/null -v {}".format(Connection), shell=True)
+                                client = 'Connection successful'
+                            except Exception:
+                                client = 'Connection could not be established'
+                                
+
+
+                    template = "general_configuration/connections.html"
+                    context = {'form': form, 'client': client, 'formchoose': formchoose}
+                    return render(request, template, context)
+                elif form.is_valid():
                     Host = form.cleaned_data['Host']
                     Port = form.cleaned_data['Port']
                     User = form.cleaned_data['User']
@@ -89,9 +156,63 @@ def default_view(request):
                         f.write(new_lines)
                     f.close()
             except Exception:
-                linkform = LinkConnection(request.POST)
-                if linkform.is_valid():
-                    LOG.warning('o')
+                if 'Test Connection' in request.POST:
+                    form = ConnectionsForm(request.POST,dire=request.POST['Host'])
+                    if form.is_valid():
+                        Host = form.cleaned_data['Host']
+                        Port = form.cleaned_data['Port']
+                        User = form.cleaned_data['User']
+                        Password = form.cleaned_data['Password']
+                        Name = form.cleaned_data['Name']
+                        Auth = form.cleaned_data['Auth']
+                        Certificate = form.cleaned_data['Certificate']
+                        CAFile = form.cleaned_data['CAFile']
+                        Cluster = form.cleaned_data['Cluster']
+
+
+                        try:
+                            if Cluster:# pragma: no cover
+                                uri = "mongodb+srv://{}:{}@{}/?tls=true&authMechanism=SCRAM-SHA-256&retrywrites=false&maxIdleTimeMS=120000".format(
+                                    User,
+                                    Password,
+                                    Host
+                                )
+                            else:
+                                uri = "mongodb://{}:{}@{}:{}/{}?authSource={}".format(
+                                    User,
+                                    Password,
+                                    Host,
+                                    Port,
+                                    Name,
+                                    Auth
+                                )
+
+                            if Certificate != '' and CAFile != '':# pragma: no cover
+                                uri += '&tls=true&tlsCertificateKeyFile={}&tlsCAFile={}'.format(Certificate, CAFile)
+                        except Exception:
+                            uri = "mongodb://{}:{}@{}:{}/{}?authSource={}".format(
+                                    User,
+                                    Password,
+                                    Host,
+                                    Port,
+                                    Name,
+                                    Auth
+                                )
+                    else:
+                        client = 'Configuration not valid'
+                    #client = module.client.admin.command('ismaster')
+                    client = MongoClient(uri)
+                        
+                    try:
+                        client = module.client.server_info()
+                        client = "Ok and running in a mongo " + client["version"] + "version"
+                    except Exception:
+                        client = 'Connection could not be established'
+                    template = "general_configuration/connections.html"
+                    context = {'form': form, 'client': client, 'formchoose': formchoose}
+                    return render(request, template, context)
+                else:
+                    linkform = LinkConnection(request.POST)
         return redirect("adminclient:connections")
     template = "general_configuration/connections.html"
     return render(request, template, context)

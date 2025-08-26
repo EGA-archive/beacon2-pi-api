@@ -27,19 +27,23 @@
             <button type="submit" class="btn btn-danger mb-3" name="ChooseConnection" value="ChooseConnection">Choose</button>
           </div>
       </form>
-    {% if form %}
+    {% if form or client %}
       <form method="post" onsubmit="openLoader()">
         {% csrf_token %}
           <div>
             
                 {% for f in form %}
-                <p>{{f.help_text|safe}} {{f}} </p>
+                <p>{{f.help_text|safe}} {{f}} {{f.errors}}</p>
                 {% endfor %}
             <span id="active-label"></span>
           </div>
           <div>
             <button type="submit" class="btn btn-danger mb-3">Save</button>
           </div>
+          <button type="submit" class="btn btn-danger mb-3" name="Test Connection" value="Test Connection">Test Connection</button>
+          {% if client %}
+          <div>{{client}}</div>
+          {% endif %}
       </form>
     {% endif %}
     {% if linkform %}
@@ -48,13 +52,14 @@
           <div>
             
                 {% for f in form %}
-                <p>{{f.help_text|safe}} {{f}} </p>
+                <p>{{f.help_text|safe}} {{f}} {{f.errors}}</p>
                 {% endfor %}
             <span id="active-label"></span>
           </div>
           <div>
             <button type="submit" class="btn btn-danger mb-3">Save</button>
           </div>
+          <button type="submit" class="btn btn-danger mb-3" name="Test Connection" value="Test Connection">Test Connection</button>
       </form>
     {% endif %}
 </body>
