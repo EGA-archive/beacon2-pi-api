@@ -1,6 +1,6 @@
 
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 from django.contrib.auth import get_user_model
 from adminbackend.forms.admin_settings import AdminForm
 from django.contrib.auth.models import Group
@@ -20,13 +20,13 @@ LOG.addHandler(sh)
 #my_group = Group.objects.get(name='my_group_name') 
 #my_group.user_set.add(your_user)
 
+@user_passes_test(lambda u: u.is_superuser)
 @login_required
+@permission_required('adminclient.can_see_view', raise_exception=True)
 def default_view(request):
     User = get_user_model()
     users = User.objects.all()
     users_list=[]
-    for group in Group.objects.all():
-        LOG.warning([i.content_type.app_label + '.' + i.codename for i in group.permissions.all()])
     form = AdminForm()
     for user in users:
         userdict={}
@@ -45,8 +45,15 @@ def default_view(request):
             Email = form.cleaned_data['Email']
             Groups = form.cleaned_data['Groups']
             user = User.objects.get(email=Email)
+            user.groups.clear()
             my_group = Group.objects.get(name=Groups)
             my_group.user_set.add(user)
+            '''
+            if Groups == 'Owner':
+                user.is_superuser = True
+                user.is_staff = True
+                user.save()
+            '''
             return redirect("adminclient:admin_settings")
     context = {"users": users_list, "form": form}
     template = "general_configuration/admin_settings.html"

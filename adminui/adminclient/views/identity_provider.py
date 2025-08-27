@@ -7,7 +7,7 @@ import logging
 import os
 import subprocess
 from dotenv import load_dotenv, set_key
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 
 
 LOG = logging.getLogger(__name__)
@@ -18,7 +18,9 @@ sh.setLevel('NOTSET')
 sh.setFormatter(formatter)
 LOG.addHandler(sh)
 
+@user_passes_test(lambda u: u.is_superuser)
 @login_required
+@permission_required('adminclient.can_see_view', raise_exception=True)
 def default_view(request):
     form = IDPForm()
     
@@ -51,9 +53,6 @@ def default_view(request):
             introspection = form.cleaned_data['Introspection']
             jwks_url = form.cleaned_data['JWKSURL']
             load_dotenv("adminui/beacon/auth/idp_providers/" + idp + '.env', override=True)
-            LOG.warning(idp)
-            LOG.warning(issuer)
-            LOG.warning(client_id)
             if 'Save' in request.POST:
                 set_key(dotenv_path="adminui/beacon/auth/idp_providers/" + idp + '.env', key_to_set="CLIENT_ID", value_to_set=client_id)
                 set_key(dotenv_path="adminui/beacon/auth/idp_providers/" + idp + '.env', key_to_set="CLIENT_SECRET", value_to_set=client_secret)

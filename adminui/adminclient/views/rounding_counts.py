@@ -5,7 +5,7 @@ import logging
 from pymongo.mongo_client import MongoClient
 from django.urls import resolve
 from adminbackend.forms.rounding_counts import RoundingCountsForm
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 
 import logging
 
@@ -18,6 +18,7 @@ sh.setFormatter(formatter)
 LOG.addHandler(sh)
 
 @login_required
+@permission_required('adminclient.can_see_view', raise_exception=True)
 def default_view(request):
     form =RoundingCountsForm()
     context = {'form': form}
@@ -33,16 +34,13 @@ def default_view(request):
                 new_lines =''
                 for line in lines:
                     if 'imprecise_count=' in str(line):
-                        LOG.warning('imprecise')
                         new_lines+="imprecise_count="+str(imprecise)+"\n"
                     elif 'round_to_tens=' in str(line):
-                        LOG.warning('tens')
                         if rounding == 'tenths' and type == 'rounded':
                             new_lines+="round_to_tens="+str(True)+"\n"
                         else:
                             new_lines+="round_to_tens="+str(False)+"\n"
                     elif 'round_to_hundreds=' in str(line):
-                        LOG.warning('hundreds')
                         if rounding == 'hundredths' and type == 'rounded':
                             new_lines+="round_to_hundreds="+str(True)+"\n"
                         else:

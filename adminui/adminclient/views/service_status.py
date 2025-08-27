@@ -6,7 +6,7 @@ import subprocess
 import os
 import logging
 import importlib
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 
 
 LOG = logging.getLogger(__name__)
@@ -18,6 +18,7 @@ sh.setFormatter(formatter)
 LOG.addHandler(sh)
 
 @login_required
+@permission_required('adminclient.can_see_view', raise_exception=True)
 def default_view(request):
     context = {}
     if request.method == 'POST':

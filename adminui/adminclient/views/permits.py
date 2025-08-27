@@ -7,7 +7,7 @@ from django.urls import resolve
 from beacon.connections.mongo.__init__ import client
 from adminbackend.forms.permits import PermitsForm, UserPermitsForm
 import yaml
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 
 import logging
 
@@ -20,6 +20,7 @@ sh.setFormatter(formatter)
 LOG.addHandler(sh)
 
 @login_required
+@permission_required('adminclient.can_see_view', raise_exception=True)
 def default_view(request):
     datasets=client["beacon"].datasets
     all_datasets=datasets.find({})
@@ -83,7 +84,6 @@ def default_view(request):
                     else:
                         new_user_list.append(user)
                 datasets_permissions[datasetID]["controlled"]["user-list"]=new_user_list
-                LOG.warning(datasets_permissions)
                 with open('adminui/beacon/permissions/datasets/datasets_permissions.yml', 'w') as outfile:
                     yaml.dump(datasets_permissions, outfile)
                 return redirect("adminclient:permits")

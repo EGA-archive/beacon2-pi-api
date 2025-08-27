@@ -6,7 +6,7 @@ from pymongo.mongo_client import MongoClient
 from django.urls import resolve
 from adminbackend.forms.beacon import BamForm
 from adminbackend.forms.entry_types import EntryTypesForm
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 
 import logging
 
@@ -19,6 +19,7 @@ sh.setFormatter(formatter)
 LOG.addHandler(sh)
 
 @login_required
+@permission_required('adminclient.can_see_view', raise_exception=True)
 def default_view(request):
     form =BamForm()
     context = {'form': form}
@@ -76,6 +77,7 @@ def default_view(request):
     return render(request, template, context)
 
 @login_required
+@permission_required('adminclient.can_see_view', raise_exception=True)
 def entry_types(request):
     form =EntryTypesForm()
     context = {'form': form}

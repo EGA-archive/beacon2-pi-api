@@ -7,7 +7,6 @@ from django.contrib.contenttypes.models import ContentType
 def add_role_permissions():
     owner = Group.objects.create(name='Owner')
     admin = Group.objects.create(name='Admin')
-    viewer = Group.objects.create(name='Viewer')
     foreigner = Group.objects.create(name='Foreigner')
     content_type = ContentType.objects.get_for_model(PermissionsInstance)
     post_permission = Permission.objects.filter(content_type=content_type)
@@ -16,7 +15,6 @@ def add_role_permissions():
         if perm.codename == "can_see_view":
             owner.permissions.add(perm)
             admin.permissions.add(perm)
-            viewer.permissions.add(perm)
 
         elif perm.codename == "can_edit_view":
             owner.permissions.add(perm)
