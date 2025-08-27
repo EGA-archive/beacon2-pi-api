@@ -6,7 +6,7 @@ from pymongo.mongo_client import MongoClient
 from django.urls import resolve
 from adminbackend.forms.budget import BudgetForm
 from beacon.conf.conf import query_budget_database
-
+from django.contrib.auth.decorators import login_required
 import logging
 
 complete_module='beacon.connections.'+query_budget_database
@@ -21,6 +21,7 @@ sh.setLevel('NOTSET')
 sh.setFormatter(formatter)
 LOG.addHandler(sh)
 
+@login_required
 def default_view(request):
     form =BudgetForm()
     context = {'form': form}

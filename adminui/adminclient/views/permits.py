@@ -7,6 +7,7 @@ from django.urls import resolve
 from beacon.connections.mongo.__init__ import client
 from adminbackend.forms.permits import PermitsForm, UserPermitsForm
 import yaml
+from django.contrib.auth.decorators import login_required
 
 import logging
 
@@ -18,6 +19,7 @@ sh.setLevel('NOTSET')
 sh.setFormatter(formatter)
 LOG.addHandler(sh)
 
+@login_required
 def default_view(request):
     datasets=client["beacon"].datasets
     all_datasets=datasets.find({})

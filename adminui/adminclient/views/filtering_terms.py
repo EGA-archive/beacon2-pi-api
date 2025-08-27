@@ -10,6 +10,8 @@ import yaml
 import json
 import logging
 import subprocess
+from django.contrib.auth.decorators import login_required
+
 
 LOG = logging.getLogger(__name__)
 fmt = '%(levelname)s - %(asctime)s - %(message)s'
@@ -19,6 +21,7 @@ sh.setLevel('NOTSET')
 sh.setFormatter(formatter)
 LOG.addHandler(sh)
 
+@login_required
 def default_view(request):
     form2 = AddFilteringTerm(request.POST)
     headers = ['id', 'label', 'type', 'synonyms', 'similarities', 'scopes']

@@ -5,6 +5,7 @@ import logging
 from pymongo.mongo_client import MongoClient
 from django.urls import resolve
 from adminbackend.forms.rounding_counts import RoundingCountsForm
+from django.contrib.auth.decorators import login_required
 
 import logging
 
@@ -16,6 +17,7 @@ sh.setLevel('NOTSET')
 sh.setFormatter(formatter)
 LOG.addHandler(sh)
 
+@login_required
 def default_view(request):
     form =RoundingCountsForm()
     context = {'form': form}

@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="htmx-config" content='{"selfRequestsOnly":false}'>
+  <title>Admin UI</title>
+  <script type="text/javascript" src="{% static '/adminui/js/htmx.min.js' %}"></script>
+  <link rel="stylesheet" href="media/mystyle.css">
+</head>
+
+<body>
+  <body class="bg-custom-powder-light" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'> <!-- NEW - hx-headers added -->
+
+      <div>The new Beacon verifier v2.0 software has been created with the main goal of validating beacon responses against the official GA4GH Beacon v2 specifications for its debugging and testing. The outcome of executing this tool will be a detailed response with all the validations for each of your beacon endpoints explaining the possible errors encountered, if any.
+
+Validate your API by adding the URL of your Beacon and pressing Start: </div>
+<a href="https://beacon-verifier-demo.ega-archive.org">Go to Verifier v2</a>
+</body>

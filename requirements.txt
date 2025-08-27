@@ -28,5 +28,6 @@ six==1.16.0
 progressbar==2.5
 tqdm==4.62.3
 obonet==0.3.1
-Django==4.1.7
+Django==4.2.16
 aiohttp-autoreload==0.0.1
+django-allauth[socialaccount]==65.11.0

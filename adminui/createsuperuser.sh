@@ -1,0 +1,1 @@
+python ./adminui/manage.py createsuperuser

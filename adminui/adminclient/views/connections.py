@@ -7,6 +7,7 @@ from django.urls import resolve
 from adminbackend.forms.connections import ConnectionsForm, ChooseConnection, LinkConnection
 from beacon.conf.conf import query_budget_database
 import subprocess
+from django.contrib.auth.decorators import login_required
 
 import logging
 
@@ -22,6 +23,7 @@ sh.setLevel('NOTSET')
 sh.setFormatter(formatter)
 LOG.addHandler(sh)
 
+@login_required
 def default_view(request):
     formchoose= ChooseConnection()
     form = None

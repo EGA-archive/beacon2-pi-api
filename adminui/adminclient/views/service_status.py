@@ -6,6 +6,7 @@ import subprocess
 import os
 import logging
 import importlib
+from django.contrib.auth.decorators import login_required
 
 
 LOG = logging.getLogger(__name__)
@@ -16,6 +17,7 @@ sh.setLevel('NOTSET')
 sh.setFormatter(formatter)
 LOG.addHandler(sh)
 
+@login_required
 def default_view(request):
     context = {}
     if request.method == 'POST':

@@ -8,6 +8,7 @@ from beacon.connections.mongo.__init__ import client
 from adminbackend.forms.filtering_terms import FilteringTermsForm, AddFilteringTerm
 import yaml
 import json
+from django.contrib.auth.decorators import login_required
 
 import logging
 
@@ -19,6 +20,7 @@ sh.setLevel('NOTSET')
 sh.setFormatter(formatter)
 LOG.addHandler(sh)
 
+@login_required
 def default_view(request):
 
     params =request.GET.urlencode()

@@ -7,6 +7,8 @@ import logging
 import os
 import subprocess
 from dotenv import load_dotenv, set_key
+from django.contrib.auth.decorators import login_required
+
 
 LOG = logging.getLogger(__name__)
 fmt = '%(levelname)s - %(asctime)s - %(message)s'
@@ -16,6 +18,7 @@ sh.setLevel('NOTSET')
 sh.setFormatter(formatter)
 LOG.addHandler(sh)
 
+@login_required
 def default_view(request):
     form = IDPForm()
     
