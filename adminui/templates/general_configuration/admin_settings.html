@@ -14,6 +14,49 @@
 
 <body>
   <body class="bg-custom-powder-light" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'> <!-- NEW - hx-headers added -->
+<table>
+  <tr>
+    <th>Email</th>
+    <th>Permissions Level</th>
+    <th></th>
+  </tr>
 
-      {{users}}
+  {% for user in users %}
+      <form method="post" onsubmit="openLoader()">
+        {% csrf_token %}      
+  <tr>
+    {% for k, v in user.items %}
+    <td>
+    {% if k == 'group' %}
+    <select name="Groups" id="id_Groups">
+    <option value="{{v}}" selected="selected">{{v}}</option>
+        {% if v != 'Owner' %}
+        <option value="Owner">Owner</option>
+        {% endif %}
+        {% if v != 'Admin' %}
+        <option value="Admin">Admin</option>
+        {% endif %}
+        {% if v != 'Viewer' %}
+        <option value="Viewer">Viewer</option>
+        {% endif %}
+        {% if v != 'Foreigner' %}
+        <option value="Foreigner">Foreigner</option>
+        {% endif %}
+    
+    </select>
+    {% elif k == 'email' %}
+    <input hidden type="text" class="btn btn-danger mb-3" id="id_Email" name="Email" value="{{v}}">{{v}}</input>
+    
+    {% endif %}
+    
+    {% endfor %}
+    </td>
+    <td><button type="submit" class="btn btn-danger mb-3">Save</button></td>
+  </tr>
+
+  </form>
+  {% endfor %}
+  
+</table>
+      
 </body>
