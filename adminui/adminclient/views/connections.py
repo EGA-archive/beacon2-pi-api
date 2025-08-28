@@ -124,9 +124,9 @@ def default_view(request):
                     Certificate = form.cleaned_data['Certificate']
                     CAFile = form.cleaned_data['CAFile']
                     Cluster = form.cleaned_data['Cluster']
-                    with open("adminui/beacon/connections/"+form.dire+"/conf.py") as f:
+                    with open("/home/app/web/beacon/connections/"+form.dire+"/conf.py") as f:
                         lines = f.readlines()
-                    with open("adminui/beacon/connections/"+form.dire+"/conf.py", "w") as f:
+                    with open("/home/app/web/beacon/connections/"+form.dire+"/conf.py", "w") as f:
                         new_lines =''
                         for line in lines:
                             if 'database_host' in str(line):

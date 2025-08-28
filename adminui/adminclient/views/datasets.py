@@ -81,14 +81,14 @@ def default_view(request):
             entry_types_included.append('g_variants')
         dataset_dict["entry_types_included"]=entry_types_included
         dataset_list.append(dataset_dict)
-    with open("adminui/beacon/conf/datasets/datasets_conf.yml") as f:
+    with open("beacon/conf/datasets/datasets_conf.yml") as f:
         datasets_test=yaml.safe_load(f)
     if request.method == 'POST':
         form = DatasetsForm(request.POST)
         if form.is_valid():
             dataID = form.cleaned_data['DatasetID']
             if 'Test Mode' in request.POST:
-                with open("adminui/beacon/conf/datasets/datasets_conf.yml") as f:
+                with open("beacon/conf/datasets/datasets_conf.yml") as f:
                     datasets_conf=yaml.safe_load(f)
                 test_datasets=[]
                 for key2, value2 in request.POST.items():
@@ -106,7 +106,7 @@ def default_view(request):
                         except Exception:
                             datasets_conf[key]={}
                             datasets_conf[key]['isTest']=False
-                with open('adminui/beacon/conf/datasets/datasets_conf.yml', 'w') as outfile:
+                with open('/home/app/web/beacon/conf/datasets/datasets_conf.yml', 'w') as outfile:
                     yaml.dump(datasets_conf, outfile)
             elif 'Delete Dataset' in request.POST:
                 analyses.delete_many({"datasetId": dataID})

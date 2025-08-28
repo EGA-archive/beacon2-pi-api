@@ -1,6 +1,6 @@
 #!/bin/bash
 
-python ./adminui/manage.py reset_db
-python ./adminui/manage.py makemigrations
-python ./adminui/manage.py migrate
-python ./adminui/manage.py runserver 0.0.0.0:8000
+python manage.py reset_db
+python manage.py makemigrations
+python manage.py migrate
+python manage.py runserver 0.0.0.0:3001

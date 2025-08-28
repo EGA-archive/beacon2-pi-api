@@ -28,11 +28,11 @@ def formatting_field(line):
     return placeholder
 
 def get_entry_types(entry_type):
-    with open("adminui/beacon/conf/" + entry_type+".py") as f:
+    with open("/home/app/web/beacon/conf/" + entry_type+".py") as f:
         lines = f.readlines()
     lookups=[]
     active_entry_type=None
-    with open("adminui/beacon/conf/"+ entry_type+".py", "r") as f:
+    with open("/home/app/web/beacon/conf/"+ entry_type+".py", "r") as f:
         for line in lines:
             if 'endpoint_name' in str(line):
                 placeholder = formatting_field(line)
@@ -66,9 +66,9 @@ def generate_endpoints(choices, first_endpoint_name,second_endpoint_name,second_
     return choices
 
 def initialize_lookup_endpoints(entry_type, entry_types, endpoint_name, analysis, biosample, cohort, dataset, genomicVariation, individual, run,initial_choices):
-    with open("adminui/beacon/conf/"+entry_type+".py") as f:
+    with open("/home/app/web/beacon/conf/"+entry_type+".py") as f:
             lines = f.readlines()
-    with open("adminui/beacon/conf/"+entry_type+".py", "r") as f:
+    with open("/home/app/web/beacon/conf/"+entry_type+".py", "r") as f:
         for line in lines:
             for second_entry_type in entry_types:
                 if entry_type == second_entry_type:
@@ -114,11 +114,11 @@ class EntryTypesForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super(EntryTypesForm, self).__init__(*args, **kwargs)
         # assign a (computed, I assume) default value to the choice field
-        with open("adminui/beacon/conf/analysis.py") as f:
+        with open("/home/app/web/beacon/conf/analysis.py") as f:
             lines = f.readlines()
         entry_types=[]
         endpoint_names=[]
-        with open("adminui/beacon/conf/analysis.py", "r") as f:
+        with open("/home/app/web/beacon/conf/analysis.py", "r") as f:
             analysis_initial_choices=[]
             for line in lines:
                 if 'endpoint_name' in str(line):
@@ -146,9 +146,9 @@ class EntryTypesForm(forms.Form):
                 elif 'database' in str(line):
                     placeholder = formatting_field(line)
                     self.initial['analysis_engine'] = placeholder
-        with open("adminui/beacon/conf/biosample.py") as f:
+        with open("/home/app/web/beacon/conf/biosample.py") as f:
             lines = f.readlines()
-        with open("adminui/beacon/conf/biosample.py", "r") as f:
+        with open("/home/app/web/beacon/conf/biosample.py", "r") as f:
             biosample_initial_choices=[]
             for line in lines:
                 if 'endpoint_name' in str(line):
@@ -176,9 +176,9 @@ class EntryTypesForm(forms.Form):
                 elif 'database' in str(line):
                     placeholder = formatting_field(line)
                     self.initial['biosample_engine'] = placeholder
-        with open("adminui/beacon/conf/cohort.py") as f:
+        with open("/home/app/web/beacon/conf/cohort.py") as f:
             lines = f.readlines()
-        with open("adminui/beacon/conf/cohort.py", "r") as f:
+        with open("/home/app/web/beacon/conf/cohort.py", "r") as f:
             cohort_initial_choices=[]
             for line in lines:
                 if 'endpoint_name' in str(line):
@@ -206,9 +206,9 @@ class EntryTypesForm(forms.Form):
                 elif 'database' in str(line):
                     placeholder = formatting_field(line)
                     self.initial['cohort_engine'] = placeholder
-        with open("adminui/beacon/conf/dataset.py") as f:
+        with open("/home/app/web/beacon/conf/dataset.py") as f:
             lines = f.readlines()
-        with open("adminui/beacon/conf/dataset.py", "r") as f:
+        with open("/home/app/web/beacon/conf/dataset.py", "r") as f:
             dataset_initial_choices=[]
             for line in lines:
                 if 'endpoint_name' in str(line):
@@ -236,9 +236,9 @@ class EntryTypesForm(forms.Form):
                 elif 'database' in str(line):
                     placeholder = formatting_field(line)
                     self.initial['dataset_engine'] = placeholder
-        with open("adminui/beacon/conf/genomicVariant.py") as f:
+        with open("/home/app/web/beacon/conf/genomicVariant.py") as f:
             lines = f.readlines()
-        with open("adminui/beacon/conf/genomicVariant.py", "r") as f:
+        with open("/home/app/web/beacon/conf/genomicVariant.py", "r") as f:
             genomicVariant_initial_choices=[]
             for line in lines:
                 if 'endpoint_name' in str(line):
@@ -266,9 +266,9 @@ class EntryTypesForm(forms.Form):
                 elif 'database' in str(line):
                     placeholder = formatting_field(line)
                     self.initial['genomicVariation_engine'] = placeholder
-        with open("adminui/beacon/conf/individual.py") as f:
+        with open("/home/app/web/beacon/conf/individual.py") as f:
             lines = f.readlines()
-        with open("adminui/beacon/conf/individual.py", "r") as f:
+        with open("/home/app/web/beacon/conf/individual.py", "r") as f:
             individual_initial_choices=[]
             for line in lines:
                 if 'endpoint_name' in str(line):
@@ -296,9 +296,9 @@ class EntryTypesForm(forms.Form):
                 elif 'database' in str(line):
                     placeholder = formatting_field(line)
                     self.initial['individual_engine'] = placeholder
-        with open("adminui/beacon/conf/run.py") as f:
+        with open("/home/app/web/beacon/conf/run.py") as f:
             lines = f.readlines()
-        with open("adminui/beacon/conf/run.py", "r") as f:
+        with open("/home/app/web/beacon/conf/run.py", "r") as f:
             run_initial_choices=[]
             for line in lines:
                 if 'endpoint_name' in str(line):
@@ -387,7 +387,7 @@ class EntryTypesForm(forms.Form):
     ('count', 'Count'),
     ('record', 'Record'),
     ]
-    database_choices=[(name, name) for name in os.listdir("adminui/beacon/connections")]
+    database_choices=[(name, name) for name in os.listdir("/home/app/web/beacon/connections")]
     analysis_entry_type, analysis_endpoint_name, analysis_lookups =get_entry_types('analysis')
     biosample_entry_type, biosample_endpoint_name, biosample_lookups =get_entry_types('biosample')
     cohort_entry_type, cohort_endpoint_name, cohort_lookups =get_entry_types('cohort')

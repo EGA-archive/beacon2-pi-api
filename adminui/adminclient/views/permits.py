@@ -27,7 +27,7 @@ def default_view(request):
     dataset_list=[]
     form = PermitsForm(request.POST)
     userform = UserPermitsForm(request.POST)
-    with open("adminui/beacon/permissions/datasets/datasets_permissions.yml") as f:
+    with open("/home/app/web/beacon/permissions/datasets/datasets_permissions.yml") as f:
         datasets_permissions=yaml.safe_load(f)
 
 
@@ -47,7 +47,7 @@ def default_view(request):
                 userrun = userform.cleaned_data['userrungranularity']
                 usergranularity = userform.cleaned_data['usergranularity']
                 
-                with open("adminui/beacon/permissions/datasets/datasets_permissions.yml") as f:
+                with open("/home/app/web/beacon/permissions/datasets/datasets_permissions.yml") as f:
                     datasets_permissions=yaml.safe_load(f)
 
                 user_list = datasets_permissions[datasetID]["controlled"]["user-list"]
@@ -84,7 +84,7 @@ def default_view(request):
                     else:
                         new_user_list.append(user)
                 datasets_permissions[datasetID]["controlled"]["user-list"]=new_user_list
-                with open('adminui/beacon/permissions/datasets/datasets_permissions.yml', 'w') as outfile:
+                with open('/home/app/web/beacon/permissions/datasets/datasets_permissions.yml', 'w') as outfile:
                     yaml.dump(datasets_permissions, outfile)
                 return redirect("adminclient:permits")
             elif 'Remove' in request.POST:
@@ -93,7 +93,7 @@ def default_view(request):
 
                 new_user_list=[]
                 
-                with open("adminui/beacon/permissions/datasets/datasets_permissions.yml") as f:
+                with open("/home/app/web/beacon/permissions/datasets/datasets_permissions.yml") as f:
                     datasets_permissions=yaml.safe_load(f)
                 user_list = datasets_permissions[datasetID]["controlled"]["user-list"]
                 
@@ -103,7 +103,7 @@ def default_view(request):
                     else:
                         new_user_list.append(user)
                 datasets_permissions[datasetID]["controlled"]["user-list"]=new_user_list
-                with open('adminui/beacon/permissions/datasets/datasets_permissions.yml', 'w') as outfile:
+                with open('/home/app/web/beacon/permissions/datasets/datasets_permissions.yml', 'w') as outfile:
                     yaml.dump(datasets_permissions, outfile)
                 return redirect("adminclient:permits")
         elif form.is_valid():
@@ -124,7 +124,7 @@ def default_view(request):
                 if granularity == '' or granularity == None:
                     granularity = 'boolean'
             
-                with open("adminui/beacon/permissions/datasets/datasets_permissions.yml") as f:
+                with open("/home/app/web/beacon/permissions/datasets/datasets_permissions.yml") as f:
                     datasets_permissions=yaml.safe_load(f)
                 new_permissions=datasets_permissions
                 try:
@@ -161,7 +161,7 @@ def default_view(request):
                 
                 datasets_permissions=new_permissions
 
-                with open('adminui/beacon/permissions/datasets/datasets_permissions.yml', 'w') as outfile:
+                with open('/home/app/web/beacon/permissions/datasets/datasets_permissions.yml', 'w') as outfile:
                     yaml.dump(datasets_permissions, outfile)
                 return redirect("adminclient:permits")
 

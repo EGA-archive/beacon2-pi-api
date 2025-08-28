@@ -32,9 +32,9 @@ class BudgetForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super(BudgetForm, self).__init__(*args, **kwargs)
         # assign a (computed, I assume) default value to the choice field
-        with open("adminui/beacon/conf/conf.py") as f:
+        with open("/home/app/web/beacon/conf/conf.py") as f:
             lines = f.readlines()
-        with open("adminui/beacon/conf/conf.py", "r") as f:
+        with open("/home/app/web/beacon/conf/conf.py", "r") as f:
             for line in lines:
                 if 'query_budget_per_user' in str(line):
                     placeholder = formatting_field(self, line)
@@ -68,7 +68,7 @@ class BudgetForm(forms.Form):
     BudgetIP = forms.BooleanField(required=False,help_text='Limit Queries per IP address')
     BudgetAmount = forms.IntegerField(help_text="Max. number of queries")
     BudgetTime = forms.IntegerField(help_text='Time for reset')
-    dirs = os.listdir("adminui/beacon/connections")
+    dirs = os.listdir("/home/app/web/beacon/connections")
     list_databases=[]
     for dir in dirs:
         list_databases.append((dir, dir))

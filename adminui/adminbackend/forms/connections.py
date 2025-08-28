@@ -38,9 +38,9 @@ class ConnectionsForm(forms.Form):
         super(ConnectionsForm,self).__init__(*args,**kwargs)
 
         # assign a (computed, I assume) default value to the choice field
-        with open("adminui/beacon/connections/" + self.dire + "/conf.py") as f:
+        with open("/home/app/web/beacon/connections/" + self.dire + "/conf.py") as f:
             lines = f.readlines()
-        with open("adminui/beacon/connections/" + self.dire + "/conf.py", "r") as f:
+        with open("/home/app/web/beacon/connections/" + self.dire + "/conf.py", "r") as f:
             for line in lines:
                 if 'database_host' in str(line):
                     placeholder = formatting_field(self, line)
@@ -93,7 +93,7 @@ class ConnectionsForm(forms.Form):
     Cluster = forms.BooleanField(help_text='Cluster', required=False)
 
 class ChooseConnection(forms.Form):
-    dirs = os.listdir("adminui/beacon/connections")
+    dirs = os.listdir("/home/app/web/beacon/connections")
     list_of_dirs=[]
     for dir in dirs:
         list_of_dirs.append((dir,dir))

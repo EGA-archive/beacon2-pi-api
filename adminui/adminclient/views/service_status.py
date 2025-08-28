@@ -25,7 +25,7 @@ def default_view(request):
         for k in request.POST:
 
             if k == 'TestDatabase':
-                dirs = os.listdir("adminui/beacon/connections")
+                dirs = os.listdir("/home/app/web/beacon/connections")
                 for dir in dirs:
                     if 'mongo' in dir:
                         try:
@@ -56,7 +56,7 @@ def default_view(request):
             elif k == 'UserInterface':
                 pass
             elif k == 'GeneralStatus':
-                dirs = os.listdir("adminui/beacon/connections")
+                dirs = os.listdir("/home/app/web/beacon/connections")
                 for dir in dirs:
                     if 'mongo' in dir:
                         try:

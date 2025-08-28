@@ -11,3 +11,4 @@ beacon/connections/mongo/data/db/*
 *.sqlite3
 *.json.gz
 adminui/adminclient/migrations/*
+adminui/node_modules

@@ -24,7 +24,8 @@ from adminclient import urls as adminclient_urls
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(adminclient_urls, namespace='adminclient')),
-    path('', include('allauth.urls'))
+    path('', include('allauth.urls')),
+    path('', include('allauth.socialaccount.urls')),
 
 ]
 

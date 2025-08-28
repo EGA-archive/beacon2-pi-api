@@ -47,9 +47,9 @@ def default_view(request):
             budgetDB = form.cleaned_data['BudgetDB']
             budgetDBname = form.cleaned_data['BudgetDBName']
             budgetTable = form.cleaned_data['BudgetTable']
-            with open("adminui/beacon/conf/conf.py") as f:
+            with open("/home/app/web/beacon/conf/conf.py") as f:
                 lines = f.readlines()
-            with open("adminui/beacon/conf/conf.py", "w") as f:
+            with open("/home/app/web/beacon/conf/conf.py", "w") as f:
                 new_lines =''
                 for line in lines:
                     if 'query_budget_per_user' in str(line):

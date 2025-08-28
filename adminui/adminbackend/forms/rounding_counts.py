@@ -31,9 +31,9 @@ class RoundingCountsForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super(RoundingCountsForm, self).__init__(*args, **kwargs)
         # assign a (computed, I assume) default value to the choice field
-        with open("adminui/beacon/conf/conf.py") as f:
+        with open("/home/app/web/beacon/conf/conf.py") as f:
             lines = f.readlines()
-        with open("adminui/beacon/conf/conf.py", "r") as f:
+        with open("/home/app/web/beacon/conf/conf.py", "r") as f:
             for line in lines:
                 if 'round_to_tens' in str(line):
                     placeholder = formatting_field(self, line)

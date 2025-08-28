@@ -23,14 +23,14 @@ services:
   admin-ui:
     restart: always
     build:
-      context: .
+      context: ./adminui
     container_name: admin-ui
     ports:
-      - "8000:8000"
-    entrypoint: ['bash','/adminui/start.sh']
+      - "3001:3001"
+    entrypoint: ['bash','/home/app/web/start.sh']
     volumes:
-      - ./beacon:/adminui/beacon
-      - ./adminui:/adminui
+      - ./beacon:/home/app/web/beacon
+      - ./adminui:/home/app/web
     networks:
       - pub
   

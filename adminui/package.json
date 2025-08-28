@@ -1,0 +1,9 @@
+{
+  "devDependencies": {
+    "tailwindcss": "^3.4.17"
+  },
+  "scripts": {
+    "tailwind:dev": "npx tailwindcss -i media/mystyle.css -o adminclient/static/adminui/css/tailwind_output.css --watch",
+    "tailwind:build": "npx tailwindcss -i media/mystyle.css -o adminclient/static/adminui/css/tailwind_output.css --minify"
+  }
+}

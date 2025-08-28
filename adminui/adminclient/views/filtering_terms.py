@@ -79,7 +79,6 @@ def default_view(request):
             return render(request, template, context)
             
         elif form.is_valid():
-            LOG.warning('here I am')
             filteringTermID = form.cleaned_data['FilteringTermID']
             if 'Delete Filtering Term' in request.POST:
                 filtering_terms.delete_many({"id": filteringTermID})

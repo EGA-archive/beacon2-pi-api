@@ -1,5 +1,6 @@
 
 {% load static %}
+{% load socialaccount %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -10,19 +11,23 @@
   <meta name="htmx-config" content='{"selfRequestsOnly":false}'>
   <title>Admin UI</title>
   <script type="text/javascript" src="{% static '/adminui/js/htmx.min.js' %}"></script>
+  <script type="text/javascript" src="{% static '/adminui/js/alpine.min.js' %}" defer></script>
+  <!-- <link href="{% static '/adminui/css/tailwind_output.css' %}" rel="stylesheet">-->
   <link rel="stylesheet" href="media/mystyle.css">
 </head>
 
 <body>
-  <body class="bg-custom-powder-light" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'> <!-- NEW - hx-headers added -->
+  <body class="bg-custom-powder-light" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
 
       <div>
 
-    {% if request.user.is_authenticated %}
+    {% if user.is_authenticated %}
      <a href="{% url 'account_logout' %}">Logout</a>
+     <div>Hello, {{user.email}}</div>
      {% else %}
      <a href="{% url 'account_login' %}">Login</a>
      {% endif %}
+     <a href="{% provider_login_url 'openid_connect' %}">Sign in with OIDC</a>
 </div>
 {% block body %}{% endblock %}
 </body>

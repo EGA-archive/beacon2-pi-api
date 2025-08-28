@@ -26,7 +26,7 @@ def default_view(request):
     
     identity_provider_list=[]
     
-    for env_filename in glob.glob("adminui/beacon/auth/idp_providers/*.env"):
+    for env_filename in glob.glob("/home/app/web/beacon/auth/idp_providers/*.env"):
         load_dotenv(env_filename, override=True)
         identity_provider_dict={}
         env_id = env_filename.split('/')
@@ -52,25 +52,25 @@ def default_view(request):
             user_info = form.cleaned_data['UserInfo']
             introspection = form.cleaned_data['Introspection']
             jwks_url = form.cleaned_data['JWKSURL']
-            load_dotenv("adminui/beacon/auth/idp_providers/" + idp + '.env', override=True)
+            load_dotenv("/home/app/web/beacon/auth/idp_providers/" + idp + '.env', override=True)
             if 'Save' in request.POST:
-                set_key(dotenv_path="adminui/beacon/auth/idp_providers/" + idp + '.env', key_to_set="CLIENT_ID", value_to_set=client_id)
-                set_key(dotenv_path="adminui/beacon/auth/idp_providers/" + idp + '.env', key_to_set="CLIENT_SECRET", value_to_set=client_secret)
-                set_key(dotenv_path="adminui/beacon/auth/idp_providers/" + idp + '.env', key_to_set="USER_INFO", value_to_set=user_info)
-                set_key(dotenv_path="adminui/beacon/auth/idp_providers/" + idp + '.env', key_to_set="INTROSPECTION", value_to_set=introspection)
-                set_key(dotenv_path="adminui/beacon/auth/idp_providers/" + idp + '.env', key_to_set="JWKS_URL", value_to_set=jwks_url)
-                set_key(dotenv_path="adminui/beacon/auth/idp_providers/" + idp + '.env', key_to_set="ISSUER", value_to_set=issuer)
+                set_key(dotenv_path="/home/app/web/beacon/auth/idp_providers/" + idp + '.env', key_to_set="CLIENT_ID", value_to_set=client_id)
+                set_key(dotenv_path="/home/app/web/beacon/auth/idp_providers/" + idp + '.env', key_to_set="CLIENT_SECRET", value_to_set=client_secret)
+                set_key(dotenv_path="/home/app/web/beacon/auth/idp_providers/" + idp + '.env', key_to_set="USER_INFO", value_to_set=user_info)
+                set_key(dotenv_path="/home/app/web/beacon/auth/idp_providers/" + idp + '.env', key_to_set="INTROSPECTION", value_to_set=introspection)
+                set_key(dotenv_path="/home/app/web/beacon/auth/idp_providers/" + idp + '.env', key_to_set="JWKS_URL", value_to_set=jwks_url)
+                set_key(dotenv_path="/home/app/web/beacon/auth/idp_providers/" + idp + '.env', key_to_set="ISSUER", value_to_set=issuer)
             elif 'Add' in request.POST:
-                create_idp = subprocess.check_output("touch adminui/beacon/auth/idp_providers/{}.env".format(idp), shell=True)
-                load_dotenv("adminui/beacon/auth/idp_providers/" + idp + '.env', override=True)
-                set_key(dotenv_path="adminui/beacon/auth/idp_providers/" + idp + '.env', key_to_set="CLIENT_ID", value_to_set=client_id)
-                set_key(dotenv_path="adminui/beacon/auth/idp_providers/" + idp + '.env', key_to_set="CLIENT_SECRET", value_to_set=client_secret)
-                set_key(dotenv_path="adminui/beacon/auth/idp_providers/" + idp + '.env', key_to_set="USER_INFO", value_to_set=user_info)
-                set_key(dotenv_path="adminui/beacon/auth/idp_providers/" + idp + '.env', key_to_set="INTROSPECTION", value_to_set=introspection)
-                set_key(dotenv_path="adminui/beacon/auth/idp_providers/" + idp + '.env', key_to_set="JWKS_URL", value_to_set=jwks_url)
-                set_key(dotenv_path="adminui/beacon/auth/idp_providers/" + idp + '.env', key_to_set="ISSUER", value_to_set=issuer)
+                create_idp = subprocess.check_output("touch /home/app/web/beacon/auth/idp_providers/{}.env".format(idp), shell=True)
+                load_dotenv("/home/app/web/beacon/auth/idp_providers/" + idp + '.env', override=True)
+                set_key(dotenv_path="/home/app/web/beacon/auth/idp_providers/" + idp + '.env', key_to_set="CLIENT_ID", value_to_set=client_id)
+                set_key(dotenv_path="/home/app/web/beacon/auth/idp_providers/" + idp + '.env', key_to_set="CLIENT_SECRET", value_to_set=client_secret)
+                set_key(dotenv_path="/home/app/web/beacon/auth/idp_providers/" + idp + '.env', key_to_set="USER_INFO", value_to_set=user_info)
+                set_key(dotenv_path="/home/app/web/beacon/auth/idp_providers/" + idp + '.env', key_to_set="INTROSPECTION", value_to_set=introspection)
+                set_key(dotenv_path="/home/app/web/beacon/auth/idp_providers/" + idp + '.env', key_to_set="JWKS_URL", value_to_set=jwks_url)
+                set_key(dotenv_path="/home/app/web/beacon/auth/idp_providers/" + idp + '.env', key_to_set="ISSUER", value_to_set=issuer)
             elif 'Delete' in request.POST:
-                os.remove("adminui/beacon/auth/idp_providers/" + idp)
+                os.remove("/home/app/web/beacon/auth/idp_providers/" + idp)
             return redirect("adminclient:identity_provider")
     context={"identity_provider_list": identity_provider_list ,"form": form}
     template = "general_configuration/identity_provider.html"
