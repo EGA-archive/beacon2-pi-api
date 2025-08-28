@@ -48,12 +48,10 @@ def default_view(request):
             user.groups.clear()
             my_group = Group.objects.get(name=Groups)
             my_group.user_set.add(user)
-            '''
             if Groups == 'Owner':
                 user.is_superuser = True
                 user.is_staff = True
                 user.save()
-            '''
             return redirect("adminclient:admin_settings")
     context = {"users": users_list, "form": form}
     template = "general_configuration/admin_settings.html"
