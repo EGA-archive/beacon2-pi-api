@@ -38,6 +38,11 @@ def get_cross_query(self, ids: dict, cross_type: str, collection_id: str):# prag
         raise
 
 @log_with_args_mongo(level)
+def lengthquery(self, collection: Collection,query: dict):
+    #LOG.debug(query)
+    return collection.find(query, {"_id": 1, "variation.location.interval.start.value": 1, "variation.location.interval.end.value": 1}).max_time_ms(100 * 1000)
+
+@log_with_args_mongo(level)
 def query_id(self, query: dict, document_id) -> dict:
     query["id"] = document_id
     return query
@@ -136,6 +141,7 @@ def get_docs_by_response_type(self, include: str, query: dict, dataset: str, lim
         queryid={}
         queryid['datasetId']=dataset
         query_count["$or"].append(queryid)
+        LOG.warning(query_count)
         if query_count["$or"]!=[]:
             dataset_count = get_count(self, mongo_collection, query_count)
             if dataset_count == 0:
