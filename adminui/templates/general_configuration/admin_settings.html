@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="htmx-config" content='{"selfRequestsOnly":false}'>
+  <title>Admin UI</title>
+  <script type="text/javascript" src="{% static '/adminui/js/htmx.min.js' %}"></script>
+  <link rel="stylesheet" href="media/mystyle.css">
+</head>
+
+<body>
+  <body class="bg-custom-powder-light" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'> <!-- NEW - hx-headers added -->
+<table>
+  <tr>
+    <th>Email</th>
+    <th>Permissions Level</th>
+    <th></th>
+  </tr>
+
+  {% for user in users %}
+      <form method="post" onsubmit="openLoader()">
+        {% csrf_token %}      
+  <tr>
+    {% for k, v in user.items %}
+    <td>
+    {% if k == 'group' %}
+    <select name="Groups" id="id_Groups">
+    <option value="{{v}}" selected="selected">{{v}}</option>
+        {% if v != 'Owner' %}
+        <option value="Owner">Owner</option>
+        {% endif %}
+        {% if v != 'Admin' %}
+        <option value="Admin">Admin</option>
+        {% endif %}
+        {% if v != 'Foreigner' %}
+        <option value="Foreigner">Foreigner</option>
+        {% endif %}
+    
+    </select>
+    {% elif k == 'email' %}
+    <input hidden type="text" class="btn btn-danger mb-3" id="id_Email" name="Email" value="{{v}}">{{v}}</input>
+    
+    {% endif %}
+    
+    {% endfor %}
+    </td>
+    <td><button type="submit" class="btn btn-danger mb-3">Save</button></td>
+  </tr>
+
+  </form>
+  {% endfor %}
+  
+</table>
+      
+</body>

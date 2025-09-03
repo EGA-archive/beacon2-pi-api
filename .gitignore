@@ -10,3 +10,5 @@ beacon/connections/mongo/data/db/*
 !beacon/connections/mongo/data/db/dir.txt
 *.sqlite3
 *.json.gz
+adminui/adminclient/migrations/*
+adminui/node_modules

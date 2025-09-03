@@ -34,6 +34,7 @@ except Exception:
     db=client[dbname].create_collection(name="similarities")
 
 genomicVariations.create_index([("variation.location.interval.start.value", 1),("variation.location.interval.end.value", 1)]) # for range queries
+genomicVariations.create_index([("length", 1)]) # for range queries
 genomicVariations.create_index([("variation.alternateBases", 1),("variation.referenceBases", 1),("variation.location.interval.start.value", 1), ("variation.location.interval.end.value", 1)]) # for sequence queries
 genomicVariations.create_index([("datasetId", 1)]) # splits all the docs into datasets faster
 genomicVariations.create_index([("variantInternalId", 1)]) # enables the g_variants/{id}/endpoint query to do it faster

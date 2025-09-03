@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-a3=je(k1+%5&4z$5vlxj@6--p$9#9mi(!au89k85n5wa(%32%h'
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -40,7 +43,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'adminclient'
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'adminclient',
+    'allauth.socialaccount.providers.openid_connect'
 ]
 
 MIDDLEWARE = [
@@ -51,7 +58,39 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "allauth.account.middleware.AccountMiddleware"
 ]
+
+SOCIALACCOUNT_PROVIDERS = {
+    "openid_connect": {
+        # Optional PKCE defaults to False, but may be required by your provider
+        # Can be set globally, or per app (settings).
+        "OAUTH_PKCE_ENABLED": True,
+        "APPS": [
+            {
+                "provider_id": "my-server",
+                "name": "My Login Server",
+                "client_id": os.getenv("CLIENT_ID"),
+                "secret": os.getenv("CLIENT_SECRET"),
+                "settings": {
+                    # When enabled, an additional call to the userinfo
+                    # endpoint takes place. The data returned is stored in
+                    # `SocialAccount.extra_data`. When disabled, the (decoded) ID
+                    # token payload is used instead.
+                    "fetch_userinfo": True,
+                    "oauth_pkce_enabled": True,
+                    "server_url": "https://login.aai.lifescience-ri.eu/oidc",
+                    # Optional token endpoint authentication method.
+                    # May be one of "client_secret_basic", "client_secret_post"
+                    # If omitted, a method from the the server's
+                    # token auth methods list is used,
+                    'redirect_uri': "http://localhost:3001/oidc/my-server/login/callback/",
+                    "token_auth_method": "client_secret_basic"
+                },
+            }
+        ]
+    }
+}
 
 ROOT_URLCONF = 'adminbackend.urls'
 
@@ -67,10 +106,18 @@ TEMPLATES = [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+                'django.contrib.messages.context_processors.messages'
             ],
         },
     },
+]
+
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by email
+    'allauth.account.auth_backends.AuthenticationBackend'
 ]
 
 WSGI_APPLICATION = 'adminbackend.wsgi.application'
@@ -124,8 +171,24 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
-
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
+
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL='/'
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
+ACCOUNT_LOGIN_METHODS = {'email'}
+ACCOUNT_CONFIRM_EMAIL_ON_GET = True
+ACCOUNT_EMAIL_VERIFICATION = 'optional'
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
+ACCOUNT_LOGOUT_ON_GET = True
+ACCOUNT_LOGIN_ON_PASSWORD_RESET = True
+ACCOUNT_LOGOUT_REDIRECT = '/'
+ACCOUNT_PRESERVE_USERNAME_CASING = False
+ACCOUNT_SESSION_REMEMBER = False
+ACCOUNT_USERNAME_MIN_LENGTH = 2
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field

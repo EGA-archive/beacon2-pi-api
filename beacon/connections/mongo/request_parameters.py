@@ -4,7 +4,8 @@ from beacon.logs.logs import log_with_args, LOG
 from beacon.conf.conf import level
 from aiohttp import web
 from beacon.connections.mongo.filters import apply_alphanumeric_filter
-from beacon.connections.mongo.__init__ import client
+from beacon.connections.mongo.__init__ import client, genomicVariations
+from beacon.connections.mongo.utils import lengthquery
 
 VARIANTS_PROPERTY_MAP = {
     "start": "variation.location.interval.start.value",
@@ -133,9 +134,6 @@ def apply_request_parameters(self, query: Dict[str, List[dict]], qparams: Reques
                     finalvalue=str(0)+','+str(startvalue-1)
                 finalvalue = finalvalue.split(',')
                 filters = generate_position_filter_start(self, k, finalvalue)
-                for filter in filters:
-                    startdictvalue=apply_alphanumeric_filter(self, {}, filter, collection, dataset, True)
-                    length_query["$and"].append(startdictvalue)
                 if isinstance(endvalue, list) and isinstance(startvalue, list):
                     finalvalue=str(startvalue[0])+','+str(endvalue[0])
                 if isinstance(startvalue, list):
@@ -184,11 +182,16 @@ def apply_request_parameters(self, query: Dict[str, List[dict]], qparams: Reques
                 subqueryor["$or"].append(endquery)
                 stage2v = str(int(v)+1)+','+str(9999999999)
                 stage2v =stage2v.split(',')
-                filters = generate_position_filter_end(self, k, stage2v)
-                for filter in filters:
-                    enddictvalue=apply_alphanumeric_filter(self, {}, filter, collection, dataset, True)
-                    length_query["$and"].append(enddictvalue)    
-                length_query["$and"].append({'length': {'$gte': int(v)-int(startvalue)}}) 
+                filters = generate_position_filter_end(self, k, stage2v)  
+                docs_length = lengthquery(self, genomicVariations, {'length': {'$gte': int(v)-int(startvalue)}, 'datasetId': dataset})
+                length_array=[]
+                for lengthdoc in docs_length:
+                    try:
+                        if int(lengthdoc["variation"]["location"]["interval"]["start"]["value"]) < int(startvalue) and int(lengthdoc["variation"]["location"]["interval"]["end"]["value"]) > int(v):
+                            length_array.append(lengthdoc["_id"])
+                    except Exception as e:
+                        continue
+                length_query["$and"].append({'_id': {'$in': length_array}})
             
             
         elif k == "datasets":

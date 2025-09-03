@@ -1,228 +1,142 @@
 {
     "entryTypes": {
         "analysis": {
-            "entryType": "analysis",
-            "openAPIEndpointsDefinition": "https://raw.githubusercontent.com/ga4gh-beacon/beacon-v2/main/models/json/beacon-v2-default-model/analyses/endpoints.json",
-            "rootUrl": "http://beaconprod:5050/api/analyses",
-            "singleEntryUrl": "http://beaconprod:5050/api/analyses/{id}",
-            "endpoints": {
-                "genomicVariant": {
-                    "returnedEntryType": "genomicVariant",
-                    "url": "http://beaconprod:5050/api/analyses/{id}/g_variants"
-                },
-                "biosample": {
-                    "returnedEntryType": "biosample",
-                    "url": "http://beaconprod:5050/api/analyses/{id}/biosamples"
-                },
-                "cohort": {
-                    "returnedEntryType": "cohort",
-                    "url": "http://beaconprod:5050/api/analyses/{id}/cohorts"
-                },
-                "dataset": {
-                    "returnedEntryType": "dataset",
-                    "url": "http://beaconprod:5050/api/analyses/{id}/datasets"
-                },
-                "individual": {
-                    "returnedEntryType": "individual",
-                    "url": "http://beaconprod:5050/api/analyses/{id}/individuals"
-                },
-                "run": {
-                    "returnedEntryType": "run",
-                    "url": "http://beaconprod:5050/api/analyses/{id}/runs"
-                }
-            }
+            "id": "analysis",
+            "name": "Bioinformatics analysis",
+            "ontologyTermForThisType": {
+                "id": "edam:operation_2945",
+                "label": "Analysis"
+            },
+            "partOfSpecification": "Beacon v2.0.0",
+            "description": "Apply analytical methods to existing data of a specific type.",
+            "defaultSchema": {
+                "id": "beacon-analysis-v2.0.0",
+                "name": "Default schema for a bioinformatics analysis",
+                "referenceToSchemaDefinition": "https://raw.githubusercontent.com/ga4gh-beacon/beacon-v2/main/models/json/beacon-v2-default-model/analyses/defaultSchema.json",
+                "schemaVersion": "v2.0.0"
+            },
+            "additionallySupportedSchemas": [],
+            "nonFilteredQueriesAllowed": true
         },
         "biosample": {
-            "entryType": "biosample",
-            "openAPIEndpointsDefinition": "https://raw.githubusercontent.com/ga4gh-beacon/beacon-v2/main/models/json/beacon-v2-default-model/biosamples/endpoints.json",
-            "rootUrl": "http://beaconprod:5050/api/biosamples",
-            "singleEntryUrl": "http://beaconprod:5050/api/biosamples/{id}",
-            "endpoints": {
-                "genomicVariant": {
-                    "returnedEntryType": "genomicVariant",
-                    "url": "http://beaconprod:5050/api/biosamples/{id}/g_variants"
-                },
-                "analysis": {
-                    "returnedEntryType": "analysis",
-                    "url": "http://beaconprod:5050/api/biosamples/{id}/analyses"
-                },
-                "run": {
-                    "returnedEntryType": "run",
-                    "url": "http://beaconprod:5050/api/biosamples/{id}/runs"
-                },
-                "individual": {
-                    "returnedEntryType": "individual",
-                    "url": "http://beaconprod:5050/api/biosamples/{id}/individuals"
-                },
-                "dataset": {
-                    "returnedEntryType": "dataset",
-                    "url": "http://beaconprod:5050/api/biosamples/{id}/datasets"
-                },
-                "cohort": {
-                    "returnedEntryType": "cohort",
-                    "url": "http://beaconprod:5050/api/biosamples/{id}/cohorts"
-                }
-            }
+            "id": "biosample",
+            "name": "Biological Sample",
+            "ontologyTermForThisType": {
+                "id": "NCIT:C70699",
+                "label": "Biospecimen"
+            },
+            "partOfSpecification": "Beacon v2.0.0",
+            "description": "Any material sample taken from a biological entity for testing, diagnostic, propagation, treatment or research purposes, including a sample obtained from a living organism or taken from the biological object after halting of all its life functions. Biospecimen can contain one or more components including but not limited to cellular molecules, cells, tissues, organs, body fluids, embryos, and body excretory products. [ NCI ]",
+            "defaultSchema": {
+                "id": "beacon-dataset-v2.0.0",
+                "name": "Default schema for a biological sample",
+                "referenceToSchemaDefinition": "https://raw.githubusercontent.com/ga4gh-beacon/beacon-v2/main/models/json/beacon-v2-default-model/biosamples/defaultSchema.json",
+                "schemaVersion": "v2.0.0"
+            },
+            "additionallySupportedSchemas": [],
+            "nonFilteredQueriesAllowed": true
         },
         "cohort": {
-            "entryType": "cohort",
-            "openAPIEndpointsDefinition": "https://raw.githubusercontent.com/ga4gh-beacon/beacon-v2/main/models/json/beacon-v2-default-model/cohorts/endpoints.json",
-            "rootUrl": "http://beaconprod:5050/api/cohorts",
-            "singleEntryUrl": "http://beaconprod:5050/api/cohorts/{id}",
-            "endpoints": {
-                "individual": {
-                    "returnedEntryType": "individual",
-                    "url": "http://beaconprod:5050/api/cohorts/{id}/individuals"
-                },
-                "analysis": {
-                    "returnedEntryType": "analysis",
-                    "url": "http://beaconprod:5050/api/cohorts/{id}/analyses"
-                },
-                "run": {
-                    "returnedEntryType": "run",
-                    "url": "http://beaconprod:5050/api/cohorts/{id}/runs"
-                },
-                "biosample": {
-                    "returnedEntryType": "biosample",
-                    "url": "http://beaconprod:5050/api/cohorts/{id}/biosamples"
-                },
-                "dataset": {
-                    "returnedEntryType": "dataset",
-                    "url": "http://beaconprod:5050/api/cohorts/{id}/datasets"
-                },
-                "genomicVariant": {
-                    "returnedEntryType": "genomicVariant",
-                    "url": "http://beaconprod:5050/api/cohorts/{id}/g_variants"
+            "id": "cohort",
+            "name": "Cohort",
+            "ontologyTermForThisType": {
+                "id": "NCIT:C61512",
+                "label": "Cohort"
+            },
+            "partOfSpecification": "Beacon v2.0.0",
+            "description": "A group of individuals, identified by a common characteristic. [ NCI ]",
+            "defaultSchema": {
+                "id": "beacon-cohort-v2.0.0",
+                "name": "Default schema for cohorts",
+                "referenceToSchemaDefinition": "https://raw.githubusercontent.com/ga4gh-beacon/beacon-v2/main/models/json/beacon-v2-default-model/cohorts/defaultSchema.json",
+                "schemaVersion": "v2.0.0"
+            },
+            "aCollectionOf": [
+                {
+                    "id": "individual",
+                    "name": "Individuals"
                 }
-            }
+            ],
+            "additionalSupportedSchemas": [],
+            "nonFilteredQueriesAllowed": true
         },
         "dataset": {
-            "entryType": "dataset",
-            "openAPIEndpointsDefinition": "https://raw.githubusercontent.com/ga4gh-beacon/beacon-v2/main/models/json/beacon-v2-default-model/datasets/endpoints.json",
-            "rootUrl": "http://beaconprod:5050/api/datasets",
-            "singleEntryUrl": "http://beaconprod:5050/api/datasets/{id}",
-            "endpoints": {
-                "individual": {
-                    "returnedEntryType": "individual",
-                    "url": "http://beaconprod:5050/api/datasets/{id}/individuals"
-                },
-                "analysis": {
-                    "returnedEntryType": "analysis",
-                    "url": "http://beaconprod:5050/api/datasets/{id}/analyses"
-                },
-                "run": {
-                    "returnedEntryType": "run",
-                    "url": "http://beaconprod:5050/api/datasets/{id}/runs"
-                },
-                "biosample": {
-                    "returnedEntryType": "biosample",
-                    "url": "http://beaconprod:5050/api/datasets/{id}/biosamples"
-                },
-                "genomicVariant": {
-                    "returnedEntryType": "genomicVariant",
-                    "url": "http://beaconprod:5050/api/datasets/{id}/g_variants"
-                },
-                "cohort": {
-                    "returnedEntryType": "cohort",
-                    "url": "http://beaconprod:5050/api/datasets/{id}/cohorts"
+            "id": "dataset",
+            "name": "Dataset",
+            "ontologyTermForThisType": {
+                "id": "NCIT:C47824",
+                "label": "Data set"
+            },
+            "partOfSpecification": "Beacon v2.0.0",
+            "description": "A Dataset is a collection of records, like rows in a database or cards in a cardholder.",
+            "defaultSchema": {
+                "id": "beacon-dataset-v2.0.0",
+                "name": "Default schema for datasets",
+                "referenceToSchemaDefinition": "https://raw.githubusercontent.com/ga4gh-beacon/beacon-v2/main/models/json/beacon-v2-default-model/datasets/defaultSchema.json",
+                "schemaVersion": "v2.0.0"
+            },
+            "aCollectionOf": [
+                {
+                    "id": "genomicVariation",
+                    "name": "Genomic Variants"
                 }
-            }
+            ],
+            "additionalSupportedSchemas": [],
+            "nonFilteredQueriesAllowed": true
         },
         "genomicVariant": {
-            "entryType": "genomicVariant",
-            "openAPIEndpointsDefinition": "https://raw.githubusercontent.com/ga4gh-beacon/beacon-v2/main/models/json/beacon-v2-default-model/genomicVariations/endpoints.json",
-            "rootUrl": "http://beaconprod:5050/api/g_variants",
-            "singleEntryUrl": "http://beaconprod:5050/api/g_variants/{variantInternalId}",
-            "endpoints": {
-                "individual": {
-                    "returnedEntryType": "individual",
-                    "url": "http://beaconprod:5050/api/g_variants/{variantInternalId}/individuals"
-                },
-                "analysis": {
-                    "returnedEntryType": "analysis",
-                    "url": "http://beaconprod:5050/api/g_variants/{variantInternalId}/analyses"
-                },
-                "run": {
-                    "returnedEntryType": "run",
-                    "url": "http://beaconprod:5050/api/g_variants/{variantInternalId}/runs"
-                },
-                "biosample": {
-                    "returnedEntryType": "biosample",
-                    "url": "http://beaconprod:5050/api/g_variants/{variantInternalId}/biosamples"
-                },
-                "cohort": {
-                    "returnedEntryType": "cohort",
-                    "url": "http://beaconprod:5050/api/g_variants/{variantInternalId}/cohorts"
-                },
-                "dataset": {
-                    "returnedEntryType": "dataset",
-                    "url": "http://beaconprod:5050/api/g_variants/{variantInternalId}/datasets"
-                }
-            }
+            "id": "genomicVariant",
+            "name": "Genomic Variants",
+            "ontologyTermForThisType": {
+                "id": "SO:0000735",
+                "label": "sequence_location"
+            },
+            "partOfSpecification": "Beacon v2.0.0",
+            "description": "The location of a sequence.",
+            "defaultSchema": {
+                "id": "beacon-g_variant-v2.0.0",
+                "name": "Default schema for a genomic variation",
+                "referenceToSchemaDefinition": "https://raw.githubusercontent.com/ga4gh-beacon/beacon-v2/main/models/json/beacon-v2-default-model/genomicVariations/defaultSchema.json",
+                "schemaVersion": "v2.0.0"
+            },
+            "additionallySupportedSchemas": [],
+            "nonFilteredQueriesAllowed": true
         },
         "individual": {
-            "entryType": "individual",
-            "openAPIEndpointsDefinition": "https://raw.githubusercontent.com/ga4gh-beacon/beacon-v2/main/models/json/beacon-v2-default-model/individuals/endpoints.json",
-            "rootUrl": "http://beaconprod:5050/api/individuals",
-            "singleEntryUrl": "http://beaconprod:5050/api/individuals/{id}",
-            "endpoints": {
-                "genomicVariant": {
-                    "returnedEntryType": "genomicVariant",
-                    "url": "http://beaconprod:5050/api/individuals/{id}/g_variants"
-                },
-                "analysis": {
-                    "returnedEntryType": "analysis",
-                    "url": "http://beaconprod:5050/api/individuals/{id}/analyses"
-                },
-                "run": {
-                    "returnedEntryType": "run",
-                    "url": "http://beaconprod:5050/api/individuals/{id}/runs"
-                },
-                "biosample": {
-                    "returnedEntryType": "biosample",
-                    "url": "http://beaconprod:5050/api/individuals/{id}/biosamples"
-                },
-                "cohort": {
-                    "returnedEntryType": "cohort",
-                    "url": "http://beaconprod:5050/api/individuals/{id}/cohorts"
-                },
-                "dataset": {
-                    "returnedEntryType": "dataset",
-                    "url": "http://beaconprod:5050/api/individuals/{id}/datasets"
-                }
-            }
+            "id": "individual",
+            "name": "Individual",
+            "ontologyTermForThisType": {
+                "id": "NCIT:C25190",
+                "label": "Person"
+            },
+            "partOfSpecification": "Beacon v2.0.0",
+            "description": "A human being. It could be a Patient, a Tissue Donor, a Participant, a Human Study Subject, etc.",
+            "defaultSchema": {
+                "id": "beacon-individual-v2.0.0",
+                "name": "Default schema for an individual",
+                "referenceToSchemaDefinition": "https://raw.githubusercontent.com/ga4gh-beacon/beacon-v2/main/models/json/beacon-v2-default-model/individuals/defaultSchema.json",
+                "schemaVersion": "v2.0.0"
+            },
+            "additionallySupportedSchemas": [],
+            "nonFilteredQueriesAllowed": true
         },
         "run": {
-            "entryType": "run",
-            "openAPIEndpointsDefinition": "https://raw.githubusercontent.com/ga4gh-beacon/beacon-v2/main/models/json/beacon-v2-default-model/runs/endpoints.json",
-            "rootUrl": "http://beaconprod:5050/api/runs",
-            "singleEntryUrl": "http://beaconprod:5050/api/runs/{id}",
-            "endpoints": {
-                "genomicVariant": {
-                    "returnedEntryType": "genomicVariant",
-                    "url": "http://beaconprod:5050/api/runs/{id}/g_variants"
-                },
-                "analysis": {
-                    "returnedEntryType": "analysis",
-                    "url": "http://beaconprod:5050/api/runs/{id}/analyses"
-                },
-                "biosample": {
-                    "returnedEntryType": "biosample",
-                    "url": "http://beaconprod:5050/api/runs/{id}/biosamples"
-                },
-                "cohort": {
-                    "returnedEntryType": "cohort",
-                    "url": "http://beaconprod:5050/api/runs/{id}/cohorts"
-                },
-                "dataset": {
-                    "returnedEntryType": "dataset",
-                    "url": "http://beaconprod:5050/api/runs/{id}/datasets"
-                },
-                "individual": {
-                    "returnedEntryType": "individual",
-                    "url": "http://beaconprod:5050/api/runs/{id}/individuals"
-                }
-            }
+            "id": "run",
+            "name": "Sequencing run",
+            "ontologyTermForThisType": {
+                "id": "NCIT:C148088",
+                "label": "Sequencing run"
+            },
+            "partOfSpecification": "Beacon v2.0.0",
+            "description": "The valid and completed operation of a high-throughput sequencing instrument for a single sequencing process. [ NCI ]",
+            "defaultSchema": {
+                "id": "beacon-run-v2.0.0",
+                "name": "Default schema for a sequencing run",
+                "referenceToSchemaDefinition": "https://raw.githubusercontent.com/ga4gh-beacon/beacon-v2/main/models/json/beacon-v2-default-model/runs/defaultSchema.json",
+                "schemaVersion": "v2.0.0"
+            },
+            "additionallySupportedSchemas": [],
+            "nonFilteredQueriesAllowed": true
         }
     }
 }

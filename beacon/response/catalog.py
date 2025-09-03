@@ -862,7 +862,140 @@ def build_entry_types(self):
             'returnedSchemas': []
         }
 
-        response = generate_endpoints(self, 'entry_types', 'entryTypes')
+        with open('beacon/response/templates/entry_types.json', 'r') as template:
+            response = json.load(template)
+
+
+        if analysis.endpoint_name != '':
+            response['entryTypes'][analysis.id]==response['entryTypes']['analysis']
+            if analysis.id != 'analysis':
+                del response['entryTypes']['analysis']
+            response['entryTypes'][analysis.id]["id"]=analysis.id
+            response['entryTypes'][analysis.id]["name"]=analysis.name
+            response['entryTypes'][analysis.id]['ontologyTermForThisType']['id']=analysis.ontology_id
+            response['entryTypes'][analysis.id]['ontologyTermForThisType']['name']=analysis.ontology_name
+            response['entryTypes'][analysis.id]['partOfSpecification']=analysis.specification
+            response['entryTypes'][analysis.id]['description']=analysis.description
+            response['entryTypes'][analysis.id]['defaultSchema']['id']=analysis.defaultSchema_id
+            response['entryTypes'][analysis.id]['defaultSchema']['name']=analysis.defaultSchema_name
+            response['entryTypes'][analysis.id]['defaultSchema']['referenceToSchemaDefinition']=analysis.defaultSchema_reference_to_schema_definition
+            response['entryTypes'][analysis.id]['defaultSchema']['schemaVersion']=analysis.defaultSchema_schema_version
+            response['entryTypes'][analysis.id]['additionallySupportedSchemas']=analysis.aditionally_supported_schemas
+            response['entryTypes'][analysis.id]['nonFilteredQueriesAllowed']=analysis.allow_queries_without_filters
+        else:
+            del response['entryTypes']['analysis']
+        if biosample.endpoint_name != '':
+            response['entryTypes'][biosample.id]==response['entryTypes']['biosample']
+            if biosample.id != 'biosample':
+                del response['entryTypes']['biosample']
+            response['entryTypes'][biosample.id]["id"]=biosample.id
+            response['entryTypes'][biosample.id]["name"]=biosample.name
+            response['entryTypes'][biosample.id]['ontologyTermForThisType']['id']=biosample.ontology_id
+            response['entryTypes'][biosample.id]['ontologyTermForThisType']['name']=biosample.ontology_name
+            response['entryTypes'][biosample.id]['partOfSpecification']=biosample.specification
+            response['entryTypes'][biosample.id]['description']=biosample.description
+            response['entryTypes'][biosample.id]['defaultSchema']['id']=biosample.defaultSchema_id
+            response['entryTypes'][biosample.id]['defaultSchema']['name']=biosample.defaultSchema_name
+            response['entryTypes'][biosample.id]['defaultSchema']['referenceToSchemaDefinition']=biosample.defaultSchema_reference_to_schema_definition
+            response['entryTypes'][biosample.id]['defaultSchema']['schemaVersion']=biosample.defaultSchema_schema_version
+            response['entryTypes'][biosample.id]['additionallySupportedSchemas']=biosample.aditionally_supported_schemas
+            response['entryTypes'][biosample.id]['nonFilteredQueriesAllowed']=biosample.allow_queries_without_filters
+        else:
+            del response['entryTypes']['biosample']
+        if cohort.endpoint_name!='':
+            response['entryTypes'][cohort.id]==response['entryTypes']['cohort']
+            if cohort.id != 'cohort':
+                del response['entryTypes']['cohort']
+            response['entryTypes'][cohort.id]["id"]=cohort.id
+            response['entryTypes'][cohort.id]["name"]=cohort.name
+            response['entryTypes'][cohort.id]['ontologyTermForThisType']['id']=cohort.ontology_id
+            response['entryTypes'][cohort.id]['ontologyTermForThisType']['name']=cohort.ontology_name
+            response['entryTypes'][cohort.id]['partOfSpecification']=cohort.specification
+            response['entryTypes'][cohort.id]['description']=cohort.description
+            response['entryTypes'][cohort.id]['defaultSchema']['id']=cohort.defaultSchema_id
+            response['entryTypes'][cohort.id]['defaultSchema']['name']=cohort.defaultSchema_name
+            response['entryTypes'][cohort.id]['defaultSchema']['referenceToSchemaDefinition']=cohort.defaultSchema_reference_to_schema_definition
+            response['entryTypes'][cohort.id]['defaultSchema']['schemaVersion']=cohort.defaultSchema_schema_version
+            response['entryTypes'][cohort.id]['additionallySupportedSchemas']=cohort.aditionally_supported_schemas
+            response['entryTypes'][cohort.id]['nonFilteredQueriesAllowed']=cohort.allow_queries_without_filters
+        else:
+            del response['entryTypes']['cohort']
+        if dataset.endpoint_name!='':
+            response['entryTypes'][dataset.id]==response['entryTypes']['dataset']
+            if dataset.id != 'dataset':
+                del response['entryTypes']['dataset']
+            response['entryTypes'][dataset.id]["id"]=dataset.id
+            response['entryTypes'][dataset.id]["name"]=dataset.name
+            response['entryTypes'][dataset.id]['ontologyTermForThisType']['id']=dataset.ontology_id
+            response['entryTypes'][dataset.id]['ontologyTermForThisType']['name']=dataset.ontology_name
+            response['entryTypes'][dataset.id]['partOfSpecification']=dataset.specification
+            response['entryTypes'][dataset.id]['description']=dataset.description
+            response['entryTypes'][dataset.id]['defaultSchema']['id']=dataset.defaultSchema_id
+            response['entryTypes'][dataset.id]['defaultSchema']['name']=dataset.defaultSchema_name
+            response['entryTypes'][dataset.id]['defaultSchema']['referenceToSchemaDefinition']=dataset.defaultSchema_reference_to_schema_definition
+            response['entryTypes'][dataset.id]['defaultSchema']['schemaVersion']=dataset.defaultSchema_schema_version
+            response['entryTypes'][dataset.id]['additionallySupportedSchemas']=dataset.aditionally_supported_schemas
+            response['entryTypes'][dataset.id]['nonFilteredQueriesAllowed']=dataset.allow_queries_without_filters
+        else:
+            del response['entryTypes']['dataset']
+        if genomicVariant.endpoint_name!='':
+            response['entryTypes'][genomicVariant.id]==response['entryTypes']['genomicVariant']
+            if genomicVariant.id != 'genomicVariant':
+                del response['entryTypes']['genomicVariant']
+            response['entryTypes'][genomicVariant.id]["id"]=genomicVariant.id
+            response['entryTypes'][genomicVariant.id]["name"]=genomicVariant.name
+            response['entryTypes'][genomicVariant.id]['ontologyTermForThisType']['id']=genomicVariant.ontology_id
+            response['entryTypes'][genomicVariant.id]['ontologyTermForThisType']['name']=genomicVariant.ontology_name
+            response['entryTypes'][genomicVariant.id]['partOfSpecification']=genomicVariant.specification
+            response['entryTypes'][genomicVariant.id]['description']=genomicVariant.description
+            response['entryTypes'][genomicVariant.id]['defaultSchema']['id']=genomicVariant.defaultSchema_id
+            response['entryTypes'][genomicVariant.id]['defaultSchema']['name']=genomicVariant.defaultSchema_name
+            response['entryTypes'][genomicVariant.id]['defaultSchema']['referenceToSchemaDefinition']=genomicVariant.defaultSchema_reference_to_schema_definition
+            response['entryTypes'][genomicVariant.id]['defaultSchema']['schemaVersion']=genomicVariant.defaultSchema_schema_version
+            response['entryTypes'][genomicVariant.id]['additionallySupportedSchemas']=genomicVariant.aditionally_supported_schemas
+            response['entryTypes'][genomicVariant.id]['nonFilteredQueriesAllowed']=genomicVariant.allow_queries_without_filters
+        else:
+            del response['entryTypes']['genomicVariant']
+        if individual.endpoint_name!='':
+            response['entryTypes'][individual.id]==response['entryTypes']['individual']
+            if individual.id != 'individual':
+                del response['entryTypes']['individual']
+            response['entryTypes'][individual.id]["id"]=individual.id
+            response['entryTypes'][individual.id]["name"]=individual.name
+            response['entryTypes'][individual.id]['ontologyTermForThisType']['id']=individual.ontology_id
+            response['entryTypes'][individual.id]['ontologyTermForThisType']['name']=individual.ontology_name
+            response['entryTypes'][individual.id]['partOfSpecification']=individual.specification
+            response['entryTypes'][individual.id]['description']=individual.description
+            response['entryTypes'][individual.id]['defaultSchema']['id']=individual.defaultSchema_id
+            response['entryTypes'][individual.id]['defaultSchema']['name']=individual.defaultSchema_name
+            response['entryTypes'][individual.id]['defaultSchema']['referenceToSchemaDefinition']=individual.defaultSchema_reference_to_schema_definition
+            response['entryTypes'][individual.id]['defaultSchema']['schemaVersion']=individual.defaultSchema_schema_version
+            response['entryTypes'][individual.id]['additionallySupportedSchemas']=individual.aditionally_supported_schemas
+            response['entryTypes'][individual.id]['nonFilteredQueriesAllowed']=individual.allow_queries_without_filters
+        else:
+            del response['entryTypes']['individual']
+        if run.endpoint_name!='':
+            response['entryTypes'][run.id]==response['entryTypes']['run']
+            if run.id != 'run':
+                del response['entryTypes']['run']
+            response['entryTypes'][run.id]["id"]=run.id
+            response['entryTypes'][run.id]["name"]=run.name
+            response['entryTypes'][run.id]['ontologyTermForThisType']['id']=run.ontology_id
+            response['entryTypes'][run.id]['ontologyTermForThisType']['name']=run.ontology_name
+            response['entryTypes'][run.id]['partOfSpecification']=run.specification
+            response['entryTypes'][run.id]['description']=run.description
+            response['entryTypes'][run.id]['defaultSchema']['id']=run.defaultSchema_id
+            response['entryTypes'][run.id]['defaultSchema']['name']=run.defaultSchema_name
+            response['entryTypes'][run.id]['defaultSchema']['referenceToSchemaDefinition']=run.defaultSchema_reference_to_schema_definition
+            response['entryTypes'][run.id]['defaultSchema']['schemaVersion']=run.defaultSchema_schema_version
+            response['entryTypes'][run.id]['additionallySupportedSchemas']=run.aditionally_supported_schemas
+            response['entryTypes'][run.id]['nonFilteredQueriesAllowed']=run.allow_queries_without_filters
+        else:
+            del response['entryTypes']['run']
+        if response['entryTypes'] == {}:
+            ErrorClass.error_code=500
+            ErrorClass.error_message='Please, provide an entry type in conf to be able to have a beacon instance with at least one endpoint to query.'
+            raise
 
         entry_types_json = {
             'meta': meta,

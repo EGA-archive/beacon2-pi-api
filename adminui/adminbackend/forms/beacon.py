@@ -33,9 +33,9 @@ class BamForm(forms.Form):
         # assign a (computed, I assume) default value to the choice field
         self.fields['APIVersion'].widget.attrs['readonly'] = True
         self.fields['BeaconVersion'].widget.attrs['readonly'] = True
-        with open("adminui/beacon/conf/conf.py") as f:
+        with open("/home/app/web/beacon/conf/conf.py") as f:
             lines = f.readlines()
-        with open("adminui/beacon/conf/conf.py", "r") as f:
+        with open("/home/app/web/beacon/conf/conf.py", "r") as f:
             for line in lines:
                 if 'beacon_name' in str(line):
                     placeholder = formatting_field(self, line)
@@ -83,7 +83,7 @@ class BamForm(forms.Form):
                     placeholder = formatting_field(self, line)
                     self.initial['granularity'] = placeholder
                 elif str(line).startswith('version'):
-                    with open("beacon/conf/api_version.yml") as api_version_file:
+                    with open("/home/app/web/beacon/conf/api_version.yml") as api_version_file:
                         api_version_yaml = yaml.safe_load(api_version_file)
                     self.initial['BeaconVersion'] = api_version_yaml['api_version']
          

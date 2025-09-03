@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="htmx-config" content='{"selfRequestsOnly":false}'>
+  <title>Admin UI</title>
+  <script type="text/javascript" src="{% static '/adminui/js/htmx.min.js' %}"></script>
+  <link rel="stylesheet" href="media/mystyle.css">
+</head>
+
+<body>
+  <body class="bg-custom-powder-light" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'> <!-- NEW - hx-headers added -->
+    <form method="post" onsubmit="openLoader()">
+        {% csrf_token %}
+    {% for idp in identity_provider_list %}
+    <div class="dataset">
+        {% for key, value in idp.items %}
+            {% if key == 'IdentityProvider' %}
+            
+                
+                <div>               
+                    <div>{{key}}: {{value}}</div>
+                    <input hidden type="text" id="id_{{key}}" name="{{key}}" value="{{value}}">
+                </div>
+            {% else %}
+                <div>               
+                    <input type="password" id="id_{{key}}" name="{{key}}" value="{{value}}">
+                </div>
+            {% endif %}
+        {% endfor %}
+
+
+
+    </div>
+    
+    <button type="submit" class="btn btn-danger mb-3" name="Save" value="Save">Save</button>
+    
+    <button type="submit" class="btn btn-danger mb-3" name="Delete" value="Delete">Delete</button>
+    
+                
+        
+    {% endfor %}
+    </form>
+    <span><button hx-on:click="htmx.toggleClass('#add_new', 'hidden')">Add New</button></span>
+        <form id='add_new' method="post" onsubmit="openLoader()" class="hidden">
+        {% csrf_token %}
+    <div class="dataset">
+            {% for f in form %}
+            <p>{{f.help_text|safe}} {{f}} </p>
+            {% endfor %}
+            <span id="active-label"></span>
+
+
+
+    </div>
+    
+    <button type="submit" class="btn btn-danger mb-3" name="Add" value="Add">Add</button>
+    
+    <button hx-on:click="htmx.toggleClass('#add_new', 'hidden')">Cancel</button>
+    
+                
+
+        </form>
+</body>

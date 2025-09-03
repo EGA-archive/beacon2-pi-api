@@ -858,7 +858,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_NONE_resultSetResponse_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?includeResultsetResponses=NONE")
+                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?includeResultsetResponses=NONE&testMode=True")
                 assert resp.status == 200
             loop.run_until_complete(test_check_g_variants_endpoint_NONE_resultSetResponse_is_working())
             loop.run_until_complete(client.close())
@@ -868,7 +868,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_MISS_resultSetResponse_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?includeResultsetResponses=MISS")
+                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?includeResultsetResponses=MISS&testMode=True")
                 assert resp.status == 200
             loop.run_until_complete(test_check_g_variants_endpoint_MISS_resultSetResponse_is_working())
             loop.run_until_complete(client.close())
@@ -878,7 +878,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_ALL_resultSetResponse_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?includeResultsetResponses=ALL")
+                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?includeResultsetResponses=ALL&testMode=True")
                 assert resp.status == 200
             loop.run_until_complete(test_check_g_variants_endpoint_ALL_resultSetResponse_is_working())
             loop.run_until_complete(client.close())
@@ -888,7 +888,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=43045703&referenceName=17&assemblyId=GRCh38&referenceBases=G&alternateBases=A")
+                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=43045703&referenceName=17&assemblyId=GRCh38&referenceBases=G&alternateBases=A&testMode=True")
                 assert resp.status == 200
             loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
             loop.run_until_complete(client.close())
@@ -898,7 +898,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=345675&referenceName=2&assemblyId=GRCh37&end=345681")
+                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=343675&referenceName=2&assemblyId=GRCh37&end=345681&testMode=True")
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
                 assert responsedict["responseSummary"]["numTotalResults"] == 6
@@ -911,7 +911,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?geneId=BRCA1")
+                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?geneId=BRCA1&testMode=True")
                 assert resp.status == 200
             loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
             loop.run_until_complete(client.close())
@@ -921,7 +921,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=43045703,43045704&end=43045704,43045705&referenceName=17&assemblyId=GRCh38")
+                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=43045703,43045704&end=43045704,43045705&referenceName=17&assemblyId=GRCh37&testMode=True")
                 assert resp.status == 200
             loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
             loop.run_until_complete(client.close())
@@ -931,7 +931,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?genomicAlleleShortForm=NC_000008.10:g.467881AGCAG>A")
+                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?genomicAlleleShortForm=NC_000008.10:g.467881AGCAG>A&testMode=True")
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
                 assert responsedict["responseSummary"]["numTotalResults"] == 1
@@ -944,7 +944,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?aminoacidChange=Pro1856Ser&geneId=BRCA1")
+                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?aminoacidChange=Pro1856Ser&geneId=BRCA1&testMode=True")
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
                 assert responsedict["responseSummary"]["numTotalResults"] == 1
@@ -1359,7 +1359,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_range_query_with_variant_min_and_max_lengths_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=345675&referenceName=2&assemblyId=GRCh38&end=345681&variantMinLength=0&variantMaxLength=10&testMode=true")
+                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=343675&referenceName=2&assemblyId=GRCh37&end=345681&variantMinLength=0&variantMaxLength=10&testMode=true")
                 assert resp.status == 200
             loop.run_until_complete(test_check_range_query_with_variant_min_and_max_lengths_working())
             loop.run_until_complete(client.close())
@@ -1407,7 +1407,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_range_query_with_variant_assemblyId_GRCh38_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=16050074&end=16050075&assemblyId=GRCh38&referenceName=22")
+                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=343675&referenceName=2&assemblyId=GRCh38&end=345681&testMode=True")
                 assert resp.status == 200
             loop.run_until_complete(test_check_range_query_with_variant_assemblyId_GRCh38_working())
             loop.run_until_complete(client.close())
@@ -1417,7 +1417,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_range_query_with_variant_assemblyId_GRCh37_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=16050074&end=16050075&assemblyId=GRCh37&referenceName=22")
+                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=343675&referenceName=2&assemblyId=GRCh37&end=345681&testMode=True")
                 assert resp.status == 200
             loop.run_until_complete(test_check_range_query_with_variant_assemblyId_GRCh37_working())
             loop.run_until_complete(client.close())
@@ -1427,7 +1427,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_range_query_with_variant_assemblyId_NCBI36_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=16050074&end=16050075&assemblyId=NCBI36&referenceName=22")
+                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=343675&referenceName=2&assemblyId=NCBI36&end=345681&testMode=True")
                 assert resp.status == 200
             loop.run_until_complete(test_check_range_query_with_variant_assemblyId_NCBI36_working())
             loop.run_until_complete(client.close())
@@ -2288,7 +2288,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=31121923&referenceName=X&assemblyId=GRCh38&end=31121924")
+                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=31120923&referenceName=X&assemblyId=GRCh38&end=31121924&testMode=true")
                 assert resp.status == 200
             loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
             loop.run_until_complete(client.close())# pragma: no cover
@@ -2298,7 +2298,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=31121923&referenceName=Y&assemblyId=GRCh38&end=31121924")
+                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=31120923&referenceName=Y&assemblyId=GRCh38&end=31121924&testMode=true")
                 assert resp.status == 200
             loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
             loop.run_until_complete(client.close())# pragma: no cover

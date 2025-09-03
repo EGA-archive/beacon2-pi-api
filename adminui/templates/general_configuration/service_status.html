@@ -1,0 +1,37 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="htmx-config" content='{"selfRequestsOnly":false}'>
+  <title>Admin UI</title>
+  <script type="text/javascript" src="{% static '/adminui/js/htmx.min.js' %}"></script>
+  <link rel="stylesheet" href="media/mystyle.css">
+</head>
+
+<body>
+  <body class="bg-custom-powder-light" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'> <!-- NEW - hx-headers added -->
+    <form method="post" onsubmit="openLoader()">
+        {% csrf_token %}
+          <button type="submit" class="btn btn-danger mb-3" name="TestDatabase" value="TestDatabase">Test Database</button>
+          <button type="submit" class="btn btn-danger mb-3" name="TestAPI" value="TestAPI">Test API</button>
+          <button type="submit" class="btn btn-danger mb-3" name="BudgetDatabase" value="BudgetDatabase">Test Budget Database</button>
+          <button type="submit" class="btn btn-danger mb-3" name="UserInterface" value="UserInterface">Test User Interface</button>
+          <button type="submit" class="btn btn-danger mb-3" name="GeneralStatus" value="GeneralStatus">Test General Status</button>
+    </form>
+          {% if client %}
+          <div>{{client}}</div>
+          {% endif %}
+          {% if database %}
+          <div>Database status is: {{database}}</div>
+          {% endif %}
+          {% if api %}
+          <div>API status is: {{api}}</div>
+          {% endif %}
+          {% if budget %}
+          <div>Budget database status is: {{budget}}</div>
+          {% endif %}
+</body>

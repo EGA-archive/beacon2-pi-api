@@ -6,6 +6,7 @@ from pymongo.mongo_client import MongoClient
 from django.urls import resolve
 from adminbackend.forms.beacon import BamForm
 from adminbackend.forms.entry_types import EntryTypesForm
+from django.contrib.auth.decorators import login_required, permission_required
 
 import logging
 
@@ -17,6 +18,8 @@ sh.setLevel('NOTSET')
 sh.setFormatter(formatter)
 LOG.addHandler(sh)
 
+@login_required
+@permission_required('adminclient.can_see_view', raise_exception=True)
 def default_view(request):
     form =BamForm()
     context = {'form': form}
@@ -35,9 +38,9 @@ def default_view(request):
             org_logo_url = form.cleaned_data['OrgLogoUrl']
             granularity = form.cleaned_data['granularity']
             security_level = form.cleaned_data['SecurityLevel']
-            with open("adminui/beacon/conf/conf.py") as f:
+            with open("/home/app/web/beacon/conf/conf.py") as f:
                 lines = f.readlines()
-            with open("adminui/beacon/conf/conf.py", "w") as f:
+            with open("/home/app/web/beacon/conf/conf.py", "w") as f:
                 new_lines =''
                 for line in lines:
                     if 'beacon_name' in str(line):
@@ -73,6 +76,8 @@ def default_view(request):
     template = "home.html"
     return render(request, template, context)
 
+@login_required
+@permission_required('adminclient.can_see_view', raise_exception=True)
 def entry_types(request):
     form =EntryTypesForm()
     context = {'form': form}
@@ -110,9 +115,9 @@ def entry_types(request):
             if analysis != None:
                 analysis_endpoints=form.cleaned_data['AnalysisEndpoints']
                 analysis_non_filtered = form.cleaned_data['AnalysisNonFiltered']
-                with open("adminui/beacon/conf/" + 'analysis' + ".py") as f:
+                with open("/home/app/web/beacon/conf/" + 'analysis' + ".py") as f:
                     lines = f.readlines()
-                with open("adminui/beacon/conf/"+ 'analysis' + ".py", "w") as f:
+                with open("/home/app/web/beacon/conf/"+ 'analysis' + ".py", "w") as f:
                     new_lines =''
                     for line in lines:
                         if 'endpoint_name=' in str(line):
@@ -233,9 +238,9 @@ def entry_types(request):
             if biosample != None:
                 biosample_endpoints=form.cleaned_data['BiosampleEndpoints']
                 biosample_non_filtered = form.cleaned_data['BiosampleNonFiltered']
-                with open("adminui/beacon/conf/" + 'biosample' + ".py") as f:
+                with open("/home/app/web/beacon/conf/" + 'biosample' + ".py") as f:
                     lines = f.readlines()
-                with open("adminui/beacon/conf/"+ 'biosample' + ".py", "w") as f:
+                with open("/home/app/web/beacon/conf/"+ 'biosample' + ".py", "w") as f:
                     new_lines =''
                     for line in lines:
                         if 'endpoint_name=' in str(line):
@@ -356,9 +361,9 @@ def entry_types(request):
             if cohort != None:
                 cohort_endpoints=form.cleaned_data['CohortEndpoints']
                 cohort_non_filtered = form.cleaned_data['CohortNonFiltered']
-                with open("adminui/beacon/conf/" + 'cohort' + ".py") as f:
+                with open("/home/app/web/beacon/conf/" + 'cohort' + ".py") as f:
                     lines = f.readlines()
-                with open("adminui/beacon/conf/"+ 'cohort' + ".py", "w") as f:
+                with open("/home/app/web/beacon/conf/"+ 'cohort' + ".py", "w") as f:
                     new_lines =''
                     for line in lines:
                         if 'endpoint_name=' in str(line):
@@ -479,9 +484,9 @@ def entry_types(request):
             if dataset != None:
                 dataset_endpoints=form.cleaned_data['DatasetEndpoints']
                 dataset_non_filtered = form.cleaned_data['DatasetNonFiltered']
-                with open("adminui/beacon/conf/" + 'dataset' + ".py") as f:
+                with open("/home/app/web/beacon/conf/" + 'dataset' + ".py") as f:
                     lines = f.readlines()
-                with open("adminui/beacon/conf/"+ 'dataset' + ".py", "w") as f:
+                with open("/home/app/web/beacon/conf/"+ 'dataset' + ".py", "w") as f:
                     new_lines =''
                     for line in lines:
                         if 'endpoint_name=' in str(line):
@@ -602,9 +607,9 @@ def entry_types(request):
             if genomicVariant != None:
                 genomicVariant_endpoints=form.cleaned_data['GenomicVariantEndpoints']
                 genomicVariant_non_filtered = form.cleaned_data['GenomicVariantNonFiltered']
-                with open("adminui/beacon/conf/" + 'genomicVariant' + ".py") as f:
+                with open("/home/app/web/beacon/conf/" + 'genomicVariant' + ".py") as f:
                     lines = f.readlines()
-                with open("adminui/beacon/conf/"+ 'genomicVariant' + ".py", "w") as f:
+                with open("/home/app/web/beacon/conf/"+ 'genomicVariant' + ".py", "w") as f:
                     new_lines =''
                     for line in lines:
                         if 'endpoint_name=' in str(line):
@@ -725,9 +730,9 @@ def entry_types(request):
             if individual != None:
                 individual_endpoints=form.cleaned_data['IndividualEndpoints']
                 individual_non_filtered = form.cleaned_data['IndividualNonFiltered']
-                with open("adminui/beacon/conf/" + 'individual' + ".py") as f:
+                with open("/home/app/web/beacon/conf/" + 'individual' + ".py") as f:
                     lines = f.readlines()
-                with open("adminui/beacon/conf/"+ 'individual' + ".py", "w") as f:
+                with open("/home/app/web/beacon/conf/"+ 'individual' + ".py", "w") as f:
                     new_lines =''
                     for line in lines:
                         if 'endpoint_name=' in str(line):
@@ -848,9 +853,9 @@ def entry_types(request):
             if run != None:
                 run_endpoints=form.cleaned_data['RunEndpoints']
                 run_non_filtered = form.cleaned_data['RunNonFiltered']
-                with open("adminui/beacon/conf/" + 'run' + ".py") as f:
+                with open("/home/app/web/beacon/conf/" + 'run' + ".py") as f:
                     lines = f.readlines()
-                with open("adminui/beacon/conf/"+ 'run' + ".py", "w") as f:
+                with open("/home/app/web/beacon/conf/"+ 'run' + ".py", "w") as f:
                     new_lines =''
                     for line in lines:
                         if 'endpoint_name=' in str(line):

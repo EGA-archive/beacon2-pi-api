@@ -55,107 +55,111 @@ def get_ontology_field_name(ontology_id:str, term_id:str, collection:str):
         fieldquery[field]=ontology_id + ":" + term_id
         query['$or'].append(fieldquery)
     results = client[dbname].get_collection(collection).find(query).limit(1)
-    results = list(results)
-    results = dumps(results)
-    results = json.loads(results)
-    field = ''
-    for result in results:
-        for k, v in result.items():
-            if isinstance(v, str): 
-                if v == ontology_id + ':' + term_id:
-                    field = k
-                    for key, value in result.items():
-                        if key == 'label':
-                            label = value.lower()
+    try:
+        results = list(results)
+        results = dumps(results)
+        results = json.loads(results)
+    except Exception:
+        results=[]
+    if results != []:
+        field = ''
+        for result in results:
+            for k, v in result.items():
+                if isinstance(v, str): 
+                    if v == ontology_id + ':' + term_id:
+                        field = k
+                        for key, value in result.items():
+                            if key == 'label':
+                                label = value.lower()
+                            break
                         break
-                    break
-            elif isinstance(v, dict):
-                for k2, v2 in v.items():
-                    if isinstance(v2, list):
-                        for item_list in v2:
-                            if isinstance(item_list, str): 
-                                if item_list == ontology_id + ':' + term_id:
-                                    field = k + '.' + k2
-                                    for key, value in v.items():
-                                        if key == 'label':
-                                            label = value.lower()
-                                            break
-                                    break
-                            elif isinstance(item_list, dict):
-                                for k21, v21 in item_list.items():
-                                    if isinstance(v21, str):
-                                        if v21 == ontology_id + ':' + term_id:
-                                            field = k + '.' + k2 + '.' + k21
-                                            for key, value in item_list.items():
-                                                if key == 'label':
-                                                    label = value.lower()
-                                                    break
-                                            break
-                                    elif isinstance(v21,dict):
-                                        for k22, v22 in v21.items():
-                                            if v22 == v21 == ontology_id + ':' + term_id:
-                                                field = k + '.' + k2 + '.' + k22
-                                                for key, value in v21.items():
+                elif isinstance(v, dict):
+                    for k2, v2 in v.items():
+                        if isinstance(v2, list):
+                            for item_list in v2:
+                                if isinstance(item_list, str): 
+                                    if item_list == ontology_id + ':' + term_id:
+                                        field = k + '.' + k2
+                                        for key, value in v.items():
+                                            if key == 'label':
+                                                label = value.lower()
+                                                break
+                                        break
+                                elif isinstance(item_list, dict):
+                                    for k21, v21 in item_list.items():
+                                        if isinstance(v21, str):
+                                            if v21 == ontology_id + ':' + term_id:
+                                                field = k + '.' + k2 + '.' + k21
+                                                for key, value in item_list.items():
                                                     if key == 'label':
                                                         label = value.lower()
                                                         break
                                                 break
-                    elif v2 == ontology_id + ':' + term_id:
-                        field = k + '.' + k2
-                        for key, value in v.items():
-                            if key == 'label':
-                                label = value.lower()
-                                break
-                        break
-            elif isinstance(v, list):
-                for item in v:
-                    if isinstance(item, str): 
-                        if item == ontology_id + ':' + term_id:
-                            field = k
-                            for key, value in result.items():
+                                        elif isinstance(v21,dict):
+                                            for k22, v22 in v21.items():
+                                                if v22 == v21 == ontology_id + ':' + term_id:
+                                                    field = k + '.' + k2 + '.' + k22
+                                                    for key, value in v21.items():
+                                                        if key == 'label':
+                                                            label = value.lower()
+                                                            break
+                                                    break
+                        elif v2 == ontology_id + ':' + term_id:
+                            field = k + '.' + k2
+                            for key, value in v.items():
                                 if key == 'label':
                                     label = value.lower()
                                     break
                             break
-                    elif isinstance(item, dict):
-                        for k2, v2 in item.items():
-                            if isinstance(v2, str):
-                                if v2 == ontology_id + ':' + term_id:
-                                    field = k + '.' + k2
-                                    for key, value in item.items():
-                                        if k == 'label':
-                                            label = v
-                                            break
-                                    break
-                            elif isinstance(v2, dict):
-                                for k3, v3 in v2.items():
-                                    if isinstance(v3, str):
-                                        if v3 == ontology_id + ':' + term_id:
-                                            field = k + '.' + k2 + '.' + k3
-                                            for key, value in v2.items():
-                                                if key == 'label':
-                                                    label = value.lower()
-                                                    break
-                                            break 
-                                    elif isinstance(v3, dict):
-                                        for k4, v4 in v3.items():
-                                            if isinstance(v4, str):
-                                                if v4 == ontology_id + ':' + term_id:
-                                                    field = k + '.' + k2 + '.' + k3 + '.' + k4
-                                                    for key, value in v3.items():
-                                                        if key == 'label':
-                                                            label = value.lower()
-                                                            break
-                                                    break 
-                                            elif isinstance(v4, dict):
-                                                for k5, v5 in v4.items():
-                                                    if v5 == ontology_id + ':' + term_id:
-                                                        field = k + '.' + k2 + '.' + k3 + '.' + k4 + '.' + k5
-                                                        for key, value in v4.items():
+                elif isinstance(v, list):
+                    for item in v:
+                        if isinstance(item, str): 
+                            if item == ontology_id + ':' + term_id:
+                                field = k
+                                for key, value in result.items():
+                                    if key == 'label':
+                                        label = value.lower()
+                                        break
+                                break
+                        elif isinstance(item, dict):
+                            for k2, v2 in item.items():
+                                if isinstance(v2, str):
+                                    if v2 == ontology_id + ':' + term_id:
+                                        field = k + '.' + k2
+                                        for key, value in item.items():
+                                            if k == 'label':
+                                                label = v
+                                                break
+                                        break
+                                elif isinstance(v2, dict):
+                                    for k3, v3 in v2.items():
+                                        if isinstance(v3, str):
+                                            if v3 == ontology_id + ':' + term_id:
+                                                field = k + '.' + k2 + '.' + k3
+                                                for key, value in v2.items():
+                                                    if key == 'label':
+                                                        label = value.lower()
+                                                        break
+                                                break 
+                                        elif isinstance(v3, dict):
+                                            for k4, v4 in v3.items():
+                                                if isinstance(v4, str):
+                                                    if v4 == ontology_id + ':' + term_id:
+                                                        field = k + '.' + k2 + '.' + k3 + '.' + k4
+                                                        for key, value in v3.items():
                                                             if key == 'label':
                                                                 label = value.lower()
                                                                 break
                                                         break 
+                                                elif isinstance(v4, dict):
+                                                    for k5, v5 in v4.items():
+                                                        if v5 == ontology_id + ':' + term_id:
+                                                            field = k + '.' + k2 + '.' + k3 + '.' + k4 + '.' + k5
+                                                            for key, value in v4.items():
+                                                                if key == 'label':
+                                                                    label = value.lower()
+                                                                    break
+                                                            break 
 
 
         if '.' in field:

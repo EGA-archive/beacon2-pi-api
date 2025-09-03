@@ -38,6 +38,11 @@ def get_cross_query(self, ids: dict, cross_type: str, collection_id: str):# prag
         raise
 
 @log_with_args_mongo(level)
+def lengthquery(self, collection: Collection,query: dict):
+    #LOG.debug(query)
+    return collection.find(query, {"_id": 1, "variation.location.interval.start.value": 1, "variation.location.interval.end.value": 1}).max_time_ms(100 * 1000)
+
+@log_with_args_mongo(level)
 def query_id(self, query: dict, document_id) -> dict:
     query["id"] = document_id
     return query
