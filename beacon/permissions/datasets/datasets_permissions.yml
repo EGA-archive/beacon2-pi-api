@@ -1,8 +1,8 @@
 test:
-  controlled:
+  public:
     default_entry_types_granularity: record
     entry_types_exceptions:
-      - individual: boolean
+      - individual: record
     user-list:
       - user_e-mail: jane.smith@beacon.ga4gh
         default_entry_types_granularity: count
@@ -10,19 +10,19 @@ test:
           - individual: record
 
 gnomad_exome_v2.1.1:
-  registered:
+  public:
     default_entry_types_granularity: record
     entry_types_exceptions:
       - individual: record
 
 gnomad_joint_v4.1:
-  registered:
+  public:
     default_entry_types_granularity: record
     entry_types_exceptions:
       - individual: record
 
 EGAD00001007774:
-  registered:
+  public:
     default_entry_types_granularity: record
     entry_types_exceptions:
       - individual: record
