@@ -887,7 +887,7 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, col
         elif filter.id == "variation.alternateBases":
             if 'max' in filter.value:
                 valuereplaced = filter.value.replace('max', '')
-                length=1+int(valuereplaced)+1
+                length=int(valuereplaced)+2
                 array_min=[]
                 dict_len={}
                 dict_len['$strLenCP']="$variation.alternateBases"
@@ -897,13 +897,25 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, col
                 dict_gt['$lt']=array_min
                 dict_expr={}
                 dict_expr['$expr']=dict_gt
+                andquery={}
+                andquery["$and"]=[]
+                andquery["$and"].append(dict_expr)
+                array_min=[]
+                dict_len={}
+                dict_len['$strLenCP']="$variation.referenceBases"
+                array_min.append(dict_len)
+                array_min.append(length)
+                dict_gt={}
+                dict_gt['$lt']=array_min
+                dict_expr={}
+                dict_expr['$expr']=dict_gt
+                andquery["$and"].append(dict_expr)
+                query=andquery
 
-                            
-                query=dict_expr
 
             elif 'min' in filter.value:
                 valuereplaced = filter.value.replace('min', '')
-                length=1+int(valuereplaced)-1
+                length=int(valuereplaced)
                 array_min=[]
                 dict_len={}
                 dict_len['$strLenCP']="$variation.alternateBases"
@@ -913,9 +925,21 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, col
                 dict_gt['$gt']=array_min
                 dict_expr={}
                 dict_expr['$expr']=dict_gt
+                andquery={}
+                andquery["$and"]=[]
+                andquery["$and"].append(dict_expr)
+                array_min=[]
+                dict_len={}
+                dict_len['$strLenCP']="$variation.referenceBases"
+                array_min.append(dict_len)
+                array_min.append(length)
+                dict_gt={}
+                dict_gt['$gt']=array_min
+                dict_expr={}
+                dict_expr['$expr']=dict_gt
+                andquery["$and"].append(dict_expr)
+                query=andquery
 
-                            
-                query=dict_expr
         elif filter.id == 'assemblyId':
             pass
 
