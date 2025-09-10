@@ -1,6 +1,6 @@
 from aiohttp.test_utils import TestClient, TestServer, loop_context
 from aiohttp import web
-from beacon.__main__ import Collection, Resultset, Info, ServiceInfo, Map, Configuration, FilteringTerms, EntryTypes
+from beacon.__main__ import Collection, Resultset, Info, ServiceInfo, Map, Configuration, FilteringTerms, EntryTypes, error_middleware
 import json
 import unittest
 import beacon.conf.conf as conf
@@ -12,11 +12,17 @@ from beacon.logs.logs import LOG
 from beacon.connections.mongo.filters import cross_query
 from unittest.mock import MagicMock
 from beacon.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run
+from aiohttp_middlewares import cors_middleware
 
 
 
 def create_app():
     app = web.Application()
+    app = web.Application(
+        middlewares=[
+            cors_middleware(origins=conf.cors_urls), error_middleware
+        ]
+    )
     #app.on_startup.append(initialize)
     app.add_routes([web.post(conf.uri_subpath+'', Info)])
     app.add_routes([web.post(conf.uri_subpath+'/info', Info)])
@@ -1776,112 +1782,6 @@ class TestMain(unittest.TestCase):
                 assert resp.status == 200
             loop.run_until_complete(test_check_runs_variants())
             loop.run_until_complete(client.close())
-    '''
-    def test_individuals_with_variant_filter(self):
-        with loop_context() as loop:
-            app = create_app()
-            client = TestClient(TestServer(app), loop=loop)
-            loop.run_until_complete(client.start_server())
-            async def test_check_individuals_variants():
-                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
-                "meta": {
-                    "apiVersion": "2.0"
-                },
-                "query": {
-                    "filters": [
-            {"id":"ENSGLOSSARY:0000150", "scope":"genomicVariation"}],
-                    "includeResultsetResponses": "HIT",
-                    "pagination": {
-                        "skip": 0,
-                        "limit": 10
-                    },
-                    "testMode": True,
-                    "requestedGranularity": "record"
-                }
-            }
-            )
-                assert resp.status == 200
-            loop.run_until_complete(test_check_individuals_variants())
-            loop.run_until_complete(client.close())
-    def test_biosamples_with_variant_filter(self):
-        with loop_context() as loop:
-            app = create_app()
-            client = TestClient(TestServer(app), loop=loop)
-            loop.run_until_complete(client.start_server())
-            async def test_check_biosamples_variants():
-                resp = await client.post(conf.uri_subpath+"/"+biosample.endpoint_name, json={
-                "meta": {
-                    "apiVersion": "2.0"
-                },
-                "query": {
-                    "filters": [
-            {"id":"ENSGLOSSARY:0000150", "scope":"genomicVariation"}],
-                    "includeResultsetResponses": "HIT",
-                    "pagination": {
-                        "skip": 0,
-                        "limit": 10
-                    },
-                    "testMode": True,
-                    "requestedGranularity": "record"
-                }
-            }
-            )
-                assert resp.status == 200
-            loop.run_until_complete(test_check_biosamples_variants())
-            loop.run_until_complete(client.close())
-    def test_analyses_with_variant_filter(self):
-        with loop_context() as loop:
-            app = create_app()
-            client = TestClient(TestServer(app), loop=loop)
-            loop.run_until_complete(client.start_server())
-            async def test_check_analyses_variants():
-                resp = await client.post(conf.uri_subpath+"/"+analysis.endpoint_name+"", json={
-                "meta": {
-                    "apiVersion": "2.0"
-                },
-                "query": {
-                    "filters": [
-            {"id":"ENSGLOSSARY:0000150", "scope":"genomicVariation"}],
-                    "includeResultsetResponses": "HIT",
-                    "pagination": {
-                        "skip": 0,
-                        "limit": 10
-                    },
-                    "testMode": True,
-                    "requestedGranularity": "record"
-                }
-            }
-            )
-                assert resp.status == 200
-            loop.run_until_complete(test_check_analyses_variants())
-            loop.run_until_complete(client.close())
-    def test_runs_with_variant_filter(self):
-        with loop_context() as loop:
-            app = create_app()
-            client = TestClient(TestServer(app), loop=loop)
-            loop.run_until_complete(client.start_server())
-            async def test_check_runs_variants():
-                resp = await client.post(conf.uri_subpath+"/"+run.endpoint_name, json={
-                "meta": {
-                    "apiVersion": "2.0"
-                },
-                "query": {
-                    "filters": [
-            {"id":"ENSGLOSSARY:0000150", "scope":"genomicVariation"}],
-                    "includeResultsetResponses": "HIT",
-                    "pagination": {
-                        "skip": 0,
-                        "limit": 10
-                    },
-                    "testMode": True,
-                    "requestedGranularity": "record"
-                }
-            }
-            )
-                assert resp.status == 200
-            loop.run_until_complete(test_check_runs_variants())
-            loop.run_until_complete(client.close())
-    '''
     def test_variants_with_run_filter(self):
         with loop_context() as loop:
             app = create_app()
@@ -2182,7 +2082,6 @@ class TestMain(unittest.TestCase):
                 assert resp.status == 200
             loop.run_until_complete(test_check_runs_variants())
             loop.run_until_complete(client.close())
-    '''
     def test_variants_with_request_parameters_and_filters(self):
         with loop_context() as loop:
             app = create_app()
@@ -2200,8 +2099,7 @@ class TestMain(unittest.TestCase):
             "start": [43045703],
                         "referenceName": "17",
             "assemblyId": "GRCh38"
-            },        
-            "filters": [{"id":"ENSGLOSSARY:0000150", "scope":"genomicVariation"}],
+            },
                     "includeResultsetResponses": "HIT",
                     "pagination": {
                         "skip": 0,
@@ -2215,7 +2113,6 @@ class TestMain(unittest.TestCase):
                 assert resp.status == 200
             loop.run_until_complete(test_check_runs_variants())
             loop.run_until_complete(client.close())
-    '''
     def test_main_check_g_variants_sequence_query_fails(self):
         with loop_context() as loop:
             app = create_app()
@@ -2545,6 +2442,34 @@ class TestMain(unittest.TestCase):
             )
                 assert resp.status == 400
             loop.run_until_complete(test_check_requestedSchemas_fails())
+            loop.run_until_complete(client.close())
+    def test_main_check_404_not_found_error(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_404_not_found_error():
+                resp = await client.post(conf.uri_subpath+"/impossibleendpoint")
+                assert resp.status == 404
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["error"]["errorMessage"] == "Not found"
+                assert responsedict["error"]["errorCode"] == "404"
+            loop.run_until_complete(test_check_404_not_found_error())
+            loop.run_until_complete(client.close())
+    def test_main_check_400_bad_request(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_400_bad_request():
+                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name+'?testMod=true')
+                LOG.warning(resp.status)
+                assert resp.status == 400
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["error"]["errorCode"] == "400"
+            loop.run_until_complete(test_check_400_bad_request())
             loop.run_until_complete(client.close())
 
 if __name__ == '__main__':
