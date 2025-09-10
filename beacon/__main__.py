@@ -231,7 +231,19 @@ class Resultset(EndpointView):
         except Exception as e:# pragma: no cover
             response_obj = build_beacon_error_response(self, ErrorClass.error_code, ErrorClass.error_message)
             return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')
-        
+
+@web.middleware
+async def error_middleware(request, handler):
+    try:
+        response = await handler(request)
+        if response.status != 404:
+            return response
+    except web.HTTPException as ex:
+        if ex.status != 404:
+            raise
+        else:
+            response_obj = build_beacon_error_response(EndpointView(request), 404, "Not found")
+            return web.Response(text=json_util.dumps(response_obj), status=404, content_type='application/json')
 
 async def initialize(app):# pragma: no cover
     setattr(conf, 'update_datetime', datetime.now().isoformat())
@@ -270,7 +282,7 @@ async def create_api():# pragma: no cover
     check_configuration()
     app = web.Application(
         middlewares=[
-            cors_middleware(origins=conf.cors_urls)
+            cors_middleware(origins=conf.cors_urls), error_middleware
         ]
     )
     app.on_startup.append(initialize)
