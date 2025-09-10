@@ -8,6 +8,7 @@ from beacon.conf.filtering_terms import alphanumeric_terms
 from beacon.logs.logs import log_with_args, LOG
 from beacon.conf.conf import level
 from beacon.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run
+from beacon.request.classes import RequestAttributes
 
 CURIE_REGEX = r'^([a-zA-Z0-9]*):\/?[a-zA-Z0-9./]*$'
 
@@ -816,21 +817,60 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, col
         if filter.id == "identifiers.genomicHGVSId":
             list_chromosomes = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','X','Y']
             dict_regex={}
-            if filter.value == 'GRCh38':
-                dict_regex['$regex']="11:"
-            elif filter.value == 'GRCh37':
-                dict_regex['$regex']="10:"
-            elif filter.value == 'NCBI36':
-                dict_regex['$regex']="9:"
-            elif filter.value in list_chromosomes:
+            if filter.value in list_chromosomes:
+                if len(filter.value) == 2:
+                    prehgvs='^NC_0000'
+                elif len(filter.value) == 1:
+                    prehgvs='^NC_00000'
                 if filter.value == 'X':
-                    dict_regex['$regex']='^NC_0000'+'23'
+                    if RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'NCBI36':
+                        dict_regex['$regex']='^NC_000023'+filter.value+'.'+'9:g'
+                    elif RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'GRCh37':
+                        dict_regex['$regex']='^NC_000023'+filter.value+'.'+'10:g'
+                    elif RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'GRCh38':
+                        dict_regex['$regex']='^NC_000023'+filter.value+'.'+'11:g'
                 elif filter.value == 'Y':
-                    dict_regex['$regex']='^NC_0000'+'24'
-                elif len(filter.value)==2:
-                    dict_regex['$regex']='^NC_0000'+filter.value+'.'+'10:g'+'|'+'^NC_0000'+filter.value+'.'+'11:g'+'|'+'^NC_0000'+filter.value+'.'+'9:g'
-                else:
-                    dict_regex['$regex']='^NC_0000'+filter.value+'.'+'10:g'+'|'+'^NC_0000'+filter.value+'.'+'11:g'+'|'+'^NC_0000'+filter.value+'.'+'9:g'+'|'+'^NC_00000'+filter.value+'.'+'10:g'+'|'+'^NC_00000'+filter.value+'.'+'11:g'+'|'+'^NC_00000'+filter.value+'.'+'9:g'
+                    if RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'NCBI36':
+                        dict_regex['$regex']='^NC_000024'+filter.value+'.'+'8:g'
+                    elif RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'GRCh37':
+                        dict_regex['$regex']='^NC_000024'+filter.value+'.'+'9:g'
+                    elif RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'GRCh38':
+                        dict_regex['$regex']='^NC_000024'+filter.value+'.'+'10:g'
+                elif filter.value in ['14', '21']:
+                    if RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'NCBI36':
+                        dict_regex['$regex']=prehgvs+filter.value+'.'+'7:g'
+                    elif RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'GRCh37':
+                        dict_regex['$regex']=prehgvs+filter.value+'.'+'8:g'
+                    elif RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'GRCh38':
+                        dict_regex['$regex']=prehgvs+filter.value+'.'+'9:g'
+                elif filter.value in ['5', '11', '15', '16', '18', '19', '24']:
+                    if RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'NCBI36':
+                        dict_regex['$regex']=prehgvs+filter.value+'.'+'8:g'
+                    elif RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'GRCh37':
+                        dict_regex['$regex']=prehgvs+filter.value+'.'+'9:g'
+                    elif RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'GRCh38':
+                        dict_regex['$regex']=prehgvs+filter.value+'.'+'10:g'
+                elif filter.value in ['1', '8', '10', '13', '17', '20', '22', '23']:
+                    if RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'NCBI36':
+                        dict_regex['$regex']=prehgvs+filter.value+'.'+'9:g'
+                    elif RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'GRCh37':
+                        dict_regex['$regex']=prehgvs+filter.value+'.'+'10:g'
+                    elif RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'GRCh38':
+                        dict_regex['$regex']=prehgvs+filter.value+'.'+'11:g'
+                elif filter.value in ['2', '3', '4', '6', '9', '12']:
+                    if RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'NCBI36':
+                        dict_regex['$regex']=prehgvs+filter.value+'.'+'10:g'
+                    elif RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'GRCh37':
+                        dict_regex['$regex']=prehgvs+filter.value+'.'+'11:g'
+                    elif RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'GRCh38':
+                        dict_regex['$regex']=prehgvs+filter.value+'.'+'12:g'
+                elif filter.value == '7':
+                    if RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'NCBI36':
+                        dict_regex['$regex']=prehgvs+filter.value+'.'+'12:g'
+                    elif RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'GRCh37':
+                        dict_regex['$regex']=prehgvs+filter.value+'.'+'13:g'
+                    elif RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'GRCh38':
+                        dict_regex['$regex']=prehgvs+filter.value+'.'+'14:g'
             elif '&gt;' in filter.value:# pragma: no cover
                 newvalue=filter.value.replace("&gt;",">")
                 dict_regex=newvalue
@@ -844,38 +884,64 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, col
             query[filter.id] = filter.value# pragma: no cover
         elif filter.id == "caseLevelData.clinicalInterpretations.clinicalRelevance":
             query[filter.id] = filter.value# pragma: no cover
-        elif filter.id == "variantInternalId":
+        elif filter.id == "variation.alternateBases":
             if 'max' in filter.value:
                 valuereplaced = filter.value.replace('max', '')
-                length=40+int(valuereplaced)+1
+                length=int(valuereplaced)+2
                 array_min=[]
                 dict_len={}
-                dict_len['$strLenCP']="$variantInternalId"
+                dict_len['$strLenCP']="$variation.alternateBases"
                 array_min.append(dict_len)
                 array_min.append(length)
                 dict_gt={}
                 dict_gt['$lt']=array_min
                 dict_expr={}
                 dict_expr['$expr']=dict_gt
+                andquery={}
+                andquery["$and"]=[]
+                andquery["$and"].append(dict_expr)
+                array_min=[]
+                dict_len={}
+                dict_len['$strLenCP']="$variation.referenceBases"
+                array_min.append(dict_len)
+                array_min.append(length)
+                dict_gt={}
+                dict_gt['$lt']=array_min
+                dict_expr={}
+                dict_expr['$expr']=dict_gt
+                andquery["$and"].append(dict_expr)
+                query=andquery
 
-                            
-                query=dict_expr
 
             elif 'min' in filter.value:
                 valuereplaced = filter.value.replace('min', '')
-                length=40+int(valuereplaced)-1
+                length=int(valuereplaced)
                 array_min=[]
                 dict_len={}
-                dict_len['$strLenCP']="$variantInternalId"
+                dict_len['$strLenCP']="$variation.alternateBases"
                 array_min.append(dict_len)
                 array_min.append(length)
                 dict_gt={}
                 dict_gt['$gt']=array_min
                 dict_expr={}
                 dict_expr['$expr']=dict_gt
+                andquery={}
+                andquery["$and"]=[]
+                andquery["$and"].append(dict_expr)
+                array_min=[]
+                dict_len={}
+                dict_len['$strLenCP']="$variation.referenceBases"
+                array_min.append(dict_len)
+                array_min.append(length)
+                dict_gt={}
+                dict_gt['$gt']=array_min
+                dict_expr={}
+                dict_expr['$expr']=dict_gt
+                andquery["$and"].append(dict_expr)
+                query=andquery
 
-                            
-                query=dict_expr
+        elif filter.id == 'assemblyId':
+            pass
 
 
 

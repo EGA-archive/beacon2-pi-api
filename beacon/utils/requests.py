@@ -125,6 +125,7 @@ async def get_qparams(self, request, query_string_body): # anomenar query strin
                         ErrorClass.error_message='two parameters conflict from string: {} and from json body query: {}'.format(v1, post_data[k][k1])
                         raise web.HTTPBadRequest
         qparams = RequestParams(**final_body).from_request(final_body)
+        RequestAttributes.qparams = qparams
         return qparams
     except Exception as e:# pragma: no cover
         ErrorClass.error_code=400

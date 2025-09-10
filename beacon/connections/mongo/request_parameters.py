@@ -10,13 +10,13 @@ from beacon.connections.mongo.utils import lengthquery
 VARIANTS_PROPERTY_MAP = {
     "start": "variation.location.interval.start.value",
     "end": "variation.location.interval.end.value",
-    "assemblyId": "identifiers.genomicHGVSId",
+    "assemblyId": "assemblyId",
     "referenceName": "identifiers.genomicHGVSId",
     "referenceBases": "variation.referenceBases",
     "alternateBases": "variation.alternateBases",
     "variantType": "variation.variantType",
-    "variantMinLength": "variantInternalId",
-    "variantMaxLength": "variantInternalId",
+    "variantMinLength": "variation.alternateBases",
+    "variantMaxLength": "variation.alternateBases",
     "geneId": "molecularAttributes.geneIds",
     "genomicAlleleShortForm": "identifiers.genomicHGVSId",
     "aminoacidChange": "molecularAttributes.aminoacidChanges",
@@ -220,7 +220,7 @@ def apply_request_parameters(self, query: Dict[str, List[dict]], qparams: Reques
                 ), collection, dataset, True))
             except KeyError:# pragma: no cover
                 raise web.HTTPNotFound
-        elif k != 'filters':
+        elif k != 'filters' and k != 'assemblyId':
             try:
                 query["$and"].append(apply_alphanumeric_filter(self, {}, AlphanumericFilter(
                     id=VARIANTS_PROPERTY_MAP[k],

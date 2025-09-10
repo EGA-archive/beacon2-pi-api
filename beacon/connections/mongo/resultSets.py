@@ -36,7 +36,7 @@ def get_resultSet(self, qparams: RequestParams, dataset: str, collection, mongo_
 @log_with_args(level)
 def get_resultSet_with_id(self, qparams: RequestParams, dataset: str, collection, mongo_collection, schema, idq):
     if collection == genomicVariant.endpoint_name:
-        query = {"$and": [{"variantInternalId": RequestAttributes.entry_id}]}
+        query = {"$and": [{"_id": RequestAttributes.entry_id}]}
         query_parameters, parameters_as_filters = apply_request_parameters(self, query, qparams, dataset)
         if parameters_as_filters == True:
             query, parameters_as_filters = apply_request_parameters(self, {}, qparams, dataset)# pragma: no cover
@@ -102,7 +102,7 @@ def get_variants_of_resultSet(self, qparams: RequestParams, dataset: str, collec
 
 @log_with_args(level)
 def get_resultSet_of_variants(self, qparams: RequestParams, dataset: str, collection, mongo_collection, schema, idq):
-    query = {"$and": [{"variantInternalId": RequestAttributes.entry_id}]}
+    query = {"$and": [{"_id": RequestAttributes.entry_id}]}
     query_parameters, parameters_as_filters = apply_request_parameters(self, query, qparams, dataset)
     if parameters_as_filters == True and query_parameters != {'$and': []}:
         query, parameters_as_filters = apply_request_parameters(self, query, qparams, dataset)# pragma: no cover
