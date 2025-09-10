@@ -241,8 +241,9 @@ async def error_middleware(request, handler):
     except web.HTTPException as ex:
         if ex.status != 404:
             raise
-    response_obj = build_beacon_error_response(EndpointView(request), 404, "Not found")
-    return web.Response(text=json_util.dumps(response_obj), status=404, content_type='application/json')
+        else:
+            response_obj = build_beacon_error_response(EndpointView(request), 404, "Not found")
+            return web.Response(text=json_util.dumps(response_obj), status=404, content_type='application/json')
 
 async def initialize(app):# pragma: no cover
     setattr(conf, 'update_datetime', datetime.now().isoformat())
