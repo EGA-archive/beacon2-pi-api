@@ -231,7 +231,6 @@ class Resultset(EndpointView):
         except Exception as e:# pragma: no cover
             response_obj = build_beacon_error_response(self, ErrorClass.error_code, ErrorClass.error_message)
             return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')
-        
 
 @web.middleware
 async def error_middleware(request, handler):
