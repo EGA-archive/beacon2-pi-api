@@ -3,6 +3,8 @@ version: '3.1'
 networks:
   idp-priv:
   pub:
+  beacon-network:
+    external: True
 
 services:
   beaconprod:
@@ -19,6 +21,7 @@ services:
       - ./beacon/permissions:/beacon/permissions
     networks:
       - pub
+      - beacon-network
 
   admin-ui:
     restart: always

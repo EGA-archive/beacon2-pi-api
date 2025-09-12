@@ -7,7 +7,7 @@ import aiohttp.web as web
 from aiohttp.web_request import Request
 from beacon.utils.txid import generate_txid
 from beacon.permissions.__main__ import query_permissions
-from beacon.response.builder import builder, collection_builder, info_builder, configuration_builder, map_builder, entry_types_builder, service_info_builder, filtering_terms_builder
+from beacon.response.builder import builder, collection_builder, info_builder, configuration_builder, map_builder, entry_types_builder, service_info_builder, filtering_terms_builder, well_known_oauth_builder
 from bson import json_util
 from beacon.response.catalog import build_beacon_error_response
 from beacon.request.classes import ErrorClass, RequestAttributes
@@ -37,6 +37,29 @@ class EndpointView(web.View, CorsViewMixin):
         RequestAttributes.entry_type=None
         RequestAttributes.entry_id=None
         RequestAttributes.pre_entry_type=None
+
+class WellKnownOauth(EndpointView):
+    @log_with_args(level)
+    async def well_known_oauth(self, request):
+        try:
+            response_obj = await well_known_oauth_builder(self)
+            return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
+        except Exception as e:# pragma: no cover
+            raise
+
+    async def get(self):
+        try:
+            return await self.well_known_oauth(self.request)
+        except Exception as e:# pragma: no cover
+            response_obj = build_beacon_error_response(self, ErrorClass.error_code, ErrorClass.error_message)
+            return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')
+
+    async def post(self):
+        try:
+            return await self.well_known_oauth(self.request)
+        except Exception as e:# pragma: no cover
+            response_obj = build_beacon_error_response(self, ErrorClass.error_code, ErrorClass.error_message)
+            return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')
 
 class ServiceInfo(EndpointView):
     @log_with_args(level)
@@ -470,6 +493,7 @@ async def create_api():# pragma: no cover
         if run.individual_lookup == True:
             app.add_routes([web.post(uri_subpath+'/'+run.endpoint_name+'/{id}/'+individual.endpoint_name, Resultset)])
             app.add_routes([web.get(uri_subpath+'/'+run.endpoint_name+'/{id}/'+individual.endpoint_name, Resultset)])
+    app.add_routes([web.get(uri_subpath+'/.well-known/oauth-protected-resource', WellKnownOauth)])
 
     ssl_context = None
     if (os.path.isfile(conf.beacon_server_key)) and (os.path.isfile(conf.beacon_server_crt)):

@@ -1038,6 +1038,20 @@ def build_beacon_service_info_response(self):
         raise
 
 @log_with_args(level)
+def build_beacon_well_known_oauth_response(self):
+    try:
+        beacon_response = {
+            'resource': conf.complete_url,
+            'authorization_servers': conf.authorization_servers,
+            'client_id': conf.client_id,
+        }
+        return beacon_response
+    except Exception as e:# pragma: no cover
+        ErrorClass.error_code=500
+        ErrorClass.error_message=str(e)
+        raise
+
+@log_with_args(level)
 def build_filtering_terms_response(self, data,
                                     num_total_results,
                                     qparams: RequestParams,

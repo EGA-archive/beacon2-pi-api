@@ -15,7 +15,7 @@ log_file=None
 beacon_id = 'org.ega-archive.beacon-ri-demo'  # ID of the Beacon
 beacon_name = 'Beacon Reference Implementation demo'  # Name of the Beacon service
 api_version = 'v2.0.0' # Version of the Beacon implementation
-uri = 'http://localhost:5050'
+uri = 'http://beaconprod:5050'
 uri_subpath = '/api'
 complete_url = uri + uri_subpath
 environment = 'test'
@@ -29,6 +29,10 @@ default_beacon_granularity = "record" # boolean, count or record
 security_levels = ['PUBLIC', 'REGISTERED', 'CONTROLLED']
 documentation_url = 'https://b2ri-documentation-demo.ega-archive.org/'
 cors_urls = ["http://localhost:3003", "http://localhost:3000"]
+
+# Oauth Well known response
+authorization_servers= ["https://beacon-network-demo2.ega-archive.org/auth/realms/Beacon"]
+client_id = "beacon"
 
 # Service Info
 ga4gh_service_type_group = 'org.ga4gh'
