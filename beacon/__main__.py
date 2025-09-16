@@ -15,13 +15,12 @@ import time
 import os
 import signal
 from threading import Thread
-from beacon.utils.requests import get_qparams, deconstruct_request
+from beacon.utils.requests import deconstruct_request
 from aiohttp_middlewares import cors_middleware
 from aiohttp_cors import CorsViewMixin
 from datetime import datetime
 from beacon.conf import conf
 import ssl
-from beacon.request.parameters import RequestMeta, RequestQuery, Pagination
 from beacon.budget.__main__ import insert_budget
 from beacon.validator.configuration import check_configuration
 import aiohttp_autoreload
@@ -38,175 +37,89 @@ class EndpointView(web.View, CorsViewMixin):
         RequestAttributes.entry_id=None
         RequestAttributes.pre_entry_type=None
 
+    async def get(self):
+        try:
+            qparams = await deconstruct_request(self, self.request)
+            return await self.handler(qparams)
+        except Exception as e:# pragma: no cover
+            response_obj = build_beacon_error_response(self, ErrorClass.error_code, ErrorClass.error_message)
+            return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')
+
+    async def post(self):
+        try:
+            qparams = await deconstruct_request(self, self.request)
+            return await self.handler(qparams)
+        except Exception as e:# pragma: no cover
+            response_obj = build_beacon_error_response(self, ErrorClass.error_code, ErrorClass.error_message)
+            return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')
+
 class ServiceInfo(EndpointView):
     @log_with_args(level)
-    async def service_info(self, request):
+    async def handler(self, qparams):
         try:
             response_obj = await service_info_builder(self)
             return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
         except Exception as e:# pragma: no cover
             raise
 
-    async def get(self):
-        try:
-            return await self.service_info(self.request)
-        except Exception as e:# pragma: no cover
-            response_obj = build_beacon_error_response(self, ErrorClass.error_code, ErrorClass.error_message)
-            return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')
-
-    async def post(self):
-        try:
-            return await self.service_info(self.request)
-        except Exception as e:# pragma: no cover
-            response_obj = build_beacon_error_response(self, ErrorClass.error_code, ErrorClass.error_message)
-            return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')
-
 class EntryTypes(EndpointView):
     @log_with_args(level)
-    async def entry_types(self, request):
+    async def handler(self, qparams):
         try:
             response_obj = await entry_types_builder(self)
             return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
         except Exception:# pragma: no cover
             raise
 
-    async def get(self):
-        try:
-            return await self.entry_types(self.request)
-        except Exception as e:# pragma: no cover
-            response_obj = build_beacon_error_response(self, ErrorClass.error_code, ErrorClass.error_message)
-            return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')
-
-    async def post(self):
-        try:
-            return await self.entry_types(self.request)
-        except Exception as e:# pragma: no cover
-            response_obj = build_beacon_error_response(self, ErrorClass.error_code, ErrorClass.error_message)
-            return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')
-
 class Map(EndpointView):
     @log_with_args(level)
-    async def map(self, request):
+    async def handler(self, qparams):
         try:
             response_obj = await map_builder(self)
             return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
         except Exception:# pragma: no cover
             raise
 
-    async def get(self):
-        try:
-            return await self.map(self.request)
-        except Exception as e:# pragma: no cover
-            response_obj = build_beacon_error_response(self, ErrorClass.error_code, ErrorClass.error_message)
-            return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')
-
-    async def post(self):
-        try:
-            return await self.map(self.request)
-        except Exception as e:# pragma: no cover
-            response_obj = build_beacon_error_response(self, ErrorClass.error_code, ErrorClass.error_message)
-            return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')
-
 class Configuration(EndpointView):
     @log_with_args(level)
-    async def configuration(self, request):
+    async def handler(self, qparams):
         try:
             response_obj = await configuration_builder(self)
             return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
         except Exception:# pragma: no cover
             raise
 
-    async def get(self):
-        try:
-            return await self.configuration(self.request)
-        except Exception as e:# pragma: no cover
-            response_obj = build_beacon_error_response(self, ErrorClass.error_code, ErrorClass.error_message)
-            return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')
-
-    async def post(self):
-        try:
-            return await self.configuration(self.request)
-        except Exception as e:# pragma: no cover
-            response_obj = build_beacon_error_response(self, ErrorClass.error_code, ErrorClass.error_message)
-            return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')
-
 class Info(EndpointView):
     @log_with_args(level)
-    async def info(self, request):
+    async def handler(self, qparams):
         try:
             response_obj = await info_builder(self)
             return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
         except Exception:# pragma: no cover
             raise
 
-    async def get(self):
-        try:
-            return await self.info(self.request)
-        except Exception as e:# pragma: no cover
-            response_obj = build_beacon_error_response(self, ErrorClass.error_code, ErrorClass.error_message)
-            return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')
-
-    async def post(self):
-        try:
-            return await self.info(self.request)
-        except Exception as e:# pragma: no cover
-            response_obj = build_beacon_error_response(self, ErrorClass.error_code, ErrorClass.error_message)
-            return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')
-
 class Collection(EndpointView):
     @log_with_args(level)
-    async def collection(self, qparams):
+    async def handler(self, qparams):
         try:
             response_obj = await collection_builder(self, qparams)
             return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
         except Exception:# pragma: no cover
             raise
-
-    async def get(self):
-        try:
-            qparams = await deconstruct_request(self, self.request)
-            return await self.collection(qparams)
-        except Exception as e:# pragma: no cover
-            response_obj = build_beacon_error_response(self, ErrorClass.error_code, ErrorClass.error_message)
-            return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')
-
-    async def post(self):
-        try:
-            qparams = await deconstruct_request(self, self.request)
-            return await self.collection(qparams)
-        except Exception as e:# pragma: no cover
-            response_obj = build_beacon_error_response(self, ErrorClass.error_code, ErrorClass.error_message)
-            return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')
         
 class FilteringTerms(EndpointView):
     @log_with_args(level)
-    async def filteringTerms(self, qparams):
+    async def handler(self, qparams):
         try:
             response_obj = await filtering_terms_builder(self, qparams)
             return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
         except Exception:# pragma: no cover
             raise
 
-    async def get(self):
-        try:
-            qparams = await deconstruct_request(self, self.request)
-            return await self.filteringTerms(qparams)
-        except Exception as e:# pragma: no cover
-            response_obj = build_beacon_error_response(self, ErrorClass.error_code, ErrorClass.error_message)
-            return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')
-
-    async def post(self):
-        try:
-            qparams = await deconstruct_request(self, self.request)
-            return await self.filteringTerms(qparams)
-        except Exception as e:# pragma: no cover
-            response_obj = build_beacon_error_response(self, ErrorClass.error_code, ErrorClass.error_message)
-            return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')
-
 class Resultset(EndpointView):
     @query_permissions
     @log_with_args(level)
-    async def resultset(self, qparams, datasets, username, time_now):
+    async def handler(self, qparams, datasets, username, time_now):
         try:
             response_obj = await builder(self, datasets, qparams)
             if time_now is not None:
@@ -214,23 +127,6 @@ class Resultset(EndpointView):
             return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
         except Exception:# pragma: no cover
             raise
-
-    async def get(self):
-        try: # Crear funció comuna
-            # Afegir classe per la request
-            qparams = await deconstruct_request(self, self.request)
-            return await self.resultset(qparams)
-        except Exception as e:# pragma: no cover
-            response_obj = build_beacon_error_response(self, ErrorClass.error_code, ErrorClass.error_message)
-            return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')
-
-    async def post(self):
-        try:
-            qparams = await deconstruct_request(self, self.request)
-            return await self.resultset(qparams)
-        except Exception as e:# pragma: no cover
-            response_obj = build_beacon_error_response(self, ErrorClass.error_code, ErrorClass.error_message)
-            return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')
 
 @web.middleware
 async def error_middleware(request, handler):
