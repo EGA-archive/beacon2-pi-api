@@ -1465,6 +1465,10 @@ class TestMain(unittest.TestCase):
             )
 
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["meta"]["returnedGranularity"] == "count"
+                assert responsedict["meta"]["receivedRequestSummary"]["includeResultsetResponses"] == "NONE"
             loop.run_until_complete(test_check_NONE_count_query_is_working())
             loop.run_until_complete(client.close())
     def test_individuals_variants_with_heterozygosity(self):

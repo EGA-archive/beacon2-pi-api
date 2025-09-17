@@ -398,6 +398,7 @@ def build_response_summary_by_dataset(self, datasets, data, dict_counts):
             else:
                 non_counted+=dict_counts[dataset.dataset]
         if count == 0 and non_counted >0:
+            RequestAttributes.returned_granularity = 'boolean'
             return {
                 'exists': True
             }
@@ -549,11 +550,13 @@ def build_beacon_record_response_by_dataset(self, datasets, data,
                                     dict_counts,
                                     entity_schema: DefaultSchemas):
     try:
+        responseSummary = build_response_summary_by_dataset(self, datasets, data, dict_counts)
+        resultSets = build_response_by_dataset(self, datasets, data, dict_counts) # setting variables before meta, in case meta changes
         beacon_response = {
             'meta': build_meta(self, entity_schema),
-            'responseSummary': build_response_summary_by_dataset(self, datasets, data, dict_counts),
+            'responseSummary': responseSummary,
             'response': {
-                'resultSets': build_response_by_dataset(self, datasets, data, dict_counts)
+                'resultSets': resultSets,
             },
             'beaconHandovers': list_of_handovers,
         }
@@ -566,9 +569,10 @@ def build_beacon_boolean_response(self,
                                     num_total_results,
                                     entity_schema: DefaultSchemas):
     try:# pragma: no cover
+        responseSummary = build_response_summary(self, num_total_results > 0, None)
         beacon_response = {
             'meta': build_meta(self, entity_schema),
-            'responseSummary': build_response_summary(self, num_total_results > 0, None),
+            'responseSummary': responseSummary,
             # TODO: 'extendedInfo': build_extended_info(),
             'beaconHandovers': list_of_handovers,
         }
@@ -582,9 +586,10 @@ def build_beacon_count_response(self, datasets, data,
                                     num_total_results,
                                     entity_schema: DefaultSchemas):
     try:
+        responseSummary = build_response_summary_by_dataset(self, datasets, data, dict_counts)
         beacon_response = {
             'meta': build_meta(self, entity_schema),
-            'responseSummary': build_response_summary_by_dataset(self, datasets, data, dict_counts),
+            'responseSummary': responseSummary,
             'beaconHandovers': list_of_handovers,
         }
         return beacon_response
@@ -609,9 +614,10 @@ def build_beacon_error_response(self, errorCode, errorMessage):
 @log_with_args(level)
 def build_beacon_collection_response(self, data, num_total_results: RequestParams, entity_schema: DefaultSchemas):
     try:
+        responseSummary = build_response_summary(self, num_total_results > 0, num_total_results)
         beacon_response = {
             'meta': build_meta(self, entity_schema),
-            'responseSummary': build_response_summary(self, num_total_results > 0, num_total_results),
+            'responseSummary': responseSummary,
             # TODO: 'info': build_extended_info(),
             'beaconHandovers': list_of_handovers,
             'response': {
