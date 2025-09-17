@@ -39,23 +39,23 @@ class EndpointView(web.View, CorsViewMixin):
 
     async def get(self):
         try:
-            qparams = await deconstruct_request(self, self.request)
-            return await self.handler(qparams)
+            await deconstruct_request(self, self.request)
+            return await self.handler()
         except Exception as e:# pragma: no cover
             response_obj = build_beacon_error_response(self, ErrorClass.error_code, ErrorClass.error_message)
             return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')
 
     async def post(self):
         try:
-            qparams = await deconstruct_request(self, self.request)
-            return await self.handler(qparams)
+            await deconstruct_request(self, self.request)
+            return await self.handler()
         except Exception as e:# pragma: no cover
             response_obj = build_beacon_error_response(self, ErrorClass.error_code, ErrorClass.error_message)
             return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')
 
 class ServiceInfo(EndpointView):
     @log_with_args(level)
-    async def handler(self, qparams):
+    async def handler(self):
         try:
             response_obj = await service_info_builder(self)
             return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
@@ -64,7 +64,7 @@ class ServiceInfo(EndpointView):
 
 class EntryTypes(EndpointView):
     @log_with_args(level)
-    async def handler(self, qparams):
+    async def handler(self):
         try:
             response_obj = await entry_types_builder(self)
             return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
@@ -73,7 +73,7 @@ class EntryTypes(EndpointView):
 
 class Map(EndpointView):
     @log_with_args(level)
-    async def handler(self, qparams):
+    async def handler(self):
         try:
             response_obj = await map_builder(self)
             return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
@@ -82,7 +82,7 @@ class Map(EndpointView):
 
 class Configuration(EndpointView):
     @log_with_args(level)
-    async def handler(self, qparams):
+    async def handler(self):
         try:
             response_obj = await configuration_builder(self)
             return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
@@ -91,7 +91,7 @@ class Configuration(EndpointView):
 
 class Info(EndpointView):
     @log_with_args(level)
-    async def handler(self, qparams):
+    async def handler(self):
         try:
             response_obj = await info_builder(self)
             return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
@@ -100,18 +100,18 @@ class Info(EndpointView):
 
 class Collection(EndpointView):
     @log_with_args(level)
-    async def handler(self, qparams):
+    async def handler(self):
         try:
-            response_obj = await collection_builder(self, qparams)
+            response_obj = await collection_builder(self)
             return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
         except Exception:# pragma: no cover
             raise
         
 class FilteringTerms(EndpointView):
     @log_with_args(level)
-    async def handler(self, qparams):
+    async def handler(self):
         try:
-            response_obj = await filtering_terms_builder(self, qparams)
+            response_obj = await filtering_terms_builder(self)
             return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
         except Exception:# pragma: no cover
             raise
@@ -119,9 +119,9 @@ class FilteringTerms(EndpointView):
 class Resultset(EndpointView):
     @query_permissions
     @log_with_args(level)
-    async def handler(self, qparams, datasets, username, time_now):
+    async def handler(self, datasets, username, time_now):
         try:
-            response_obj = await builder(self, datasets, qparams)
+            response_obj = await builder(self, datasets)
             if time_now is not None:
                 insert_budget(self, username, time_now)
             return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')

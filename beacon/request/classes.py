@@ -21,3 +21,5 @@ class RequestAttributes():
         self.allowed_granularity=None # the maximum granularity allowed for the returning entry type
         self.entry_type_id=None # the name of a single record of the returning entry type (e.g. individual for individuals)
         self.qparams=None # the query parameters collected from the request
+        self.response_type=None # the type of response (resultSet or not: countresponse, booleanresponse)
+        self.returned_granularity=None # the granularity returned: record, count or boolean

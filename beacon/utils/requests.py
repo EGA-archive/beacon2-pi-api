@@ -9,18 +9,6 @@ import html
 from beacon.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run
 
 @log_with_args(level)
-async def check_request_content_type(self, request: Request):
-    try:# pragma: no cover
-        if request.headers.get('Content-Type') == 'application/json':
-            post_data = await request.json()
-        else:
-            post_data = await request.post()
-        return post_data
-    except Exception:# pragma: no cover
-        raise
-
-
-@log_with_args(level)
 def parse_query_string(self, request):
     '''
     Here we process the query string dictionary, which comes in a multidict (request.query) with each of the parameters as key of the dict and we transform it in a dictionary
@@ -81,7 +69,7 @@ def parse_query_string(self, request):
     return query_string_body
 
 @log_with_args(level)
-async def get_qparams(self, request, query_string_body): # anomenar query string en comptes de qparams
+async def get_qparams(self, request): # anomenar query string en comptes de qparams
     # Bad Request not priority
     '''
     The function will catch all the parameters in the query string and see if they also exist in a json body of the request. If a parameter is found in both places and is different, we
@@ -89,6 +77,7 @@ async def get_qparams(self, request, query_string_body): # anomenar query strin
     returned to have a variable called qparams with the query parameters that will be used for processing the query.
     '''
     try:
+        query_string_body=parse_query_string(self, request)
         post_data = await request.json() if request.has_body else {}
         try:
             if post_data["query"]["requestParameters"] == {}:
@@ -126,7 +115,6 @@ async def get_qparams(self, request, query_string_body): # anomenar query strin
                         raise web.HTTPBadRequest
         qparams = RequestParams(**final_body).from_request(final_body)
         RequestAttributes.qparams = qparams
-        return qparams
     except Exception as e:# pragma: no cover
         ErrorClass.error_code=400
         if ErrorClass.error_message is None:
@@ -168,17 +156,17 @@ def set_entry_type_configuration(self):
         RequestAttributes.allowed_granularity = dataset.granularity
         RequestAttributes.entry_type_id = dataset.id
     elif RequestAttributes.entry_type == 'filtering_terms':
-        pass
+        RequestAttributes.allowed_granularity = 'record'
     elif RequestAttributes.entry_type == 'map':
-        pass
+        RequestAttributes.allowed_granularity = 'record'
     elif RequestAttributes.entry_type == 'configuration':
-        pass
+        RequestAttributes.allowed_granularity = 'record'
     elif RequestAttributes.entry_type == 'info':
-        pass
+        RequestAttributes.allowed_granularity = 'record'
     elif RequestAttributes.entry_type == 'service-info':
-        pass
+        RequestAttributes.allowed_granularity = 'record'
     elif RequestAttributes.entry_type == 'entry_types':
-        pass
+        RequestAttributes.allowed_granularity = 'record'
     else:
         ErrorClass.error_code=500
         ErrorClass.error_message='no entry type detected, check your uri from conf file to make sure is correct'
@@ -202,6 +190,7 @@ def set_entry_type(self, request):
             LOG.warning('configuration variable uri: {} not the same as where the beacon is hosted'.format(uri))
         if abs_url_with_query_string.endswith('/api'):
             RequestAttributes.entry_type='info'
+            set_entry_type_configuration(self)
         else:
             path_list = abs_url[starting_endpoint:].split('/')
             path_list = list(filter(None, path_list))
@@ -232,6 +221,27 @@ def set_entry_type(self, request):
         raise
 
 @log_with_args(level)
+def set_response_type(self):
+    '''
+    We receive an absolute url with a host and a port, the endpoint queried and the query string. We check that the url and host match with the beacon uri in conf and then
+    we keep the name of the endpoint checking if it matches an entry type in configuration and the internal id queried, if there is one.
+    '''
+    if RequestAttributes.qparams.query.includeResultsetResponses != 'NONE':
+        RequestAttributes.response_type = 'resultSet'
+    elif RequestAttributes.qparams.query.includeResultsetResponses == 'NONE' and RequestAttributes.allowed_granularity in ['count','record'] and RequestAttributes.qparams.query.requestedGranularity in ['count', 'record']:
+        RequestAttributes.response_type = 'count'
+    else:
+        RequestAttributes.response_type = 'boolean'
+    if RequestAttributes.allowed_granularity == 'boolean':
+        RequestAttributes.returned_granularity = 'boolean'
+    elif RequestAttributes.allowed_granularity in ['count', 'record'] and RequestAttributes.qparams.query.requestedGranularity == 'boolean':
+        RequestAttributes.returned_granularity = 'boolean'
+    elif RequestAttributes.allowed_granularity == 'record' and RequestAttributes.qparams.query.requestedGranularity == 'record' and RequestAttributes.response_type == 'resultSet':
+        RequestAttributes.returned_granularity = 'record'
+    else:
+        RequestAttributes.returned_granularity = 'count'
+
+@log_with_args(level)
 def set_ip(self, request):
     RequestAttributes.ip=request.remote
 
@@ -252,9 +262,8 @@ async def deconstruct_request(self, request):
         set_ip(self, request)
         set_headers(self, request)
         set_entry_type(self, request)
-        query_string_body = parse_query_string(self, request)
-        qparams = await get_qparams(self, self.request, query_string_body)
-        return qparams
+        await get_qparams(self, self.request)
+        set_response_type(self)
     except Exception:
         raise
     

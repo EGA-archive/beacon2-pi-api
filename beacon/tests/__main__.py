@@ -2464,7 +2464,6 @@ class TestMain(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_400_bad_request():
                 resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name+'?testMod=true')
-                LOG.warning(resp.status)
                 assert resp.status == 400
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)

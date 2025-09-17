@@ -2,11 +2,11 @@ from beacon.connections.mongo.__init__ import client, dbname, filtering_terms
 from beacon.connections.mongo.utils import get_count
 from typing import Optional
 from beacon.response.schemas import DefaultSchemas
-from beacon.request.parameters import RequestParams
+from beacon.request.classes import RequestAttributes
 from beacon.connections.mongo.utils import get_filtering_documents
 from beacon.request.classes import ErrorClass
 
-def get_filtering_terms(self, qparams: RequestParams):
+def get_filtering_terms(self):
     try:
         query = {}
         schema = DefaultSchemas.FILTERINGTERMS
@@ -17,8 +17,8 @@ def get_filtering_terms(self, qparams: RequestParams):
             filtering_terms,
             query,
             remove_id,
-            qparams.query.pagination.skip,
-            qparams.query.pagination.limit
+            RequestAttributes.qparams.query.pagination.skip,
+            RequestAttributes.qparams.query.pagination.limit
         )
         return schema, count, docs
     except Exception as e:# pragma: no cover

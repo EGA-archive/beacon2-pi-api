@@ -13,17 +13,17 @@ from beacon.connections.mongo.__init__ import cohorts
 from beacon.request.classes import RequestAttributes
 
 @log_with_args_mongo(level)
-def get_cohorts(self, qparams: RequestParams):
+def get_cohorts(self):
     collection = cohort.endpoint_name
-    limit = qparams.query.pagination.limit
-    query = apply_filters(self, {}, qparams.query.filters, collection, {}, "a")
+    limit = RequestAttributes.qparams.query.pagination.limit
+    query = apply_filters(self, {}, RequestAttributes.qparams.query.filters, collection, {}, "a")
     schema = DefaultSchemas.COHORTS
     count = get_count(self, cohorts, query)
     docs = get_documents(self,
         cohorts,
         query,
-        qparams.query.pagination.skip,
-        qparams.query.pagination.skip*limit
+        RequestAttributes.qparams.query.pagination.skip,
+        RequestAttributes.qparams.query.pagination.skip*limit
     )
     response_converted = (
         [r for r in docs] if docs else []
@@ -31,18 +31,18 @@ def get_cohorts(self, qparams: RequestParams):
     return response_converted, count, schema
 
 @log_with_args_mongo(level)
-def get_cohort_with_id(self, qparams: RequestParams):
+def get_cohort_with_id(self):
     collection = cohort.endpoint_name
-    limit = qparams.query.pagination.limit
-    query = apply_filters(self, {}, qparams.query.filters, collection, {}, "a")
+    limit = RequestAttributes.qparams.query.pagination.limit
+    query = apply_filters(self, {}, RequestAttributes.qparams.query.filters, collection, {}, "a")
     query = query_id(self, query, RequestAttributes.entry_id)
     schema = DefaultSchemas.COHORTS
     count = get_count(self, cohorts, query)
     docs = get_documents(self,
         cohorts,
         query,
-        qparams.query.pagination.skip,
-        qparams.query.pagination.skip*limit
+        RequestAttributes.qparams.query.pagination.skip,
+        RequestAttributes.qparams.query.pagination.skip*limit
     )
     response_converted = (
         [r for r in docs] if docs else []

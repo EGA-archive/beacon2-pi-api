@@ -334,10 +334,10 @@ def generate_endpoints(self, response_type, key_response):
     return response
 
 @log_with_args(level)
-def build_response(self, data, num_total_results, qparams):
+def build_response(self, data, num_total_results):
     """"Fills the `response` part with the correct format in `results`"""
-    limit = qparams.query.pagination.limit
-    include = qparams.query.includeResultsetResponses
+    limit = RequestAttributes.qparams.query.pagination.limit
+    include = RequestAttributes.qparams.query.includeResultsetResponses
     if limit != 0 and limit < num_total_results:# pragma: no cover
         response = {
             'id': '', # TODO: Set the name of the dataset/cohort
@@ -379,11 +379,11 @@ def build_response_summary(self, exists, num_total_results):
         raise
 
 @log_with_args(level)
-def build_response_summary_by_dataset(self, datasets, data, dict_counts, qparams):
+def build_response_summary_by_dataset(self, datasets, data, dict_counts):
     try:
         count=0
         non_counted=0
-        granularity = qparams.query.requestedGranularity
+        granularity = RequestAttributes.qparams.query.requestedGranularity
         for dataset in datasets:
             if dataset.granularity != 'boolean' and RequestAttributes.allowed_granularity != 'boolean' and granularity != 'boolean':
                 if conf.imprecise_count !=0:
@@ -416,13 +416,13 @@ def build_response_summary_by_dataset(self, datasets, data, dict_counts, qparams
         raise
 
 @log_with_args(level)
-def build_meta(self, qparams: RequestParams, entity_schema: Optional[DefaultSchemas], returned_granularity: Granularity):
+def build_meta(self, entity_schema: Optional[DefaultSchemas]):
     try:
         meta = {
             'beaconId': conf.beacon_id,
             'apiVersion': conf.api_version,
-            'returnedGranularity': returned_granularity,
-            'receivedRequestSummary': qparams.summary(),
+            'returnedGranularity': RequestAttributes.returned_granularity,
+            'receivedRequestSummary': RequestAttributes.qparams.summary(),
             'returnedSchemas': [entity_schema.value] if entity_schema is not None else []
         }
         return meta
@@ -431,8 +431,8 @@ def build_meta(self, qparams: RequestParams, entity_schema: Optional[DefaultSche
             meta = {
                 'beaconId': conf.beacon_id,
                 'apiVersion': conf.api_version,
-                'returnedGranularity': returned_granularity,
-                'receivedRequestSummary': qparams,
+                'returnedGranularity': None,
+                'receivedRequestSummary': None,
                 'returnedSchemas': [entity_schema.value] if entity_schema is not None else []
             }
             return meta
@@ -464,9 +464,9 @@ def build_info_meta(self, entity_schema: Optional[DefaultSchemas]):
             raise
 
 @log_with_args(level)
-def build_response_by_dataset(self, datasets, data, dict_counts, qparams):
+def build_response_by_dataset(self, datasets, data, dict_counts):
     try:
-        granularity = qparams.query.requestedGranularity
+        granularity = RequestAttributes.qparams.query.requestedGranularity
         list_of_responses=[]
         for dataset in datasets:
             if dataset.granularity == 'record' and RequestAttributes.allowed_granularity=='record' and granularity =='record':
@@ -547,23 +547,13 @@ def build_response_by_dataset(self, datasets, data, dict_counts, qparams):
 @log_with_args(level)
 def build_beacon_record_response_by_dataset(self, datasets, data,
                                     dict_counts,
-                                    num_total_results,
-                                    qparams: RequestParams,
                                     entity_schema: DefaultSchemas):
     try:
-        if RequestAttributes.allowed_granularity == 'boolean':
-            granul_returned = 'boolean'
-        elif RequestAttributes.allowed_granularity in ['count', 'record'] and qparams.query.requestedGranularity == 'boolean':
-            granul_returned = 'boolean'
-        elif RequestAttributes.allowed_granularity == 'record' and qparams.query.requestedGranularity == 'record':
-            granul_returned = 'record'
-        else:
-            granul_returned = 'count'
         beacon_response = {
-            'meta': build_meta(self, qparams, entity_schema, granul_returned),
-            'responseSummary': build_response_summary_by_dataset(self, datasets, data, dict_counts, qparams),
+            'meta': build_meta(self, entity_schema),
+            'responseSummary': build_response_summary_by_dataset(self, datasets, data, dict_counts),
             'response': {
-                'resultSets': build_response_by_dataset(self, datasets, data, dict_counts, qparams)
+                'resultSets': build_response_by_dataset(self, datasets, data, dict_counts)
             },
             'beaconHandovers': list_of_handovers,
         }
@@ -574,11 +564,10 @@ def build_beacon_record_response_by_dataset(self, datasets, data,
 @log_with_args(level)
 def build_beacon_boolean_response(self,
                                     num_total_results,
-                                    qparams: RequestParams,
                                     entity_schema: DefaultSchemas):
     try:# pragma: no cover
         beacon_response = {
-            'meta': build_meta(self, qparams, entity_schema, Granularity.BOOLEAN),
+            'meta': build_meta(self, entity_schema),
             'responseSummary': build_response_summary(self, num_total_results > 0, None),
             # TODO: 'extendedInfo': build_extended_info(),
             'beaconHandovers': list_of_handovers,
@@ -591,12 +580,11 @@ def build_beacon_boolean_response(self,
 def build_beacon_count_response(self, datasets, data,
                                     dict_counts,
                                     num_total_results,
-                                    qparams: RequestParams,
                                     entity_schema: DefaultSchemas):
     try:
         beacon_response = {
-            'meta': build_meta(self, qparams, entity_schema, 'count'),
-            'responseSummary': build_response_summary_by_dataset(self, datasets, data, dict_counts, qparams),
+            'meta': build_meta(self, entity_schema),
+            'responseSummary': build_response_summary_by_dataset(self, datasets, data, dict_counts),
             'beaconHandovers': list_of_handovers,
         }
         return beacon_response
@@ -608,12 +596,7 @@ def build_beacon_error_response(self, errorCode, errorMessage):
     try:
 
         beacon_response = {
-            'meta': build_meta(self,         {
-                "apiVersion": RequestMeta().apiVersion,
-                "requestedSchemas": RequestMeta().requestedSchemas,
-                "pagination": RequestQuery().pagination.dict(),
-                "requestedGranularity": RequestQuery().requestedGranularity,
-            }, None, Granularity.RECORD),
+            'meta': build_meta(self, None),
             'error': {
                 'errorCode': str(errorCode),
                 'errorMessage': str(errorMessage)
@@ -624,10 +607,10 @@ def build_beacon_error_response(self, errorCode, errorMessage):
         raise
 
 @log_with_args(level)
-def build_beacon_collection_response(self, data, num_total_results, qparams: RequestParams, entity_schema: DefaultSchemas):
+def build_beacon_collection_response(self, data, num_total_results: RequestParams, entity_schema: DefaultSchemas):
     try:
         beacon_response = {
-            'meta': build_meta(self, qparams, entity_schema, Granularity.RECORD),
+            'meta': build_meta(self, entity_schema),
             'responseSummary': build_response_summary(self, num_total_results > 0, num_total_results),
             # TODO: 'info': build_extended_info(),
             'beaconHandovers': list_of_handovers,
@@ -1040,11 +1023,10 @@ def build_beacon_service_info_response(self):
 @log_with_args(level)
 def build_filtering_terms_response(self, data,
                                     num_total_results,
-                                    qparams: RequestParams,
                                     entity_schema: DefaultSchemas):
     try:
         beacon_response = {
-            'meta': build_meta(self, qparams, entity_schema, Granularity.RECORD),
+            'meta': build_meta(self, entity_schema),
             'responseSummary': build_response_summary(self, num_total_results > 0, num_total_results),
             # TODO: 'extendedInfo': build_extended_info(),
             'response': {

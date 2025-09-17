@@ -22,7 +22,7 @@ def get_datasets(self):
         raise
 
 @log_with_args_mongo(level)
-def get_full_datasets(self, qparams: RequestParams):
+def get_full_datasets(self):
     try:
         collection = datasets
         if RequestAttributes.entry_id == None:
@@ -53,11 +53,11 @@ def get_list_of_datasets(self):
         raise
 
 @log_with_args_mongo(level)
-def get_dataset_with_id(self, qparams: RequestParams):
-    limit = qparams.query.pagination.limit
-    query_parameters, parameters_as_filters = apply_request_parameters(self, {}, qparams, RequestAttributes.entry_id)
+def get_dataset_with_id(self):
+    limit = RequestAttributes.qparams.query.pagination.limit
+    query_parameters, parameters_as_filters = apply_request_parameters(self, {}, RequestAttributes.entry_id)
     if parameters_as_filters == True:
-        query, parameters_as_filters = apply_request_parameters(self, {}, qparams, RequestAttributes.entry_id)# pragma: no cover
+        query, parameters_as_filters = apply_request_parameters(self, {}, RequestAttributes.entry_id)# pragma: no cover
     else:
         query={}
     query = query_id(self, query, RequestAttributes.entry_id)
@@ -66,8 +66,8 @@ def get_dataset_with_id(self, qparams: RequestParams):
     docs = get_documents(self,
         datasets,
         query,
-        qparams.query.pagination.skip,
-        qparams.query.pagination.skip*limit
+        RequestAttributes.qparams.query.pagination.skip,
+        RequestAttributes.qparams.query.pagination.skip*limit
     )
     response_converted = (
                 [r for r in docs] if docs else []
