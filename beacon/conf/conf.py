@@ -28,7 +28,7 @@ update_datetime = ''
 default_beacon_granularity = "record" # boolean, count or record
 security_levels = ['PUBLIC', 'REGISTERED', 'CONTROLLED']
 documentation_url = 'https://b2ri-documentation-demo.ega-archive.org/'
-cors_urls = ["http://localhost:3003", "http://localhost:3000", "https://af-beacon.ega-archive.org"]
+cors_urls = ["http://localhost:3003", "http://localhost:3000", "https://af-beacon.ega-archive.org", "https://beacon-apis-test.ega-archive.org"]
 
 # Service Info
 ga4gh_service_type_group = 'org.ga4gh'
