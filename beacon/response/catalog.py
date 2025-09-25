@@ -203,7 +203,7 @@ def generate_endpoints(self, response_type, key_response):
         response[key_response][genomicVariant.id]["openAPIEndpointsDefinition"]=genomicVariant.open_api_endpoints_definition
         response[key_response][genomicVariant.id]["rootUrl"]=conf.complete_url+'/'+genomicVariant.endpoint_name
         if genomicVariant.singleEntryUrl == True:
-            response[key_response][genomicVariant.id]["singleEntryUrl"]=conf.complete_url+'/'+genomicVariant.endpoint_name+'/{id}'
+            response[key_response][genomicVariant.id]["singleEntryUrl"]=conf.complete_url+'/'+genomicVariant.endpoint_name+'/{variantInternalId}'
         else:
             del response[key_response][genomicVariant.id]["singleEntryUrl"]
         if genomicVariant.analysis_lookup == True:
@@ -211,37 +211,37 @@ def generate_endpoints(self, response_type, key_response):
             if analysis.id != 'analysis':
                 del response[key_response][genomicVariant.id]["endpoints"]["analysis"]
             response[key_response][genomicVariant.id]["endpoints"][analysis.id]["returnedEntryType"]=analysis.id
-            response[key_response][genomicVariant.id]["endpoints"][analysis.id]["url"]=conf.complete_url+'/'+genomicVariant.endpoint_name+'/{id}/'+analysis.endpoint_name
+            response[key_response][genomicVariant.id]["endpoints"][analysis.id]["url"]=conf.complete_url+'/'+genomicVariant.endpoint_name+'/{variantInternalId}/'+analysis.endpoint_name
         if genomicVariant.biosample_lookup == True:
             response[key_response][genomicVariant.id]["endpoints"][biosample.id]=response[key_response][genomicVariant.id]["endpoints"]["biosample"]
             if biosample.id != 'biosample':
                 del response[key_response][genomicVariant.id]["endpoints"]["biosample"]
             response[key_response][genomicVariant.id]["endpoints"][biosample.id]["returnedEntryType"]=biosample.id
-            response[key_response][genomicVariant.id]["endpoints"][biosample.id]["url"]=conf.complete_url+'/'+genomicVariant.endpoint_name+'/{id}/'+biosample.endpoint_name
+            response[key_response][genomicVariant.id]["endpoints"][biosample.id]["url"]=conf.complete_url+'/'+genomicVariant.endpoint_name+'/{variantInternalId}/'+biosample.endpoint_name
         if genomicVariant.cohort_lookup == True:
             response[key_response][genomicVariant.id]["endpoints"][cohort.id]=response[key_response][genomicVariant.id]["endpoints"]["cohort"]
             if cohort.id != 'cohort':
                 del response[key_response][genomicVariant.id]["endpoints"]["genomicVariant"]
             response[key_response][genomicVariant.id]["endpoints"][cohort.id]["returnedEntryType"]=cohort.id
-            response[key_response][genomicVariant.id]["endpoints"][cohort.id]["url"]=conf.complete_url+'/'+genomicVariant.endpoint_name+'/{id}/'+cohort.endpoint_name
+            response[key_response][genomicVariant.id]["endpoints"][cohort.id]["url"]=conf.complete_url+'/'+genomicVariant.endpoint_name+'/{variantInternalId}/'+cohort.endpoint_name
         if genomicVariant.dataset_lookup == True:
             response[key_response][genomicVariant.id]["endpoints"][dataset.id]=response[key_response][genomicVariant.id]["endpoints"]["dataset"]
             if dataset.id != 'dataset':
                 del response[key_response][genomicVariant.id]["endpoints"]["dataset"]
             response[key_response][genomicVariant.id]["endpoints"][dataset.id]["returnedEntryType"]=dataset.id
-            response[key_response][genomicVariant.id]["endpoints"][dataset.id]["url"]=conf.complete_url+'/'+genomicVariant.endpoint_name+'/{id}/'+dataset.endpoint_name
+            response[key_response][genomicVariant.id]["endpoints"][dataset.id]["url"]=conf.complete_url+'/'+genomicVariant.endpoint_name+'/{variantInternalId}/'+dataset.endpoint_name
         if genomicVariant.individual_lookup == True:
             response[key_response][genomicVariant.id]["endpoints"][individual.id]=response[key_response][genomicVariant.id]["endpoints"]["individual"]
             if individual.id != 'individual':
                 del response[key_response][genomicVariant.id]["endpoints"]["individual"]
             response[key_response][genomicVariant.id]["endpoints"][individual.id]["returnedEntryType"]=individual.id
-            response[key_response][genomicVariant.id]["endpoints"][individual.id]["url"]=conf.complete_url+'/'+genomicVariant.endpoint_name+'/{id}/'+individual.endpoint_name
+            response[key_response][genomicVariant.id]["endpoints"][individual.id]["url"]=conf.complete_url+'/'+genomicVariant.endpoint_name+'/{variantInternalId}/'+individual.endpoint_name
         if genomicVariant.run_lookup == True:
             response[key_response][genomicVariant.id]["endpoints"][run.id]=response[key_response][genomicVariant.id]["endpoints"]["run"]
             if run.id != 'run':
                 del response[key_response][genomicVariant.id]["endpoints"]["run"]
             response[key_response][genomicVariant.id]["endpoints"][run.id]["returnedEntryType"]=run.id
-            response[key_response][genomicVariant.id]["endpoints"][run.id]["url"]=conf.complete_url+'/'+genomicVariant.endpoint_name+'/{id}/'+run.endpoint_name
+            response[key_response][genomicVariant.id]["endpoints"][run.id]["url"]=conf.complete_url+'/'+genomicVariant.endpoint_name+'/{variantInternalId}/'+run.endpoint_name
     if individual.endpoint_name!='':
         response[key_response][individual.id]=response[key_response]['individual']
         response[key_response][individual.id]["entryType"]=individual.id
@@ -633,7 +633,6 @@ def build_beacon_collection_response(self, data, num_total_results: RequestParam
 def build_beacon_info_response(self):
     # TODO: reproduir el mateix procediment que per la resta amb templates.
     try:
-        conf2 = confs
         beacon_response = {
             'meta': build_info_meta(self, None),
             'response': {
@@ -660,9 +659,8 @@ def build_beacon_info_response(self):
         }
         return beacon_response
     except Exception as ex:# pragma: no cover
-        template = "An exception of type {0} occurred. Arguments:\n{1!r}"
-        message = template.format(type(ex).__name__, ex.args)
-        LOG.warning(message)
+        #template = "An exception of type {0} occurred. Arguments:\n{1!r}"
+        #message = template.format(type(ex).__name__, ex.args)
         ErrorClass.error_code=500
         ErrorClass.error_message=str(ex)
         raise

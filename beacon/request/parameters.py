@@ -292,7 +292,7 @@ class RequestParams(CamelModel):
             return {
                 "apiVersion": self.meta.apiVersion,
                 "requestedSchemas": self.meta.requestedSchemas,
-                "filters": self.query.filters,
+                "filters": [filtering_term.id for filtering_term in self.query.filters],
                 "requestParameters": self.query.requestParameters,
                 "includeResultsetResponses": self.query.includeResultsetResponses,
                 "pagination": self.query.pagination.dict(),
