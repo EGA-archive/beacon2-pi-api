@@ -15,6 +15,7 @@ def contains_special_characters(string):
     return False
 
 def check_configuration():
+    # TODO: posar decorator de logs a la funció
     if analysis.endpoint_name != '' and analysis.granularity not in ['boolean', 'count', 'record']:
         raise Exception("analysis granularity must be one string between boolean, count or record")
     if biosample.endpoint_name != '' and biosample.granularity not in ['boolean', 'count', 'record']:

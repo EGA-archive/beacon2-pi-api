@@ -10,12 +10,13 @@ from beacon.filtering_terms.resources import resources
 from beacon.utils.handovers import list_of_handovers, list_of_handovers_per_dataset
 import json
 import math
+import sys
 
 @log_with_args(level)
 def generate_endpoints(self, response_type, key_response):
     with open('beacon/response/templates/{}.json'.format(response_type), 'r') as template:
         response = json.load(template)
-
+    # TODO: delete parts where the entry type without name shouldn't exist
     if analysis.endpoint_name!='':
         response[key_response][analysis.id]=response[key_response]['analysis']
         response[key_response][analysis.id]["entryType"]=analysis.id
@@ -630,7 +631,9 @@ def build_beacon_collection_response(self, data, num_total_results: RequestParam
 
 @log_with_args(level)
 def build_beacon_info_response(self):
+    # TODO: reproduir el mateix procediment que per la resta amb templates.
     try:
+        conf2 = confs
         beacon_response = {
             'meta': build_info_meta(self, None),
             'response': {
@@ -656,9 +659,12 @@ def build_beacon_info_response(self):
             }
         }
         return beacon_response
-    except Exception as e:# pragma: no cover
+    except Exception as ex:# pragma: no cover
+        template = "An exception of type {0} occurred. Arguments:\n{1!r}"
+        message = template.format(type(ex).__name__, ex.args)
+        LOG.warning(message)
         ErrorClass.error_code=500
-        ErrorClass.error_message=str(e)
+        ErrorClass.error_message=str(ex)
         raise
 
 @log_with_args(level)
@@ -821,6 +827,7 @@ def build_configuration(self):
 
 @log_with_args(level)
 def build_map(self):
+    # TODO: comprovar que s'eliminin els entry types que no tenen nom a configuration
     try:
         meta = {
             '$schema': 'https://raw.githubusercontent.com/ga4gh-beacon/beacon-framework-v2/main/responses/sections/beaconInformationalResponseMeta.json',
