@@ -6,25 +6,24 @@ from beacon.request.classes import Granularity, RequestAttributes
 from beacon.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run, filtering_terms
 
 @log_with_args(level)
-async def builder(self, datasets, qparams):
-    granularity = qparams.query.requestedGranularity
+async def builder(self, datasets):
     try:
         complete_module='beacon.connections.'+RequestAttributes.source+'.executor'
         import importlib
         module = importlib.import_module(complete_module, package=None)
-        datasets_docs, datasets_count, count, entity_schema, include, datasets = await module.execute_function(self, datasets, qparams)
-        if qparams.query.includeResultsetResponses != 'NONE':
-            response = build_beacon_record_response_by_dataset(self, datasets, datasets_docs, datasets_count, count, qparams, entity_schema)
-        elif qparams.query.includeResultsetResponses == 'NONE' and RequestAttributes.allowed_granularity in ['count','record'] and granularity in ['count', 'record']:
-            response = build_beacon_count_response(self, datasets, datasets_docs, datasets_count, count, qparams, entity_schema)
+        datasets_docs, datasets_count, count, entity_schema, include, datasets = await module.execute_function(self, datasets)
+        if RequestAttributes.response_type == 'resultSet':
+            response = build_beacon_record_response_by_dataset(self, datasets, datasets_docs, datasets_count, entity_schema)
+        elif RequestAttributes.response_type == 'count':
+            response = build_beacon_count_response(self, datasets, datasets_docs, datasets_count, count, entity_schema)
         else:# pragma: no cover
-            response = build_beacon_boolean_response(self, count, qparams, entity_schema)
+            response = build_beacon_boolean_response(self, count, entity_schema)
         return response
     except Exception:# pragma: no cover
         raise
 
 @log_with_args(level)
-async def collection_builder(self, qparams):
+async def collection_builder(self):
     try:
         if RequestAttributes.entry_type == dataset.endpoint_name:
             source = dataset.database
@@ -33,9 +32,9 @@ async def collection_builder(self, qparams):
         complete_module='beacon.connections.'+source+'.executor'
         import importlib
         module = importlib.import_module(complete_module, package=None)
-        response_converted, count, entity_schema = await module.execute_collection_function(self, qparams)
+        response_converted, count, entity_schema = await module.execute_collection_function(self)
         response = build_beacon_collection_response(
-                    self, response_converted, count, qparams, entity_schema
+                    self, response_converted, count, entity_schema
                 )
         return response
     except Exception:# pragma: no cover
@@ -92,15 +91,15 @@ async def service_info_builder(self):
         raise
 
 @log_with_args(level)
-async def filtering_terms_builder(self, qparams):
+async def filtering_terms_builder(self):
     source=filtering_terms.database
     complete_module='beacon.connections.'+source+'.filtering_terms'
     import importlib
     module = importlib.import_module(complete_module, package=None)
     try:
-        entity_schema, count, records = module.get_filtering_terms(self, qparams)
+        entity_schema, count, records = module.get_filtering_terms(self)
         response = build_filtering_terms_response(
-                    self, records, count, qparams, entity_schema
+                    self, records, count, entity_schema
                 )
         return response
     except Exception:# pragma: no cover

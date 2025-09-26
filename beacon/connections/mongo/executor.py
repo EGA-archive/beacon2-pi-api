@@ -14,9 +14,9 @@ from beacon.request.classes import ErrorClass, RequestAttributes
 from aiohttp import web
 
 @log_with_args(level)
-async def execute_function(self, datasets: list, qparams: RequestParams):
-    include = qparams.query.includeResultsetResponses
-    limit = qparams.query.pagination.limit
+async def execute_function(self, datasets: list):
+    include = RequestAttributes.qparams.query.includeResultsetResponses
+    limit = RequestAttributes.qparams.query.pagination.limit
     datasets_docs={}
     datasets_count={}
     new_count=0
@@ -28,7 +28,7 @@ async def execute_function(self, datasets: list, qparams: RequestParams):
         pass
     if RequestAttributes.entry_type==genomicVariant.endpoint_name:
         try:
-            if genomicVariant.allow_queries_without_filters == False and qparams.query.filters == [] and qparams.query.requestParameters == []:
+            if genomicVariant.allow_queries_without_filters == False and RequestAttributes.qparams.query.filters == [] and RequestAttributes.qparams.query.requestParameters == []:
                 ErrorClass.error_code=400
                 ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(genomicVariant.endpoint_name)
                 raise web.HTTPBadRequest
@@ -42,7 +42,7 @@ async def execute_function(self, datasets: list, qparams: RequestParams):
         idq="caseLevelData.biosampleId"
     elif RequestAttributes.entry_type==analysis.endpoint_name:
         try:
-            if analysis.allow_queries_without_filters == False and qparams.query.filters == [] and qparams.query.requestParameters == []:
+            if analysis.allow_queries_without_filters == False and RequestAttributes.qparams.query.filters == [] and RequestAttributes.qparams.query.requestParameters == []:
                 ErrorClass.error_code=400
                 ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(analysis.endpoint_name)
                 raise web.HTTPBadRequest
@@ -56,7 +56,7 @@ async def execute_function(self, datasets: list, qparams: RequestParams):
         idq="biosampleId"
     elif RequestAttributes.entry_type==biosample.endpoint_name:
         try:
-            if biosample.allow_queries_without_filters == False and qparams.query.filters == [] and qparams.query.requestParameters == []:
+            if biosample.allow_queries_without_filters == False and RequestAttributes.qparams.query.filters == [] and RequestAttributes.qparams.query.requestParameters == []:
                 ErrorClass.error_code=400
                 ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(biosample.endpoint_name)
                 raise web.HTTPBadRequest
@@ -70,7 +70,7 @@ async def execute_function(self, datasets: list, qparams: RequestParams):
         idq="id"
     elif RequestAttributes.entry_type==individual.endpoint_name:
         try:
-            if individual.allow_queries_without_filters == False and qparams.query.filters == [] and qparams.query.requestParameters == []:
+            if individual.allow_queries_without_filters == False and RequestAttributes.qparams.query.filters == [] and RequestAttributes.qparams.query.requestParameters == []:
                 ErrorClass.error_code=400
                 ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(individual.endpoint_name)
                 raise web.HTTPBadRequest
@@ -84,7 +84,7 @@ async def execute_function(self, datasets: list, qparams: RequestParams):
         idq="id"
     elif RequestAttributes.entry_type==run.endpoint_name:
         try:
-            if run.allow_queries_without_filters == False and qparams.query.filters == [] and qparams.query.requestParameters == []:
+            if run.allow_queries_without_filters == False and RequestAttributes.qparams.query.filters == [] and RequestAttributes.qparams.query.requestParameters == []:
                 ErrorClass.error_code=400
                 ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(run.endpoint_name)
                 raise web.HTTPBadRequest
@@ -127,7 +127,7 @@ async def execute_function(self, datasets: list, qparams: RequestParams):
 
     if datasets != []:
         with ThreadPoolExecutor() as pool:
-            done, pending = await asyncio.wait(fs=[loop.run_in_executor(pool, function, self, qparams, dataset.dataset, collection, mongo_collection, schema, idq) for dataset in datasets],
+            done, pending = await asyncio.wait(fs=[loop.run_in_executor(pool, function, self, dataset.dataset, collection, mongo_collection, schema, idq) for dataset in datasets],
             return_when=asyncio.ALL_COMPLETED
             )
         for task in done:
@@ -162,7 +162,7 @@ async def execute_function(self, datasets: list, qparams: RequestParams):
         raise web.HTTPBadRequest
 
 @log_with_args(level)
-async def execute_collection_function(self, qparams: RequestParams):
+async def execute_collection_function(self):
     if RequestAttributes.entry_id == None:
         if RequestAttributes.entry_type == dtaset.endpoint_name:
             function=get_full_datasets
@@ -173,5 +173,5 @@ async def execute_collection_function(self, qparams: RequestParams):
             function=get_dataset_with_id
         elif RequestAttributes.entry_type == cohort.endpoint_name:
             function=get_cohort_with_id
-    response_converted, count, entity_schema = function(self, qparams)
+    response_converted, count, entity_schema = function(self)
     return response_converted, count, entity_schema

@@ -13,7 +13,7 @@ except Exception as e:# pragma: no cover
 level=logging.NOTSET
 log_file=None
 beacon_id = 'org.ega-archive.beacon-ri-demo'  # ID of the Beacon
-beacon_name = 'Beacon Reference Implementation demo'  # Name of the Beacon service
+beacon_name = 'Beacon Production Implementation demo'  # Name of the Beacon service
 api_version = 'v2.0.0' # Version of the Beacon implementation
 uri = 'http://localhost:5050'
 uri_subpath = '/api'

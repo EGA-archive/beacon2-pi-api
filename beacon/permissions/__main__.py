@@ -38,10 +38,10 @@ async def authorization(self):
     return username, list_visa_datasets
 
 @log_with_args(level)
-async def get_datasets_list(self, qparams, authorized_datasets):
+async def get_datasets_list(self, authorized_datasets):
     try:
         try:
-            specific_datasets = qparams.query.requestParameters['datasets']
+            specific_datasets = RequestAttributes.qparams.query.requestParameters['datasets']
         except Exception as e:
             specific_datasets = []
         beacon_datasets = module.get_list_of_datasets(self)# pragma: no cover
@@ -56,17 +56,17 @@ async def get_datasets_list(self, qparams, authorized_datasets):
 
 def query_permissions(func):
     @log_with_args(level)
-    async def permission(self, qparams):
+    async def permission(self):
         try:
             time_now=None
             username = 'public'
             try:
-                requested_datasets = qparams.query.requestParameters["datasets"]
+                requested_datasets = RequestAttributes.qparams.query.requestParameters["datasets"]
             except Exception:
                 requested_datasets = []
-            if qparams.query.testMode == True:
-                datasets_permissions = await PermissionsProxy.get_permissions(self, username=username, requested_datasets=requested_datasets, testMode=qparams.query.testMode)
-                response_datasets= await get_datasets_list(self, qparams, datasets_permissions)
+            if RequestAttributes.qparams.query.testMode == True:
+                datasets_permissions = await PermissionsProxy.get_permissions(self, username=username, requested_datasets=requested_datasets, testMode=RequestAttributes.qparams.query.testMode)
+                response_datasets= await get_datasets_list(self, datasets_permissions)
                 response_datasets_names=[]
                 for response_dataset in response_datasets:
                     response_datasets_names.append(response_dataset.dataset)
@@ -77,12 +77,12 @@ def query_permissions(func):
                         raise web.HTTPBadRequest
             else:
                 username, list_visa_datasets = await authorization(self)
-                datasets_permissions = await PermissionsProxy.get_permissions(self, username=username, requested_datasets=requested_datasets, testMode=qparams.query.testMode)
+                datasets_permissions = await PermissionsProxy.get_permissions(self, username=username, requested_datasets=requested_datasets, testMode=RequestAttributes.qparams.query.testMode)
                 time_now = check_budget(self, username)
                 for visa_dataset in list_visa_datasets:
                     datasets_permissions.append(DatasetPermission(visa_dataset, default_beacon_granularity))
-            response_datasets= await get_datasets_list(self, qparams, datasets_permissions)
-            return await func(self, qparams, response_datasets, username, time_now)
+            response_datasets= await get_datasets_list(self, datasets_permissions)
+            return await func(self, response_datasets, username, time_now)
         except Exception:# pragma: no cover
             raise
     return permission

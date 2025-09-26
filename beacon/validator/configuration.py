@@ -1,10 +1,11 @@
 from beacon.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run
 from beacon.conf import conf
-from beacon.logs.logs import LOG
+from beacon.logs.logs import LOG, log_with_args_check_configuration
 import os
 import re
 import logging
 import yaml
+import aiohttp.web as web
 
 def contains_special_characters(string):
     for char in string:
@@ -14,7 +15,37 @@ def contains_special_characters(string):
             return True
     return False
 
+@log_with_args_check_configuration(conf.level)
 def check_configuration():
+    # TODO: posar decorator de logs a la funció
+    if isinstance(analysis.enable_endpoint, bool):
+        pass
+    else:
+        raise Exception("{}.enable_endpoint variable from {}.py must be boolean".format('analysis', 'analysis'))
+    if isinstance(biosample.enable_endpoint, bool):
+        pass
+    else:
+        raise Exception("{}.enable_endpoint variable from {}.py must be boolean".format('biosample', 'biosample'))
+    if isinstance(cohort.enable_endpoint, bool):
+        pass
+    else:
+        raise Exception("{}.enable_endpoint variable from {}.py must be boolean".format('cohort', 'cohort'))
+    if isinstance(dataset.enable_endpoint, bool):
+        pass
+    else:
+        raise Exception("{}.enable_endpoint variable from {}.py must be boolean".format('dataset', 'dataset'))
+    if isinstance(genomicVariant.enable_endpoint, bool):
+        pass
+    else:
+        raise Exception("{}.enable_endpoint variable from {}.py must be boolean".format('genomicVariant', 'genomicVariant'))
+    if isinstance(individual.enable_endpoint, bool):
+        pass
+    else:
+        raise Exception("{}.enable_endpoint variable from {}.py must be boolean".format('individual', 'individual'))
+    if isinstance(run.enable_endpoint, bool):
+        pass
+    else:
+        raise Exception("{}.enable_endpoint variable from {}.py must be boolean".format('run', 'run'))
     if analysis.endpoint_name != '' and analysis.granularity not in ['boolean', 'count', 'record']:
         raise Exception("analysis granularity must be one string between boolean, count or record")
     if biosample.endpoint_name != '' and biosample.granularity not in ['boolean', 'count', 'record']:

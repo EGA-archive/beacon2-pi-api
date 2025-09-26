@@ -1,25 +1,19 @@
 from typing_extensions import Self
 from pydantic import (
     BaseModel,
-    ValidationError,
     field_validator,
-    Field,
-    PrivateAttr,
     model_validator
 )
 from strenum import StrEnum
 from typing import List, Optional, Union
-from beacon.conf.conf import api_version, default_beacon_granularity
+from beacon.conf.conf import default_beacon_granularity
 from beacon.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run
 from humps.main import camelize
 from aiohttp.web_request import Request
 from aiohttp import web
-import html
-import json
-from beacon.logs.logs import log_with_args, LOG
 from beacon.request.classes import ErrorClass, RequestAttributes
 from beacon.request.classes import Granularity
-from beacon.conf.conf import api_version, beacon_id 
+from beacon.logs.logs import LOG
 
 class CamelModel(BaseModel):
     class Config:
@@ -299,7 +293,7 @@ class RequestParams(CamelModel):
             return {
                 "apiVersion": self.meta.apiVersion,
                 "requestedSchemas": self.meta.requestedSchemas,
-                "filters": self.query.filters,
+                "filters": [filtering_term["id"] for filtering_term in self.query.filters],
                 "requestParameters": self.query.requestParameters,
                 "includeResultsetResponses": self.query.includeResultsetResponses,
                 "pagination": self.query.pagination.dict(),

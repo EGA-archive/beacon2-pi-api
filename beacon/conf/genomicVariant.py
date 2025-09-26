@@ -1,4 +1,5 @@
 endpoint_name='g_variants' # Leave it blank ('') to deactivate the endpoint.
+enable_endpoint=True
 open_api_endpoints_definition='https://raw.githubusercontent.com/ga4gh-beacon/beacon-v2/main/models/json/beacon-v2-default-model/genomicVariations/endpoints.json'
 database='mongo' # The name must match the folder's name in connection that belongs to the desired database.
 
