@@ -2474,6 +2474,48 @@ class TestMain(unittest.TestCase):
                 assert responsedict["error"]["errorCode"] == "400"
             loop.run_until_complete(test_check_400_bad_request())
             loop.run_until_complete(client.close())
+    def test_map_endpoint_response_with_disabled_endpoint(self):
+        with loop_context() as loop:
+            from beacon.conf import analysis
+            analysis.enable_endpoint=False
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_map_endpoint_response_with_disabled_endpoint():
+                resp = await client.get(conf.uri_subpath+"/map")
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                self.assertIn("biosample",responsedict["response"]["endpointSets"])
+                self.assertIn("cohort",responsedict["response"]["endpointSets"])
+                self.assertIn("dataset",responsedict["response"]["endpointSets"])
+                self.assertIn("genomicVariant",responsedict["response"]["endpointSets"])
+                self.assertIn("run",responsedict["response"]["endpointSets"])
+                self.assertIn("individual",responsedict["response"]["endpointSets"])
+                self.assertNotIn("analysis",responsedict["response"]["endpointSets"])
+            loop.run_until_complete(test_check_map_endpoint_response_with_disabled_endpoint())
+            loop.run_until_complete(client.close())
+    def test_configuration_endpoint_response_with_disabled_endpoint(self):
+        with loop_context() as loop:
+            from beacon.conf import analysis
+            analysis.enable_endpoint=False
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_configuration_endpoint_response_with_disabled_endpoint():
+                resp = await client.get(conf.uri_subpath+"/configuration")
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                self.assertIn("biosample",responsedict["response"]["entryTypes"])
+                self.assertIn("cohort",responsedict["response"]["entryTypes"])
+                self.assertIn("dataset",responsedict["response"]["entryTypes"])
+                self.assertIn("genomicVariant",responsedict["response"]["entryTypes"])
+                self.assertIn("run",responsedict["response"]["entryTypes"])
+                self.assertIn("individual",responsedict["response"]["entryTypes"])
+                self.assertNotIn("analysis",responsedict["response"]["entryTypes"])
+            loop.run_until_complete(test_check_configuration_endpoint_response_with_disabled_endpoint())
+            loop.run_until_complete(client.close())
 
 if __name__ == '__main__':
     unittest.main()

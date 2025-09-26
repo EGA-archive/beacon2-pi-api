@@ -13,6 +13,7 @@ from aiohttp.web_request import Request
 from aiohttp import web
 from beacon.request.classes import ErrorClass, RequestAttributes
 from beacon.request.classes import Granularity
+from beacon.logs.logs import LOG
 
 class CamelModel(BaseModel):
     class Config:
@@ -292,7 +293,7 @@ class RequestParams(CamelModel):
             return {
                 "apiVersion": self.meta.apiVersion,
                 "requestedSchemas": self.meta.requestedSchemas,
-                "filters": [filtering_term.id for filtering_term in self.query.filters],
+                "filters": [filtering_term["id"] for filtering_term in self.query.filters],
                 "requestParameters": self.query.requestParameters,
                 "includeResultsetResponses": self.query.includeResultsetResponses,
                 "pagination": self.query.pagination.dict(),
