@@ -626,30 +626,28 @@ def build_beacon_collection_response(self, data, num_total_results: RequestParam
 def build_beacon_info_response(self):
     # TODO: reproduir el mateix procediment que per la resta amb templates.
     try:
-        beacon_response = {
-            'meta': build_info_meta(self, None),
-            'response': {
-                'id': conf.beacon_id,
-                'name': conf.beacon_name,
-                'apiVersion': conf.api_version,
-                'environment': conf.environment,
-                'organization': {
-                    'id': conf.org_id,
-                    'name': conf.org_name,
-                    'description': conf.org_description,
-                    'address': conf.org_adress,
-                    'welcomeUrl': conf.org_welcome_url,
-                    'contactUrl': conf.org_contact_url,
-                    'logoUrl': conf.org_logo_url,
-                },
-                'description': conf.description,
-                'version': conf.version,
-                'welcomeUrl': conf.welcome_url,
-                'alternativeUrl': conf.alternative_url,
-                'createDateTime': conf.create_datetime,
-                'updateDateTime': conf.update_datetime
-            }
-        }
+        with open('beacon/response/templates/{}.json'.format("info"), 'r') as template:
+            response = json.load(template)
+        beacon_response={}
+        beacon_response['meta']=build_info_meta(self, None)
+        response['id']=conf.beacon_id
+        response['name']=conf.beacon_name
+        response['apiVersion']=conf.api_version
+        response['environment']=conf.environment
+        response['organization']['id']=conf.org_id
+        response['organization']['name']=conf.org_name
+        response['organization']['description']=conf.org_description
+        response['organization']['address']=conf.org_adress
+        response['organization']['welcomeUrl']=conf.org_welcome_url
+        response['organization']['contactUrl']=conf.org_contact_url
+        response['organization']['logoUrl']=conf.org_logo_url
+        response['description']=conf.description
+        response['version']=conf.version
+        response['welcomeUrl']=conf.welcome_url
+        response['alternativeUrl']=conf.alternative_url
+        response['createDateTime']=conf.create_datetime
+        response['updateDateTime']=conf.update_datetime
+        beacon_response['response']=response
         return beacon_response
     except Exception as ex:# pragma: no cover
         #template = "An exception of type {0} occurred. Arguments:\n{1!r}"
@@ -998,26 +996,22 @@ def build_entry_types(self):
 @log_with_args(level)
 def build_beacon_service_info_response(self):
     try:
-        beacon_response = {
-            'id': conf.beacon_id,
-            'name': conf.beacon_name,
-            'type': {
-                'group': conf.ga4gh_service_type_group,
-                'artifact': conf.ga4gh_service_type_artifact,
-                'version': conf.ga4gh_service_type_version
-            },
-            'description': conf.description,
-            'organization': {
-                'name': conf.org_name,
-                'url': conf.org_welcome_url
-            },
-            'contactUrl': conf.org_contact_url,
-            'documentationUrl': conf.documentation_url,
-            'createdAt': conf.create_datetime,
-            'updatedAt': conf.update_datetime,
-            'environment': conf.environment,
-            'version': conf.version,
-        }
+        with open('beacon/response/templates/{}.json'.format("service-info"), 'r') as template:
+            beacon_response = json.load(template)
+        beacon_response['id']=conf.beacon_id
+        beacon_response['name']=conf.beacon_name
+        beacon_response['type']['group']=conf.ga4gh_service_type_group
+        beacon_response['type']['artifact']=conf.ga4gh_service_type_artifact
+        beacon_response['type']['version']=conf.ga4gh_service_type_version
+        beacon_response['description']=conf.description
+        beacon_response['organization']['name']=conf.org_name
+        beacon_response['organization']['url']=conf.org_welcome_url
+        beacon_response['contactUrl']=conf.org_contact_url
+        beacon_response['documentationUrl']=conf.documentation_url
+        beacon_response['createdAt']=conf.create_datetime
+        beacon_response['updatedAt']=conf.update_datetime
+        beacon_response['environment']=conf.environment
+        beacon_response['version']=conf.version
         return beacon_response
     except Exception as e:# pragma: no cover
         ErrorClass.error_code=500

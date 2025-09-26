@@ -237,6 +237,17 @@ class TestMain(unittest.TestCase):
             async def test_check_info_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/info")
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                self.assertIn("response",responsedict)
+                self.assertIn("meta",responsedict)
+                self.assertIn("id",responsedict["response"])
+                self.assertIn("name",responsedict["response"])
+                self.assertIn("apiVersion",responsedict["response"])
+                self.assertIn("environment",responsedict["response"])
+                self.assertIn("organization",responsedict["response"])
+                self.assertIn("id",responsedict["response"]["organization"])
+                self.assertIn("name",responsedict["response"]["organization"])
             loop.run_until_complete(test_check_info_endpoint_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_post_info_endpoint_is_working(self):
@@ -247,6 +258,17 @@ class TestMain(unittest.TestCase):
             async def test_check_post_info_endpoint_is_working():
                 resp = await client.post(conf.uri_subpath+"/info")
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                self.assertIn("response",responsedict)
+                self.assertIn("meta",responsedict)
+                self.assertIn("id",responsedict["response"])
+                self.assertIn("name",responsedict["response"])
+                self.assertIn("apiVersion",responsedict["response"])
+                self.assertIn("environment",responsedict["response"])
+                self.assertIn("organization",responsedict["response"])
+                self.assertIn("id",responsedict["response"]["organization"])
+                self.assertIn("name",responsedict["response"]["organization"])
             loop.run_until_complete(test_check_post_info_endpoint_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_service_info_endpoint_is_working(self):
