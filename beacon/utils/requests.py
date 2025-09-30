@@ -21,15 +21,18 @@ def parse_query_string(self, request):
     for k, v in request.query.items():
         v = html.escape(v)
         if k == 'filters':
+            LOG.warning('hereeee')
+            LOG.warning(v)
             v_list=[]
             if ',' in v:
                 v_list =v.split(',')# pragma: no cover
             else:
                 v_list.append(v)
+            query_string_body["query"]["filters"]=[]
             for id in v_list:
                 v_dict={}
                 v_dict['id']=id
-            query_string_body["query"]["filters"] = [v_dict]
+                query_string_body["query"]["filters"].append(v_dict)
         elif k == 'includeResultsetResponses':
             query_string_body["query"]["includeResultsetResponses"] = v
         elif k == 'skip':
@@ -240,6 +243,76 @@ def set_response_type(self):
         RequestAttributes.returned_granularity = 'record'
     else:
         RequestAttributes.returned_granularity = 'count'
+    if RequestAttributes.entry_type == genomicVariant.endpoint_name:
+        try:
+            if genomicVariant.allow_queries_without_filters == False and RequestAttributes.qparams.query.filters == [] and RequestAttributes.qparams.query.requestParameters == {}:
+                ErrorClass.error_code=400
+                ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type)
+                raise web.HTTPBadRequest
+        except Exception:
+            ErrorClass.error_code=400
+            ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type)
+            raise web.HTTPBadRequest
+    elif RequestAttributes.entry_type == analysis.endpoint_name:
+        try:
+            if analysis.allow_queries_without_filters == False and RequestAttributes.qparams.query.filters == [] and RequestAttributes.qparams.query.requestParameters == {}:
+                ErrorClass.error_code=400
+                ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type)
+                raise web.HTTPBadRequest
+        except Exception:
+            ErrorClass.error_code=400
+            ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type)
+            raise web.HTTPBadRequest
+    elif RequestAttributes.entry_type == biosample.endpoint_name:
+        try:
+            if biosample.allow_queries_without_filters == False and RequestAttributes.qparams.query.filters == [] and RequestAttributes.qparams.query.requestParameters == {}:
+                ErrorClass.error_code=400
+                ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type)
+                raise web.HTTPBadRequest
+        except Exception:
+            ErrorClass.error_code=400
+            ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type)
+            raise web.HTTPBadRequest
+    elif RequestAttributes.entry_type == cohort.endpoint_name:
+        try:
+            if cohort.allow_queries_without_filters == False and RequestAttributes.qparams.query.filters == [] and RequestAttributes.qparams.query.requestParameters == {}:
+                ErrorClass.error_code=400
+                ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type)
+                raise web.HTTPBadRequest
+        except Exception:
+            ErrorClass.error_code=400
+            ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type)
+            raise web.HTTPBadRequest
+    elif RequestAttributes.entry_type == dataset.endpoint_name:
+        try:
+            if dataset.allow_queries_without_filters == False and RequestAttributes.qparams.query.filters == [] and RequestAttributes.qparams.query.requestParameters == {}:
+                ErrorClass.error_code=400
+                ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type)
+                raise web.HTTPBadRequest
+        except Exception:
+            ErrorClass.error_code=400
+            ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type)
+            raise web.HTTPBadRequest
+    elif RequestAttributes.entry_type == individual.endpoint_name:
+        try:
+            if individual.allow_queries_without_filters == False and RequestAttributes.qparams.query.filters == [] and RequestAttributes.qparams.query.requestParameters == {}:
+                ErrorClass.error_code=400
+                ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type)
+                raise web.HTTPBadRequest
+        except Exception:
+            ErrorClass.error_code=400
+            ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type)
+            raise web.HTTPBadRequest
+    elif RequestAttributes.entry_type == run.endpoint_name:
+        try:
+            if run.allow_queries_without_filters == False and RequestAttributes.qparams.query.filters == [] and RequestAttributes.qparams.query.requestParameters == {}:
+                ErrorClass.error_code=400
+                ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type)
+                raise web.HTTPBadRequest
+        except Exception:
+            ErrorClass.error_code=400
+            ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type)
+            raise web.HTTPBadRequest
 
 @log_with_args(level)
 def set_ip(self, request):

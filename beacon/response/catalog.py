@@ -851,7 +851,7 @@ def build_entry_types(self):
             response = json.load(template)
 
 
-        if analysis.endpoint_name != '':
+        if analysis.endpoint_name != '' and analysis.enable_endpoint == True:
             response['entryTypes'][analysis.id]==response['entryTypes']['analysis']
             if analysis.id != 'analysis':
                 del response['entryTypes']['analysis']
@@ -869,7 +869,7 @@ def build_entry_types(self):
             response['entryTypes'][analysis.id]['nonFilteredQueriesAllowed']=analysis.allow_queries_without_filters
         else:
             del response['entryTypes']['analysis']
-        if biosample.endpoint_name != '':
+        if biosample.endpoint_name != '' and biosample.enable_endpoint == True:
             response['entryTypes'][biosample.id]==response['entryTypes']['biosample']
             if biosample.id != 'biosample':
                 del response['entryTypes']['biosample']
@@ -887,7 +887,7 @@ def build_entry_types(self):
             response['entryTypes'][biosample.id]['nonFilteredQueriesAllowed']=biosample.allow_queries_without_filters
         else:
             del response['entryTypes']['biosample']
-        if cohort.endpoint_name!='' and analysis.enable_endpoint==True:
+        if cohort.endpoint_name!='' and cohort.enable_endpoint==True:
             response['entryTypes'][cohort.id]==response['entryTypes']['cohort']
             if cohort.id != 'cohort':
                 del response['entryTypes']['cohort']
@@ -905,7 +905,7 @@ def build_entry_types(self):
             response['entryTypes'][cohort.id]['nonFilteredQueriesAllowed']=cohort.allow_queries_without_filters
         else:
             del response['entryTypes']['cohort']
-        if dataset.endpoint_name!='' and analysis.enable_endpoint==True:
+        if dataset.endpoint_name!='' and dataset.enable_endpoint==True:
             response['entryTypes'][dataset.id]==response['entryTypes']['dataset']
             if dataset.id != 'dataset':
                 del response['entryTypes']['dataset']
@@ -923,7 +923,7 @@ def build_entry_types(self):
             response['entryTypes'][dataset.id]['nonFilteredQueriesAllowed']=dataset.allow_queries_without_filters
         else:
             del response['entryTypes']['dataset']
-        if genomicVariant.endpoint_name!='' and analysis.enable_endpoint==True:
+        if genomicVariant.endpoint_name!='' and genomicVariant.enable_endpoint==True:
             response['entryTypes'][genomicVariant.id]==response['entryTypes']['genomicVariant']
             if genomicVariant.id != 'genomicVariant':
                 del response['entryTypes']['genomicVariant']
@@ -941,7 +941,7 @@ def build_entry_types(self):
             response['entryTypes'][genomicVariant.id]['nonFilteredQueriesAllowed']=genomicVariant.allow_queries_without_filters
         else:
             del response['entryTypes']['genomicVariant']
-        if individual.endpoint_name!='' and analysis.enable_endpoint==True:
+        if individual.endpoint_name!='' and individual.enable_endpoint==True:
             response['entryTypes'][individual.id]==response['entryTypes']['individual']
             if individual.id != 'individual':
                 del response['entryTypes']['individual']
@@ -959,7 +959,7 @@ def build_entry_types(self):
             response['entryTypes'][individual.id]['nonFilteredQueriesAllowed']=individual.allow_queries_without_filters
         else:
             del response['entryTypes']['individual']
-        if run.endpoint_name!='' and analysis.enable_endpoint==True:
+        if run.endpoint_name!='' and run.enable_endpoint==True:
             response['entryTypes'][run.id]==response['entryTypes']['run']
             if run.id != 'run':
                 del response['entryTypes']['run']

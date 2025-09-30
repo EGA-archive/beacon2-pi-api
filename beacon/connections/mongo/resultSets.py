@@ -58,11 +58,15 @@ def get_resultSet_with_id(self, dataset: str, collection, mongo_collection, sche
 
 @log_with_args(level)
 def get_variants_of_resultSet(self, dataset: str, collection, mongo_collection, schema, idq):
-    if collection == analysis.endpoint_name or collection == run.endpoint_name:
+    if RequestAttributes.pre_entry_type == analysis.endpoint_name or RequestAttributes.pre_entry_type == run.endpoint_name:
         query = {"$and": [{"id": RequestAttributes.entry_id}]}
         query = apply_filters(self, query, RequestAttributes.qparams.query.filters, collection, {}, dataset)
-        initial_ids = collection \
-            .find_one(query, {"biosampleId": 1, "_id": 0})
+        if RequestAttributes.pre_entry_type == analysis.endpoint_name:
+            initial_ids = analyses \
+                .find_one(query, {"biosampleId": 1, "_id": 0})
+        else:
+            initial_ids = runs \
+                .find_one(query, {"biosampleId": 1, "_id": 0})   
         RequestAttributes.entry_id = initial_ids["biosampleId"]
     try:
         targets = targets_ \
@@ -207,7 +211,7 @@ def get_resultSet_of_variants(self, dataset: str, collection, mongo_collection, 
 
 @log_with_args(level)
 def get_analyses_of_resultSet(self, dataset: str, collection, mongo_collection, schema, idq):
-    if collection == run.endpoint_name:
+    if RequestAttributes.pre_entry_type == run.endpoint_name:
         query = {"id": RequestAttributes.entry_id}
     else:
         query = {"biosampleId": RequestAttributes.entry_id}
@@ -222,8 +226,8 @@ def get_analyses_of_resultSet(self, dataset: str, collection, mongo_collection, 
 
 @log_with_args(level)
 def get_biosamples_of_resultSet(self, dataset: str, collection, mongo_collection, schema, idq):
-    if RequestAttributes.entry_type == analysis.endpoint_name or RequestAttributes.entry_type == run.endpoint_name:
-        if RequestAttributes.entry_type == analysis.endpoint_name:
+    if RequestAttributes.pre_entry_type == analysis.endpoint_name or RequestAttributes.pre_entry_type == run.endpoint_name:
+        if RequestAttributes.pre_entry_type == analysis.endpoint_name:
             secondary_collection = analyses
         else:
             secondary_collection = runs
@@ -352,7 +356,7 @@ def get_variants_of_cohort(self, dataset: str, collection, mongo_collection, sch
 
 @log_with_args(level)
 def get_runs_of_resultSet(self, dataset: str, collection, mongo_collection, schema, idq):
-    if RequestAttributes.entry_type == analysis.endpoint_name:
+    if RequestAttributes.pre_entry_type == analysis.endpoint_name:
         analyses_found = analyses \
         .find({"id": RequestAttributes.entry_id, "datasetId": dataset}, {"biosampleId": 1, "_id": 0})
         list_of_analysisfound=[]
@@ -372,7 +376,7 @@ def get_runs_of_resultSet(self, dataset: str, collection, mongo_collection, sche
 
 @log_with_args(level)
 def get_individuals_of_resultSet(self, dataset: str, collection, mongo_collection, schema, idq):
-    if RequestAttributes.entry_type == analysis.endpoint_name or RequestAttributes.entry_type == run.endpoint_name:
+    if RequestAttributes.pre_entry_type == analysis.endpoint_name or RequestAttributes.pre_entry_type == run.endpoint_name:
         if RequestAttributes.entry_type == analysis.endpoint_name:
             secondary_collection = analyses
         secondary_collection = runs

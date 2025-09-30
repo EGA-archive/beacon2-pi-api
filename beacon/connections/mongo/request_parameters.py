@@ -85,6 +85,8 @@ def generate_position_filter_start_sequence_query(self, key: str, value: List[in
 
 @log_with_args(level)
 def apply_request_parameters(self, query: Dict[str, List[dict]], dataset: str):
+    LOG.warning('come ooooon')
+    LOG.warning(RequestAttributes.qparams.query.requestParameters)
     collection = 'g_variants'
     if len(RequestAttributes.qparams.query.requestParameters) > 0 and "$and" not in query:
         query["$and"] = []
@@ -229,18 +231,6 @@ def apply_request_parameters(self, query: Dict[str, List[dict]], dataset: str):
                 ), collection, dataset, True))
             except KeyError:# pragma: no cover
                 raise web.HTTPNotFound
-
-        elif k == 'filters':
-            v_list=[]
-            if ',' in v:
-                v_list =v.split(',')# pragma: no cover
-            else:
-                v_list.append(v)
-            for id in v_list:
-                v_dict={}
-                v_dict['id']=id
-                RequestAttributes.qparams.query.filters.append(v_dict)        
-            return query, True
     if length_query["$and"]!=[]:
         subqueryor["$or"].append(length_query) 
     try:
