@@ -41,7 +41,7 @@ class EndpointView(web.View, CorsViewMixin):
         try:
             await deconstruct_request(self, self.request)
             return await self.handler()
-        except Exception as e:# pragma: no cover
+        except Exception as e:
             response_obj = build_beacon_error_response(self, ErrorClass.error_code, ErrorClass.error_message)
             return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')
 
@@ -49,7 +49,7 @@ class EndpointView(web.View, CorsViewMixin):
         try:
             await deconstruct_request(self, self.request)
             return await self.handler()
-        except Exception as e:# pragma: no cover
+        except Exception as e:
             response_obj = build_beacon_error_response(self, ErrorClass.error_code, ErrorClass.error_message)
             return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')
 
@@ -59,7 +59,7 @@ class ServiceInfo(EndpointView):
         try:
             response_obj = await service_info_builder(self)
             return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
-        except Exception as e:# pragma: no cover
+        except Exception as e:
             raise
 
 class EntryTypes(EndpointView):
@@ -68,7 +68,7 @@ class EntryTypes(EndpointView):
         try:
             response_obj = await entry_types_builder(self)
             return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
-        except Exception:# pragma: no cover
+        except Exception:
             raise
 
 class Map(EndpointView):
@@ -77,7 +77,7 @@ class Map(EndpointView):
         try:
             response_obj = await map_builder(self)
             return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
-        except Exception:# pragma: no cover
+        except Exception:
             raise
 
 class Configuration(EndpointView):
@@ -86,7 +86,7 @@ class Configuration(EndpointView):
         try:
             response_obj = await configuration_builder(self)
             return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
-        except Exception:# pragma: no cover
+        except Exception:
             raise
 
 class Info(EndpointView):
@@ -95,7 +95,7 @@ class Info(EndpointView):
         try:
             response_obj = await info_builder(self)
             return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
-        except Exception:# pragma: no cover
+        except Exception:
             raise
 
 class Collection(EndpointView):
@@ -104,7 +104,7 @@ class Collection(EndpointView):
         try:
             response_obj = await collection_builder(self)
             return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
-        except Exception:# pragma: no cover
+        except Exception:
             raise
         
 class FilteringTerms(EndpointView):
@@ -113,7 +113,7 @@ class FilteringTerms(EndpointView):
         try:
             response_obj = await filtering_terms_builder(self)
             return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
-        except Exception:# pragma: no cover
+        except Exception:
             raise
 
 class Resultset(EndpointView):
@@ -125,7 +125,7 @@ class Resultset(EndpointView):
             if time_now is not None:
                 insert_budget(self, username, time_now)
             return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
-        except Exception:# pragma: no cover
+        except Exception:
             raise
 
 @web.middleware
@@ -141,12 +141,12 @@ async def error_middleware(request, handler):
             response_obj = build_beacon_error_response(EndpointView(request), 404, "Not found")
             return web.Response(text=json_util.dumps(response_obj), status=404, content_type='application/json')
 
-async def initialize(app):# pragma: no cover
+async def initialize(app):
     setattr(conf, 'update_datetime', datetime.now().isoformat())
 
     LOG.info("Initialization done.")
 
-def _on_shutdown(pid):# pragma: no cover
+def _on_shutdown(pid):
     time.sleep(6)
 
     #  Sending SIGINT to close server
@@ -154,7 +154,7 @@ def _on_shutdown(pid):# pragma: no cover
 
     LOG.info('Shutting down beacon v2')
 
-async def _graceful_shutdown_ctx(app):# pragma: no cover
+async def _graceful_shutdown_ctx(app):
     def graceful_shutdown_sigterm_handler():
         nonlocal thread
         thread = Thread(target=_on_shutdown, args=(os.getpid(),))
@@ -174,7 +174,7 @@ async def _graceful_shutdown_ctx(app):# pragma: no cover
     if thread is not None:
         thread.join()
 
-async def create_api():# pragma: no cover
+async def create_api():
     check_configuration()
     app = web.Application(
         middlewares=[
@@ -382,5 +382,5 @@ async def create_api():# pragma: no cover
     while True:
         await asyncio.sleep(3600)
 
-if __name__ == '__main__':# pragma: no cover
+if __name__ == '__main__':
     asyncio.run(create_api())

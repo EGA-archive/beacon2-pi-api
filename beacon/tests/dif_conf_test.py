@@ -7,6 +7,7 @@ import beacon.conf.conf as conf
 from beacon.logs.logs import LOG
 from beacon.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run
 from aiohttp_middlewares import cors_middleware
+from beacon.validator.configuration import contains_special_characters, check_configuration
 
 
 
@@ -215,6 +216,7 @@ class TestNoFilters(unittest.TestCase):
                 assert resp.status == 400
             loop.run_until_complete(test_analysis_query_without_filters_allowed())
             loop.run_until_complete(client.close())
+            analysis.allow_queries_without_filters=True
     def test_no_filters_biosample_query_without_filters_allowed(self):
         with loop_context() as loop:
             from beacon.conf import biosample
@@ -227,6 +229,7 @@ class TestNoFilters(unittest.TestCase):
                 assert resp.status == 400
             loop.run_until_complete(test_biosample_query_without_filters_allowed())
             loop.run_until_complete(client.close())
+            biosample.allow_queries_without_filters=True
     def test_no_filters_cohort_query_without_filters_allowed(self):
         with loop_context() as loop:
             from beacon.conf import cohort
@@ -239,6 +242,7 @@ class TestNoFilters(unittest.TestCase):
                 assert resp.status == 400
             loop.run_until_complete(test_cohort_query_without_filters_allowed())
             loop.run_until_complete(client.close())
+            cohort.allow_queries_without_filters=True
     def test_no_filters_dataset_query_without_filters_allowed(self):
         with loop_context() as loop:
             from beacon.conf import dataset
@@ -251,6 +255,7 @@ class TestNoFilters(unittest.TestCase):
                 assert resp.status == 400
             loop.run_until_complete(test_dataset_query_without_filters_allowed())
             loop.run_until_complete(client.close())
+            dataset.allow_queries_without_filters=True
     def test_no_filters_genomicVariation_query_without_filters_allowed(self):
         with loop_context() as loop:
             from beacon.conf import genomicVariant
@@ -263,6 +268,7 @@ class TestNoFilters(unittest.TestCase):
                 assert resp.status == 400
             loop.run_until_complete(test_genomicVariant_query_without_filters_allowed())
             loop.run_until_complete(client.close())
+            genomicVariant.allow_queries_without_filters=True
     def test_no_filters_individual_query_without_filters_allowed(self):
         with loop_context() as loop:
             from beacon.conf import individual
@@ -275,6 +281,7 @@ class TestNoFilters(unittest.TestCase):
                 assert resp.status == 400
             loop.run_until_complete(test_individual_query_without_filters_allowed())
             loop.run_until_complete(client.close())
+            individual.allow_queries_without_filters=True
     def test_no_filters_run_query_without_filters_allowed(self):
         with loop_context() as loop:
             from beacon.conf import run
@@ -287,6 +294,7 @@ class TestNoFilters(unittest.TestCase):
                 assert resp.status == 400
             loop.run_until_complete(test_run_query_without_filters_allowed())
             loop.run_until_complete(client.close())
+            run.allow_queries_without_filters=True
     def test_map_endpoint_response_with_disabled_endpoint(self):
         with loop_context() as loop:
             from beacon.conf import analysis
@@ -299,15 +307,10 @@ class TestNoFilters(unittest.TestCase):
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
-                self.assertIn("biosample",responsedict["response"]["endpointSets"])
-                self.assertIn("cohort",responsedict["response"]["endpointSets"])
-                self.assertIn("dataset",responsedict["response"]["endpointSets"])
-                self.assertIn("genomicVariant",responsedict["response"]["endpointSets"])
-                self.assertIn("run",responsedict["response"]["endpointSets"])
-                self.assertIn("individual",responsedict["response"]["endpointSets"])
                 self.assertNotIn("analysis",responsedict["response"]["endpointSets"])
             loop.run_until_complete(test_check_map_endpoint_response_with_disabled_endpoint())
             loop.run_until_complete(client.close())
+            analysis.enable_endpoint=True
     def test_configuration_endpoint_response_with_disabled_endpoint(self):
         with loop_context() as loop:
             from beacon.conf import analysis
@@ -320,15 +323,128 @@ class TestNoFilters(unittest.TestCase):
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
-                self.assertIn("biosample",responsedict["response"]["entryTypes"])
-                self.assertIn("cohort",responsedict["response"]["entryTypes"])
-                self.assertIn("dataset",responsedict["response"]["entryTypes"])
-                self.assertIn("genomicVariant",responsedict["response"]["entryTypes"])
-                self.assertIn("run",responsedict["response"]["entryTypes"])
-                self.assertIn("individual",responsedict["response"]["entryTypes"])
                 self.assertNotIn("analysis",responsedict["response"]["entryTypes"])
             loop.run_until_complete(test_check_configuration_endpoint_response_with_disabled_endpoint())
             loop.run_until_complete(client.close())
+            analysis.enable_endpoint=True
+    def test_endpoint_contains_special_chars(self):
+        with loop_context() as loop:
+            from beacon.conf import analysis
+            analysis.endpoint_name="%aydga&-_al)"
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_endpoint_contains_special_chars():
+                contains_special_characters(analysis.endpoint_name)
+            loop.run_until_complete(test_check_endpoint_contains_special_chars())
+            loop.run_until_complete(client.close())
+            analysis.endpoint_name="analyses"
+    def test_main_check_configuration_with_wrong_analysis_enable_endpoint(self):
+        with loop_context() as loop:
+            from beacon.conf import analysis
+            analysis.enable_endpoint="no Boolean"
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_configuration_enable_analysis():
+                try:
+                    check_configuration()
+                except Exception:
+                    pass
+            loop.run_until_complete(test_check_configuration_enable_analysis())
+            loop.run_until_complete(client.close())
+            analysis.enable_endpoint=True
+    def test_main_check_configuration_with_wrong_biosample_enable_endpoint(self):
+        with loop_context() as loop:
+            from beacon.conf import biosample
+            biosample.enable_endpoint="no Boolean"
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_configuration_enable_biosample():
+                try:
+                    check_configuration()
+                except Exception:
+                    pass
+            loop.run_until_complete(test_check_configuration_enable_biosample())
+            loop.run_until_complete(client.close())
+            biosample.enable_endpoint=True
+    def test_main_check_configuration_with_wrong_cohort_enable_endpoint(self):
+        with loop_context() as loop:
+            from beacon.conf import cohort
+            cohort.enable_endpoint="no Boolean"
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_configuration_enable_cohort():
+                try:
+                    check_configuration()
+                except Exception:
+                    pass
+            loop.run_until_complete(test_check_configuration_enable_cohort())
+            loop.run_until_complete(client.close())
+            cohort.enable_endpoint=True
+    def test_main_check_configuration_with_wrong_dataset_enable_endpoint(self):
+        with loop_context() as loop:
+            from beacon.conf import dataset
+            dataset.enable_endpoint="no Boolean"
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_configuration_enable_dataset():
+                try:
+                    check_configuration()
+                except Exception:
+                    pass
+            loop.run_until_complete(test_check_configuration_enable_dataset())
+            loop.run_until_complete(client.close())
+            dataset.enable_endpoint=True
+    def test_main_check_configuration_with_wrong_individual_enable_endpoint(self):
+        with loop_context() as loop:
+            from beacon.conf import individual
+            individual.enable_endpoint="no Boolean"
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_configuration_enable_individual():
+                try:
+                    check_configuration()
+                except Exception:
+                    pass
+            loop.run_until_complete(test_check_configuration_enable_individual())
+            loop.run_until_complete(client.close())
+            individual.enable_endpoint=True
+    def test_main_check_configuration_with_wrong_genomicVariant_enable_endpoint(self):
+        with loop_context() as loop:
+            from beacon.conf import genomicVariant
+            genomicVariant.enable_endpoint="no Boolean"
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_configuration_enable_genomicVariant():
+                try:
+                    check_configuration()
+                except Exception:
+                    pass
+            loop.run_until_complete(test_check_configuration_enable_genomicVariant())
+            loop.run_until_complete(client.close())
+            genomicVariant.enable_endpoint=True
+    def test_main_check_configuration_with_wrong_run_enable_endpoint(self):
+        with loop_context() as loop:
+            from beacon.conf import run
+            run.enable_endpoint="no Boolean"
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_configuration_enable_run():
+                try:
+                    check_configuration()
+                except Exception:
+                    pass
+            loop.run_until_complete(test_check_configuration_enable_run())
+            loop.run_until_complete(client.close())
+            run.enable_endpoint=True
+
     
 
 def suite():

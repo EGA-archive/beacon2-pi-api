@@ -16,7 +16,7 @@ def get_datasets(self):
         query = {}
         query = collection.find(query)
         return query
-    except Exception as e:# pragma: no cover
+    except Exception as e:
         ErrorClass.error_code=500
         ErrorClass.error_message=str(e)
         raise
@@ -27,7 +27,7 @@ def get_full_datasets(self):
         collection = datasets
         if RequestAttributes.entry_id == None:
             query = {}
-        else:# pragma: no cover
+        else:
             query = {'id': RequestAttributes.entry_id}
         count = get_count(self, datasets, query)
         query = collection.find(query)
@@ -36,7 +36,7 @@ def get_full_datasets(self):
             [r for r in query] if query else []
         )
         return response_converted, count, entity_schema
-    except Exception as e:# pragma: no cover
+    except Exception as e:
         ErrorClass.error_code=500
         ErrorClass.error_message=str(e)
         raise
@@ -47,7 +47,7 @@ def get_list_of_datasets(self):
         datasets = get_datasets(self)
         beacon_datasets = [ r for r in datasets ]
         return beacon_datasets
-    except Exception as e:# pragma: no cover
+    except Exception as e:
         ErrorClass.error_code=500
         ErrorClass.error_message=str(e)
         raise
@@ -57,7 +57,7 @@ def get_dataset_with_id(self):
     limit = RequestAttributes.qparams.query.pagination.limit
     query_parameters, parameters_as_filters = apply_request_parameters(self, {}, RequestAttributes.entry_id)
     if parameters_as_filters == True:
-        query, parameters_as_filters = apply_request_parameters(self, {}, RequestAttributes.entry_id)# pragma: no cover
+        query, parameters_as_filters = apply_request_parameters(self, {}, RequestAttributes.entry_id)
     else:
         query={}
     query = query_id(self, query, RequestAttributes.entry_id)

@@ -7,7 +7,7 @@ from beacon.auth.__main__ import fetch_idp, validate_access_token, authenticatio
 from dotenv import load_dotenv
 
 # for keycloak, create aud in mappers, with custom, aud and beacon for audience
-mock_access_token = 'eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJreS1tUXNxZ0ZYeHdSUVRfRUhuQlJJUGpmbVhfRXZuUTVEbzZWUTJCazdZIn0.eyJleHAiOjE3NTkyMjczNDEsImlhdCI6MTc1OTIyNzA0MSwianRpIjoiNDNjNTBhYWUtYjljMy00M2ZmLWJmNmQtMGZiZGFjY2U5NWEzIiwiaXNzIjoiaHR0cHM6Ly9iZWFjb24tbmV0d29yay1kZW1vMi5lZ2EtYXJjaGl2ZS5vcmcvYXV0aC9yZWFsbXMvQmVhY29uIiwiYXVkIjoiYmVhY29uIiwic3ViIjoiNDdlZmYxYjEtNzYyMS00NTcwLWEwYmItMDFhNzE5ZmJhMGEyIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiYmVhY29uIiwic2Vzc2lvbl9zdGF0ZSI6Ijc0NTEyMGFmLWRkY2UtNGMyMC04MzRjLTE1MDA3M2U1M2ZiZiIsImFjciI6IjEiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIG1pY3JvcHJvZmlsZS1qd3QiLCJ1cG4iOiJqYW5lIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJuYW1lIjoiSmFuZSBTbWl0aCIsImdyb3VwcyI6WyJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIiwib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiJdLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJqYW5lIiwiZ2l2ZW5fbmFtZSI6IkphbmUiLCJmYW1pbHlfbmFtZSI6IlNtaXRoIiwiZW1haWwiOiJqYW5lLnNtaXRoQGJlYWNvbi5nYTRnaCJ9.fyYcD4I5sVakNW4QKxIvilnVMtVHC9tU6xTBKTW6DnkkJtHsmuVUrG-PgYcOy5u-BZzZpyDlFdgjKzbIPrp0zcHG_H1Uf9QnhXID8P_UEN1BqCD6enebqBRUtlVWA7DOg5mKVmOsSUpnRBMK--8W-YrhBjihmaFaUAmz6aM4i_xETeH9GuvVVxLbcSbQa10ipn_Dn1Sm_qadOnJLOWSRcwo_05BG0j_ollbsICLCdFNy14j_gf6TUJcHfg4IHdixxvFQV7mJ1OyV6JPxFzH6BmX0sIrI_5r0kDCKBjMLtCSQK8xAIRh380lVqUvK-s6zCPMGx8uY-yhuGqtr_Hl-4g'
+mock_access_token = 'eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJreS1tUXNxZ0ZYeHdSUVRfRUhuQlJJUGpmbVhfRXZuUTVEbzZWUTJCazdZIn0.eyJleHAiOjE3NTkyMzI4MDYsImlhdCI6MTc1OTIzMjUwNiwianRpIjoiODc4YTVlYjQtNjdlNS00ODk1LWFiNzktODgxYjM3M2FiODVmIiwiaXNzIjoiaHR0cHM6Ly9iZWFjb24tbmV0d29yay1kZW1vMi5lZ2EtYXJjaGl2ZS5vcmcvYXV0aC9yZWFsbXMvQmVhY29uIiwiYXVkIjoiYmVhY29uIiwic3ViIjoiNDdlZmYxYjEtNzYyMS00NTcwLWEwYmItMDFhNzE5ZmJhMGEyIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiYmVhY29uIiwic2Vzc2lvbl9zdGF0ZSI6IjI2Yzg1YzU3LTdkMGQtNDI5Zi1hYWYwLThiOTIyMTJkMzNkOCIsImFjciI6IjEiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIG1pY3JvcHJvZmlsZS1qd3QiLCJ1cG4iOiJqYW5lIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJuYW1lIjoiSmFuZSBTbWl0aCIsImdyb3VwcyI6WyJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIiwib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiJdLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJqYW5lIiwiZ2l2ZW5fbmFtZSI6IkphbmUiLCJmYW1pbHlfbmFtZSI6IlNtaXRoIiwiZW1haWwiOiJqYW5lLnNtaXRoQGJlYWNvbi5nYTRnaCJ9.MBMLULyrRu9_r_y_v6PfdfdHWv3fw4WCg-hLy7alu6k1agVtf8YVqm_xboFvYeLHFw4XxihmwSPWd_uVlXiUFLZoPlu6QttniXs_vFzIV38hRdEniHMAr7fPDKoeROXf4Rwj32wQqQWnakNrXGgedWtWRdKq3-upx1lh0bZ00srR0c0BLZSrP2Rvv1Ycb1P6CaY13L56BwK44x6ZY7NDNmXadFcPk2MgBm-Unvbpopb1GZXskPwf5cAO6EF4cE7XK_PvdnMHebCvY76fLtwy1b3uUbTuONozDipz_7umnh83F_6hisV-J6-OPugOAMRX_A6vNHDJiaYzrQXouU7D2A'
 mock_access_token_false = 'public'
 #dummy test anonymous
 #dummy test login
@@ -64,7 +64,7 @@ class TestAuthN(unittest.TestCase):
                     decoded = jwt.decode(mock_access_token, options={"verify_signature": False})
                     issuer = decoded['iss']
                     aud = decoded['aud']
-                except Exception:# pragma: no cover
+                except Exception:
                     raise web.HTTPUnauthorized()
                 access_token_validation = validate_access_token(self, mock_access_token, IDP_ISSUER, IDP_JWKS_URL, algorithm, aud)
                 assert access_token_validation == True
@@ -129,17 +129,17 @@ class TestAuthN(unittest.TestCase):
                             visa["ga4gh_visa_v1"]["value"]='visa/dataset'
                             if visa['iss']==IDP_ISSUER:
                                 pass
-                            else:# pragma: no cover
+                            else:
                                 raise web.HTTPUnauthorized('invalid visa token')
                             dataset_url = visa["ga4gh_visa_v1"]["value"]
                             dataset_url_splitted = dataset_url.split('/')
                             visa_dataset = dataset_url_splitted[-1]
                             list_visa_datasets.append(visa_dataset)
-                        except Exception:# pragma: no cover
+                        except Exception:
                             visa_dataset = None
                 assert list_visa_datasets == ['dataset']
             loop.run_until_complete(test_check_visa_passports())
             loop.run_until_complete(client.close())
 
 if __name__ == '__main__':
-    unittest.main()# pragma: no cover
+    unittest.main()

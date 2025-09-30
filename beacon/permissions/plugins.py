@@ -11,17 +11,17 @@ class DatasetPermission:
 class Permissions():
     """Base class, just to agree on the interface."""
     def __init__(self, *args, **kwargs):
-        pass# pragma: no cover
+        pass
 
     async def initialize(self):
-        raise NotImplementedError('Overload this function in a subclass')# pragma: no cover
+        raise NotImplementedError('Overload this function in a subclass')
 
     async def get(self, username, requested_datasets=None):
         """Return an iterable for the granted datasets for the given username and within a requested list of datasets."""
-        raise NotImplementedError('Overload this function in a subclass')# pragma: no cover
+        raise NotImplementedError('Overload this function in a subclass')
 
     async def close(self):
-        raise NotImplementedError('Overload this function in a subclass')# pragma: no cover
+        raise NotImplementedError('Overload this function in a subclass')
 
 
 
@@ -33,7 +33,7 @@ class DummyPermissions(Permissions):
     """
 
     async def initialize(self):
-        pass# pragma: no cover
+        pass
     
     async def get_permissions(self, username, requested_datasets=None, testMode=False):
         datasets = []
@@ -95,4 +95,4 @@ class DummyPermissions(Permissions):
             raise
 
     async def close(self):
-        pass# pragma: no cover
+        pass

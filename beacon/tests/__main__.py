@@ -7,12 +7,14 @@ import beacon.conf.conf as conf
 from beacon.request.classes import ErrorClass
 from beacon.permissions.tests import TestAuthZ
 from beacon.auth.tests import TestAuthN
+from beacon.tests.dif_conf_test import TestNoFilters
 #from beacon.request.tests import TestRequest
 from beacon.logs.logs import LOG
 from beacon.connections.mongo.filters import cross_query
 from unittest.mock import MagicMock
 from beacon.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run
 from aiohttp_middlewares import cors_middleware
+from beacon.validator.configuration import check_configuration
 
 
 
@@ -1165,7 +1167,7 @@ class TestMain(unittest.TestCase):
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?star=12448")
                 assert resp.status == 400
             loop.run_until_complete(test_check_request_parameters_fail())
-            loop.run_until_complete(client.close())# pragma: no cover
+            loop.run_until_complete(client.close())
     def test_main_check_wrong_combination_request_parameters(self):
         with loop_context() as loop:
             app = create_app()
@@ -1175,7 +1177,7 @@ class TestMain(unittest.TestCase):
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=12448")
                 assert resp.status == 400
             loop.run_until_complete(test_wrong_combination_request_parameters())
-            loop.run_until_complete(client.close())# pragma: no cover
+            loop.run_until_complete(client.close())
     def test_main_check_datasets_g_variants_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
@@ -1597,16 +1599,6 @@ class TestMain(unittest.TestCase):
 
                 assert resp.status == 200
             loop.run_until_complete(test_check_datasets_list_query_is_working())
-            loop.run_until_complete(client.close())
-    def test_main_check_range_query_with_variant_assemblyId_GRCh37_is_working(self):
-        with loop_context() as loop:
-            app = create_app()
-            client = TestClient(TestServer(app), loop=loop)
-            loop.run_until_complete(client.start_server())
-            async def test_check_range_query_with_variant_assemblyId_GRCh37_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=343675&referenceName=2&assemblyId=GRCh37&end=345681&testMode=True")
-                assert resp.status == 200
-            loop.run_until_complete(test_check_range_query_with_variant_assemblyId_GRCh37_working())
             loop.run_until_complete(client.close())
     def test_main_check_range_query_with_variant_assemblyId_GRCh37_is_working(self):
         with loop_context() as loop:
@@ -2317,7 +2309,7 @@ class TestMain(unittest.TestCase):
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=43045703&referenceName=17&referenceBases=G&alternateBases=A&testMode=True")
                 assert resp.status == 400
             loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
-            loop.run_until_complete(client.close())# pragma: no cover
+            loop.run_until_complete(client.close())
     def test_main_check_g_variants_range_query_fails(self):
         with loop_context() as loop:
             app = create_app()
@@ -2327,7 +2319,7 @@ class TestMain(unittest.TestCase):
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=345675&referenceName=2&end=345681&testMode=True")
                 assert resp.status == 400
             loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
-            loop.run_until_complete(client.close())# pragma: no cover
+            loop.run_until_complete(client.close())
     def test_main_check_g_variants_bracket_query_fails(self):
         with loop_context() as loop:
             app = create_app()
@@ -2337,7 +2329,7 @@ class TestMain(unittest.TestCase):
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=43045703,43045704&end=43045704,43045705&referenceName=17&testMode=True")
                 assert resp.status == 400
             loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
-            loop.run_until_complete(client.close())# pragma: no cover
+            loop.run_until_complete(client.close())
     def test_main_check_test_mode_fails(self):
         with loop_context() as loop:
             app = create_app()
@@ -2347,7 +2339,7 @@ class TestMain(unittest.TestCase):
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=43045703,43045704&end=43045704,43045705&referenceName=17&assemblyId=GRCh37&testMode=3")
                 assert resp.status == 400
             loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
-            loop.run_until_complete(client.close())# pragma: no cover
+            loop.run_until_complete(client.close())
     def test_descendant_terms(self):
         with loop_context() as loop:
             app = create_app()
@@ -2373,7 +2365,7 @@ class TestMain(unittest.TestCase):
             )
                 assert resp.status == 200
             loop.run_until_complete(test_check_runs_variants())
-            loop.run_until_complete(client.close())# pragma: no cover
+            loop.run_until_complete(client.close())
     def test_main_check_g_variants_range_query_chrX(self):
         with loop_context() as loop:
             app = create_app()
@@ -2383,7 +2375,7 @@ class TestMain(unittest.TestCase):
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=31120923&referenceName=X&assemblyId=GRCh37&end=31121924&testMode=true")
                 assert resp.status == 200
             loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
-            loop.run_until_complete(client.close())# pragma: no cover
+            loop.run_until_complete(client.close())
     def test_main_check_g_variants_range_query_chrY(self):
         with loop_context() as loop:
             app = create_app()
@@ -2393,7 +2385,7 @@ class TestMain(unittest.TestCase):
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=31120923&referenceName=Y&assemblyId=GRCh37&end=31121924&testMode=true")
                 assert resp.status == 200
             loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
-            loop.run_until_complete(client.close())# pragma: no cover
+            loop.run_until_complete(client.close())
     def test_main_check_limit_query_is_working(self):
         with loop_context() as loop:
             app = create_app()
@@ -2823,6 +2815,15 @@ class TestMain(unittest.TestCase):
                 resp = await client.get(conf.uri_subpath+"/"+individual.endpoint_name+"?filters=NCIT:C16576,NCIT:C16731")
                 assert resp.status == 200
             loop.run_until_complete(test_check_get_double_filters())
+            loop.run_until_complete(client.close())
+    def test_main_check_configuration_validation(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_configuration():
+                check_configuration()
+            loop.run_until_complete(test_check_configuration())
             loop.run_until_complete(client.close())
     
 

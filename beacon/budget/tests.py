@@ -17,7 +17,7 @@ def create_test_app():
     #app.on_startup.append(initialize)
     return app
 
-def _on_shutdown(pid):# pragma: no cover
+def _on_shutdown(pid):
     time.sleep(6)
 
     #  Sending SIGINT to close server
@@ -25,7 +25,7 @@ def _on_shutdown(pid):# pragma: no cover
 
     LOG.info('Shutting down beacon v2')
 
-async def _graceful_shutdown_ctx(app):# pragma: no cover
+async def _graceful_shutdown_ctx(app):
     def graceful_shutdown_sigterm_handler():
         nonlocal thread
         thread = Thread(target=_on_shutdown, args=(os.getpid(),))

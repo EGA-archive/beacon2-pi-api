@@ -25,7 +25,7 @@ def parse_query_string(self, request):
             LOG.warning(v)
             v_list=[]
             if ',' in v:
-                v_list =v.split(',')# pragma: no cover
+                v_list =v.split(',')
             else:
                 v_list.append(v)
             query_string_body["query"]["filters"]=[]
@@ -56,7 +56,7 @@ def parse_query_string(self, request):
         elif k == 'datasets':
             query_string_body["query"]["requestParameters"][k]=[v]
         elif k in ["start", "end"]:
-            if ',' in v:# pragma: no cover
+            if ',' in v:
                 v_splitted = v.split(',')
                 query_string_body["query"]["requestParameters"][k]=[int(v) for v in v_splitted]
             else:
@@ -118,7 +118,7 @@ async def get_qparams(self, request): # anomenar query string en comptes de qpa
                         raise web.HTTPBadRequest
         qparams = RequestParams(**final_body).from_request(final_body)
         RequestAttributes.qparams = qparams
-    except Exception as e:# pragma: no cover
+    except Exception as e:
         ErrorClass.error_code=400
         if ErrorClass.error_message is None:
             ErrorClass.error_message='set of meta/query parameters: {} not allowed'.format(post_data)

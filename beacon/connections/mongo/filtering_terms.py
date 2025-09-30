@@ -21,7 +21,7 @@ def get_filtering_terms(self):
             RequestAttributes.qparams.query.pagination.limit
         )
         return schema, count, docs
-    except Exception as e:# pragma: no cover
+    except Exception as e:
         ErrorClass.error_code=500
         ErrorClass.error_message=str(e)
         raise

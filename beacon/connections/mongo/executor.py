@@ -87,21 +87,21 @@ async def execute_function(self, datasets: list):
                     datasets_docs[dataset]=records
                     datasets_count[dataset]=dataset_count
                 else:
-                    datasets = [x for x in datasets if x.dataset != dataset] # pragma: no cover
+                    datasets = [x for x in datasets if x.dataset != dataset] 
             elif include == 'MISS':
-                if dataset_count == 0:# pragma: no cover
+                if dataset_count == 0:
                     new_count+=dataset_count
                     datasets_docs[dataset]=records
                     datasets_count[dataset]=dataset_count
                 else:
-                    datasets = [x for x in datasets if x.dataset != dataset] # pragma: no cover
+                    datasets = [x for x in datasets if x.dataset != dataset] 
             else:
                 if dataset_count != -1 and dataset_count != 0:
                     new_count+=dataset_count
                     datasets_docs[dataset]=records
                     datasets_count[dataset]=dataset_count
                 else:
-                    datasets = [x for x in datasets if x.dataset != dataset] # pragma: no cover
+                    datasets = [x for x in datasets if x.dataset != dataset] 
         count=new_count
     try:
         return datasets_docs, datasets_count, count, entity_schema, include, datasets
