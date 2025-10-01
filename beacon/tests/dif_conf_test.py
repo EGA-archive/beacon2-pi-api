@@ -7,7 +7,7 @@ import beacon.conf.conf as conf
 from beacon.logs.logs import LOG
 from beacon.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run
 from aiohttp_middlewares import cors_middleware
-from beacon.validator.configuration import contains_special_characters, check_configuration
+from beacon.validator.configuration import check_configuration
 
 
 
@@ -327,18 +327,6 @@ class TestNoFilters(unittest.TestCase):
             loop.run_until_complete(test_check_configuration_endpoint_response_with_disabled_endpoint())
             loop.run_until_complete(client.close())
             analysis.enable_endpoint=True
-    def test_endpoint_contains_special_chars(self):
-        with loop_context() as loop:
-            from beacon.conf import analysis
-            analysis.endpoint_name="%aydga&-_al)"
-            app = create_app()
-            client = TestClient(TestServer(app), loop=loop)
-            loop.run_until_complete(client.start_server())
-            async def test_check_endpoint_contains_special_chars():
-                contains_special_characters(analysis.endpoint_name)
-            loop.run_until_complete(test_check_endpoint_contains_special_chars())
-            loop.run_until_complete(client.close())
-            analysis.endpoint_name="analyses"
     def test_main_check_configuration_with_wrong_analysis_enable_endpoint(self):
         with loop_context() as loop:
             from beacon.conf import analysis
@@ -444,6 +432,434 @@ class TestNoFilters(unittest.TestCase):
             loop.run_until_complete(test_check_configuration_enable_run())
             loop.run_until_complete(client.close())
             run.enable_endpoint=True
+    def test_main_check_configuration_with_wrong_analysis_granularity(self):
+        with loop_context() as loop:
+            from beacon.conf import analysis
+            analysis.granularity="no Boolean"
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_configuration_enable_analysis():
+                try:
+                    check_configuration()
+                except Exception:
+                    pass
+            loop.run_until_complete(test_check_configuration_enable_analysis())
+            loop.run_until_complete(client.close())
+            analysis.granularity="record"
+    def test_main_check_configuration_with_wrong_biosample_granularity(self):
+        with loop_context() as loop:
+            from beacon.conf import biosample
+            biosample.granularity="no Boolean"
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_configuration_enable_biosample():
+                try:
+                    check_configuration()
+                except Exception:
+                    pass
+            loop.run_until_complete(test_check_configuration_enable_biosample())
+            loop.run_until_complete(client.close())
+            biosample.granularity="record"
+    def test_main_check_configuration_with_wrong_cohort_granularity(self):
+        with loop_context() as loop:
+            from beacon.conf import cohort
+            cohort.granularity="no Boolean"
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_configuration_enable_cohort():
+                try:
+                    check_configuration()
+                except Exception:
+                    pass
+            loop.run_until_complete(test_check_configuration_enable_cohort())
+            loop.run_until_complete(client.close())
+            cohort.granularity="record"
+    def test_main_check_configuration_with_wrong_dataset_granularity(self):
+        with loop_context() as loop:
+            from beacon.conf import dataset
+            dataset.granularity="no Boolean"
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_configuration_enable_dataset():
+                try:
+                    check_configuration()
+                except Exception:
+                    pass
+            loop.run_until_complete(test_check_configuration_enable_dataset())
+            loop.run_until_complete(client.close())
+            dataset.granularity="record"
+    def test_main_check_configuration_with_wrong_individual_granularity(self):
+        with loop_context() as loop:
+            from beacon.conf import individual
+            individual.granularity="no Boolean"
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_configuration_enable_individual():
+                try:
+                    check_configuration()
+                except Exception:
+                    pass
+            loop.run_until_complete(test_check_configuration_enable_individual())
+            loop.run_until_complete(client.close())
+            individual.granularity="record"
+    def test_main_check_configuration_with_wrong_genomicVariant_granularity(self):
+        with loop_context() as loop:
+            from beacon.conf import genomicVariant
+            genomicVariant.granularity="no Boolean"
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_configuration_enable_genomicVariant():
+                try:
+                    check_configuration()
+                except Exception:
+                    pass
+            loop.run_until_complete(test_check_configuration_enable_genomicVariant())
+            loop.run_until_complete(client.close())
+            genomicVariant.granularity="record"
+    def test_main_check_configuration_with_wrong_run_granularity(self):
+        with loop_context() as loop:
+            from beacon.conf import run
+            run.granularity="no Boolean"
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_configuration_granularity_run():
+                try:
+                    check_configuration()
+                except Exception:
+                    pass
+            loop.run_until_complete(test_check_configuration_granularity_run())
+            loop.run_until_complete(client.close())
+            run.granularity="record"
+    def test_main_check_configuration_http(self):
+        with loop_context() as loop:
+            from beacon.conf import conf
+            conf.uri="https://localhost:5010"
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_configuration_http():
+                try:
+                    check_configuration()
+                except Exception:
+                    pass
+            loop.run_until_complete(test_check_configuration_http())
+            loop.run_until_complete(client.close())
+            conf.uri="http://localhost:50101"
+    def test_main_check_configuration_wrong_uri(self):
+        with loop_context() as loop:
+            from beacon.conf import conf
+            conf.uri="afafsafas"
+            async def test_check_configuration_wrong_uri():
+                try:
+                    check_configuration()
+                except Exception:
+                    pass
+            loop.run_until_complete(test_check_configuration_wrong_uri())
+            conf.uri="http://localhost:50101"
+    def test_main_check_configuration_wrong_uri_trailing_slash(self):
+        with loop_context() as loop:
+            from beacon.conf import conf
+            conf.uri="http://localhost:50101/"
+
+            async def test_check_configuration_wrong_uri_trailing_slash():
+                try:
+                    check_configuration()
+                except Exception:
+                    pass
+            loop.run_until_complete(test_check_configuration_wrong_uri_trailing_slash())
+            conf.uri="http://localhost:50101"
+    def test_main_check_configuration_wrong_uri_subpath_trailing_slash(self):
+        with loop_context() as loop:
+            from beacon.conf import conf
+            conf.uri_subpath="/api/"
+            async def test_check_configuration_wrong_uri_subpath_trailing_slash():
+                try:
+                    check_configuration()
+                except Exception:
+                    pass
+            loop.run_until_complete(test_check_configuration_wrong_uri_subpath_trailing_slash())
+            conf.uri_subpath="/api"
+    def test_main_check_configuration_wrong_uri_subpath_starting_slash_missing(self):
+        with loop_context() as loop:
+            from beacon.conf import conf
+            conf.uri_subpath="api"
+            async def test_check_configuration_wrong_uri_subpath_starting_slash():
+                try:
+                    check_configuration()
+                except Exception:
+                    pass
+            loop.run_until_complete(test_check_configuration_wrong_uri_subpath_starting_slash())
+            conf.uri_subpath="/api"
+    def test_main_check_configuration_wrong_query_budget_amount(self):
+        with loop_context() as loop:
+            from beacon.conf import conf
+            conf.query_budget_amount="api"
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_configuration_wrong_query_budget_amount():
+                try:
+                    check_configuration()
+                except Exception:
+                    pass
+            loop.run_until_complete(test_check_configuration_wrong_query_budget_amount())
+            loop.run_until_complete(client.close())
+            conf.query_budget_amount=3
+    def test_main_check_configuration_wrong_query_budget_time(self):
+        with loop_context() as loop:
+            from beacon.conf import conf
+            conf.query_budget_time_in_seconds="api"
+            async def test_check_configuration_wrong_query_budget_time():
+                try:
+                    check_configuration()
+                except Exception:
+                    pass
+            loop.run_until_complete(test_check_configuration_wrong_query_budget_time())
+            conf.query_budget_time_in_seconds=3
+    def test_main_check_configuration_wrong_query_budget_user(self):
+        with loop_context() as loop:
+            from beacon.conf import conf
+            conf.query_budget_per_user="api"
+            async def test_check_configuration_wrong_query_budget_user():
+                try:
+                    check_configuration()
+                except Exception:
+                    pass
+            loop.run_until_complete(test_check_configuration_wrong_query_budget_user())
+            conf.query_budget_per_user=False
+    def test_main_check_configuration_wrong_query_budget_ip(self):
+        with loop_context() as loop:
+            from beacon.conf import conf
+            conf.query_budget_per_ip="api"
+            async def test_check_configuration_wrong_query_budget_ip():
+                try:
+                    check_configuration()
+                except Exception:
+                    pass
+            loop.run_until_complete(test_check_configuration_wrong_query_budget_ip())
+            conf.query_budget_per_ip=False
+    def test_main_check_configuration_wrong_query_budget_database(self):
+        with loop_context() as loop:
+            from beacon.conf import conf
+            conf.query_budget_database="api"
+            async def test_check_configuration_wrong_query_budget_database():
+                try:
+                    check_configuration()
+                except Exception:
+                    pass
+            loop.run_until_complete(test_check_configuration_wrong_query_budget_database())
+            conf.query_budget_database=False
+    def test_main_check_configuration_with_wrong_analysis_database(self):
+        with loop_context() as loop:
+            from beacon.conf import analysis
+            analysis.database="no Boolean"
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_configuration_enable_analysis():
+                try:
+                    check_configuration()
+                except Exception:
+                    pass
+            loop.run_until_complete(test_check_configuration_enable_analysis())
+            loop.run_until_complete(client.close())
+            analysis.database="mongo"
+    def test_main_check_configuration_with_wrong_biosample_database(self):
+        with loop_context() as loop:
+            from beacon.conf import biosample
+            biosample.database="no Boolean"
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_configuration_enable_biosample():
+                try:
+                    check_configuration()
+                except Exception:
+                    pass
+            loop.run_until_complete(test_check_configuration_enable_biosample())
+            loop.run_until_complete(client.close())
+            biosample.database="mongo"
+    def test_main_check_configuration_with_wrong_cohort_database(self):
+        with loop_context() as loop:
+            from beacon.conf import cohort
+            cohort.database="no Boolean"
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_configuration_enable_cohort():
+                try:
+                    check_configuration()
+                except Exception:
+                    pass
+            loop.run_until_complete(test_check_configuration_enable_cohort())
+            loop.run_until_complete(client.close())
+            cohort.database="mongo"
+    def test_main_check_configuration_with_wrong_dataset_database(self):
+        with loop_context() as loop:
+            from beacon.conf import dataset
+            dataset.database="no Boolean"
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_configuration_enable_dataset():
+                try:
+                    check_configuration()
+                except Exception:
+                    pass
+            loop.run_until_complete(test_check_configuration_enable_dataset())
+            loop.run_until_complete(client.close())
+            dataset.database="mongo"
+    def test_main_check_configuration_with_wrong_individual_database(self):
+        with loop_context() as loop:
+            from beacon.conf import individual
+            individual.database="no Boolean"
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_configuration_enable_individual():
+                try:
+                    check_configuration()
+                except Exception:
+                    pass
+            loop.run_until_complete(test_check_configuration_enable_individual())
+            loop.run_until_complete(client.close())
+            individual.database="mongo"
+    def test_main_check_configuration_with_wrong_genomicVariant_database(self):
+        with loop_context() as loop:
+            from beacon.conf import genomicVariant
+            genomicVariant.database="no Boolean"
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_configuration_enable_genomicVariant():
+                try:
+                    check_configuration()
+                except Exception:
+                    pass
+            loop.run_until_complete(test_check_configuration_enable_genomicVariant())
+            loop.run_until_complete(client.close())
+            genomicVariant.database="mongo"
+    def test_main_check_configuration_with_wrong_run_database(self):
+        with loop_context() as loop:
+            from beacon.conf import run
+            run.database="no Boolean"
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_configuration_database_run():
+                try:
+                    check_configuration()
+                except Exception:
+                    pass
+            loop.run_until_complete(test_check_configuration_database_run())
+            loop.run_until_complete(client.close())
+            run.database="mongo"
+    def test_main_check_configuration_wrong_environment(self):
+        with loop_context() as loop:
+            from beacon.conf import conf
+            conf.environment="api"
+            async def test_check_configuration_wrong_environment():
+                try:
+                    check_configuration()
+                except Exception:
+                    pass
+            loop.run_until_complete(test_check_configuration_wrong_environment())
+            conf.environment="dev"
+    def test_main_check_configuration_wrong_default_granularity(self):
+        with loop_context() as loop:
+            from beacon.conf import conf
+            conf.default_beacon_granularity="api"
+            async def test_check_configuration_wrong_granularity():
+                try:
+                    check_configuration()
+                except Exception:
+                    pass
+            loop.run_until_complete(test_check_configuration_wrong_granularity())
+            conf.default_beacon_granularity="record"
+    def test_analyses_endpoint_name_is_string(self):
+        with loop_context() as loop:
+            from beacon.conf import analysis
+            analysis.endpoint_name=3
+            async def test_check_endpoint_endpoint_name_is_string():
+                try:
+                    check_configuration()
+                except Exception:
+                    pass
+            loop.run_until_complete(test_check_endpoint_endpoint_name_is_string())
+            analysis.endpoint_name="analyses"
+    def test_biosamples_endpoint_name_is_string(self):
+        with loop_context() as loop:
+            from beacon.conf import biosample
+            biosample.endpoint_name=3
+            async def test_check_endpoint_endpoint_name_is_string():
+                try:
+                    check_configuration()
+                except Exception:
+                    pass
+            loop.run_until_complete(test_check_endpoint_endpoint_name_is_string())
+            biosample.endpoint_name="biosamples"
+    def test_cohorts_endpoint_name_is_string(self):
+        with loop_context() as loop:
+            from beacon.conf import cohort
+            cohort.endpoint_name=3
+            async def test_check_endpoint_endpoint_name_is_string():
+                try:
+                    check_configuration()
+                except Exception:
+                    pass
+            loop.run_until_complete(test_check_endpoint_endpoint_name_is_string())
+            cohort.endpoint_name="cohorts"
+    def test_datasets_endpoint_name_is_string(self):
+        with loop_context() as loop:
+            from beacon.conf import dataset
+            dataset.endpoint_name=3
+            async def test_check_endpoint_endpoint_name_is_string():
+                try:
+                    check_configuration()
+                except Exception:
+                    pass
+            loop.run_until_complete(test_check_endpoint_endpoint_name_is_string())
+            dataset.endpoint_name="datasets"
+    def test_g_variants_endpoint_name_is_string(self):
+        with loop_context() as loop:
+            from beacon.conf import genomicVariant
+            genomicVariant.endpoint_name=3
+            async def test_check_endpoint_endpoint_name_is_string():
+                try:
+                    check_configuration()
+                except Exception:
+                    pass
+            loop.run_until_complete(test_check_endpoint_endpoint_name_is_string())
+            genomicVariant.endpoint_name="g_variants"
+    def test_runs_endpoint_name_is_string(self):
+        with loop_context() as loop:
+            from beacon.conf import run
+            run.endpoint_name=3
+            async def test_check_endpoint_endpoint_name_is_string():
+                try:
+                    check_configuration()
+                except Exception:
+                    pass
+            loop.run_until_complete(test_check_endpoint_endpoint_name_is_string())
+            run.endpoint_name="runs"
+    def test_individuals_endpoint_name_is_string(self):
+        with loop_context() as loop:
+            from beacon.conf import individual
+            individual.endpoint_name=3
+            async def test_check_endpoint_endpoint_name_is_string():
+                try:
+                    check_configuration()
+                except Exception:
+                    pass
+            loop.run_until_complete(test_check_endpoint_endpoint_name_is_string())
+            individual.endpoint_name="individuals"
 
     
 

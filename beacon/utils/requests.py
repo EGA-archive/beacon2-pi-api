@@ -329,8 +329,7 @@ async def deconstruct_request(self, request):
     Here we grab the attributes that come from a request: ip, headers, entry_type related attributes and request parameters in four different steps, the order of which is
     declared first is not relevant.
     '''
-    # headers, path, query string, body
-    # analitzar entry type en una sola funció
+    # TODO: add attribute to requestClass for schemaToReturn
     try:
         set_ip(self, request)
         set_headers(self, request)

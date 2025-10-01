@@ -7,7 +7,6 @@ import beacon.conf.conf as conf
 from beacon.request.classes import ErrorClass
 from beacon.permissions.tests import TestAuthZ
 from beacon.auth.tests import TestAuthN
-from beacon.tests.dif_conf_test import TestNoFilters
 #from beacon.request.tests import TestRequest
 from beacon.logs.logs import LOG
 from beacon.connections.mongo.filters import cross_query

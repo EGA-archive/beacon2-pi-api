@@ -43,6 +43,7 @@ async def collection_builder(self):
 @log_with_args(level)
 async def info_builder(self):
     try:
+        # TODO: if requested service-info, call service-info builder. If schema is supported, 
         response = build_beacon_info_response(
                     self
                 )

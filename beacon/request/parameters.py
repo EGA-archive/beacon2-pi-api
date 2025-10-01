@@ -74,7 +74,7 @@ class Pagination(CamelModel):
 
 class RequestMeta(CamelModel):
     requestedSchemas: Optional[List[SchemasPerEntity]] = []
-    apiVersion: str = 'v2.0.0'
+    apiVersion: str = 'Not provided' # TODO: add supported schemas parsing, by default,
 
 class SequenceQuery(BaseModel):
     referenceName: Union[str,int]

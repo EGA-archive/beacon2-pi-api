@@ -66,8 +66,6 @@ def check_configuration():
         pass
     else:
         raise Exception("The uri of your beacon must start with https protocol.")
-    if conf.uri_subpath.startswith('/') and conf.uri.endswith('/'):
-        raise Exception("The uri_subpath can not start with slash / if the conf.uri ends with slash /")
     if conf.uri.endswith('/'):
         raise Exception("The uri can't end with trailing slash /")
     if conf.uri_subpath.endswith('/'):
