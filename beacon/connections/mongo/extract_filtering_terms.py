@@ -127,8 +127,8 @@ def get_ontology_field_name(ontology_id:str, term_id:str, collection:str):
                                     if v2 == ontology_id + ':' + term_id:
                                         field = k + '.' + k2
                                         for key, value in item.items():
-                                            if k == 'label':
-                                                label = v
+                                            if key == 'label':
+                                                label = value.lower()
                                                 break
                                         break
                                 elif isinstance(v2, dict):
