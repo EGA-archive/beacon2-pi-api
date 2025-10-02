@@ -259,8 +259,7 @@ def get_filtering_object(terms_ids: list, collection_name: str):
             value_id=None
             if 'measurements.assayCode' in field:
                 value_id = label
-            else:
-                ontology_label = label
+            ontology_label = label
             if field is not None:
                 if onto not in list_of_ontologies:
                     list_of_ontologies.append(onto)
