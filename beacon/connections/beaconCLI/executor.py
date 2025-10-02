@@ -42,6 +42,6 @@ async def execute_function(self, entry_type: str, datasets: list, entry_id: Opti
         if limit == 0 or new_count < limit:
             pass
         else:
-            count = limit# pragma: no cover
+            count = limit
         datasets_count["NONE"]=count
     return datasets_docs, datasets_count, count, entity_schema, include

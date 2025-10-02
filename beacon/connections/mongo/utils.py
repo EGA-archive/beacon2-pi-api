@@ -7,12 +7,12 @@ from beacon.conf.filtering_terms import alphanumeric_terms
 from beacon.request.classes import ErrorClass
 
 @log_with_args_mongo(level)
-def get_cross_query(self, ids: dict, cross_type: str, collection_id: str):# pragma: no cover
+def get_cross_query(self, ids: dict, cross_type: str, collection_id: str):
     try:
         id_list=[]
         dict_in={}
         id_dict={}
-        if cross_type == 'biosampleId' or cross_type=='id':# pragma: no cover
+        if cross_type == 'biosampleId' or cross_type=='id':
             list_item=ids
             id_list.append(str(list_item))
             dict_in["$in"]=id_list
@@ -23,7 +23,7 @@ def get_cross_query(self, ids: dict, cross_type: str, collection_id: str):# prag
             dict_in["$in"]=list_individualIds
             id_dict[collection_id]=dict_in
             query = id_dict
-        else:# pragma: no cover
+        else:
             for k, v in ids.items():
                 for item in v:
                     id_list.append(item[cross_type])
@@ -75,20 +75,20 @@ def get_count(self, collection: Collection, query: dict) -> int:
         try:
             counts=list(counts)
             if counts == []:
-                total_counts=collection.count_documents(query)# pragma: no cover
-                insert_dict={}# pragma: no cover
-                insert_dict['id']=str(query)# pragma: no cover
-                insert_dict['num_results']=total_counts# pragma: no cover
-                insert_dict['collection']=str(collection)# pragma: no cover
-                insert_total=counts_.insert_one(insert_dict)# pragma: no cover
+                total_counts=collection.count_documents(query)
+                insert_dict={}
+                insert_dict['id']=str(query)
+                insert_dict['num_results']=total_counts
+                insert_dict['collection']=str(collection)
+                insert_total=counts_.insert_one(insert_dict)
             else:
                 total_counts=counts[0]["num_results"]
-        except Exception as e:# pragma: no cover
+        except Exception as e:
             insert_dict={}
             insert_dict['id']=str(query)
             total_counts=0
-            insert_dict['num_results']=total_counts# pragma: no cover
-            insert_dict['collection']=str(collection)# pragma: no cover
+            insert_dict['num_results']=total_counts
+            insert_dict['collection']=str(collection)
             insert_total=counts_.insert_one(insert_dict)
         return total_counts
 
@@ -131,7 +131,7 @@ def get_docs_by_response_type(self, include: str, query: dict, dataset: str, lim
             )
             docs=list(docs)
         else:
-            dataset_count=0# pragma: no cover
+            dataset_count=0
         if dataset_count !=0:
             return count, -1, None
     else:
@@ -155,7 +155,7 @@ def get_docs_by_response_type(self, include: str, query: dict, dataset: str, lim
                 )
                 docs=list(docs)
         else:
-            dataset_count=0# pragma: no cover
+            dataset_count=0
         if dataset_count==0:
             return count, -1, None
     return count, dataset_count, docs

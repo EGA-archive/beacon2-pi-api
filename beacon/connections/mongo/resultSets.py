@@ -15,8 +15,8 @@ def get_resultSet(self, dataset: str, collection, mongo_collection, schema, idq)
     parameters_as_filters=False
     query_parameters, parameters_as_filters = apply_request_parameters(self, {}, dataset)
     if parameters_as_filters == True and query_parameters != {'$and': []}:
-        query, parameters_as_filters = apply_request_parameters(self, {}, dataset)# pragma: no cover
-        query_parameters={}# pragma: no cover
+        query, parameters_as_filters = apply_request_parameters(self, {}, dataset)
+        query_parameters={}
     elif query_parameters != {'$and': []}:
         query=query_parameters
     elif query_parameters == {'$and': []}:
@@ -39,8 +39,8 @@ def get_resultSet_with_id(self, dataset: str, collection, mongo_collection, sche
         query = {"$and": [{"_id": RequestAttributes.entry_id}]}
         query_parameters, parameters_as_filters = apply_request_parameters(self, query, dataset)
         if parameters_as_filters == True:
-            query, parameters_as_filters = apply_request_parameters(self, {}, dataset)# pragma: no cover
-            query_parameters={}# pragma: no cover
+            query, parameters_as_filters = apply_request_parameters(self, {}, dataset)
+            query_parameters={}
         else:
             query=query_parameters
     else:
@@ -52,17 +52,21 @@ def get_resultSet_with_id(self, dataset: str, collection, mongo_collection, sche
     limit = RequestAttributes.qparams.query.pagination.limit
     skip = RequestAttributes.qparams.query.pagination.skip
     if limit > 100 or limit == 0:
-        limit = 100# pragma: no cover
+        limit = 100
     count, dataset_count, docs = get_docs_by_response_type(self, include, query, dataset, limit, skip, mongo_collection, idq)
     return schema, count, dataset_count, docs, dataset
 
 @log_with_args(level)
 def get_variants_of_resultSet(self, dataset: str, collection, mongo_collection, schema, idq):
-    if collection == analysis.endpoint_name or collection == run.endpoint_name:
+    if RequestAttributes.pre_entry_type == analysis.endpoint_name or RequestAttributes.pre_entry_type == run.endpoint_name:
         query = {"$and": [{"id": RequestAttributes.entry_id}]}
         query = apply_filters(self, query, RequestAttributes.qparams.query.filters, collection, {}, dataset)
-        initial_ids = collection \
-            .find_one(query, {"biosampleId": 1, "_id": 0})
+        if RequestAttributes.pre_entry_type == analysis.endpoint_name:
+            initial_ids = analyses \
+                .find_one(query, {"biosampleId": 1, "_id": 0})
+        else:
+            initial_ids = runs \
+                .find_one(query, {"biosampleId": 1, "_id": 0})   
         RequestAttributes.entry_id = initial_ids["biosampleId"]
     try:
         targets = targets_ \
@@ -75,7 +79,7 @@ def get_variants_of_resultSet(self, dataset: str, collection, mongo_collection, 
         if bioid == RequestAttributes.entry_id:
             break
         position+=1
-    if position == len(bioids):# pragma: no cover
+    if position == len(bioids):
         return schema, 0, -1, None, dataset
     position=str(position)
     query_cl={"$or": [{ position: "10", "datasetId": dataset},{ position: "11", "datasetId": dataset}, { position: "01", "datasetId": dataset}, { position: "y", "datasetId": dataset}]}
@@ -96,7 +100,7 @@ def get_variants_of_resultSet(self, dataset: str, collection, mongo_collection, 
     limit = RequestAttributes.qparams.query.pagination.limit
     skip = RequestAttributes.qparams.query.pagination.skip
     if limit > 100 or limit == 0:
-        limit = 100# pragma: no cover
+        limit = 100
     count, dataset_count, docs = get_docs_by_response_type(self, include, query, dataset, limit, skip, mongo_collection, idq)
     return schema, count, dataset_count, docs, dataset
 
@@ -105,8 +109,8 @@ def get_resultSet_of_variants(self, dataset: str, collection, mongo_collection, 
     query = {"$and": [{"_id": RequestAttributes.entry_id}]}
     query_parameters, parameters_as_filters = apply_request_parameters(self, query, dataset)
     if parameters_as_filters == True and query_parameters != {'$and': []}:
-        query, parameters_as_filters = apply_request_parameters(self, query, dataset)# pragma: no cover
-        query_parameters={}# pragma: no cover
+        query, parameters_as_filters = apply_request_parameters(self, query, dataset)
+        query_parameters={}
     elif query_parameters != {'$and': []}:
         query=query_parameters
     elif query_parameters == {'$and': []}:
@@ -116,7 +120,7 @@ def get_resultSet_of_variants(self, dataset: str, collection, mongo_collection, 
         .find(query, {"identifiers.genomicHGVSId": 1, "datasetId": 1, "_id": 0})
     HGVSIds=list(HGVSIds)
     HGVSDataset=HGVSIds[0]["datasetId"]
-    if dataset != HGVSDataset:# pragma: no cover
+    if dataset != HGVSDataset:
         return schema, 0, 0, [], dataset
     HGVSId=HGVSIds[0]["identifiers"]["genomicHGVSId"]
     queryHGVSId={"datasetId": HGVSDataset, "id": HGVSId}
@@ -167,7 +171,7 @@ def get_resultSet_of_variants(self, dataset: str, collection, mongo_collection, 
             finalids=[]
             for bioid in biosampleIds:
                 finalids.append({idq: bioid})
-        except Exception:# pragma: no cover
+        except Exception:
             finalids=[]
         superfinalquery = {"$and": [{"$or": finalids}]}
     else:
@@ -183,11 +187,11 @@ def get_resultSet_of_variants(self, dataset: str, collection, mongo_collection, 
                 finalids=[]
                 for indid in individual_id:
                     finalids.append(indid["individualId"])
-            except Exception:# pragma: no cover
+            except Exception:
                 finalids=[]
             if finalids==[]:
-                finalids=biosampleIds# pragma: no cover
-        except Exception:# pragma: no cover
+                finalids=biosampleIds
+        except Exception:
             finalids=biosampleIds
         finalquery={}
         finalquery["$or"]=[]
@@ -201,13 +205,13 @@ def get_resultSet_of_variants(self, dataset: str, collection, mongo_collection, 
     limit = RequestAttributes.qparams.query.pagination.limit
     skip = RequestAttributes.qparams.query.pagination.skip
     if limit > 100 or limit == 0:
-        limit = 100# pragma: no cover
+        limit = 100
     count, dataset_count, docs = get_docs_by_response_type(self, include, query, dataset, limit, skip, mongo_collection, idq)
     return schema, count, dataset_count, docs, dataset
 
 @log_with_args(level)
 def get_analyses_of_resultSet(self, dataset: str, collection, mongo_collection, schema, idq):
-    if collection == run.endpoint_name:
+    if RequestAttributes.pre_entry_type == run.endpoint_name:
         query = {"id": RequestAttributes.entry_id}
     else:
         query = {"biosampleId": RequestAttributes.entry_id}
@@ -216,14 +220,14 @@ def get_analyses_of_resultSet(self, dataset: str, collection, mongo_collection, 
     limit = RequestAttributes.qparams.query.pagination.limit
     skip = RequestAttributes.qparams.query.pagination.skip
     if limit > 100 or limit == 0:
-        limit = 100# pragma: no cover
+        limit = 100
     count, dataset_count, docs = get_docs_by_response_type(self, include, query, dataset, limit, skip, mongo_collection, idq)
     return schema, count, dataset_count, docs, dataset
 
 @log_with_args(level)
 def get_biosamples_of_resultSet(self, dataset: str, collection, mongo_collection, schema, idq):
-    if RequestAttributes.entry_type == analysis.endpoint_name or RequestAttributes.entry_type == run.endpoint_name:
-        if RequestAttributes.entry_type == analysis.endpoint_name:
+    if RequestAttributes.pre_entry_type == analysis.endpoint_name or RequestAttributes.pre_entry_type == run.endpoint_name:
+        if RequestAttributes.pre_entry_type == analysis.endpoint_name:
             secondary_collection = analyses
         else:
             secondary_collection = runs
@@ -240,7 +244,7 @@ def get_biosamples_of_resultSet(self, dataset: str, collection, mongo_collection
     limit = RequestAttributes.qparams.query.pagination.limit
     skip = RequestAttributes.qparams.query.pagination.skip
     if limit > 100 or limit == 0:
-        limit = 100# pragma: no cover
+        limit = 100
     count, dataset_count, docs = get_docs_by_response_type(self, include, query, dataset, limit, skip, mongo_collection, idq)
     return schema, count, dataset_count, docs, dataset
 
@@ -256,13 +260,13 @@ def get_variants_of_dataset(self, dataset: str, collection, mongo_collection, sc
         queryid["datasetId"]=dataset
         query_count["$or"].append(queryid)
     else:
-        return schema, 0, 0, None, dataset# pragma: no cover
+        return schema, 0, 0, None, dataset
     query = apply_filters(self, query_count, RequestAttributes.qparams.query.filters, collection, {}, dataset)
     include = RequestAttributes.qparams.query.includeResultsetResponses
     limit = RequestAttributes.qparams.query.pagination.limit
     skip = RequestAttributes.qparams.query.pagination.skip
     if limit > 100 or limit == 0:
-        limit = 100# pragma: no cover
+        limit = 100
     count, dataset_count, docs = get_docs_by_response_type(self, include, query, dataset, limit, skip, mongo_collection, idq)
     return schema, count, dataset_count, docs, dataset
 
@@ -278,13 +282,13 @@ def get_resultSet_of_dataset(self, dataset: str, collection, mongo_collection, s
     if dataset == RequestAttributes.entry_id:
         dict_in['datasetId']=RequestAttributes.entry_id
     else:
-        return schema, 0, 0, None, dataset# pragma: no cover
+        return schema, 0, 0, None, dataset
     query = apply_filters(self, dict_in, RequestAttributes.qparams.query.filters, collection, {}, dataset)
     include = RequestAttributes.qparams.query.includeResultsetResponses
     limit = RequestAttributes.qparams.query.pagination.limit
     skip = RequestAttributes.qparams.query.pagination.skip
     if limit > 100 or limit == 0:
-        limit = 100# pragma: no cover
+        limit = 100
     count, dataset_count, docs = get_docs_by_response_type(self, include, query, dataset, limit, skip, mongo_collection, idq)
     return schema, count, dataset_count, docs, dataset
 
@@ -301,12 +305,12 @@ def get_resultSet_of_cohort(self, dataset: str, collection, mongo_collection, sc
     if dataset == dataset_found:
         dict_in['datasetId']=dataset_found
     else:
-        return schema, 0, 0, None, dataset# pragma: no cover
+        return schema, 0, 0, None, dataset
     query = apply_filters(self, dict_in, RequestAttributes.qparams.query.filters, collection, {}, dataset)
     count = get_count(self, cohorts, query)
     skip = RequestAttributes.qparams.query.pagination.skip
     if limit > 100 or limit == 0:
-        limit = 100# pragma: no cover
+        limit = 100
     count, dataset_count, docs = get_docs_by_response_type(self, include, query, dataset, limit, skip, mongo_collection, idq)
     return schema, count, dataset_count, docs, dataset
 
@@ -323,7 +327,7 @@ def get_variants_of_cohort(self, dataset: str, collection, mongo_collection, sch
     if dataset == dataset_found:
         dict_in['datasetId']=dataset_found
     else:
-        return schema, 0, 0, None, dataset# pragma: no cover
+        return schema, 0, 0, None, dataset
     query = apply_filters(self, dict_in, RequestAttributes.qparams.query.filters, collection, {}, dataset)
     count = get_count(self, cohorts, query)
     query_count={}
@@ -342,17 +346,17 @@ def get_variants_of_cohort(self, dataset: str, collection, mongo_collection, sch
         queryid["datasetId"]=dataset
         query_count["$or"].append(queryid)
     else:
-        return schema, 0, 0, None, dataset# pragma: no cover
+        return schema, 0, 0, None, dataset
     query = apply_filters(self, query_count, RequestAttributes.qparams.query.filters, collection, {}, dataset)
     skip = RequestAttributes.qparams.query.pagination.skip
     if limit > 100 or limit == 0:
-        limit = 100# pragma: no cover
+        limit = 100
     count, dataset_count, docs = get_docs_by_response_type(self, include, query, dataset, limit, skip, mongo_collection, idq)
     return schema, count, dataset_count, docs, dataset
 
 @log_with_args(level)
 def get_runs_of_resultSet(self, dataset: str, collection, mongo_collection, schema, idq):
-    if RequestAttributes.entry_type == analysis.endpoint_name:
+    if RequestAttributes.pre_entry_type == analysis.endpoint_name:
         analyses_found = analyses \
         .find({"id": RequestAttributes.entry_id, "datasetId": dataset}, {"biosampleId": 1, "_id": 0})
         list_of_analysisfound=[]
@@ -366,13 +370,13 @@ def get_runs_of_resultSet(self, dataset: str, collection, mongo_collection, sche
     limit = RequestAttributes.qparams.query.pagination.limit
     skip = RequestAttributes.qparams.query.pagination.skip
     if limit > 100 or limit == 0:
-        limit = 100# pragma: no cover
+        limit = 100
     count, dataset_count, docs = get_docs_by_response_type(self, include, query, dataset, limit, skip, mongo_collection, idq)
     return schema, count, dataset_count, docs, dataset
 
 @log_with_args(level)
 def get_individuals_of_resultSet(self, dataset: str, collection, mongo_collection, schema, idq):
-    if RequestAttributes.entry_type == analysis.endpoint_name or RequestAttributes.entry_type == run.endpoint_name:
+    if RequestAttributes.pre_entry_type == analysis.endpoint_name or RequestAttributes.pre_entry_type == run.endpoint_name:
         if RequestAttributes.entry_type == analysis.endpoint_name:
             secondary_collection = analyses
         secondary_collection = runs
@@ -389,6 +393,6 @@ def get_individuals_of_resultSet(self, dataset: str, collection, mongo_collectio
     limit = RequestAttributes.qparams.query.pagination.limit
     skip = RequestAttributes.qparams.query.pagination.skip
     if limit > 100 or limit == 0:
-        limit = 100# pragma: no cover
+        limit = 100
     count, dataset_count, docs = get_docs_by_response_type(self, include, query, dataset, limit, skip, mongo_collection, idq)
     return schema, count, dataset_count, docs, dataset

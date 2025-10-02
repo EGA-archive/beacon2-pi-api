@@ -6,12 +6,11 @@ class Granularity(StrEnum):
     RECORD = "record"
 
 class ErrorClass():
-    def __init__(self) -> None:# pragma: no cover
-        self.error_message=None
+    def __init__(self) -> None: #       self.error_message=None
         self.error_code=None
 
 class RequestAttributes():
-    def __init__(self) -> None:# pragma: no cover, explicar cada component què significa i una explicació del que és la classe
+    def __init__(self) -> None:
         self.ip=None # ip from the request client
         self.headers=None # headers in the request (e.g. authorization token...)
         self.entry_type=None # the entry type for the returning response

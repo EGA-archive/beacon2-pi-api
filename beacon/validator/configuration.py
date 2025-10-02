@@ -66,8 +66,6 @@ def check_configuration():
         pass
     else:
         raise Exception("The uri of your beacon must start with https protocol.")
-    if conf.uri_subpath.startswith('/') and conf.uri.endswith('/'):
-        raise Exception("The uri_subpath can not start with slash / if the conf.uri ends with slash /")
     if conf.uri.endswith('/'):
         raise Exception("The uri can't end with trailing slash /")
     if conf.uri_subpath.endswith('/'):
@@ -149,7 +147,7 @@ def check_configuration():
         raise Exception('The analysis.id variable must be analysis.')
     if not isinstance(analysis.name, str):
         raise Exception('The analysis.name must be of type string.')
-    if not isinstance(analysis.ontology_id, str) and not re.match("[A-Za-z0-9]+:[A-Za-z0-9]", analysis.ontology_id):
+    if not isinstance(analysis.ontology_id, str) or not re.match("[A-Za-z0-9]+:[A-Za-z0-9]", analysis.ontology_id):
         raise Exception('The analysis.ontology_id must be of type string and CURIE.')
     if not isinstance(analysis.ontology_name, str):
         raise Exception('The analysis.ontology_name must be of type string.')
@@ -189,7 +187,7 @@ def check_configuration():
         raise Exception('The biosample.id variable must be biosample.')
     if not isinstance(biosample.name, str):
         raise Exception('The biosample.name must be of type string.')
-    if not isinstance(biosample.ontology_id, str) and not re.match("[A-Za-z0-9]+:[A-Za-z0-9]", biosample.ontology_id):
+    if not isinstance(biosample.ontology_id, str) or not re.match("[A-Za-z0-9]+:[A-Za-z0-9]", biosample.ontology_id):
         raise Exception('The biosample.ontology_id must be of type string and CURIE.')
     if not isinstance(biosample.ontology_name, str):
         raise Exception('The biosample.ontology_name must be of type string.')
@@ -229,7 +227,7 @@ def check_configuration():
         raise Exception('The cohort.id variable must be cohort.')
     if not isinstance(cohort.name, str):
         raise Exception('The cohort.name must be of type string.')
-    if not isinstance(cohort.ontology_id, str) and not re.match("[A-Za-z0-9]+:[A-Za-z0-9]", cohort.ontology_id):
+    if not isinstance(cohort.ontology_id, str) or not re.match("[A-Za-z0-9]+:[A-Za-z0-9]", cohort.ontology_id):
         raise Exception('The cohort.ontology_id must be of type string and CURIE.')
     if not isinstance(cohort.ontology_name, str):
         raise Exception('The cohort.ontology_name must be of type string.')
@@ -269,7 +267,7 @@ def check_configuration():
         raise Exception('The dataset.id variable must be dataset.')
     if not isinstance(dataset.name, str):
         raise Exception('The dataset.name must be of type string.')
-    if not isinstance(dataset.ontology_id, str) and not re.match("[A-Za-z0-9]+:[A-Za-z0-9]", dataset.ontology_id):
+    if not isinstance(dataset.ontology_id, str) or not re.match("[A-Za-z0-9]+:[A-Za-z0-9]", dataset.ontology_id):
         raise Exception('The dataset.ontology_id must be of type string and CURIE.')
     if not isinstance(dataset.ontology_name, str):
         raise Exception('The dataset.ontology_name must be of type string.')
@@ -309,7 +307,7 @@ def check_configuration():
         raise Exception('The genomicVariant.id variable must be genomicVariant.')
     if not isinstance(genomicVariant.name, str):
         raise Exception('The genomicVariant.name must be of type string.')
-    if not isinstance(genomicVariant.ontology_id, str) and not re.match("[A-Za-z0-9]+:[A-Za-z0-9]", genomicVariant.ontology_id):
+    if not isinstance(genomicVariant.ontology_id, str) or not re.match("[A-Za-z0-9]+:[A-Za-z0-9]", genomicVariant.ontology_id):
         raise Exception('The genomicVariant.ontology_id must be of type string and CURIE.')
     if not isinstance(genomicVariant.ontology_name, str):
         raise Exception('The genomicVariant.ontology_name must be of type string.')
@@ -349,7 +347,7 @@ def check_configuration():
         raise Exception('The individual.id variable must be individual.')
     if not isinstance(individual.name, str):
         raise Exception('The individual.name must be of type string.')
-    if not isinstance(individual.ontology_id, str) and not re.match("[A-Za-z0-9]+:[A-Za-z0-9]", individual.ontology_id):
+    if not isinstance(individual.ontology_id, str) or not re.match("[A-Za-z0-9]+:[A-Za-z0-9]", individual.ontology_id):
         raise Exception('The individual.ontology_id must be of type string and CURIE.')
     if not isinstance(individual.ontology_name, str):
         raise Exception('The individual.ontology_name must be of type string.')
@@ -389,7 +387,7 @@ def check_configuration():
         raise Exception('The run.id variable must be run.')
     if not isinstance(run.name, str):
         raise Exception('The run.name must be of type string.')
-    if not isinstance(run.ontology_id, str) and not re.match("[A-Za-z0-9]+:[A-Za-z0-9]", run.ontology_id):
+    if not isinstance(run.ontology_id, str) or not re.match("[A-Za-z0-9]+:[A-Za-z0-9]", run.ontology_id):
         raise Exception('The run.ontology_id must be of type string and CURIE.')
     if not isinstance(run.ontology_name, str):
         raise Exception('The run.ontology_name must be of type string.')
@@ -448,13 +446,13 @@ def check_configuration():
         raise Exception('The documentation_url config parameter must be a string')
     if not conf.welcome_url.startswith('http://'):
         if not conf.welcome_url.startswith('https://'):
-            raise Exception('The url {} in cors_urls variable must start with http protocol'.format(conf.welcome_url))
+            raise Exception('The url {} in welcome_url variable must start with http protocol'.format(conf.welcome_url))
     if not conf.alternative_url.startswith('http://'):
         if not conf.alternative_url.startswith('https://'):
-            raise Exception('The url {} in cors_urls variable must start with http protocol'.format(conf.alternative_url))
+            raise Exception('The url {} in alternative_url variable must start with http protocol'.format(conf.alternative_url))
     if not conf.documentation_url.startswith('http://'):
         if not conf.documentation_url.startswith('https://'):
-            raise Exception('The url {} in cors_urls variable must start with http protocol'.format(conf.documentation_url))
+            raise Exception('The url {} in documentation_url variable must start with http protocol'.format(conf.documentation_url))
     try:
         with open("/beacon/permissions/datasets/datasets_permissions.yml", 'r') as pfile:
             datasets = yaml.safe_load(pfile)
@@ -468,9 +466,9 @@ def check_configuration():
                         for parameters, paramsvalues in securityconf.items():
                             if parameters not in ['default_entry_types_granularity', 'entry_types_exceptions', 'user-list']:
                                 raise Exception("entries for dataset settings have to be default_entry_types_granularity, entry_types_exceptions or user-list")
-                            if dataset == 'controlled':
+                            if security_level == 'controlled':
                                 if parameters == 'user-list':
-                                    for user in parameters:
+                                    for user in paramsvalues:
                                         for confuser, valueuser in user.items():
                                             if confuser not in ['user_e-mail', 'default_entry_types_granularity', 'entry_types_exceptions']:
                                                 raise Exception("entries for user settings in user-list must be be default_entry_types_granularity, entry_types_exceptions or user_e-mail")

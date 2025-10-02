@@ -341,7 +341,7 @@ def build_response(self, data, num_total_results):
     """"Fills the `response` part with the correct format in `results`"""
     limit = RequestAttributes.qparams.query.pagination.limit
     include = RequestAttributes.qparams.query.includeResultsetResponses
-    if limit != 0 and limit < num_total_results:# pragma: no cover
+    if limit != 0 and limit < num_total_results:
         response = {
             'id': '', # TODO: Set the name of the dataset/cohort
             'setType': '', # TODO: Set the type of collection
@@ -351,7 +351,7 @@ def build_response(self, data, num_total_results):
             # 'info': None,
             'resultsHandover': list_of_handovers,  # build_results_handover
         }
-    else:# pragma: no cover
+    else:
         response = {
             'id': '', # TODO: Set the name of the dataset/cohort
             'setType': '', # TODO: Set the type of collection
@@ -367,7 +367,7 @@ def build_response(self, data, num_total_results):
 @log_with_args(level)
 def build_response_summary(self, exists, num_total_results):
     try:
-        if num_total_results is None:# pragma: no cover
+        if num_total_results is None:
             return {
                 'exists': exists
             }
@@ -376,7 +376,7 @@ def build_response_summary(self, exists, num_total_results):
                 'exists': exists,
                 'numTotalResults': num_total_results
             }
-    except Exception as e:# pragma: no cover
+    except Exception as e:
         ErrorClass.error_code=500
         ErrorClass.error_message=str(e)
         raise
@@ -415,7 +415,7 @@ def build_response_summary_by_dataset(self, datasets, data, dict_counts):
             return {
                 'exists': False
             }
-    except Exception as e:# pragma: no cover
+    except Exception as e:
         ErrorClass.error_code=500
         ErrorClass.error_message=str(e)
         raise
@@ -445,7 +445,7 @@ def build_info_meta(self, entity_schema: Optional[DefaultSchemas]):
             'returnedSchemas': [entity_schema.value] if entity_schema is not None else []
         }
         return meta
-    except Exception:# pragma: no cover
+    except Exception:
         try:
             meta = {
                 'beaconId': conf.beacon_id,
@@ -466,7 +466,7 @@ def build_response_by_dataset(self, datasets, data, dict_counts):
         for dataset in datasets:
             if dataset.granularity == 'record' and RequestAttributes.allowed_granularity=='record' and granularity =='record':
                 for handover in list_of_handovers_per_dataset:
-                    if handover["dataset"]==dataset.dataset:# pragma: no cover
+                    if handover["dataset"]==dataset.dataset:
                         response = {
                             'id': dataset.dataset, # TODO: Set the name of the dataset/cohort
                             'setType': 'dataset', # TODO: Set the type of collection
@@ -500,7 +500,7 @@ def build_response_by_dataset(self, datasets, data, dict_counts):
                     response['countPrecision']='rounded'
             elif dataset.granularity != 'boolean' and RequestAttributes.allowed_granularity != 'boolean' and granularity != 'boolean':
                 for handover in list_of_handovers_per_dataset:
-                    if handover["dataset"]==dataset.dataset:# pragma: no cover
+                    if handover["dataset"]==dataset.dataset:
                         response = {
                             'id': dataset.dataset, # TODO: Set the name of the dataset/cohort
                             'setType': 'dataset', # TODO: Set the type of collection
@@ -518,7 +518,7 @@ def build_response_by_dataset(self, datasets, data, dict_counts):
                         }
             else:
                 for handover in list_of_handovers_per_dataset:
-                    if handover["dataset"]==dataset.dataset:# pragma: no cover
+                    if handover["dataset"]==dataset.dataset:
                         response = {
                             'id': dataset.dataset, # TODO: Set the name of the dataset/cohort
                             'setType': 'dataset', # TODO: Set the type of collection
@@ -536,7 +536,7 @@ def build_response_by_dataset(self, datasets, data, dict_counts):
             list_of_responses.append(response)
 
         return list_of_responses
-    except Exception:# pragma: no cover
+    except Exception:
         raise
 
 @log_with_args(level)
@@ -555,14 +555,14 @@ def build_beacon_record_response_by_dataset(self, datasets, data,
             'beaconHandovers': list_of_handovers,
         }
         return beacon_response
-    except Exception:# pragma: no cover
+    except Exception:
         raise
 
 @log_with_args(level)
 def build_beacon_boolean_response(self,
                                     num_total_results,
                                     entity_schema: DefaultSchemas):
-    try:# pragma: no cover
+    try:
         responseSummary = build_response_summary(self, num_total_results > 0, None)
         beacon_response = {
             'meta': build_meta(self, entity_schema),
@@ -571,7 +571,7 @@ def build_beacon_boolean_response(self,
             'beaconHandovers': list_of_handovers,
         }
         return beacon_response
-    except Exception:# pragma: no cover
+    except Exception:
         raise
 
 @log_with_args(level)
@@ -587,7 +587,7 @@ def build_beacon_count_response(self, datasets, data,
             'beaconHandovers': list_of_handovers,
         }
         return beacon_response
-    except Exception:# pragma: no cover
+    except Exception:
         raise
 
 @log_with_args(level)
@@ -602,7 +602,7 @@ def build_beacon_error_response(self, errorCode, errorMessage):
             }
         }
         return beacon_response
-    except Exception:# pragma: no cover
+    except Exception:
         raise
 
 @log_with_args(level)
@@ -619,7 +619,7 @@ def build_beacon_collection_response(self, data, num_total_results: RequestParam
             }
         }
         return beacon_response
-    except Exception:# pragma: no cover
+    except Exception:
         raise
 
 @log_with_args(level)
@@ -649,7 +649,7 @@ def build_beacon_info_response(self):
         response['updateDateTime']=conf.update_datetime
         beacon_response['response']=response
         return beacon_response
-    except Exception as ex:# pragma: no cover
+    except Exception as ex:
         #template = "An exception of type {0} occurred. Arguments:\n{1!r}"
         #message = template.format(type(ex).__name__, ex.args)
         ErrorClass.error_code=500
@@ -811,7 +811,7 @@ def build_configuration(self):
         }
 
         return configuration_json
-    except Exception:# pragma: no cover
+    except Exception:
         raise
 
 @log_with_args(level)
@@ -833,7 +833,7 @@ def build_map(self):
         }
 
         return beacon_map_json
-    except Exception as e:# pragma: no cover
+    except Exception as e:
         ErrorClass.error_code=500
         ErrorClass.error_message=str(e)
         raise
@@ -851,7 +851,7 @@ def build_entry_types(self):
             response = json.load(template)
 
 
-        if analysis.endpoint_name != '':
+        if analysis.endpoint_name != '' and analysis.enable_endpoint == True:
             response['entryTypes'][analysis.id]==response['entryTypes']['analysis']
             if analysis.id != 'analysis':
                 del response['entryTypes']['analysis']
@@ -869,7 +869,7 @@ def build_entry_types(self):
             response['entryTypes'][analysis.id]['nonFilteredQueriesAllowed']=analysis.allow_queries_without_filters
         else:
             del response['entryTypes']['analysis']
-        if biosample.endpoint_name != '':
+        if biosample.endpoint_name != '' and biosample.enable_endpoint == True:
             response['entryTypes'][biosample.id]==response['entryTypes']['biosample']
             if biosample.id != 'biosample':
                 del response['entryTypes']['biosample']
@@ -887,7 +887,7 @@ def build_entry_types(self):
             response['entryTypes'][biosample.id]['nonFilteredQueriesAllowed']=biosample.allow_queries_without_filters
         else:
             del response['entryTypes']['biosample']
-        if cohort.endpoint_name!='' and analysis.enable_endpoint==True:
+        if cohort.endpoint_name!='' and cohort.enable_endpoint==True:
             response['entryTypes'][cohort.id]==response['entryTypes']['cohort']
             if cohort.id != 'cohort':
                 del response['entryTypes']['cohort']
@@ -905,7 +905,7 @@ def build_entry_types(self):
             response['entryTypes'][cohort.id]['nonFilteredQueriesAllowed']=cohort.allow_queries_without_filters
         else:
             del response['entryTypes']['cohort']
-        if dataset.endpoint_name!='' and analysis.enable_endpoint==True:
+        if dataset.endpoint_name!='' and dataset.enable_endpoint==True:
             response['entryTypes'][dataset.id]==response['entryTypes']['dataset']
             if dataset.id != 'dataset':
                 del response['entryTypes']['dataset']
@@ -923,7 +923,7 @@ def build_entry_types(self):
             response['entryTypes'][dataset.id]['nonFilteredQueriesAllowed']=dataset.allow_queries_without_filters
         else:
             del response['entryTypes']['dataset']
-        if genomicVariant.endpoint_name!='' and analysis.enable_endpoint==True:
+        if genomicVariant.endpoint_name!='' and genomicVariant.enable_endpoint==True:
             response['entryTypes'][genomicVariant.id]==response['entryTypes']['genomicVariant']
             if genomicVariant.id != 'genomicVariant':
                 del response['entryTypes']['genomicVariant']
@@ -941,7 +941,7 @@ def build_entry_types(self):
             response['entryTypes'][genomicVariant.id]['nonFilteredQueriesAllowed']=genomicVariant.allow_queries_without_filters
         else:
             del response['entryTypes']['genomicVariant']
-        if individual.endpoint_name!='' and analysis.enable_endpoint==True:
+        if individual.endpoint_name!='' and individual.enable_endpoint==True:
             response['entryTypes'][individual.id]==response['entryTypes']['individual']
             if individual.id != 'individual':
                 del response['entryTypes']['individual']
@@ -959,7 +959,7 @@ def build_entry_types(self):
             response['entryTypes'][individual.id]['nonFilteredQueriesAllowed']=individual.allow_queries_without_filters
         else:
             del response['entryTypes']['individual']
-        if run.endpoint_name!='' and analysis.enable_endpoint==True:
+        if run.endpoint_name!='' and run.enable_endpoint==True:
             response['entryTypes'][run.id]==response['entryTypes']['run']
             if run.id != 'run':
                 del response['entryTypes']['run']
@@ -988,7 +988,7 @@ def build_entry_types(self):
         }
 
         return entry_types_json
-    except Exception as e:# pragma: no cover
+    except Exception as e:
         ErrorClass.error_code=500
         ErrorClass.error_message=str(e)
         raise
@@ -1013,7 +1013,7 @@ def build_beacon_service_info_response(self):
         beacon_response['environment']=conf.environment
         beacon_response['version']=conf.version
         return beacon_response
-    except Exception as e:# pragma: no cover
+    except Exception as e:
         ErrorClass.error_code=500
         ErrorClass.error_message=str(e)
         raise
@@ -1034,5 +1034,5 @@ def build_filtering_terms_response(self, data,
             'beaconHandovers': list_of_handovers,
         }
         return beacon_response
-    except Exception:# pragma: no cover
+    except Exception:
         raise

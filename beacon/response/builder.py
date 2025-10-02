@@ -16,10 +16,10 @@ async def builder(self, datasets):
             response = build_beacon_record_response_by_dataset(self, datasets, datasets_docs, datasets_count, entity_schema)
         elif RequestAttributes.response_type == 'count':
             response = build_beacon_count_response(self, datasets, datasets_docs, datasets_count, count, entity_schema)
-        else:# pragma: no cover
+        else:
             response = build_beacon_boolean_response(self, count, entity_schema)
         return response
-    except Exception:# pragma: no cover
+    except Exception:
         raise
 
 @log_with_args(level)
@@ -37,17 +37,18 @@ async def collection_builder(self):
                     self, response_converted, count, entity_schema
                 )
         return response
-    except Exception:# pragma: no cover
+    except Exception:
         raise
 
 @log_with_args(level)
 async def info_builder(self):
     try:
+        # TODO: if requested service-info, call service-info builder. If schema is supported, 
         response = build_beacon_info_response(
                     self
                 )
         return response
-    except Exception:# pragma: no cover
+    except Exception:
         raise
 
 @log_with_args(level)
@@ -57,7 +58,7 @@ async def configuration_builder(self):
                     self
                 )
         return response
-    except Exception:# pragma: no cover
+    except Exception:
         raise
 
 @log_with_args(level)
@@ -67,7 +68,7 @@ async def map_builder(self):
                     self
                 )
         return response
-    except Exception:# pragma: no cover
+    except Exception:
         raise
 
 @log_with_args(level)
@@ -77,7 +78,7 @@ async def entry_types_builder(self):
                     self
                 )
         return response
-    except Exception:# pragma: no cover
+    except Exception:
         raise
 
 @log_with_args(level)
@@ -87,7 +88,7 @@ async def service_info_builder(self):
                     self
                 )
         return response
-    except Exception:# pragma: no cover
+    except Exception:
         raise
 
 @log_with_args(level)
@@ -102,5 +103,5 @@ async def filtering_terms_builder(self):
                     self, records, count, entity_schema
                 )
         return response
-    except Exception:# pragma: no cover
+    except Exception:
         raise

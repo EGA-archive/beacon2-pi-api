@@ -26,9 +26,9 @@ async def authorization(self):
         access_token = auth[7:].strip() # 7 = len('Bearer ')
         user, list_visa_datasets = await authentication(self, access_token)
         if user is None:
-            user = 'public'# pragma: no cover
+            user = 'public'
         elif user == 'public':
-            username = 'public'# pragma: no cover
+            username = 'public'
         else:
             username = user.get('preferred_username')
     except Exception as e:
@@ -44,13 +44,13 @@ async def get_datasets_list(self, authorized_datasets):
             specific_datasets = RequestAttributes.qparams.query.requestParameters['datasets']
         except Exception as e:
             specific_datasets = []
-        beacon_datasets = module.get_list_of_datasets(self)# pragma: no cover
+        beacon_datasets = module.get_list_of_datasets(self)
         # Get response
         if specific_datasets != []:
             response_datasets =  [element for element in authorized_datasets if element.dataset in [r['id'] for r in beacon_datasets] and element.dataset in specific_datasets]
         else:
             response_datasets =  [element for element in authorized_datasets if element.dataset in [r['id'] for r in beacon_datasets]]
-    except Exception:# pragma: no cover
+    except Exception:
         raise
     return response_datasets
 
@@ -83,7 +83,7 @@ def query_permissions(func):
                     datasets_permissions.append(DatasetPermission(visa_dataset, default_beacon_granularity))
             response_datasets= await get_datasets_list(self, datasets_permissions)
             return await func(self, response_datasets, username, time_now)
-        except Exception:# pragma: no cover
+        except Exception:
             raise
     return permission
 

@@ -74,7 +74,7 @@ class Pagination(CamelModel):
 
 class RequestMeta(CamelModel):
     requestedSchemas: Optional[List[SchemasPerEntity]] = []
-    apiVersion: str = 'v2.0.0'
+    apiVersion: str = 'Not provided' # TODO: add supported schemas parsing, by default,
 
 class SequenceQuery(BaseModel):
     referenceName: Union[str,int]
@@ -96,9 +96,9 @@ class SequenceQuery(BaseModel):
                     raise
                 else:
                     pass
-            except Exception as e:# pragma: no cover
+            except Exception as e:
                 raise ValueError
-        else:# pragma: no cover
+        else:
             raise ValueError
     @field_validator('start')
     @classmethod
@@ -131,7 +131,7 @@ class RangeQuery(BaseModel):
                     raise
                 else:
                     pass
-            except Exception as e:# pragma: no cover
+            except Exception as e:
                 raise ValueError
         start=values.start
         end=values.end
@@ -167,7 +167,7 @@ class BracketQuery(BaseModel):
     @field_validator('start')
     @classmethod
     def start_must_be_array_of_integers(cls, v: list) -> list:
-        for num in v:# pragma: no cover
+        for num in v:
             if isinstance(num, int):
                 pass
             else:
@@ -175,7 +175,7 @@ class BracketQuery(BaseModel):
     @field_validator('end')
     @classmethod
     def end_must_be_array_of_integers(cls, v: list) -> list:
-        for num in v:# pragma: no cover
+        for num in v:
             if isinstance(num, int):
                 pass
             else:
@@ -191,9 +191,9 @@ class BracketQuery(BaseModel):
                     raise
                 else:
                     pass
-            except Exception as e:# pragma: no cover
+            except Exception as e:
                 raise ValueError
-        else:# pragma: no cover
+        else:
             raise ValueError
 
 class GenomicAlleleQuery(BaseModel):
@@ -300,7 +300,7 @@ class RequestParams(CamelModel):
                 "requestedGranularity": self.query.requestedGranularity,
                 "testMode": self.query.testMode
             }
-        except Exception as e:# pragma: no cover
+        except Exception as e:
             ErrorClass.error_code=500
             ErrorClass.error_message=str(e)
             raise
