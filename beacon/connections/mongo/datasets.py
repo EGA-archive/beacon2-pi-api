@@ -8,6 +8,7 @@ from beacon.connections.mongo.utils import get_docs_by_response_type, query_id, 
 from beacon.connections.mongo.request_parameters import apply_request_parameters
 from beacon.request.classes import ErrorClass, RequestAttributes
 from beacon.connections.mongo.__init__ import datasets
+import aiohttp.web as web
 
 @log_with_args_mongo(level)
 def get_datasets(self):
@@ -17,8 +18,7 @@ def get_datasets(self):
         query = collection.find(query)
         return query
     except Exception as e:
-        ErrorClass.error_code=500
-        ErrorClass.error_message=str(e)
+        ErrorClass.error_code, ErrorClass.error_message = ErrorClass.handle_exception(ErrorClass, web.HTTPInternalServerError)
         raise
 
 @log_with_args_mongo(level)
@@ -37,8 +37,7 @@ def get_full_datasets(self):
         )
         return response_converted, count, entity_schema
     except Exception as e:
-        ErrorClass.error_code=500
-        ErrorClass.error_message=str(e)
+        ErrorClass.error_code, ErrorClass.error_message = ErrorClass.handle_exception(ErrorClass, web.HTTPInternalServerError)
         raise
 
 @log_with_args_mongo(level)
@@ -48,8 +47,7 @@ def get_list_of_datasets(self):
         beacon_datasets = [ r for r in datasets ]
         return beacon_datasets
     except Exception as e:
-        ErrorClass.error_code=500
-        ErrorClass.error_message=str(e)
+        ErrorClass.error_code, ErrorClass.error_message = ErrorClass.handle_exception(ErrorClass, web.HTTPInternalServerError)
         raise
 
 @log_with_args_mongo(level)

@@ -301,6 +301,5 @@ class RequestParams(CamelModel):
                 "testMode": self.query.testMode
             }
         except Exception as e:
-            ErrorClass.error_code=500
-            ErrorClass.error_message=str(e)
+            ErrorClass.error_code, ErrorClass.error_message = ErrorClass.handle_exception(ErrorClass, web.HTTPInternalServerError)
             raise

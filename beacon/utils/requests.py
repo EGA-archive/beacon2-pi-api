@@ -85,6 +85,8 @@ async def get_qparams(self, request): # anomenar query string en comptes de qpa
         try:
             if post_data["query"]["requestParameters"] == {}:
                 ErrorClass.error_message='requestParameters can not be empty, remove the requestParameters property from the body if you do not want to apply any'
+                ErrorClass.error_code, ErrorClass.error_message = ErrorClass.handle_exception(ErrorClass, web.HTTPBadRequest)
+                raise
         except Exception:
             pass
         final_body=post_data
@@ -102,27 +104,30 @@ async def get_qparams(self, request): # anomenar query string en comptes de qpa
                             elif isinstance(v2, list):
                                 if post_data[k][k1][k2]!=v2:
                                     ErrorClass.error_message='two parameters conflict from string: {} and from json body query: {}'.format(v2, post_data[k][k1][k2])
-                                    raise web.HTTPBadRequest
+                                    ErrorClass.error_code, ErrorClass.error_message = ErrorClass.handle_exception(ErrorClass, web.HTTPBadRequest)
+                                    raise
                             elif isinstance(v2, dict):
                                 for k3, v3 in v2.items():
                                     if post_data[k][k1][k2].get(k3)==None:
                                         final_body[k][k1][k2][k3]=v3
                                     elif post_data[k][k1][k2][k3]!=v3:
                                         ErrorClass.error_message='two parameters conflict from string: {} and from json body query: {}'.format(v3, post_data[k][k1][k2][k3])
-                                        raise web.HTTPBadRequest
+                                        ErrorClass.error_code, ErrorClass.error_message = ErrorClass.handle_exception(ErrorClass, web.HTTPBadRequest)
+                                        raise
                             elif post_data[k][k1][k2]!=v2:
                                 ErrorClass.error_message='two parameters conflict from string: {} and from json body query: {}'.format(v2, post_data[k][k1][k2])
-                                raise web.HTTPBadRequest
+                                ErrorClass.error_code, ErrorClass.error_message = ErrorClass.handle_exception(ErrorClass, web.HTTPBadRequest)
+                                raise
                     elif post_data[k][k1]!=v1:
                         ErrorClass.error_message='two parameters conflict from string: {} and from json body query: {}'.format(v1, post_data[k][k1])
-                        raise web.HTTPBadRequest
+                        ErrorClass.error_code, ErrorClass.error_message = ErrorClass.handle_exception(ErrorClass, web.HTTPBadRequest)
+                        raise
         qparams = RequestParams(**final_body).from_request(final_body)
         RequestAttributes.qparams = qparams
     except Exception as e:
-        ErrorClass.error_code=400
-        if ErrorClass.error_message is None:
-            ErrorClass.error_message='set of meta/query parameters: {} not allowed'.format(post_data)
-        raise web.HTTPBadRequest
+        ErrorClass.error_message = 'set of meta/query parameters: {} not allowed'.format(post_data)
+        ErrorClass.error_code, ErrorClass.error_message = ErrorClass.handle_exception(ErrorClass, web.HTTPBadRequest)
+        raise
     
 @log_with_args(level)
 def set_entry_type_configuration(self):
@@ -171,9 +176,9 @@ def set_entry_type_configuration(self):
     elif RequestAttributes.entry_type == 'entry_types':
         RequestAttributes.allowed_granularity = 'record'
     else:
-        ErrorClass.error_code=500
         ErrorClass.error_message='no entry type detected, check your uri from conf file to make sure is correct'
-        raise web.HTTPInternalServerError
+        ErrorClass.error_code, ErrorClass.error_message = ErrorClass.handle_exception(ErrorClass, web.HTTPInternalServerError)
+        raise
     
 @log_with_args(level)
 def set_entry_type(self, request):
@@ -198,26 +203,23 @@ def set_entry_type(self, request):
             path_list = abs_url[starting_endpoint:].split('/')
             path_list = list(filter(None, path_list))
             if path_list == []:
-                ErrorClass.error_code=500
                 ErrorClass.error_message='the {} parameter from conf.py is not the same as the root one received in request: {}. Configure you uri accordingly.'.format(uri, abs_url)
-                raise web.HTTPInternalServerError
+                ErrorClass.error_code, ErrorClass.error_message = ErrorClass.handle_exception(ErrorClass, web.HTTPInternalServerError)
             if len(path_list) > 2:
                 try:
                     RequestAttributes.pre_entry_type=path_list[0]
                     RequestAttributes.entry_type=path_list[2]
                 except Exception:
-                    ErrorClass.error_code=500
                     ErrorClass.error_message='path received is wrong, check your uri: {} from conf file to make sure is correct'.format(uri)
-                    raise web.HTTPInternalServerError
+                    ErrorClass.error_code, ErrorClass.error_message = ErrorClass.handle_exception(ErrorClass, web.HTTPInternalServerError)
                 set_entry_type_configuration(self)
                 RequestAttributes.entry_id=request.match_info.get('id', None)
             else:
                 try:
                     RequestAttributes.entry_type=path_list[0]
                 except Exception:
-                    ErrorClass.error_code=500
                     ErrorClass.error_message='path received is wrong, check your uri: {} from conf file to make sure is correct'.format(uri)
-                    raise web.HTTPInternalServerError
+                    ErrorClass.error_code, ErrorClass.error_message = ErrorClass.handle_exception(ErrorClass, web.HTTPInternalServerError)
                 set_entry_type_configuration(self)
                 RequestAttributes.entry_id=request.match_info.get('id', None)
     except Exception:
@@ -246,73 +248,73 @@ def set_response_type(self):
     if RequestAttributes.entry_type == genomicVariant.endpoint_name:
         try:
             if genomicVariant.allow_queries_without_filters == False and RequestAttributes.qparams.query.filters == [] and RequestAttributes.qparams.query.requestParameters == {}:
-                ErrorClass.error_code=400
                 ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type)
-                raise web.HTTPBadRequest
+                ErrorClass.error_code, ErrorClass.error_message = ErrorClass.handle_exception(ErrorClass, web.HTTPBadRequest)
+                raise
         except Exception:
-            ErrorClass.error_code=400
             ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type)
-            raise web.HTTPBadRequest
+            ErrorClass.error_code, ErrorClass.error_message = ErrorClass.handle_exception(ErrorClass, web.HTTPBadRequest)
+            raise
     elif RequestAttributes.entry_type == analysis.endpoint_name:
         try:
             if analysis.allow_queries_without_filters == False and RequestAttributes.qparams.query.filters == [] and RequestAttributes.qparams.query.requestParameters == {}:
-                ErrorClass.error_code=400
                 ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type)
-                raise web.HTTPBadRequest
+                ErrorClass.error_code, ErrorClass.error_message = ErrorClass.handle_exception(ErrorClass, web.HTTPBadRequest)
+                raise
         except Exception:
-            ErrorClass.error_code=400
             ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type)
-            raise web.HTTPBadRequest
+            ErrorClass.error_code, ErrorClass.error_message = ErrorClass.handle_exception(ErrorClass, web.HTTPBadRequest)
+            raise
     elif RequestAttributes.entry_type == biosample.endpoint_name:
         try:
             if biosample.allow_queries_without_filters == False and RequestAttributes.qparams.query.filters == [] and RequestAttributes.qparams.query.requestParameters == {}:
-                ErrorClass.error_code=400
                 ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type)
-                raise web.HTTPBadRequest
+                ErrorClass.error_code, ErrorClass.error_message = ErrorClass.handle_exception(ErrorClass, web.HTTPBadRequest)
+                raise
         except Exception:
-            ErrorClass.error_code=400
             ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type)
-            raise web.HTTPBadRequest
+            ErrorClass.error_code, ErrorClass.error_message = ErrorClass.handle_exception(ErrorClass, web.HTTPBadRequest)
+            raise
     elif RequestAttributes.entry_type == cohort.endpoint_name:
         try:
             if cohort.allow_queries_without_filters == False and RequestAttributes.qparams.query.filters == [] and RequestAttributes.qparams.query.requestParameters == {}:
-                ErrorClass.error_code=400
                 ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type)
-                raise web.HTTPBadRequest
+                ErrorClass.error_code, ErrorClass.error_message = ErrorClass.handle_exception(ErrorClass, web.HTTPBadRequest)
+                raise
         except Exception:
-            ErrorClass.error_code=400
             ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type)
-            raise web.HTTPBadRequest
+            ErrorClass.error_code, ErrorClass.error_message = ErrorClass.handle_exception(ErrorClass, web.HTTPBadRequest)
+            raise
     elif RequestAttributes.entry_type == dataset.endpoint_name:
         try:
             if dataset.allow_queries_without_filters == False and RequestAttributes.qparams.query.filters == [] and RequestAttributes.qparams.query.requestParameters == {}:
-                ErrorClass.error_code=400
                 ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type)
-                raise web.HTTPBadRequest
+                ErrorClass.error_code, ErrorClass.error_message = ErrorClass.handle_exception(ErrorClass, web.HTTPBadRequest)
+                raise
         except Exception:
-            ErrorClass.error_code=400
             ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type)
-            raise web.HTTPBadRequest
+            ErrorClass.error_code, ErrorClass.error_message = ErrorClass.handle_exception(ErrorClass, web.HTTPBadRequest)
+            raise
     elif RequestAttributes.entry_type == individual.endpoint_name:
         try:
             if individual.allow_queries_without_filters == False and RequestAttributes.qparams.query.filters == [] and RequestAttributes.qparams.query.requestParameters == {}:
-                ErrorClass.error_code=400
                 ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type)
-                raise web.HTTPBadRequest
+                ErrorClass.error_code, ErrorClass.error_message = ErrorClass.handle_exception(ErrorClass, web.HTTPBadRequest)
+                raise
         except Exception:
-            ErrorClass.error_code=400
             ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type)
-            raise web.HTTPBadRequest
+            ErrorClass.error_code, ErrorClass.error_message = ErrorClass.handle_exception(ErrorClass, web.HTTPBadRequest)
+            raise
     elif RequestAttributes.entry_type == run.endpoint_name:
         try:
             if run.allow_queries_without_filters == False and RequestAttributes.qparams.query.filters == [] and RequestAttributes.qparams.query.requestParameters == {}:
-                ErrorClass.error_code=400
                 ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type)
-                raise web.HTTPBadRequest
+                ErrorClass.error_code, ErrorClass.error_message = ErrorClass.handle_exception(ErrorClass, web.HTTPBadRequest)
+                raise
         except Exception:
-            ErrorClass.error_code=400
             ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type)
-            raise web.HTTPBadRequest
+            ErrorClass.error_code, ErrorClass.error_message = ErrorClass.handle_exception(ErrorClass, web.HTTPBadRequest)
+            raise
 
 @log_with_args(level)
 def set_ip(self, request):
