@@ -14,84 +14,33 @@ from beacon.request.classes import ErrorClass, RequestAttributes
 from aiohttp import web
 
 @log_with_args(level)
-async def execute_function(self, datasets: list, qparams: RequestParams):
-    include = qparams.query.includeResultsetResponses
-    limit = qparams.query.pagination.limit
+async def execute_function(self, datasets: list):
+    include = RequestAttributes.qparams.query.includeResultsetResponses
+    limit = RequestAttributes.qparams.query.pagination.limit
     datasets_docs={}
     datasets_count={}
     new_count=0
-    try:
-        entry_type_splitted = RequestAttributes.entry_type.split('.')
-        RequestAttributes.entry_type = entry_type_splitted[1]
-        RequestAttributes.pre_entry_type = entry_type_splitted[0]
-    except Exception:
-        pass
     if RequestAttributes.entry_type==genomicVariant.endpoint_name:
-        try:
-            if genomicVariant.allow_queries_without_filters == False and qparams.query.filters == [] and qparams.query.requestParameters == []:
-                ErrorClass.error_code=400
-                ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(genomicVariant.endpoint_name)
-                raise web.HTTPBadRequest
-        except Exception:
-            ErrorClass.error_code=400
-            ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(genomicVariant.endpoint_name)
-            raise web.HTTPBadRequest
         collection=genomicVariant.endpoint_name
         mongo_collection=genomicVariations
         schema=DefaultSchemas.GENOMICVARIATIONS
         idq="caseLevelData.biosampleId"
     elif RequestAttributes.entry_type==analysis.endpoint_name:
-        try:
-            if analysis.allow_queries_without_filters == False and qparams.query.filters == [] and qparams.query.requestParameters == []:
-                ErrorClass.error_code=400
-                ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(analysis.endpoint_name)
-                raise web.HTTPBadRequest
-        except Exception:
-            ErrorClass.error_code=400
-            ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(analysis.endpoint_name)
-            raise web.HTTPBadRequest
         collection=analysis.endpoint_name
         mongo_collection=analyses
         schema=DefaultSchemas.ANALYSES
         idq="biosampleId"
     elif RequestAttributes.entry_type==biosample.endpoint_name:
-        try:
-            if biosample.allow_queries_without_filters == False and qparams.query.filters == [] and qparams.query.requestParameters == []:
-                ErrorClass.error_code=400
-                ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(biosample.endpoint_name)
-                raise web.HTTPBadRequest
-        except Exception:
-            ErrorClass.error_code=400
-            ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(biosample.endpoint_name)
-            raise web.HTTPBadRequest
         collection=biosample.endpoint_name
         mongo_collection=biosamples
         schema=DefaultSchemas.BIOSAMPLES
         idq="id"
     elif RequestAttributes.entry_type==individual.endpoint_name:
-        try:
-            if individual.allow_queries_without_filters == False and qparams.query.filters == [] and qparams.query.requestParameters == []:
-                ErrorClass.error_code=400
-                ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(individual.endpoint_name)
-                raise web.HTTPBadRequest
-        except Exception:
-            ErrorClass.error_code=400
-            ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(individual.endpoint_name)
-            raise web.HTTPBadRequest
         collection=individual.endpoint_name
         mongo_collection=individuals
         schema=DefaultSchemas.INDIVIDUALS
         idq="id"
     elif RequestAttributes.entry_type==run.endpoint_name:
-        try:
-            if run.allow_queries_without_filters == False and qparams.query.filters == [] and qparams.query.requestParameters == []:
-                ErrorClass.error_code=400
-                ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(run.endpoint_name)
-                raise web.HTTPBadRequest
-        except Exception:
-            ErrorClass.error_code=400
-            ErrorClass.error_message="{} endpoint doesn't allow query without filters".format(run.endpoint_name)
-            raise web.HTTPBadRequest
         collection=run.endpoint_name
         mongo_collection=runs
         schema=DefaultSchemas.RUNS
@@ -127,7 +76,7 @@ async def execute_function(self, datasets: list, qparams: RequestParams):
 
     if datasets != []:
         with ThreadPoolExecutor() as pool:
-            done, pending = await asyncio.wait(fs=[loop.run_in_executor(pool, function, self, qparams, dataset.dataset, collection, mongo_collection, schema, idq) for dataset in datasets],
+            done, pending = await asyncio.wait(fs=[loop.run_in_executor(pool, function, self, dataset.dataset, collection, mongo_collection, schema, idq) for dataset in datasets],
             return_when=asyncio.ALL_COMPLETED
             )
         for task in done:
@@ -138,21 +87,21 @@ async def execute_function(self, datasets: list, qparams: RequestParams):
                     datasets_docs[dataset]=records
                     datasets_count[dataset]=dataset_count
                 else:
-                    datasets = [x for x in datasets if x.dataset != dataset] # pragma: no cover
+                    datasets = [x for x in datasets if x.dataset != dataset] 
             elif include == 'MISS':
-                if dataset_count == 0:# pragma: no cover
+                if dataset_count == 0:
                     new_count+=dataset_count
                     datasets_docs[dataset]=records
                     datasets_count[dataset]=dataset_count
                 else:
-                    datasets = [x for x in datasets if x.dataset != dataset] # pragma: no cover
+                    datasets = [x for x in datasets if x.dataset != dataset] 
             else:
                 if dataset_count != -1 and dataset_count != 0:
                     new_count+=dataset_count
                     datasets_docs[dataset]=records
                     datasets_count[dataset]=dataset_count
                 else:
-                    datasets = [x for x in datasets if x.dataset != dataset] # pragma: no cover
+                    datasets = [x for x in datasets if x.dataset != dataset] 
         count=new_count
     try:
         return datasets_docs, datasets_count, count, entity_schema, include, datasets
@@ -162,7 +111,7 @@ async def execute_function(self, datasets: list, qparams: RequestParams):
         raise web.HTTPBadRequest
 
 @log_with_args(level)
-async def execute_collection_function(self, qparams: RequestParams):
+async def execute_collection_function(self):
     if RequestAttributes.entry_id == None:
         if RequestAttributes.entry_type == dtaset.endpoint_name:
             function=get_full_datasets
@@ -173,5 +122,5 @@ async def execute_collection_function(self, qparams: RequestParams):
             function=get_dataset_with_id
         elif RequestAttributes.entry_type == cohort.endpoint_name:
             function=get_cohort_with_id
-    response_converted, count, entity_schema = function(self, qparams)
+    response_converted, count, entity_schema = function(self)
     return response_converted, count, entity_schema

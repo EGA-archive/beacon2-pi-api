@@ -3,13 +3,12 @@ import time
 from beacon.conf.conf import level
 from beacon.conf.conf import log_file
 from typing import Optional
-import os
 
 LOG = logging.getLogger(__name__)
 fmt = '%(levelname)s - %(asctime)s - %(message)s'
 formatter = logging.Formatter(fmt)
 
-if log_file:# pragma: no cover
+if log_file:
     fh = logging.FileHandler(log_file)
     fh.setLevel(level)
     fh.setFormatter(formatter)
@@ -34,6 +33,29 @@ if len(LOG.handlers) > 0:
 # Auditing -> registre de accions que s'han fet i que es guardin
 # DTO entre classe i classe quan es retorna un objecte 
 
+def log_with_args_check_configuration(level):
+    def add_logging(func):
+        def wrapper(*args, **kwargs):
+            try:
+                start = time.time()
+                logging.basicConfig(format=fmt, level=level)
+                result = func(*args, **kwargs)
+                LOG.debug(f"{result} - {func.__name__} - initial call")
+                finish = time.time()
+                LOG.debug(f"{result} - {func.__name__}- {finish-start} - returned OK")
+                if f"{func.__name__}" == 'initialize':
+                    LOG.info(f"{result} - Initialization done")
+                elif f"{func.__name__}" == 'destroy':
+                    LOG.info(f"{result} - Shutting down")
+                return result
+            except:
+                err = "There was an exception in  "
+                err += func.__name__
+                LOG.error(f"check_configuration - {err}")
+                raise
+        return wrapper
+    return add_logging
+
 def log_with_args_initial(level):
     def add_logging(func):
         def wrapper(self, *args, **kwargs):
@@ -45,11 +67,11 @@ def log_with_args_initial(level):
                 finish = time.time()
                 LOG.debug(f"{result} - {func.__name__}- {finish-start} - returned OK")
                 if f"{func.__name__}" == 'initialize':
-                    LOG.info(f"{result} - Initialization done")# pragma: no cover
+                    LOG.info(f"{result} - Initialization done")
                 elif f"{func.__name__}" == 'destroy':
-                    LOG.info(f"{result} - Shutting down")# pragma: no cover
+                    LOG.info(f"{result} - Shutting down")
                 return result
-            except:# pragma: no cover
+            except:
                 err = "There was an exception in  "
                 err += func.__name__
                 LOG.error(f"{result} - {err}")
@@ -68,9 +90,9 @@ def log_with_args(level):
                 finish = time.time()
                 LOG.debug(f"{self._id} - {func.__name__} - {finish-start} - returned OK")
                 if f"{func.__name__}" == 'initialize':
-                    LOG.info(f"{self._id} - Initialization done")# pragma: no cover
+                    LOG.info(f"{self._id} - Initialization done")
                 elif f"{func.__name__}" == 'destroy':
-                    LOG.info(f"{self._id} - Shutting down")# pragma: no cover
+                    LOG.info(f"{self._id} - Shutting down")
                 return result
             except:
                 err = "There was an exception in  "
@@ -91,11 +113,11 @@ def log_with_args_mongo(level):
                 finish = time.time()
                 LOG.debug(f"{self._id} - {func.__name__} - {finish-start} - returned OK")
                 if f"{func.__name__}" == 'initialize':
-                    LOG.info(f"{self._id} - Initialization done")# pragma: no cover
+                    LOG.info(f"{self._id} - Initialization done")
                 elif f"{func.__name__}" == 'destroy':
-                    LOG.info(f"{self._id} - Shutting down")# pragma: no cover
+                    LOG.info(f"{self._id} - Shutting down")
                 return result
-            except Exception:# pragma: no cover
+            except Exception:
                 err = "There was an exception in  "
                 err += func.__name__
                 LOG.error(f"{self._id} - {err}")

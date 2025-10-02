@@ -6,12 +6,11 @@ class Granularity(StrEnum):
     RECORD = "record"
 
 class ErrorClass():
-    def __init__(self) -> None:# pragma: no cover
-        self.error_message=None
+    def __init__(self) -> None: #       self.error_message=None
         self.error_code=None
 
 class RequestAttributes():
-    def __init__(self) -> None:# pragma: no cover, explicar cada component què significa i una explicació del que és la classe
+    def __init__(self) -> None:
         self.ip=None # ip from the request client
         self.headers=None # headers in the request (e.g. authorization token...)
         self.entry_type=None # the entry type for the returning response
@@ -21,3 +20,5 @@ class RequestAttributes():
         self.allowed_granularity=None # the maximum granularity allowed for the returning entry type
         self.entry_type_id=None # the name of a single record of the returning entry type (e.g. individual for individuals)
         self.qparams=None # the query parameters collected from the request
+        self.response_type=None # the type of response (resultSet or not: countresponse, booleanresponse)
+        self.returned_granularity=None # the granularity returned: record, count or boolean

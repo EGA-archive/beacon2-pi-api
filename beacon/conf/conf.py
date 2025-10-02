@@ -5,7 +5,7 @@ from beacon.request.classes import ErrorClass
 try:
     with open("beacon/conf/api_version.yml") as api_version_file:
         api_version_yaml = yaml.safe_load(api_version_file)
-except Exception as e:# pragma: no cover
+except Exception as e:
     ErrorClass.error_code=500
     ErrorClass.error_message='There are issues with the api_version.yml file. Check if it can be opened or if has any content'
     raise
@@ -13,7 +13,7 @@ except Exception as e:# pragma: no cover
 level=logging.NOTSET
 log_file=None
 beacon_id = 'org.ega-archive.beacon-ri-demo'  # ID of the Beacon
-beacon_name = 'Beacon Reference Implementation demo'  # Name of the Beacon service
+beacon_name = 'Beacon Production Implementation demo'  # Name of the Beacon service
 api_version = 'v2.0.0' # Version of the Beacon implementation
 uri = 'http://localhost:5050'
 uri_subpath = '/api'

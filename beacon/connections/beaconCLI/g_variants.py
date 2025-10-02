@@ -8,7 +8,7 @@ from beacon.conf.conf import level
 from beacon.request.classes import ErrorClass
 
 @log_with_args(level)
-def get_variants(self, entry_id: Optional[str], qparams: RequestParams, dataset: str):
+def get_variants(self, entry_id: Optional[str], dataset: str):
     try:
         stdin, stdout, stderr = client.exec_command('cd /CLItest && python3 main.py -rg 37 -c 1 -p 1 --range 1000000000 --public')
     except Exception as e:

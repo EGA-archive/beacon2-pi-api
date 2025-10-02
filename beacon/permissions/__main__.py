@@ -26,9 +26,9 @@ async def authorization(self):
         access_token = auth[7:].strip() # 7 = len('Bearer ')
         user, list_visa_datasets = await authentication(self, access_token)
         if user is None:
-            user = 'public'# pragma: no cover
+            user = 'public'
         elif user == 'public':
-            username = 'public'# pragma: no cover
+            username = 'public'
         else:
             username = user.get('preferred_username')
     except Exception as e:
@@ -38,35 +38,35 @@ async def authorization(self):
     return username, list_visa_datasets
 
 @log_with_args(level)
-async def get_datasets_list(self, qparams, authorized_datasets):
+async def get_datasets_list(self, authorized_datasets):
     try:
         try:
-            specific_datasets = qparams.query.requestParameters['datasets']
+            specific_datasets = RequestAttributes.qparams.query.requestParameters['datasets']
         except Exception as e:
             specific_datasets = []
-        beacon_datasets = module.get_list_of_datasets(self)# pragma: no cover
+        beacon_datasets = module.get_list_of_datasets(self)
         # Get response
         if specific_datasets != []:
             response_datasets =  [element for element in authorized_datasets if element.dataset in [r['id'] for r in beacon_datasets] and element.dataset in specific_datasets]
         else:
             response_datasets =  [element for element in authorized_datasets if element.dataset in [r['id'] for r in beacon_datasets]]
-    except Exception:# pragma: no cover
+    except Exception:
         raise
     return response_datasets
 
 def query_permissions(func):
     @log_with_args(level)
-    async def permission(self, qparams):
+    async def permission(self):
         try:
             time_now=None
             username = 'public'
             try:
-                requested_datasets = qparams.query.requestParameters["datasets"]
+                requested_datasets = RequestAttributes.qparams.query.requestParameters["datasets"]
             except Exception:
                 requested_datasets = []
-            if qparams.query.testMode == True:
-                datasets_permissions = await PermissionsProxy.get_permissions(self, username=username, requested_datasets=requested_datasets, testMode=qparams.query.testMode)
-                response_datasets= await get_datasets_list(self, qparams, datasets_permissions)
+            if RequestAttributes.qparams.query.testMode == True:
+                datasets_permissions = await PermissionsProxy.get_permissions(self, username=username, requested_datasets=requested_datasets, testMode=RequestAttributes.qparams.query.testMode)
+                response_datasets= await get_datasets_list(self, datasets_permissions)
                 response_datasets_names=[]
                 for response_dataset in response_datasets:
                     response_datasets_names.append(response_dataset.dataset)
@@ -77,13 +77,13 @@ def query_permissions(func):
                         raise web.HTTPBadRequest
             else:
                 username, list_visa_datasets = await authorization(self)
-                datasets_permissions = await PermissionsProxy.get_permissions(self, username=username, requested_datasets=requested_datasets, testMode=qparams.query.testMode)
+                datasets_permissions = await PermissionsProxy.get_permissions(self, username=username, requested_datasets=requested_datasets, testMode=RequestAttributes.qparams.query.testMode)
                 time_now = check_budget(self, username)
                 for visa_dataset in list_visa_datasets:
                     datasets_permissions.append(DatasetPermission(visa_dataset, default_beacon_granularity))
-            response_datasets= await get_datasets_list(self, qparams, datasets_permissions)
-            return await func(self, qparams, response_datasets, username, time_now)
-        except Exception:# pragma: no cover
+            response_datasets= await get_datasets_list(self, datasets_permissions)
+            return await func(self, response_datasets, username, time_now)
+        except Exception:
             raise
     return permission
 

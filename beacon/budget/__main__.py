@@ -33,7 +33,7 @@ def check_budget(self, username):
             ErrorClass.error_code=401
             ErrorClass.error_message="Authentication failed. Please, log in to see results for the query"
             raise
-        return time_now # pragma: no cover
+        return time_now 
     except Exception as e:
         raise
 

@@ -1,8 +1,10 @@
+from beacon.conf import conf
+
 #### PLEASE, ALL THE HANDOVERS YOU NEED FOR BEACON TO SHOW LIKE THE handover_1 EXAMPLE BELOW #####
 
 handover_1={
     "note": "Description of the handover",
-    "url": "Link for the handover",
+    "url": conf.uri,
     "handoverType": {
                     'id': 'NCIT:C189151',
                     'label': 'Study Data Repository'

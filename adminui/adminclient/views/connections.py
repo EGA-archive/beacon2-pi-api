@@ -61,7 +61,7 @@ def default_view(request):
 
 
                             try:
-                                if Cluster:# pragma: no cover
+                                if Cluster:
                                     uri = "mongodb+srv://{}:{}@{}/?tls=true&authMechanism=SCRAM-SHA-256&retrywrites=false&maxIdleTimeMS=120000".format(
                                         User,
                                         Password,
@@ -77,7 +77,7 @@ def default_view(request):
                                         Auth
                                     )
 
-                                if Certificate != '' and CAFile != '':# pragma: no cover
+                                if Certificate != '' and CAFile != '':
                                     uri += '&tls=true&tlsCertificateKeyFile={}&tlsCAFile={}'.format(Certificate, CAFile)
                             except Exception:
                                 uri = "mongodb://{}:{}@{}:{}/{}?authSource={}".format(
@@ -174,7 +174,7 @@ def default_view(request):
 
 
                         try:
-                            if Cluster:# pragma: no cover
+                            if Cluster:
                                 uri = "mongodb+srv://{}:{}@{}/?tls=true&authMechanism=SCRAM-SHA-256&retrywrites=false&maxIdleTimeMS=120000".format(
                                     User,
                                     Password,
@@ -190,7 +190,7 @@ def default_view(request):
                                     Auth
                                 )
 
-                            if Certificate != '' and CAFile != '':# pragma: no cover
+                            if Certificate != '' and CAFile != '':
                                 uri += '&tls=true&tlsCertificateKeyFile={}&tlsCAFile={}'.format(Certificate, CAFile)
                         except Exception:
                             uri = "mongodb://{}:{}@{}:{}/{}?authSource={}".format(

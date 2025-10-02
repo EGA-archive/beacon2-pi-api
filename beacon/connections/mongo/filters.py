@@ -30,7 +30,7 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
             try:
                 query["$and"] = []
                 query["$and"].append(queryHGVSId)
-            except Exception:# pragma: no cover
+            except Exception:
                 pass
     else:
         def_list=[]                
@@ -114,11 +114,11 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                     finalids=[]
                     for indid in individual_id:
                         finalids.append(indid["individualId"])
-                except Exception:# pragma: no cover
+                except Exception:
                     finalids=[]
                 if finalids==[]:
-                    finalids=biosampleIds# pragma: no cover
-            except Exception:# pragma: no cover
+                    finalids=biosampleIds
+            except Exception:
                 finalids=biosampleIds
             query={}
             query["$or"]=[]
@@ -152,7 +152,7 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                 finalids=[]
                 for bioid in biosampleIds:
                     finalids.append({"id": bioid})
-            except Exception:# pragma: no cover
+            except Exception:
                 finalids=[]
             query = {"$and": [{"$or": finalids}]}
         elif scope == 'genomicVariation' and collection in [analysis.endpoint_name,run.endpoint_name]:
@@ -182,7 +182,7 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                 finalids=[]
                 for bioid in biosampleIds:
                     finalids.append({"biosampleId": bioid})
-            except Exception:# pragma: no cover
+            except Exception:
                 finalids=[]
             query = {"$and": [{"$or": finalids}]}
         elif scope == 'run' and collection != run.endpoint_name:
@@ -249,7 +249,7 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                     def_list.append(new_id)
                     query={}
                     query['$or']=def_list
-        elif scope == 'analysis' and collection != analysis.endpoint_name:# pragma: no cover
+        elif scope == 'analysis' and collection != analysis.endpoint_name:
             mongo_collection=analyses
             if collection == genomicVariant.endpoint_name:
                 original_id="biosampleId"
@@ -383,12 +383,14 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
 
 @log_with_args(level)
 def apply_filters(self, query: dict, filters: List[dict], collection: str, query_parameters: dict, dataset: str) -> dict:
+    LOG.warning(query_parameters)
+    LOG.warning(filters)
     request_parameters = query_parameters
     total_query={}
     if len(filters) >= 1:
         total_query["$and"] = []
         if query != {} and request_parameters == {}:
-            total_query["$and"].append(query)# pragma: no cover
+            total_query["$and"].append(query)
         for filter in filters:
             partial_query = {}
             if "value" in filter:
@@ -399,14 +401,14 @@ def apply_filters(self, query: dict, filters: List[dict], collection: str, query
                 filter.include_descendant_terms=True
                 partial_query = apply_ontology_filter(self, partial_query, filter, collection, request_parameters, dataset)
             elif "similarity" in filter or "includeDescendantTerms" in filter or re.match(CURIE_REGEX, filter["id"]) and filter["id"].isupper():
-                filter = OntologyFilter(**filter)# pragma: no cover
-                partial_query = apply_ontology_filter(self, partial_query, filter, collection, request_parameters, dataset)# pragma: no cover
+                filter = OntologyFilter(**filter)
+                partial_query = apply_ontology_filter(self, partial_query, filter, collection, request_parameters, dataset)
             else:
                 filter = CustomFilter(**filter)
                 partial_query = apply_custom_filter(self, partial_query, filter, collection, dataset)
             total_query["$and"].append(partial_query)
             if total_query["$and"] == [{'$or': []}] or total_query['$and'] == []:
-                total_query = {}# pragma: no cover
+                total_query = {}
     if request_parameters != {}:
         try:
             if collection == individual.endpoint_name:
@@ -415,7 +417,7 @@ def apply_filters(self, query: dict, filters: List[dict], collection: str, query
                 HGVSIds=list(HGVSIds)
                 HGVSDataset=HGVSIds[0]["datasetId"]
                 HGVSId=HGVSIds[0]["identifiers"]["genomicHGVSId"]
-                if dataset != HGVSDataset:# pragma: no cover
+                if dataset != HGVSDataset:
                     return {}
                 queryHGVSId={"datasetId": dataset, "id": HGVSId}
                 string_of_ids = caseLevelData \
@@ -444,11 +446,11 @@ def apply_filters(self, query: dict, filters: List[dict], collection: str, query
                         finalids=[]
                         for indid in individual_id:
                             finalids.append(indid["individualId"])
-                    except Exception:# pragma: no cover
+                    except Exception:
                         finalids=[]
-                    if finalids==[]:# pragma: no cover
+                    if finalids==[]:
                         finalids=biosampleIds
-                except Exception:# pragma: no cover
+                except Exception:
                     finalids=biosampleIds
                 finalquery={}
                 finalquery["$or"]=[]
@@ -466,7 +468,7 @@ def apply_filters(self, query: dict, filters: List[dict], collection: str, query
                 HGVSIds=list(HGVSIds)
                 HGVSDataset=HGVSIds[0]["datasetId"]
                 HGVSId=HGVSIds[0]["identifiers"]["genomicHGVSId"]
-                if dataset != HGVSDataset:# pragma: no cover
+                if dataset != HGVSDataset:
                     return {}
                 queryHGVSId={"datasetId": dataset, "id": HGVSId}
                 string_of_ids = caseLevelData \
@@ -488,7 +490,7 @@ def apply_filters(self, query: dict, filters: List[dict], collection: str, query
                     finalids=[]
                     for bioid in biosampleIds:
                         finalids.append({"id": bioid})
-                except Exception:# pragma: no cover
+                except Exception:
                     finalids=[]
                 try:
                     total_query["$and"].append({"$or": finalids})
@@ -501,7 +503,7 @@ def apply_filters(self, query: dict, filters: List[dict], collection: str, query
                 HGVSIds=list(HGVSIds)
                 HGVSDataset=HGVSIds[0]["datasetId"]
                 HGVSId=HGVSIds[0]["identifiers"]["genomicHGVSId"]
-                if dataset != HGVSDataset:# pragma: no cover
+                if dataset != HGVSDataset:
                     return {}
                 queryHGVSId={"datasetId": dataset, "id": HGVSId}
                 string_of_ids = caseLevelData \
@@ -522,7 +524,7 @@ def apply_filters(self, query: dict, filters: List[dict], collection: str, query
                     finalids=[]
                     for bioid in biosampleIds:
                         finalids.append({"biosampleId": bioid})
-                except Exception:# pragma: no cover
+                except Exception:
                     finalids=[]
                 try:
                     total_query["$and"].append({"$or": finalids})
@@ -536,8 +538,8 @@ def apply_filters(self, query: dict, filters: List[dict], collection: str, query
                     total_query["$and"]=[]
                     total_query["$and"].append(request_parameters)
             if total_query["$and"] == [{'$or': []}] or total_query['$and'] == []:
-                total_query = {}# pragma: no cover
-        except Exception:# pragma: no cover
+                total_query = {}
+        except Exception:
             pass
     if total_query == {} and query != {}:
         total_query=query
@@ -561,8 +563,8 @@ def apply_ontology_filter(self, query: dict, filter: OntologyFilter, collection:
     except Exception:
         synonym_id=None
     if synonym_id is not None:
-        final_term_list.append(filter.id)# pragma: no cover
-        filter.id=synonym_id# pragma: no cover
+        final_term_list.append(filter.id)
+        filter.id=synonym_id
     
     
     scope = filter.scope
@@ -570,7 +572,7 @@ def apply_ontology_filter(self, query: dict, filter: OntologyFilter, collection:
 
     is_filter_id_required = True
     # Search similar
-    if filter.similarity != Similarity.EXACT:# pragma: no cover
+    if filter.similarity != Similarity.EXACT:
         is_filter_id_required = False
         ontology_list=filter.id.split(':')
         try:
@@ -663,9 +665,9 @@ def apply_ontology_filter(self, query: dict, filter: OntologyFilter, collection:
 
         try: 
             if query['$or']:
-                pass# pragma: no cover
-            else:# pragma: no cover
-                query['$or']=[]# pragma: no cover
+                pass
+            else:
+                query['$or']=[]
         except Exception:
             query['$or']=[]
         list_descendant.append(filter.id)
@@ -692,7 +694,7 @@ def apply_ontology_filter(self, query: dict, filter: OntologyFilter, collection:
         try:
             dict_regex['$regex']=":"+label
             dict_regex['$options']='i'
-        except Exception:# pragma: no cover
+        except Exception:
             dict_regex['$regex']=''
         dict_id={}
         dict_id['id']=dict_regex
@@ -723,7 +725,7 @@ def apply_ontology_filter(self, query: dict, filter: OntologyFilter, collection:
         query=cross_query(self, query, scope, collection, request_parameters, dataset)
 
             
-    if is_filter_id_required:# pragma: no cover
+    if is_filter_id_required:
         query_filtering={}
         query_filtering['$and']=[]
         dict_id={}
@@ -781,15 +783,15 @@ def apply_ontology_filter(self, query: dict, filter: OntologyFilter, collection:
 @log_with_args(level)
 def format_value(self, value: Union[str, List[int]]) -> Union[List[int], str, int, float]:
     if isinstance(value, list):
-        return value# pragma: no cover
+        return value
     elif isinstance(value, int):
-        return value# pragma: no cover
+        return value
     
     elif value.isnumeric():
         if float(value).is_integer():
             return int(value)
         else:
-            return float(value)# pragma: no cover
+            return float(value)
     
     else:
         return value
@@ -871,19 +873,19 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, col
                         dict_regex['$regex']=prehgvs+filter.value+'.'+'13:g'
                     elif RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'GRCh38':
                         dict_regex['$regex']=prehgvs+filter.value+'.'+'14:g'
-            elif '&gt;' in filter.value:# pragma: no cover
+            elif '&gt;' in filter.value:
                 newvalue=filter.value.replace("&gt;",">")
                 dict_regex=newvalue
-            elif '.' in filter.value:# pragma: no cover
+            elif '.' in filter.value:
                 dict_regex['$regex']=filter.value
                 dict_regex['$options']= "si"
             query[filter.id] = dict_regex
         elif filter.id == 'molecularAttributes.aminoacidChanges':
-            query[filter.id] = filter.value# pragma: no cover
+            query[filter.id] = filter.value
         elif filter.id == 'molecularAttributes.geneIds':
-            query[filter.id] = filter.value# pragma: no cover
+            query[filter.id] = filter.value
         elif filter.id == "caseLevelData.clinicalInterpretations.clinicalRelevance":
-            query[filter.id] = filter.value# pragma: no cover
+            query[filter.id] = filter.value
         elif filter.id == "variation.alternateBases":
             if 'max' in filter.value:
                 valuereplaced = filter.value.replace('max', '')
@@ -956,16 +958,16 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, col
         scope = filter.scope
         scope=choose_scope(self, scope, collection, filter)
         if filter.id in alphanumeric_terms:
-            query_term = filter.id# pragma: no cover
+            query_term = filter.id
         else:
             query_term = filter.id + '.' + 'label'
         if formatted_operator == "$eq":
             if '%' in filter.value:
                 try: 
                     if query['$or']:
-                        pass# pragma: no cover
-                    else:# pragma: no cover
-                        query['$or']=[]# pragma: no cover
+                        pass
+                    else:
+                        query['$or']=[]
                 except Exception:
                     query['$or']=[]
                 value_splitted=filter.value.split('%')
@@ -979,9 +981,9 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, col
             else:
                 try: 
                     if query['$or']:
-                        pass# pragma: no cover
-                    else:# pragma: no cover
-                        query['$or']=[]# pragma: no cover
+                        pass
+                    else:
+                        query['$or']=[]
                 except Exception:
                     query['$or']=[]
                 query_id={}
@@ -994,9 +996,9 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, col
             if '%' in filter.value:
                 try: 
                     if query['$nor']:
-                        pass# pragma: no cover
-                    else:# pragma: no cover
-                        query['$nor']=[]# pragma: no cover
+                        pass
+                    else:
+                        query['$nor']=[]
                 except Exception:
                     query['$nor']=[]
                 value_splitted=filter.value.split('%')
@@ -1008,9 +1010,9 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, col
             else:
                 try: 
                     if query['$nor']:
-                        pass# pragma: no cover
-                    else:# pragma: no cover
-                        query['$nor']=[]# pragma: no cover
+                        pass
+                    else:
+                        query['$nor']=[]
                 except Exception:
                     query['$nor']=[]
 
@@ -1028,12 +1030,12 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, col
                     try:
                         int(char)
                         age_in_number = age_in_number+char
-                    except Exception:# pragma: no cover
+                    except Exception:
                         continue
                 new_age_list=''
                 
                 if "=" in filter.operator:
-                    z = int(age_in_number)# pragma: no cover
+                    z = int(age_in_number)
                 else:
                     z = int(age_in_number)+1
                 while z < 150:
@@ -1053,11 +1055,11 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, col
                     try:
                         int(char)
                         age_in_number = age_in_number+char
-                    except Exception:# pragma: no cover
+                    except Exception:
                         continue
                 new_age_list=''
                 if "=" in filter.operator:
-                    z = int(age_in_number)# pragma: no cover
+                    z = int(age_in_number)
                 else:
                     z = int(age_in_number)-1
                 while z > 0:
@@ -1077,9 +1079,9 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, col
                     try:
                         int(char)
                         age_in_number = age_in_number+char
-                    except Exception:# pragma: no cover
+                    except Exception:
                         continue
-                z = int(age_in_number)# pragma: no cover
+                z = int(age_in_number)
                 newagechar="P"+str(z)+"Y"
                 dict_in={}
                 dict_in["$regex"]=newagechar
@@ -1134,7 +1136,7 @@ def apply_custom_filter(self, query: dict, filter: CustomFilter, collection:str,
     scope=choose_scope(self, scope, collection, filter)
     value_splitted = filter.id.split(':')
     if value_splitted[0] in alphanumeric_terms:
-        query_term = value_splitted[0]# pragma: no cover
+        query_term = value_splitted[0]
     else:
         query_term = value_splitted[0] + '.label'
     query[query_term]=value_splitted[1]

@@ -127,8 +127,8 @@ def get_ontology_field_name(ontology_id:str, term_id:str, collection:str):
                                     if v2 == ontology_id + ':' + term_id:
                                         field = k + '.' + k2
                                         for key, value in item.items():
-                                            if k == 'label':
-                                                label = v
+                                            if key == 'label':
+                                                label = value.lower()
                                                 break
                                         break
                                 elif isinstance(v2, dict):
@@ -259,8 +259,7 @@ def get_filtering_object(terms_ids: list, collection_name: str):
             value_id=None
             if 'measurements.assayCode' in field:
                 value_id = label
-            else:
-                ontology_label = label
+            ontology_label = label
             if field is not None:
                 if onto not in list_of_ontologies:
                     list_of_ontologies.append(onto)
