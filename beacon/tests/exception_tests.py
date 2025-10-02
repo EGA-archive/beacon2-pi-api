@@ -9,6 +9,7 @@ from beacon.conf import analysis, biosample, cohort, dataset, genomicVariant, in
 from aiohttp_middlewares import cors_middleware
 from beacon.validator.configuration import contains_special_characters, check_configuration
 import logging
+import yaml
 
 
 class TestConfigurationExceptions(unittest.TestCase):
@@ -155,7 +156,7 @@ class TestConfigurationExceptions(unittest.TestCase):
     def test_analyses_ontology_id(self):
         with loop_context() as loop:
             from beacon.conf import analysis
-            analysis.ontology_id="NOT CURIE"
+            analysis.ontology_id="NOT13132 CURIE_!"
             async def test_check_analyses_ontology_id():
                 try:
                     check_configuration()
@@ -1714,17 +1715,6 @@ class TestConfigurationExceptions(unittest.TestCase):
                     pass
             loop.run_until_complete(test_conf_wrong_api_version())
             conf.api_version="string"
-    def test_conf_wrong_api_version(self):
-        with loop_context() as loop:
-            from beacon.conf import conf
-            conf.api_version=3
-            async def test_conf_wrong_api_version():
-                try:
-                    check_configuration()
-                except Exception:
-                    pass
-            loop.run_until_complete(test_conf_wrong_api_version())
-            conf.api_version="string"
     def test_conf_wrong_description(self):
         with loop_context() as loop:
             from beacon.conf import conf
@@ -1816,14 +1806,91 @@ class TestConfigurationExceptions(unittest.TestCase):
     def test_conf_wrong_documentation_url_no_http(self):
         with loop_context() as loop:
             from beacon.conf import conf
-            conf.documentation_url="https://b2ri-documentation-demo.ega-archive.org/"
+            conf.documentation_url="string"
             async def test_conf_wrong_documentation_url():
                 try:
                     check_configuration()
                 except Exception:
                     pass
             loop.run_until_complete(test_conf_wrong_documentation_url())
-            conf.documentation_url="string"
+            conf.documentation_url="https://b2ri-documentation-demo.ega-archive.org/"
+    def test_wrong_datasets_permissions(self):
+        with loop_context() as loop:
+            data={
+                "testing": {
+                    "registere": "yes"
+                }
+            }
+            with open('/beacon/permissions/datasets/datasets_permissions.yml', 'w') as outfile:
+                yaml.dump(data, outfile, default_flow_style=False)
+            async def test_conf_wrong_datasets_permissions():
+                try:
+                    check_configuration()
+                except Exception:
+                    pass
+            loop.run_until_complete(test_conf_wrong_datasets_permissions())
+    def test_wrong_datasets_permissions_2(self):
+        with loop_context() as loop:
+            data={
+                "testing": {
+                    "registered": {"yes": "no"}
+                }
+            }
+            with open('/beacon/permissions/datasets/datasets_permissions.yml', 'w') as outfile:
+                yaml.dump(data, outfile, default_flow_style=False)
+            async def test_conf_wrong_datasets_permissions_2():
+                try:
+                    check_configuration()
+                except Exception:
+                    pass
+            loop.run_until_complete(test_conf_wrong_datasets_permissions_2())
+    def test_wrong_datasets_permissions_3(self):
+        with loop_context() as loop:
+            data={
+                "testing": {
+                    "controlled": {"user-list": [{"user": "unknown"}]}
+                }
+            }
+            with open('/beacon/permissions/datasets/datasets_permissions.yml', 'w') as outfile:
+                yaml.dump(data, outfile, default_flow_style=False)
+            async def test_conf_wrong_datasets_permissions_3():
+                try:
+                    check_configuration()
+                except Exception:
+                    pass
+            loop.run_until_complete(test_conf_wrong_datasets_permissions_3())
+    def test_wrong_datasets_conf(self):
+        with loop_context() as loop:
+            data={
+                "testing": {
+                    "registere": "yes"
+                }
+            }
+            with open('/beacon/conf/datasets/datasets_conf.yml', 'w') as outfile:
+                yaml.dump(data, outfile, default_flow_style=False)
+            async def test_conf_wrong_datasets_conf():
+                try:
+                    check_configuration()
+                except Exception:
+                    pass
+            loop.run_until_complete(test_conf_wrong_datasets_conf())
+    def test_wrong_datasets_conf_2(self):
+        with loop_context() as loop:
+            data={
+                "testing": {
+                    "isTest": "yes"
+                }
+            }
+            with open('/beacon/conf/datasets/datasets_conf.yml', 'w') as outfile:
+                yaml.dump(data, outfile, default_flow_style=False)
+            async def test_conf_wrong_datasets_conf_2():
+                try:
+                    check_configuration()
+                except Exception:
+                    pass
+            loop.run_until_complete(test_conf_wrong_datasets_conf_2())
+
+
 
 def suite():
     """

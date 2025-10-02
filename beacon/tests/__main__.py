@@ -2824,6 +2824,10 @@ class TestMain(unittest.TestCase):
                 check_configuration()
             loop.run_until_complete(test_check_configuration())
             loop.run_until_complete(client.close())
+
+            
+            
+
     
 
 if __name__ == '__main__':

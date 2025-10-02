@@ -545,10 +545,7 @@ class TestNoFilters(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_configuration_http():
-                try:
-                    check_configuration()
-                except Exception:
-                    pass
+                check_configuration()
             loop.run_until_complete(test_check_configuration_http())
             loop.run_until_complete(client.close())
             conf.uri="http://localhost:50101"
@@ -655,7 +652,7 @@ class TestNoFilters(unittest.TestCase):
                 except Exception:
                     pass
             loop.run_until_complete(test_check_configuration_wrong_query_budget_database())
-            conf.query_budget_database=False
+            conf.query_budget_database="mongo"
     def test_main_check_configuration_with_wrong_analysis_database(self):
         with loop_context() as loop:
             from beacon.conf import analysis

@@ -5,7 +5,7 @@ from beacon.request.classes import ErrorClass
 try:
     with open("beacon/conf/api_version.yml") as api_version_file:
         api_version_yaml = yaml.safe_load(api_version_file)
-except Exception as e:# pragma: no cover
+except Exception as e:
     ErrorClass.error_code=500
     ErrorClass.error_message='There are issues with the api_version.yml file. Check if it can be opened or if has any content'
     raise
