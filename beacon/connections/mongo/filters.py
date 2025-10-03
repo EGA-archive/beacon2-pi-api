@@ -822,57 +822,54 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, col
                     dict_regex['$regex']='NC_012920.1:m'
                 else:
                     if 'chr' in filter.value:
-                        if len(filter.value) == 5:
-                            prehgvs='^NC_0000'
-                        elif len(filter.value) == 4:
-                            prehgvs='^NC_00000'
-                    elif len(filter.value) == 2:
+                        filter.value=filter.value.replace('chr', '')
+                    if len(filter.value) == 2:
                         prehgvs='^NC_0000'
                     elif len(filter.value) == 1:
                         prehgvs='^NC_00000'
-                    if filter.value == 'X' or filter.value == 'chrX':
+                    if filter.value == 'X':
                         if RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'NCBI36':
                             dict_regex['$regex']='^NC_000023'+filter.value+'.'+'9:g'
                         elif RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'GRCh37':
                             dict_regex['$regex']='^NC_000023'+filter.value+'.'+'10:g'
                         elif RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'GRCh38':
                             dict_regex['$regex']='^NC_000023'+filter.value+'.'+'11:g'
-                    elif filter.value == 'Y' or filter.value == 'chrY':
+                    elif filter.value == 'Y':
                         if RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'NCBI36':
                             dict_regex['$regex']='^NC_000024'+filter.value+'.'+'8:g'
                         elif RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'GRCh37':
                             dict_regex['$regex']='^NC_000024'+filter.value+'.'+'9:g'
                         elif RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'GRCh38':
                             dict_regex['$regex']='^NC_000024'+filter.value+'.'+'10:g'
-                    elif filter.value in ['14', '21', 'chr14', 'chr21']:
+                    elif filter.value in ['14', '21']:
                         if RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'NCBI36':
                             dict_regex['$regex']=prehgvs+filter.value+'.'+'7:g'
                         elif RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'GRCh37':
                             dict_regex['$regex']=prehgvs+filter.value+'.'+'8:g'
                         elif RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'GRCh38':
                             dict_regex['$regex']=prehgvs+filter.value+'.'+'9:g'
-                    elif filter.value in ['5', '11', '15', '16', '18', '19', '24', 'chr5', 'chr11', 'chr15', 'chr16', 'chr18', 'chr19', 'chr24']:
+                    elif filter.value in ['5', '11', '15', '16', '18', '19', '24']:
                         if RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'NCBI36':
                             dict_regex['$regex']=prehgvs+filter.value+'.'+'8:g'
                         elif RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'GRCh37':
                             dict_regex['$regex']=prehgvs+filter.value+'.'+'9:g'
                         elif RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'GRCh38':
                             dict_regex['$regex']=prehgvs+filter.value+'.'+'10:g'
-                    elif filter.value in ['1', '8', '10', '13', '17', '20', '22', '23', 'chr1', 'chr8', 'chr10', 'chr13', 'chr17', 'chr20', 'chr22', 'chr23']:
+                    elif filter.value in ['1', '8', '10', '13', '17', '20', '22', '23']:
                         if RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'NCBI36':
                             dict_regex['$regex']=prehgvs+filter.value+'.'+'9:g'
                         elif RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'GRCh37':
                             dict_regex['$regex']=prehgvs+filter.value+'.'+'10:g'
                         elif RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'GRCh38':
                             dict_regex['$regex']=prehgvs+filter.value+'.'+'11:g'
-                    elif filter.value in ['2', '3', '4', '6', '9', '12', 'chr2', 'chr3', 'chr4', 'chr6', 'chr9', 'chr12']:
+                    elif filter.value in ['2', '3', '4', '6', '9', '12']:
                         if RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'NCBI36':
                             dict_regex['$regex']=prehgvs+filter.value+'.'+'10:g'
                         elif RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'GRCh37':
                             dict_regex['$regex']=prehgvs+filter.value+'.'+'11:g'
                         elif RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'GRCh38':
                             dict_regex['$regex']=prehgvs+filter.value+'.'+'12:g'
-                    elif filter.value == '7' or filter.value == 'chr7':
+                    elif filter.value == '7':
                         if RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'NCBI36':
                             dict_regex['$regex']=prehgvs+filter.value+'.'+'12:g'
                         elif RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'GRCh37':
