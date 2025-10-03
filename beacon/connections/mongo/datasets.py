@@ -8,6 +8,8 @@ from beacon.connections.mongo.utils import get_docs_by_response_type, query_id, 
 from beacon.connections.mongo.request_parameters import apply_request_parameters
 from beacon.request.classes import ErrorClass, RequestAttributes
 from beacon.connections.mongo.__init__ import datasets
+import aiohttp.web as web
+from beacon.logs.logs import LOG
 
 @log_with_args_mongo(level)
 def get_datasets(self):
@@ -17,8 +19,7 @@ def get_datasets(self):
         query = collection.find(query)
         return query
     except Exception as e:
-        ErrorClass.error_code=500
-        ErrorClass.error_message=str(e)
+        self._error.handle_exception(e, None)
         raise
 
 @log_with_args_mongo(level)
@@ -29,16 +30,25 @@ def get_full_datasets(self):
             query = {}
         else:
             query = {'id': RequestAttributes.entry_id}
-        count = get_count(self, datasets, query)
         query = collection.find(query)
         entity_schema = DefaultSchemas.DATASETS
-        response_converted = (
-            [r for r in query] if query else []
-        )
+        try:
+            if RequestAttributes.qparams.query.requestParameters["datasets"] != []:
+                response_converted = (
+                    [r for r in query if r in RequestAttributes.qparams.query.requestParameters["datasets"]] if query else []
+                )
+            else:
+                response_converted = (
+                    [r for r in query] if query else []
+                ) 
+        except Exception:
+            response_converted = (
+                [r for r in query] if query else []
+            )
+        count = len(response_converted)
         return response_converted, count, entity_schema
     except Exception as e:
-        ErrorClass.error_code=500
-        ErrorClass.error_message=str(e)
+        self._error.handle_exception(e, None)
         raise
 
 @log_with_args_mongo(level)
@@ -48,8 +58,7 @@ def get_list_of_datasets(self):
         beacon_datasets = [ r for r in datasets ]
         return beacon_datasets
     except Exception as e:
-        ErrorClass.error_code=500
-        ErrorClass.error_message=str(e)
+        self._error.handle_exception(e, None)
         raise
 
 @log_with_args_mongo(level)

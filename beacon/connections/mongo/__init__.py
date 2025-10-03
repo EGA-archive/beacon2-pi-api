@@ -2,6 +2,7 @@ from pymongo.mongo_client import MongoClient
 from beacon.connections.mongo import conf
 from beacon.request.classes import ErrorClass
 from beacon.conf.conf import query_budget_database, query_budget_db_name, query_budget_table
+import aiohttp.web as web
 
 try:
 
@@ -27,8 +28,8 @@ try:
     client = MongoClient(uri)
 
 except Exception as e:
-    ErrorClass.error_code=500
-    ErrorClass.error_message=str(e)
+    ErrorClass.error_code = 500
+    ErrorClass.error_message = str(e)
     raise
 
 # Mongo dbname

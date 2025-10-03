@@ -6,21 +6,20 @@ import subprocess
 from beacon.logs.logs import log_with_args, LOG
 from beacon.conf.conf import level
 from beacon.request.classes import ErrorClass
+import aiohttp.web as web
 
 @log_with_args(level)
 def get_variants(self, entry_id: Optional[str], dataset: str):
     try:
         stdin, stdout, stderr = client.exec_command('cd /CLItest && python3 main.py -rg 37 -c 1 -p 1 --range 1000000000 --public')
     except Exception as e:
-        ErrorClass.error_code=500
-        ErrorClass.error_message=str(e)
+        self._error.handle_exception(e, None)
         raise
     try:
         bash = stdout.read()
     except subprocess.CalledProcessError as e:
         output = e.output
-        ErrorClass.error_code=500
-        ErrorClass.error_message=output
+        self._error.handle_exception(e, output)
         raise
     bash_list = bash.split(b'\n')
 

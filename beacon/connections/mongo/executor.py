@@ -11,7 +11,7 @@ from beacon.conf import individual, genomicVariant, biosample, run, dataset as d
 from beacon.connections.mongo.__init__ import biosamples, genomicVariations, individuals, analyses, runs, datasets, cohorts
 from beacon.response.schemas import DefaultSchemas
 from beacon.request.classes import ErrorClass, RequestAttributes
-from aiohttp import web
+import aiohttp.web as web
 
 @log_with_args(level)
 async def execute_function(self, datasets: list):
@@ -106,9 +106,8 @@ async def execute_function(self, datasets: list):
     try:
         return datasets_docs, datasets_count, count, entity_schema, include, datasets
     except Exception:
-        ErrorClass.error_code=400
-        ErrorClass.error_message="No datasets found. Check out the permissions if a response was expected."
-        raise web.HTTPBadRequest
+        self._error.handle_exception(web.HTTPBadRequest, "No datasets found. Check out the permissions or the datsets requested if a response was expected.")
+        raise
 
 @log_with_args(level)
 async def execute_collection_function(self):

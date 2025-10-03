@@ -19,6 +19,7 @@ Please, go to [B2RI/B2PI docs website](https://b2ri-documentation-demo.ega-archi
 * Architecture of the code is not dependent on a particular database, meaning that different types of databases (and more than one) can be potentially applied to this instance (although now only MongoDB is the one developed)
 * Parameters are sanitized
 * Users can manage what entry types want their beacon to show by editing a manage conf file inside source
+* Admin-ui to manage all the configuration settings from a UI is in development.
 
 ### TLS configuration
 

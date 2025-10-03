@@ -377,8 +377,7 @@ def build_response_summary(self, exists, num_total_results):
                 'numTotalResults': num_total_results
             }
     except Exception as e:
-        ErrorClass.error_code=500
-        ErrorClass.error_message=str(e)
+        self._error.handle_exception(e, None)
         raise
 
 @log_with_args(level)
@@ -416,8 +415,7 @@ def build_response_summary_by_dataset(self, datasets, data, dict_counts):
                 'exists': False
             }
     except Exception as e:
-        ErrorClass.error_code=500
-        ErrorClass.error_message=str(e)
+        self._error.handle_exception(e, None)
         raise
 
 @log_with_args(level)
@@ -432,8 +430,17 @@ def build_meta(self, entity_schema: Optional[DefaultSchemas]):
         }
         return meta
     except Exception as e:
-        ErrorClass.error_code=500
-        ErrorClass.error_message=str(e)
+        meta = {
+            'beaconId': conf.beacon_id,
+            'apiVersion': conf.api_version,
+            'returnedGranularity': "boolean",
+            'receivedRequestSummary': {"apiVersion": "Request did not reach server",
+                                        "requestedSchemas": [],
+                                        "pagination": {},
+                                        "requestedGranularity": "boolean"},
+            'returnedSchemas': [entity_schema.value] if entity_schema is not None else []
+        }
+        return meta
         raise
 
 @log_with_args(level)
@@ -454,8 +461,7 @@ def build_info_meta(self, entity_schema: Optional[DefaultSchemas]):
             }
             return meta
         except Exception as e:
-            ErrorClass.error_code=500
-            ErrorClass.error_message=str(e)
+            self._error.handle_exception(e, None)
             raise
 
 @log_with_args(level)
@@ -650,10 +656,7 @@ def build_beacon_info_response(self):
         beacon_response['response']=response
         return beacon_response
     except Exception as ex:
-        #template = "An exception of type {0} occurred. Arguments:\n{1!r}"
-        #message = template.format(type(ex).__name__, ex.args)
-        ErrorClass.error_code=500
-        ErrorClass.error_message=str(ex)
+        self._error.handle_exception(ex, None)
         raise
 
 @log_with_args(level)
@@ -834,8 +837,7 @@ def build_map(self):
 
         return beacon_map_json
     except Exception as e:
-        ErrorClass.error_code=500
-        ErrorClass.error_message=str(e)
+        self._error.handle_exception(e, None)
         raise
 
 @log_with_args(level)
@@ -989,8 +991,7 @@ def build_entry_types(self):
 
         return entry_types_json
     except Exception as e:
-        ErrorClass.error_code=500
-        ErrorClass.error_message=str(e)
+        self._error.handle_exception(e, None)
         raise
 
 @log_with_args(level)
@@ -1014,8 +1015,7 @@ def build_beacon_service_info_response(self):
         beacon_response['version']=conf.version
         return beacon_response
     except Exception as e:
-        ErrorClass.error_code=500
-        ErrorClass.error_message=str(e)
+        self._error.handle_exception(e, None)
         raise
 
 @log_with_args(level)

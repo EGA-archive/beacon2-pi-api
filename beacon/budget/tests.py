@@ -59,7 +59,7 @@ class TestBudget(unittest.TestCase):
         with loop_context() as loop:
             client = TestClient(TestServer(self.app), loop=loop)
             loop.run_until_complete(client.start_server())
-            MagicClass = MagicMock(_id='hohoho')
+            MagicClass = MagicMock(_id='hohoho', _error=ErrorClass())
             async def test_insert_and_check_budget_by_user():
                 RequestAttributes.ip="172.0.0.1"
                 time_now = check_budget(self=MagicClass, username="jane")
@@ -70,7 +70,7 @@ class TestBudget(unittest.TestCase):
                     resp = check_budget(self=MagicClass, username="jane")
                 except Exception:
                     pass
-                assert ErrorClass.error_code == 429
+                assert MagicClass._error.error_code == 429
                 
             loop.run_until_complete(test_insert_and_check_budget_by_user())
             loop.run_until_complete(client.close())
@@ -82,14 +82,14 @@ class TestBudget(unittest.TestCase):
         with loop_context() as loop:
             client = TestClient(TestServer(self.app), loop=loop)
             loop.run_until_complete(client.start_server())
-            MagicClass = MagicMock(_id='hohoho')
+            MagicClass = MagicMock(_id='hohoho', _error=ErrorClass())
             async def test_insert_and_check_budget_by_unauthorized_user():
                 try:
                     RequestAttributes.ip=None
                     resp = check_budget(self=MagicClass, username="public")
                 except Exception:
                     pass
-                assert ErrorClass.error_code == 401
+                assert MagicClass._error.error_code == 401
             loop.run_until_complete(test_insert_and_check_budget_by_unauthorized_user())
             loop.run_until_complete(client.close())
     def test_insert_and_check_budget_by_ip(self):
@@ -100,7 +100,7 @@ class TestBudget(unittest.TestCase):
             app = create_test_app()
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
-            MagicClass = MagicMock(_id='hohoho')
+            MagicClass = MagicMock(_id='hohoho', _error=ErrorClass())
             async def test_insert_and_check_budget_by_ip():
                 RequestAttributes.ip="172.0.0.1"
                 time_now = check_budget(self=MagicClass, username="public")
@@ -111,7 +111,7 @@ class TestBudget(unittest.TestCase):
                     resp = check_budget(self=MagicClass, username="public")
                 except Exception:
                     pass
-                assert ErrorClass.error_code == 429
+                assert MagicClass._error.error_code == 429
                 _graceful_shutdown_ctx(app)
             loop.run_until_complete(test_insert_and_check_budget_by_ip())
             loop.run_until_complete(client.close())

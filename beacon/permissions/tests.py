@@ -90,7 +90,7 @@ class TestAuthZ(unittest.TestCase):
                 headers={'Authorization': 'Bearer ' + mock_access_token}
                 RequestAttributes.headers= headers
                 username, list_visa_datasets = await authorization(self=MagicClass)
-                assert username == 'jane'
+                assert username == 'jane.smith@beacon.ga4gh'
             loop.run_until_complete(test_authorization())
             loop.run_until_complete(client.close())
 

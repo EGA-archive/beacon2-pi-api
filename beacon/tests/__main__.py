@@ -417,7 +417,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_analyses_with_limit_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+analysis.endpoint_name+"?limit=200")
+                resp = await client.get(conf.uri_subpath+"/"+analysis.endpoint_name+"?limit=200&skip=0&requestedGranularity=record")
                 assert resp.status == 200
             loop.run_until_complete(test_check_analyses_with_limit_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -2823,6 +2823,200 @@ class TestMain(unittest.TestCase):
             async def test_check_configuration():
                 check_configuration()
             loop.run_until_complete(test_check_configuration())
+            loop.run_until_complete(client.close())
+    def test_individuals_with_request_parameters_empty_fails(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_individuals_with_request_parameters_empty_fails():
+                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
+                "meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "requestParameters": {},
+                    "filters": [
+            {"id":"NCIT:C16576", "scope":"individual"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+            }
+            )
+                assert resp.status == 400
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert "set of meta/query parameters" in responsedict["error"]["errorMessage"]
+                assert responsedict["error"]["errorCode"] == "400"
+            loop.run_until_complete(test_check_individuals_with_request_parameters_empty_fails())
+            loop.run_until_complete(client.close())
+    def test_main_check_measurement_value_query_is_not_working_with_query_string_filters(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_measurement_value_query_is_not_working():
+                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name+'?filters=NCIT:C16576&limit=5&skip=0', json={
+                "meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+                            {
+                        "id": "anatomical entity",
+                        "operator": ">",
+                        "value": "44",
+                        "scope": "individual"
+                    }, 
+                ],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+            }
+            )
+
+                assert resp.status == 400
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert "two parameters conflict from string" in responsedict["error"]["errorMessage"]
+            loop.run_until_complete(test_check_measurement_value_query_is_not_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_measurement_value_query_is_working_with_query_string_filters(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_measurement_value_query_is_working():
+                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name+'?skip=0', json={
+                "meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+                            {
+                        "id": "anatomical entity",
+                        "operator": ">",
+                        "value": "44",
+                        "scope": "individual"
+                    }, 
+                ],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+            }
+            )
+
+                assert resp.status == 200
+            loop.run_until_complete(test_check_measurement_value_query_is_working())
+            loop.run_until_complete(client.close())
+    def test_individuals_with_request_parameters_with_query_string(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_runs_variants():
+                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name+'?alternateBases=A', json={
+                "meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "requestParameters": {
+                "referenceBases": "G" ,
+            "start": [43045703],
+                        "referenceName": "17",
+            "assemblyId": "GRCh37"
+            },        
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+            }
+            )
+                assert resp.status == 200
+            loop.run_until_complete(test_check_runs_variants())
+            loop.run_until_complete(client.close())
+    def test_individuals_with_request_parameters_with_query_string_parsing_datasets(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_runs_variants():
+                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name+'?end=43045704,43045705', json={
+                "meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "requestParameters": {
+            "start": [43045703,43045704],
+                        "referenceName": "17",
+            "assemblyId": "GRCh37"
+            },        
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+            }
+            )
+                assert resp.status == 200
+            loop.run_until_complete(test_check_runs_variants())
+            loop.run_until_complete(client.close())
+    def test_main_check_measurement_value_query_is_not_working_with_query_string_includeResultsetResponses(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_measurement_value_query_is_not_working():
+                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name+'?includeResultsetResponses=MISS', json={
+                "meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+                            {
+                        "id": "anatomical entity",
+                        "operator": ">",
+                        "value": "44",
+                        "scope": "individual"
+                    }, 
+                ],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+            }
+            )
+
+                assert resp.status == 400
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert "two parameters conflict from string" in responsedict["error"]["errorMessage"]
+            loop.run_until_complete(test_check_measurement_value_query_is_not_working())
             loop.run_until_complete(client.close())
 
             

@@ -5,6 +5,7 @@ from beacon.logs.logs import log_with_args_mongo, LOG
 from beacon.conf.conf import level
 from beacon.conf.filtering_terms import alphanumeric_terms
 from beacon.request.classes import ErrorClass
+import aiohttp.web as web
 
 @log_with_args_mongo(level)
 def get_cross_query(self, ids: dict, cross_type: str, collection_id: str):
@@ -33,8 +34,7 @@ def get_cross_query(self, ids: dict, cross_type: str, collection_id: str):
 
         return query
     except Exception as e:
-        ErrorClass.error_code=500
-        ErrorClass.error_message=str(e)
+        self._error.handle_exception(e, None)
         raise
 
 @log_with_args_mongo(level)
@@ -215,8 +215,7 @@ def choose_scope(self, scope, collection, filter):
                     ErrorClass.error_message="Look at filtering terms endpoint and select a scope from one of the available scope values for this filtering term: {}".format(filter.id)
                     raise
         except Exception as e:
-            ErrorClass.error_code=500
-            ErrorClass.error_message=str(e)
+            self._error.handle_exception(e, None)
             raise
     else:
         for scoped in scopes:
