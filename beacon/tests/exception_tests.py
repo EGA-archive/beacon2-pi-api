@@ -10,6 +10,7 @@ from aiohttp_middlewares import cors_middleware
 from beacon.validator.configuration import contains_special_characters, check_configuration
 import logging
 import yaml
+from beacon.tests.__main__ import create_app
 
 
 class TestConfigurationExceptions(unittest.TestCase):

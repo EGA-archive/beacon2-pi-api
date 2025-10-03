@@ -29,8 +29,7 @@ class EndpointView(web.View, CorsViewMixin):
     def __init__(self, request: Request):
         self._request = request
         self._id = generate_txid(self)
-        ErrorClass.error_code = None
-        ErrorClass.error_message = None
+        self._error = ErrorClass()
         RequestAttributes.ip = None
         RequestAttributes.headers=None
         RequestAttributes.entry_type=None
@@ -42,16 +41,16 @@ class EndpointView(web.View, CorsViewMixin):
             await deconstruct_request(self, self.request)
             return await self.handler()
         except Exception as e:
-            response_obj = build_beacon_error_response(self, ErrorClass.error_code, ErrorClass.error_message)
-            return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')
+            response_obj = build_beacon_error_response(self, self._error.return_code(), self._error.return_message())
+            return web.Response(text=json_util.dumps(response_obj), status=self._error.return_code(), content_type='application/json')
 
     async def post(self):
         try:
             await deconstruct_request(self, self.request)
             return await self.handler()
         except Exception as e:
-            response_obj = build_beacon_error_response(self, ErrorClass.error_code, ErrorClass.error_message)
-            return web.Response(text=json_util.dumps(response_obj), status=ErrorClass.error_code, content_type='application/json')
+            response_obj = build_beacon_error_response(self, self._error.return_code(), self._error.return_message())
+            return web.Response(text=json_util.dumps(response_obj), status=self._error.return_code(), content_type='application/json')
 
 class ServiceInfo(EndpointView):
     @log_with_args(level)

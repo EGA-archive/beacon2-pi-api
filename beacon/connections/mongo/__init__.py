@@ -28,7 +28,8 @@ try:
     client = MongoClient(uri)
 
 except Exception as e:
-    ErrorClass.error_code, ErrorClass.error_message = ErrorClass.handle_exception(ErrorClass, web.HTTPInternalServerError)
+    ErrorClass.error_code = 500
+    ErrorClass.error_message = str(e)
     raise
 
 # Mongo dbname

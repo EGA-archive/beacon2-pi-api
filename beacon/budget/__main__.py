@@ -17,22 +17,19 @@ def check_budget(self, username):
         if username is not None and username != 'public' and query_budget_per_user == True:
             remaining_budget=module.get_remaining_budget_by_user(self, username, start_budget_time)
             if len(remaining_budget)>=query_budget_amount:
-                ErrorClass.error_message="Number of queries exceeded for this user: {}".format(username)
-                ErrorClass.error_code, ErrorClass.error_message = ErrorClass.handle_exception(ErrorClass, web.HTTPTooManyRequests)
+                self._error.handle_exception(web.HTTPTooManyRequests, "Number of queries exceeded for this user: {}".format(username))
                 raise
             else:
                 return time_now
         elif query_budget_per_ip == True and RequestAttributes.ip is not None:
             remaining_budget=module.get_remaining_budget_by_ip(self, start_budget_time)
             if len(remaining_budget)>=query_budget_amount:
-                ErrorClass.error_message="Number of queries exceeded for this ip: {}".format(RequestAttributes.ip)
-                ErrorClass.error_code, ErrorClass.error_message = ErrorClass.handle_exception(ErrorClass, web.HTTPTooManyRequests)
+                self._error.handle_exception(web.HTTPTooManyRequests, "Number of queries exceeded for this ip: {}".format(RequestAttributes.ip))
                 raise
             else:
                 return time_now
         elif query_budget_per_user == True and username is None or query_budget_per_user == True and username == 'public':
-            ErrorClass.error_message="Authentication failed. Please, log in to see results for the query"
-            ErrorClass.error_code, ErrorClass.error_message = ErrorClass.handle_exception(ErrorClass, web.HTTPUnauthorized)
+            self._error.handle_exception(web.HTTPUnauthorized, "Authentication failed. Please, log in to see results for the query")
             raise
         return time_now 
     except Exception as e:

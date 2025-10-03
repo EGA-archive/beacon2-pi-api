@@ -30,7 +30,7 @@ async def authorization(self):
         elif user == 'public':
             username = 'public'
         else:
-            username = user.get('preferred_username')
+            username = user.get('email')
     except Exception as e:
         list_visa_datasets = []
         username = 'public'

@@ -34,7 +34,7 @@ def get_cross_query(self, ids: dict, cross_type: str, collection_id: str):
 
         return query
     except Exception as e:
-        ErrorClass.error_code, ErrorClass.error_message = ErrorClass.handle_exception(ErrorClass, web.HTTPInternalServerError)
+        self._error.handle_exception(e, None)
         raise
 
 @log_with_args_mongo(level)
@@ -215,7 +215,7 @@ def choose_scope(self, scope, collection, filter):
                     ErrorClass.error_message="Look at filtering terms endpoint and select a scope from one of the available scope values for this filtering term: {}".format(filter.id)
                     raise
         except Exception as e:
-            ErrorClass.error_code, ErrorClass.error_message = ErrorClass.handle_exception(ErrorClass, web.HTTPInternalServerError)
+            self._error.handle_exception(e, None)
             raise
     else:
         for scoped in scopes:

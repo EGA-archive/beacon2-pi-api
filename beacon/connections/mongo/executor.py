@@ -106,8 +106,7 @@ async def execute_function(self, datasets: list):
     try:
         return datasets_docs, datasets_count, count, entity_schema, include, datasets
     except Exception:
-        ErrorClass.error_message="No datasets found. Check out the permissions if a response was expected."
-        ErrorClass.error_code, ErrorClass.error_message = ErrorClass.handle_exception(ErrorClass, web.HTTPBadRequest)
+        self._error.handle_exception(web.HTTPBadRequest, "No datasets found. Check out the permissions or the datsets requested if a response was expected.")
         raise
 
 @log_with_args(level)

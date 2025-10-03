@@ -383,8 +383,6 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
 
 @log_with_args(level)
 def apply_filters(self, query: dict, filters: List[dict], collection: str, query_parameters: dict, dataset: str) -> dict:
-    LOG.warning(query_parameters)
-    LOG.warning(filters)
     request_parameters = query_parameters
     total_query={}
     if len(filters) >= 1:

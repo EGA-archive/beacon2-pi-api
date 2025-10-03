@@ -13,11 +13,10 @@ from beacon.request.classes import ErrorClass
 def validate_access_token(self, access_token, idp_issuer, jwks_url, algorithm, aud):
     try:
         if not jwt.algorithms.has_crypto:
-            ErrorClass.error_message="Unauthorized. The token is not encrypted with an algorithm."
-            ErrorClass.error_code, ErrorClass.error_message = ErrorClass.handle_exception(ErrorClass, web.HTTPUnauthorized)
+            self._error.handle_exception(web.HTTPUnauthorized, "Unauthorized. The token is not encrypted with an algorithm.")
             raise
     except Exception as e:
-        ErrorClass.error_code, ErrorClass.error_message = ErrorClass.handle_exception(ErrorClass, e)
+        self._error.handle_exception(e, None)
         raise
     try:
         jwks_client = jwt.PyJWKClient(jwks_url, cache_jwk_set=True, lifespan=360)
@@ -50,8 +49,7 @@ def fetch_idp(self, access_token):
         issuer = decoded['iss']
         aud = decoded['aud']
     except Exception as e:
-        ErrorClass.error_message="Unauthorized. The token could not be decoded"
-        ErrorClass.error_code, ErrorClass.error_message = ErrorClass.handle_exception(ErrorClass, web.HTTPUnauthorized)
+        self._error.handle_exception(web.HTTPUnauthorized, "Unauthorized. The token could not be decoded")
         raise
     try:
         user_info=''
@@ -75,11 +73,10 @@ def fetch_idp(self, access_token):
             else:
                 continue
     except Exception as e:
-        ErrorClass.error_code, ErrorClass.error_message = ErrorClass.handle_exception(ErrorClass, e)
+        self._error.handle_exception(e, None)
         raise
     if idp_issuer is None:
-        ErrorClass.error_message="Unauthorized. There is no issuer in the token. Please, use a valid token with an issuer header."
-        ErrorClass.error_code, ErrorClass.error_message = ErrorClass.handle_exception(ErrorClass, web.HTTPUnauthorized)
+        self._error.handle_exception(web.HTTPUnauthorized, "Unauthorized. There is no issuer in the token. Please, use a valid token with an issuer header.")
         raise
     return idp_issuer, user_info, idp_client_id, idp_client_secret, idp_introspection, idp_jwks_url, algorithm, aud
 
@@ -114,8 +111,7 @@ async def fetch_user_info(self, access_token, user_info, idp_issuer, list_visa_d
                                 if visa['iss']==idp_issuer:
                                     pass
                                 else:
-                                    ErrorClass.error_message="Unauthorized. Invalid visa token."
-                                    ErrorClass.error_code, ErrorClass.error_message = ErrorClass.handle_exception(ErrorClass, web.HTTPUnauthorized)
+                                    self._error.handle_exception(web.HTTPUnauthorized, "Unauthorized. Invalid visa token.")
                                     raise
                                 dataset_url = visa["ga4gh_visa_v1"]["value"]
                                 dataset_url_splitted = dataset_url.split('/')
@@ -127,8 +123,7 @@ async def fetch_user_info(self, access_token, user_info, idp_issuer, list_visa_d
                     pass
                 return user, list_visa_datasets
             else:
-                ErrorClass.error_message="Unauthorized. Could not fetch the user info from the token."
-                ErrorClass.error_code, ErrorClass.error_message = ErrorClass.handle_exception(ErrorClass, web.HTTPUnauthorized)
+                self._error.handle_exception(web.HTTPUnauthorized, "Unauthorized. Could not fetch the user info from the token.")
                 raise
 
 @log_with_args(level)

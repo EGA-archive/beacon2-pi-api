@@ -23,5 +23,5 @@ def get_filtering_terms(self):
         )
         return schema, count, docs
     except Exception as e:
-        ErrorClass.error_code, ErrorClass.error_message = ErrorClass.handle_exception(ErrorClass, web.HTTPInternalServerError)
+        self._error.handle_exception(e, None)
         raise

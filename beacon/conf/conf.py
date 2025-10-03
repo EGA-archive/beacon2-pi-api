@@ -8,7 +8,7 @@ try:
         api_version_yaml = yaml.safe_load(api_version_file)
 except Exception as e:
     ErrorClass.error_message='There are issues with the api_version.yml file. Check if it can be opened or if has any content'
-    ErrorClass.error_code, ErrorClass.error_message = ErrorClass.handle_exception(ErrorClass, web.HTTPInternalServerError)
+    ErrorClass.error_code=500
     raise
 
 level=logging.NOTSET
