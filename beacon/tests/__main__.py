@@ -1060,6 +1060,19 @@ class TestMain(unittest.TestCase):
                 assert resp.status == 200
             loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
             loop.run_until_complete(client.close())
+    def test_main_check_g_variants_range_query_with_chr(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_g_variants_endpoint_with_parameters_is_working():
+                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=343675&referenceName=chr2&assemblyId=GRCh37&end=345681&testMode=True")
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 6
+                assert resp.status == 200
+            loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
+            loop.run_until_complete(client.close())
     def test_main_check_g_variants_geneId_query(self):
         with loop_context() as loop:
             app = create_app()
