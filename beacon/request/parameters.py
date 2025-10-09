@@ -63,13 +63,16 @@ class CustomFilter(CamelModel):
 
 
 class SchemasPerEntity(CamelModel):
-    entityType: Optional[str] = ""
-    schema: Optional[str] = ""
+    entityType: Optional[str] = None
+    schema: Optional[str] = None
 
 
 class Pagination(CamelModel):
     skip: int = 0
     limit: int = 10
+    currentPage: Optional[str] = None
+    nexttPage: Optional[str] = None
+    previousPage: Optional[str] = None
 
 
 class RequestMeta(CamelModel):

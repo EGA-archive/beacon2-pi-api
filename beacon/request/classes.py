@@ -17,78 +17,9 @@ class ErrorClass:
                 self.error_message = type(exception).__name__
             else:
                 self.error_message = message
-            if exception == web.HTTPBadRequest:
-                self.error_code = 400
-            elif exception == web.HTTPUnauthorized:
-                self.error_code = 401
-            elif exception == web.HTTPPaymentRequired:
-                self.error_code = 402
-            elif exception == web.HTTPForbidden:
-                self.error_code = 403
-            elif exception == web.HTTPNotFound:
-                self.error_code = 404
-            elif exception == web.HTTPMethodNotAllowed:
-                self.error_code = 405
-            elif exception == web.HTTPNotAcceptable:
-                self.error_code = 406
-            elif exception == web.HTTPProxyAuthenticationRequired:
-                self.error_code = 407
-            elif exception == web.HTTPRequestTimeout:
-                self.error_code = 408
-            elif exception == web.HTTPConflict:
-                self.error_code = 409
-            elif exception == web.HTTPGone:
-                self.error_code = 410
-            elif exception == web.HTTPLengthRequired:
-                self.error_code = 411
-            elif exception == web.HTTPPreconditionFailed:
-                self.error_code = 412
-            elif exception == web.HTTPRequestEntityTooLarge:
-                self.error_code = 413
-            elif exception == web.HTTPRequestURITooLong:
-                self.error_code = 414
-            elif exception == web.HTTPUnsupportedMediaType:
-                self.error_code = 415
-            elif exception == web.HTTPRequestRangeNotSatisfiable:
-                self.error_code = 416
-            elif exception == web.HTTPExpectationFailed:
-                self.error_code= 417
-            elif exception == web.HTTPMisdirectedRequest:
-                self.error_code = 421
-            elif exception == web.HTTPUnprocessableEntity:
-                self.error_code = 422
-            elif exception == web.HTTPFailedDependency:
-                self.error_code = 424
-            elif exception == web.HTTPUpgradeRequired:
-                self.error_code = 426
-            elif exception == web.HTTPPreconditionRequired:
-                self.error_code = 428
-            elif exception == web.HTTPTooManyRequests:
-                self.error_code = 429
-            elif exception == web.HTTPRequestHeaderFieldsTooLarge:
-                self.error_code = 431
-            elif exception == web.HTTPUnavailableForLegalReasons:
-                self.error_code = 451
-            elif exception == web.HTTPInternalServerError:
-                self.error_code = 500
-            elif exception == web.HTTPNotImplemented:
-                self.error_code = 501
-            elif exception == web.HTTPBadGateway:
-                self.error_code = 502
-            elif exception == web.HTTPServiceUnavailable:
-                self.error_code = 503
-            elif exception == web.HTTPGatewayTimeout:
-                self.error_code = 504
-            elif exception == web.HTTPVersionNotSupported:
-                self.error_code = 505
-            elif exception == web.HTTPVariantAlsoNegotiates:
-                self.error_codee = 506
-            elif exception == web.HTTPInsufficientStorage:
-                self.error_code = 507
-            elif exception == web.HTTPNotExtended:
-                self.error_code = 510
-            elif exception == web.HTTPNetworkAuthenticationRequired:
-                self.error_code = 511
+            # Això és del tipus web.HTTPException? i posar status
+            if exception == web.HTTPException:
+                self.error_code = exception.status
             elif exception == NotImplementedError:
                 self.error_code = 501
             elif exception == OSError:
@@ -123,3 +54,4 @@ class RequestAttributes():
         self.qparams=None # the query parameters collected from the request
         self.response_type=None # the type of response (resultSet or not: countresponse, booleanresponse)
         self.returned_granularity=None # the granularity returned: record, count or boolean
+        self.entity_schema=None

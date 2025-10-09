@@ -1,16 +1,10 @@
 {
-    "$schema": "https://raw.githubusercontent.com/ga4gh-beacon/beacon-framework-v2/main/configuration/beaconConfigurationSchema.json",
-    "maturityAttributes": {
-        "productionStatus": "TEST"
+    "meta": {
+        "apiVersion": "v2.0.0",
+        "beaconId": "beaconId",
+        "returnedSchemas": []
     },
-    "securityAttributes": {
-        "defaultGranularity": "record",
-        "securityLevels": [
-            "PUBLIC",
-            "REGISTERED",
-            "CONTROLLED"
-        ]
-    },
+    "response": {
     "entryTypes": {
         "analysis": {
             "id": "analysis",
@@ -151,4 +145,5 @@
             "nonFilteredQueriesAllowed": true
         }
     }
+}
 }

@@ -18,6 +18,7 @@ def get_cohorts(self):
     limit = RequestAttributes.qparams.query.pagination.limit
     query = apply_filters(self, {}, RequestAttributes.qparams.query.filters, collection, {}, "a")
     schema = DefaultSchemas.COHORTS
+    RequestAttributes.entity_schema=DefaultSchemas.COHORTS
     count = get_count(self, cohorts, query)
     docs = get_documents(self,
         cohorts,
@@ -37,6 +38,7 @@ def get_cohort_with_id(self):
     query = apply_filters(self, {}, RequestAttributes.qparams.query.filters, collection, {}, "a")
     query = query_id(self, query, RequestAttributes.entry_id)
     schema = DefaultSchemas.COHORTS
+    RequestAttributes.entity_schema=DefaultSchemas.COHORTS
     count = get_count(self, cohorts, query)
     docs = get_documents(self,
         cohorts,

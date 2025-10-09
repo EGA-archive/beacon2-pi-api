@@ -30,8 +30,9 @@ def get_full_datasets(self):
             query = {}
         else:
             query = {'id': RequestAttributes.entry_id}
-        query = collection.find(query)
+        query = collection.find(query, {"_id": 0})
         entity_schema = DefaultSchemas.DATASETS
+        RequestAttributes.entity_schema=DefaultSchemas.DATASETS
         try:
             if RequestAttributes.qparams.query.requestParameters["datasets"] != []:
                 response_converted = (
@@ -71,6 +72,7 @@ def get_dataset_with_id(self):
         query={}
     query = query_id(self, query, RequestAttributes.entry_id)
     schema = DefaultSchemas.DATASETS
+    RequestAttributes.entity_schema=DefaultSchemas.DATASETS
     count = get_count(self, datasets, query)
     docs = get_documents(self,
         datasets,

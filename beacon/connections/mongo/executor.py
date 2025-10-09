@@ -24,26 +24,31 @@ async def execute_function(self, datasets: list):
         collection=genomicVariant.endpoint_name
         mongo_collection=genomicVariations
         schema=DefaultSchemas.GENOMICVARIATIONS
+        RequestAttributes.entity_schema=DefaultSchemas.GENOMICVARIATIONS
         idq="caseLevelData.biosampleId"
     elif RequestAttributes.entry_type==analysis.endpoint_name:
         collection=analysis.endpoint_name
         mongo_collection=analyses
         schema=DefaultSchemas.ANALYSES
+        RequestAttributes.entity_schema=DefaultSchemas.ANALYSES
         idq="biosampleId"
     elif RequestAttributes.entry_type==biosample.endpoint_name:
         collection=biosample.endpoint_name
         mongo_collection=biosamples
         schema=DefaultSchemas.BIOSAMPLES
+        RequestAttributes.entity_schema=DefaultSchemas.BIOSAMPLES
         idq="id"
     elif RequestAttributes.entry_type==individual.endpoint_name:
         collection=individual.endpoint_name
         mongo_collection=individuals
         schema=DefaultSchemas.INDIVIDUALS
+        RequestAttributes.entity_schema=DefaultSchemas.INDIVIDUALS
         idq="id"
     elif RequestAttributes.entry_type==run.endpoint_name:
         collection=run.endpoint_name
         mongo_collection=runs
         schema=DefaultSchemas.RUNS
+        RequestAttributes.entity_schema=DefaultSchemas.RUNS
         idq="biosampleId"
     if RequestAttributes.pre_entry_type == None:
         if RequestAttributes.entry_id == None:
