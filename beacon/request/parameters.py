@@ -14,6 +14,7 @@ from aiohttp import web
 from beacon.request.classes import ErrorClass, RequestAttributes
 from beacon.request.classes import Granularity
 from beacon.logs.logs import LOG
+import re
 
 class CamelModel(BaseModel):
     class Config:
@@ -48,19 +49,31 @@ class OntologyFilter(CamelModel):
     scope: Optional[str] =None
     include_descendant_terms: bool = False
     similarity: Similarity = Similarity.EXACT
-
+    @field_validator('id')
+    @classmethod
+    def id__ontology_filter_must_be_CURIE(cls, v: str) -> str:
+        if re.match("[A-Za-z0-9]+:[A-Za-z0-9]", v):
+            pass
+        else:
+            raise ValueError('id must be CURIE, e.g. NCIT:C42331')
+        return v
 
 class AlphanumericFilter(CamelModel):
     id: str
     value: Union[str, int, List[int]]
     scope: Optional[str] =None
     operator: Operator = Operator.EQUAL
+    @field_validator('id')
+    @classmethod
+    def id__alphanumeric_filter_must_not_be_CURIE(cls, v: str) -> str:
+        if re.match("[A-Za-z0-9]+:[A-Za-z0-9]", v):
+            raise ValueError('id must be a schema field reference, not a CURIE')
+        return v
 
 
 class CustomFilter(CamelModel):
     id: str
     scope: Optional[str] =None
-
 
 class SchemasPerEntity(CamelModel):
     entityType: Optional[str] = None

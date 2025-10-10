@@ -1,5 +1,4 @@
 from aiohttp.web_request import Request
-from beacon.response.catalog import build_meta, build_response_summary, build_info_meta, build_configuration, build_map
 from beacon.logs.logs import log_with_args, LOG
 from beacon.conf.conf import level
 from beacon.request.classes import Granularity, RequestAttributes
@@ -37,11 +36,11 @@ async def builder(self, datasets):
         complete_module='beacon.connections.'+RequestAttributes.source+'.executor'
         import importlib
         module = importlib.import_module(complete_module, package=None)
-        datasets_docs, datasets_count, count, entity_schema, include, datasets = await module.execute_function(self, datasets)
+        datasets_docs, datasets_count, count, include, datasets = await module.execute_function(self, datasets)
         if RequestAttributes.response_type == 'resultSet':
-            with open('beacon/response/templates/{}/resultSetsResponse.json'.format('v2.2.0'), 'r') as template:
+            with open('beacon/response/templates/{}/resultSetsResponse.json'.format(RequestAttributes.returned_apiVersion), 'r') as template:
                 response = json.load(template)
-            meta = Meta(receivedRequestSummary=RequestAttributes.qparams.summary(),returnedGranularity=RequestAttributes.returned_granularity,returnedSchemas=[RequestAttributes.entity_schema.value] if RequestAttributes.entity_schema is not None else [],testMode=RequestAttributes.qparams.query.testMode)
+            meta = Meta(receivedRequestSummary=RequestAttributes.qparams.summary(),returnedGranularity=RequestAttributes.returned_granularity,returnedSchemas=RequestAttributes.returned_schema,testMode=RequestAttributes.qparams.query.testMode)
             responseSummary = ResponseSummary.build_response_summary_by_dataset(ResponseSummary, datasets, datasets_count)
             list_of_resultSets=[]
             for dataset in datasets:
@@ -54,9 +53,9 @@ async def builder(self, datasets):
             response = resultSetsFromTemplate.model_validate(resultSetsResponse)
             response = response.model_dump(exclude_none=True)
         elif RequestAttributes.response_type == 'count':
-            with open('beacon/response/templates/{}/count.json'.format('v2.2.0'), 'r') as template:
+            with open('beacon/response/templates/{}/count.json'.format(RequestAttributes.returned_apiVersion), 'r') as template:
                 response = json.load(template)
-            meta = Meta(receivedRequestSummary=RequestAttributes.qparams.summary(),returnedGranularity=RequestAttributes.returned_granularity,returnedSchemas=[RequestAttributes.entity_schema.value] if RequestAttributes.entity_schema is not None else [],testMode=RequestAttributes.qparams.query.testMode)
+            meta = Meta(receivedRequestSummary=RequestAttributes.qparams.summary(),returnedGranularity=RequestAttributes.returned_granularity,returnedSchemas=RequestAttributes.returned_schema,testMode=RequestAttributes.qparams.query.testMode)
             responseSummary = CountResponseSummary.build_count_response_summary(CountResponseSummary, count)
             countResponse = CountResponse(meta=meta, responseSummary=responseSummary)
             countResponse = countResponse.model_dump(exclude_none=True)
@@ -64,9 +63,9 @@ async def builder(self, datasets):
             response = countsFromTemplate.model_validate(countResponse)
             response = response.model_dump(exclude_none=True)
         else:
-            with open('beacon/response/templates/{}/boolean.json'.format('v2.2.0'), 'r') as template:
+            with open('beacon/response/templates/{}/boolean.json'.format(RequestAttributes.returned_apiVersion), 'r') as template:
                 response = json.load(template)
-            meta = Meta(receivedRequestSummary=RequestAttributes.qparams.summary(),returnedGranularity=RequestAttributes.returned_granularity,returnedSchemas=[RequestAttributes.entity_schema.value] if RequestAttributes.entity_schema is not None else [],testMode=RequestAttributes.qparams.query.testMode)
+            meta = Meta(receivedRequestSummary=RequestAttributes.qparams.summary(),returnedGranularity=RequestAttributes.returned_granularity,returnedSchemas=RequestAttributes.returned_schema,testMode=RequestAttributes.qparams.query.testMode)
             responseSummary = BooleanResponseSummary(exists=count>0)
             booleanResponse = BooleanResponse(meta=meta, responseSummary=responseSummary)
             booleanResponse = booleanResponse.model_dump(exclude_none=True)
@@ -87,10 +86,10 @@ async def collection_builder(self):
         complete_module='beacon.connections.'+source+'.executor'
         import importlib
         module = importlib.import_module(complete_module, package=None)
-        response_converted, count, entity_schema = await module.execute_collection_function(self)
-        with open('beacon/response/templates/{}/collections.json'.format('v2.2.0'), 'r') as template:
+        response_converted, count = await module.execute_collection_function(self)
+        with open('beacon/response/templates/{}/collections.json'.format(RequestAttributes.returned_apiVersion), 'r') as template:
             response = json.load(template)
-        meta = Meta(receivedRequestSummary=RequestAttributes.qparams.summary(),returnedGranularity=RequestAttributes.returned_granularity,returnedSchemas=[RequestAttributes.entity_schema.value] if RequestAttributes.entity_schema is not None else [],testMode=RequestAttributes.qparams.query.testMode)
+        meta = Meta(receivedRequestSummary=RequestAttributes.qparams.summary(),returnedGranularity=RequestAttributes.returned_granularity,returnedSchemas=RequestAttributes.returned_schema,testMode=RequestAttributes.qparams.query.testMode)
         responseSummary = ResponseSummary(exists=count>0,numTotalResults=count)
         collections = Collection(collections=response_converted)
         collectionResponse = CollectionResponse(meta=meta,response=collections,responseSummary=responseSummary)
@@ -187,7 +186,7 @@ async def filtering_terms_builder(self):
     import importlib
     module = importlib.import_module(complete_module, package=None)
     try:
-        entity_schema, count, records = module.get_filtering_terms(self)
+        count, records = module.get_filtering_terms(self)
         with open('beacon/response/templates/{}/filtering_terms.json'.format("v2.2.0"), 'r') as template:
             response = json.load(template)
         filteringterms = FilteringTermsResults(filteringTerms=records)

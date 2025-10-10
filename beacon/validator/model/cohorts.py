@@ -21,7 +21,7 @@ class OntologyTerm(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('id must be CURIE, e.g. NCIT:C42331')
-        return v.title()
+        return v
 
 class Age(BaseModel, extra='forbid'):
     iso8601duration: str
@@ -63,7 +63,7 @@ class EventTimeline(BaseModel, extra='forbid'):
                 parse(v)
             except Exception as e:
                 raise ValueError('end, if string, must be Timestamp, getting this error: {}'.format(e))
-            return v.title()
+            return v
     @field_validator('start')
     @classmethod
     def check_start(cls, v: str) -> str:
@@ -72,7 +72,7 @@ class EventTimeline(BaseModel, extra='forbid'):
                 parse(v)
             except Exception as e:
                 raise ValueError('start, if string, must be Timestamp, getting this error: {}'.format(e))
-            return v.title()
+            return v
         
 
 class Diseases(BaseModel, extra='forbid'):
@@ -90,7 +90,7 @@ class Diseases(BaseModel, extra='forbid'):
                 parse(v)
             except Exception as e:
                 raise ValueError('ageOfOnset, if string, must be Timestamp, getting this error: {}'.format(e))
-            return v.title()
+            return v
         elif isinstance(v, dict):
             fits_in_class=False
             try:
@@ -135,7 +135,7 @@ class Ethnicity(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('id must be CURIE, e.g. NCIT:C42331')
-        return v.title()
+        return v
     
 class Sex(BaseModel, extra='forbid'):
     id: str
@@ -147,7 +147,7 @@ class Sex(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('id must be CURIE, e.g. NCIT:C42331')
-        return v.title()
+        return v
     
 class Reference(BaseModel, extra='forbid'):
     id: Optional[str] = None
@@ -185,7 +185,7 @@ class PhenotypicFeatures(BaseModel, extra='forbid'):
                 parse(v)
             except Exception as e:
                 raise ValueError('onset, if string, must be Timestamp, getting this error: {}'.format(e))
-            return v.title()
+            return v
         elif isinstance(v, dict):
             fits_in_class=False
             try:
@@ -227,7 +227,7 @@ class PhenotypicFeatures(BaseModel, extra='forbid'):
                 parse(v)
             except Exception as e:
                 raise ValueError('resolution, if string, must be Timestamp, getting this error: {}'.format(e))
-            return v.title()
+            return v
         elif isinstance(v, dict):
             fits_in_class=False
             try:
@@ -322,7 +322,7 @@ class CollectionEvent(BaseModel, extra='forbid'):
                 parse(v)
             except Exception as e:
                 raise ValueError('eventDate, if string, must be Timestamp, getting this error: {}'.format(e))
-            return v.title()
+            return v
 
 class Cohorts(BaseModel, extra='forbid'):
     def __init__(self, **data) -> None:

@@ -20,7 +20,7 @@ class OntologyTerm(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('id must be CURIE, e.g. NCIT:C42331')
-        return v.title()
+        return v
             
 class DUODataUse(BaseModel, extra='forbid'):
     description: str
@@ -35,7 +35,7 @@ class DUODataUse(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('id must be CURIE, e.g. NCIT:C42331')
-        return v.title()
+        return v
     @field_validator('modifiers')
     @classmethod
     def check_modifiers(cls, v: list) -> list:
@@ -72,7 +72,7 @@ class Datasets(BaseModel, extra='forbid'):
                 parse(v)
             except Exception as e:
                 raise ValueError('createDateTime, if string, must be Timestamp, getting this error: {}'.format(e))
-            return v.title()
+            return v
     @field_validator('updateDateTime')
     @classmethod
     def check_updateDateTime(cls, v: str) -> str:
@@ -81,4 +81,4 @@ class Datasets(BaseModel, extra='forbid'):
                 parse(v)
             except Exception as e:
                 raise ValueError('updateDateTime, if string, must be Timestamp, getting this error: {}'.format(e))
-            return v.title()
+            return v

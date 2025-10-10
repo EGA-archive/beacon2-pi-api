@@ -1,5 +1,7 @@
 from pydantic import (
-    BaseModel
+    BaseModel,
+    field_validator,
+    model_validator
 )
 from beacon.validator.model.genomicVariations import OntologyTerm, GenomicVariations
 from beacon.validator.model.analyses import Analyses
@@ -28,7 +30,7 @@ class Meta(BaseModel):
     receivedRequestSummary: ReceivedRequestSummary
     returnedGranularity: str
     returnedSchemas: List[SchemasPerEntity]
-    testMode: Optional[bool]
+    testMode: Optional[bool] = None
 
 class InformationalMeta(BaseModel):
     apiVersion: str=conf.api_version
@@ -78,6 +80,12 @@ class ResultsetInstance(BaseModel):
     resultsCount: Optional[int]=None
     resultsHandovers: Optional[List[Handover]] = None
     setType: str
+    @field_validator('countPrecision')
+    @classmethod
+    def countPrecision_must_be_exact_imprecise_rounded_resultSet(cls, v: str) -> str:
+        if isinstance(v, str) and v not in ['exact', 'imprecise', 'rounded']:
+            raise ValueError('countPrecision must be one between exact, imprecise, rounded')
+        return v
     
     def build_response_by_dataset(self, dataset, data, dict_counts, allowed_granularity, granularity):
         resultsHandovers=None
@@ -155,6 +163,12 @@ class CountResponseSummary(BaseModel):
     countPrecision: Optional[str] = None
     exists: bool
     numTotalResults: int
+    @field_validator('countPrecision')
+    @classmethod
+    def countPrecision_must_be_exact_imprecise_rounded(cls, v: str) -> str:
+        if isinstance(v, str) and v not in ['exact', 'imprecise', 'rounded']:
+            raise ValueError('countPrecision must be one between exact, imprecise, rounded')
+        return v
     def build_count_response_summary(self, count):
         countAdjustedTo=None
         countPrecision=None                                    
@@ -247,6 +261,12 @@ class EntryTypes(BaseModel):
 class SecurityAttributes(BaseModel):
     defaultGranularity: Optional[str] = conf.default_beacon_granularity
     securityLevels: Optional[List[str]] = conf.security_levels
+    @field_validator('defaultGranularity')
+    @classmethod
+    def defaultGranularity_must_be_boolean_count_record(cls, v: str) -> str:
+        if v not in ['boolean', 'count', 'record']:
+            raise ValueError('defaultGranularity must be one between boolean, count, record')
+        return v
 
 class Entries(BaseModel):
     analysis: Optional[EntryTypes] = None
@@ -256,6 +276,12 @@ class Entries(BaseModel):
     genomicVariant: Optional[EntryTypes] = None
     individual: Optional[EntryTypes] = None
     run: Optional[EntryTypes] = None
+
+    @model_validator(mode='after')
+    def check_not_all_entries_are_none(self):
+        if self.analysis == None and self.biosample == None and self.cohort == None and self.dataset == None and self.genomicVariant == None and self.individual == None and self.run == None:
+            raise ValueError('Minimum 1 entry is required for entryTypes')
+        return self
 
 class EntryTypesSchema(BaseModel):
     entryTypes: Entries
@@ -297,6 +323,8 @@ class EntryTypesSchema(BaseModel):
                                                                                        schemaVersion=run.defaultSchema_schema_version),
         additionallySupportedSchemas=run.aditionally_supported_schemas,nonFilteredQueriesAllowed=run.allow_queries_without_filters)))
 
+
+
 class ConfigurationSchema(EntryTypesSchema):
     maturityAttributes: MaturityAttributes = MaturityAttributes().model_dump(exclude_none=True)
     securityAttributes: Optional[SecurityAttributes] = SecurityAttributes().model_dump(exclude_none=True)
@@ -317,6 +345,11 @@ class RelatedEndpointEntries(BaseModel):
     genomicVariant: Optional[RelatedEndpoint] = None
     individual: Optional[RelatedEndpoint] = None
     run: Optional[RelatedEndpoint] = None
+    @model_validator(mode='after')
+    def check_not_all_related_endpoints_are_none(self):
+        if self.analysis == None and self.biosample == None and self.cohort == None and self.dataset == None and self.genomicVariant == None and self.individual == None and self.run == None:
+            raise ValueError('Minimum 1 entry is required for endpoints')
+        return self
 
 class Endpoint(BaseModel):
     endpoints: RelatedEndpointEntries
@@ -334,6 +367,11 @@ class EndpointEntries(BaseModel):
     genomicVariant: Optional[Endpoint] = None
     individual: Optional[Endpoint] = None
     run: Optional[Endpoint] = None
+    @model_validator(mode='after')
+    def check_not_all_endpoint_entries_are_none(self):
+        if self.analysis == None and self.biosample == None and self.cohort == None and self.dataset == None and self.genomicVariant == None and self.individual == None and self.run == None:
+            raise ValueError('Minimum 1 entry is required for endpointSets')
+        return self
 
 class MapSchema(BaseModel):
     endpointSets: EndpointEntries
@@ -438,6 +476,12 @@ class FilteringTermInResponse(BaseModel):
     scopes: Optional[List[str]] = None
     type: str
     values: Optional[List[str]] = None
+    @field_validator('type')
+    @classmethod
+    def type_must_be_alphanumeric_custom_ontology(cls, v: str) -> str:
+        if v not in ['alphanumeric', 'ontology', 'custom']:
+            raise ValueError('type must be one between alphanumeric, ontology, custom')
+        return v
 
 class Resource(BaseModel):
     id: str

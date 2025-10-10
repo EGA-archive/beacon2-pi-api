@@ -1,0 +1,29 @@
+{
+    "meta": {
+        "apiVersion": "v2.0.0",
+        "beaconId": "beaconId",
+        "returnedSchemas": []
+    },
+    "response":{
+        "alternativeUrl": "https://example.org/wiki/Main_Page",
+        "apiVersion": "v2.0.0",
+        "createDateTime": "2017-01-17T20:33:40Z",
+        "description": "string",
+        "environment": "dev",
+        "id": "org.ega-archive.beacon-pi-demo",
+        "info": {},
+        "name": "string",
+        "organization": {
+            "address": "string",
+            "contactUrl": "string",
+            "description": "string",
+            "id": "string",
+            "logoUrl": "string",
+            "name": "string",
+            "welcomeUrl": "string"
+        },
+        "updateDateTime": "2017-01-17T20:33:40Z",
+        "version": "v0.1",
+        "welcomeUrl": "https://example.org/wiki/Main_Page"
+    }
+}

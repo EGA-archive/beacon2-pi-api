@@ -9,7 +9,6 @@ from beacon.utils.txid import generate_txid
 from beacon.permissions.__main__ import query_permissions
 from beacon.response.builder import builder, collection_builder, info_builder, configuration_builder, map_builder, entry_types_builder, service_info_builder, filtering_terms_builder
 from bson import json_util
-from beacon.response.catalog import build_beacon_error_response
 from beacon.request.classes import ErrorClass, RequestAttributes
 import time
 import os

@@ -20,7 +20,7 @@ class OntologyTerm(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('id must be CURIE, e.g. NCIT:C42331')
-        return v.title()
+        return v
 
 class Members(BaseModel, extra='forbid'):
     affected: bool
@@ -42,7 +42,7 @@ class Number(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('type can only contain the word Number')
-        return v.title()
+        return v
 
 class DefiniteRange(BaseModel, extra='forbid'):
     type: str
@@ -55,7 +55,7 @@ class DefiniteRange(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('type can only contain the word DefiniteRange')
-        return v.title()
+        return v
     
 class IndefiniteRange(BaseModel, extra='forbid'):
     type: str
@@ -68,7 +68,7 @@ class IndefiniteRange(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('type can only contain the word IndefiniteRange')
-        return v.title()
+        return v
     @field_validator('comparator')
     @classmethod
     def comparator_options(cls, v: str) -> str:
@@ -76,7 +76,7 @@ class IndefiniteRange(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('comparator must be <= or >=')
-        return v.title()
+        return v
 
 class CytobandInterval(BaseModel, extra='forbid'):
     type: str
@@ -89,7 +89,7 @@ class CytobandInterval(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('type can only contain the word CytobandInterval')
-        return v.title()
+        return v
     @field_validator('start')
     @classmethod
     def start_must_be_HumanCytoband(cls, v: str) -> str:
@@ -97,7 +97,7 @@ class CytobandInterval(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('start must be a character string representing cytobands derived from the *International System for Human Cytogenomic Nomenclature* (ISCN)')
-        return v.title()
+        return v
     @field_validator('end')
     @classmethod
     def end_must_be_HumanCytoband(cls, v: str) -> str:
@@ -105,7 +105,7 @@ class CytobandInterval(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('end must be a character string representing cytobands derived from the *International System for Human Cytogenomic Nomenclature* (ISCN)')
-        return v.title()
+        return v
 
 class SimpleInterval(BaseModel, extra='forbid'):
     type: str
@@ -118,7 +118,7 @@ class SimpleInterval(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('type can only contain the word SimpleInterval')
-        return v.title()
+        return v
     
 class SequenceInterval(BaseModel, extra='forbid'):
     type: str
@@ -131,7 +131,7 @@ class SequenceInterval(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('type can only contain the word SequenceInterval')
-        return v.title()
+        return v
 
 class ChromosomeLocation(BaseModel, extra='forbid'):
     id: Optional[str]=Field(default=None, alias='_id')
@@ -146,7 +146,7 @@ class ChromosomeLocation(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('_id must be CURIE, e.g. NCIT:C42331')
-        return v.title()
+        return v
     @field_validator('type')
     @classmethod
     def type_must_be_ChromosomeLocation(cls, v: str) -> str:
@@ -154,7 +154,7 @@ class ChromosomeLocation(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('type can only contain the word ChromosomeLocation')
-        return v.title()
+        return v
     @field_validator('species_id')
     @classmethod
     def species_id_must_be_CURIE(cls, v: str) -> str:
@@ -162,7 +162,7 @@ class ChromosomeLocation(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('species_id must be CURIE, e.g. NCIT:C42331')
-        return v.title()
+        return v
     @field_validator('chr')
     @classmethod
     def chr_allowed(cls, v: str) -> str:
@@ -171,7 +171,7 @@ class ChromosomeLocation(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('chr must be a valid chromosome, e.g. 1..22, X, Y')
-        return v.title()
+        return v
     
 class SequenceLocation(BaseModel, extra='forbid'):
     id: Optional[str]=Field(default=None, alias='_id')
@@ -185,7 +185,7 @@ class SequenceLocation(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('_id must be CURIE, e.g. NCIT:C42331')
-        return v.title()
+        return v
     @field_validator('type')
     @classmethod
     def type_must_be_SequenceLocation(cls, v: str) -> str:
@@ -193,7 +193,7 @@ class SequenceLocation(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('type can only contain the word SequenceLocation')
-        return v.title()
+        return v
     @field_validator('sequence_id')
     @classmethod
     def sequence_id_must_be_CURIE(cls, v: str) -> str:
@@ -201,7 +201,7 @@ class SequenceLocation(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('sequence_id must be CURIE, e.g. NCIT:C42331')
-        return v.title()
+        return v
     
 class DerivedSequenceExpression(BaseModel, extra='forbid'):
     type: str
@@ -214,7 +214,7 @@ class DerivedSequenceExpression(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('type can only contain the word DerivedSequenceExpression')
-        return v.title()
+        return v
     
 class LiteralSequenceExpression(BaseModel, extra='forbid'):
     type: str
@@ -226,7 +226,7 @@ class LiteralSequenceExpression(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('type can only contain the word LiteralSequenceExpression')
-        return v.title()
+        return v
     @field_validator('sequence')
     @classmethod
     def check_sequence(cls, v: str) -> str:
@@ -234,7 +234,7 @@ class LiteralSequenceExpression(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('sequence must be a character string of Residues that represents a biological sequence using the conventional sequence order (5’-to-3’ for nucleic acid sequences, and amino-to-carboxyl for amino acid sequences). IUPAC ambiguity codes are permitted in Sequences.')
-        return v.title()
+        return v
     
 class RepeatedSequenceExpression(BaseModel, extra='forbid'):
     type: str
@@ -247,7 +247,7 @@ class RepeatedSequenceExpression(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('type can only contain the word RepeatedSequenceExpression')
-        return v.title()
+        return v
     
 class ComposedSequenceExpression(BaseModel, extra='forbid'):
     type: Optional[str] = None
@@ -259,7 +259,7 @@ class ComposedSequenceExpression(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('type can only contain the word ComposedSequenceExpression')
-        return v.title()
+        return v
     @field_validator('components')
     @classmethod
     def check_components(cls, v: list) -> list:
@@ -296,7 +296,7 @@ class Allele(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('_id must be CURIE, e.g. NCIT:C42331')
-        return v.title()
+        return v
     @field_validator('type')
     @classmethod
     def type_must_be_Allele(cls, v: str) -> str:
@@ -304,7 +304,7 @@ class Allele(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('type can only contain the word Allele')
-        return v.title()
+        return v
     @field_validator('location')
     @classmethod
     def location_must_be_CURIE(cls, v: str) -> str:
@@ -313,7 +313,7 @@ class Allele(BaseModel, extra='forbid'):
                 pass
             else:
                 raise ValueError('location, if string, must be CURIE, e.g. NCIT:C42331')
-            return v.title()
+            return v
         
 class Haplotype(BaseModel, extra='forbid'):
     id: Optional[str]=Field(default=None, alias='_id')
@@ -326,7 +326,7 @@ class Haplotype(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('_id must be CURIE, e.g. NCIT:C42331')
-        return v.title()
+        return v
     @field_validator('type')
     @classmethod
     def type_must_be_Haplotype(cls, v: str) -> str:
@@ -334,7 +334,7 @@ class Haplotype(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('type can only contain the word Haplotype')
-        return v.title()
+        return v
     @field_validator('members')
     @classmethod
     def check_members(cls, v: list) -> list:
@@ -353,7 +353,7 @@ class Haplotype(BaseModel, extra='forbid'):
                     fits_in_class=False
                 if fits_in_class == False:
                     raise ValueError('members must be an array of items that fit CURIE or Allele')
-        return v.title()
+        return v
 
 class Gene(BaseModel, extra='forbid'):
     type: str
@@ -365,7 +365,7 @@ class Gene(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('type can only contain the word Gene')
-        return v.title()
+        return v
     @field_validator('gene_id')
     @classmethod
     def gene_id_must_be_CURIE(cls, v: str) -> str:
@@ -373,7 +373,7 @@ class Gene(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('_id must be CURIE, e.g. NCIT:C42331')
-        return v.title()
+        return v
 
 class CopyNumberChange(BaseModel, extra='forbid'):
     id: Optional[str]=Field(default=None, alias='_id')
@@ -387,7 +387,7 @@ class CopyNumberChange(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('_id must be CURIE, e.g. NCIT:C42331')
-        return v.title()
+        return v
     @field_validator('type')
     @classmethod
     def type_must_be_CopyNumberChange(cls, v: str) -> str:
@@ -395,7 +395,7 @@ class CopyNumberChange(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('type can only contain the word CopyNumberChange')
-        return v.title()
+        return v
     @field_validator('copy_change')
     @classmethod
     def check_copy_change(cls, v: str) -> str:
@@ -403,7 +403,7 @@ class CopyNumberChange(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('copy_change "MUST be one of \"efo:0030069\" (complete genomic loss), \"efo:0020073\" (high-level loss),  \"efo:0030068\" (low-level loss), \"efo:0030067\" (loss), \"efo:0030064\" (regional base ploidy),  \"efo:0030070\" (gain), \"efo:0030071\" (low-level gain), \"efo:0030072\" (high-level gain).')
-        return v.title()
+        return v
     
 class CopyNumberCount(BaseModel, extra='forbid'):
     id: Optional[str]=Field(default=None, alias='_id')
@@ -417,7 +417,7 @@ class CopyNumberCount(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('_id must be CURIE, e.g. NCIT:C42331')
-        return v.title()
+        return v
     @field_validator('type')
     @classmethod
     def type_must_be_CopyNumberCount(cls, v: str) -> str:
@@ -425,7 +425,7 @@ class CopyNumberCount(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('type can only contain the word CopyNumberCount')
-        return v.title()
+        return v
     
 class GenotypeMember(BaseModel, extra='forbid'):
     type: str
@@ -438,7 +438,7 @@ class GenotypeMember(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('type can only contain the word GenotypeMember')
-        return v.title()
+        return v
     
 class Genotype(BaseModel, extra='forbid'):
     id: Optional[str]=Field(default=None, alias='_id')
@@ -452,7 +452,7 @@ class Genotype(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('_id must be CURIE, e.g. NCIT:C42331')
-        return v.title()
+        return v
     @field_validator('type')
     @classmethod
     def type_must_be_Genotype(cls, v: str) -> str:
@@ -460,7 +460,7 @@ class Genotype(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('type can only contain the word Genotype')
-        return v.title()
+        return v
     @field_validator('members')
     @classmethod
     def check_exposures(cls, v: list) -> list:
@@ -479,7 +479,7 @@ class LegacyVariation(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('alternateBases must be a valid base from ACGTUNRYSWKMBDHV')
-        return v.title()
+        return v
     @field_validator('referenceBases')
     @classmethod
     def check_referenceBases(cls, v: str) -> str:
@@ -487,7 +487,7 @@ class LegacyVariation(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('referenceBases must be a valid base from ACGTUNRYSWKMBDHV')
-        return v.title()
+        return v
     
 class SoftwareTool(BaseModel, extra='forbid'):
     toolName: str
@@ -508,7 +508,7 @@ class PhenoClinicEffect(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('clinicalRelevance must be a valid string from ["benign","likely benign","uncertain significance","likely pathogenic","pathogenic"]')
-        return v.title()    
+        return v    
     
 class CaseLevelVariant(BaseModel, extra='forbid'):
     alleleOrigin: Optional[OntologyTerm] =None
@@ -559,7 +559,7 @@ class Identifiers(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('clinvarVariantId must be a valid clinvar string')
-        return v.title()
+        return v
     @field_validator('proteinHGVSIds')
     @classmethod
     def check_proteinHGVSIds(cls, v: list) -> list:
@@ -568,7 +568,7 @@ class Identifiers(BaseModel, extra='forbid'):
                 pass
             else:
                 raise ValueError('proteinHGVSIds must be an array of strings')
-        return v.title()
+        return v
     @field_validator('transcriptHGVSIds')
     @classmethod
     def check_transcriptHGVSIds(cls, v: list) -> list:
@@ -577,7 +577,7 @@ class Identifiers(BaseModel, extra='forbid'):
                 pass
             else:
                 raise ValueError('transcriptHGVSIds must be an array of strings')
-        return v.title()
+        return v
     @field_validator('variantAlternativeIds')
     @classmethod
     def check_variantAlternativeIds(cls, v: list) -> list:

@@ -24,7 +24,7 @@ class OntologyTerm(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('id must be CURIE, e.g. NCIT:C42331')
-        return v.title()
+        return v
 
 class Runs(BaseModel, extra='forbid'):
     def __init__(self, **data) -> None:

@@ -20,7 +20,7 @@ class OntologyTerm(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('id must be CURIE, e.g. NCIT:C42331')
-        return v.title()
+        return v
 
 class Age(BaseModel, extra='forbid'):
     iso8601duration: str
@@ -77,7 +77,7 @@ class DoseIntervals(BaseModel, extra='forbid'):
                 parse(v)
             except Exception as e:
                 raise ValueError('interval, if string, must be Timestamp, getting this error: {}'.format(e))
-            return v.title()
+            return v
         elif isinstance(v, dict):
             fits_in_class=False
             try:
@@ -127,7 +127,7 @@ class Diseases(BaseModel, extra='forbid'):
                 parse(v)
             except Exception as e:
                 raise ValueError('ageOfOnset, if string, must be Timestamp, getting this error: {}'.format(e))
-            return v.title()
+            return v
         elif isinstance(v, dict):
             fits_in_class=False
             try:
@@ -172,7 +172,7 @@ class Ethnicity(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('id must be CURIE, e.g. NCIT:C42331')
-        return v.title()
+        return v
     
 class Exposures(BaseModel, extra='forbid'):
     ageAtExposure: Age
@@ -192,7 +192,7 @@ class GeographicOrigin(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('id must be CURIE, e.g. NCIT:C42331')
-        return v.title()
+        return v
 
 class InterventionsOrProcedures(BaseModel, extra='forbid'):
     ageAtProcedure: Optional[Union[str,dict]]=None
@@ -207,7 +207,7 @@ class InterventionsOrProcedures(BaseModel, extra='forbid'):
                 parse(v)
             except Exception as e:
                 raise ValueError('ageAtProcedure, if string, must be Timestamp, getting this error: {}'.format(e))
-            return v.title()
+            return v
         elif isinstance(v, dict):
             fits_in_class=False
             try:
@@ -266,7 +266,7 @@ class Measurement(BaseModel, extra='forbid'):
                 parse(v)
             except Exception as e:
                 raise ValueError('observationMoment, if string, must be Timestamp, getting this error: {}'.format(e))
-            return v.title()
+            return v
         elif isinstance(v, dict):
             fits_in_class=False
             try:
@@ -343,7 +343,7 @@ class PhenotypicFeatures(BaseModel, extra='forbid'):
                 parse(v)
             except Exception as e:
                 raise ValueError('onset, if string, must be Timestamp, getting this error: {}'.format(e))
-            return v.title()
+            return v
         elif isinstance(v, dict):
             fits_in_class=False
             try:
@@ -385,7 +385,7 @@ class PhenotypicFeatures(BaseModel, extra='forbid'):
                 parse(v)
             except Exception as e:
                 raise ValueError('resolution, if string, must be Timestamp, getting this error: {}'.format(e))
-            return v.title()
+            return v
         elif isinstance(v, dict):
             fits_in_class=False
             try:
@@ -430,7 +430,7 @@ class Sex(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('id must be CURIE, e.g. NCIT:C42331')
-        return v.title()
+        return v
             
 class Treatment(BaseModel, extra='forbid'):
     ageAtOnset: Optional[Age] = None
@@ -510,3 +510,21 @@ class Individuals(BaseModel, extra='forbid'):
     def check_treatments(cls, v: list) -> list:
         for treatment in v:
             Treatment(**treatment)
+    @field_validator('karyotypicSex')
+    @classmethod
+    def check_karyotypic(cls, v: str) -> str:
+        karyotypic_values=[
+                "UNKNOWN_KARYOTYPE",
+                "XX",
+                "XY",
+                "XO",
+                "XXY",
+                "XXX",
+                "XXYY",
+                "XXXY",
+                "XXXX",
+                "XYY",
+                "OTHER_KARYOTYPE"]
+        if v not in karyotypic_values:
+            raise ValueError('id must be one from {}'.format(karyotypic_values))
+        return v

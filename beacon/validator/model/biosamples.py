@@ -21,7 +21,7 @@ class OntologyTerm(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('id must be CURIE, e.g. NCIT:C42331')
-        return v.title()
+        return v
 
 class Age(BaseModel, extra='forbid'):
     iso8601duration: str
@@ -65,7 +65,7 @@ class InterventionsOrProcedures(BaseModel, extra='forbid'):
                 parse(v)
             except Exception as e:
                 raise ValueError('ageAtProcedure, if string, must be Timestamp, getting this error: {}'.format(e))
-            return v.title()
+            return v
         elif isinstance(v, dict):
             fits_in_class=False
             try:
@@ -121,7 +121,7 @@ class Measurement(BaseModel, extra='forbid'):
                 parse(v)
             except Exception as e:
                 raise ValueError('observationMoment, if string, must be Timestamp, getting this error: {}'.format(e))
-            return v.title()
+            return v
         elif isinstance(v, dict):
             fits_in_class=False
             try:

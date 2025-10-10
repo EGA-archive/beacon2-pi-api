@@ -54,4 +54,5 @@ class RequestAttributes():
         self.qparams=None # the query parameters collected from the request
         self.response_type=None # the type of response (resultSet or not: countresponse, booleanresponse)
         self.returned_granularity=None # the granularity returned: record, count or boolean
-        self.entity_schema=None
+        self.returned_apiVersion=None
+        self.returned_schema=None
