@@ -10,7 +10,7 @@ from pydantic import (
 
 from typing import Optional, Union
 
-class OntologyTerm(BaseModel, extra='forbid'):
+class OntologyTerm(BaseModel):
     id: str
     label: Optional[str]=None
     @field_validator('id')
@@ -22,17 +22,17 @@ class OntologyTerm(BaseModel, extra='forbid'):
             raise ValueError('id must be CURIE, e.g. NCIT:C42331')
         return v
 
-class Members(BaseModel, extra='forbid'):
+class Members(BaseModel):
     affected: bool
     memberId: str
     role: OntologyTerm
 
-class Reference(BaseModel, extra='forbid'):
+class Reference(BaseModel):
     id: Optional[str] = None
     notes: Optional[str] = None
     reference: Optional[str] = None
 
-class Number(BaseModel, extra='forbid'):
+class Number(BaseModel):
     type: str
     value: int
     @field_validator('type')
@@ -44,7 +44,7 @@ class Number(BaseModel, extra='forbid'):
             raise ValueError('type can only contain the word Number')
         return v
 
-class DefiniteRange(BaseModel, extra='forbid'):
+class DefiniteRange(BaseModel):
     type: str
     min: Union[int, float]
     max: Union[int, float]
@@ -57,7 +57,7 @@ class DefiniteRange(BaseModel, extra='forbid'):
             raise ValueError('type can only contain the word DefiniteRange')
         return v
     
-class IndefiniteRange(BaseModel, extra='forbid'):
+class IndefiniteRange(BaseModel):
     type: str
     value: Union[int, float]
     comparator: str
@@ -78,7 +78,7 @@ class IndefiniteRange(BaseModel, extra='forbid'):
             raise ValueError('comparator must be <= or >=')
         return v
 
-class CytobandInterval(BaseModel, extra='forbid'):
+class CytobandInterval(BaseModel):
     type: str
     start: str
     end: str
@@ -107,7 +107,7 @@ class CytobandInterval(BaseModel, extra='forbid'):
             raise ValueError('end must be a character string representing cytobands derived from the *International System for Human Cytogenomic Nomenclature* (ISCN)')
         return v
 
-class SimpleInterval(BaseModel, extra='forbid'):
+class SimpleInterval(BaseModel):
     type: str
     start: int
     end: int
@@ -120,7 +120,7 @@ class SimpleInterval(BaseModel, extra='forbid'):
             raise ValueError('type can only contain the word SimpleInterval')
         return v
     
-class SequenceInterval(BaseModel, extra='forbid'):
+class SequenceInterval(BaseModel):
     type: str
     start: Union[DefiniteRange, IndefiniteRange, Number]
     end: Union[DefiniteRange, IndefiniteRange, Number]
@@ -133,7 +133,7 @@ class SequenceInterval(BaseModel, extra='forbid'):
             raise ValueError('type can only contain the word SequenceInterval')
         return v
 
-class ChromosomeLocation(BaseModel, extra='forbid'):
+class ChromosomeLocation(BaseModel):
     id: Optional[str]=Field(default=None, alias='_id')
     type: str
     species_id: str
@@ -173,7 +173,7 @@ class ChromosomeLocation(BaseModel, extra='forbid'):
             raise ValueError('chr must be a valid chromosome, e.g. 1..22, X, Y')
         return v
     
-class SequenceLocation(BaseModel, extra='forbid'):
+class SequenceLocation(BaseModel):
     id: Optional[str]=Field(default=None, alias='_id')
     type: str
     sequence_id: str
@@ -203,7 +203,7 @@ class SequenceLocation(BaseModel, extra='forbid'):
             raise ValueError('sequence_id must be CURIE, e.g. NCIT:C42331')
         return v
     
-class DerivedSequenceExpression(BaseModel, extra='forbid'):
+class DerivedSequenceExpression(BaseModel):
     type: str
     location: SequenceLocation
     reverse_complement: bool
@@ -216,7 +216,7 @@ class DerivedSequenceExpression(BaseModel, extra='forbid'):
             raise ValueError('type can only contain the word DerivedSequenceExpression')
         return v
     
-class LiteralSequenceExpression(BaseModel, extra='forbid'):
+class LiteralSequenceExpression(BaseModel):
     type: str
     sequence: str
     @field_validator('type')
@@ -236,7 +236,7 @@ class LiteralSequenceExpression(BaseModel, extra='forbid'):
             raise ValueError('sequence must be a character string of Residues that represents a biological sequence using the conventional sequence order (5’-to-3’ for nucleic acid sequences, and amino-to-carboxyl for amino acid sequences). IUPAC ambiguity codes are permitted in Sequences.')
         return v
     
-class RepeatedSequenceExpression(BaseModel, extra='forbid'):
+class RepeatedSequenceExpression(BaseModel):
     type: str
     seq_expr: Union[DerivedSequenceExpression, LiteralSequenceExpression]
     count: Union[DefiniteRange, IndefiniteRange, Number]
@@ -249,7 +249,7 @@ class RepeatedSequenceExpression(BaseModel, extra='forbid'):
             raise ValueError('type can only contain the word RepeatedSequenceExpression')
         return v
     
-class ComposedSequenceExpression(BaseModel, extra='forbid'):
+class ComposedSequenceExpression(BaseModel):
     type: Optional[str] = None
     components: list
     @field_validator('type')
@@ -284,7 +284,7 @@ class ComposedSequenceExpression(BaseModel, extra='forbid'):
             if fits_in_class == False:
                 raise ValueError('components must be an array containing any format possible between DerivedSequenceExpression, LiteralSequenceExpression or RepeatedSequenceExpression. It is mandatory to at least be one of DerivedSequenceExpression or RepeatedSequenceExpression')
 
-class Allele(BaseModel, extra='forbid'):
+class Allele(BaseModel):
     id: Optional[str] = Field(default=None, alias='_id')
     type: str
     location: Union[str,ChromosomeLocation,SequenceLocation]
@@ -315,7 +315,7 @@ class Allele(BaseModel, extra='forbid'):
                 raise ValueError('location, if string, must be CURIE, e.g. NCIT:C42331')
             return v
         
-class Haplotype(BaseModel, extra='forbid'):
+class Haplotype(BaseModel):
     id: Optional[str]=Field(default=None, alias='_id')
     type: str
     members: list
@@ -355,7 +355,7 @@ class Haplotype(BaseModel, extra='forbid'):
                     raise ValueError('members must be an array of items that fit CURIE or Allele')
         return v
 
-class Gene(BaseModel, extra='forbid'):
+class Gene(BaseModel):
     type: str
     gene_id: str
     @field_validator('type')
@@ -375,7 +375,7 @@ class Gene(BaseModel, extra='forbid'):
             raise ValueError('_id must be CURIE, e.g. NCIT:C42331')
         return v
 
-class CopyNumberChange(BaseModel, extra='forbid'):
+class CopyNumberChange(BaseModel):
     id: Optional[str]=Field(default=None, alias='_id')
     type: str
     subject: Union[str, ChromosomeLocation, Gene, SequenceLocation]
@@ -405,7 +405,7 @@ class CopyNumberChange(BaseModel, extra='forbid'):
             raise ValueError('copy_change "MUST be one of \"efo:0030069\" (complete genomic loss), \"efo:0020073\" (high-level loss),  \"efo:0030068\" (low-level loss), \"efo:0030067\" (loss), \"efo:0030064\" (regional base ploidy),  \"efo:0030070\" (gain), \"efo:0030071\" (low-level gain), \"efo:0030072\" (high-level gain).')
         return v
     
-class CopyNumberCount(BaseModel, extra='forbid'):
+class CopyNumberCount(BaseModel):
     id: Optional[str]=Field(default=None, alias='_id')
     type: str
     subject: Union[str, ChromosomeLocation, Gene, SequenceLocation]
@@ -427,7 +427,7 @@ class CopyNumberCount(BaseModel, extra='forbid'):
             raise ValueError('type can only contain the word CopyNumberCount')
         return v
     
-class GenotypeMember(BaseModel, extra='forbid'):
+class GenotypeMember(BaseModel):
     type: str
     count: Union[DefiniteRange, IndefiniteRange, Number]
     variation: Union[Allele, Haplotype]
@@ -440,7 +440,7 @@ class GenotypeMember(BaseModel, extra='forbid'):
             raise ValueError('type can only contain the word GenotypeMember')
         return v
     
-class Genotype(BaseModel, extra='forbid'):
+class Genotype(BaseModel):
     id: Optional[str]=Field(default=None, alias='_id')
     type: str
     members: list
@@ -467,7 +467,7 @@ class Genotype(BaseModel, extra='forbid'):
         for member in v:
             GenotypeMember(**member)
 
-class LegacyVariation(BaseModel, extra='forbid'):
+class LegacyVariation(BaseModel):
     alternateBases: str
     location: Union[str,ChromosomeLocation,SequenceLocation]
     referenceBases: Optional[str] = None
@@ -489,12 +489,12 @@ class LegacyVariation(BaseModel, extra='forbid'):
             raise ValueError('referenceBases must be a valid base from ACGTUNRYSWKMBDHV')
         return v
     
-class SoftwareTool(BaseModel, extra='forbid'):
+class SoftwareTool(BaseModel):
     toolName: str
     toolReferences: dict
     version: str
     
-class PhenoClinicEffect(BaseModel, extra='forbid'):
+class PhenoClinicEffect(BaseModel):
     annotatedWith: Optional[SoftwareTool]=None
     category: Optional[OntologyTerm]=None
     clinicalRelevance: Optional[str] = None
@@ -510,7 +510,7 @@ class PhenoClinicEffect(BaseModel, extra='forbid'):
             raise ValueError('clinicalRelevance must be a valid string from ["benign","likely benign","uncertain significance","likely pathogenic","pathogenic"]')
         return v    
     
-class CaseLevelVariant(BaseModel, extra='forbid'):
+class CaseLevelVariant(BaseModel):
     alleleOrigin: Optional[OntologyTerm] =None
     analysisId: Optional[str]=None
     biosampleId: str
@@ -531,11 +531,11 @@ class CaseLevelVariant(BaseModel, extra='forbid'):
         for phenotypicEffect in v:
             PhenoClinicEffect(**phenotypicEffect)
 
-class PopulationFrequency(BaseModel, extra='forbid'):
+class PopulationFrequency(BaseModel):
     alleleFrequency: Union[float, int]
     population: str
 
-class FrequencyInPopulation(BaseModel, extra='forbid'):
+class FrequencyInPopulation(BaseModel):
     frequencies: list
     source: str
     sourceReference: str
@@ -546,7 +546,7 @@ class FrequencyInPopulation(BaseModel, extra='forbid'):
         for frequency in v:
             PopulationFrequency(**frequency)
 
-class Identifiers(BaseModel, extra='forbid'):
+class Identifiers(BaseModel):
     clinvarVariantId: Optional[str]=None
     genomicHGVSId: Optional[str]=None
     proteinHGVSIds: Optional[list]=None
@@ -584,11 +584,11 @@ class Identifiers(BaseModel, extra='forbid'):
         for alternative in v:
             Reference(**alternative)
 
-class GenomicFeature(BaseModel, extra='forbid'):
+class GenomicFeature(BaseModel):
     featureClass: OntologyTerm
     featureId: Optional[OntologyTerm]=None
 
-class MolecularAttributes(BaseModel, extra='forbid'):
+class MolecularAttributes(BaseModel):
     aminoacidChanges: Optional[list]=None
     geneIds: Optional[list]=None
     genomicFeatures: Optional[list]=None
@@ -622,7 +622,7 @@ class MolecularAttributes(BaseModel, extra='forbid'):
         for molecularEffect in v:
             OntologyTerm(**molecularEffect)
 
-class VariantLevelData(BaseModel, extra='forbid'):
+class VariantLevelData(BaseModel):
     clinicalInterpretations: Optional[list]=None
     phenotypicEffects: Optional[list]=None
     @field_validator('clinicalInterpretations')
@@ -636,7 +636,7 @@ class VariantLevelData(BaseModel, extra='forbid'):
         for phenotypicEffect in v:
             PhenoClinicEffect(**phenotypicEffect)
 
-class GenomicVariations(BaseModel, extra='forbid'):
+class GenomicVariations(BaseModel):
     def __init__(self, **data) -> None:
         for private_key in self.__class__.__private_attributes__.keys():
             try:

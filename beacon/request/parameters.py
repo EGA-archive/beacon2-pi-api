@@ -231,6 +231,18 @@ class RequestQuery(CamelModel):
     requestParameters: Union[SequenceQuery,RangeQuery,BracketQuery,AminoacidChangeQuery,GeneIdQuery,GenomicAlleleQuery,DatasetsRequested] = {}
     testMode: bool = False
     requestedGranularity: Granularity = Granularity(default_beacon_granularity)
+    @field_validator('requestedGranularity')
+    @classmethod
+    def requestedGranularity_must_be_boolean_count_record(cls, v: str) -> str:
+        if v not in ['boolean', 'count', 'record']:
+            raise ValueError('requestedGranularity must be one between boolean, count, record')
+        return v
+    @field_validator('includeResultsetResponses')
+    @classmethod
+    def includeResultsetResponses_is_correct(cls, v: str) -> str:
+        if v not in ['HIT', 'MISS', 'ALL', 'NONE']:
+            raise ValueError('includeResultsetResponses must be one between HIT, MISS, ALL, NONE')
+        return v
 
 class RequestParams(CamelModel):
     meta: RequestMeta = RequestMeta()

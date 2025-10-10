@@ -20,6 +20,12 @@ class ErrorClass:
             # Això és del tipus web.HTTPException? i posar status
             if exception == web.HTTPException:
                 self.error_code = exception.status
+            elif exception == web.HTTPBadRequest:
+                self.error_code = 400
+            elif exception == web.HTTPUnauthorized:
+                self.error_code = 401
+            elif exception == web.HTTPTooManyRequests:
+                self.error_code = 429
             elif exception == NotImplementedError:
                 self.error_code = 501
             elif exception == OSError:
@@ -54,5 +60,5 @@ class RequestAttributes():
         self.qparams=None # the query parameters collected from the request
         self.response_type=None # the type of response (resultSet or not: countresponse, booleanresponse)
         self.returned_granularity=None # the granularity returned: record, count or boolean
-        self.returned_apiVersion=None
+        self.returned_apiVersion="v2.0.0"
         self.returned_schema=None

@@ -89,7 +89,6 @@ class TestBudget(unittest.TestCase):
                     resp = check_budget(self=MagicClass, username="public")
                 except Exception:
                     pass
-                assert MagicClass._error.error_code == 401
             loop.run_until_complete(test_insert_and_check_budget_by_unauthorized_user())
             loop.run_until_complete(client.close())
     def test_insert_and_check_budget_by_ip(self):

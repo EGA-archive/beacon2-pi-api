@@ -7,14 +7,14 @@ import aiohttp.web as web
 from aiohttp.web_request import Request
 from beacon.utils.txid import generate_txid
 from beacon.permissions.__main__ import query_permissions
-from beacon.response.builder import builder, collection_builder, info_builder, configuration_builder, map_builder, entry_types_builder, service_info_builder, filtering_terms_builder
+from beacon.response.builder import builder, collection_builder, info_builder, configuration_builder, map_builder, entry_types_builder, service_info_builder, filtering_terms_builder, error_builder
 from bson import json_util
 from beacon.request.classes import ErrorClass, RequestAttributes
 import time
 import os
 import signal
 from threading import Thread
-from beacon.utils.requests import deconstruct_request
+from beacon.utils.requests import deconstruct_request, RequestParams
 from aiohttp_middlewares import cors_middleware
 from aiohttp_cors import CorsViewMixin
 from datetime import datetime
@@ -34,13 +34,16 @@ class EndpointView(web.View, CorsViewMixin):
         RequestAttributes.entry_type=None
         RequestAttributes.entry_id=None
         RequestAttributes.pre_entry_type=None
+        RequestAttributes.returned_apiVersion="v2.0.0"
+        RequestAttributes.qparams=RequestParams()
+        RequestAttributes.returned_granularity="boolean"
 
     async def get(self):
         try:
             await deconstruct_request(self, self.request)
             return await self.handler()
         except Exception as e:
-            response_obj = build_beacon_error_response(self, self._error.return_code(), self._error.return_message())
+            response_obj = await error_builder(self, self._error.return_code(), self._error.return_message())
             return web.Response(text=json_util.dumps(response_obj), status=self._error.return_code(), content_type='application/json')
 
     async def post(self):
@@ -48,7 +51,7 @@ class EndpointView(web.View, CorsViewMixin):
             await deconstruct_request(self, self.request)
             return await self.handler()
         except Exception as e:
-            response_obj = build_beacon_error_response(self, self._error.return_code(), self._error.return_message())
+            response_obj = await error_builder(self, self._error.return_code(), self._error.return_message())
             return web.Response(text=json_util.dumps(response_obj), status=self._error.return_code(), content_type='application/json')
 
 class ServiceInfo(EndpointView):
@@ -136,7 +139,7 @@ async def error_middleware(request, handler):
         if ex.status != 404:
             raise
         else:
-            response_obj = build_beacon_error_response(EndpointView(request), 404, "Not found")
+            response_obj = await error_builder(EndpointView(request), 404, "Not found")
             return web.Response(text=json_util.dumps(response_obj), status=404, content_type='application/json')
 
 async def initialize(app):

@@ -1,4 +1,3 @@
-from aiohttp.web_request import Request
 from beacon.logs.logs import log_with_args, LOG
 from beacon.conf.conf import level
 from beacon.request.classes import Granularity, RequestAttributes
@@ -26,7 +25,9 @@ from beacon.validator.framework import (Info,
                                         EntryTypesResponse,
                                         ServiceInfo,
                                         FilteringTermsResults,
-                                        FilteringTermsResponse)
+                                        FilteringTermsResponse,
+                                        ErrorResponse,
+                                        BeaconError)
 from pydantic import create_model, Field
 from typing import Optional
 
@@ -104,7 +105,7 @@ async def collection_builder(self):
 @log_with_args(level)
 async def info_builder(self):
     try:
-        with open('beacon/response/templates/{}/info.json'.format("v2.2.0"), 'r') as template:
+        with open('beacon/response/templates/{}/info.json'.format(RequestAttributes.returned_apiVersion), 'r') as template:
             response = json.load(template)
         info = Info()
         meta = InformationalMeta(returnedSchemas=[{"schema": "info-v2.2.0"}])
@@ -120,7 +121,7 @@ async def info_builder(self):
 @log_with_args(level)
 async def configuration_builder(self):
     try:
-        with open('beacon/response/templates/{}/configuration.json'.format("v2.2.0"), 'r') as template:
+        with open('beacon/response/templates/{}/configuration.json'.format(RequestAttributes.returned_apiVersion), 'r') as template:
             response = json.load(template)
         configuration = ConfigurationSchema.return_schema(ConfigurationSchema)
         meta = InformationalMeta(returnedSchemas=[{"schema": "configuration-v2.2.0"}])
@@ -136,7 +137,7 @@ async def configuration_builder(self):
 @log_with_args(level)
 async def map_builder(self):
     try:
-        with open('beacon/response/templates/{}/map.json'.format("v2.2.0"), 'r') as template:
+        with open('beacon/response/templates/{}/map.json'.format(RequestAttributes.returned_apiVersion), 'r') as template:
             response = json.load(template)
         map = MapSchema.populate_endpoints(MapSchema)
         meta = InformationalMeta(returnedSchemas=[{"schema": "map-v2.2.0"}])
@@ -152,7 +153,7 @@ async def map_builder(self):
 @log_with_args(level)
 async def entry_types_builder(self):
     try:
-        with open('beacon/response/templates/{}/entry_types.json'.format("v2.2.0"), 'r') as template:
+        with open('beacon/response/templates/{}/entry_types.json'.format(RequestAttributes.returned_apiVersion), 'r') as template:
             response = json.load(template)
         entry_types = EntryTypesSchema.return_schema(EntryTypesSchema)
         meta = InformationalMeta(returnedSchemas=[{"schema": "entry_types-v2.2.0"}])
@@ -168,7 +169,7 @@ async def entry_types_builder(self):
 @log_with_args(level)
 async def service_info_builder(self):
     try:
-        with open('beacon/response/templates/{}/service-info.json'.format("v2.2.0"), 'r') as template:
+        with open('beacon/response/templates/{}/service-info.json'.format(RequestAttributes.returned_apiVersion), 'r') as template:
             response = json.load(template)
         service_info = ServiceInfo()
         serviceInfoResponse = service_info.model_dump(exclude_none=True)
@@ -187,7 +188,7 @@ async def filtering_terms_builder(self):
     module = importlib.import_module(complete_module, package=None)
     try:
         count, records = module.get_filtering_terms(self)
-        with open('beacon/response/templates/{}/filtering_terms.json'.format("v2.2.0"), 'r') as template:
+        with open('beacon/response/templates/{}/filtering_terms.json'.format(RequestAttributes.returned_apiVersion), 'r') as template:
             response = json.load(template)
         filteringterms = FilteringTermsResults(filteringTerms=records)
         meta = InformationalMeta(returnedSchemas=[{"schema": "filtering_terms-v2.2.0"}])
@@ -195,6 +196,22 @@ async def filtering_terms_builder(self):
         filteringTermsResponse = filteringTermsResponse.model_dump(exclude_none=True)
         FilteringTermsFromTemplate = create_model('FilteringTermsFromTemplate', **{k: (Optional[type(v)], None) for k, v in response.items()})
         response = FilteringTermsFromTemplate.model_validate(filteringTermsResponse)
+        response = response.model_dump(exclude_none=True)
+        return response
+    except Exception:
+        raise
+
+@log_with_args(level)
+async def error_builder(self, status, message):
+    try:
+        with open('beacon/response/templates/{}/error.json'.format(RequestAttributes.returned_apiVersion), 'r') as template:
+            response = json.load(template)
+        error = BeaconError(errorCode=status,errorMessage=message)
+        meta = Meta(receivedRequestSummary=RequestAttributes.qparams.summary(),returnedGranularity=RequestAttributes.returned_granularity,returnedSchemas=[{"schema": "error-v2.2.0"}],testMode=RequestAttributes.qparams.query.testMode)
+        errorResponse = ErrorResponse(meta=meta,error=error)
+        errorResponse = errorResponse.model_dump(exclude_none=True)
+        ErrorFromTemplate = create_model('ErrorFromTemplate', **{k: (Optional[type(v)], None) for k, v in response.items()})
+        response = ErrorFromTemplate.model_validate(errorResponse)
         response = response.model_dump(exclude_none=True)
         return response
     except Exception:

@@ -11,7 +11,7 @@ from pydantic import (
 
 from typing import Optional, Union
 
-class OntologyTerm(BaseModel, extra='forbid'):
+class OntologyTerm(BaseModel):
     id: str
     label: Optional[str]=None
     @field_validator('id')
@@ -23,36 +23,36 @@ class OntologyTerm(BaseModel, extra='forbid'):
             raise ValueError('id must be CURIE, e.g. NCIT:C42331')
         return v
 
-class Age(BaseModel, extra='forbid'):
+class Age(BaseModel):
     iso8601duration: str
 
-class AgeRange(BaseModel, extra='forbid'):
+class AgeRange(BaseModel):
     end: Age
     start: Age
 
-class GestationalAge(BaseModel, extra='forbid'):
+class GestationalAge(BaseModel):
     days: Optional[int] = None
     weeks: int
 
-class TimeInterval(BaseModel, extra='forbid'):
+class TimeInterval(BaseModel):
     end: str
     start: str
 
-class ReferenceRange(BaseModel, extra='forbid'):
+class ReferenceRange(BaseModel):
     high: Union[int,float]
     low: Union[int, float]
     unit: OntologyTerm
 
-class Quantity(BaseModel, extra='forbid'):
+class Quantity(BaseModel):
     referenceRange: Optional[ReferenceRange] = None
     unit: OntologyTerm
     value: Union[int, float]
 
-class TypedQuantity(BaseModel, extra='forbid'):
+class TypedQuantity(BaseModel):
     quantity: Quantity
     quantityType: OntologyTerm
 
-class InterventionsOrProcedures(BaseModel, extra='forbid'):
+class InterventionsOrProcedures(BaseModel):
     ageAtProcedure: Optional[Union[str,dict]]=None
     bodySite: Optional[OntologyTerm]=None
     dateOfProcedure: Optional[str]=None
@@ -100,7 +100,7 @@ class InterventionsOrProcedures(BaseModel, extra='forbid'):
             if fits_in_class == False:
                 raise ValueError('ageAtProcedure, if object, must be any format possible between age, ageRange, gestationalAge, timeInterval or OntologyTerm')
             
-class Measurement(BaseModel, extra='forbid'):
+class Measurement(BaseModel):
     assayCode: OntologyTerm
     date: Optional[str] = None
     measurementValue: Union[Quantity, OntologyTerm, list]
@@ -160,7 +160,7 @@ class Measurement(BaseModel, extra='forbid'):
     def check_procedure(cls, v: dict) -> dict:
         InterventionsOrProcedures(**v)
 
-class Biosamples(BaseModel, extra='forbid'):
+class Biosamples(BaseModel):
     def __init__(self, **data) -> None:
         for private_key in self.__class__.__private_attributes__.keys():
             try:

@@ -10,7 +10,7 @@ from pydantic import (
 
 from typing import Optional, Union, List
 
-class OntologyTerm(BaseModel, extra='forbid'):
+class OntologyTerm(BaseModel):
     id: str
     label: Optional[str]=None
     @field_validator('id')
@@ -22,7 +22,7 @@ class OntologyTerm(BaseModel, extra='forbid'):
             raise ValueError('id must be CURIE, e.g. NCIT:C42331')
         return v
             
-class DUODataUse(BaseModel, extra='forbid'):
+class DUODataUse(BaseModel):
     description: str
     id: str
     label: Optional[str]=None
@@ -42,10 +42,10 @@ class DUODataUse(BaseModel, extra='forbid'):
         for modifier in v:
             OntologyTerm(**modifier)
 
-class DataUseConditions(BaseModel, extra='forbid'):
+class DataUseConditions(BaseModel):
     duoDataUse: Optional[List[DUODataUse]] = None
 
-class Datasets(BaseModel, extra='forbid'):
+class Datasets(BaseModel):
     def __init__(self, **data) -> None:
         for private_key in self.__class__.__private_attributes__.keys():
             try:

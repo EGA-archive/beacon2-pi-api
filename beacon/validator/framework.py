@@ -10,7 +10,7 @@ from beacon.validator.model.cohorts import Cohorts
 from beacon.validator.model.datasets import Datasets
 from beacon.validator.model.individuals import Individuals
 from beacon.validator.model.runs import Runs
-from beacon.request.parameters import SchemasPerEntity, Pagination
+from beacon.request.parameters import SchemasPerEntity, Pagination, SequenceQuery,RangeQuery,BracketQuery,AminoacidChangeQuery,GeneIdQuery,GenomicAlleleQuery,DatasetsRequested
 from typing import List, Optional, Union, Dict
 from beacon.logs.logs import LOG
 from beacon.conf import conf, analysis, biosample, cohort, dataset, genomicVariant, individual, run
@@ -23,6 +23,10 @@ class ReceivedRequestSummary(BaseModel):
     requestedSchemas: List[SchemasPerEntity]
     pagination: Pagination
     requestedGranularity: str
+    testMode: Optional[bool] = None
+    filters: Optional[List[str]] = None
+    requestParameters: Optional[Dict] = None
+    includeResultsetResponses: Optional[str] = None
 
 class Meta(BaseModel):
     apiVersion: str=conf.api_version
@@ -114,20 +118,35 @@ class ResultsetInstance(BaseModel):
                 countPrecision='rounded'
             else:
                 resultsCount=dict_counts[dataset.dataset]
-                
+            return self(id=dataset.dataset,
+                        setType='dataset',
+                        exists=dict_counts[dataset.dataset]>0,
+                        results=data[dataset.dataset],
+                        resultsCount=resultsCount,
+                        countAdjustedTo=countAdjustedTo,
+                        countPrecision=countPrecision,
+                        resultsHandovers=resultsHandovers)
         elif dataset.granularity != 'boolean' and allowed_granularity != 'boolean' and granularity != 'boolean':
             resultsCount=dict_counts[dataset.dataset]
-                    
+            return self(id=dataset.dataset,
+                        setType='dataset',
+                        exists=dict_counts[dataset.dataset]>0,
+                        results=None,
+                        resultsCount=resultsCount,
+                        countAdjustedTo=countAdjustedTo,
+                        countPrecision=countPrecision,
+                        resultsHandovers=resultsHandovers)
         else:
             resultsCount=None
-        return self(id=dataset.dataset,
-                    setType='dataset',
-                    exists=dict_counts[dataset.dataset]>0,
-                    results=data[dataset.dataset],
-                    resultsCount=resultsCount,
-                    countAdjustedTo=countAdjustedTo,
-                    countPrecision=countPrecision,
-                    resultsHandovers=resultsHandovers)
+            return self(id=dataset.dataset,
+                        setType='dataset',
+                        exists=dict_counts[dataset.dataset]>0,
+                        results=None,
+                        resultsCount=resultsCount,
+                        countAdjustedTo=countAdjustedTo,
+                        countPrecision=None,
+                        resultsHandovers=resultsHandovers)
+
 
 class ResponseSummary(BaseModel):
     exists: bool
@@ -291,37 +310,37 @@ class EntryTypesSchema(BaseModel):
                    description=analysis.description, defaultSchema=ReferenceToAnSchema(id=analysis.defaultSchema_id,name=analysis.defaultSchema_name,
                                                                                        referenceToSchemaDefinition=analysis.defaultSchema_reference_to_schema_definition,
                                                                                        schemaVersion=analysis.defaultSchema_schema_version),
-        additionallySupportedSchemas=analysis.aditionally_supported_schemas,nonFilteredQueriesAllowed=analysis.allow_queries_without_filters),
+        additionallySupportedSchemas=analysis.aditionally_supported_schemas,nonFilteredQueriesAllowed=analysis.allow_queries_without_filters) if analysis.enable_endpoint == True else None,
         biosample=EntryTypes(id=biosample.id,name=biosample.name,ontologyTermForThisType=OntologyTerm(id=biosample.ontology_id, label=biosample.ontology_name),partOfSpecification=biosample.specification,
                    description=biosample.description, defaultSchema=ReferenceToAnSchema(id=biosample.defaultSchema_id,name=biosample.defaultSchema_name,
                                                                                        referenceToSchemaDefinition=biosample.defaultSchema_reference_to_schema_definition,
                                                                                        schemaVersion=biosample.defaultSchema_schema_version),
-        additionallySupportedSchemas=biosample.aditionally_supported_schemas,nonFilteredQueriesAllowed=biosample.allow_queries_without_filters),
+        additionallySupportedSchemas=biosample.aditionally_supported_schemas,nonFilteredQueriesAllowed=biosample.allow_queries_without_filters) if biosample.enable_endpoint == True else None,
         cohort=EntryTypes(id=cohort.id,name=cohort.name,ontologyTermForThisType=OntologyTerm(id=cohort.ontology_id, label=cohort.ontology_name),partOfSpecification=cohort.specification,
                    description=cohort.description, defaultSchema=ReferenceToAnSchema(id=cohort.defaultSchema_id,name=cohort.defaultSchema_name,
                                                                                        referenceToSchemaDefinition=cohort.defaultSchema_reference_to_schema_definition,
                                                                                        schemaVersion=cohort.defaultSchema_schema_version),
-        additionallySupportedSchemas=cohort.aditionally_supported_schemas,nonFilteredQueriesAllowed=cohort.allow_queries_without_filters),
+        additionallySupportedSchemas=cohort.aditionally_supported_schemas,nonFilteredQueriesAllowed=cohort.allow_queries_without_filters) if cohort.enable_endpoint == True else None,
         dataset=EntryTypes(id=dataset.id,name=dataset.name,ontologyTermForThisType=OntologyTerm(id=dataset.ontology_id, label=dataset.ontology_name),partOfSpecification=dataset.specification,
                    description=dataset.description, defaultSchema=ReferenceToAnSchema(id=dataset.defaultSchema_id,name=dataset.defaultSchema_name,
                                                                                        referenceToSchemaDefinition=dataset.defaultSchema_reference_to_schema_definition,
                                                                                        schemaVersion=dataset.defaultSchema_schema_version),
-        additionallySupportedSchemas=dataset.aditionally_supported_schemas,nonFilteredQueriesAllowed=dataset.allow_queries_without_filters),
+        additionallySupportedSchemas=dataset.aditionally_supported_schemas,nonFilteredQueriesAllowed=dataset.allow_queries_without_filters) if dataset.enable_endpoint == True else None,
         genomicVariant=EntryTypes(id=genomicVariant.id,name=genomicVariant.name,ontologyTermForThisType=OntologyTerm(id=genomicVariant.ontology_id, label=genomicVariant.ontology_name),partOfSpecification=genomicVariant.specification,
                    description=genomicVariant.description, defaultSchema=ReferenceToAnSchema(id=genomicVariant.defaultSchema_id,name=genomicVariant.defaultSchema_name,
                                                                                        referenceToSchemaDefinition=genomicVariant.defaultSchema_reference_to_schema_definition,
                                                                                        schemaVersion=genomicVariant.defaultSchema_schema_version),
-        additionallySupportedSchemas=genomicVariant.aditionally_supported_schemas,nonFilteredQueriesAllowed=genomicVariant.allow_queries_without_filters),
+        additionallySupportedSchemas=genomicVariant.aditionally_supported_schemas,nonFilteredQueriesAllowed=genomicVariant.allow_queries_without_filters) if genomicVariant.enable_endpoint == True else None,
         individual=EntryTypes(id=individual.id,name=individual.name,ontologyTermForThisType=OntologyTerm(id=individual.ontology_id, label=individual.ontology_name),partOfSpecification=individual.specification,
                    description=individual.description, defaultSchema=ReferenceToAnSchema(id=individual.defaultSchema_id,name=individual.defaultSchema_name,
                                                                                        referenceToSchemaDefinition=individual.defaultSchema_reference_to_schema_definition,
                                                                                        schemaVersion=individual.defaultSchema_schema_version),
-        additionallySupportedSchemas=individual.aditionally_supported_schemas,nonFilteredQueriesAllowed=individual.allow_queries_without_filters),
+        additionallySupportedSchemas=individual.aditionally_supported_schemas,nonFilteredQueriesAllowed=individual.allow_queries_without_filters) if individual.enable_endpoint == True else None,
         run=EntryTypes(id=run.id,name=run.name,ontologyTermForThisType=OntologyTerm(id=run.ontology_id, label=run.ontology_name),partOfSpecification=run.specification,
                    description=run.description, defaultSchema=ReferenceToAnSchema(id=run.defaultSchema_id,name=run.defaultSchema_name,
                                                                                        referenceToSchemaDefinition=run.defaultSchema_reference_to_schema_definition,
                                                                                        schemaVersion=run.defaultSchema_schema_version),
-        additionallySupportedSchemas=run.aditionally_supported_schemas,nonFilteredQueriesAllowed=run.allow_queries_without_filters)))
+        additionallySupportedSchemas=run.aditionally_supported_schemas,nonFilteredQueriesAllowed=run.allow_queries_without_filters) if run.enable_endpoint == True else None))
 
 
 
@@ -384,7 +403,7 @@ class MapSchema(BaseModel):
                                                                                              dataset=RelatedEndpoint(returnedEntryType=dataset.id,url=conf.complete_url+'/'+analysis.endpoint_name+'/{id}/'+dataset.endpoint_name) if analysis.dataset_lookup == True else None,
                                                                                              genomicVariant=RelatedEndpoint(returnedEntryType=genomicVariant.id,url=conf.complete_url+'/'+analysis.endpoint_name+'/{id}/'+genomicVariant.endpoint_name) if analysis.genomicVariant_lookup == True else None,
                                                                                              individual=RelatedEndpoint(returnedEntryType=individual.id,url=conf.complete_url+'/'+analysis.endpoint_name+'/{id}/'+individual.endpoint_name) if analysis.individual_lookup == True else None,
-                                                                                             run=RelatedEndpoint(returnedEntryType=run.id,url=conf.complete_url+'/'+analysis.endpoint_name+'/{id}/'+run.endpoint_name) if analysis.run_lookup == True else None)),
+                                                                                             run=RelatedEndpoint(returnedEntryType=run.id,url=conf.complete_url+'/'+analysis.endpoint_name+'/{id}/'+run.endpoint_name) if analysis.run_lookup == True else None)) if analysis.enable_endpoint == True else None,
                                         biosample=Endpoint(id=biosample.id,openAPIEndpointsDefinition=biosample.open_api_endpoints_definition,
                                                             entryType=biosample.id,
                                                             rootUrl=conf.complete_url+'/'+biosample.endpoint_name, singleEntryUrl=conf.complete_url+'/'+biosample.endpoint_name+'/{id}' if biosample.singleEntryUrl==True else None,
@@ -393,7 +412,7 @@ class MapSchema(BaseModel):
                                                                                              dataset=RelatedEndpoint(returnedEntryType=dataset.id,url=conf.complete_url+'/'+biosample.endpoint_name+'/{id}/'+dataset.endpoint_name) if biosample.dataset_lookup == True else None,
                                                                                              genomicVariant=RelatedEndpoint(returnedEntryType=genomicVariant.id,url=conf.complete_url+'/'+biosample.endpoint_name+'/{id}/'+genomicVariant.endpoint_name) if biosample.genomicVariant_lookup == True else None,
                                                                                              individual=RelatedEndpoint(returnedEntryType=individual.id,url=conf.complete_url+'/'+biosample.endpoint_name+'/{id}/'+individual.endpoint_name) if biosample.individual_lookup == True else None,
-                                                                                             run=RelatedEndpoint(returnedEntryType=run.id,url=conf.complete_url+'/'+biosample.endpoint_name+'/{id}/'+run.endpoint_name) if biosample.run_lookup == True else None)),
+                                                                                             run=RelatedEndpoint(returnedEntryType=run.id,url=conf.complete_url+'/'+biosample.endpoint_name+'/{id}/'+run.endpoint_name) if biosample.run_lookup == True else None)) if biosample.enable_endpoint == True else None,
                                         cohort=Endpoint(id=cohort.id,openAPIEndpointsDefinition=cohort.open_api_endpoints_definition,
                                                             entryType=cohort.id,
                                                             rootUrl=conf.complete_url+'/'+cohort.endpoint_name, singleEntryUrl=conf.complete_url+'/'+cohort.endpoint_name+'/{id}' if cohort.singleEntryUrl==True else None,
@@ -402,7 +421,7 @@ class MapSchema(BaseModel):
                                                                                              dataset=RelatedEndpoint(returnedEntryType=dataset.id,url=conf.complete_url+'/'+cohort.endpoint_name+'/{id}/'+dataset.endpoint_name) if cohort.dataset_lookup == True else None,
                                                                                              genomicVariant=RelatedEndpoint(returnedEntryType=genomicVariant.id,url=conf.complete_url+'/'+cohort.endpoint_name+'/{id}/'+genomicVariant.endpoint_name) if cohort.genomicVariant_lookup == True else None,
                                                                                              individual=RelatedEndpoint(returnedEntryType=individual.id,url=conf.complete_url+'/'+cohort.endpoint_name+'/{id}/'+individual.endpoint_name) if cohort.individual_lookup == True else None,
-                                                                                             run=RelatedEndpoint(returnedEntryType=run.id,url=conf.complete_url+'/'+cohort.endpoint_name+'/{id}/'+run.endpoint_name) if cohort.run_lookup == True else None)),
+                                                                                             run=RelatedEndpoint(returnedEntryType=run.id,url=conf.complete_url+'/'+cohort.endpoint_name+'/{id}/'+run.endpoint_name) if cohort.run_lookup == True else None)) if cohort.enable_endpoint == True else None,
                                         dataset=Endpoint(id=dataset.id,openAPIEndpointsDefinition=dataset.open_api_endpoints_definition,
                                                             entryType=dataset.id,
                                                             rootUrl=conf.complete_url+'/'+dataset.endpoint_name, singleEntryUrl=conf.complete_url+'/'+dataset.endpoint_name+'/{id}' if dataset.singleEntryUrl==True else None,
@@ -411,7 +430,7 @@ class MapSchema(BaseModel):
                                                                                              cohort=RelatedEndpoint(returnedEntryType=cohort.id,url=conf.complete_url+'/'+dataset.endpoint_name+'/{id}/'+cohort.endpoint_name) if dataset.cohort_lookup == True else None,
                                                                                              genomicVariant=RelatedEndpoint(returnedEntryType=genomicVariant.id,url=conf.complete_url+'/'+dataset.endpoint_name+'/{id}/'+genomicVariant.endpoint_name) if dataset.genomicVariant_lookup == True else None,
                                                                                              individual=RelatedEndpoint(returnedEntryType=individual.id,url=conf.complete_url+'/'+dataset.endpoint_name+'/{id}/'+individual.endpoint_name) if dataset.individual_lookup == True else None,
-                                                                                             run=RelatedEndpoint(returnedEntryType=run.id,url=conf.complete_url+'/'+dataset.endpoint_name+'/{id}/'+run.endpoint_name) if dataset.run_lookup == True else None)),
+                                                                                             run=RelatedEndpoint(returnedEntryType=run.id,url=conf.complete_url+'/'+dataset.endpoint_name+'/{id}/'+run.endpoint_name) if dataset.run_lookup == True else None)) if dataset.enable_endpoint == True else None,
                                         genomicVariant=Endpoint(id=genomicVariant.id,openAPIEndpointsDefinition=genomicVariant.open_api_endpoints_definition,
                                                             entryType=genomicVariant.id,
                                                             rootUrl=conf.complete_url+'/'+genomicVariant.endpoint_name, singleEntryUrl=conf.complete_url+'/'+genomicVariant.endpoint_name+'/{id}' if genomicVariant.singleEntryUrl==True else None,
@@ -420,7 +439,7 @@ class MapSchema(BaseModel):
                                                                                              cohort=RelatedEndpoint(returnedEntryType=cohort.id,url=conf.complete_url+'/'+genomicVariant.endpoint_name+'/{id}/'+cohort.endpoint_name) if genomicVariant.cohort_lookup == True else None,
                                                                                              dataset=RelatedEndpoint(returnedEntryType=dataset.id,url=conf.complete_url+'/'+genomicVariant.endpoint_name+'/{id}/'+dataset.endpoint_name) if genomicVariant.dataset_lookup == True else None,
                                                                                              individual=RelatedEndpoint(returnedEntryType=individual.id,url=conf.complete_url+'/'+genomicVariant.endpoint_name+'/{id}/'+individual.endpoint_name) if genomicVariant.individual_lookup == True else None,
-                                                                                             run=RelatedEndpoint(returnedEntryType=run.id,url=conf.complete_url+'/'+genomicVariant.endpoint_name+'/{id}/'+run.endpoint_name) if genomicVariant.run_lookup == True else None)),
+                                                                                             run=RelatedEndpoint(returnedEntryType=run.id,url=conf.complete_url+'/'+genomicVariant.endpoint_name+'/{id}/'+run.endpoint_name) if genomicVariant.run_lookup == True else None)) if genomicVariant.enable_endpoint == True else None,
                                         individual=Endpoint(id=individual.id,openAPIEndpointsDefinition=individual.open_api_endpoints_definition,
                                                             entryType=individual.id,
                                                             rootUrl=conf.complete_url+'/'+individual.endpoint_name, singleEntryUrl=conf.complete_url+'/'+individual.endpoint_name+'/{id}' if individual.singleEntryUrl==True else None,
@@ -429,7 +448,7 @@ class MapSchema(BaseModel):
                                                                                              cohort=RelatedEndpoint(returnedEntryType=cohort.id,url=conf.complete_url+'/'+individual.endpoint_name+'/{id}/'+cohort.endpoint_name) if individual.cohort_lookup == True else None,
                                                                                              dataset=RelatedEndpoint(returnedEntryType=dataset.id,url=conf.complete_url+'/'+individual.endpoint_name+'/{id}/'+dataset.endpoint_name) if individual.dataset_lookup == True else None,
                                                                                              genomicVariant=RelatedEndpoint(returnedEntryType=genomicVariant.id,url=conf.complete_url+'/'+individual.endpoint_name+'/{id}/'+genomicVariant.endpoint_name) if individual.genomicVariant_lookup == True else None,
-                                                                                             run=RelatedEndpoint(returnedEntryType=run.id,url=conf.complete_url+'/'+individual.endpoint_name+'/{id}/'+run.endpoint_name) if individual.run_lookup == True else None)),
+                                                                                             run=RelatedEndpoint(returnedEntryType=run.id,url=conf.complete_url+'/'+individual.endpoint_name+'/{id}/'+run.endpoint_name) if individual.run_lookup == True else None)) if individual.enable_endpoint == True else None,
                                         run=Endpoint(id=run.id,openAPIEndpointsDefinition=run.open_api_endpoints_definition,
                                                             entryType=run.id,
                                                             rootUrl=conf.complete_url+'/'+run.endpoint_name, singleEntryUrl=conf.complete_url+'/'+run.endpoint_name+'/{id}' if run.singleEntryUrl==True else None,
@@ -438,7 +457,7 @@ class MapSchema(BaseModel):
                                                                                              cohort=RelatedEndpoint(returnedEntryType=cohort.id,url=conf.complete_url+'/'+run.endpoint_name+'/{id}/'+cohort.endpoint_name) if run.cohort_lookup == True else None,
                                                                                              dataset=RelatedEndpoint(returnedEntryType=dataset.id,url=conf.complete_url+'/'+run.endpoint_name+'/{id}/'+dataset.endpoint_name) if run.dataset_lookup == True else None,
                                                                                              genomicVariant=RelatedEndpoint(returnedEntryType=genomicVariant.id,url=conf.complete_url+'/'+run.endpoint_name+'/{id}/'+genomicVariant.endpoint_name) if run.genomicVariant_lookup == True else None,
-                                                                                             individual=RelatedEndpoint(returnedEntryType=individual.id,url=conf.complete_url+'/'+run.endpoint_name+'/{id}/'+individual.endpoint_name) if run.individual_lookup == True else None))))
+                                                                                             individual=RelatedEndpoint(returnedEntryType=individual.id,url=conf.complete_url+'/'+run.endpoint_name+'/{id}/'+individual.endpoint_name) if run.individual_lookup == True else None))if run.enable_endpoint == True else None))
 
 class MapResponse(BaseModel):
     meta: InformationalMeta
@@ -498,3 +517,11 @@ class FilteringTermsResults(BaseModel):
 class FilteringTermsResponse(BaseModel):
     meta: InformationalMeta
     response: FilteringTermsResults
+
+class BeaconError(BaseModel):
+    errorCode: int
+    errorMessage: Optional[str] = None
+
+class ErrorResponse(BaseModel):
+    error: BeaconError
+    meta: Meta

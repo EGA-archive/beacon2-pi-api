@@ -103,9 +103,10 @@ async def get_qparams(self, request): # anomenar query string en comptes de qpa
                     raise web.HTTPBadRequest
     try:
         qparams = RequestParams(**final_body).from_request(final_body)
+        RequestAttributes.qparams = qparams
     except Exception:
         self._error.handle_exception(web.HTTPBadRequest, 'set of meta/query parameters: {} not allowed'.format(post_data))
-    RequestAttributes.qparams = qparams
+        raise
     
 @log_with_args(level)
 def set_entry_type_configuration(self):
