@@ -12,7 +12,16 @@ from beacon.request.classes import RequestAttributes
 def get_cohorts(self):
     collection = cohort.endpoint_name
     limit = RequestAttributes.qparams.query.pagination.limit
-    query = apply_filters(self, {}, RequestAttributes.qparams.query.filters, collection, {}, "a")
+    query = apply_filters(self, {}, RequestAttributes.qparams.query.filters, collection, {}, None)
+    try:
+        if RequestAttributes.qparams.query.requestParameters["datasets"] != None:
+            try:
+                query["$and"].append({"datasetId": {"$in": RequestAttributes.qparams.query.requestParameters["datasets"]}})
+            except Exception:
+                query["$and"]=[]
+                query["$and"].append({"datasetId": {"$in": RequestAttributes.qparams.query.requestParameters["datasets"]}})
+    except Exception:
+        pass
     count = get_count(self, cohorts, query)
     docs = get_documents(self,
         cohorts,

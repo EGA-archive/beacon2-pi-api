@@ -89,9 +89,8 @@ class DummyPermissions(Permissions):
                     datasetInstance = DatasetPermission(dataset, default_granularity)
                     datasets.append(datasetInstance)
             return datasets
-        except Exception:
-            ErrorClass.error_code=500
-            ErrorClass.error_message="Check if datasets_permissions.yml file is not empty of datasets or has any header missing."
+        except Exception as e:
+            self._error.handle_exception(e, "Check if datasets_permissions.yml file is not empty of datasets or has any header missing.")
             raise
 
     async def close(self):

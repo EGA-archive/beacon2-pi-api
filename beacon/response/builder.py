@@ -28,7 +28,7 @@ from beacon.validator.framework import (Info,
                                         FilteringTermsResponse,
                                         ErrorResponse,
                                         BeaconError)
-from pydantic import create_model, Field
+from pydantic import create_model, Field, ValidationError
 from typing import Optional
 
 @log_with_args(level)
@@ -74,6 +74,10 @@ async def builder(self, datasets):
             response = booleanFromTemplate.model_validate(booleanResponse)
             response = response.model_dump(exclude_none=True)
         return response
+    except ValidationError as v:
+        LOG.warning(v)
+        self._error.handle_exception(v, None)
+        raise
     except Exception as e:
         self._error.handle_exception(e, None)
         raise
@@ -100,6 +104,10 @@ async def collection_builder(self):
         response = collectionFromTemplate.model_validate(collectionResponse)
         response = response.model_dump(exclude_none=True)
         return response
+    except ValidationError as v:
+        LOG.warning(v)
+        self._error.handle_exception(v, None)
+        raise
     except Exception as e:
         self._error.handle_exception(e, None)
         raise
@@ -225,3 +233,4 @@ async def error_builder(self, status, message):
     except Exception as e:
         self._error.handle_exception(e, None)
         raise
+
