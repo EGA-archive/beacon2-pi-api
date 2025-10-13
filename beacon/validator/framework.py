@@ -1,7 +1,9 @@
 from pydantic import (
     BaseModel,
     field_validator,
-    model_validator
+    model_validator,
+    Field,
+    ConfigDict
 )
 from beacon.validator.model.genomicVariations import OntologyTerm, GenomicVariations
 from beacon.validator.model.analyses import Analyses
@@ -345,6 +347,7 @@ class EntryTypesSchema(BaseModel):
 
 
 class ConfigurationSchema(EntryTypesSchema):
+    schema: str = Field(alias="$schema", default="https://raw.githubusercontent.com/ga4gh-beacon/beacon-framework-v2/main/configuration/beaconConfigurationSchema.json")
     maturityAttributes: MaturityAttributes = MaturityAttributes().model_dump(exclude_none=True)
     securityAttributes: Optional[SecurityAttributes] = SecurityAttributes().model_dump(exclude_none=True)
 
@@ -393,6 +396,7 @@ class EndpointEntries(BaseModel):
         return self
 
 class MapSchema(BaseModel):
+    schema: str = Field(alias="$schema", default="https://raw.githubusercontent.com/ga4gh-beacon/beacon-framework-v2/main/configuration/beaconConfigurationSchema.json")
     endpointSets: EndpointEntries
     def populate_endpoints(self):
         return self(endpointSets=EndpointEntries(analysis=Endpoint(id=analysis.id,openAPIEndpointsDefinition=analysis.open_api_endpoints_definition,
