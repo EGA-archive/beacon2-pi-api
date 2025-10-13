@@ -74,7 +74,8 @@ async def builder(self, datasets):
             response = booleanFromTemplate.model_validate(booleanResponse)
             response = response.model_dump(exclude_none=True)
         return response
-    except Exception:
+    except Exception as e:
+        self._error.handle_exception(e, None)
         raise
 
 @log_with_args(level)
@@ -99,7 +100,8 @@ async def collection_builder(self):
         response = collectionFromTemplate.model_validate(collectionResponse)
         response = response.model_dump(exclude_none=True)
         return response
-    except Exception:
+    except Exception as e:
+        self._error.handle_exception(e, None)
         raise
 
 @log_with_args(level)
@@ -115,7 +117,8 @@ async def info_builder(self):
         response = InfoFromTemplate.model_validate(infoResponse)
         response = response.model_dump(exclude_none=True)
         return response
-    except Exception:
+    except Exception as e:
+        self._error.handle_exception(e, None)
         raise
 
 @log_with_args(level)
@@ -131,7 +134,8 @@ async def configuration_builder(self):
         response = ConfigurationFromTemplate.model_validate(configurationResponse)
         response = response.model_dump(exclude_none=True)
         return response
-    except Exception:
+    except Exception as e:
+        self._error.handle_exception(e, None)
         raise
 
 @log_with_args(level)
@@ -147,7 +151,8 @@ async def map_builder(self):
         response = MapFromTemplate.model_validate(mapResponse)
         response = response.model_dump(exclude_none=True)
         return response
-    except Exception:
+    except Exception as e:
+        self._error.handle_exception(e, None)
         raise
 
 @log_with_args(level)
@@ -163,7 +168,8 @@ async def entry_types_builder(self):
         response = EntryTypesFromTemplate.model_validate(entryTypesResponse)
         response = response.model_dump(exclude_none=True)
         return response
-    except Exception:
+    except Exception as e:
+        self._error.handle_exception(e, None)
         raise
 
 @log_with_args(level)
@@ -177,7 +183,8 @@ async def service_info_builder(self):
         response = ServiceInfoFromTemplate.model_validate(serviceInfoResponse)
         response = response.model_dump(exclude_none=True)
         return response
-    except Exception:
+    except Exception as e:
+        self._error.handle_exception(e, None)
         raise
 
 @log_with_args(level)
@@ -198,7 +205,8 @@ async def filtering_terms_builder(self):
         response = FilteringTermsFromTemplate.model_validate(filteringTermsResponse)
         response = response.model_dump(exclude_none=True)
         return response
-    except Exception:
+    except Exception as e:
+        self._error.handle_exception(e, None)
         raise
 
 @log_with_args(level)
@@ -214,5 +222,6 @@ async def error_builder(self, status, message):
         response = ErrorFromTemplate.model_validate(errorResponse)
         response = response.model_dump(exclude_none=True)
         return response
-    except Exception:
+    except Exception as e:
+        self._error.handle_exception(e, None)
         raise
