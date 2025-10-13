@@ -30,7 +30,7 @@ def get_full_datasets(self):
         try:
             if RequestAttributes.qparams.query.requestParameters["datasets"] != []:
                 response_converted = (
-                    [r for r in query if r in RequestAttributes.qparams.query.requestParameters["datasets"]] if query else []
+                    [r for r in query if r["id"] in RequestAttributes.qparams.query.requestParameters["datasets"]] if query else []
                 )
             else:
                 response_converted = (
