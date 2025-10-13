@@ -14,6 +14,7 @@ from aiohttp import web
 from beacon.request.classes import ErrorClass, RequestAttributes
 from beacon.request.classes import Granularity
 from beacon.logs.logs import LOG
+import re
 
 class CamelModel(BaseModel):
     class Config:
@@ -48,28 +49,43 @@ class OntologyFilter(CamelModel):
     scope: Optional[str] =None
     include_descendant_terms: bool = False
     similarity: Similarity = Similarity.EXACT
-
+    @field_validator('id')
+    @classmethod
+    def id__ontology_filter_must_be_CURIE(cls, v: str) -> str:
+        if re.match("[A-Za-z0-9]+:[A-Za-z0-9]", v):
+            pass
+        else:
+            raise ValueError('id must be CURIE, e.g. NCIT:C42331')
+        return v
 
 class AlphanumericFilter(CamelModel):
     id: str
     value: Union[str, int, List[int]]
     scope: Optional[str] =None
     operator: Operator = Operator.EQUAL
+    @field_validator('id')
+    @classmethod
+    def id__alphanumeric_filter_must_not_be_CURIE(cls, v: str) -> str:
+        if re.match("[A-Za-z0-9]+:[A-Za-z0-9]", v):
+            raise ValueError('id must be a schema field reference, not a CURIE')
+        return v
 
 
 class CustomFilter(CamelModel):
     id: str
     scope: Optional[str] =None
 
-
 class SchemasPerEntity(CamelModel):
-    entityType: Optional[str] = ""
-    schema: Optional[str] = ""
+    entityType: Optional[str] = None
+    schema: Optional[str] = None
 
 
 class Pagination(CamelModel):
     skip: int = 0
     limit: int = 10
+    currentPage: Optional[str] = None
+    nexttPage: Optional[str] = None
+    previousPage: Optional[str] = None
 
 
 class RequestMeta(CamelModel):
@@ -215,6 +231,18 @@ class RequestQuery(CamelModel):
     requestParameters: Union[SequenceQuery,RangeQuery,BracketQuery,AminoacidChangeQuery,GeneIdQuery,GenomicAlleleQuery,DatasetsRequested] = {}
     testMode: bool = False
     requestedGranularity: Granularity = Granularity(default_beacon_granularity)
+    @field_validator('requestedGranularity')
+    @classmethod
+    def requestedGranularity_must_be_boolean_count_record(cls, v: str) -> str:
+        if v not in ['boolean', 'count', 'record']:
+            raise ValueError('requestedGranularity must be one between boolean, count, record')
+        return v
+    @field_validator('includeResultsetResponses')
+    @classmethod
+    def includeResultsetResponses_is_correct(cls, v: str) -> str:
+        if v not in ['HIT', 'MISS', 'ALL', 'NONE']:
+            raise ValueError('includeResultsetResponses must be one between HIT, MISS, ALL, NONE')
+        return v
 
 class RequestParams(CamelModel):
     meta: RequestMeta = RequestMeta()

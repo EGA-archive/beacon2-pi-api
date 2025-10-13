@@ -1,12 +1,8 @@
-from beacon.request.parameters import RequestParams
-from beacon.response.schemas import DefaultSchemas
 from typing import Optional
 from beacon.connections.beaconCLI.__init__ import client
 import subprocess
 from beacon.logs.logs import log_with_args, LOG
 from beacon.conf.conf import level
-from beacon.request.classes import ErrorClass
-import aiohttp.web as web
 
 @log_with_args(level)
 def get_variants(self, entry_id: Optional[str], dataset: str):
@@ -41,6 +37,5 @@ def get_variants(self, entry_id: Optional[str], dataset: str):
 
         break
     docs={}
-    schema = DefaultSchemas.GENOMICVARIATIONS
 
-    return schema, count, dataset_count, docs, dataset
+    return count, dataset_count, docs, dataset

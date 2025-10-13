@@ -23,7 +23,7 @@ async def execute_function(self, entry_type: str, datasets: list, entry_id: Opti
             return_when=asyncio.ALL_COMPLETED
             )
         for task in done:
-            entity_schema, count, dataset_count, records, dataset = task.result()
+            count, dataset_count, records, dataset = task.result()
             if dataset_count != -1:
                 new_count+=dataset_count
                 datasets_docs[dataset]=records
@@ -37,11 +37,11 @@ async def execute_function(self, entry_type: str, datasets: list, entry_id: Opti
             return_when=asyncio.ALL_COMPLETED
             )
         for task in done:
-            entity_schema, count, dataset_count, records, dataset = task.result()
+            count, dataset_count, records, dataset = task.result()
         datasets_docs["NONE"]=records
         if limit == 0 or new_count < limit:
             pass
         else:
             count = limit
         datasets_count["NONE"]=count
-    return datasets_docs, datasets_count, count, entity_schema, include
+    return datasets_docs, datasets_count, count, include

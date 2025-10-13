@@ -9,8 +9,7 @@ from beacon.conf import analysis, biosample, cohort, dataset as dtaset, genomicV
 from beacon.connections.mongo.resultSets import get_resultSet, get_resultSet_with_id, get_variants_of_resultSet, get_resultSet_of_variants, get_analyses_of_resultSet, get_biosamples_of_resultSet, get_resultSet_of_dataset, get_variants_of_dataset, get_resultSet_of_cohort, get_variants_of_cohort, get_runs_of_resultSet, get_individuals_of_resultSet
 from beacon.conf import individual, genomicVariant, biosample, run, dataset as dtaset
 from beacon.connections.mongo.__init__ import biosamples, genomicVariations, individuals, analyses, runs, datasets, cohorts
-from beacon.response.schemas import DefaultSchemas
-from beacon.request.classes import ErrorClass, RequestAttributes
+from beacon.request.classes import RequestAttributes
 import aiohttp.web as web
 
 @log_with_args(level)
@@ -23,27 +22,22 @@ async def execute_function(self, datasets: list):
     if RequestAttributes.entry_type==genomicVariant.endpoint_name:
         collection=genomicVariant.endpoint_name
         mongo_collection=genomicVariations
-        schema=DefaultSchemas.GENOMICVARIATIONS
         idq="caseLevelData.biosampleId"
     elif RequestAttributes.entry_type==analysis.endpoint_name:
         collection=analysis.endpoint_name
         mongo_collection=analyses
-        schema=DefaultSchemas.ANALYSES
         idq="biosampleId"
     elif RequestAttributes.entry_type==biosample.endpoint_name:
         collection=biosample.endpoint_name
         mongo_collection=biosamples
-        schema=DefaultSchemas.BIOSAMPLES
         idq="id"
     elif RequestAttributes.entry_type==individual.endpoint_name:
         collection=individual.endpoint_name
         mongo_collection=individuals
-        schema=DefaultSchemas.INDIVIDUALS
         idq="id"
     elif RequestAttributes.entry_type==run.endpoint_name:
         collection=run.endpoint_name
         mongo_collection=runs
-        schema=DefaultSchemas.RUNS
         idq="biosampleId"
     if RequestAttributes.pre_entry_type == None:
         if RequestAttributes.entry_id == None:
@@ -76,11 +70,11 @@ async def execute_function(self, datasets: list):
 
     if datasets != []:
         with ThreadPoolExecutor() as pool:
-            done, pending = await asyncio.wait(fs=[loop.run_in_executor(pool, function, self, dataset.dataset, collection, mongo_collection, schema, idq) for dataset in datasets],
+            done, pending = await asyncio.wait(fs=[loop.run_in_executor(pool, function, self, dataset.dataset, collection, mongo_collection, idq) for dataset in datasets],
             return_when=asyncio.ALL_COMPLETED
             )
         for task in done:
-            entity_schema, count, dataset_count, records, dataset = task.result()
+            count, dataset_count, records, dataset = task.result()
             if include == 'ALL':
                 if dataset_count != -1:
                     new_count+=dataset_count
@@ -104,7 +98,7 @@ async def execute_function(self, datasets: list):
                     datasets = [x for x in datasets if x.dataset != dataset] 
         count=new_count
     try:
-        return datasets_docs, datasets_count, count, entity_schema, include, datasets
+        return datasets_docs, datasets_count, count, include, datasets
     except Exception:
         self._error.handle_exception(web.HTTPBadRequest, "No datasets found. Check out the permissions or the datsets requested if a response was expected.")
         raise
@@ -121,5 +115,5 @@ async def execute_collection_function(self):
             function=get_dataset_with_id
         elif RequestAttributes.entry_type == cohort.endpoint_name:
             function=get_cohort_with_id
-    response_converted, count, entity_schema = function(self)
-    return response_converted, count, entity_schema
+    response_converted, count = function(self)
+    return response_converted, count

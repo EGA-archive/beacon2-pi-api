@@ -7,15 +7,14 @@ import aiohttp.web as web
 from aiohttp.web_request import Request
 from beacon.utils.txid import generate_txid
 from beacon.permissions.__main__ import query_permissions
-from beacon.response.builder import builder, collection_builder, info_builder, configuration_builder, map_builder, entry_types_builder, service_info_builder, filtering_terms_builder
+from beacon.response.builder import builder, collection_builder, info_builder, configuration_builder, map_builder, entry_types_builder, service_info_builder, filtering_terms_builder, error_builder
 from bson import json_util
-from beacon.response.catalog import build_beacon_error_response
 from beacon.request.classes import ErrorClass, RequestAttributes
 import time
 import os
 import signal
 from threading import Thread
-from beacon.utils.requests import deconstruct_request
+from beacon.utils.requests import deconstruct_request, RequestParams
 from aiohttp_middlewares import cors_middleware
 from aiohttp_cors import CorsViewMixin
 from datetime import datetime
@@ -35,13 +34,16 @@ class EndpointView(web.View, CorsViewMixin):
         RequestAttributes.entry_type=None
         RequestAttributes.entry_id=None
         RequestAttributes.pre_entry_type=None
+        RequestAttributes.returned_apiVersion="v2.0.0"
+        RequestAttributes.qparams=RequestParams()
+        RequestAttributes.returned_granularity="boolean"
 
     async def get(self):
         try:
             await deconstruct_request(self, self.request)
             return await self.handler()
         except Exception as e:
-            response_obj = build_beacon_error_response(self, self._error.return_code(), self._error.return_message())
+            response_obj = await error_builder(self, self._error.return_code(), self._error.return_message())
             return web.Response(text=json_util.dumps(response_obj), status=self._error.return_code(), content_type='application/json')
 
     async def post(self):
@@ -49,7 +51,7 @@ class EndpointView(web.View, CorsViewMixin):
             await deconstruct_request(self, self.request)
             return await self.handler()
         except Exception as e:
-            response_obj = build_beacon_error_response(self, self._error.return_code(), self._error.return_message())
+            response_obj = await error_builder(self, self._error.return_code(), self._error.return_message())
             return web.Response(text=json_util.dumps(response_obj), status=self._error.return_code(), content_type='application/json')
 
 class ServiceInfo(EndpointView):
@@ -137,7 +139,7 @@ async def error_middleware(request, handler):
         if ex.status != 404:
             raise
         else:
-            response_obj = build_beacon_error_response(EndpointView(request), 404, "Not found")
+            response_obj = await error_builder(EndpointView(request), 404, "Not found")
             return web.Response(text=json_util.dumps(response_obj), status=404, content_type='application/json')
 
 async def initialize(app):
@@ -174,212 +176,219 @@ async def _graceful_shutdown_ctx(app):
         thread.join()
 
 async def create_api():
-    check_configuration()
-    app = web.Application(
-        middlewares=[
-            cors_middleware(origins=conf.cors_urls), error_middleware
-        ]
-    )
-    app.on_startup.append(initialize)
-    app.cleanup_ctx.append(_graceful_shutdown_ctx)
-    # base_path del /api a la configuració
-    app.add_routes([web.post(uri_subpath, Info)])
-    app.add_routes([web.post(uri_subpath+'/info', Info)])
-    app.add_routes([web.post(uri_subpath+'/entry_types', EntryTypes)])
-    app.add_routes([web.post(uri_subpath+'/service-info', ServiceInfo)])
-    app.add_routes([web.post(uri_subpath+'/configuration', Configuration)])
-    app.add_routes([web.post(uri_subpath+'/map', Map)])
-    app.add_routes([web.post(uri_subpath+'/filtering_terms', FilteringTerms)])
-    app.add_routes([web.get(uri_subpath, Info)])
-    app.add_routes([web.get(uri_subpath+'/info', Info)])
-    app.add_routes([web.get(uri_subpath+'/entry_types', EntryTypes)])
-    app.add_routes([web.get(uri_subpath+'/service-info', ServiceInfo)])
-    app.add_routes([web.get(uri_subpath+'/configuration', Configuration)])
-    app.add_routes([web.get(uri_subpath+'/map', Map)])
-    app.add_routes([web.get(uri_subpath+'/filtering_terms', FilteringTerms)])
-    if dataset.endpoint_name != '':
-        app.add_routes([web.post(uri_subpath+'/'+dataset.endpoint_name, Collection)])
-        app.add_routes([web.get(uri_subpath+'/'+dataset.endpoint_name, Collection)])
-        if dataset.singleEntryUrl == True:
-            app.add_routes([web.post(uri_subpath+'/'+dataset.endpoint_name+'/{id}', Collection)])
-            app.add_routes([web.get(uri_subpath+'/'+dataset.endpoint_name+'/{id}', Collection)])
-        if dataset.analysis_lookup == True:
-            app.add_routes([web.post(uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+analysis.endpoint_name, Resultset)])
-            app.add_routes([web.get(uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+analysis.endpoint_name, Resultset)])
-        if dataset.biosample_lookup == True:
-            app.add_routes([web.post(uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+biosample.endpoint_name, Resultset)])
-            app.add_routes([web.get(uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+biosample.endpoint_name, Resultset)])
-        if dataset.cohort_lookup == True:
-            app.add_routes([web.post(uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
-            app.add_routes([web.get(uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
-        if dataset.genomicVariant_lookup == True:
-            app.add_routes([web.post(uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, Resultset)])
-            app.add_routes([web.get(uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, Resultset)])
-        if dataset.individual_lookup == True:
-            app.add_routes([web.post(uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+individual.endpoint_name, Resultset)])
-            app.add_routes([web.get(uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+individual.endpoint_name, Resultset)])
-        if dataset.run_lookup == True:
-            app.add_routes([web.post(uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
-            app.add_routes([web.get(uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
-    if cohort.endpoint_name != '':
-        app.add_routes([web.post(uri_subpath+'/'+cohort.endpoint_name, Collection)])
-        app.add_routes([web.get(uri_subpath+'/'+cohort.endpoint_name, Collection)])
-        if cohort.singleEntryUrl == True:
-            app.add_routes([web.post(uri_subpath+'/'+cohort.endpoint_name+'/{id}', Collection)])
-            app.add_routes([web.get(uri_subpath+'/'+cohort.endpoint_name+'/{id}', Collection)])
-        if cohort.analysis_lookup == True:
-            app.add_routes([web.post(uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+analysis.endpoint_name, Resultset)])
-            app.add_routes([web.get(uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+analysis.endpoint_name, Resultset)])
-        if cohort.biosample_lookup == True:
-            app.add_routes([web.post(uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+biosample.endpoint_name, Resultset)])
-            app.add_routes([web.get(uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+biosample.endpoint_name, Resultset)])
-        if cohort.dataset_lookup == True:
-            app.add_routes([web.post(uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
-            app.add_routes([web.get(uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
-        if cohort.genomicVariant_lookup == True:
-            app.add_routes([web.post(uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, Resultset)])
-            app.add_routes([web.get(uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, Resultset)])
-        if cohort.individual_lookup == True:
-            app.add_routes([web.post(uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+individual.endpoint_name, Resultset)])
-            app.add_routes([web.get(uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+individual.endpoint_name, Resultset)])
-        if cohort.run_lookup == True:
-            app.add_routes([web.post(uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
-            app.add_routes([web.get(uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
-    if analysis.endpoint_name != '':
-        app.add_routes([web.post(uri_subpath+'/'+analysis.endpoint_name, Resultset)])
-        app.add_routes([web.get(uri_subpath+'/'+analysis.endpoint_name, Resultset)])
-        if analysis.singleEntryUrl == True:
-            app.add_routes([web.post(uri_subpath+'/'+analysis.endpoint_name+'/{id}', Resultset)])
-            app.add_routes([web.get(uri_subpath+'/'+analysis.endpoint_name+'/{id}', Resultset)])
-        if analysis.cohort_lookup == True:
-            app.add_routes([web.post(uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
-            app.add_routes([web.get(uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
-        if analysis.biosample_lookup == True:
-            app.add_routes([web.post(uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+biosample.endpoint_name, Resultset)])
-            app.add_routes([web.get(uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+biosample.endpoint_name, Resultset)])
-        if analysis.dataset_lookup == True:
-            app.add_routes([web.post(uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
-            app.add_routes([web.get(uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
-        if analysis.genomicVariant_lookup == True:
-            app.add_routes([web.post(uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, Resultset)])
-            app.add_routes([web.get(uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, Resultset)])
-        if analysis.individual_lookup == True:
-            app.add_routes([web.post(uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+individual.endpoint_name, Resultset)])
-            app.add_routes([web.get(uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+individual.endpoint_name, Resultset)])
-        if analysis.run_lookup == True:
-            app.add_routes([web.post(uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
-            app.add_routes([web.get(uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
-    if biosample.endpoint_name != '':
-        app.add_routes([web.post(uri_subpath+'/'+biosample.endpoint_name, Resultset)])
-        app.add_routes([web.get(uri_subpath+'/'+biosample.endpoint_name, Resultset)])
-        if biosample.singleEntryUrl == True:
-            app.add_routes([web.post(uri_subpath+'/'+biosample.endpoint_name+'/{id}', Resultset)])
-            app.add_routes([web.get(uri_subpath+'/'+biosample.endpoint_name+'/{id}', Resultset)])
-        if biosample.cohort_lookup == True:
-            app.add_routes([web.post(uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
-            app.add_routes([web.get(uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
-        if biosample.analysis_lookup == True:
-            app.add_routes([web.post(uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+analysis.endpoint_name, Resultset)])
-            app.add_routes([web.get(uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+analysis.endpoint_name, Resultset)])
-        if biosample.dataset_lookup == True:
-            app.add_routes([web.post(uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
-            app.add_routes([web.get(uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
-        if biosample.genomicVariant_lookup == True:
-            app.add_routes([web.post(uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, Resultset)])
-            app.add_routes([web.get(uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, Resultset)])
-        if biosample.individual_lookup == True:
-            app.add_routes([web.post(uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+individual.endpoint_name, Resultset)])
-            app.add_routes([web.get(uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+individual.endpoint_name, Resultset)])
-        if biosample.run_lookup == True:
-            app.add_routes([web.post(uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
-            app.add_routes([web.get(uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
-    if genomicVariant.endpoint_name != '':
-        app.add_routes([web.post(uri_subpath+'/'+genomicVariant.endpoint_name, Resultset)])
-        app.add_routes([web.get(uri_subpath+'/'+genomicVariant.endpoint_name, Resultset)])
-        if genomicVariant.singleEntryUrl == True:
-            app.add_routes([web.post(uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}', Resultset)])
-            app.add_routes([web.get(uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}', Resultset)])
-        if genomicVariant.cohort_lookup == True:
-            app.add_routes([web.post(uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
-            app.add_routes([web.get(uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
-        if genomicVariant.analysis_lookup == True:
-            app.add_routes([web.post(uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+analysis.endpoint_name, Resultset)])
-            app.add_routes([web.get(uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+analysis.endpoint_name, Resultset)])
-        if genomicVariant.dataset_lookup == True:
-            app.add_routes([web.post(uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
-            app.add_routes([web.get(uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
-        if genomicVariant.biosample_lookup == True:
-            app.add_routes([web.post(uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+biosample.endpoint_name, Resultset)])
-            app.add_routes([web.get(uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+biosample.endpoint_name, Resultset)])
-        if genomicVariant.individual_lookup == True:
-            app.add_routes([web.post(uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+individual.endpoint_name, Resultset)])
-            app.add_routes([web.get(uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+individual.endpoint_name, Resultset)])
-        if genomicVariant.run_lookup == True:
-            app.add_routes([web.post(uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
-            app.add_routes([web.get(uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
-    if individual.endpoint_name != '':
-        app.add_routes([web.post(uri_subpath+'/'+individual.endpoint_name, Resultset)])
-        app.add_routes([web.get(uri_subpath+'/'+individual.endpoint_name, Resultset)])
-        if individual.singleEntryUrl == True:
-            app.add_routes([web.post(uri_subpath+'/'+individual.endpoint_name+'/{id}', Resultset)])
-            app.add_routes([web.get(uri_subpath+'/'+individual.endpoint_name+'/{id}', Resultset)])
-        if individual.cohort_lookup == True:
-            app.add_routes([web.post(uri_subpath+'/'+individual.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
-            app.add_routes([web.get(uri_subpath+'/'+individual.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
-        if individual.analysis_lookup == True:
-            app.add_routes([web.post(uri_subpath+'/'+individual.endpoint_name+'/{id}/'+analysis.endpoint_name, Resultset)])
-            app.add_routes([web.get(uri_subpath+'/'+individual.endpoint_name+'/{id}/'+analysis.endpoint_name, Resultset)])
-        if individual.dataset_lookup == True:
-            app.add_routes([web.post(uri_subpath+'/'+individual.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
-            app.add_routes([web.get(uri_subpath+'/'+individual.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
-        if individual.biosample_lookup == True:
-            app.add_routes([web.post(uri_subpath+'/'+individual.endpoint_name+'/{id}/'+biosample.endpoint_name, Resultset)])
-            app.add_routes([web.get(uri_subpath+'/'+individual.endpoint_name+'/{id}/'+biosample.endpoint_name, Resultset)])
-        if individual.genomicVariant_lookup == True:
-            app.add_routes([web.post(uri_subpath+'/'+individual.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, Resultset)])
-            app.add_routes([web.get(uri_subpath+'/'+individual.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, Resultset)])
-        if individual.run_lookup == True:
-            app.add_routes([web.post(uri_subpath+'/'+individual.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
-            app.add_routes([web.get(uri_subpath+'/'+individual.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
-    if run.endpoint_name != '':
-        app.add_routes([web.post(uri_subpath+'/'+run.endpoint_name, Resultset)])
-        app.add_routes([web.get(uri_subpath+'/'+run.endpoint_name, Resultset)])
-        if run.singleEntryUrl == True:
-            app.add_routes([web.post(uri_subpath+'/'+run.endpoint_name+'/{id}', Resultset)])
-            app.add_routes([web.get(uri_subpath+'/'+run.endpoint_name+'/{id}', Resultset)])
-        if run.cohort_lookup == True:
-            app.add_routes([web.post(uri_subpath+'/'+run.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
-            app.add_routes([web.get(uri_subpath+'/'+run.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
-        if run.analysis_lookup == True:
-            app.add_routes([web.post(uri_subpath+'/'+run.endpoint_name+'/{id}/'+analysis.endpoint_name, Resultset)])
-            app.add_routes([web.get(uri_subpath+'/'+run.endpoint_name+'/{id}/'+analysis.endpoint_name, Resultset)])
-        if run.dataset_lookup == True:
-            app.add_routes([web.post(uri_subpath+'/'+run.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
-            app.add_routes([web.get(uri_subpath+'/'+run.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
-        if run.biosample_lookup == True:
-            app.add_routes([web.post(uri_subpath+'/'+run.endpoint_name+'/{id}/'+biosample.endpoint_name, Resultset)])
-            app.add_routes([web.get(uri_subpath+'/'+run.endpoint_name+'/{id}/'+biosample.endpoint_name, Resultset)])
-        if run.genomicVariant_lookup == True:
-            app.add_routes([web.post(uri_subpath+'/'+run.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, Resultset)])
-            app.add_routes([web.get(uri_subpath+'/'+run.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, Resultset)])
-        if run.individual_lookup == True:
-            app.add_routes([web.post(uri_subpath+'/'+run.endpoint_name+'/{id}/'+individual.endpoint_name, Resultset)])
-            app.add_routes([web.get(uri_subpath+'/'+run.endpoint_name+'/{id}/'+individual.endpoint_name, Resultset)])
+    try:
+        check_configuration()
+        app = web.Application(
+            middlewares=[
+                cors_middleware(origins=conf.cors_urls), error_middleware
+            ]
+        )
+        app.on_startup.append(initialize)
+        app.cleanup_ctx.append(_graceful_shutdown_ctx)
+        # base_path del /api a la configuració
+        app.add_routes([web.post(uri_subpath, Info)])
+        app.add_routes([web.post(uri_subpath+'/info', Info)])
+        app.add_routes([web.post(uri_subpath+'/entry_types', EntryTypes)])
+        app.add_routes([web.post(uri_subpath+'/service-info', ServiceInfo)])
+        app.add_routes([web.post(uri_subpath+'/configuration', Configuration)])
+        app.add_routes([web.post(uri_subpath+'/map', Map)])
+        app.add_routes([web.post(uri_subpath+'/filtering_terms', FilteringTerms)])
+        app.add_routes([web.get(uri_subpath, Info)])
+        app.add_routes([web.get(uri_subpath+'/info', Info)])
+        app.add_routes([web.get(uri_subpath+'/entry_types', EntryTypes)])
+        app.add_routes([web.get(uri_subpath+'/service-info', ServiceInfo)])
+        app.add_routes([web.get(uri_subpath+'/configuration', Configuration)])
+        app.add_routes([web.get(uri_subpath+'/map', Map)])
+        app.add_routes([web.get(uri_subpath+'/filtering_terms', FilteringTerms)])
+        if dataset.endpoint_name != '':
+            app.add_routes([web.post(uri_subpath+'/'+dataset.endpoint_name, Collection)])
+            app.add_routes([web.get(uri_subpath+'/'+dataset.endpoint_name, Collection)])
+            if dataset.singleEntryUrl == True:
+                app.add_routes([web.post(uri_subpath+'/'+dataset.endpoint_name+'/{id}', Collection)])
+                app.add_routes([web.get(uri_subpath+'/'+dataset.endpoint_name+'/{id}', Collection)])
+            if dataset.analysis_lookup == True:
+                app.add_routes([web.post(uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+analysis.endpoint_name, Resultset)])
+                app.add_routes([web.get(uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+analysis.endpoint_name, Resultset)])
+            if dataset.biosample_lookup == True:
+                app.add_routes([web.post(uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+biosample.endpoint_name, Resultset)])
+                app.add_routes([web.get(uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+biosample.endpoint_name, Resultset)])
+            if dataset.cohort_lookup == True:
+                app.add_routes([web.post(uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
+                app.add_routes([web.get(uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
+            if dataset.genomicVariant_lookup == True:
+                app.add_routes([web.post(uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, Resultset)])
+                app.add_routes([web.get(uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, Resultset)])
+            if dataset.individual_lookup == True:
+                app.add_routes([web.post(uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+individual.endpoint_name, Resultset)])
+                app.add_routes([web.get(uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+individual.endpoint_name, Resultset)])
+            if dataset.run_lookup == True:
+                app.add_routes([web.post(uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
+                app.add_routes([web.get(uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
+        if cohort.endpoint_name != '':
+            app.add_routes([web.post(uri_subpath+'/'+cohort.endpoint_name, Collection)])
+            app.add_routes([web.get(uri_subpath+'/'+cohort.endpoint_name, Collection)])
+            if cohort.singleEntryUrl == True:
+                app.add_routes([web.post(uri_subpath+'/'+cohort.endpoint_name+'/{id}', Collection)])
+                app.add_routes([web.get(uri_subpath+'/'+cohort.endpoint_name+'/{id}', Collection)])
+            if cohort.analysis_lookup == True:
+                app.add_routes([web.post(uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+analysis.endpoint_name, Resultset)])
+                app.add_routes([web.get(uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+analysis.endpoint_name, Resultset)])
+            if cohort.biosample_lookup == True:
+                app.add_routes([web.post(uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+biosample.endpoint_name, Resultset)])
+                app.add_routes([web.get(uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+biosample.endpoint_name, Resultset)])
+            if cohort.dataset_lookup == True:
+                app.add_routes([web.post(uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
+                app.add_routes([web.get(uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
+            if cohort.genomicVariant_lookup == True:
+                app.add_routes([web.post(uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, Resultset)])
+                app.add_routes([web.get(uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, Resultset)])
+            if cohort.individual_lookup == True:
+                app.add_routes([web.post(uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+individual.endpoint_name, Resultset)])
+                app.add_routes([web.get(uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+individual.endpoint_name, Resultset)])
+            if cohort.run_lookup == True:
+                app.add_routes([web.post(uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
+                app.add_routes([web.get(uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
+        if analysis.endpoint_name != '':
+            app.add_routes([web.post(uri_subpath+'/'+analysis.endpoint_name, Resultset)])
+            app.add_routes([web.get(uri_subpath+'/'+analysis.endpoint_name, Resultset)])
+            if analysis.singleEntryUrl == True:
+                app.add_routes([web.post(uri_subpath+'/'+analysis.endpoint_name+'/{id}', Resultset)])
+                app.add_routes([web.get(uri_subpath+'/'+analysis.endpoint_name+'/{id}', Resultset)])
+            if analysis.cohort_lookup == True:
+                app.add_routes([web.post(uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
+                app.add_routes([web.get(uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
+            if analysis.biosample_lookup == True:
+                app.add_routes([web.post(uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+biosample.endpoint_name, Resultset)])
+                app.add_routes([web.get(uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+biosample.endpoint_name, Resultset)])
+            if analysis.dataset_lookup == True:
+                app.add_routes([web.post(uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
+                app.add_routes([web.get(uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
+            if analysis.genomicVariant_lookup == True:
+                app.add_routes([web.post(uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, Resultset)])
+                app.add_routes([web.get(uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, Resultset)])
+            if analysis.individual_lookup == True:
+                app.add_routes([web.post(uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+individual.endpoint_name, Resultset)])
+                app.add_routes([web.get(uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+individual.endpoint_name, Resultset)])
+            if analysis.run_lookup == True:
+                app.add_routes([web.post(uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
+                app.add_routes([web.get(uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
+        if biosample.endpoint_name != '':
+            app.add_routes([web.post(uri_subpath+'/'+biosample.endpoint_name, Resultset)])
+            app.add_routes([web.get(uri_subpath+'/'+biosample.endpoint_name, Resultset)])
+            if biosample.singleEntryUrl == True:
+                app.add_routes([web.post(uri_subpath+'/'+biosample.endpoint_name+'/{id}', Resultset)])
+                app.add_routes([web.get(uri_subpath+'/'+biosample.endpoint_name+'/{id}', Resultset)])
+            if biosample.cohort_lookup == True:
+                app.add_routes([web.post(uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
+                app.add_routes([web.get(uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
+            if biosample.analysis_lookup == True:
+                app.add_routes([web.post(uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+analysis.endpoint_name, Resultset)])
+                app.add_routes([web.get(uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+analysis.endpoint_name, Resultset)])
+            if biosample.dataset_lookup == True:
+                app.add_routes([web.post(uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
+                app.add_routes([web.get(uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
+            if biosample.genomicVariant_lookup == True:
+                app.add_routes([web.post(uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, Resultset)])
+                app.add_routes([web.get(uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, Resultset)])
+            if biosample.individual_lookup == True:
+                app.add_routes([web.post(uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+individual.endpoint_name, Resultset)])
+                app.add_routes([web.get(uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+individual.endpoint_name, Resultset)])
+            if biosample.run_lookup == True:
+                app.add_routes([web.post(uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
+                app.add_routes([web.get(uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
+        if genomicVariant.endpoint_name != '':
+            app.add_routes([web.post(uri_subpath+'/'+genomicVariant.endpoint_name, Resultset)])
+            app.add_routes([web.get(uri_subpath+'/'+genomicVariant.endpoint_name, Resultset)])
+            if genomicVariant.singleEntryUrl == True:
+                app.add_routes([web.post(uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}', Resultset)])
+                app.add_routes([web.get(uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}', Resultset)])
+            if genomicVariant.cohort_lookup == True:
+                app.add_routes([web.post(uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
+                app.add_routes([web.get(uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
+            if genomicVariant.analysis_lookup == True:
+                app.add_routes([web.post(uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+analysis.endpoint_name, Resultset)])
+                app.add_routes([web.get(uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+analysis.endpoint_name, Resultset)])
+            if genomicVariant.dataset_lookup == True:
+                app.add_routes([web.post(uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
+                app.add_routes([web.get(uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
+            if genomicVariant.biosample_lookup == True:
+                app.add_routes([web.post(uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+biosample.endpoint_name, Resultset)])
+                app.add_routes([web.get(uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+biosample.endpoint_name, Resultset)])
+            if genomicVariant.individual_lookup == True:
+                app.add_routes([web.post(uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+individual.endpoint_name, Resultset)])
+                app.add_routes([web.get(uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+individual.endpoint_name, Resultset)])
+            if genomicVariant.run_lookup == True:
+                app.add_routes([web.post(uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
+                app.add_routes([web.get(uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
+        if individual.endpoint_name != '':
+            app.add_routes([web.post(uri_subpath+'/'+individual.endpoint_name, Resultset)])
+            app.add_routes([web.get(uri_subpath+'/'+individual.endpoint_name, Resultset)])
+            if individual.singleEntryUrl == True:
+                app.add_routes([web.post(uri_subpath+'/'+individual.endpoint_name+'/{id}', Resultset)])
+                app.add_routes([web.get(uri_subpath+'/'+individual.endpoint_name+'/{id}', Resultset)])
+            if individual.cohort_lookup == True:
+                app.add_routes([web.post(uri_subpath+'/'+individual.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
+                app.add_routes([web.get(uri_subpath+'/'+individual.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
+            if individual.analysis_lookup == True:
+                app.add_routes([web.post(uri_subpath+'/'+individual.endpoint_name+'/{id}/'+analysis.endpoint_name, Resultset)])
+                app.add_routes([web.get(uri_subpath+'/'+individual.endpoint_name+'/{id}/'+analysis.endpoint_name, Resultset)])
+            if individual.dataset_lookup == True:
+                app.add_routes([web.post(uri_subpath+'/'+individual.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
+                app.add_routes([web.get(uri_subpath+'/'+individual.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
+            if individual.biosample_lookup == True:
+                app.add_routes([web.post(uri_subpath+'/'+individual.endpoint_name+'/{id}/'+biosample.endpoint_name, Resultset)])
+                app.add_routes([web.get(uri_subpath+'/'+individual.endpoint_name+'/{id}/'+biosample.endpoint_name, Resultset)])
+            if individual.genomicVariant_lookup == True:
+                app.add_routes([web.post(uri_subpath+'/'+individual.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, Resultset)])
+                app.add_routes([web.get(uri_subpath+'/'+individual.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, Resultset)])
+            if individual.run_lookup == True:
+                app.add_routes([web.post(uri_subpath+'/'+individual.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
+                app.add_routes([web.get(uri_subpath+'/'+individual.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
+        if run.endpoint_name != '':
+            app.add_routes([web.post(uri_subpath+'/'+run.endpoint_name, Resultset)])
+            app.add_routes([web.get(uri_subpath+'/'+run.endpoint_name, Resultset)])
+            if run.singleEntryUrl == True:
+                app.add_routes([web.post(uri_subpath+'/'+run.endpoint_name+'/{id}', Resultset)])
+                app.add_routes([web.get(uri_subpath+'/'+run.endpoint_name+'/{id}', Resultset)])
+            if run.cohort_lookup == True:
+                app.add_routes([web.post(uri_subpath+'/'+run.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
+                app.add_routes([web.get(uri_subpath+'/'+run.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
+            if run.analysis_lookup == True:
+                app.add_routes([web.post(uri_subpath+'/'+run.endpoint_name+'/{id}/'+analysis.endpoint_name, Resultset)])
+                app.add_routes([web.get(uri_subpath+'/'+run.endpoint_name+'/{id}/'+analysis.endpoint_name, Resultset)])
+            if run.dataset_lookup == True:
+                app.add_routes([web.post(uri_subpath+'/'+run.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
+                app.add_routes([web.get(uri_subpath+'/'+run.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
+            if run.biosample_lookup == True:
+                app.add_routes([web.post(uri_subpath+'/'+run.endpoint_name+'/{id}/'+biosample.endpoint_name, Resultset)])
+                app.add_routes([web.get(uri_subpath+'/'+run.endpoint_name+'/{id}/'+biosample.endpoint_name, Resultset)])
+            if run.genomicVariant_lookup == True:
+                app.add_routes([web.post(uri_subpath+'/'+run.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, Resultset)])
+                app.add_routes([web.get(uri_subpath+'/'+run.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, Resultset)])
+            if run.individual_lookup == True:
+                app.add_routes([web.post(uri_subpath+'/'+run.endpoint_name+'/{id}/'+individual.endpoint_name, Resultset)])
+                app.add_routes([web.get(uri_subpath+'/'+run.endpoint_name+'/{id}/'+individual.endpoint_name, Resultset)])
 
-    ssl_context = None
-    if (os.path.isfile(conf.beacon_server_key)) and (os.path.isfile(conf.beacon_server_crt)):
-        ssl_context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
-        ssl_context.load_cert_chain(certfile=conf.beacon_server_crt, keyfile=conf.beacon_server_key)
-    
-    aiohttp_autoreload.start()
-    LOG.debug("Starting app")
-    runner = web.AppRunner(app)
-    await runner.setup()
-    site = web.TCPSite(runner, '0.0.0.0', 5050,  ssl_context=ssl_context)
-    await site.start()
+        ssl_context = None
+        if (os.path.isfile(conf.beacon_server_key)) and (os.path.isfile(conf.beacon_server_crt)):
+            ssl_context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+            ssl_context.load_cert_chain(certfile=conf.beacon_server_crt, keyfile=conf.beacon_server_key)
+        
+        aiohttp_autoreload.start()
+        LOG.debug("Starting app")
+        runner = web.AppRunner(app)
+        await runner.setup()
+        site = web.TCPSite(runner, '0.0.0.0', 5050,  ssl_context=ssl_context)
+        await site.start()
 
-    while True:
-        await asyncio.sleep(3600)
+        while True:
+            await asyncio.sleep(3600)
+            
+    except Exception:
+        raise
 
 if __name__ == '__main__':
-    asyncio.run(create_api())
+    try:
+        asyncio.run(create_api())
+    except Exception:
+        raise

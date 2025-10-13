@@ -588,7 +588,7 @@ class TestMain(unittest.TestCase):
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
                 from beacon.utils.handovers import handover_1
-                assert responsedict["response"]["resultSets"][0]["resultsHandover"] == handover_1
+                assert responsedict["response"]["resultSets"][0]["resultsHandovers"] == [handover_1]
             loop.run_until_complete(test_check_individuals_endpoint_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_individuals_with_limit_endpoint_is_working(self):
@@ -2653,7 +2653,7 @@ class TestMain(unittest.TestCase):
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
                 assert responsedict["error"]["errorMessage"] == "Not found"
-                assert responsedict["error"]["errorCode"] == "404"
+                assert responsedict["error"]["errorCode"] == 404
             loop.run_until_complete(test_check_404_not_found_error())
             loop.run_until_complete(client.close())
     def test_main_check_400_bad_request(self):
@@ -2666,7 +2666,7 @@ class TestMain(unittest.TestCase):
                 assert resp.status == 400
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
-                assert responsedict["error"]["errorCode"] == "400"
+                assert responsedict["error"]["errorCode"] == 400
             loop.run_until_complete(test_check_400_bad_request())
             loop.run_until_complete(client.close())
     def test_main_check_biosamples_g_variants_sequence_query(self):
@@ -2865,7 +2865,7 @@ class TestMain(unittest.TestCase):
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
                 assert "set of meta/query parameters" in responsedict["error"]["errorMessage"]
-                assert responsedict["error"]["errorCode"] == "400"
+                assert responsedict["error"]["errorCode"] == 400
             loop.run_until_complete(test_check_individuals_with_request_parameters_empty_fails())
             loop.run_until_complete(client.close())
     def test_main_check_measurement_value_query_is_not_working_with_query_string_filters(self):

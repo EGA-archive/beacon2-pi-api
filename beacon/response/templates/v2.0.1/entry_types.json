@@ -1,4 +1,10 @@
 {
+    "meta": {
+        "apiVersion": "v2.0.0",
+        "beaconId": "beaconId",
+        "returnedSchemas": []
+    },
+    "response": {
     "entryTypes": {
         "analysis": {
             "id": "analysis",
@@ -139,4 +145,5 @@
             "nonFilteredQueriesAllowed": true
         }
     }
+}
 }
