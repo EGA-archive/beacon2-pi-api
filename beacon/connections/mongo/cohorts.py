@@ -51,3 +51,5 @@ def get_cohort_with_id(self):
         [r for r in docs] if docs else []
     )
     return response_converted, count
+
+# 1. Mirar si hi ha connexió amb la base de dades de budget a MongoDB. Si no, retornar 404, data not found.

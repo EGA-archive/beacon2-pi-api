@@ -4,38 +4,34 @@ from pymongo.collection import Collection
 from beacon.logs.logs import log_with_args_mongo, LOG
 from beacon.conf.conf import level
 from beacon.conf.filtering_terms import alphanumeric_terms
-from beacon.request.classes import ErrorClass
+from beacon.exceptions.exceptions import InvalidRequest
 import aiohttp.web as web
 
 @log_with_args_mongo(level)
 def get_cross_query(self, ids: dict, cross_type: str, collection_id: str):
-    try:
-        id_list=[]
-        dict_in={}
-        id_dict={}
-        if cross_type == 'biosampleId' or cross_type=='id':
-            list_item=ids
-            id_list.append(str(list_item))
-            dict_in["$in"]=id_list
-            id_dict[collection_id]=dict_in
-            query = id_dict
-        elif cross_type == 'individualIds' or cross_type=='biosampleIds':
-            list_individualIds=ids
-            dict_in["$in"]=list_individualIds
-            id_dict[collection_id]=dict_in
-            query = id_dict
-        else:
-            for k, v in ids.items():
-                for item in v:
-                    id_list.append(item[cross_type])
-            dict_in["$in"]=id_list
-            id_dict[collection_id]=dict_in
-            query = id_dict
+    id_list=[]
+    dict_in={}
+    id_dict={}
+    if cross_type == 'biosampleId' or cross_type=='id':
+        list_item=ids
+        id_list.append(str(list_item))
+        dict_in["$in"]=id_list
+        id_dict[collection_id]=dict_in
+        query = id_dict
+    elif cross_type == 'individualIds' or cross_type=='biosampleIds':
+        list_individualIds=ids
+        dict_in["$in"]=list_individualIds
+        id_dict[collection_id]=dict_in
+        query = id_dict
+    else:
+        for k, v in ids.items():
+            for item in v:
+                id_list.append(item[cross_type])
+        dict_in["$in"]=id_list
+        id_dict[collection_id]=dict_in
+        query = id_dict
 
-        return query
-    except Exception as e:
-        self._error.handle_exception(e, None)
-        raise
+    return query
 
 @log_with_args_mongo(level)
 def lengthquery(self, collection: Collection,query: dict):
@@ -180,47 +176,37 @@ def choose_scope(self, scope, collection, filter):
     )
     docs = list(docs)
     if docs == [] and filter.id not in alphanumeric_terms:
-        ErrorClass.error_code=400
-        ErrorClass.error_message="The filtering term: {} is not a valid filtering term.".format(filter.id)
-        raise
+        raise InvalidRequest("The filtering term: {} is not a valid filtering term.".format(filter.id))
     try:
         fterm=docs[0]
         scopes=fterm["scopes"]
     except Exception:
         scopes=[]
     if scope is None:
-        try:
-            if scopes == []:
-                if filter.id not in ["GENO:0000136", "GENO:0000458"]:
-                    if collection == 'g_variants':
-                        scope = 'genomicVariation'
-                    else:
-                        scope = collection[0:-1]
+        if scopes == []:
+            if filter.id not in ["GENO:0000136", "GENO:0000458"]:
+                if collection == 'g_variants':
+                    scope = 'genomicVariation'
                 else:
-                    scope = None
+                    scope = collection[0:-1]
+            else:
+                scope = None
+            return scope
+        else:
+            for scoped in scopes:
+                if str(scoped)+'s'==collection and collection != 'g_variants':
+                    scope=str(scoped)
+                    return scope
+                elif str(scoped)=='genomicVariation' and collection=='g_variants':
+                    scope=str(scoped)
+                    return scope
+            if len(scopes) == 1:
+                scope = scopes[0]
                 return scope
             else:
-                for scoped in scopes:
-                    if str(scoped)+'s'==collection and collection != 'g_variants':
-                        scope=str(scoped)
-                        return scope
-                    elif str(scoped)=='genomicVariation' and collection=='g_variants':
-                        scope=str(scoped)
-                        return scope
-                if len(scopes) == 1:
-                    scope = scopes[0]
-                    return scope
-                else:
-                    ErrorClass.error_code=400
-                    ErrorClass.error_message="Look at filtering terms endpoint and select a scope from one of the available scope values for this filtering term: {}".format(filter.id)
-                    raise
-        except Exception as e:
-            self._error.handle_exception(e, None)
-            raise
+                raise InvalidRequest("Look at filtering terms endpoint and select a scope from one of the available scope values for this filtering term: {}".format(filter.id))
     else:
         for scoped in scopes:
             if scope == scoped:
                 return scope
-        ErrorClass.error_code=400
-        ErrorClass.error_message="Scope requested in filtering term does not match any of its possible scopes. Look at filtering terms endpoint to know which scopes you can select for this filtering term: {}".format(filter.id)
-        raise
+        raise InvalidRequest("Scope requested in filtering term does not match any of its possible scopes. Look at filtering terms endpoint to know which scopes you can select for this filtering term: {}".format(filter.id))

@@ -95,3 +95,8 @@ class DummyPermissions(Permissions):
 
     async def close(self):
         pass
+
+# Errors dels arxius de permissos
+# 1. Mirar si els arxius són correctes i es troben al path, si no, retornar un 500
+# 2. Mirar si els arxius no són buits, si ho estan, retornar 204, que la petició és successful, però no hi ha res a retornar. El mateix que si no hi ha dades a la database.
+# 3. Resta d'excepcions, llençar cap amunt.

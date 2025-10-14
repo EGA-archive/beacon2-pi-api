@@ -117,3 +117,7 @@ async def execute_collection_function(self):
             function=get_cohort_with_id
     response_converted, count = function(self)
     return response_converted, count
+
+# 1. Mirar si la configuració coincideix amb la request arribada. Si no, retornar un 400 Bad Request.
+# 2. Mirar si s'ha trobat algun match de dataset amb permissions, si el dataset trobat no té permissions, retornar un 401 Unauthorized.
+# 3. Resta d'errors llençar cap amunt.

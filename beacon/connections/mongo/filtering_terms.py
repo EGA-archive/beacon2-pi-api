@@ -20,3 +20,5 @@ def get_filtering_terms(self):
     except Exception as e:
         self._error.handle_exception(e, None)
         raise
+
+# 1. Mirar si hi ha connexió amb la base de dades de budget a MongoDB. Si no, retornar 404, data not found.

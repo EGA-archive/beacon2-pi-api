@@ -7,16 +7,15 @@ from pydantic import (
 from strenum import StrEnum
 from typing import List, Optional, Union
 from beacon.conf.conf import default_beacon_granularity
-from beacon.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run
 from humps.main import camelize
 from aiohttp.web_request import Request
 from aiohttp import web
-from beacon.request.classes import ErrorClass, RequestAttributes
 from beacon.request.classes import Granularity
 from beacon.logs.logs import LOG
 import re
+from beacon.exceptions.exceptions import InvalidRequest
 
-class CamelModel(BaseModel):
+class CamelModel(BaseModel, extra='forbid'):
     class Config:
         alias_generator = camelize
         allow_population_by_field_name = True
@@ -44,7 +43,7 @@ class Operator(StrEnum):
     LESS_EQUAL = "<=",
     GREATER_EQUAL = ">="
 
-class OntologyFilter(CamelModel):
+class OntologyFilter(CamelModel, extra='forbid'):
     id: str
     scope: Optional[str] =None
     include_descendant_terms: bool = False
@@ -55,10 +54,10 @@ class OntologyFilter(CamelModel):
         if re.match("[A-Za-z0-9]+:[A-Za-z0-9]", v):
             pass
         else:
-            raise ValueError('id must be CURIE, e.g. NCIT:C42331')
+            raise InvalidRequest('id must be CURIE, e.g. NCIT:C42331')
         return v
 
-class AlphanumericFilter(CamelModel):
+class AlphanumericFilter(CamelModel, extra='forbid'):
     id: str
     value: Union[str, int, List[int]]
     scope: Optional[str] =None
@@ -67,20 +66,20 @@ class AlphanumericFilter(CamelModel):
     @classmethod
     def id__alphanumeric_filter_must_not_be_CURIE(cls, v: str) -> str:
         if re.match("[A-Za-z0-9]+:[A-Za-z0-9]", v):
-            raise ValueError('id must be a schema field reference, not a CURIE')
+            raise InvalidRequest('id must be a schema field reference, not a CURIE')
         return v
 
 
-class CustomFilter(CamelModel):
+class CustomFilter(CamelModel, extra='forbid'):
     id: str
     scope: Optional[str] =None
 
-class SchemasPerEntity(CamelModel):
+class SchemasPerEntity(CamelModel, extra='forbid'):
     entityType: Optional[str] = None
     schema: Optional[str] = None
 
 
-class Pagination(CamelModel):
+class Pagination(CamelModel, extra='forbid'):
     skip: int = 0
     limit: int = 10
     currentPage: Optional[str] = None
@@ -88,11 +87,11 @@ class Pagination(CamelModel):
     previousPage: Optional[str] = None
 
 
-class RequestMeta(CamelModel):
+class RequestMeta(CamelModel, extra='forbid'):
     requestedSchemas: Optional[List[SchemasPerEntity]] = []
     apiVersion: str = 'Not provided' # TODO: add supported schemas parsing, by default,
 
-class SequenceQuery(BaseModel):
+class SequenceQuery(BaseModel, extra='forbid'):
     referenceName: Union[str,int]
     start: Union[int,list]
     alternateBases:str
@@ -104,26 +103,19 @@ class SequenceQuery(BaseModel):
     @model_validator(mode='after')
     @classmethod
     def referenceName_must_have_assemblyId_if_not_HGVSId(cls, values):
-        if values.referenceName in ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','X','Y','MT',1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]:
-            try:
-                if values.assemblyId == None:
-                    ErrorClass.error_code=400
-                    ErrorClass.error_message='if referenceName is just the chromosome: assemblyId parameter is required'
-                    raise
-                else:
-                    pass
-            except Exception as e:
-                raise ValueError
-        else:
-            raise ValueError
+        if values.referenceName in ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','X','Y','MT','chr1','chr2','chr3','chr4','chr5','chr6','chr7','chr8','chr9','chr10','chr11','chr12','chr13','chr14','chr15','chr16','chr17','chr18','chr19','chr20','chr21','chr22','chr23','chrX','chrY','chrMT',1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]:
+            if values.assemblyId == None:
+                raise InvalidRequest('if referenceName is just the chromosome: assemblyId parameter is required')
+            else:
+                raise InvalidRequest('referenceName must be a number between 1-24, or a string with X, Y, MT or all the previous mentioned values with chr at the beginning')
     @field_validator('start')
     @classmethod
     def id_must_be_CURIE(cls, v: Union[int,list]) -> Union[int,list]:
         if isinstance(v,list):
             if len(v)>1:
-                raise ValueError
+                raise InvalidRequest('start can only have one item in the array')
 
-class RangeQuery(BaseModel):
+class RangeQuery(BaseModel, extra='forbid'):
     referenceName: Union[str,int]
     start: Union[int,list]
     end: Union[int,list]
@@ -139,16 +131,11 @@ class RangeQuery(BaseModel):
     @model_validator(mode='after')
     @classmethod
     def referenceName_must_have_assemblyId_if_not_HGVSId_2(cls, values):
-        if values.referenceName in ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','X','Y','MT',1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]:
-            try:
-                if values.assemblyId == None:
-                    ErrorClass.error_code=400
-                    ErrorClass.error_message='if referenceName is just the chromosome: assemblyId parameter is required'
-                    raise
-                else:
-                    pass
-            except Exception as e:
-                raise ValueError
+        if values.referenceName in ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','X','Y','MT','chr1','chr2','chr3','chr4','chr5','chr6','chr7','chr8','chr9','chr10','chr11','chr12','chr13','chr14','chr15','chr16','chr17','chr18','chr19','chr20','chr21','chr22','chr23','chrX','chrY','chrMT',1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]:
+            if values.assemblyId == None:
+                raise InvalidRequest('if referenceName is just the chromosome: assemblyId parameter is required')
+            else:
+                raise InvalidRequest('referenceName must be a number between 1-24, or a string with X, Y, MT or all the previous mentioned values with chr at the beginning')
         start=values.start
         end=values.end
         if isinstance(start, list):
@@ -156,13 +143,12 @@ class RangeQuery(BaseModel):
         if isinstance(end, list):
             end = end [0]
         if int(start) > int(end):
-            ErrorClass.error_code=400
-            ErrorClass.error_message="start's value can not be greater than end's value"
-            raise
+            raise InvalidRequest("start's value can not be greater than end's value")
+            raise 
 
 
 
-class GeneIdQuery(BaseModel):
+class GeneIdQuery(BaseModel, extra='forbid'):
     geneId: str
     variantType: Optional[str] =None
     alternateBases: Optional[str] =None
@@ -171,7 +157,7 @@ class GeneIdQuery(BaseModel):
     variantMaxLength: Optional[int] =None
     datasets: Optional[list]=[]
 
-class BracketQuery(BaseModel):
+class BracketQuery(BaseModel, extra='forbid'):
     referenceName: Union[str,int]
     start: list
     end: list
@@ -183,48 +169,59 @@ class BracketQuery(BaseModel):
     @field_validator('start')
     @classmethod
     def start_must_be_array_of_integers(cls, v: list) -> list:
+        new_list=[]
         for num in v:
             if isinstance(num, int):
-                pass
+                new_list.append(num)
+            elif isinstance(num, str):
+                try:
+                    new_list.append(str(num))
+                except Exception:
+                    raise InvalidRequest('start parameter must be an array of integers')
+
             else:
-                raise ValueError
+                raise InvalidRequest('referenceName must be a number between 1-24, or a string with X, Y, MT or all the previous mentioned values with chr at the beginning')
+        return new_list
     @field_validator('end')
     @classmethod
     def end_must_be_array_of_integers(cls, v: list) -> list:
+        new_list=[]
         for num in v:
             if isinstance(num, int):
-                pass
+                new_list.append(num)
+            elif isinstance(num, str):
+                try:
+                    new_list.append(str(num))
+                except Exception:
+                    raise InvalidRequest('end parameter must be an array of integers')
+
             else:
-                raise ValueError
+                raise InvalidRequest('referenceName must be a number between 1-24, or a string with X, Y, MT or all the previous mentioned values with chr at the beginning')
+        return new_list
+
     @model_validator(mode='after')
     @classmethod
     def referenceName_must_have_assemblyId_if_not_HGVSId_3(cls, values):
-        if values.referenceName in ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','X','Y','MT',1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]:
-            try:
-                if values.assemblyId == None:
-                    ErrorClass.error_code=400
-                    ErrorClass.error_message='if referenceName is just the chromosome: assemblyId parameter is required'
-                    raise
-                else:
-                    pass
-            except Exception as e:
-                raise ValueError
+        if values.referenceName in ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','X','Y','MT','chr1','chr2','chr3','chr4','chr5','chr6','chr7','chr8','chr9','chr10','chr11','chr12','chr13','chr14','chr15','chr16','chr17','chr18','chr19','chr20','chr21','chr22','chr23','chrX','chrY','chrMT',1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]:
+            if values.assemblyId == None:
+                raise InvalidRequest('if referenceName is just the chromosome: assemblyId parameter is required')
         else:
-            raise ValueError
+            raise InvalidRequest('referenceName must be a number between 1-24, or a string with X, Y, MT or all the previous mentioned values with chr at the beginning')
+            raise
 
-class GenomicAlleleQuery(BaseModel):
+class GenomicAlleleQuery(BaseModel, extra='forbid'):
     genomicAlleleShortForm: str
     datasets: Optional[list]=[]
 
-class AminoacidChangeQuery(BaseModel):
+class AminoacidChangeQuery(BaseModel, extra='forbid'):
     aminoacidChange: str
     geneId: str
     datasets: Optional[list]=[]
 
-class DatasetsRequested(BaseModel):
+class DatasetsRequested(BaseModel, extra='forbid'):
     datasets: list[str]
 
-class RequestQuery(CamelModel):
+class RequestQuery(CamelModel, extra='forbid'):
     filters: List[Union[AlphanumericFilter,OntologyFilter,CustomFilter]] = []
     includeResultsetResponses: IncludeResultsetResponses = IncludeResultsetResponses.HIT
     pagination: Pagination = Pagination()
@@ -235,16 +232,16 @@ class RequestQuery(CamelModel):
     @classmethod
     def requestedGranularity_must_be_boolean_count_record(cls, v: str) -> str:
         if v not in ['boolean', 'count', 'record']:
-            raise ValueError('requestedGranularity must be one between boolean, count, record')
+            raise InvalidRequest('requestedGranularity must be one between boolean, count, record')
         return v
     @field_validator('includeResultsetResponses')
     @classmethod
     def includeResultsetResponses_is_correct(cls, v: str) -> str:
         if v not in ['HIT', 'MISS', 'ALL', 'NONE']:
-            raise ValueError('includeResultsetResponses must be one between HIT, MISS, ALL, NONE')
+            raise InvalidRequest('includeResultsetResponses must be one between HIT, MISS, ALL, NONE')
         return v
 
-class RequestParams(CamelModel):
+class RequestParams(CamelModel, extra='forbid'):
     meta: RequestMeta = RequestMeta()
     query: RequestQuery = RequestQuery()
 
@@ -264,70 +261,18 @@ class RequestParams(CamelModel):
             self.query.requestParameters = request["query"]["requestParameters"]
         except Exception:
             pass
-        if self.meta.requestedSchemas != []:
-            schemaCounter=0
-            if RequestAttributes.entry_type_id == analysis.id:
-                for requestedSchema in self.meta.requestedSchemas:
-                    if analysis.defaultSchema_id not in requestedSchema["schema"]:
-                        pass
-                    else:
-                        schemaCounter+=1
-            elif RequestAttributes.entry_type_id == biosample.id:
-                for requestedSchema in self.meta.requestedSchemas:
-                    if biosample.defaultSchema_id not in requestedSchema["schema"]:
-                        pass
-                    else:
-                        schemaCounter+=1
-            elif RequestAttributes.entry_type_id == cohort.id:
-                for requestedSchema in self.meta.requestedSchemas:
-                    if cohort.defaultSchema_id not in requestedSchema["schema"]:
-                        pass
-                    else:
-                        schemaCounter+=1
-            elif RequestAttributes.entry_type_id == dataset.id:
-                for requestedSchema in self.meta.requestedSchemas:
-                    if dataset.defaultSchema_id not in requestedSchema["schema"]:
-                        pass
-                    else:
-                        schemaCounter+=1
-            elif RequestAttributes.entry_type_id == genomicVariant.id:
-                for requestedSchema in self.meta.requestedSchemas:
-                    if genomicVariant.defaultSchema_id not in requestedSchema["schema"]:
-                        pass
-                    else:
-                        schemaCounter+=1
-            elif RequestAttributes.entry_type_id == individual.id:
-                for requestedSchema in self.meta.requestedSchemas:
-                    if individual.defaultSchema_id not in requestedSchema["schema"]:
-                        pass
-                    else:
-                        schemaCounter+=1
-            elif RequestAttributes.entry_type_id == run.id:
-                for requestedSchema in self.meta.requestedSchemas:
-                    if run.defaultSchema_id not in requestedSchema["schema"]:
-                        pass
-                    else:
-                        schemaCounter+=1
-            if schemaCounter==0:
-                ErrorClass.error_code=400
-                ErrorClass.error_message="schema requested: {} not supported".format(requestedSchema)
-                raise
         return self
         
 
     def summary(self):
         "Return a summary of all the query parameters from the request in a json format to be returnend in recieved request summary."
-        try:
-            return {
-                "apiVersion": self.meta.apiVersion,
-                "requestedSchemas": self.meta.requestedSchemas,
-                "filters": [filtering_term["id"] for filtering_term in self.query.filters],
-                "requestParameters": self.query.requestParameters,
-                "includeResultsetResponses": self.query.includeResultsetResponses,
-                "pagination": self.query.pagination.dict(),
-                "requestedGranularity": self.query.requestedGranularity,
-                "testMode": self.query.testMode
-            }
-        except Exception as e:
-            ErrorClass.error_code, ErrorClass.error_message = ErrorClass.handle_exception(ErrorClass, web.HTTPInternalServerError)
-            raise
+        return {
+            "apiVersion": self.meta.apiVersion,
+            "requestedSchemas": self.meta.requestedSchemas,
+            "filters": [filtering_term["id"] for filtering_term in self.query.filters],
+            "requestParameters": self.query.requestParameters,
+            "includeResultsetResponses": self.query.includeResultsetResponses,
+            "pagination": self.query.pagination.dict(),
+            "requestedGranularity": self.query.requestedGranularity,
+            "testMode": self.query.testMode
+        }
