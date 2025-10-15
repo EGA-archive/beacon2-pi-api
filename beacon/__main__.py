@@ -9,7 +9,7 @@ from beacon.utils.txid import generate_txid
 from beacon.permissions.__main__ import query_permissions
 from beacon.response.builder import builder, collection_builder, info_builder, configuration_builder, map_builder, entry_types_builder, service_info_builder, filtering_terms_builder, error_builder
 from bson import json_util
-from beacon.request.classes import ErrorClass, RequestAttributes
+from beacon.request.classes import RequestAttributes
 import time
 import os
 import signal
@@ -29,12 +29,12 @@ class EndpointView(web.View, CorsViewMixin):
     def __init__(self, request: Request):
         self._request = request
         self._id = generate_txid(self)
-        self._error = ErrorClass()
         RequestAttributes.ip = None
         RequestAttributes.headers=None
         RequestAttributes.entry_type=None
         RequestAttributes.entry_id=None
         RequestAttributes.pre_entry_type=None
+        RequestAttributes.returned_schema=None
         RequestAttributes.returned_apiVersion="v2.0.0"
         RequestAttributes.qparams=RequestParams()
         RequestAttributes.returned_granularity="boolean"

@@ -11,11 +11,11 @@ from beacon.conf import individual, genomicVariant, biosample, run, dataset as d
 from beacon.connections.mongo.__init__ import biosamples, genomicVariations, individuals, analyses, runs, datasets, cohorts
 from beacon.request.classes import RequestAttributes
 import aiohttp.web as web
+from beacon.exceptions.exceptions import NoPermissionsAvailable
 
 @log_with_args(level)
 async def execute_function(self, datasets: list):
     include = RequestAttributes.qparams.query.includeResultsetResponses
-    limit = RequestAttributes.qparams.query.pagination.limit
     datasets_docs={}
     datasets_count={}
     new_count=0
@@ -100,8 +100,7 @@ async def execute_function(self, datasets: list):
     try:
         return datasets_docs, datasets_count, count, include, datasets
     except Exception:
-        self._error.handle_exception(web.HTTPBadRequest, "No datasets found. Check out the permissions or the datsets requested if a response was expected.")
-        raise
+        raise NoPermissionsAvailable("No datasets found. Check out the permissions or the datasets requested if a response was expected.")
 
 @log_with_args(level)
 async def execute_collection_function(self):
@@ -117,7 +116,3 @@ async def execute_collection_function(self):
             function=get_cohort_with_id
     response_converted, count = function(self)
     return response_converted, count
-
-# 1. Mirar si la configuració coincideix amb la request arribada. Si no, retornar un 400 Bad Request.
-# 2. Mirar si s'ha trobat algun match de dataset amb permissions, si el dataset trobat no té permissions, retornar un 401 Unauthorized.
-# 3. Resta d'errors llençar cap amunt.

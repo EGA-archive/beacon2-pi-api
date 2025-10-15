@@ -4,7 +4,7 @@ from aiohttp import web
 from beacon.request.parameters import RequestParams
 from beacon.logs.logs import log_with_args, LOG
 from beacon.conf.conf import level, uri, uri_subpath, api_version
-from beacon.request.classes import ErrorClass, RequestAttributes
+from beacon.request.classes import RequestAttributes
 from beacon.exceptions.exceptions import IncoherenceInRequestError, InvalidRequest, WrongURIPath, NoFiltersAllowed
 import html
 from beacon.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run

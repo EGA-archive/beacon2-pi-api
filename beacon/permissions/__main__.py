@@ -10,7 +10,7 @@ from beacon.budget.__main__ import check_budget
 from beacon.conf import dataset
 import yaml
 from beacon.request.classes import RequestAttributes
-from beacon.exceptions.exceptions import InvalidRequest
+from beacon.exceptions.exceptions import InvalidRequest, NoPermissionsAvailable
 
 source=dataset.database
 complete_module='beacon.connections.'+source+'.datasets'
@@ -22,7 +22,7 @@ async def authorization(self):
     try:
         auth = RequestAttributes.headers.get('Authorization')
         if not auth or not auth.lower().startswith('bearer '):
-            raise web.HTTPUnauthorized()
+            raise NoPermissionsAvailable('request received did not add a token or token did not start with bearer')
         list_visa_datasets=[]
         access_token = auth[7:].strip() # 7 = len('Bearer ')
         user, list_visa_datasets = await authentication(self, access_token)

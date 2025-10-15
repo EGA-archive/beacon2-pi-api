@@ -1,11 +1,10 @@
 from pymongo.mongo_client import MongoClient
 from beacon.connections.mongo import conf
-from beacon.request.classes import ErrorClass
 from beacon.conf.conf import query_budget_database, query_budget_db_name, query_budget_table
 import aiohttp.web as web
+from beacon.exceptions.exceptions import DatabaseIsDown
 
 try:
-
     if conf.database_cluster:
         uri = "mongodb+srv://{}:{}@{}/?tls=true&authMechanism=SCRAM-SHA-256&retrywrites=false&maxIdleTimeMS=120000".format(
             conf.database_user,
@@ -28,9 +27,7 @@ try:
     client = MongoClient(uri)
 
 except Exception as e:
-    ErrorClass.error_code = 500
-    ErrorClass.error_message = str(e)
-    raise
+    raise DatabaseIsDown(str(e))
 
 # Mongo dbname
 dbname='beacon'

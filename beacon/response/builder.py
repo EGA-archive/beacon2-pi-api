@@ -76,7 +76,7 @@ async def builder(self, datasets):
             response = response.model_dump(exclude_none=True)
         return response
     except ValidationError as v:
-        raise InvalidData(str(v))
+        raise InvalidData('{} templates or data are not correct'.format(RequestAttributes.entry_type))
 
 @log_with_args(level)
 async def collection_builder(self):
@@ -101,7 +101,7 @@ async def collection_builder(self):
         response = response.model_dump(exclude_none=True)
         return response
     except ValidationError as v:
-        raise InvalidData(str(v))
+        raise InvalidData('{} templates or data are not correct'.format(RequestAttributes.entry_type))
 
 @log_with_args(level)
 async def info_builder(self):
@@ -117,7 +117,7 @@ async def info_builder(self):
         response = response.model_dump(exclude_none=True)
         return response
     except ValidationError as v:
-        raise InvalidData(str(v))
+        raise InvalidData('{} templates or data are not correct'.format(RequestAttributes.entry_type))
 
 @log_with_args(level)
 async def configuration_builder(self):
@@ -133,7 +133,7 @@ async def configuration_builder(self):
         response = response.model_dump(exclude_none=True)
         return response
     except ValidationError as v:
-        raise InvalidData(str(v))
+        raise InvalidData('{} templates or data are not correct'.format(RequestAttributes.entry_type))
 
 @log_with_args(level)
 async def map_builder(self):
@@ -149,7 +149,7 @@ async def map_builder(self):
         response = response.model_dump(exclude_none=True)
         return response
     except ValidationError as v:
-        raise InvalidData(str(v))
+        raise InvalidData('{} templates or data are not correct'.format(RequestAttributes.entry_type))
 
 @log_with_args(level)
 async def entry_types_builder(self):
@@ -165,7 +165,7 @@ async def entry_types_builder(self):
         response = response.model_dump(exclude_none=True)
         return response
     except ValidationError as v:
-        raise InvalidData(str(v))
+        raise InvalidData('{} templates or data are not correct'.format(RequestAttributes.entry_type))
 
 @log_with_args(level)
 async def service_info_builder(self):
@@ -179,7 +179,7 @@ async def service_info_builder(self):
         response = response.model_dump(exclude_none=True)
         return response
     except ValidationError as v:
-        raise InvalidData(str(v))
+        raise InvalidData('{} templates or data are not correct'.format(RequestAttributes.entry_type))
 
 @log_with_args(level)
 async def filtering_terms_builder(self):
@@ -200,7 +200,7 @@ async def filtering_terms_builder(self):
         response = response.model_dump(exclude_none=True)
         return response
     except ValidationError as v:
-        raise InvalidData(str(v))
+        raise InvalidData('{} templates or data are not correct'.format(RequestAttributes.entry_type))
 
 @log_with_args(level)
 async def error_builder(self, status, message):
@@ -216,4 +216,4 @@ async def error_builder(self, status, message):
         response = response.model_dump(exclude_none=True)
         return response
     except ValidationError as v:
-        raise InvalidData(str(v))
+        raise InvalidData('{} templates or data are not correct'.format(RequestAttributes.entry_type))

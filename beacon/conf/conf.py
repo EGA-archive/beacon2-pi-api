@@ -1,22 +1,20 @@
 import logging
 import yaml
-from beacon.request.classes import ErrorClass
 import aiohttp.web as web
+from beacon.exceptions.exceptions import FileNotFound
 
 try:
     with open("beacon/conf/api_version.yml") as api_version_file:
         api_version_yaml = yaml.safe_load(api_version_file)
 except Exception as e:
-    ErrorClass.error_message='There are issues with the api_version.yml file. Check if it can be opened or if has any content'
-    ErrorClass.error_code=500
-    raise
+    raise FileNotFound('There are issues with the api_version.yml file. Check if it can be opened or if has any content')
 
 level=logging.NOTSET
 log_file=None
 beacon_id = 'org.ega-archive.beacon-ri-demo'  # ID of the Beacon
 beacon_name = 'Beacon Production Implementation demo'  # Name of the Beacon service
 api_version = 'v2.0.0' # Version of the Beacon implementation
-uri = 'http://localhost:5050'
+uri = 'http://localhost:50510'
 uri_subpath = '/api'
 complete_url = uri + uri_subpath
 environment = 'test'

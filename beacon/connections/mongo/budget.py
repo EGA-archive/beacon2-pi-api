@@ -32,7 +32,3 @@ def get_remaining_budget_by_ip(self, start_budget_time):
     remaining_budget = client[query_budget_db_name][query_budget_table].find(budget_query).max_time_ms(100 * 1000)
     remaining_budget=list(remaining_budget)
     return remaining_budget
-
-# 1. Mirar si  hi ha error d'haver rebut una IP/user a la request. Si no s'ha rebut, retornar un 401.
-# 2. Mirar si hi ha connexió amb la base de dades de budget a MongoDB. Si no, retornar 404, data not found.
-# 3. Resta d'errors llençar cap amunt.

@@ -2,7 +2,8 @@ from typing_extensions import Self
 from pydantic import (
     BaseModel,
     field_validator,
-    model_validator
+    model_validator,
+    Field
 )
 from strenum import StrEnum
 from typing import List, Optional, Union
@@ -13,7 +14,6 @@ from aiohttp import web
 from beacon.request.classes import Granularity
 from beacon.logs.logs import LOG
 import re
-from beacon.exceptions.exceptions import InvalidRequest
 
 class CamelModel(BaseModel, extra='forbid'):
     class Config:
@@ -54,7 +54,7 @@ class OntologyFilter(CamelModel, extra='forbid'):
         if re.match("[A-Za-z0-9]+:[A-Za-z0-9]", v):
             pass
         else:
-            raise InvalidRequest('id must be CURIE, e.g. NCIT:C42331')
+            raise ValueError('id must be CURIE, e.g. NCIT:C42331')
         return v
 
 class AlphanumericFilter(CamelModel, extra='forbid'):
@@ -66,7 +66,7 @@ class AlphanumericFilter(CamelModel, extra='forbid'):
     @classmethod
     def id__alphanumeric_filter_must_not_be_CURIE(cls, v: str) -> str:
         if re.match("[A-Za-z0-9]+:[A-Za-z0-9]", v):
-            raise InvalidRequest('id must be a schema field reference, not a CURIE')
+            raise ValueError('id must be a schema field reference, not a CURIE')
         return v
 
 
@@ -105,15 +105,15 @@ class SequenceQuery(BaseModel, extra='forbid'):
     def referenceName_must_have_assemblyId_if_not_HGVSId(cls, values):
         if values.referenceName in ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','X','Y','MT','chr1','chr2','chr3','chr4','chr5','chr6','chr7','chr8','chr9','chr10','chr11','chr12','chr13','chr14','chr15','chr16','chr17','chr18','chr19','chr20','chr21','chr22','chr23','chrX','chrY','chrMT',1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]:
             if values.assemblyId == None:
-                raise InvalidRequest('if referenceName is just the chromosome: assemblyId parameter is required')
-            else:
-                raise InvalidRequest('referenceName must be a number between 1-24, or a string with X, Y, MT or all the previous mentioned values with chr at the beginning')
+                raise ValueError('if referenceName is just the chromosome: assemblyId parameter is required')
+        else:
+            raise ValueError('referenceName must be a number between 1-24, or a string with X, Y, MT or all the previous mentioned values with chr at the beginning')
     @field_validator('start')
     @classmethod
     def id_must_be_CURIE(cls, v: Union[int,list]) -> Union[int,list]:
         if isinstance(v,list):
             if len(v)>1:
-                raise InvalidRequest('start can only have one item in the array')
+                raise ValueError('start can only have one item in the array')
 
 class RangeQuery(BaseModel, extra='forbid'):
     referenceName: Union[str,int]
@@ -133,9 +133,9 @@ class RangeQuery(BaseModel, extra='forbid'):
     def referenceName_must_have_assemblyId_if_not_HGVSId_2(cls, values):
         if values.referenceName in ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','X','Y','MT','chr1','chr2','chr3','chr4','chr5','chr6','chr7','chr8','chr9','chr10','chr11','chr12','chr13','chr14','chr15','chr16','chr17','chr18','chr19','chr20','chr21','chr22','chr23','chrX','chrY','chrMT',1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]:
             if values.assemblyId == None:
-                raise InvalidRequest('if referenceName is just the chromosome: assemblyId parameter is required')
-            else:
-                raise InvalidRequest('referenceName must be a number between 1-24, or a string with X, Y, MT or all the previous mentioned values with chr at the beginning')
+                raise ValueError('if referenceName is just the chromosome: assemblyId parameter is required')
+        else:
+            raise ValueError('referenceName must be a number between 1-24, or a string with X, Y, MT or all the previous mentioned values with chr at the beginning')
         start=values.start
         end=values.end
         if isinstance(start, list):
@@ -143,8 +143,7 @@ class RangeQuery(BaseModel, extra='forbid'):
         if isinstance(end, list):
             end = end [0]
         if int(start) > int(end):
-            raise InvalidRequest("start's value can not be greater than end's value")
-            raise 
+            raise ValueError("start's value can not be greater than end's value")
 
 
 
@@ -177,10 +176,7 @@ class BracketQuery(BaseModel, extra='forbid'):
                 try:
                     new_list.append(str(num))
                 except Exception:
-                    raise InvalidRequest('start parameter must be an array of integers')
-
-            else:
-                raise InvalidRequest('referenceName must be a number between 1-24, or a string with X, Y, MT or all the previous mentioned values with chr at the beginning')
+                    raise ValueError('start parameter must be an array of integers')
         return new_list
     @field_validator('end')
     @classmethod
@@ -193,10 +189,7 @@ class BracketQuery(BaseModel, extra='forbid'):
                 try:
                     new_list.append(str(num))
                 except Exception:
-                    raise InvalidRequest('end parameter must be an array of integers')
-
-            else:
-                raise InvalidRequest('referenceName must be a number between 1-24, or a string with X, Y, MT or all the previous mentioned values with chr at the beginning')
+                    raise ValueError('end parameter must be an array of integers')
         return new_list
 
     @model_validator(mode='after')
@@ -204,10 +197,9 @@ class BracketQuery(BaseModel, extra='forbid'):
     def referenceName_must_have_assemblyId_if_not_HGVSId_3(cls, values):
         if values.referenceName in ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','X','Y','MT','chr1','chr2','chr3','chr4','chr5','chr6','chr7','chr8','chr9','chr10','chr11','chr12','chr13','chr14','chr15','chr16','chr17','chr18','chr19','chr20','chr21','chr22','chr23','chrX','chrY','chrMT',1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]:
             if values.assemblyId == None:
-                raise InvalidRequest('if referenceName is just the chromosome: assemblyId parameter is required')
+                raise ValueError('if referenceName is just the chromosome: assemblyId parameter is required')
         else:
-            raise InvalidRequest('referenceName must be a number between 1-24, or a string with X, Y, MT or all the previous mentioned values with chr at the beginning')
-            raise
+            raise ValueError('referenceName must be a number between 1-24, or a string with X, Y, MT or all the previous mentioned values with chr at the beginning')
 
 class GenomicAlleleQuery(BaseModel, extra='forbid'):
     genomicAlleleShortForm: str
@@ -232,13 +224,13 @@ class RequestQuery(CamelModel, extra='forbid'):
     @classmethod
     def requestedGranularity_must_be_boolean_count_record(cls, v: str) -> str:
         if v not in ['boolean', 'count', 'record']:
-            raise InvalidRequest('requestedGranularity must be one between boolean, count, record')
+            raise ValueError('requestedGranularity must be one between boolean, count, record')
         return v
     @field_validator('includeResultsetResponses')
     @classmethod
     def includeResultsetResponses_is_correct(cls, v: str) -> str:
         if v not in ['HIT', 'MISS', 'ALL', 'NONE']:
-            raise InvalidRequest('includeResultsetResponses must be one between HIT, MISS, ALL, NONE')
+            raise ValueError('includeResultsetResponses must be one between HIT, MISS, ALL, NONE')
         return v
 
 class RequestParams(CamelModel, extra='forbid'):

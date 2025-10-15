@@ -1,6 +1,7 @@
-from beacon.request.classes import ErrorClass, RequestAttributes
+from beacon.request.classes import RequestAttributes
 import yaml
 from beacon.logs.logs import LOG
+from beacon.exceptions.exceptions import NoPermissionsAvailable
 
 class DatasetPermission:
     def __init__(self, dataset, default_granularity):
@@ -90,13 +91,7 @@ class DummyPermissions(Permissions):
                     datasets.append(datasetInstance)
             return datasets
         except Exception as e:
-            self._error.handle_exception(e, "Check if datasets_permissions.yml file is not empty of datasets or has any header missing.")
-            raise
+            raise NoPermissionsAvailable("Check if datasets_permissions.yml file is not empty of datasets or has any header missing.")
 
     async def close(self):
         pass
-
-# Errors dels arxius de permissos
-# 1. Mirar si els arxius són correctes i es troben al path, si no, retornar un 500
-# 2. Mirar si els arxius no són buits, si ho estan, retornar 204, que la petició és successful, però no hi ha res a retornar. El mateix que si no hi ha dades a la database.
-# 3. Resta d'excepcions, llençar cap amunt.

@@ -462,8 +462,3 @@ merge_ontology_terms()
 merge_alphanumeric_terms()
 merge_custom_terms()
 insert_zygosity_terms()
-
-# 1. Mirar si hi ha connexió amb la base de dades de budget a MongoDB. Si no, retornar 404, data not found.
-# 2. Mirar si les dades són compliants amb el model, si no, retornar 400 o 422.
-# Aquí puc utilitzar els validadors per trobar els termes ontològics.
-# 4. Resta d'errors llençar cap amunt.
