@@ -198,37 +198,25 @@ def apply_request_parameters(self, query: Dict[str, List[dict]], dataset: str):
         elif k == "datasets":
             pass
         elif k == "variantMinLength":
-            try:
-                query["$and"].append(apply_alphanumeric_filter(self, {}, AlphanumericFilter(
-                    id=VARIANTS_PROPERTY_MAP[k],
-                    value='min'+v
-                ), collection, dataset, True))
-            except KeyError:
-                raise web.HTTPNotFound
+            query["$and"].append(apply_alphanumeric_filter(self, {}, AlphanumericFilter(
+                id=VARIANTS_PROPERTY_MAP[k],
+                value='min'+v
+            ), collection, dataset, True))
         elif k == "variantMaxLength":
-            try:
-                query["$and"].append(apply_alphanumeric_filter(self, {}, AlphanumericFilter(
-                    id=VARIANTS_PROPERTY_MAP[k],
-                    value='max'+v
-                ), collection, dataset, True))
-            except KeyError:
-                raise web.HTTPNotFound    
+            query["$and"].append(apply_alphanumeric_filter(self, {}, AlphanumericFilter(
+                id=VARIANTS_PROPERTY_MAP[k],
+                value='max'+v
+            ), collection, dataset, True))    
         elif k == "mateName" or k == 'referenceName':
-            try:
-                referencedict["$or"].append(apply_alphanumeric_filter(self, {}, AlphanumericFilter(
-                    id=VARIANTS_PROPERTY_MAP[k],
-                    value=v
-                ), collection, dataset, True))
-            except KeyError:
-                raise web.HTTPNotFound
+            referencedict["$or"].append(apply_alphanumeric_filter(self, {}, AlphanumericFilter(
+                id=VARIANTS_PROPERTY_MAP[k],
+                value=v
+            ), collection, dataset, True))
         elif k != 'filters' and k != 'assemblyId':
-            try:
-                query["$and"].append(apply_alphanumeric_filter(self, {}, AlphanumericFilter(
-                    id=VARIANTS_PROPERTY_MAP[k],
-                    value=v
-                ), collection, dataset, True))
-            except KeyError:
-                raise web.HTTPNotFound
+            query["$and"].append(apply_alphanumeric_filter(self, {}, AlphanumericFilter(
+                id=VARIANTS_PROPERTY_MAP[k],
+                value=v
+            ), collection, dataset, True))
     if length_query["$and"]!=[]:
         subqueryor["$or"].append(length_query) 
     try:

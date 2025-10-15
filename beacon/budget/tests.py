@@ -5,7 +5,6 @@ from aiohttp import web
 from unittest.mock import MagicMock, patch
 from beacon.logs.logs import LOG
 import beacon
-from beacon.request.classes import ErrorClass
 import os
 import time
 import signal
@@ -59,7 +58,7 @@ class TestBudget(unittest.TestCase):
         with loop_context() as loop:
             client = TestClient(TestServer(self.app), loop=loop)
             loop.run_until_complete(client.start_server())
-            MagicClass = MagicMock(_id='hohoho', _error=ErrorClass())
+            MagicClass = MagicMock(_id='hohoho')
             async def test_insert_and_check_budget_by_user():
                 RequestAttributes.ip="172.0.0.1"
                 time_now = check_budget(self=MagicClass, username="jane")
@@ -68,9 +67,8 @@ class TestBudget(unittest.TestCase):
                 insert_budget(self=MagicClass, username="jane", time_now=time_now)
                 try:
                     resp = check_budget(self=MagicClass, username="jane")
-                except Exception:
-                    pass
-                assert MagicClass._error.error_code == 429
+                except Exception as e:
+                    assert e.status == 429
                 
             loop.run_until_complete(test_insert_and_check_budget_by_user())
             loop.run_until_complete(client.close())
@@ -82,7 +80,7 @@ class TestBudget(unittest.TestCase):
         with loop_context() as loop:
             client = TestClient(TestServer(self.app), loop=loop)
             loop.run_until_complete(client.start_server())
-            MagicClass = MagicMock(_id='hohoho', _error=ErrorClass())
+            MagicClass = MagicMock(_id='hohoho')
             async def test_insert_and_check_budget_by_unauthorized_user():
                 try:
                     RequestAttributes.ip=None
@@ -99,7 +97,7 @@ class TestBudget(unittest.TestCase):
             app = create_test_app()
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
-            MagicClass = MagicMock(_id='hohoho', _error=ErrorClass())
+            MagicClass = MagicMock(_id='hohoho')
             async def test_insert_and_check_budget_by_ip():
                 RequestAttributes.ip="172.0.0.1"
                 time_now = check_budget(self=MagicClass, username="public")
@@ -108,9 +106,8 @@ class TestBudget(unittest.TestCase):
                 insert_budget(self=MagicClass, username="public", time_now=time_now)
                 try:
                     resp = check_budget(self=MagicClass, username="public")
-                except Exception:
-                    pass
-                assert MagicClass._error.error_code == 429
+                except Exception as e:
+                    assert e.status == 429
                 _graceful_shutdown_ctx(app)
             loop.run_until_complete(test_insert_and_check_budget_by_ip())
             loop.run_until_complete(client.close())

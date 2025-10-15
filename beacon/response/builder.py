@@ -30,6 +30,7 @@ from beacon.validator.framework import (Info,
                                         BeaconError)
 from pydantic import create_model, Field, ValidationError
 from typing import Optional
+from beacon.exceptions.exceptions import InvalidData
 
 @log_with_args(level)
 async def builder(self, datasets):
@@ -75,12 +76,7 @@ async def builder(self, datasets):
             response = response.model_dump(exclude_none=True)
         return response
     except ValidationError as v:
-        LOG.warning(v)
-        self._error.handle_exception(v, None)
-        raise
-    except Exception as e:
-        self._error.handle_exception(e, None)
-        raise
+        raise InvalidData('{} templates or data are not correct'.format(RequestAttributes.entry_type))
 
 @log_with_args(level)
 async def collection_builder(self):
@@ -105,12 +101,7 @@ async def collection_builder(self):
         response = response.model_dump(exclude_none=True)
         return response
     except ValidationError as v:
-        LOG.warning(v)
-        self._error.handle_exception(v, None)
-        raise
-    except Exception as e:
-        self._error.handle_exception(e, None)
-        raise
+        raise InvalidData('{} templates or data are not correct'.format(RequestAttributes.entry_type))
 
 @log_with_args(level)
 async def info_builder(self):
@@ -125,9 +116,8 @@ async def info_builder(self):
         response = InfoFromTemplate.model_validate(infoResponse)
         response = response.model_dump(exclude_none=True)
         return response
-    except Exception as e:
-        self._error.handle_exception(e, None)
-        raise
+    except ValidationError as v:
+        raise InvalidData('{} templates or data are not correct'.format(RequestAttributes.entry_type))
 
 @log_with_args(level)
 async def configuration_builder(self):
@@ -142,9 +132,8 @@ async def configuration_builder(self):
         response = ConfigurationFromTemplate.model_validate(configurationResponse)
         response = response.model_dump(exclude_none=True)
         return response
-    except Exception as e:
-        self._error.handle_exception(e, None)
-        raise
+    except ValidationError as v:
+        raise InvalidData('{} templates or data are not correct'.format(RequestAttributes.entry_type))
 
 @log_with_args(level)
 async def map_builder(self):
@@ -159,9 +148,8 @@ async def map_builder(self):
         response = MapFromTemplate.model_validate(mapResponse)
         response = response.model_dump(exclude_none=True)
         return response
-    except Exception as e:
-        self._error.handle_exception(e, None)
-        raise
+    except ValidationError as v:
+        raise InvalidData('{} templates or data are not correct'.format(RequestAttributes.entry_type))
 
 @log_with_args(level)
 async def entry_types_builder(self):
@@ -176,9 +164,8 @@ async def entry_types_builder(self):
         response = EntryTypesFromTemplate.model_validate(entryTypesResponse)
         response = response.model_dump(exclude_none=True)
         return response
-    except Exception as e:
-        self._error.handle_exception(e, None)
-        raise
+    except ValidationError as v:
+        raise InvalidData('{} templates or data are not correct'.format(RequestAttributes.entry_type))
 
 @log_with_args(level)
 async def service_info_builder(self):
@@ -191,9 +178,8 @@ async def service_info_builder(self):
         response = ServiceInfoFromTemplate.model_validate(serviceInfoResponse)
         response = response.model_dump(exclude_none=True)
         return response
-    except Exception as e:
-        self._error.handle_exception(e, None)
-        raise
+    except ValidationError as v:
+        raise InvalidData('{} templates or data are not correct'.format(RequestAttributes.entry_type))
 
 @log_with_args(level)
 async def filtering_terms_builder(self):
@@ -213,9 +199,8 @@ async def filtering_terms_builder(self):
         response = FilteringTermsFromTemplate.model_validate(filteringTermsResponse)
         response = response.model_dump(exclude_none=True)
         return response
-    except Exception as e:
-        self._error.handle_exception(e, None)
-        raise
+    except ValidationError as v:
+        raise InvalidData('{} templates or data are not correct'.format(RequestAttributes.entry_type))
 
 @log_with_args(level)
 async def error_builder(self, status, message):
@@ -230,7 +215,5 @@ async def error_builder(self, status, message):
         response = ErrorFromTemplate.model_validate(errorResponse)
         response = response.model_dump(exclude_none=True)
         return response
-    except Exception as e:
-        self._error.handle_exception(e, None)
-        raise
-
+    except ValidationError as v:
+        raise InvalidData('{} templates or data are not correct'.format(RequestAttributes.entry_type))

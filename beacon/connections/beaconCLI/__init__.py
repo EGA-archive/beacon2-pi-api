@@ -1,5 +1,6 @@
 import paramiko
 from beacon.connections.beaconCLI import conf
+from beacon.exceptions.exceptions import DatabaseIsDown
 
 def create_ssh(host, username, password):
     ssh = paramiko.SSHClient()
@@ -7,4 +8,7 @@ def create_ssh(host, username, password):
     ssh.connect(host, username=username, password=password)
     return ssh
 
-client = create_ssh(host=conf.host, username=conf.username, password=conf.password)
+try:
+    client = create_ssh(host=conf.host, username=conf.username, password=conf.password)
+except Exception as e:
+    raise DatabaseIsDown(str(e))

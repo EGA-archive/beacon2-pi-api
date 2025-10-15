@@ -19,6 +19,7 @@ from beacon.conf import conf, analysis, biosample, cohort, dataset, genomicVaria
 from beacon.request.classes import RequestAttributes
 import math
 from beacon.utils.handovers import list_of_handovers_per_dataset
+from beacon.filtering_terms.resources import resources
 
 class ReceivedRequestSummary(BaseModel):
     apiVersion: str
@@ -516,7 +517,7 @@ class Resource(BaseModel):
 
 class FilteringTermsResults(BaseModel):
     filteringTerms: Optional[List[FilteringTermInResponse]] = None
-    resources: Optional[List[Resource]] = None
+    resources: Optional[List[Resource]] = resources
 
 class FilteringTermsResponse(BaseModel):
     meta: InformationalMeta

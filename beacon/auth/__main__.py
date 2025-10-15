@@ -7,17 +7,12 @@ import os
 from dotenv import load_dotenv
 from beacon.logs.logs import log_with_args
 from beacon.conf.conf import level
-from beacon.request.classes import ErrorClass
+from beacon.exceptions.exceptions import NoPermissionsAvailable
 
 @log_with_args(level)
 def validate_access_token(self, access_token, idp_issuer, jwks_url, algorithm, aud):
-    try:
-        if not jwt.algorithms.has_crypto:
-            self._error.handle_exception(web.HTTPUnauthorized, "Unauthorized. The token is not encrypted with an algorithm.")
-            raise
-    except Exception as e:
-        self._error.handle_exception(e, None)
-        raise
+    if not jwt.algorithms.has_crypto:
+        raise NoPermissionsAvailable("Unauthorized. The token is not encrypted with an algorithm.")
     try:
         jwks_client = jwt.PyJWKClient(jwks_url, cache_jwk_set=True, lifespan=360)
         signing_key = jwks_client.get_signing_key_from_jwt(access_token)
@@ -49,35 +44,29 @@ def fetch_idp(self, access_token):
         issuer = decoded['iss']
         aud = decoded['aud']
     except Exception as e:
-        self._error.handle_exception(web.HTTPUnauthorized, "Unauthorized. The token could not be decoded")
-        raise
-    try:
-        user_info=''
-        idp_issuer=None
-        for env_filename in glob.glob("beacon/auth/idp_providers/*.env"):
-            load_dotenv(env_filename, override=True)
-            IDP_ISSUER = os.getenv('ISSUER')
-            if issuer == IDP_ISSUER:
-                IDP_CLIENT_ID = os.getenv('CLIENT_ID')
-                IDP_CLIENT_SECRET = os.getenv('CLIENT_SECRET')
-                IDP_USER_INFO = os.getenv('USER_INFO')
-                IDP_INTROSPECTION = os.getenv('INTROSPECTION')
-                IDP_JWKS_URL = os.getenv('JWKS_URL')
-                idp_issuer = IDP_ISSUER
-                user_info = IDP_USER_INFO
-                idp_client_id = IDP_CLIENT_ID
-                idp_client_secret = IDP_CLIENT_SECRET
-                idp_introspection = IDP_INTROSPECTION
-                idp_jwks_url = IDP_JWKS_URL
-                break
-            else:
-                continue
-    except Exception as e:
-        self._error.handle_exception(e, None)
-        raise
+        raise NoPermissionsAvailable("Unauthorized. The token could not be decoded")
+    user_info=''
+    idp_issuer=None
+    for env_filename in glob.glob("beacon/auth/idp_providers/*.env"):
+        load_dotenv(env_filename, override=True)
+        IDP_ISSUER = os.getenv('ISSUER')
+        if issuer == IDP_ISSUER:
+            IDP_CLIENT_ID = os.getenv('CLIENT_ID')
+            IDP_CLIENT_SECRET = os.getenv('CLIENT_SECRET')
+            IDP_USER_INFO = os.getenv('USER_INFO')
+            IDP_INTROSPECTION = os.getenv('INTROSPECTION')
+            IDP_JWKS_URL = os.getenv('JWKS_URL')
+            idp_issuer = IDP_ISSUER
+            user_info = IDP_USER_INFO
+            idp_client_id = IDP_CLIENT_ID
+            idp_client_secret = IDP_CLIENT_SECRET
+            idp_introspection = IDP_INTROSPECTION
+            idp_jwks_url = IDP_JWKS_URL
+            break
+        else:
+            continue
     if idp_issuer is None:
-        self._error.handle_exception(web.HTTPUnauthorized, "Unauthorized. There is no issuer in the token. Please, use a valid token with an issuer header.")
-        raise
+        raise NoPermissionsAvailable("Unauthorized. There is no issuer in the token. Please, use a valid token with an issuer header.")
     return idp_issuer, user_info, idp_client_id, idp_client_secret, idp_introspection, idp_jwks_url, algorithm, aud
 
 '''
@@ -111,8 +100,7 @@ async def fetch_user_info(self, access_token, user_info, idp_issuer, list_visa_d
                                 if visa['iss']==idp_issuer:
                                     pass
                                 else:
-                                    self._error.handle_exception(web.HTTPUnauthorized, "Unauthorized. Invalid visa token.")
-                                    raise
+                                    raise NoPermissionsAvailable("Unauthorized. Invalid visa token.")
                                 dataset_url = visa["ga4gh_visa_v1"]["value"]
                                 dataset_url_splitted = dataset_url.split('/')
                                 visa_dataset = dataset_url_splitted[-1]
@@ -123,8 +111,7 @@ async def fetch_user_info(self, access_token, user_info, idp_issuer, list_visa_d
                     pass
                 return user, list_visa_datasets
             else:
-                self._error.handle_exception(web.HTTPUnauthorized, "Unauthorized. Could not fetch the user info from the token.")
-                raise
+                raise NoPermissionsAvailable("Unauthorized. Could not fetch the user info from the token.")
 
 @log_with_args(level)
 async def authentication(self, access_token):

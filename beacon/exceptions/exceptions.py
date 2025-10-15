@@ -1,32 +1,54 @@
-import sys
-import traceback
-import aiohttp.web as web
-from typing import Optional
-
-class HandleException():
-    def __init__(self) -> None:
+class AppError(Exception):
+    def __init__(self, message):
         self.status=None
-        self.output=None 
-    """
-    def handle_exception(self, exception, message=None):
-        try:
-            self.output = "{}: {}".format(type(exception).__name__, exception if not message else message)
-            if exception == web.HTTPBadRequest:
-                self.status = 404
-            elif type(exception).__name__ == "ValidationError":
-                self.status = 404
-            elif exception == NotImplementedError:
-                self.status = 501
-            elif exception == OSError:
-                self.status = 507
-            elif exception in [AssertionError,AttributeError,EOFError,FloatingPointError,GeneratorExit,ImportError,ModuleNotFoundError,IndexError,KeyError,KeyboardInterrupt,
-                                    MemoryError,NameError,OverflowError,RecursionError,ReferenceError,RuntimeError,StopIteration,StopAsyncIteration,SyntaxError,IndentationError,
-                                    TabError,SystemError,SystemExit,TypeError,UnboundLocalError,UnicodeError,UnicodeEncodeError,UnicodeDecodeError,UnicodeTranslateError,
-                                    ValueError,ZeroDivisionError]:
-                self.status = 500
-            else:
-                self.status = 500
-        except Exception:
-            self.output = 'yesss'
-            self.status = 300
-    """
+        self.message=message
+
+class IncoherenceInRequestError(AppError):
+    def __init__(self, message):
+        self.status=400
+        self.message=message
+
+class InvalidRequest(AppError):
+    def __init__(self, message):
+        self.status=400
+        self.message=message
+
+class WrongURIPath(AppError):
+    def __init__(self, message):
+        self.status=404
+        self.message=message
+
+class NoFiltersAllowed(AppError):
+    def __init__(self, message):
+        self.status=400
+        self.message=message
+
+class InvalidData(AppError):
+    def __init__(self, message):
+        self.status=422
+        self.message=message
+
+class NoPermissionsAvailable(AppError):
+    def __init__(self, message):
+        self.status=401
+        self.message=message
+
+class DatabaseIsDown(AppError):
+    def __init__(self, message):
+        self.status=503
+        self.message=message
+
+class FileNotFound(AppError):
+    def __init__(self, message):
+        self.status=404
+        self.message=message
+
+class NoDatasetsFound(AppError):
+    def __init__(self, message):
+        self.status=404
+        self.message=message
+
+class NumberOfQueriesExceeded(AppError):
+    def __init__(self, message):
+        self.status=429
+        self.message=message

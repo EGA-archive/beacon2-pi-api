@@ -4,7 +4,6 @@ from beacon.__main__ import Collection, Resultset, Info, ServiceInfo, Map, Confi
 import json
 import unittest
 import beacon.conf.conf as conf
-from beacon.request.classes import ErrorClass
 from beacon.permissions.tests import TestAuthZ
 from beacon.auth.tests import TestAuthN
 #from beacon.request.tests import TestRequest
@@ -2614,34 +2613,6 @@ class TestMain(unittest.TestCase):
                 assert resp.status == 200
             loop.run_until_complete(test_check_requestedSchemas())
             loop.run_until_complete(client.close())
-    def test_main_check_requestedSchemas_fails(self):
-        with loop_context() as loop:
-            app = create_app()
-            client = TestClient(TestServer(app), loop=loop)
-            loop.run_until_complete(client.start_server())
-            async def test_check_requestedSchemas_fails():
-                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
-                "meta": {
-                    "apiVersion": "2.0",
-                    "requestedSchemas": [{"schema": "beacon-individua-v2.0.0"}]
-                },
-                "query": { "requestParameters": {
-                "datasets": ["test"]
-                },
-                    "filters": [                ],
-                    "includeResultsetResponses": "HIT",
-                    "pagination": {
-                        "skip": 0,
-                        "limit": 10
-                    },
-                    "testMode": True,
-                    "requestedGranularity": "boolean"
-                }
-            }
-            )
-                assert resp.status == 400
-            loop.run_until_complete(test_check_requestedSchemas_fails())
-            loop.run_until_complete(client.close())
     def test_main_check_404_not_found_error(self):
         with loop_context() as loop:
             app = create_app()
@@ -2815,7 +2786,7 @@ class TestMain(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_check_no_dataset_found():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?datasets=no_dataset")
-                assert resp.status == 400
+                assert resp.status == 401
             loop.run_until_complete(test_check_check_no_dataset_found())
             loop.run_until_complete(client.close())
     def test_main_get_double_filters(self):

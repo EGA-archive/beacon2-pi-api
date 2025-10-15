@@ -4,11 +4,13 @@ from aiohttp import web
 from beacon.request.parameters import RequestParams
 from beacon.logs.logs import log_with_args, LOG
 from beacon.conf.conf import level, uri, uri_subpath, api_version
-from beacon.request.classes import ErrorClass, RequestAttributes
+from beacon.request.classes import RequestAttributes
+from beacon.exceptions.exceptions import IncoherenceInRequestError, InvalidRequest, WrongURIPath, NoFiltersAllowed
 import html
 from beacon.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run
 import os
 from beacon.request.parameters import RequestMeta, SchemasPerEntity
+from pydantic import ValidationError
 
 @log_with_args(level)
 def parse_query_string(self, request):
@@ -79,34 +81,31 @@ async def get_qparams(self, request): # anomenar query string en comptes de qpa
     will return a Bad Request. After that, the params request will be validated against a pydantic class RequestParams and an instance of the object class will be 
     returned to have a variable called qparams with the query parameters that will be used for processing the query.
     '''
-    query_string_body=parse_query_string(self, request)
-    post_data = await request.json() if request.has_body else {}
-    final_body=post_data
-    for k, v in query_string_body.items():
-        if post_data.get(k) == None:
-            final_body[k]=v
-        else:
-            for k1, v1 in v.items():
-                if isinstance(v1, dict):
-                    for k2, v2 in v1.items():
-                        if post_data[k][k1].get(k2)==None:
-                            final_body[k][k1][k2]=v2
-                        elif post_data[k][k1][k2]!=v2:
-                            self._error.handle_exception(web.HTTPBadRequest, 'two parameters conflict from string: {} and from json body query: {}'.format(v1, post_data[k][k1][k2]))
-                            raise web.HTTPBadRequest
-                elif isinstance(v1, list):
-                    for item in v1:
-                        if item not in post_data[k][k1]:
-                            final_body[k][k1].append(item)
-                elif post_data[k][k1]!=v1:
-                    self._error.handle_exception(web.HTTPBadRequest, 'two parameters conflict from string: {} and from json body query: {}'.format(v1, post_data[k][k1]))
-                    raise web.HTTPBadRequest
     try:
+        query_string_body=parse_query_string(self, request)
+        post_data = await request.json() if request.has_body else {}
+        final_body=post_data
+        for k, v in query_string_body.items():
+            if post_data.get(k) == None:
+                final_body[k]=v
+            else:
+                for k1, v1 in v.items():
+                    if isinstance(v1, dict):
+                        for k2, v2 in v1.items():
+                            if post_data[k][k1].get(k2)==None:
+                                final_body[k][k1][k2]=v2
+                            elif post_data[k][k1][k2]!=v2:
+                                raise IncoherenceInRequestError('two parameters conflict from string: {} and from json body query: {}'.format(v1, post_data[k][k1][k2]))
+                    elif isinstance(v1, list):
+                        for item in v1:
+                            if item not in post_data[k][k1]:
+                                final_body[k][k1].append(item)
+                    elif post_data[k][k1]!=v1:
+                        raise IncoherenceInRequestError('two parameters conflict from string: {} and from json body query: {}'.format(v1, post_data[k][k1]))
         qparams = RequestParams(**final_body).from_request(final_body)
         RequestAttributes.qparams = qparams
-    except Exception:
-        self._error.handle_exception(web.HTTPBadRequest, 'set of meta/query parameters: {} not allowed'.format(post_data))
-        raise
+    except ValidationError:
+        raise InvalidRequest('set of meta/query parameters: {} not allowed'.format(post_data))
     
 @log_with_args(level)
 def set_entry_type_configuration(self):
@@ -177,20 +176,20 @@ def set_entry_type(self, request):
         path_list = abs_url[starting_endpoint:].split('/')
         path_list = list(filter(None, path_list))
         if path_list == []:
-            self._error.handle_exception(web.HTTPInternalServerError, 'the {} parameter from conf.py is not the same as the root one received in request: {}. Configure you uri accordingly.'.format(uri, abs_url))
+            raise WrongURIPath('the {} parameter from conf.py is not the same as the root one received in request: {}. Configure you uri accordingly.'.format(uri, abs_url))
         if len(path_list) > 2:
             try:
                 RequestAttributes.pre_entry_type=path_list[0]
                 RequestAttributes.entry_type=path_list[2]
             except Exception:
-                self._error.handle_exception(web.HTTPInternalServerError, 'path received is wrong, check your uri: {} from conf file to make sure is correct'.format(uri))
+                raise WrongURIPath('path received is wrong, check your uri: {} from conf file to make sure is correct'.format(uri))
             set_entry_type_configuration(self)
             RequestAttributes.entry_id=request.match_info.get('id', None)
         else:
             try:
                 RequestAttributes.entry_type=path_list[0]
             except Exception:
-                self._error.handle_exception(web.HTTPInternalServerError, 'path received is wrong, check your uri: {} from conf file to make sure is correct'.format(uri))
+                raise WrongURIPath('path received is wrong, check your uri: {} from conf file to make sure is correct'.format(uri))
             set_entry_type_configuration(self)
             RequestAttributes.entry_id=request.match_info.get('id', None)
 
@@ -216,32 +215,25 @@ def set_response_type(self):
         RequestAttributes.returned_granularity = 'count'
     if RequestAttributes.entry_type == genomicVariant.endpoint_name:
         if genomicVariant.allow_queries_without_filters == False and RequestAttributes.qparams.query.filters == [] and RequestAttributes.qparams.query.requestParameters == {}:
-            self._error.handle_exception(web.HTTPBadRequest, "{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type))
-            raise
+            raise NoFiltersAllowed("{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type))
     elif RequestAttributes.entry_type == analysis.endpoint_name:
         if analysis.allow_queries_without_filters == False and RequestAttributes.qparams.query.filters == [] and RequestAttributes.qparams.query.requestParameters == {}:
-            self._error.handle_exception(web.HTTPBadRequest, "{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type))
-            raise
+            raise NoFiltersAllowed("{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type))
     elif RequestAttributes.entry_type == biosample.endpoint_name:
         if biosample.allow_queries_without_filters == False and RequestAttributes.qparams.query.filters == [] and RequestAttributes.qparams.query.requestParameters == {}:
-            self._error.handle_exception(web.HTTPBadRequest, "{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type))
-            raise
+            raise NoFiltersAllowed("{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type))
     elif RequestAttributes.entry_type == cohort.endpoint_name:
         if cohort.allow_queries_without_filters == False and RequestAttributes.qparams.query.filters == [] and RequestAttributes.qparams.query.requestParameters == {}:
-            self._error.handle_exception(web.HTTPBadRequest, "{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type))
-            raise
+            raise NoFiltersAllowed("{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type))
     elif RequestAttributes.entry_type == dataset.endpoint_name:
         if dataset.allow_queries_without_filters == False and RequestAttributes.qparams.query.filters == [] and RequestAttributes.qparams.query.requestParameters == {}:
-            self._error.handle_exception(web.HTTPBadRequest, "{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type))
-            raise
+            raise NoFiltersAllowed("{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type))
     elif RequestAttributes.entry_type == individual.endpoint_name:
         if individual.allow_queries_without_filters == False and RequestAttributes.qparams.query.filters == [] and RequestAttributes.qparams.query.requestParameters == {}:
-            self._error.handle_exception(web.HTTPBadRequest, "{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type))
-            raise
+            raise NoFiltersAllowed("{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type))
     elif RequestAttributes.entry_type == run.endpoint_name:
         if run.allow_queries_without_filters == False and RequestAttributes.qparams.query.filters == [] and RequestAttributes.qparams.query.requestParameters == {}:
-            self._error.handle_exception(web.HTTPBadRequest, "{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type))
-            raise
+            raise NoFiltersAllowed("{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type))
     if RequestAttributes.qparams.meta.apiVersion in os.listdir():
         RequestAttributes.returned_apiVersion = RequestAttributes.qparams.meta.apiVersion
     else:
@@ -328,13 +320,8 @@ async def deconstruct_request(self, request):
     Here we grab the attributes that come from a request: ip, headers, entry_type related attributes and request parameters in four different steps, the order of which is
     declared first is not relevant.
     '''
-    # TODO: add attribute to requestClass for schemaToReturn
-    try:
-        set_ip(self, request)
-        set_headers(self, request)
-        set_entry_type(self, request)
-        await get_qparams(self, self.request)
-        set_response_type(self)
-    except Exception:
-        raise
-    
+    set_ip(self, request)
+    set_headers(self, request)
+    set_entry_type(self, request)
+    await get_qparams(self, self.request)
+    set_response_type(self)

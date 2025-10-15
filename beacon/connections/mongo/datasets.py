@@ -9,52 +9,40 @@ from beacon.logs.logs import LOG
 
 @log_with_args_mongo(level)
 def get_datasets(self):
-    try:
-        collection = datasets
-        query = {}
-        query = collection.find(query)
-        return query
-    except Exception as e:
-        self._error.handle_exception(e, None)
-        raise
+    collection = datasets
+    query = {}
+    query = collection.find(query)
+    return query
 
 @log_with_args_mongo(level)
 def get_full_datasets(self):
+    collection = datasets
+    if RequestAttributes.entry_id == None:
+        query = {}
+    else:
+        query = {'id': RequestAttributes.entry_id}
+    query = collection.find(query, {"_id": 0})
     try:
-        collection = datasets
-        if RequestAttributes.entry_id == None:
-            query = {}
+        if RequestAttributes.qparams.query.requestParameters["datasets"] != []:
+            response_converted = (
+                [r for r in query if r["id"] in RequestAttributes.qparams.query.requestParameters["datasets"]] if query else []
+            )
         else:
-            query = {'id': RequestAttributes.entry_id}
-        query = collection.find(query, {"_id": 0})
-        try:
-            if RequestAttributes.qparams.query.requestParameters["datasets"] != []:
-                response_converted = (
-                    [r for r in query if r["id"] in RequestAttributes.qparams.query.requestParameters["datasets"]] if query else []
-                )
-            else:
-                response_converted = (
-                    [r for r in query] if query else []
-                ) 
-        except Exception:
             response_converted = (
                 [r for r in query] if query else []
-            )
-        count = len(response_converted)
-        return response_converted, count
-    except Exception as e:
-        self._error.handle_exception(e, None)
-        raise
+            ) 
+    except Exception:
+        response_converted = (
+            [r for r in query] if query else []
+        )
+    count = len(response_converted)
+    return response_converted, count
 
 @log_with_args_mongo(level)
 def get_list_of_datasets(self):
-    try:
-        datasets = get_datasets(self)
-        beacon_datasets = [ r for r in datasets ]
-        return beacon_datasets
-    except Exception as e:
-        self._error.handle_exception(e, None)
-        raise
+    datasets = get_datasets(self)
+    beacon_datasets = [ r for r in datasets ]
+    return beacon_datasets
 
 @log_with_args_mongo(level)
 def get_dataset_with_id(self):
@@ -76,3 +64,5 @@ def get_dataset_with_id(self):
                 [r for r in docs] if docs else []
             )
     return response_converted, count
+
+# 1. Mirar si hi ha connexió amb la base de dades de budget a MongoDB. Si no, retornar 404, data not found.

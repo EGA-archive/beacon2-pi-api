@@ -3,20 +3,16 @@ from beacon.connections.beaconCLI.__init__ import client
 import subprocess
 from beacon.logs.logs import log_with_args, LOG
 from beacon.conf.conf import level
+from beacon.exceptions.exceptions import DatabaseIsDown
 
 @log_with_args(level)
 def get_variants(self, entry_id: Optional[str], dataset: str):
-    try:
-        stdin, stdout, stderr = client.exec_command('cd /CLItest && python3 main.py -rg 37 -c 1 -p 1 --range 1000000000 --public')
-    except Exception as e:
-        self._error.handle_exception(e, None)
-        raise
+    stdin, stdout, stderr = client.exec_command('cd /CLItest && python3 main.py -rg 37 -c 1 -p 1 --range 1000000000 --public')
     try:
         bash = stdout.read()
     except subprocess.CalledProcessError as e:
         output = e.output
-        self._error.handle_exception(e, output)
-        raise
+        raise DatabaseIsDown(output)
     bash_list = bash.split(b'\n')
 
     for item in bash_list:

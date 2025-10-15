@@ -9,7 +9,7 @@ from beacon.utils.txid import generate_txid
 from beacon.permissions.__main__ import query_permissions
 from beacon.response.builder import builder, collection_builder, info_builder, configuration_builder, map_builder, entry_types_builder, service_info_builder, filtering_terms_builder, error_builder
 from bson import json_util
-from beacon.request.classes import ErrorClass, RequestAttributes
+from beacon.request.classes import RequestAttributes
 import time
 import os
 import signal
@@ -22,18 +22,19 @@ from beacon.conf import conf
 import ssl
 from beacon.budget.__main__ import insert_budget
 from beacon.validator.configuration import check_configuration
+from beacon.exceptions.exceptions import AppError
 import aiohttp_autoreload
 
 class EndpointView(web.View, CorsViewMixin):
     def __init__(self, request: Request):
         self._request = request
         self._id = generate_txid(self)
-        self._error = ErrorClass()
         RequestAttributes.ip = None
         RequestAttributes.headers=None
         RequestAttributes.entry_type=None
         RequestAttributes.entry_id=None
         RequestAttributes.pre_entry_type=None
+        RequestAttributes.returned_schema=None
         RequestAttributes.returned_apiVersion="v2.0.0"
         RequestAttributes.qparams=RequestParams()
         RequestAttributes.returned_granularity="boolean"
@@ -42,92 +43,74 @@ class EndpointView(web.View, CorsViewMixin):
         try:
             await deconstruct_request(self, self.request)
             return await self.handler()
+        except AppError as e:
+            response_obj = await error_builder(self, e.status, e.message)
+            return web.Response(text=json_util.dumps(response_obj), status=e.status, content_type='application/json')
         except Exception as e:
-            response_obj = await error_builder(self, self._error.return_code(), self._error.return_message())
-            return web.Response(text=json_util.dumps(response_obj), status=self._error.return_code(), content_type='application/json')
+            response_obj = await error_builder(self, 500, "Unexpected system error: {}".format(e))
+            return web.Response(text=json_util.dumps(response_obj), status=500, content_type='application/json')
 
     async def post(self):
         try:
             await deconstruct_request(self, self.request)
             return await self.handler()
+        except AppError as e:
+            response_obj = await error_builder(self, e.status, e.message)
+            return web.Response(text=json_util.dumps(response_obj), status=e.status, content_type='application/json')
         except Exception as e:
-            response_obj = await error_builder(self, self._error.return_code(), self._error.return_message())
-            return web.Response(text=json_util.dumps(response_obj), status=self._error.return_code(), content_type='application/json')
+            response_obj = await error_builder(self, 500, "Unexpected system error: {}".format(e))
+            return web.Response(text=json_util.dumps(response_obj), status=500, content_type='application/json')
 
 class ServiceInfo(EndpointView):
     @log_with_args(level)
     async def handler(self):
-        try:
-            response_obj = await service_info_builder(self)
-            return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
-        except Exception as e:
-            raise
+        response_obj = await service_info_builder(self)
+        return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
 
 class EntryTypes(EndpointView):
     @log_with_args(level)
     async def handler(self):
-        try:
-            response_obj = await entry_types_builder(self)
-            return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
-        except Exception:
-            raise
+        response_obj = await entry_types_builder(self)
+        return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
 
 class Map(EndpointView):
     @log_with_args(level)
     async def handler(self):
-        try:
-            response_obj = await map_builder(self)
-            return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
-        except Exception:
-            raise
+        response_obj = await map_builder(self)
+        return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
 
 class Configuration(EndpointView):
     @log_with_args(level)
     async def handler(self):
-        try:
-            response_obj = await configuration_builder(self)
-            return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
-        except Exception:
-            raise
+        response_obj = await configuration_builder(self)
+        return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
 
 class Info(EndpointView):
     @log_with_args(level)
     async def handler(self):
-        try:
-            response_obj = await info_builder(self)
-            return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
-        except Exception:
-            raise
+        response_obj = await info_builder(self)
+        return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
 
 class Collection(EndpointView):
     @log_with_args(level)
     async def handler(self):
-        try:
-            response_obj = await collection_builder(self)
-            return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
-        except Exception:
-            raise
+        response_obj = await collection_builder(self)
+        return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
         
 class FilteringTerms(EndpointView):
     @log_with_args(level)
     async def handler(self):
-        try:
-            response_obj = await filtering_terms_builder(self)
-            return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
-        except Exception:
-            raise
+        response_obj = await filtering_terms_builder(self)
+        return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
 
 class Resultset(EndpointView):
     @query_permissions
     @log_with_args(level)
     async def handler(self, datasets, username, time_now):
-        try:
-            response_obj = await builder(self, datasets)
-            if time_now is not None:
-                insert_budget(self, username, time_now)
-            return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
-        except Exception:
-            raise
+        response_obj = await builder(self, datasets)
+        if time_now is not None:
+            insert_budget(self, username, time_now)
+        return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
 
 @web.middleware
 async def error_middleware(request, handler):
@@ -137,7 +120,8 @@ async def error_middleware(request, handler):
             return response
     except web.HTTPException as ex:
         if ex.status != 404:
-            raise
+            response_obj = await error_builder(EndpointView(request), ex.status, "Unexpected system error: {}".format(ex))
+            return web.Response(text=json_util.dumps(response_obj), status=ex.status, content_type='application/json')
         else:
             response_obj = await error_builder(EndpointView(request), 404, "Not found")
             return web.Response(text=json_util.dumps(response_obj), status=404, content_type='application/json')

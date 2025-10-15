@@ -10,6 +10,7 @@ from pydantic import (
 
 from typing import Optional, Union, List
 
+
 class OntologyTerm(BaseModel):
     id: str
     label: Optional[str]=None

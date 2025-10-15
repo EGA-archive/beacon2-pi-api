@@ -6,47 +6,6 @@ class Granularity(StrEnum):
     COUNT = "count",
     RECORD = "record"
 
-class ErrorClass:
-    def __init__(self) -> None: #       
-            self.error_message=None
-            self.error_code=None
-
-    def handle_exception(self, exception, message):
-        try:
-            if message==None:
-                self.error_message = type(exception).__name__
-            else:
-                self.error_message = message
-            # Això és del tipus web.HTTPException? i posar status
-            if exception == web.HTTPException:
-                self.error_code = exception.status
-            elif exception == web.HTTPBadRequest:
-                self.error_code = 400
-            elif exception == web.HTTPUnauthorized:
-                self.error_code = 401
-            elif exception == web.HTTPTooManyRequests:
-                self.error_code = 429
-            elif exception == NotImplementedError:
-                self.error_code = 501
-            elif exception == OSError:
-                self.error_code = 507
-            elif exception in [AssertionError,AttributeError,EOFError,FloatingPointError,GeneratorExit,ImportError,ModuleNotFoundError,IndexError,KeyError,KeyboardInterrupt,
-                            MemoryError,NameError,OverflowError,RecursionError,ReferenceError,RuntimeError,StopIteration,StopAsyncIteration,SyntaxError,IndentationError,
-                            TabError,SystemError,SystemExit,TypeError,UnboundLocalError,UnicodeError,UnicodeEncodeError,UnicodeDecodeError,UnicodeTranslateError,
-                            ValueError,ZeroDivisionError]:
-                self.error_code = 500
-            else:
-                self.error_code = 500
-        except Exception:
-            self.error_message = 'unknown error'
-            self.error_code = 500
-
-    def return_message(self):
-        return self.error_message
-
-    def return_code(self):
-        return self.error_code
-
 class RequestAttributes():
     def __init__(self) -> None:
         self.ip=None # ip from the request client

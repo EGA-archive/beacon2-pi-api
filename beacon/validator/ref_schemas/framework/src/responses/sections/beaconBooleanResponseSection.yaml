@@ -1,8 +1,0 @@
-$schema: https://json-schema.org/draft/2020-12/schema
-description: Boolean (true/false) response section.
-type: object
-required:
-  - exists
-properties:
-  exists:
-    $ref: ../../common/beaconCommonComponents.yaml#/definitions/Exists

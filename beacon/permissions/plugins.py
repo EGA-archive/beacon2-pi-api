@@ -1,6 +1,7 @@
-from beacon.request.classes import ErrorClass, RequestAttributes
+from beacon.request.classes import RequestAttributes
 import yaml
 from beacon.logs.logs import LOG
+from beacon.exceptions.exceptions import NoPermissionsAvailable
 
 class DatasetPermission:
     def __init__(self, dataset, default_granularity):
@@ -90,8 +91,7 @@ class DummyPermissions(Permissions):
                     datasets.append(datasetInstance)
             return datasets
         except Exception as e:
-            self._error.handle_exception(e, "Check if datasets_permissions.yml file is not empty of datasets or has any header missing.")
-            raise
+            raise NoPermissionsAvailable("Check if datasets_permissions.yml file is not empty of datasets or has any header missing.")
 
     async def close(self):
         pass
