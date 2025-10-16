@@ -1,0 +1,7 @@
+{
+    "template": false,
+    "variantType": "VT",
+    "aminoacidChange": "HGVSp",
+    "geneId": "SYMBOL",
+    "molecularEffects": "CONSEQUENCE"
+}
