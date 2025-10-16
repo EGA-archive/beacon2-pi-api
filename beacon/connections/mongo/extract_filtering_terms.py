@@ -234,7 +234,6 @@ def find_ontology_terms_used(collection_name: str) -> List[Dict]:
                 term = ':'.join([ontology_id, term_id])
                 if term not in terms_ids:
                     terms_ids.append(term)
-
     return terms_ids
 
 

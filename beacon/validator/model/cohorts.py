@@ -124,6 +124,7 @@ class Diseases(BaseModel):
                     fits_in_class=False
             if fits_in_class == False:
                 raise ValueError('ageOfOnset, if object, must be any format possible between age, ageRange, gestationalAge, timeInterval or OntologyTerm')
+            return v
             
 class Ethnicity(BaseModel):
     id: str
@@ -177,6 +178,7 @@ class PhenotypicFeatures(BaseModel):
     def check_modifiers(cls, v: list) -> list:
         for modifier in v:
             OntologyTerm(**modifier)
+        return v
     @field_validator('onset')
     @classmethod
     def check_onset(cls, v: Union[str,dict]= Field(union_mode='left_to_right')) -> Union[str,dict]:
@@ -219,6 +221,7 @@ class PhenotypicFeatures(BaseModel):
                     fits_in_class=False
             if fits_in_class == False:
                 raise ValueError('onset, if object, must be any format possible between age, ageRange, gestationalAge, timeInterval or OntologyTerm')
+            return v
     @field_validator('resolution')
     @classmethod
     def check_resolution(cls, v: Union[str,dict]= Field(union_mode='left_to_right')) -> Union[str,dict]:
@@ -261,6 +264,7 @@ class PhenotypicFeatures(BaseModel):
                     fits_in_class=False
             if fits_in_class == False:
                 raise ValueError('resolution, if object, must be any format possible between age, ageRange, gestationalAge, timeInterval or OntologyTerm')
+            return v
 
 class CohortCriteria(BaseModel):
     ageRange: AgeRange
@@ -274,26 +278,31 @@ class CohortCriteria(BaseModel):
     def check_diseaseConditions(cls, v: list) -> list:
         for disease in v:
             Diseases(**disease)
+        return v
     @field_validator('ethnicities')
     @classmethod
     def check_ethnicities(cls, v: list) -> list:
         for ethnicity in v:
             Ethnicity(**ethnicity)
+        return v
     @field_validator('genders')
     @classmethod
     def check_genders(cls, v: list) -> list:
         for gender in v:
             Ethnicity(**gender)
+        return v
     @field_validator('locations')
     @classmethod
     def check_locations(cls, v: list) -> list:
         for location in v:
             OntologyTerm(**location)
+        return v
     @field_validator('phenotypicConditions')
     @classmethod
     def check_phenotypicConditions(cls, v: list) -> list:
         for phenotypicCondition in v:
             PhenotypicFeatures(**phenotypicCondition)
+        return v
 
 class DataAvailabilityAndDistribution(BaseModel):
     availability: bool
@@ -348,8 +357,10 @@ class Cohorts(BaseModel):
     def check_cohortDataTypes(cls, v: list) -> list:
         for cohortDataType in v:
             OntologyTerm(**cohortDataType)
+        return v
     @field_validator('collectionEvents')
     @classmethod
     def check_collectionEvents(cls, v: list) -> list:
         for collectionEvent in v:
             CollectionEvent(**collectionEvent)
+        return v

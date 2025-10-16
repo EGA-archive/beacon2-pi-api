@@ -1,10 +1,6 @@
 from beacon.connections.mongo.__init__ import client, dbname, genomicVariations, caseLevelData, individuals, analyses, biosamples, cohorts, datasets, runs, targets
 
 try:
-    client[dbname].drop_collection("synonyms")
-except Exception:
-    client[dbname].create_collection(name="synonyms")
-try:
     client[dbname].validate_collection("synonyms")
 except Exception:
     db=client[dbname].create_collection(name="synonyms")
@@ -18,16 +14,9 @@ except Exception:
     db=client[dbname].create_collection(name="caseLevelData")
 try:
     client[dbname].drop_collection("counts")
+    client[dbname].create_collection(name="counts")
 except Exception:
     client[dbname].create_collection(name="counts")
-try:
-    client[dbname].validate_collection("counts")
-except Exception:
-    db=client[dbname].create_collection(name="counts")
-try:
-    client[dbname].drop_collection("similarities")
-except Exception:
-    client[dbname].create_collection(name="similarities")
 try:
     client[dbname].validate_collection("similarities")
 except Exception:

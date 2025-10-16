@@ -43,6 +43,7 @@ class EndpointView(web.View, CorsViewMixin):
         try:
             await deconstruct_request(self, self.request)
             return await self.handler()
+        
         except AppError as e:
             response_obj = await error_builder(self, e.status, e.message)
             return web.Response(text=json_util.dumps(response_obj), status=e.status, content_type='application/json')

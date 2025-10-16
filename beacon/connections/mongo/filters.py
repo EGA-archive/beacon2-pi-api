@@ -396,7 +396,7 @@ def apply_filters(self, query: dict, filters: List[dict], collection: str, query
                 partial_query = apply_alphanumeric_filter(self, partial_query, filter, collection, dataset, False)
             elif "includeDescendantTerms" not in filter and '.' not in filter["id"] and filter["id"].isupper():
                 filter=OntologyFilter(**filter)
-                filter.include_descendant_terms=True
+                filter.includeDescendantTerms=True
                 partial_query = apply_ontology_filter(self, partial_query, filter, collection, request_parameters, dataset)
             elif "similarity" in filter or "includeDescendantTerms" in filter or re.match(CURIE_REGEX, filter["id"]) and filter["id"].isupper():
                 filter = OntologyFilter(**filter)
@@ -546,7 +546,7 @@ def apply_filters(self, query: dict, filters: List[dict], collection: str, query
 
 @log_with_args(level)
 def apply_ontology_filter(self, query: dict, filter: OntologyFilter, collection: str, request_parameters: dict, dataset: str) -> dict:
-    final_term_list=[]
+    final_term_list=[]    
     query_synonyms={}
     query_synonyms['id']=filter.id
     synonyms=get_documents(self,
@@ -561,96 +561,36 @@ def apply_ontology_filter(self, query: dict, filter: OntologyFilter, collection:
     except Exception:
         synonym_id=None
     if synonym_id is not None:
-        final_term_list.append(filter.id)
-        filter.id=synonym_id
-    
-    
-    scope = filter.scope
-    scope=choose_scope(self, scope, collection, filter)
+        final_term_list.append(synonym_id)
 
-    is_filter_id_required = True
+    try:
+        scope = filter.scope
+        scope=choose_scope(self, scope, collection, filter)
+    except Exception:
+        if synonym_id is not None:
+            filter.id=synonym_id
+            scope = filter.scope
+            scope=choose_scope(self, scope, collection, filter)
+        else:
+            raise
+
     # Search similar
     if filter.similarity != Similarity.EXACT:
-        is_filter_id_required = False
-        ontology_list=filter.id.split(':')
         try:
             if filter.similarity == Similarity.HIGH:
-                similarity_high=[]
                 ontology_dict=similarities.find({"id": filter.id})
                 final_term_list = ontology_dict[0]["similarity_high"]
             elif filter.similarity == Similarity.MEDIUM:
-                similarity_medium=[]
                 ontology_dict=similarities.find({"id": filter.id})
                 final_term_list = ontology_dict[0]["similarity_medium"]
             elif filter.similarity == Similarity.LOW:
-                similarity_low=[]
                 ontology_dict=similarities.find({"id": filter.id})
                 final_term_list = ontology_dict[0]["similarity_low"]
         except Exception:
             pass
         
-
-
-        final_term_list.append(filter.id)
-        query_filtering={}
-        query_filtering['$and']=[]
-        dict_id={}
-        dict_id['id']=filter.id
-        dict_scope={}
-        dict_scope['scopes']=scope
-        query_filtering['$and'].append(dict_id)
-        query_filtering['$and'].append(dict_scope)
-        docs = get_documents(self,
-            filtering_terms,
-            query_filtering,
-            0,
-            1
-        )
-            
-        for doc_term in docs:
-            label = doc_term['label']
-        if scope == 'genomicVariation' and collection == genomicVariant.endpoint_name or scope == collection:
-            query_filtering={}
-            query_filtering['$and']=[]
-            dict_regex={}
-            try:
-                dict_regex['$regex']=":"+label
-                dict_regex['$options']='i'
-            except Exception:
-                dict_regex['$regex']=''
-            dict_id={}
-            dict_id['id']=dict_regex
-            dict_scope={}
-            dict_scope['scopes']=scope
-            query_filtering['$and'].append(dict_id)
-            query_filtering['$and'].append(dict_scope)
-            docs_2 = get_documents(self,
-                filtering_terms,
-                query_filtering,
-                0,
-                1
-            )
-            for doc2 in docs_2:
-                query_terms = doc2['id']
-            query_terms = query_terms.split(':')
-            query_term = query_terms[0] + '.id'
-            if final_term_list !=[]:
-                new_query={}
-                query_id={}
-                new_query['$or']=[]
-                for simil in final_term_list:
-                    query_id={}
-                    query_id[query_term]=simil
-                    new_query['$or'].append(query_id)
-                query = new_query
-        else:
-            pass
-        
-
     # Apply descendant terms
-    if filter.include_descendant_terms == True:
-        final_term_list.append(filter.id)
-        is_filter_id_required = False
+    if filter.includeDescendantTerms == True:
         ontology=filter.id.replace("\n","")
         list_descendant = []
         try:
@@ -660,120 +600,60 @@ def apply_ontology_filter(self, query: dict, filter: OntologyFilter, collection:
                 final_term_list.append(descendant)
         except Exception:
             pass
+    final_term_list.append(filter.id)
 
-        try: 
-            if query['$or']:
-                pass
-            else:
-                query['$or']=[]
-        except Exception:
-            query['$or']=[]
-        list_descendant.append(filter.id)
-        query_filtering={}
-        query_filtering['$and']=[]
-        dict_id={}
-        dict_id['id']=filter.id
-        dict_scope={}
-        dict_scope['scopes']=scope
-        query_filtering['$and'].append(dict_id)
-        query_filtering['$and'].append(dict_scope)
-        docs = get_documents(self,
-            filtering_terms,
-            query_filtering,
-            0,
-            1
-        )
-
-        for doc_term in docs:
-            label = doc_term['label']
-        query_filtering={}
-        query_filtering['$and']=[]
-        dict_regex={}
-        try:
-            dict_regex['$regex']=":"+label
-            dict_regex['$options']='i'
-        except Exception:
-            dict_regex['$regex']=''
-        dict_id={}
-        dict_id['id']=dict_regex
-        dict_scope={}
-        dict_scope['scopes']=scope
-        query_filtering['$and'].append(dict_id)
-        query_filtering['$and'].append(dict_scope)
-        docs_2 = get_documents(self,
-            filtering_terms,
-            query_filtering,
-            0,
-            1
-        )
-        for doc2 in docs_2:
-            query_terms = doc2['id']
-            query_terms = query_terms.split(':')
-            query_term = query_terms[0] + '.id'
-        
-        if final_term_list !=[]:
-            new_query={}
-            query_id={}
-            new_query['$or']=[]
-            for simil in final_term_list:
-                query_id={}
-                query_id[query_term]=simil
-                new_query['$or'].append(query_id)
-            query = new_query
-        query=cross_query(self, query, scope, collection, request_parameters, dataset)
-
-            
-    if is_filter_id_required:
-        query_filtering={}
-        query_filtering['$and']=[]
-        dict_id={}
-        dict_id['id']=filter.id
-        dict_scope={}
-        dict_scope['scopes']=scope
-        query_filtering['$and'].append(dict_id)
-        query_filtering['$and'].append(dict_scope)
-        docs = get_documents(self,
+    query_filtering={}
+    query_filtering['$and']=[]
+    dict_id={}
+    dict_id['id']=filter.id
+    dict_scope={}
+    dict_scope['scopes']=scope
+    query_filtering['$and'].append(dict_id)
+    query_filtering['$and'].append(dict_scope)
+    docs = get_documents(self,
         filtering_terms,
         query_filtering,
         0,
         1
     )
-        
-        for doc_term in docs:
-            label = doc_term['label']
-        query_filtering={}
-        query_filtering['$and']=[]
-        dict_regex={}
+
+    for doc_term in docs:
+        label = doc_term['label']
+    query_filtering={}
+    query_filtering['$and']=[]
+    dict_regex={}
+    try:
         dict_regex['$regex']=":"+label
         dict_regex['$options']='i'
-        dict_id={}
-        dict_id['id']=dict_regex
-        dict_scope={}
-        dict_scope['scopes']=scope
-        query_filtering['$and'].append(dict_id)
-        query_filtering['$and'].append(dict_scope)
-        docs_2 = get_documents(self,
+    except Exception:
+        dict_regex['$regex']=''
+    dict_id={}
+    dict_id['id']=dict_regex
+    dict_scope={}
+    dict_scope['scopes']=scope
+    query_filtering['$and'].append(dict_id)
+    query_filtering['$and'].append(dict_scope)
+    docs_2 = get_documents(self,
         filtering_terms,
         query_filtering,
         0,
         1
     )
-        for doc2 in docs_2:
-            query_terms = doc2['id']
+    for doc2 in docs_2:
+        query_terms = doc2['id']
         query_terms = query_terms.split(':')
         query_term = query_terms[0] + '.id'
-        query[query_term]=filter.id
-        if final_term_list !=[]:
-            new_query={}
+    
+    if final_term_list !=[]:
+        new_query={}
+        query_id={}
+        new_query['$or']=[]
+        for simil in final_term_list:
             query_id={}
-            new_query['$or']=[]
-            for simil in final_term_list:
-                query_id={}
-                query_id[query_term]=simil
-                new_query['$or'].append(query_id)
-            new_query['$or'].append(query)
-            query = new_query
-        query=cross_query(self, query, scope, collection, request_parameters, dataset)
+            query_id[query_term]=simil
+            new_query['$or'].append(query_id)
+        query = new_query
+    query=cross_query(self, query, scope, collection, request_parameters, dataset)
     return query
 
 

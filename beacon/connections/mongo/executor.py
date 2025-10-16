@@ -8,10 +8,11 @@ from beacon.connections.mongo.cohorts import get_cohorts, get_cohort_with_id
 from beacon.conf import analysis, biosample, cohort, dataset as dtaset, genomicVariant, individual, run
 from beacon.connections.mongo.resultSets import get_resultSet, get_resultSet_with_id, get_variants_of_resultSet, get_resultSet_of_variants, get_analyses_of_resultSet, get_biosamples_of_resultSet, get_resultSet_of_dataset, get_variants_of_dataset, get_resultSet_of_cohort, get_variants_of_cohort, get_runs_of_resultSet, get_individuals_of_resultSet
 from beacon.conf import individual, genomicVariant, biosample, run, dataset as dtaset
-from beacon.connections.mongo.__init__ import biosamples, genomicVariations, individuals, analyses, runs, datasets, cohorts
+from beacon.connections.mongo.__init__ import biosamples, genomicVariations, individuals, analyses, runs, datasets, cohorts, client
 from beacon.request.classes import RequestAttributes
 import aiohttp.web as web
-from beacon.exceptions.exceptions import NoPermissionsAvailable
+from beacon.exceptions.exceptions import NoPermissionsAvailable, DatabaseIsDown
+from pymongo.errors import ConnectionFailure
 
 @log_with_args(level)
 async def execute_function(self, datasets: list):
@@ -99,20 +100,28 @@ async def execute_function(self, datasets: list):
         count=new_count
     try:
         return datasets_docs, datasets_count, count, include, datasets
+    except ConnectionFailure as e:
+        client.close()
+        raise DatabaseIsDown(str(e))
     except Exception:
         raise NoPermissionsAvailable("No datasets found. Check out the permissions or the datasets requested if a response was expected.")
+    
 
 @log_with_args(level)
 async def execute_collection_function(self):
-    if RequestAttributes.entry_id == None:
-        if RequestAttributes.entry_type == dtaset.endpoint_name:
-            function=get_full_datasets
-        elif RequestAttributes.entry_type == cohort.endpoint_name:
-            function=get_cohorts
-    else:
-        if RequestAttributes.entry_type == dtaset.endpoint_name:
-            function=get_dataset_with_id
-        elif RequestAttributes.entry_type == cohort.endpoint_name:
-            function=get_cohort_with_id
-    response_converted, count = function(self)
-    return response_converted, count
+    try:
+        if RequestAttributes.entry_id == None:
+            if RequestAttributes.entry_type == dtaset.endpoint_name:
+                function=get_full_datasets
+            elif RequestAttributes.entry_type == cohort.endpoint_name:
+                function=get_cohorts
+        else:
+            if RequestAttributes.entry_type == dtaset.endpoint_name:
+                function=get_dataset_with_id
+            elif RequestAttributes.entry_type == cohort.endpoint_name:
+                function=get_cohort_with_id
+        response_converted, count = function(self)
+        return response_converted, count
+    except ConnectionFailure as e:
+        client.close()
+        raise DatabaseIsDown(str(e))
