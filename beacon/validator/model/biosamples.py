@@ -99,6 +99,7 @@ class InterventionsOrProcedures(BaseModel):
                     fits_in_class=False
             if fits_in_class == False:
                 raise ValueError('ageAtProcedure, if object, must be any format possible between age, ageRange, gestationalAge, timeInterval or OntologyTerm')
+            return v
             
 class Measurement(BaseModel):
     assayCode: OntologyTerm
@@ -113,6 +114,7 @@ class Measurement(BaseModel):
         if isinstance(v, list):
             for measurement in v:
                 TypedQuantity(**measurement)
+            return v
     @field_validator('observationMoment')
     @classmethod
     def check_observationMoment(cls, v: Union[str,dict]= Field(union_mode='left_to_right')) -> Union[str,dict]:
@@ -155,6 +157,7 @@ class Measurement(BaseModel):
                     fits_in_class=False
             if fits_in_class == False:
                 raise ValueError('observationMoment, if object, must be any format possible between age, ageRange, gestationalAge, timeInterval or OntologyTerm')
+            return v
     @field_validator('procedure')
     @classmethod
     def check_procedure(cls, v: dict) -> dict:
@@ -195,8 +198,10 @@ class Biosamples(BaseModel):
     def check_diagnosticMarkers(cls, v: list) -> list:
         for diagnosticMarker in v:
             OntologyTerm(**diagnosticMarker)
+        return v
     @field_validator('measurements')
     @classmethod
     def check_measurements(cls, v: list) -> list:
         for measurement in v:
             Measurement(**measurement)
+        return v

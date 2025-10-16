@@ -283,7 +283,7 @@ class ComposedSequenceExpression(BaseModel):
                     fits_in_class=False
             if fits_in_class == False:
                 raise ValueError('components must be an array containing any format possible between DerivedSequenceExpression, LiteralSequenceExpression or RepeatedSequenceExpression. It is mandatory to at least be one of DerivedSequenceExpression or RepeatedSequenceExpression')
-
+        return v
 class Allele(BaseModel):
     id: Optional[str] = Field(default=None, alias='_id')
     type: str
@@ -525,11 +525,13 @@ class CaseLevelVariant(BaseModel):
     def check_clinicalInterpretations(cls, v: list) -> list:
         for interpretation in v:
             PhenoClinicEffect(**interpretation)
+        return v
     @field_validator('phenotypicEffects')
     @classmethod
     def check_phenotypicEffects(cls, v: list) -> list:
         for phenotypicEffect in v:
             PhenoClinicEffect(**phenotypicEffect)
+        return v
 
 class PopulationFrequency(BaseModel):
     alleleFrequency: Union[float, int]
@@ -545,6 +547,7 @@ class FrequencyInPopulation(BaseModel):
     def check_frequencies(cls, v: list) -> list:
         for frequency in v:
             PopulationFrequency(**frequency)
+        return v
 
 class Identifiers(BaseModel):
     clinvarVariantId: Optional[str]=None
@@ -583,6 +586,7 @@ class Identifiers(BaseModel):
     def check_variantAlternativeIds(cls, v: list) -> list:
         for alternative in v:
             Reference(**alternative)
+        return v
 
 class GenomicFeature(BaseModel):
     featureClass: OntologyTerm
@@ -601,7 +605,7 @@ class MolecularAttributes(BaseModel):
                 pass
             else:
                 raise ValueError('aminoacidChanges must be an array of strings')
-        return aminoacidChange.title()
+        return v
     @field_validator('geneIds')
     @classmethod
     def check_geneIds(cls, v: list) -> list:
@@ -610,17 +614,19 @@ class MolecularAttributes(BaseModel):
                 pass
             else:
                 raise ValueError('geneIds must be an array of strings')
-        return geneId.title()
+        return v
     @field_validator('genomicFeatures')
     @classmethod
     def check_genomicFeatures(cls, v: list) -> list:
         for genomicFeature in v:
             GenomicFeature(**genomicFeature)
+        return v
     @field_validator('molecularEffects')
     @classmethod
     def check_molecularEffects(cls, v: list) -> list:
         for molecularEffect in v:
             OntologyTerm(**molecularEffect)
+        return v
 
 class VariantLevelData(BaseModel):
     clinicalInterpretations: Optional[list]=None
@@ -630,11 +636,13 @@ class VariantLevelData(BaseModel):
     def check_clinicalInterpretations(cls, v: list) -> list:
         for interpretation in v:
             PhenoClinicEffect(**interpretation)
+        return v
     @field_validator('phenotypicEffects')
     @classmethod
     def check_phenotypicEffects(cls, v: list) -> list:
         for phenotypicEffect in v:
             PhenoClinicEffect(**phenotypicEffect)
+        return v
 
 class GenomicVariations(BaseModel):
     def __init__(self, **data) -> None:
@@ -657,8 +665,10 @@ class GenomicVariations(BaseModel):
     def check_caseLevelData(cls, v: list) -> list:
         for case in v:
             CaseLevelVariant(**case)
+        return v
     @field_validator('frequencyInPopulations')
     @classmethod
     def check_frequencyInPopulations(cls, v: list) -> list:
         for fp in v:
             FrequencyInPopulation(**fp)
+        return v

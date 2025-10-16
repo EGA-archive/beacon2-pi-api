@@ -25,7 +25,6 @@ try:
         uri += '&tls=true&tlsCertificateKeyFile={}&tlsCAFile={}'.format(conf.database_certificate, conf.database_cafile)
 
     client = MongoClient(uri)
-
 except Exception as e:
     raise DatabaseIsDown(str(e))
 
@@ -51,4 +50,7 @@ if query_budget_database == 'mongo':
     try:
         client[query_budget_db_name].validate_collection(query_budget_table)
     except Exception:
-        db=client[query_budget_db_name].create_collection(name=query_budget_table)
+        try:
+            db=client[query_budget_db_name].create_collection(name=query_budget_table)
+        except Exception as e:
+            raise DatabaseIsDown(str(e))

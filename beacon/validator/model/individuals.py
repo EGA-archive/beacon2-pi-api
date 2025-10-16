@@ -112,6 +112,7 @@ class DoseIntervals(BaseModel):
                     fits_in_class=False
             if fits_in_class == False:
                 raise ValueError('interval, if object, must be any format possible between age, ageRange, gestationalAge, timeInterval or OntologyTerm')
+            return v
 
 class Diseases(BaseModel):
     ageOfOnset: Optional[Union[str,dict]]=None
@@ -162,6 +163,7 @@ class Diseases(BaseModel):
                     fits_in_class=False
             if fits_in_class == False:
                 raise ValueError('ageOfOnset, if object, must be any format possible between age, ageRange, gestationalAge, timeInterval or OntologyTerm')
+            return v
 
 class Ethnicity(BaseModel):
     id: str
@@ -242,6 +244,7 @@ class InterventionsOrProcedures(BaseModel):
                     fits_in_class=False
             if fits_in_class == False:
                 raise ValueError('ageAtProcedure, if object, must be any format possible between age, ageRange, gestationalAge, timeInterval or OntologyTerm')
+            return v
             
 class Measurement(BaseModel):
     assayCode: OntologyTerm
@@ -259,6 +262,7 @@ class Measurement(BaseModel):
                     Quantity(**measurement)
                 except Exception:
                     TypedQuantity(**measurement)
+            return v
     @field_validator('observationMoment')
     @classmethod
     def check_observationMoment(cls, v: Union[str,dict]= Field(union_mode='left_to_right')) -> Union[str,dict]:
@@ -301,6 +305,7 @@ class Measurement(BaseModel):
                     fits_in_class=False
             if fits_in_class == False:
                 raise ValueError('observationMoment, if object, must be any format possible between age, ageRange, gestationalAge, timeInterval or OntologyTerm')
+            return v
     @field_validator('procedure')
     @classmethod
     def check_procedure(cls, v: dict) -> dict:
@@ -331,11 +336,13 @@ class PhenotypicFeatures(BaseModel):
     @classmethod
     def check_evidence(cls, v: dict) -> dict:
         Evidence(**v)
+        return v
     @field_validator('modifiers')
     @classmethod
     def check_modifiers(cls, v: list) -> list:
         for modifier in v:
             OntologyTerm(**modifier)
+        return v
     @field_validator('onset')
     @classmethod
     def check_onset(cls, v: Union[str,dict]= Field(union_mode='left_to_right')) -> Union[str,dict]:
@@ -378,6 +385,7 @@ class PhenotypicFeatures(BaseModel):
                     fits_in_class=False
             if fits_in_class == False:
                 raise ValueError('onset, if object, must be any format possible between age, ageRange, gestationalAge, timeInterval or OntologyTerm')
+            return v
     @field_validator('resolution')
     @classmethod
     def check_resolution(cls, v: Union[str,dict]= Field(union_mode='left_to_right')) -> Union[str,dict]:
@@ -420,6 +428,7 @@ class PhenotypicFeatures(BaseModel):
                     fits_in_class=False
             if fits_in_class == False:
                 raise ValueError('resolution, if object, must be any format possible between age, ageRange, gestationalAge, timeInterval or OntologyTerm')
+            return v
 
 class Sex(BaseModel):
     id: str
@@ -444,6 +453,7 @@ class Treatment(BaseModel):
     def check_doseIntervals(cls, v: list) -> list:
         for doseInterval in v:
             DoseIntervals(**doseInterval)
+        return v
 
 class Individuals(BaseModel):
     def __init__(self, **data) -> None:
@@ -472,45 +482,54 @@ class Individuals(BaseModel):
     @classmethod
     def check_ethnicity(cls, v: dict) -> dict:
         Ethnicity(**v)
+        return v
     @field_validator('diseases')
     @classmethod
     def check_diseases(cls, v: list) -> list:
         for disease in v:
             Diseases(**disease)
+        return v
     @field_validator('exposures')
     @classmethod
     def check_exposures(cls, v: list) -> list:
         for exposure in v:
             Exposures(**exposure)
+        return v
     @field_validator('geographicOrigin')
     @classmethod
     def check_geographicOrigin(cls, v: dict) -> dict:
         GeographicOrigin(**v)
+        return v
     @field_validator('interventionsOrProcedures')
     @classmethod
     def check_interventions(cls, v: list) -> list:
         for procedure in v:
             InterventionsOrProcedures(**procedure)
+        return v
     @field_validator('measures')
     @classmethod
     def check_measures(cls, v: list) -> list:
         for measure in v:
             Measurement(**measure)
+        return v
     @field_validator('pedigrees')
     @classmethod
     def check_pedigrees(cls, v: list) -> list:
         for pedigree in v:
             Pedigrees(**pedigree)
+        return v
     @field_validator('phenotypicFeatures')
     @classmethod
     def check_phenotypicFeatures(cls, v: list) -> list:
         for phenotypicFeature in v:
             PhenotypicFeatures(**phenotypicFeature)
+        return v
     @field_validator('treatments')
     @classmethod
     def check_treatments(cls, v: list) -> list:
         for treatment in v:
             Treatment(**treatment)
+        return v
     @field_validator('karyotypicSex')
     @classmethod
     def check_karyotypic(cls, v: str) -> str:

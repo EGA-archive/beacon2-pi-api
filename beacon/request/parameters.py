@@ -46,8 +46,8 @@ class Operator(StrEnum):
 class OntologyFilter(CamelModel, extra='forbid'):
     id: str
     scope: Optional[str] =None
-    include_descendant_terms: bool = False
-    similarity: Similarity = Similarity.EXACT
+    includeDescendantTerms: Optional[bool] = True
+    similarity: Optional[Similarity] = Similarity.EXACT
     @field_validator('id')
     @classmethod
     def id__ontology_filter_must_be_CURIE(cls, v: str) -> str:

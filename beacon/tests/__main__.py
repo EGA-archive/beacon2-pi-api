@@ -2375,6 +2375,9 @@ class TestMain(unittest.TestCase):
             }
             )
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 20
             loop.run_until_complete(test_check_runs_variants())
             loop.run_until_complete(client.close())
     def test_main_check_g_variants_range_query_chrX(self):
@@ -3002,6 +3005,124 @@ class TestMain(unittest.TestCase):
                 assert "two parameters conflict from string" in responsedict["error"]["errorMessage"]
             loop.run_until_complete(test_check_measurement_value_query_is_not_working())
             loop.run_until_complete(client.close())
+    def test_similarity_high(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_similarity_high():
+                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
+                "meta": {
+                    "apiVersion": "2.0"
+                },
+                "query":{
+                    "filters": [
+            {"id":"MONDO:0004975", "scope":"individual", "similarity": "high"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+            }
+            )
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 20
+            loop.run_until_complete(test_check_similarity_high())
+            loop.run_until_complete(client.close())
+    def test_similarity_medium(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_similarity_medium():
+                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
+                "meta": {
+                    "apiVersion": "2.0"
+                },
+                "query":{
+                    "filters": [
+            {"id":"MONDO:0004975", "scope":"individual", "similarity": "medium"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+            }
+            )
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 20
+            loop.run_until_complete(test_check_similarity_medium())
+            loop.run_until_complete(client.close())
+    def test_similarity_low(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_similarity_low():
+                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
+                "meta": {
+                    "apiVersion": "2.0"
+                },
+                "query":{
+                    "filters": [
+            {"id":"MONDO:0004975", "scope":"individual", "similarity": "low"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+            }
+            )
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 20
+            loop.run_until_complete(test_check_similarity_low())
+            loop.run_until_complete(client.close())
+    def test_synonyms(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_synonyms():
+                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
+                "meta": {
+                    "apiVersion": "2.0"
+                },
+                "query":{
+                    "filters": [
+            {"id":"DOID:1485", "scope":"individual"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+            }
+            )
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 20
+            loop.run_until_complete(test_check_synonyms())
+            loop.run_until_complete(client.close())
+
+
 
             
             
