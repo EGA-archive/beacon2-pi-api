@@ -52,7 +52,7 @@ def parse_query_string(self, request):
         elif k == 'testMode':
             query_string_body["query"]["testMode"] = v
         elif k == 'requestedSchemas':
-            query_string_body["meta"]["requestedSchemas"] = v
+            query_string_body["meta"]["requestedSchemas"] = [{"schema": v}]
         elif k == 'requestedGranularity':
             query_string_body["query"]["requestedGranularity"] = v
         elif k == 'datasets':

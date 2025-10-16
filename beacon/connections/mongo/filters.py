@@ -38,6 +38,8 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
             mongo_collection=individuals
             original_id="id"
             join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
+            if join_ids == []:
+                return query
             targets = targets_ \
                 .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
             bioids=targets[0]["biosampleIds"]
@@ -73,6 +75,8 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
             mongo_collection=individuals
             original_id="id"
             join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
+            if join_ids == []:
+                return query
             final_id="individualId"
             for id_item in join_ids:
                 new_id={}
@@ -190,6 +194,8 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
             if collection == genomicVariant.endpoint_name:
                 original_id="biosampleId"
                 join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
+                if join_ids == []:
+                    return query
                 targets = targets_ \
                     .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
                 bioids=targets[0]["biosampleIds"]
@@ -222,6 +228,8 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
             elif collection == individual.endpoint_name:
                 original_id="individualId"
                 join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
+                if join_ids == []:
+                    return query
                 final_id="id"
                 for id_item in join_ids:
                     new_id={}
@@ -232,6 +240,8 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
             elif collection == analysis.endpoint_name:
                 original_id="biosampleId"
                 join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
+                if join_ids == []:
+                    return query
                 final_id="biosampleId"
                 for id_item in join_ids:
                     new_id={}
@@ -242,6 +252,8 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
             elif collection == biosample.endpoint_name:
                 original_id="biosampleId"
                 join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
+                if join_ids == []:
+                    return query
                 final_id="id"
                 for id_item in join_ids:
                     new_id={}
@@ -254,6 +266,8 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
             if collection == genomicVariant.endpoint_name:
                 original_id="biosampleId"
                 join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
+                if join_ids == []:
+                    return query
                 targets = targets_ \
                     .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
                 bioids=targets[0]["biosampleIds"]
@@ -286,6 +300,8 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
             elif collection == individual.endpoint_name:
                 original_id="individualId"
                 join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
+                if join_ids == []:
+                    return query
                 final_id="id"
                 for id_item in join_ids:
                     new_id={}
@@ -296,6 +312,8 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
             elif collection == run.endpoint_name:
                 original_id="biosampleId"
                 join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
+                if join_ids == []:
+                    return query
                 final_id="biosampleId"
                 for id_item in join_ids:
                     new_id={}
@@ -306,6 +324,8 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
             elif collection == biosample.endpoint_name:
                 original_id="biosampleId"
                 join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
+                if join_ids == []:
+                    return query
                 final_id="id"
                 for id_item in join_ids:
                     new_id={}
@@ -318,6 +338,8 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
             if collection == genomicVariant.endpoint_name:
                 original_id="id"
                 join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
+                if join_ids == []:
+                    return query
                 targets = targets_ \
                     .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
                 bioids=targets[0]["biosampleIds"]
@@ -350,6 +372,8 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
             elif collection == individual.endpoint_name:
                 original_id="individualId"
                 join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
+                if join_ids == []:
+                    return query
                 final_id="id"
                 for id_item in join_ids:
                     new_id={}
@@ -360,6 +384,8 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
             elif collection == analysis.endpoint_name:
                 original_id="id"
                 join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
+                if join_ids == []:
+                    return query
                 final_id="biosampleId"
                 for id_item in join_ids:
                     new_id={}
@@ -370,6 +396,8 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
             elif collection == run.endpoint_name:
                 original_id="id"
                 join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
+                if join_ids == []:
+                    return query
                 final_id="biosampleId"
                 for id_item in join_ids:
                     new_id={}

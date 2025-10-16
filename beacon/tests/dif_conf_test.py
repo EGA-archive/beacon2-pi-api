@@ -291,7 +291,6 @@ class TestNoFilters(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_run_query_without_filters_allowed():
                 resp = await client.get(conf.uri_subpath+"/"+run.endpoint_name)
-                LOG.warning(resp.status)
                 assert resp.status == 400
             loop.run_until_complete(test_run_query_without_filters_allowed())
             loop.run_until_complete(client.close())

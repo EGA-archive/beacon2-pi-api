@@ -3121,13 +3121,506 @@ class TestMain(unittest.TestCase):
                 assert responsedict["responseSummary"]["numTotalResults"] == 20
             loop.run_until_complete(test_check_synonyms())
             loop.run_until_complete(client.close())
-
-
-
-            
-            
-
-    
+    def test_main_check_analyses_with_requestedSchemas_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_analyses_with_with_requestedSchemas_is_working():
+                resp = await client.get(conf.uri_subpath+"/"+analysis.endpoint_name+"?requestedSchemas=beacon-analysis-v2.0.0")
+                assert resp.status == 200
+            loop.run_until_complete(test_check_analyses_with_with_requestedSchemas_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_cross_query_analyses_individuals_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_cross_query_analyses_individuals_is_working():
+                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"variantCaller", "operator":"=", "value": "GATK4.0","scope":"analysis"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
+            loop.run_until_complete(test_check_post_cross_query_analyses_individuals_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_cross_query_analyses_individuals_is_not_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_cross_query_analyses_individuals_is_not_working():
+                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"variantCaller", "operator":"=", "value": "GATK3.0","scope":"analysis"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == False
+            loop.run_until_complete(test_check_post_cross_query_analyses_individuals_is_not_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_cross_query_analyses_g_variants_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_cross_query_analyses_g_variants_is_working():
+                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name, json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"variantCaller", "operator":"=", "value": "GATK4.0","scope":"analysis"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 40
+            loop.run_until_complete(test_check_post_cross_query_analyses_g_variants_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_cross_query_analyses_g_variants_is_not_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_cross_query_analyses_g_variants_is_not_working():
+                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name, json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"variantCaller", "operator":"=", "value": "GATK3.0","scope":"analysis"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == False
+            loop.run_until_complete(test_check_post_cross_query_analyses_g_variants_is_not_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_cross_query_analyses_runs_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_cross_query_analyses_runs_is_working():
+                resp = await client.post(conf.uri_subpath+"/"+run.endpoint_name, json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"variantCaller", "operator":"=", "value": "GATK4.0","scope":"analysis"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
+            loop.run_until_complete(test_check_post_cross_query_analyses_runs_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_cross_query_analyses_runs_is_not_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_cross_query_analyses_runs_is_not_working():
+                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name, json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"variantCaller", "operator":"=", "value": "GATK3.0","scope":"analysis"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == False
+            loop.run_until_complete(test_check_post_cross_query_analyses_runs_is_not_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_cross_query_analyses_biosamples_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_cross_query_analyses_biosamples_is_working():
+                resp = await client.post(conf.uri_subpath+"/"+biosample.endpoint_name, json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"variantCaller", "operator":"=", "value": "GATK4.0","scope":"analysis"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
+            loop.run_until_complete(test_check_post_cross_query_analyses_biosamples_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_cross_query_biosamples_analyses_is_not_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_cross_query_analyses_biosamples_is_not_working():
+                resp = await client.post(conf.uri_subpath+"/"+biosample.endpoint_name, json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"variantCaller", "operator":"=", "value": "GATK3.0","scope":"analysis"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == False
+            loop.run_until_complete(test_check_post_cross_query_analyses_biosamples_is_not_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_cross_query_individuals_g_variants_is_not_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_cross_query_individuals_g_variants_is_not_working():
+                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name, json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"anatomical entity", "operator":"=", "value": "GATK3.0","scope":"individual"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == False
+            loop.run_until_complete(test_check_post_cross_query_individuals_g_variants_is_not_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_cross_query_individuals_runs_is_not_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_cross_query_individuals_runs_is_not_working():
+                resp = await client.post(conf.uri_subpath+"/"+run.endpoint_name, json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"anatomical entity", "operator":"=", "value": "GATK3.0","scope":"individual"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == False
+            loop.run_until_complete(test_check_post_cross_query_individuals_runs_is_not_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_cross_query_runs_individuals_is_not_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_cross_query_runs_individuals_is_not_working():
+                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"librarySource", "operator":"=", "value": "GATK3.0","scope":"run"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == False
+            loop.run_until_complete(test_check_post_cross_query_runs_individuals_is_not_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_cross_query_g_variants_runs_is_not_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_cross_query_runs_g_variants_is_not_working():
+                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name, json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"librarySource", "operator":"=", "value": "GATK3.0","scope":"run"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == False
+            loop.run_until_complete(test_check_post_cross_query_runs_g_variants_is_not_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_cross_query_biosamples_runs_is_not_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_cross_query_runs_biosamples_is_not_working():
+                resp = await client.post(conf.uri_subpath+"/"+biosample.endpoint_name, json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"librarySource", "operator":"=", "value": "GATK3.0","scope":"run"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == False
+            loop.run_until_complete(test_check_post_cross_query_runs_biosamples_is_not_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_cross_query_runs_analyses_is_not_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_cross_query_runs_analyses_is_not_working():
+                resp = await client.post(conf.uri_subpath+"/"+analysis.endpoint_name, json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"librarySource", "operator":"=", "value": "GATK3.0","scope":"run"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == False
+            loop.run_until_complete(test_check_post_cross_query_runs_analyses_is_not_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_cross_query_biosamples_individuals_is_not_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_cross_query_biosamples_individuals_is_not_working():
+                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"measurements.assayCode", "operator":"=", "value": "GATK3.0","scope":"biosample"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == False
+            loop.run_until_complete(test_check_post_cross_query_biosamples_individuals_is_not_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_cross_query_g_variants_biosamples_is_not_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_cross_query_biosamples_g_variants_is_not_working():
+                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name, json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"measurements.assayCode", "operator":"=", "value": "GATK3.0","scope":"biosample"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == False
+            loop.run_until_complete(test_check_post_cross_query_biosamples_g_variants_is_not_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_cross_query_runs_biosamples_is_not_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_cross_query_runs_biosamples_is_not_working():
+                resp = await client.post(conf.uri_subpath+"/"+run.endpoint_name, json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"measurements.assayCode", "operator":"=", "value": "GATK3.0","scope":"biosample"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == False
+            loop.run_until_complete(test_check_post_cross_query_runs_biosamples_is_not_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_cross_query_analyses_biosamples_is_not_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_cross_query_biosamples_analyses_is_not_working():
+                resp = await client.post(conf.uri_subpath+"/"+analysis.endpoint_name, json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"measurements.assayCode", "operator":"=", "value": "GATK3.0","scope":"biosample"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == False
+            loop.run_until_complete(test_check_post_cross_query_biosamples_analyses_is_not_working())
+            loop.run_until_complete(client.close())
 
 if __name__ == '__main__':
     unittest.main()
