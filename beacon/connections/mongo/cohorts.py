@@ -10,9 +10,8 @@ from beacon.request.classes import RequestAttributes
 
 @log_with_args_mongo(level)
 def get_cohorts(self):
-    collection = cohort.endpoint_name
     limit = RequestAttributes.qparams.query.pagination.limit
-    query = apply_filters(self, {}, RequestAttributes.qparams.query.filters, collection, {}, None)
+    query = apply_filters(self, {}, RequestAttributes.qparams.query.filters, {}, None)
     try:
         if RequestAttributes.qparams.query.requestParameters["datasets"] != None:
             try:
@@ -36,9 +35,8 @@ def get_cohorts(self):
 
 @log_with_args_mongo(level)
 def get_cohort_with_id(self):
-    collection = cohort.endpoint_name
     limit = RequestAttributes.qparams.query.pagination.limit
-    query = apply_filters(self, {}, RequestAttributes.qparams.query.filters, collection, {}, "a")
+    query = apply_filters(self, {}, RequestAttributes.qparams.query.filters, {}, "a")
     query = query_id(self, query, RequestAttributes.entry_id)
     count = get_count(self, cohorts, query)
     docs = get_documents(self,

@@ -85,7 +85,6 @@ def generate_position_filter_start_sequence_query(self, key: str, value: List[in
 
 @log_with_args(level)
 def apply_request_parameters(self, query: Dict[str, List[dict]], dataset: str):
-    collection = 'g_variants'
     if len(RequestAttributes.qparams.query.requestParameters) > 0 and "$and" not in query:
         query["$and"] = []
     subquery={}
@@ -121,11 +120,11 @@ def apply_request_parameters(self, query: Dict[str, List[dict]], dataset: str):
             if equal == False:
                 filters = generate_position_filter_start_sequence_query(self, k, v)
                 for filter in filters:
-                    query["$and"].append(apply_alphanumeric_filter(self, {}, filter, collection, dataset, True))
+                    query["$and"].append(apply_alphanumeric_filter(self, {}, filter, dataset, True))
             elif isBracket == True:
                 filters = generate_position_filter_start(self, k, v)
                 for filter in filters:
-                    startdictvalue=apply_alphanumeric_filter(self, {}, filter, collection, dataset, True)
+                    startdictvalue=apply_alphanumeric_filter(self, {}, filter, dataset, True)
                     startquery["$and"].append(startdictvalue)
             else:
                 startvalue=v
@@ -146,7 +145,7 @@ def apply_request_parameters(self, query: Dict[str, List[dict]], dataset: str):
                 finalvalue = finalvalue.split(',')
                 filters = generate_position_filter_start(self, k, finalvalue)
                 for filter in filters:
-                    startdict=apply_alphanumeric_filter(self, {}, filter, collection, dataset, True)
+                    startdict=apply_alphanumeric_filter(self, {}, filter, dataset, True)
                     startrangequery["$and"].append(startdict)  
                 subqueryor["$or"].append(startrangequery)            
         elif k == "end":
@@ -159,7 +158,7 @@ def apply_request_parameters(self, query: Dict[str, List[dict]], dataset: str):
             filters = generate_position_filter_end(self, k, v)
             if isBracket==True:
                 for filter in filters:
-                    enddictvalue=apply_alphanumeric_filter(self, {}, filter, collection, dataset, True)
+                    enddictvalue=apply_alphanumeric_filter(self, {}, filter, dataset, True)
                     startquery["$and"].append(enddictvalue)
                 query["$and"].append(startquery)    
             elif isBracket==False:
@@ -178,7 +177,7 @@ def apply_request_parameters(self, query: Dict[str, List[dict]], dataset: str):
                 stage2v = stage2v.split(',')
                 filters = generate_position_filter_end(self, k, stage2v)
                 for filter in filters:
-                    enddictvalue=apply_alphanumeric_filter(self, {}, filter, collection, dataset, True)
+                    enddictvalue=apply_alphanumeric_filter(self, {}, filter, dataset, True)
                     endquery["$and"].append(enddictvalue)
                 subqueryor["$or"].append(endquery)
                 stage2v = str(int(v)+1)+','+str(9999999999)
@@ -201,22 +200,22 @@ def apply_request_parameters(self, query: Dict[str, List[dict]], dataset: str):
             query["$and"].append(apply_alphanumeric_filter(self, {}, AlphanumericFilter(
                 id=VARIANTS_PROPERTY_MAP[k],
                 value='min'+v
-            ), collection, dataset, True))
+            ), dataset, True))
         elif k == "variantMaxLength":
             query["$and"].append(apply_alphanumeric_filter(self, {}, AlphanumericFilter(
                 id=VARIANTS_PROPERTY_MAP[k],
                 value='max'+v
-            ), collection, dataset, True))    
+            ), dataset, True))    
         elif k == "mateName" or k == 'referenceName':
             referencedict["$or"].append(apply_alphanumeric_filter(self, {}, AlphanumericFilter(
                 id=VARIANTS_PROPERTY_MAP[k],
                 value=v
-            ), collection, dataset, True))
+            ), dataset, True))
         elif k != 'filters' and k != 'assemblyId':
             query["$and"].append(apply_alphanumeric_filter(self, {}, AlphanumericFilter(
                 id=VARIANTS_PROPERTY_MAP[k],
                 value=v
-            ), collection, dataset, True))
+            ), dataset, True))
     if length_query["$and"]!=[]:
         subqueryor["$or"].append(length_query) 
     try:

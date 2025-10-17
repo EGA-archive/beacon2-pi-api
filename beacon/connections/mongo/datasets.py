@@ -9,19 +9,17 @@ from beacon.logs.logs import LOG
 
 @log_with_args_mongo(level)
 def get_datasets(self):
-    collection = datasets
     query = {}
-    query = collection.find(query)
+    query = datasets.find(query)
     return query
 
 @log_with_args_mongo(level)
 def get_full_datasets(self):
-    collection = datasets
     if RequestAttributes.entry_id == None:
         query = {}
     else:
         query = {'id': RequestAttributes.entry_id}
-    query = collection.find(query, {"_id": 0})
+    query = datasets.find(query, {"_id": 0})
     try:
         if RequestAttributes.qparams.query.requestParameters["datasets"] != []:
             response_converted = (

@@ -13,8 +13,8 @@ from beacon.request.classes import RequestAttributes
 CURIE_REGEX = r'^([a-zA-Z0-9]*):\/?[a-zA-Z0-9./]*$'
 
 @log_with_args(level)
-def cross_query(self, query: dict, scope: str, collection: str, request_parameters: dict, dataset: str):
-    if scope == 'genomicVariation' and collection == genomicVariant.endpoint_name or scope == collection[0:-1]:
+def cross_query(self, query: dict, scope: str, request_parameters: dict, dataset: str):
+    if scope == 'genomicVariation' and RequestAttributes.entry_type == genomicVariant.endpoint_name or scope == RequestAttributes.entry_type[0:-1]:
         subquery={}
         subquery["$or"]=[]
         if request_parameters != {}:
@@ -34,7 +34,7 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                 pass
     else:
         def_list=[]                
-        if scope == 'individual' and collection == genomicVariant.endpoint_name:
+        if scope == 'individual' and RequestAttributes.entry_type == genomicVariant.endpoint_name:
             mongo_collection=individuals
             original_id="id"
             join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
@@ -71,7 +71,7 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                 listHGVS.append(justid)
             queryHGVS["$in"]=listHGVS
             query["identifiers.genomicHGVSId"]=queryHGVS
-        elif scope == 'individual' and collection in [run.endpoint_name,biosample.endpoint_name,analysis.endpoint_name]:
+        elif scope == 'individual' and RequestAttributes.entry_type in [run.endpoint_name,biosample.endpoint_name,analysis.endpoint_name]:
             mongo_collection=individuals
             original_id="id"
             join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
@@ -84,7 +84,7 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                 def_list.append(new_id)
             query={}
             query['$or']=def_list
-        elif scope == 'genomicVariation' and collection == individual.endpoint_name:
+        elif scope == 'genomicVariation' and RequestAttributes.entry_type == individual.endpoint_name:
             HGVSIds = genomicVariations \
                 .find(query, {"identifiers.genomicHGVSId": 1, "_id": 0})
             HGVSIds=list(HGVSIds)
@@ -129,7 +129,7 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
             for finalid in finalids:
                 finalquery = {"id": finalid}
                 query["$or"].append(finalquery)
-        elif scope == 'genomicVariation' and collection == biosample.endpoint_name:
+        elif scope == 'genomicVariation' and RequestAttributes.entry_type == biosample.endpoint_name:
             HGVSIds = genomicVariations \
                 .find(query, {"identifiers.genomicHGVSId": 1, "_id": 0})
             HGVSIds=list(HGVSIds)
@@ -159,7 +159,7 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
             except Exception:
                 finalids=[]
             query = {"$and": [{"$or": finalids}]}
-        elif scope == 'genomicVariation' and collection in [analysis.endpoint_name,run.endpoint_name]:
+        elif scope == 'genomicVariation' and RequestAttributes.entry_type in [analysis.endpoint_name,run.endpoint_name]:
             HGVSIds = genomicVariations \
                 .find(query, {"identifiers.genomicHGVSId": 1, "_id": 0})
             HGVSIds=list(HGVSIds)
@@ -189,9 +189,9 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
             except Exception:
                 finalids=[]
             query = {"$and": [{"$or": finalids}]}
-        elif scope == 'run' and collection != run.endpoint_name:
+        elif scope == 'run' and RequestAttributes.entry_type != run.endpoint_name:
             mongo_collection=runs
-            if collection == genomicVariant.endpoint_name:
+            if RequestAttributes.entry_type == genomicVariant.endpoint_name:
                 original_id="biosampleId"
                 join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
                 if join_ids == []:
@@ -225,7 +225,7 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                     listHGVS.append(justid)
                 queryHGVS["$in"]=listHGVS
                 query["identifiers.genomicHGVSId"]=queryHGVS
-            elif collection == individual.endpoint_name:
+            elif RequestAttributes.entry_type == individual.endpoint_name:
                 original_id="individualId"
                 join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
                 if join_ids == []:
@@ -237,7 +237,7 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                     def_list.append(new_id)
                     query={}
                     query['$or']=def_list
-            elif collection == analysis.endpoint_name:
+            elif RequestAttributes.entry_type == analysis.endpoint_name:
                 original_id="biosampleId"
                 join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
                 if join_ids == []:
@@ -249,7 +249,7 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                     def_list.append(new_id)
                     query={}
                     query['$or']=def_list
-            elif collection == biosample.endpoint_name:
+            elif RequestAttributes.entry_type == biosample.endpoint_name:
                 original_id="biosampleId"
                 join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
                 if join_ids == []:
@@ -261,9 +261,9 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                     def_list.append(new_id)
                     query={}
                     query['$or']=def_list
-        elif scope == 'analysis' and collection != analysis.endpoint_name:
+        elif scope == 'analysis' and RequestAttributes.entry_type != analysis.endpoint_name:
             mongo_collection=analyses
-            if collection == genomicVariant.endpoint_name:
+            if RequestAttributes.entry_type == genomicVariant.endpoint_name:
                 original_id="biosampleId"
                 join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
                 if join_ids == []:
@@ -297,7 +297,7 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                     listHGVS.append(justid)
                 queryHGVS["$in"]=listHGVS
                 query["identifiers.genomicHGVSId"]=queryHGVS
-            elif collection == individual.endpoint_name:
+            elif RequestAttributes.entry_type == individual.endpoint_name:
                 original_id="individualId"
                 join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
                 if join_ids == []:
@@ -309,7 +309,7 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                     def_list.append(new_id)
                 query={}
                 query['$or']=def_list
-            elif collection == run.endpoint_name:
+            elif RequestAttributes.entry_type == run.endpoint_name:
                 original_id="biosampleId"
                 join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
                 if join_ids == []:
@@ -321,7 +321,7 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                     def_list.append(new_id)
                 query={}
                 query['$or']=def_list
-            elif collection == biosample.endpoint_name:
+            elif RequestAttributes.entry_type == biosample.endpoint_name:
                 original_id="biosampleId"
                 join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
                 if join_ids == []:
@@ -333,9 +333,9 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                     def_list.append(new_id)
                 query={}
                 query['$or']=def_list
-        elif scope == 'biosample' and collection != biosample.endpoint_name:
+        elif scope == 'biosample' and RequestAttributes.entry_type != biosample.endpoint_name:
             mongo_collection=biosamples
-            if collection == genomicVariant.endpoint_name:
+            if RequestAttributes.entry_type == genomicVariant.endpoint_name:
                 original_id="id"
                 join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
                 if join_ids == []:
@@ -369,7 +369,7 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                     listHGVS.append(justid)
                 queryHGVS["$in"]=listHGVS
                 query["identifiers.genomicHGVSId"]=queryHGVS
-            elif collection == individual.endpoint_name:
+            elif RequestAttributes.entry_type == individual.endpoint_name:
                 original_id="individualId"
                 join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
                 if join_ids == []:
@@ -381,7 +381,7 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                     def_list.append(new_id)
                 query={}
                 query['$or']=def_list
-            elif collection == analysis.endpoint_name:
+            elif RequestAttributes.entry_type == analysis.endpoint_name:
                 original_id="id"
                 join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
                 if join_ids == []:
@@ -393,7 +393,7 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
                     def_list.append(new_id)
                 query={}
                 query['$or']=def_list
-            elif collection == run.endpoint_name:
+            elif RequestAttributes.entry_type == run.endpoint_name:
                 original_id="id"
                 join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
                 if join_ids == []:
@@ -410,7 +410,7 @@ def cross_query(self, query: dict, scope: str, collection: str, request_paramete
 
 
 @log_with_args(level)
-def apply_filters(self, query: dict, filters: List[dict], collection: str, query_parameters: dict, dataset: str) -> dict:
+def apply_filters(self, query: dict, filters: List[dict], query_parameters: dict, dataset: str) -> dict:
     request_parameters = query_parameters
     total_query={}
     if len(filters) >= 1:
@@ -421,23 +421,23 @@ def apply_filters(self, query: dict, filters: List[dict], collection: str, query
             partial_query = {}
             if "value" in filter:
                 filter = AlphanumericFilter(**filter)
-                partial_query = apply_alphanumeric_filter(self, partial_query, filter, collection, dataset, False)
+                partial_query = apply_alphanumeric_filter(self, partial_query, filter, dataset, False)
             elif "includeDescendantTerms" not in filter and '.' not in filter["id"] and filter["id"].isupper():
                 filter=OntologyFilter(**filter)
                 filter.includeDescendantTerms=True
-                partial_query = apply_ontology_filter(self, partial_query, filter, collection, request_parameters, dataset)
+                partial_query = apply_ontology_filter(self, partial_query, filter, request_parameters, dataset)
             elif "similarity" in filter or "includeDescendantTerms" in filter or re.match(CURIE_REGEX, filter["id"]) and filter["id"].isupper():
                 filter = OntologyFilter(**filter)
-                partial_query = apply_ontology_filter(self, partial_query, filter, collection, request_parameters, dataset)
+                partial_query = apply_ontology_filter(self, partial_query, filter, request_parameters, dataset)
             else:
                 filter = CustomFilter(**filter)
-                partial_query = apply_custom_filter(self, partial_query, filter, collection, dataset)
+                partial_query = apply_custom_filter(self, partial_query, filter, dataset)
             total_query["$and"].append(partial_query)
             if total_query["$and"] == [{'$or': []}] or total_query['$and'] == []:
                 total_query = {}
     if request_parameters != {}:
         try:
-            if collection == individual.endpoint_name:
+            if RequestAttributes.entry_type == individual.endpoint_name:
                 HGVSIds = genomicVariations \
                     .find(request_parameters, {"identifiers.genomicHGVSId": 1, "datasetId": 1, "_id": 0})
                 HGVSIds=list(HGVSIds)
@@ -488,7 +488,7 @@ def apply_filters(self, query: dict, filters: List[dict], collection: str, query
                 except Exception:
                     total_query["$and"]=[]
                     total_query["$and"].append(finalquery)
-            elif collection == biosample.endpoint_name:
+            elif RequestAttributes.entry_type == biosample.endpoint_name:
                 HGVSIds = genomicVariations \
                     .find(request_parameters, {"identifiers.genomicHGVSId": 1, "datasetId": 1, "_id": 0})
                 HGVSIds=list(HGVSIds)
@@ -523,7 +523,7 @@ def apply_filters(self, query: dict, filters: List[dict], collection: str, query
                 except Exception:
                     total_query["$and"]=[]
                     total_query["$and"].append({"$or": finalids})
-            elif collection == analysis.endpoint_name or collection == run.endpoint_name:
+            elif RequestAttributes.entry_type == analysis.endpoint_name or RequestAttributes.entry_type == run.endpoint_name:
                 HGVSIds = genomicVariations \
                     .find(request_parameters, {"identifiers.genomicHGVSId": 1, "datasetId": 1, "_id": 0})
                 HGVSIds=list(HGVSIds)
@@ -573,7 +573,7 @@ def apply_filters(self, query: dict, filters: List[dict], collection: str, query
 
 
 @log_with_args(level)
-def apply_ontology_filter(self, query: dict, filter: OntologyFilter, collection: str, request_parameters: dict, dataset: str) -> dict:
+def apply_ontology_filter(self, query: dict, filter: OntologyFilter, request_parameters: dict, dataset: str) -> dict:
     final_term_list=[]    
     query_synonyms={}
     query_synonyms['id']=filter.id
@@ -593,12 +593,12 @@ def apply_ontology_filter(self, query: dict, filter: OntologyFilter, collection:
 
     try:
         scope = filter.scope
-        scope=choose_scope(self, scope, collection, filter)
+        scope=choose_scope(self, scope, filter)
     except Exception:
         if synonym_id is not None:
             filter.id=synonym_id
             scope = filter.scope
-            scope=choose_scope(self, scope, collection, filter)
+            scope=choose_scope(self, scope, filter)
         else:
             raise
 
@@ -681,7 +681,7 @@ def apply_ontology_filter(self, query: dict, filter: OntologyFilter, collection:
             query_id[query_term]=simil
             new_query['$or'].append(query_id)
         query = new_query
-    query=cross_query(self, query, scope, collection, request_parameters, dataset)
+    query=cross_query(self, query, scope, request_parameters, dataset)
     return query
 
 
@@ -718,7 +718,7 @@ def format_operator(self, operator: Operator) -> str:
         return "$lte"
 
 @log_with_args(level)
-def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, collection: str, dataset: str, isRequestParameter: bool) -> dict:
+def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, dataset: str, isRequestParameter: bool) -> dict:
     formatted_value = format_value(self, filter.value)
     formatted_operator = format_operator(self, filter.operator)
     if isRequestParameter == True:
@@ -867,7 +867,7 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, col
 
     elif isinstance(formatted_value,str):
         scope = filter.scope
-        scope=choose_scope(self, scope, collection, filter)
+        scope=choose_scope(self, scope, filter)
         if filter.id in alphanumeric_terms:
             query_term = filter.id
         else:
@@ -887,7 +887,7 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, col
                 query_id={}
                 query_id[query_term]=regex_dict
                 query['$or'].append(query_id)
-                query=cross_query(self, query, scope, collection, {}, dataset)
+                query=cross_query(self, query, scope, {}, dataset)
                 
             else:
                 try: 
@@ -900,7 +900,7 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, col
                 query_id={}
                 query_id[query_term]=filter.value
                 query['$or'].append(query_id) 
-                query=cross_query(self, query, scope, collection, {}, dataset)
+                query=cross_query(self, query, scope, {}, dataset)
                 
 
         elif formatted_operator == "$ne":
@@ -933,7 +933,7 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, col
         
     else:
         scope = filter.scope
-        scope=choose_scope(self, scope, collection, filter)
+        scope=choose_scope(self, scope, filter)
         if "iso8601duration" in filter.id:
             if '>' in filter.operator:
                 age_in_number=""
@@ -959,7 +959,7 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, col
                 dict_in={}
                 dict_in["$regex"]=new_age_list
                 query[filter.id] = dict_in
-                query=cross_query(self, query, scope, collection, {}, dataset)
+                query=cross_query(self, query, scope, {}, dataset)
             elif '<' in filter.operator:
                 age_in_number=""
                 for char in filter.value:
@@ -983,7 +983,7 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, col
                 dict_in={}
                 dict_in["$regex"]=new_age_list
                 query[filter.id] = dict_in
-                query=cross_query(self, query, scope, collection, {}, dataset)
+                query=cross_query(self, query, scope, {}, dataset)
             elif '=' in filter.operator:
                 age_in_number=""
                 for char in filter.value:
@@ -997,7 +997,7 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, col
                 dict_in={}
                 dict_in["$regex"]=newagechar
                 query[filter.id] = dict_in
-                query=cross_query(self, query, scope, collection, {}, dataset)
+                query=cross_query(self, query, scope, {}, dataset)
         else:
             query_filtering={}
             query_filtering['$and']=[]
@@ -1037,20 +1037,20 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, col
             dict_measures={}
             dict_measures[measuresfield]=dict_elemmatch
             query = dict_measures
-            query=cross_query(self, query, scope, collection, {}, dataset)
+            query=cross_query(self, query, scope, {}, dataset)
     return query
 
 
 @log_with_args(level)
-def apply_custom_filter(self, query: dict, filter: CustomFilter, collection:str, dataset: str) -> dict:
+def apply_custom_filter(self, query: dict, filter: CustomFilter, dataset: str) -> dict:
     scope = filter.scope
-    scope=choose_scope(self, scope, collection, filter)
+    scope=choose_scope(self, scope, filter)
     value_splitted = filter.id.split(':')
     if value_splitted[0] in alphanumeric_terms:
         query_term = value_splitted[0]
     else:
         query_term = value_splitted[0] + '.label'
     query[query_term]=value_splitted[1]
-    query=cross_query(self, query, scope, collection, {}, dataset)
+    query=cross_query(self, query, scope, {}, dataset)
 
     return query

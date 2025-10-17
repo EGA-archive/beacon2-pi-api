@@ -4,3 +4,4 @@ beacon/connections/mongo/data/datasets/*
 beacon/connections/mongo/data/db/*
 *.json.gz
 adminui/node_modules
+*.vcf.bgz
