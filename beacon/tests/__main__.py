@@ -1,20 +1,18 @@
 from aiohttp.test_utils import TestClient, TestServer, loop_context
 from aiohttp import web
-from beacon.__main__ import Collection, PhenoGeno, Info, ServiceInfo, Map, Configuration, FilteringTerms, EntryTypes, error_middleware
+from beacon.__main__ import Collection, PhenoGeno, Info, ServiceInfo, Map, Configuration, FilteringTerms, EntryTypes, error_middleware, create_api, _graceful_shutdown_ctx
 import json
 import unittest
 import beacon.conf.conf as conf
 from beacon.permissions.tests import TestAuthZ
 from beacon.auth.tests import TestAuthN
-#from beacon.request.tests import TestRequest
 from beacon.logs.logs import LOG
 from beacon.connections.mongo.filters import cross_query
 from unittest.mock import MagicMock
 from beacon.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run
 from aiohttp_middlewares import cors_middleware
 from beacon.validator.configuration import check_configuration
-
-
+import asyncio
 
 def create_app():
     app = web.Application()
@@ -3566,6 +3564,21 @@ class TestMain(unittest.TestCase):
                 assert responsedict["responseSummary"]["exists"] == False
             loop.run_until_complete(test_check_post_cross_query_biosamples_analyses_is_not_working())
             loop.run_until_complete(client.close())
+
+class AsyncTest(unittest.IsolatedAsyncioTestCase):
+    async def test_main_create_api(self):
+        async def server_running_in_background():
+            server = await asyncio.run(await create_api(5051))
+            LOG.warning(server)
+            await server.serve_forever()
+        server_task = asyncio.create_task(server_running_in_background())
+        
+        await asyncio.sleep(2)
+        
+        
+
+
+
 
 if __name__ == '__main__':
     unittest.main()

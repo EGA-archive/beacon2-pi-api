@@ -25,6 +25,7 @@ from beacon.validator.configuration import check_configuration
 from beacon.exceptions.exceptions import AppError
 import aiohttp_autoreload
 
+
 class EndpointView(web.View, CorsViewMixin):
     def __init__(self, request: Request):
         self._request = request
@@ -156,7 +157,7 @@ async def _graceful_shutdown_ctx(app):
     if thread is not None:
         thread.join()
 
-async def create_api():
+async def create_api(port):
     try:
         check_configuration()
         app = web.Application(
@@ -359,7 +360,7 @@ async def create_api():
         LOG.debug("Starting app")
         runner = web.AppRunner(app)
         await runner.setup()
-        site = web.TCPSite(runner, '0.0.0.0', 5050,  ssl_context=ssl_context)
+        site = web.TCPSite(runner, '0.0.0.0', port,  ssl_context=ssl_context)
         await site.start()
 
         while True:
@@ -370,6 +371,6 @@ async def create_api():
 
 if __name__ == '__main__':
     try:
-        asyncio.run(create_api())
+        asyncio.run(create_api(5050))
     except Exception:
         raise
