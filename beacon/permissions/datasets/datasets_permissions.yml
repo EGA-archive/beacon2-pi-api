@@ -28,10 +28,10 @@ EGAD00001007774:
       - individual: record
 
 CINECA_synthetic_cohort_EUROPE_UK1:
-  registered:
-    default_entry_types_granularity: count
+  public:
+    default_entry_types_granularity: record
     entry_types_exceptions:
-      - cohort: boolean
+      - cohort: record
 
 AV_Dataset:
   controlled:
