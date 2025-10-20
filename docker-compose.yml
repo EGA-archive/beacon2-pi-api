@@ -1,39 +1,24 @@
 version: '3.1'
 
 networks:
-  idp-priv:
-  pub:
+  idp-priv-spain:
+  pub-spain:
 
 services:
-  beaconprod:
-    restart: always
+  beaconspreg:
     build:
       context: .
-    container_name: beaconprod
+    container_name: beaconspreg
     ports:
-      - "5050:5050"
+      - "5091:5050"
     entrypoint: ['python','-m','beacon']
     volumes:
       - ./beacon/logs/logs.log:/beacon/logs/logs.log
       - ./beacon/conf/conf.py:/beacon/conf/conf.py
       - ./beacon/permissions:/beacon/permissions
     networks:
-      - pub
+      - pub-spain
 
-  admin-ui:
-    restart: always
-    build:
-      context: ./adminui
-    container_name: admin-ui
-    ports:
-      - "3001:3001"
-    entrypoint: ['bash','/home/app/web/start.sh']
-    volumes:
-      - ./beacon:/home/app/web/beacon
-      - ./adminui:/home/app/web
-    networks:
-      - pub
-  
   idp:
     #image: quay.io/keycloak/keycloak:12.0.0
     image: sleighzy/keycloak
@@ -51,7 +36,7 @@ services:
       - DB_ADDR=idp-db
       - DB_PORT=5432
       - DB_DATABASE=keycloak
-      #- DB_SCHEMA=public
+      #- DB_SCHEMA=pub-spainlic
       - KEYCLOAK_IMPORT=/tmp/beacon-realm.json -Dkeycloak.profile.feature.upload_scripts=enabled -Dkeycloak.profile.feature.token_exchange=enabled -Dkeycloak.profile.feature.admin_fine_grained_authz=enabled
       - KEYCLOAK_HOSTNAME=localhost
       #- KC_HOSTNAME_URL=https://beacon-network-test2.ega-archive.org
@@ -64,8 +49,8 @@ services:
       - "8080:8080"
       - "9991:8443"
     networks:
-      - idp-priv 
-      - pub
+      - idp-priv-spain 
+      - pub-spain
     depends_on:
       - idp-db
 
@@ -78,16 +63,17 @@ services:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=secret
     networks:
-      - idp-priv
+      - idp-priv-spain
 
-  db:
+  dbspreg:
     image: mongo:5
-    command: --wiredTigerCacheSizeGB 4
-    #command: --wiredTigerCacheSizeGB 4 --sslMode requireSSL --tlsCertificateKeyFile test-server1.pem --tlsCAFile test-ca.pem
+    mem_limit: 7500m
+    mem_reservation: 2000M
+    command: --port 27024 --wiredTigerCacheSizeGB 4
     hostname: mongo
-    container_name: mongoprod
+    container_name: mongospreg
     ports:
-      - 27017:27017
+      - 27024:27024
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
@@ -98,46 +84,31 @@ services:
       - ./beacon/connections/mongo/data/db:/data/db
       - ./beacon/connections/mongo/data/configdb:/data/configdb
       - ./beacon/connections/mongo/data/caseLevelData:/data/caseLevelData
-      #- ./test-server1.pem:/test-server1.pem
-      #- ./test-ca.pem:/test-ca.pem
-      #- ./test-client.pem:/test-client.pem
     networks:
-      - pub
+      - pub-spain
     #command: --verbose
-  
-  mongo-express:
-    image: mongo-express
-    restart: always
-    ports:
-      - 8081:8081
-    environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: root
-      ME_CONFIG_MONGODB_ADMINPASSWORD: example
-      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
-    networks:
-      - pub
 
   beacon-ri-tools:
     image: ghcr.io/ega-archive/beacon2-ri-tools-v2:latest
     hostname: beacon-ri-tools
     container_name: ri-tools
     networks:
-      - pub
+      - pub-spain
     tty: true
     volumes:
       - ./ri-tools/output_docs:/usr/src/app/output_docs
       - ./ri-tools/conf:/usr/src/app/conf
       - ./ri-tools/files/vcf/files_to_read:/usr/src/app/files/vcf/files_to_read
       - ./ri-tools/csv:/usr/src/app/csv
-      - ./ri-tools/pipelines:/usr/src/app/pipelines
-      - ./ri-tools/files/updated_json:/usr/src/app/files/updated_json
 
-  phenopackets-to-BFF:
-    image: ghcr.io/ega-archive/phenopackets-to-bff:latest
+  admin-ui:
     restart: always
-    hostname: phenopackets-to-BFF
-    container_name: phenopackets-to-BFF
+    build:
+      context: ./adminui
+    container_name: admin-ui
+    ports:
+      - "3001:3001"
+    entrypoint: ['bash','/home/app/web/start.sh']
     volumes:
-      - ./ri-tools/phenopackets-to-BFF/:/usr/src/app/examples
-    networks:
-      - pub
+      - ./beacon:/home/app/web/beacon
+      - ./adminui:/home/app/web
