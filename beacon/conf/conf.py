@@ -16,6 +16,7 @@ beacon_name = 'GDI Spain Beacon'  # Name of the Beacon service
 api_version = 'v2.0.0' # Version of the Beacon implementation
 uri = 'https://beacon-spain.ega-archive.org'
 uri_subpath = '/api'
+complete_url = uri + uri_subpath
 environment = 'test'
 description = r"This Beacon is based on synthetic data hosted at GDI Spain Node. It includes three datasets: the B1MG one million genomes, 2504 samples from CINECA UK1 synthetic dataset and the rare diseases dataset from rd-connect."
 version = api_version_yaml['api_version']
