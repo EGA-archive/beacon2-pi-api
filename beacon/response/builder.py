@@ -3,7 +3,7 @@ from beacon.conf.conf import level
 from beacon.request.classes import Granularity, RequestAttributes
 from beacon.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run, filtering_terms as fterms, conf
 import json
-from beacon.validator.framework import (Info, 
+from beacon.validator.framework import (InfoBody, 
                                         InfoResponse, 
                                         ResponseSummary, 
                                         ResultsetInstance, 
@@ -105,15 +105,15 @@ async def collection_builder(self):
 
 @log_with_args(level)
 async def info_builder(self):
-    try:
+    try: # TODO: posar el path en un arxiu de configuració i el nom del template
         with open('beacon/response/templates/{}/info.json'.format(RequestAttributes.returned_apiVersion), 'r') as template:
             response = json.load(template)
-        info = Info()
-        meta = InformationalMeta(returnedSchemas=[{"schema": "info-v2.2.0"}])
+        info = InfoBody()
+        meta = InformationalMeta(returnedSchemas=[{"schema": "info-v2.2.0"}]) # TODO: gestionar-ho al mòdul Request
         infoResponse = InfoResponse(meta=meta,response=info)
-        infoResponse = infoResponse.model_dump(exclude_none=True)
+        infoResponseJSON = infoResponse.model_dump(exclude_none=True)
         InfoFromTemplate = create_model('InfoFromTemplate', **{k: (Optional[type(v)], None) for k, v in response.items()})
-        response = InfoFromTemplate.model_validate(infoResponse)
+        response = InfoFromTemplate.model_validate(infoResponseJSON)
         response = response.model_dump(exclude_none=True)
         return response
     except ValidationError as v:
@@ -123,7 +123,7 @@ async def info_builder(self):
 async def configuration_builder(self):
     try:
         with open('beacon/response/templates/{}/configuration.json'.format(RequestAttributes.returned_apiVersion), 'r') as template:
-            response = json.load(template)
+            response = json.load(template) # Create classes for a generic builder
         configuration = ConfigurationSchema.return_schema(ConfigurationSchema)
         meta = InformationalMeta(returnedSchemas=[{"schema": "configuration-v2.2.0"}])
         configurationResponse = ConfigurationResponse(meta=meta,response=configuration)

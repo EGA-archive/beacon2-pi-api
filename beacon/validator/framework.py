@@ -54,7 +54,7 @@ class BeaconOrganization(BaseModel):
     name: str=conf.org_name
     welcomeUrl: Optional[str]=conf.org_welcome_url if conf.welcome_url != "" else None
 
-class Info(BaseModel):
+class InfoBody(BaseModel):
     alternativeUrl: Optional[str]=conf.alternative_url if conf.alternative_url != "" else None
     createDateTime: Optional[str]=conf.create_datetime if conf.create_datetime != "" else None
     description: Optional[str]=conf.description if conf.description != "" else None
@@ -70,7 +70,7 @@ class Info(BaseModel):
     
 class InfoResponse(BaseModel):
     meta: InformationalMeta
-    response: Info
+    response: InfoBody
 
 class Handover(BaseModel):
     handoverType: OntologyTerm
