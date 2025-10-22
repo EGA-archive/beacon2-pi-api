@@ -373,4 +373,4 @@ if __name__ == '__main__':
     try:
         asyncio.run(create_api(5050))
     except Exception:
-        raise
+        raise # TODO: Les excepcions més greus han d'estar codificades aquí.
