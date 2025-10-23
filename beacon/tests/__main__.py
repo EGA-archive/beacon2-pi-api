@@ -3564,6 +3564,34 @@ class TestMain(unittest.TestCase):
                 assert responsedict["responseSummary"]["exists"] == False
             loop.run_until_complete(test_check_post_cross_query_biosamples_analyses_is_not_working())
             loop.run_until_complete(client.close())
+    def test_main_check_cohorts_datasets_cross_query_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_cohorts_datasets_cross_query_is_working():
+                resp = await client.get(conf.uri_subpath+"/"+cohort.endpoint_name+"/EGA-testing/"+dataset.endpoint_name)
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
+            loop.run_until_complete(test_check_cohorts_datasets_cross_query_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_datasets_cohorts_cross_query_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_datasets_cohorts_cross_query_is_working():
+                resp = await client.get(conf.uri_subpath+"/"+dataset.endpoint_name+"/EGA-testing/"+cohort.endpoint_name)
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
+            loop.run_until_complete(test_check_datasets_cohorts_cross_query_is_working())
+            loop.run_until_complete(client.close())
 
 class AsyncTest(unittest.IsolatedAsyncioTestCase):
     async def test_main_create_api(self):

@@ -13,7 +13,7 @@ from beacon.request.classes import RequestAttributes
 from beacon.exceptions.exceptions import InvalidRequest, NoPermissionsAvailable
 
 source=dataset.database
-complete_module='beacon.connections.'+source+'.datasets'
+complete_module='beacon.connections.'+source+'.collections'
 import importlib
 module = importlib.import_module(complete_module, package=None)
 
