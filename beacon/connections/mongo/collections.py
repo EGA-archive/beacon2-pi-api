@@ -113,7 +113,6 @@ def get_cross_collections(self):
     query = apply_filters(self, {}, RequestAttributes.qparams.query.filters, {}, "a")
     query = query_id(self, query, RequestAttributes.entry_id)
     mapping = get_phenotypic_cross_query_attributes(self, RequestAttributes.entry_type, RequestAttributes.pre_entry_type)
-    LOG.warning(mapping)
     docs = get_documents_for_cohorts(self,
         mapping["secondary_collection"],
         query,

@@ -78,10 +78,14 @@ class EndpointView(web.View, CorsViewMixin):
         except AppError as e:
             response_obj = await error_builder(self, e.status, e.message)
             return web.Response(text=json_util.dumps(response_obj), status=e.status, content_type='application/json')
+        except Exception as e:
+            response_obj = await error_builder(self, 500, "Unexpected system error: {}".format(e))
+            return web.Response(text=json_util.dumps(response_obj), status=500, content_type='application/json')
 
     async def post(self):
         try:
             await deconstruct_request(self, self.request)
+            self.template_path = path + '/' + RequestAttributes.returned_apiVersion + '/' 
             return await self.handler()
         except AppError as e:
             response_obj = await error_builder(self, e.status, e.message)

@@ -3584,7 +3584,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_datasets_cohorts_cross_query_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+dataset.endpoint_name+"/EGA-testing/"+cohort.endpoint_name)
+                resp = await client.get(conf.uri_subpath+"/"+dataset.endpoint_name+"/test/"+cohort.endpoint_name)
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -3592,12 +3592,47 @@ class TestMain(unittest.TestCase):
                 assert responsedict["responseSummary"]["numTotalResults"] == 1
             loop.run_until_complete(test_check_datasets_cohorts_cross_query_is_working())
             loop.run_until_complete(client.close())
+    def test_main_check_measurement_value_query_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_measurement_value_query_is_working():
+                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
+                "meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+                            {
+                        "id": "anatomical entity",
+                        "operator": ">",
+                        "value": "P44Y",
+                        "scope": "individual"
+                    }, 
+                ],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+            }
+            )
+
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 20
+            loop.run_until_complete(test_check_measurement_value_query_is_working())
+            loop.run_until_complete(client.close())
 
 class AsyncTest(unittest.IsolatedAsyncioTestCase):
     async def test_main_create_api(self):
         async def server_running_in_background():
             server = await asyncio.run(await create_api(5051))
-            LOG.warning(server)
             await server.serve_forever()
         server_task = asyncio.create_task(server_running_in_background())
         

@@ -15,7 +15,7 @@ class InvalidRequest(AppError):
 
 class WrongURIPath(AppError):
     def __init__(self, message):
-        self.status=404
+        self.status=400
         self.message=message
 
 class NoFiltersAllowed(AppError):
@@ -40,12 +40,12 @@ class DatabaseIsDown(AppError):
 
 class FileNotFound(AppError):
     def __init__(self, message):
-        self.status=404
+        self.status=503
         self.message=message
 
 class NoDatasetsFound(AppError):
     def __init__(self, message):
-        self.status=404
+        self.status=400
         self.message=message
 
 class NumberOfQueriesExceeded(AppError):

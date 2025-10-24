@@ -1,7 +1,3 @@
-# I noticed a misbehaviour with 3.7.2 regarding cookie storage for raised HTTP response
-# That's the case for the HTTPFound redirections
-# It seems the cookies are not sent in the response, and therefore, the browser does not store them
-# Obviously, sessions do not work then, and Openid Connect auth.py code is broken
 aiohttp==3.10.11
 aiohttp-cors==0.7.0
 aiohttp-middlewares==2.4.0
