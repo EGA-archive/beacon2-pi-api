@@ -34,7 +34,7 @@ class TestAuthZ(unittest.TestCase):
                 for dataset in datasets:
                     list_datasets_names.append(dataset.dataset)
                 tc = unittest.TestCase()
-                tc.assertSetEqual(set(['test']),set(list_datasets_names))
+                tc.assertSetEqual(set(['test', 'test2']),set(list_datasets_names))
             loop.run_until_complete(test_verify_public_datasets())
             loop.run_until_complete(client.close())
     def test_authZ_verify_registered_datasets(self):

@@ -24,7 +24,6 @@ class OntologyTerm(BaseModel):
         return v
             
 class DUODataUse(BaseModel):
-    description: str
     id: str
     label: Optional[str]=None
     modifiers: Optional[list] = None
