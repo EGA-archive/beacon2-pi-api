@@ -3,7 +3,6 @@ from beacon.connections.mongo.__init__ import client, counts as counts_, filteri
 from pymongo.collection import Collection
 from beacon.logs.logs import log_with_args_mongo, LOG
 from beacon.conf.conf import level
-from beacon.conf.filtering_terms import alphanumeric_terms
 from beacon.exceptions.exceptions import InvalidRequest
 import aiohttp.web as web
 from beacon.conf import genomicVariant, analysis, run, biosample, individual, dataset, cohort
@@ -176,7 +175,7 @@ def choose_scope(self, scope, filter):
     1
     )
     docs = list(docs)
-    if docs == [] and filter.id not in alphanumeric_terms:
+    if docs == []:
         raise InvalidRequest("The filtering term: {} is not a valid filtering term.".format(filter.id))
     try:
         fterm=docs[0]
