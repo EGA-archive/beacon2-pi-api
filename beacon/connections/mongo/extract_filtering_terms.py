@@ -8,6 +8,7 @@ from bson.json_util import dumps
 import json
 import os
 from beacon.connections.mongo.__init__ import dbname, filtering_terms as filtering_terms_, client
+from beacon.conf.filtering_terms import alphanumeric_terms_individuals, alphanumeric_terms_g_variants, alphanumeric_terms_analyses, alphanumeric_terms_biosamples, alphanumeric_terms_cohorts, alphanumeric_terms_datasets, alphanumeric_terms_runs
 
 ONTOLOGY_REGEX = re.compile(r"([_A-Za-z0-9]+):([_A-Za-z0-9^\-]+)")
 ICD_REGEX = re.compile(r"(ICD[_A-Za-z0-9]+):([_A-Za-z0-9^\./-]+)")
@@ -258,6 +259,8 @@ def get_filtering_object(terms_ids: list, collection_name: str):
             value_id=None
             if 'measurements.assayCode' in field:
                 value_id = label
+            if 'measures.assayCode' in field:
+                value_id = label
             ontology_label = label
             if field is not None:
                 if onto not in list_of_ontologies:
@@ -373,6 +376,69 @@ def merge_ontology_terms():
         
     
 def merge_alphanumeric_terms():
+    alphanumterms=[]
+    for alphanumeric_term in alphanumeric_terms_analyses:
+        alphanumterms.append({
+                                'type': 'alphanumeric',
+                                'id': alphanumeric_term,
+                                'scopes': ['analysis']
+                            })
+    if alphanumterms != []:
+        filtering_terms_.insert_many(alphanumterms)
+    alphanumterms=[]
+    for alphanumeric_term in alphanumeric_terms_biosamples:
+        alphanumterms.append({
+                                'type': 'alphanumeric',
+                                'id': alphanumeric_term,
+                                'scopes': ['biosample']
+                            })
+    if alphanumterms != []:
+        filtering_terms_.insert_many(alphanumterms)
+    alphanumterms=[]
+    for alphanumeric_term in alphanumeric_terms_cohorts:
+        alphanumterms.append({
+                                'type': 'alphanumeric',
+                                'id': alphanumeric_term,
+                                'scopes': ['cohort']
+                            })
+    if alphanumterms != []:
+        filtering_terms_.insert_many(alphanumterms)
+    alphanumterms=[]
+    for alphanumeric_term in alphanumeric_terms_datasets:
+        alphanumterms.append({
+                                'type': 'alphanumeric',
+                                'id': alphanumeric_term,
+                                'scopes': ['dataset']
+                            })
+    if alphanumterms != []:
+        filtering_terms_.insert_many(alphanumterms)
+    alphanumterms=[]
+    for alphanumeric_term in alphanumeric_terms_g_variants:
+        alphanumterms.append({
+                                'type': 'alphanumeric',
+                                'id': alphanumeric_term,
+                                'scopes': ['genomicVariation']
+                            })
+    if alphanumterms != []:
+        filtering_terms_.insert_many(alphanumterms)
+    alphanumterms=[]
+    for alphanumeric_term in alphanumeric_terms_individuals:
+        alphanumterms.append({
+                                'type': 'alphanumeric',
+                                'id': alphanumeric_term,
+                                'scopes': ['individual']
+                            })
+    if alphanumterms != []:
+        filtering_terms_.insert_many(alphanumterms)
+    alphanumterms=[]
+    for alphanumeric_term in alphanumeric_terms_runs:
+        alphanumterms.append({
+                                'type': 'alphanumeric',
+                                'id': alphanumeric_term,
+                                'scopes': ['run']
+                            })
+    if alphanumterms != []:
+        filtering_terms_.insert_many(alphanumterms)
     filtering_terms = filtering_terms_.find({"type": "alphanumeric"})
     array_of_ids=[]
     repeated_ids=[]

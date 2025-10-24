@@ -267,7 +267,7 @@ class PhenotypicFeatures(BaseModel):
             return v
 
 class CohortCriteria(BaseModel):
-    ageRange: AgeRange
+    ageRange: Optional[AgeRange]=None
     diseaseConditions: Optional[list]=None
     ethnicities: Optional[list]=None
     genders: Optional[list]=None

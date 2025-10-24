@@ -54,7 +54,7 @@ class BeaconOrganization(BaseModel):
     name: str=conf.org_name
     welcomeUrl: Optional[str]=conf.org_welcome_url if conf.welcome_url != "" else None
 
-class Info(BaseModel):
+class InfoBody(BaseModel):
     alternativeUrl: Optional[str]=conf.alternative_url if conf.alternative_url != "" else None
     createDateTime: Optional[str]=conf.create_datetime if conf.create_datetime != "" else None
     description: Optional[str]=conf.description if conf.description != "" else None
@@ -70,7 +70,7 @@ class Info(BaseModel):
     
 class InfoResponse(BaseModel):
     meta: InformationalMeta
-    response: Info
+    response: InfoBody
 
 class Handover(BaseModel):
     handoverType: OntologyTerm
@@ -249,13 +249,13 @@ class BooleanResponse(BaseModel):
     info: Optional[Dict] = None
     beaconHandovers: Optional[List[Handover]] = None
 
-class Collection(BaseModel):
+class Collections(BaseModel):
     collections: List[Union[Cohorts,Datasets]]
 
 class CollectionResponse(BaseModel):
     meta: Meta
     responseSummary: ResponseSummary
-    response: Collection
+    response: Collections
     beaconHandovers: Optional[List[Handover]] = None
     info: Optional[Dict] = None
 
@@ -481,7 +481,7 @@ class ServiceType(BaseModel):
     group: str = "beacon"
     version: str = conf.version if conf.version != "" else None
 
-class ServiceInfo(BaseModel):
+class ServiceInfoResponse(BaseModel):
     contactUrl: Optional[str] = conf.org_contact_url if conf.org_contact_url != "" else None
     createdAt: Optional[str] = conf.create_datetime if conf.create_datetime != "" else None
     description: Optional[str] = conf.description if conf.description != "" else None

@@ -1,20 +1,18 @@
 from aiohttp.test_utils import TestClient, TestServer, loop_context
 from aiohttp import web
-from beacon.__main__ import Collection, Resultset, Info, ServiceInfo, Map, Configuration, FilteringTerms, EntryTypes, error_middleware
+from beacon.__main__ import Collection, PhenoGeno, Info, ServiceInfo, Map, Configuration, FilteringTerms, EntryTypes, error_middleware, create_api, _graceful_shutdown_ctx
 import json
 import unittest
 import beacon.conf.conf as conf
 from beacon.permissions.tests import TestAuthZ
 from beacon.auth.tests import TestAuthN
-#from beacon.request.tests import TestRequest
 from beacon.logs.logs import LOG
 from beacon.connections.mongo.filters import cross_query
 from unittest.mock import MagicMock
 from beacon.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run
 from aiohttp_middlewares import cors_middleware
 from beacon.validator.configuration import check_configuration
-
-
+import asyncio
 
 def create_app():
     app = web.Application()
@@ -45,23 +43,23 @@ def create_app():
             app.add_routes([web.post(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}', Collection)])
             app.add_routes([web.get(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}', Collection)])
         if dataset.analysis_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+analysis.endpoint_name, Resultset)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+analysis.endpoint_name, Resultset)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGeno)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGeno)])
         if dataset.biosample_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+biosample.endpoint_name, Resultset)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+biosample.endpoint_name, Resultset)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGeno)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGeno)])
         if dataset.cohort_lookup == True:
             app.add_routes([web.post(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
             app.add_routes([web.get(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
         if dataset.genomicVariant_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, Resultset)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, Resultset)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGeno)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGeno)])
         if dataset.individual_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+individual.endpoint_name, Resultset)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+individual.endpoint_name, Resultset)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGeno)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGeno)])
         if dataset.run_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGeno)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGeno)])
     if cohort.endpoint_name != '':
         app.add_routes([web.post(conf.uri_subpath+'/'+cohort.endpoint_name, Collection)])
         app.add_routes([web.get(conf.uri_subpath+'/'+cohort.endpoint_name, Collection)])
@@ -69,143 +67,143 @@ def create_app():
             app.add_routes([web.post(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}', Collection)])
             app.add_routes([web.get(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}', Collection)])
         if cohort.analysis_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+analysis.endpoint_name, Resultset)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+analysis.endpoint_name, Resultset)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGeno)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGeno)])
         if cohort.biosample_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+biosample.endpoint_name, Resultset)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+biosample.endpoint_name, Resultset)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGeno)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGeno)])
         if cohort.dataset_lookup == True:
             app.add_routes([web.post(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
             app.add_routes([web.get(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
         if cohort.genomicVariant_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, Resultset)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, Resultset)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGeno)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGeno)])
         if cohort.individual_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+individual.endpoint_name, Resultset)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+individual.endpoint_name, Resultset)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGeno)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGeno)])
         if cohort.run_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGeno)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGeno)])
     if analysis.endpoint_name != '':
-        app.add_routes([web.post(conf.uri_subpath+'/'+analysis.endpoint_name, Resultset)])
-        app.add_routes([web.get(conf.uri_subpath+'/'+analysis.endpoint_name, Resultset)])
+        app.add_routes([web.post(conf.uri_subpath+'/'+analysis.endpoint_name, PhenoGeno)])
+        app.add_routes([web.get(conf.uri_subpath+'/'+analysis.endpoint_name, PhenoGeno)])
         if analysis.singleEntryUrl == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}', Resultset)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}', Resultset)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}', PhenoGeno)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}', PhenoGeno)])
         if analysis.cohort_lookup == True:
             app.add_routes([web.post(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
             app.add_routes([web.get(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
         if analysis.biosample_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+biosample.endpoint_name, Resultset)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+biosample.endpoint_name, Resultset)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGeno)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGeno)])
         if analysis.dataset_lookup == True:
             app.add_routes([web.post(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
             app.add_routes([web.get(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
         if analysis.genomicVariant_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, Resultset)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, Resultset)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGeno)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGeno)])
         if analysis.individual_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+individual.endpoint_name, Resultset)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+individual.endpoint_name, Resultset)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGeno)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGeno)])
         if analysis.run_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGeno)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGeno)])
     if biosample.endpoint_name != '':
-        app.add_routes([web.post(conf.uri_subpath+'/'+biosample.endpoint_name, Resultset)])
-        app.add_routes([web.get(conf.uri_subpath+'/'+biosample.endpoint_name, Resultset)])
+        app.add_routes([web.post(conf.uri_subpath+'/'+biosample.endpoint_name, PhenoGeno)])
+        app.add_routes([web.get(conf.uri_subpath+'/'+biosample.endpoint_name, PhenoGeno)])
         if biosample.singleEntryUrl == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}', Resultset)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}', Resultset)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}', PhenoGeno)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}', PhenoGeno)])
         if biosample.cohort_lookup == True:
             app.add_routes([web.post(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
             app.add_routes([web.get(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
         if biosample.analysis_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+analysis.endpoint_name, Resultset)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+analysis.endpoint_name, Resultset)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGeno)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGeno)])
         if biosample.dataset_lookup == True:
             app.add_routes([web.post(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
             app.add_routes([web.get(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
         if biosample.genomicVariant_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, Resultset)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, Resultset)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGeno)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGeno)])
         if biosample.individual_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+individual.endpoint_name, Resultset)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+individual.endpoint_name, Resultset)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGeno)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGeno)])
         if biosample.run_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGeno)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGeno)])
     if genomicVariant.endpoint_name != '':
-        app.add_routes([web.post(conf.uri_subpath+'/'+genomicVariant.endpoint_name, Resultset)])
-        app.add_routes([web.get(conf.uri_subpath+'/'+genomicVariant.endpoint_name, Resultset)])
+        app.add_routes([web.post(conf.uri_subpath+'/'+genomicVariant.endpoint_name, PhenoGeno)])
+        app.add_routes([web.get(conf.uri_subpath+'/'+genomicVariant.endpoint_name, PhenoGeno)])
         if genomicVariant.singleEntryUrl == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}', Resultset)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}', Resultset)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}', PhenoGeno)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}', PhenoGeno)])
         if genomicVariant.cohort_lookup == True:
             app.add_routes([web.post(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
             app.add_routes([web.get(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
         if genomicVariant.analysis_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+analysis.endpoint_name, Resultset)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+analysis.endpoint_name, Resultset)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGeno)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGeno)])
         if genomicVariant.dataset_lookup == True:
             app.add_routes([web.post(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
             app.add_routes([web.get(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
         if genomicVariant.biosample_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+biosample.endpoint_name, Resultset)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+biosample.endpoint_name, Resultset)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGeno)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGeno)])
         if genomicVariant.individual_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+individual.endpoint_name, Resultset)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+individual.endpoint_name, Resultset)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGeno)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGeno)])
         if genomicVariant.run_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGeno)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGeno)])
     if individual.endpoint_name != '':
-        app.add_routes([web.post(conf.uri_subpath+'/'+individual.endpoint_name, Resultset)])
-        app.add_routes([web.get(conf.uri_subpath+'/'+individual.endpoint_name, Resultset)])
+        app.add_routes([web.post(conf.uri_subpath+'/'+individual.endpoint_name, PhenoGeno)])
+        app.add_routes([web.get(conf.uri_subpath+'/'+individual.endpoint_name, PhenoGeno)])
         if individual.singleEntryUrl == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}', Resultset)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}', Resultset)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}', PhenoGeno)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}', PhenoGeno)])
         if individual.cohort_lookup == True:
             app.add_routes([web.post(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
             app.add_routes([web.get(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
         if individual.analysis_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+analysis.endpoint_name, Resultset)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+analysis.endpoint_name, Resultset)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGeno)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGeno)])
         if individual.dataset_lookup == True:
             app.add_routes([web.post(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
             app.add_routes([web.get(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
         if individual.biosample_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+biosample.endpoint_name, Resultset)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+biosample.endpoint_name, Resultset)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGeno)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGeno)])
         if individual.genomicVariant_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, Resultset)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, Resultset)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGeno)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGeno)])
         if individual.run_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+run.endpoint_name, Resultset)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGeno)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGeno)])
     if run.endpoint_name != '':
-        app.add_routes([web.post(conf.uri_subpath+'/'+run.endpoint_name, Resultset)])
-        app.add_routes([web.get(conf.uri_subpath+'/'+run.endpoint_name, Resultset)])
+        app.add_routes([web.post(conf.uri_subpath+'/'+run.endpoint_name, PhenoGeno)])
+        app.add_routes([web.get(conf.uri_subpath+'/'+run.endpoint_name, PhenoGeno)])
         if run.singleEntryUrl == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+run.endpoint_name+'/{id}', Resultset)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+run.endpoint_name+'/{id}', Resultset)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+run.endpoint_name+'/{id}', PhenoGeno)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+run.endpoint_name+'/{id}', PhenoGeno)])
         if run.cohort_lookup == True:
             app.add_routes([web.post(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
             app.add_routes([web.get(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
         if run.analysis_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+analysis.endpoint_name, Resultset)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+analysis.endpoint_name, Resultset)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGeno)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGeno)])
         if run.dataset_lookup == True:
             app.add_routes([web.post(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
             app.add_routes([web.get(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
         if run.biosample_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+biosample.endpoint_name, Resultset)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+biosample.endpoint_name, Resultset)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGeno)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGeno)])
         if run.genomicVariant_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, Resultset)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, Resultset)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGeno)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGeno)])
         if run.individual_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+individual.endpoint_name, Resultset)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+individual.endpoint_name, Resultset)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGeno)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGeno)])
     return app
 
 class TestMain(unittest.TestCase):
@@ -1198,61 +1196,6 @@ class TestMain(unittest.TestCase):
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?datasets=test")
                 assert resp.status == 200
             loop.run_until_complete(test_check_datasets_g_variants_endpoint_is_working())
-            loop.run_until_complete(client.close())
-    def test_main_check_cross_query_is_working(self):
-        with loop_context() as loop:
-            app = create_app()
-            client = TestClient(TestServer(app), loop=loop)
-            loop.run_until_complete(client.start_server())
-            async def test_check_cross_query_is_working():
-                MagicClass = MagicMock(_id='hohoho')
-                resp = cross_query(MagicClass, {'$or': [{'ethnicity.id': 'NCIT:C43851'}]}, 'individual', 'biosamples', {}, 'test')
-                assert resp != {}
-            loop.run_until_complete(test_check_cross_query_is_working())
-            loop.run_until_complete(client.close())
-    def test_main_check_cross_query_3_is_working(self):
-        with loop_context() as loop:
-            app = create_app()
-            client = TestClient(TestServer(app), loop=loop)
-            loop.run_until_complete(client.start_server())
-            async def test_check_cross_query_3_is_working():
-                MagicClass = MagicMock(_id='hohoho')
-                resp = cross_query(MagicClass, {'$or': [{'ethnicity.id': 'NCIT:C43851'}]}, 'individual', 'g_variants', {}, 'test')
-                assert resp != {}
-            loop.run_until_complete(test_check_cross_query_3_is_working())
-            loop.run_until_complete(client.close())
-    def test_main_check_cross_query_7_is_working(self):
-        with loop_context() as loop:
-            app = create_app()
-            client = TestClient(TestServer(app), loop=loop)
-            loop.run_until_complete(client.start_server())
-            async def test_check_cross_query_7_is_working():
-                MagicClass = MagicMock(_id='hohoho')
-                resp = cross_query(MagicClass, {'$or': [{'platformModel.id': 'OBI:0002048'}]}, 'run', 'individuals', {}, 'test')
-                assert resp != {}
-            loop.run_until_complete(test_check_cross_query_7_is_working())
-            loop.run_until_complete(client.close())
-    def test_main_check_cross_query_8_is_working(self):
-        with loop_context() as loop:
-            app = create_app()
-            client = TestClient(TestServer(app), loop=loop)
-            loop.run_until_complete(client.start_server())
-            async def test_check_cross_query_8_is_working():
-                MagicClass = MagicMock(_id='hohoho')
-                resp = cross_query(MagicClass, {'$or': [{'platformModel.id': 'OBI:0002048'}]}, 'run', 'biosamples', {}, 'test')
-                assert resp != {}
-            loop.run_until_complete(test_check_cross_query_8_is_working())
-            loop.run_until_complete(client.close())
-    def test_main_check_cross_query_9_is_working(self):
-        with loop_context() as loop:
-            app = create_app()
-            client = TestClient(TestServer(app), loop=loop)
-            loop.run_until_complete(client.start_server())
-            async def test_check_cross_query_9_is_working():
-                MagicClass = MagicMock(_id='hohoho')
-                resp = cross_query(MagicClass, {'$or': [{'platformModel.id': 'OBI:0002048'}]}, 'run', 'g_variants', {}, 'test')
-                assert resp != {}
-            loop.run_until_complete(test_check_cross_query_9_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_alphanumeric_equal_query_is_working(self):
         with loop_context() as loop:
@@ -3121,13 +3064,584 @@ class TestMain(unittest.TestCase):
                 assert responsedict["responseSummary"]["numTotalResults"] == 20
             loop.run_until_complete(test_check_synonyms())
             loop.run_until_complete(client.close())
+    def test_main_check_analyses_with_requestedSchemas_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_analyses_with_with_requestedSchemas_is_working():
+                resp = await client.get(conf.uri_subpath+"/"+analysis.endpoint_name+"?requestedSchemas=beacon-analysis-v2.0.0")
+                assert resp.status == 200
+            loop.run_until_complete(test_check_analyses_with_with_requestedSchemas_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_cross_query_analyses_individuals_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_cross_query_analyses_individuals_is_working():
+                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"variantCaller", "operator":"=", "value": "GATK4.0","scope":"analysis"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
+            loop.run_until_complete(test_check_post_cross_query_analyses_individuals_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_cross_query_analyses_individuals_is_not_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_cross_query_analyses_individuals_is_not_working():
+                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"variantCaller", "operator":"=", "value": "GATK3.0","scope":"analysis"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == False
+            loop.run_until_complete(test_check_post_cross_query_analyses_individuals_is_not_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_cross_query_analyses_g_variants_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_cross_query_analyses_g_variants_is_working():
+                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name, json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"variantCaller", "operator":"=", "value": "GATK4.0","scope":"analysis"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 40
+            loop.run_until_complete(test_check_post_cross_query_analyses_g_variants_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_cross_query_analyses_g_variants_is_not_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_cross_query_analyses_g_variants_is_not_working():
+                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name, json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"variantCaller", "operator":"=", "value": "GATK3.0","scope":"analysis"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == False
+            loop.run_until_complete(test_check_post_cross_query_analyses_g_variants_is_not_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_cross_query_analyses_runs_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_cross_query_analyses_runs_is_working():
+                resp = await client.post(conf.uri_subpath+"/"+run.endpoint_name, json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"variantCaller", "operator":"=", "value": "GATK4.0","scope":"analysis"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
+            loop.run_until_complete(test_check_post_cross_query_analyses_runs_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_cross_query_analyses_runs_is_not_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_cross_query_analyses_runs_is_not_working():
+                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name, json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"variantCaller", "operator":"=", "value": "GATK3.0","scope":"analysis"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == False
+            loop.run_until_complete(test_check_post_cross_query_analyses_runs_is_not_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_cross_query_analyses_biosamples_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_cross_query_analyses_biosamples_is_working():
+                resp = await client.post(conf.uri_subpath+"/"+biosample.endpoint_name, json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"variantCaller", "operator":"=", "value": "GATK4.0","scope":"analysis"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
+            loop.run_until_complete(test_check_post_cross_query_analyses_biosamples_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_cross_query_biosamples_analyses_is_not_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_cross_query_analyses_biosamples_is_not_working():
+                resp = await client.post(conf.uri_subpath+"/"+biosample.endpoint_name, json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"variantCaller", "operator":"=", "value": "GATK3.0","scope":"analysis"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == False
+            loop.run_until_complete(test_check_post_cross_query_analyses_biosamples_is_not_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_cross_query_individuals_g_variants_is_not_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_cross_query_individuals_g_variants_is_not_working():
+                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name, json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"anatomical entity", "operator":"=", "value": "GATK3.0","scope":"individual"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == False
+            loop.run_until_complete(test_check_post_cross_query_individuals_g_variants_is_not_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_cross_query_individuals_runs_is_not_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_cross_query_individuals_runs_is_not_working():
+                resp = await client.post(conf.uri_subpath+"/"+run.endpoint_name, json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"anatomical entity", "operator":"=", "value": "GATK3.0","scope":"individual"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == False
+            loop.run_until_complete(test_check_post_cross_query_individuals_runs_is_not_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_cross_query_runs_individuals_is_not_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_cross_query_runs_individuals_is_not_working():
+                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"librarySource", "operator":"=", "value": "GATK3.0","scope":"run"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == False
+            loop.run_until_complete(test_check_post_cross_query_runs_individuals_is_not_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_cross_query_g_variants_runs_is_not_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_cross_query_runs_g_variants_is_not_working():
+                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name, json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"librarySource", "operator":"=", "value": "GATK3.0","scope":"run"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == False
+            loop.run_until_complete(test_check_post_cross_query_runs_g_variants_is_not_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_cross_query_biosamples_runs_is_not_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_cross_query_runs_biosamples_is_not_working():
+                resp = await client.post(conf.uri_subpath+"/"+biosample.endpoint_name, json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"librarySource", "operator":"=", "value": "GATK3.0","scope":"run"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == False
+            loop.run_until_complete(test_check_post_cross_query_runs_biosamples_is_not_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_cross_query_runs_analyses_is_not_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_cross_query_runs_analyses_is_not_working():
+                resp = await client.post(conf.uri_subpath+"/"+analysis.endpoint_name, json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"librarySource", "operator":"=", "value": "GATK3.0","scope":"run"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == False
+            loop.run_until_complete(test_check_post_cross_query_runs_analyses_is_not_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_cross_query_biosamples_individuals_is_not_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_cross_query_biosamples_individuals_is_not_working():
+                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"measurements.assayCode", "operator":"=", "value": "GATK3.0","scope":"biosample"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == False
+            loop.run_until_complete(test_check_post_cross_query_biosamples_individuals_is_not_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_cross_query_g_variants_biosamples_is_not_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_cross_query_biosamples_g_variants_is_not_working():
+                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name, json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"measurements.assayCode", "operator":"=", "value": "GATK3.0","scope":"biosample"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == False
+            loop.run_until_complete(test_check_post_cross_query_biosamples_g_variants_is_not_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_cross_query_runs_biosamples_is_not_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_cross_query_runs_biosamples_is_not_working():
+                resp = await client.post(conf.uri_subpath+"/"+run.endpoint_name, json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"measurements.assayCode", "operator":"=", "value": "GATK3.0","scope":"biosample"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == False
+            loop.run_until_complete(test_check_post_cross_query_runs_biosamples_is_not_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_cross_query_analyses_biosamples_is_not_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_cross_query_biosamples_analyses_is_not_working():
+                resp = await client.post(conf.uri_subpath+"/"+analysis.endpoint_name, json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"measurements.assayCode", "operator":"=", "value": "GATK3.0","scope":"biosample"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == False
+            loop.run_until_complete(test_check_post_cross_query_biosamples_analyses_is_not_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_cohorts_datasets_cross_query_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_cohorts_datasets_cross_query_is_working():
+                resp = await client.get(conf.uri_subpath+"/"+cohort.endpoint_name+"/EGA-testing/"+dataset.endpoint_name)
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
+            loop.run_until_complete(test_check_cohorts_datasets_cross_query_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_datasets_cohorts_cross_query_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_datasets_cohorts_cross_query_is_working():
+                resp = await client.get(conf.uri_subpath+"/"+dataset.endpoint_name+"/test/"+cohort.endpoint_name)
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
+            loop.run_until_complete(test_check_datasets_cohorts_cross_query_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_measurement_value_query_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_measurement_value_query_is_working():
+                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
+                "meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+                            {
+                        "id": "anatomical entity",
+                        "operator": ">",
+                        "value": "P44Y",
+                        "scope": "individual"
+                    }, 
+                ],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+            }
+            )
+
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 20
+            loop.run_until_complete(test_check_measurement_value_query_is_working())
+            loop.run_until_complete(client.close())
+
+class AsyncTest(unittest.IsolatedAsyncioTestCase):
+    async def test_main_create_api(self):
+        async def server_running_in_background():
+            server = await asyncio.run(await create_api(5051))
+            await server.serve_forever()
+        server_task = asyncio.create_task(server_running_in_background())
+        
+        await asyncio.sleep(2)
+        
+        
 
 
 
-            
-            
-
-    
 
 if __name__ == '__main__':
     unittest.main()

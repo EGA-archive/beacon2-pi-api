@@ -7,10 +7,11 @@ from beacon.conf.conf import level, uri, uri_subpath, api_version
 from beacon.request.classes import RequestAttributes
 from beacon.exceptions.exceptions import IncoherenceInRequestError, InvalidRequest, WrongURIPath, NoFiltersAllowed
 import html
-from beacon.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run
+from beacon.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run, filtering_terms
 import os
 from beacon.request.parameters import RequestMeta, SchemasPerEntity
 from pydantic import ValidationError
+from beacon.connections.mongo.__init__ import analyses, biosamples, genomicVariations,individuals, runs, datasets, cohorts
 
 @log_with_args(level)
 def parse_query_string(self, request):
@@ -52,7 +53,7 @@ def parse_query_string(self, request):
         elif k == 'testMode':
             query_string_body["query"]["testMode"] = v
         elif k == 'requestedSchemas':
-            query_string_body["meta"]["requestedSchemas"] = v
+            query_string_body["meta"]["requestedSchemas"] = [{"schema": v}]
         elif k == 'requestedGranularity':
             query_string_body["query"]["requestedGranularity"] = v
         elif k == 'datasets':
@@ -142,6 +143,7 @@ def set_entry_type_configuration(self):
         RequestAttributes.allowed_granularity = dataset.granularity
         RequestAttributes.entry_type_id = dataset.id
     elif RequestAttributes.entry_type == 'filtering_terms':
+        RequestAttributes.source = filtering_terms.database
         RequestAttributes.allowed_granularity = 'record'
     elif RequestAttributes.entry_type == 'map':
         RequestAttributes.allowed_granularity = 'record'
@@ -192,6 +194,20 @@ def set_entry_type(self, request):
                 raise WrongURIPath('path received is wrong, check your uri: {} from conf file to make sure is correct'.format(uri))
             set_entry_type_configuration(self)
             RequestAttributes.entry_id=request.match_info.get('id', None)
+    if RequestAttributes.entry_type==genomicVariant.endpoint_name:
+        RequestAttributes.mongo_collection=genomicVariations
+    elif RequestAttributes.entry_type==analysis.endpoint_name:
+        RequestAttributes.mongo_collection=analyses
+    elif RequestAttributes.entry_type==biosample.endpoint_name:
+        RequestAttributes.mongo_collection=biosamples
+    elif RequestAttributes.entry_type==individual.endpoint_name:
+        RequestAttributes.mongo_collection=individuals
+    elif RequestAttributes.entry_type==run.endpoint_name:
+        RequestAttributes.mongo_collection=runs
+    elif RequestAttributes.entry_type==dataset.endpoint_name:
+        RequestAttributes.mongo_collection=datasets
+    elif RequestAttributes.entry_type==cohort.endpoint_name:
+        RequestAttributes.mongo_collection=cohorts
 
 @log_with_args(level)
 def set_response_type(self):
@@ -304,6 +320,18 @@ def set_response_type(self):
             RequestAttributes.returned_schema = [SchemasPerEntity(entityType=individual.id,schema=individual.defaultSchema_id).model_dump()]
         elif RequestAttributes.entry_type == run.endpoint_name:
             RequestAttributes.returned_schema = [SchemasPerEntity(entityType=run.id,schema=run.defaultSchema_id).model_dump()]
+    if RequestAttributes.entry_type == 'filtering_terms':
+        RequestAttributes.returned_schema = {"schema": "filtering_terms-{}".format(RequestAttributes.returned_apiVersion)}
+    elif RequestAttributes.entry_type == 'map':
+        RequestAttributes.returned_schema = {"schema": "map-{}".format(RequestAttributes.returned_apiVersion)}
+    elif RequestAttributes.entry_type == 'configuration':
+        RequestAttributes.returned_schema = {"schema": "configuration-{}".format(RequestAttributes.returned_apiVersion)}
+    elif RequestAttributes.entry_type == 'info':
+        RequestAttributes.returned_schema = {"schema": "info-{}".format(RequestAttributes.returned_apiVersion)}
+    elif RequestAttributes.entry_type == 'service-info':
+        RequestAttributes.returned_schema = {"schema": "service-info-{}".format(RequestAttributes.returned_apiVersion)}
+    elif RequestAttributes.entry_type == 'entry_types':
+        RequestAttributes.returned_schema = {"schema": "entry_types-{}".format(RequestAttributes.returned_apiVersion)}
 
 @log_with_args(level)
 def set_ip(self, request):

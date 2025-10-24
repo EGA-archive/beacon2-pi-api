@@ -1,6 +1,6 @@
 from aiohttp.test_utils import TestClient, TestServer, loop_context
 from aiohttp import web
-from beacon.__main__ import Collection, Resultset, Info, ServiceInfo, Map, Configuration, FilteringTerms, EntryTypes, error_middleware
+from beacon.__main__ import Collection, PhenoGeno, Info, ServiceInfo, Map, Configuration, FilteringTerms, EntryTypes, error_middleware
 import json
 import unittest
 import beacon.conf.conf as conf

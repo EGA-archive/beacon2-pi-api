@@ -12,3 +12,4 @@ beacon/connections/mongo/data/db/*
 *.json.gz
 adminui/adminclient/migrations/*
 adminui/node_modules
+*.vcf.bgz
