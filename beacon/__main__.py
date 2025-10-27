@@ -94,6 +94,7 @@ class EndpointView(web.View, CorsViewMixin):
             response_obj = await error_builder(self, 500, "Unexpected system error: {}".format(e))
             return web.Response(text=json_util.dumps(response_obj), status=500, content_type='application/json')
 
+
     def create_response(self):
         with open(self.template_path, 'r') as template:
             templateJSON = json.load(template)
@@ -213,11 +214,16 @@ class PhenoGeno(EndpointView):
             meta = Meta(receivedRequestSummary=RequestAttributes.qparams.summary(),returnedGranularity=RequestAttributes.returned_granularity,returnedSchemas=RequestAttributes.returned_schema,testMode=RequestAttributes.qparams.query.testMode)
             if RequestAttributes.response_type == 'resultSet':
                 self.template_path = self.template_path + resultSetsTemplate
-                responseSummary = ResponseSummary.build_response_summary_by_dataset(ResponseSummary, datasets, datasets_count)
                 list_of_resultSets=[]
+                new_datasets=[]
                 for dataset in datasets:
-                    resultSet = ResultsetInstance.build_response_by_dataset(ResultsetInstance,dataset, datasets_docs, datasets_count,RequestAttributes.allowed_granularity,RequestAttributes.qparams.query.requestedGranularity)
-                    list_of_resultSets.append(resultSet)
+                    try:
+                        resultSet = ResultsetInstance.build_response_by_dataset(ResultsetInstance,dataset, datasets_docs, datasets_count,RequestAttributes.allowed_granularity,RequestAttributes.qparams.query.requestedGranularity)
+                        list_of_resultSets.append(resultSet)
+                        new_datasets.append(dataset)
+                    except ValidationError as v:
+                        LOG.error('{} dataset is invalid: {}'.format(dataset.dataset, str(v)))
+                responseSummary = ResponseSummary.build_response_summary_by_dataset(ResponseSummary, new_datasets, datasets_count)
                 resultSets = Resultsets.return_resultSets(Resultsets, list_of_resultSets)
                 self.classResponse = ResultsetsResponse.return_response(ResultsetsResponse, meta, resultSets, responseSummary)
                 response_obj = self.create_response()
