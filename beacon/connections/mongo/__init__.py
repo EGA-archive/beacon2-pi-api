@@ -53,4 +53,4 @@ if query_budget_database == 'mongo':
         try:
             db=client[query_budget_db_name].create_collection(name=query_budget_table)
         except Exception as e:
-            raise DatabaseIsDown(str(e))
+            pass
