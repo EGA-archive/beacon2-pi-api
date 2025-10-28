@@ -61,7 +61,7 @@ def query_permissions(func):
             requested_datasets = RequestAttributes.qparams.query.requestParameters["datasets"]
         except Exception:
             requested_datasets = []
-        if RequestAttributes.qparams.query.testMode == True:
+        if RequestAttributes.qparams.query.testMode == True: # TODO: Incloure budget a testMode també.
             datasets_permissions = await PermissionsProxy.get_permissions(self, username=username, requested_datasets=requested_datasets, testMode=RequestAttributes.qparams.query.testMode)
             response_datasets= await get_datasets_list(self, datasets_permissions)
             response_datasets_names=[]

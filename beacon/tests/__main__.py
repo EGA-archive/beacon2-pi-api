@@ -1972,6 +1972,9 @@ class TestMain(unittest.TestCase):
             }
             )
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
             loop.run_until_complete(test_check_runs_variants())
             loop.run_until_complete(client.close())
     def test_analyses_with_run_filter(self):

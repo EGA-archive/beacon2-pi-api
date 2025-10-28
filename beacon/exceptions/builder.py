@@ -2,9 +2,8 @@ from beacon.logs.logs import log_with_args, LOG
 from beacon.conf.conf import level
 from beacon.request.classes import RequestAttributes
 import json
-from beacon.validator.framework import (Meta, 
-                                        ErrorResponse,
-                                        BeaconError)
+from beacon.validator.framework.meta import Meta
+from beacon.validator.framework.error import ErrorResponse, BeaconError
 from pydantic import create_model, Field, ValidationError
 from typing import Optional
 from beacon.exceptions.exceptions import InvalidData

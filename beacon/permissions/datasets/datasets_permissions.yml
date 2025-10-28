@@ -3,11 +3,20 @@ test:
     default_entry_types_granularity: record
     entry_types_exceptions:
       - individual: record
+  registered:
+    default_entry_types_granularity: count
+    entry_types_exceptions:
+      - cohort: boolean
+  controlled:
+    default_entry_types_granularity: count
+    entry_types_exceptions:
+      - cohort: boolean
     user-list:
       - user_e-mail: jane.smith@beacon.ga4gh
         default_entry_types_granularity: count
         entry_types_exceptions:
           - individual: record
+      - user_e-mail: john.doe@beacon.ga4gh
 
 test2:
   public:
