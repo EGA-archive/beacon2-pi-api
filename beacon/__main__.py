@@ -73,13 +73,13 @@ class EndpointView(web.View, CorsViewMixin):
     async def get(self):
         try:
             await deconstruct_request(self, self.request)
-            self.template_path = path + '/' + RequestAttributes.returned_apiVersion + '/' 
+            self.template_path = path + '/' + RequestAttributes.returned_apiVersion + '/' # TODO: definir variable de forma diferent a la variable de path final. Cridar això en una funció.
             return await self.handler()
         except AppError as e:
             response_obj = await error_builder(self, e.status, e.message)
             return web.Response(text=json_util.dumps(response_obj), status=e.status, content_type='application/json')
         except Exception as e:
-            response_obj = await error_builder(self, 500, "Unexpected system error: {}".format(e))
+            response_obj = await error_builder(self, 500, "Unexpected internal error: {}".format(e))
             return web.Response(text=json_util.dumps(response_obj), status=500, content_type='application/json')
 
     async def post(self):
@@ -95,7 +95,7 @@ class EndpointView(web.View, CorsViewMixin):
             return web.Response(text=json_util.dumps(response_obj), status=500, content_type='application/json')
 
 
-    def create_response(self):
+    def create_response(self): # TODO: Comentar cada línia de codi amb el que fem aquí.
         with open(self.template_path, 'r') as template:
             templateJSON = json.load(template)
         classtoJSON = self.classResponse.model_dump(exclude_none=True)
@@ -182,6 +182,7 @@ class Collection(EndpointView):
             self.classResponse = CollectionResponse(meta=meta,response=collections,responseSummary=responseSummary)
             response_obj = self.create_response()
         except ValidationError as v:
+            LOG.error(str(v))
             raise InvalidData('{} templates or data are not correct'.format(RequestAttributes.entry_type))
         return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
         
@@ -206,10 +207,10 @@ class PhenoGeno(EndpointView):
     @query_permissions
     @log_with_args(level)
     async def handler(self, datasets, username, time_now):
-        complete_module='beacon.connections.'+RequestAttributes.source+'.executor'
+        complete_module='beacon.connections.'+RequestAttributes.source+'.executor'# TODO: Comentar.
         import importlib
         module = importlib.import_module(complete_module, package=None)
-        datasets_docs, datasets_count, count, include, datasets = await module.execute_function(self, datasets)
+        datasets_docs, datasets_count, count, include, datasets = await module.execute_function(self, datasets) # TODO: Això s'ha de retornar en una classe.
         try:
             meta = Meta(receivedRequestSummary=RequestAttributes.qparams.summary(),returnedGranularity=RequestAttributes.returned_granularity,returnedSchemas=RequestAttributes.returned_schema,testMode=RequestAttributes.qparams.query.testMode)
             if RequestAttributes.response_type == 'resultSet':
@@ -507,3 +508,6 @@ if __name__ == '__main__':
         asyncio.run(create_api(5050))
     except Exception:
         raise # TODO: Les excepcions més greus han d'estar codificades aquí.
+
+
+# TODO: Posar classes Endpoint en arxius diferents (com model i framework) i també routes. Només deixar les línies de crida.
