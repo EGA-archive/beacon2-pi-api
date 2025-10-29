@@ -50,7 +50,7 @@ async def execute_function(self, datasets: list):
     try:
         return datasets_docs, datasets_count, count, include, datasets
     except ConnectionFailure as e:
-        client.close() # No és el mateix que no trobi la base de dades que estigui malament la connexió.
+        #client.close() # No és el mateix que no trobi la base de dades que estigui malament la connexió.
         raise DatabaseIsDown(str(e))
     except Exception:
         raise NoPermissionsAvailable("No datasets found. Check out the permissions or the datasets requested if a response was expected.")
@@ -63,5 +63,5 @@ async def execute_collection_function(self):
         response_converted, count = function(self)
         return response_converted, count
     except ConnectionFailure as e:
-        client.close()
+        #client.close()
         raise DatabaseIsDown(str(e))
