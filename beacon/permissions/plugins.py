@@ -58,10 +58,9 @@ class DummyPermissions(Permissions):
                         continue
                 default_granularity = None
                 granularity_exceptions = None
-                user_granularity_exceptions = None
 
                 for security_level, dataset_properties in security_level_dict.items():
-                    if username == 'public' and security_level == 'public':
+                    if security_level == 'public':
                         default_granularity = dataset_properties.get('default_entry_types_granularity')
                         granularity_exceptions = dataset_properties.get('entry_types_exceptions')
                     elif username != 'public' and security_level == 'registered':
@@ -72,17 +71,9 @@ class DummyPermissions(Permissions):
                         if user_exceptions != None:
                             for user_exception in user_exceptions:
                                 if user_exception['user_e-mail'] == username:
-                                    user_default_granularity = user_exception.get('default_entry_types_granularity')
-                                    default_granularity = dataset_properties.get('default_entry_types_granularity')
-                                    granularity_exceptions = dataset_properties.get('entry_types_exceptions')
-                                    if user_default_granularity != None:
-                                        default_granularity = user_default_granularity
-                                    user_granularity_exceptions = user_exception.get('entry_types_exceptions')
-                if user_granularity_exceptions != None:
-                    for entry_type_id, entry_type_granularity in user_granularity_exceptions[0].items():
-                        if entry_type_id == RequestAttributes.entry_type_id:
-                            default_granularity = entry_type_granularity
-                elif granularity_exceptions != None:
+                                    default_granularity = user_exception.get('default_entry_types_granularity')
+                                    granularity_exceptions = user_exception.get('entry_types_exceptions')
+                if granularity_exceptions != None:
                     for entry_type_id, entry_type_granularity in granularity_exceptions[0].items():
                         if entry_type_id == RequestAttributes.entry_type_id:
                             default_granularity = entry_type_granularity

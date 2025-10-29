@@ -1,6 +1,7 @@
 from typing import List, Union
 import re
-from beacon.request.parameters import AlphanumericFilter, CustomFilter, OntologyFilter, Operator, Similarity
+from beacon.request.parameters import AlphanumericFilter, CustomFilter, OntologyFilter
+from beacon.request.classes import Operator, Similarity
 from beacon.connections.mongo.utils import get_documents, join_query, choose_scope
 from beacon.connections.mongo.__init__ import client, genomicVariations, individuals, datasets, cohorts, analyses, biosamples, runs, targets as targets_, caseLevelData, filtering_terms, similarities, synonyms as synonyms_
 from beacon.conf import conf

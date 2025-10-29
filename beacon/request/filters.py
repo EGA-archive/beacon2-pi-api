@@ -2,7 +2,7 @@ from pydantic import (
     field_validator,
 )
 from typing import List, Optional, Union
-from beacon.request.parameters import Similarity
+from beacon.request.classes import CamelModel, Similarity, Operator
 import re
 
 class OntologyFilter(CamelModel, extra='forbid'):
