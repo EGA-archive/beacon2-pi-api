@@ -8,76 +8,13 @@ from pydantic import (
 from strenum import StrEnum
 from typing import List, Optional, Union
 from beacon.conf.conf import default_beacon_granularity
-from humps.main import camelize
 from aiohttp.web_request import Request
-from aiohttp import web
-from beacon.request.classes import Granularity
-from beacon.logs.logs import LOG
-import re
-
-class CamelModel(BaseModel, extra='forbid'):
-    class Config:
-        alias_generator = camelize
-        allow_population_by_field_name = True
-
-
-class IncludeResultsetResponses(StrEnum):
-    ALL = "ALL",
-    HIT = "HIT",
-    MISS = "MISS",
-    NONE = "NONE"
-
-
-class Similarity(StrEnum):
-    EXACT = "exact",
-    HIGH = "high",
-    MEDIUM = "medium",
-    LOW = "low"
-
-
-class Operator(StrEnum):
-    EQUAL = "=",
-    LESS = "<",
-    GREATER = ">",
-    NOT = "!",
-    LESS_EQUAL = "<=",
-    GREATER_EQUAL = ">="
-
-class OntologyFilter(CamelModel, extra='forbid'):
-    id: str
-    scope: Optional[str] =None
-    includeDescendantTerms: Optional[bool] = True
-    similarity: Optional[Similarity] = Similarity.EXACT
-    @field_validator('id')
-    @classmethod
-    def id__ontology_filter_must_be_CURIE(cls, v: str) -> str:
-        if re.match("[A-Za-z0-9]+:[A-Za-z0-9]", v):
-            pass
-        else:
-            raise ValueError('id must be CURIE, e.g. NCIT:C42331')
-        return v
-
-class AlphanumericFilter(CamelModel, extra='forbid'):
-    id: str
-    value: Union[str, int, List[int]]
-    scope: Optional[str] =None
-    operator: Operator = Operator.EQUAL
-    @field_validator('id')
-    @classmethod
-    def id__alphanumeric_filter_must_not_be_CURIE(cls, v: str) -> str:
-        if re.match("[A-Za-z0-9]+:[A-Za-z0-9]", v):
-            raise ValueError('id must be a schema field reference, not a CURIE')
-        return v
-
-
-class CustomFilter(CamelModel, extra='forbid'):
-    id: str
-    scope: Optional[str] =None
+from beacon.request.classes import Granularity, CamelModel, IncludeResultsetResponses
+from beacon.request.filters import AlphanumericFilter, OntologyFilter, CustomFilter
 
 class SchemasPerEntity(CamelModel, extra='forbid'):
     entityType: Optional[str] = None
     schema: Optional[str] = None
-
 
 class Pagination(CamelModel, extra='forbid'):
     skip: int = 0
@@ -85,7 +22,6 @@ class Pagination(CamelModel, extra='forbid'):
     currentPage: Optional[str] = None
     nexttPage: Optional[str] = None
     previousPage: Optional[str] = None
-
 
 class RequestMeta(CamelModel, extra='forbid'):
     requestedSchemas: Optional[List[SchemasPerEntity]] = []
@@ -144,8 +80,6 @@ class RangeQuery(BaseModel, extra='forbid'):
             end = end [0]
         if int(start) > int(end):
             raise ValueError("start's value can not be greater than end's value")
-
-
 
 class GeneIdQuery(BaseModel, extra='forbid'):
     geneId: str
