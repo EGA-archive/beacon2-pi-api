@@ -1,7 +1,6 @@
 from aiohttp.test_utils import TestClient, TestServer, loop_context
 from aiohttp import web
-from beacon.__main__ import Collection, PhenoGeno, Info, ServiceInfo, Map, Configuration, FilteringTerms, EntryTypes, error_middleware
-import json
+from beacon.tests.__main__ import create_app
 import unittest
 import beacon.conf.conf as conf
 from beacon.logs.logs import LOG
@@ -10,7 +9,6 @@ from aiohttp_middlewares import cors_middleware
 from beacon.validator.configuration import contains_special_characters, check_configuration
 import logging
 import yaml
-from beacon.tests.__main__ import create_app
 
 
 class TestConfigurationExceptions(unittest.TestCase):

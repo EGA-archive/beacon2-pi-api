@@ -1,4 +1,5 @@
-from beacon.request.parameters import RequestParams, AlphanumericFilter, Operator
+from beacon.request.parameters import AlphanumericFilter
+from beacon.request.classes import Operator
 from typing import List, Dict
 from beacon.logs.logs import log_with_args, LOG
 from beacon.conf.conf import level

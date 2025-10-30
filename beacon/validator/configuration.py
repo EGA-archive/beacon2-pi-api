@@ -17,7 +17,6 @@ def contains_special_characters(string):
 
 @log_with_args_check_configuration(conf.level)
 def check_configuration():
-    # TODO: posar decorator de logs a la funció
     if isinstance(analysis.enable_endpoint, bool):
         pass
     else:

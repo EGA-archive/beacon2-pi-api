@@ -1,5 +1,31 @@
 from strenum import StrEnum
-import aiohttp.web as web
+from humps.main import camelize
+from pydantic import BaseModel
+
+class CamelModel(BaseModel, extra='forbid'):
+    class Config:
+        alias_generator = camelize
+        allow_population_by_field_name = True
+
+class IncludeResultsetResponses(StrEnum):
+    ALL = "ALL",
+    HIT = "HIT",
+    MISS = "MISS",
+    NONE = "NONE"
+
+class Similarity(StrEnum):
+    EXACT = "exact",
+    HIGH = "high",
+    MEDIUM = "medium",
+    LOW = "low"
+
+class Operator(StrEnum):
+    EQUAL = "=",
+    LESS = "<",
+    GREATER = ">",
+    NOT = "!",
+    LESS_EQUAL = "<=",
+    GREATER_EQUAL = ">="
 
 class Granularity(StrEnum):
     BOOLEAN = "boolean",

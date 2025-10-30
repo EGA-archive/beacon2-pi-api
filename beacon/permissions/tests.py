@@ -34,7 +34,7 @@ class TestAuthZ(unittest.TestCase):
                 for dataset in datasets:
                     list_datasets_names.append(dataset.dataset)
                 tc = unittest.TestCase()
-                tc.assertSetEqual(set(['test', 'test2']),set(list_datasets_names))
+                tc.assertSetEqual(set(['test', 'test2', 'test3']),set(list_datasets_names))
             loop.run_until_complete(test_verify_public_datasets())
             loop.run_until_complete(client.close())
     def test_authZ_verify_registered_datasets(self):
@@ -49,7 +49,7 @@ class TestAuthZ(unittest.TestCase):
                 for dataset in datasets:
                     list_datasets_names.append(dataset.dataset)
                 tc = unittest.TestCase()
-                tc.assertSetEqual(set(['CINECA_synthetic_cohort_EUROPE_UK1']),set(list_datasets_names))
+                tc.assertSetEqual(set(['CINECA_synthetic_cohort_EUROPE_UK1', 'test2', 'test', 'test3']),set(list_datasets_names))
             loop.run_until_complete(test_verify_registered_datasets())
             loop.run_until_complete(client.close())
     def test_authZ_verify_controlled_datasets(self):
@@ -64,7 +64,7 @@ class TestAuthZ(unittest.TestCase):
                 for dataset in datasets:
                     list_datasets_names.append(dataset.dataset)
                 tc = unittest.TestCase()
-                tc.assertSetEqual(set(['AV_Dataset', 'CINECA_synthetic_cohort_EUROPE_UK1']),set(list_datasets_names))
+                tc.assertSetEqual(set(['AV_Dataset', 'test', 'test2', 'test3', 'CINECA_synthetic_cohort_EUROPE_UK1']),set(list_datasets_names))
             loop.run_until_complete(test_verify_registered_datasets())
             loop.run_until_complete(client.close())
     def test_authZ_bearer_required(self):

@@ -5,9 +5,10 @@ import jwt
 from aiohttp import web
 from beacon.auth.__main__ import fetch_idp, validate_access_token, authentication, fetch_user_info
 from dotenv import load_dotenv
+import re
 
 # for keycloak, create aud in mappers, with custom, aud and beacon for audience
-mock_access_token = 'eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJreS1tUXNxZ0ZYeHdSUVRfRUhuQlJJUGpmbVhfRXZuUTVEbzZWUTJCazdZIn0.eyJleHAiOjE3NjEzMDA5MjYsImlhdCI6MTc2MTMwMDYyNiwianRpIjoiNGFhN2ViMzMtMjVkNC00NmYyLWJjNjQtNTc2YzUxNmUwM2RmIiwiaXNzIjoiaHR0cHM6Ly9iZWFjb24tbmV0d29yay1kZW1vMi5lZ2EtYXJjaGl2ZS5vcmcvYXV0aC9yZWFsbXMvQmVhY29uIiwiYXVkIjoiYmVhY29uIiwic3ViIjoiNDdlZmYxYjEtNzYyMS00NTcwLWEwYmItMDFhNzE5ZmJhMGEyIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiYmVhY29uIiwic2Vzc2lvbl9zdGF0ZSI6Ijc3MWFhMTcxLWE3NzctNDhhOC05OGJkLTQ4NWRkZDE3Y2IwYyIsImFjciI6IjEiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIG1pY3JvcHJvZmlsZS1qd3QiLCJ1cG4iOiJqYW5lIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJuYW1lIjoiSmFuZSBTbWl0aCIsImdyb3VwcyI6WyJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIiwib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiJdLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJqYW5lIiwiZ2l2ZW5fbmFtZSI6IkphbmUiLCJmYW1pbHlfbmFtZSI6IlNtaXRoIiwiZW1haWwiOiJqYW5lLnNtaXRoQGJlYWNvbi5nYTRnaCJ9.LL3QWIwNGqlkPzeJqU21ZMQlvhH8lAGgqMHNlVrhNFaAFvai57hnY7Co7JqZS8YG281QEWRMR7cXgY3fR7Z64MoRJVyNgfKBSjc-J8jjHPpKggy0vyrcS17AI_xz2c6E07KRLc-auQTuF35wHw8DlfKsmsBqsDVLhhIWgGu8EtL3srZPhfrDh5yGo-N6L6nhKSpOpHD9ttfPtQUtMZVAqxxCfcl1cF2jygx4zZEmQfOK19tqP9Jk05JVDfiNAEwWTzHojT103ZRXaEteDKMCOSYOecSmhoQN5_b_X3biZxAMutDqnCtFw0dSFIFJW70t4kR_0f-fE6Fv8qsaBzjt2w'
+mock_access_token = 'eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJreS1tUXNxZ0ZYeHdSUVRfRUhuQlJJUGpmbVhfRXZuUTVEbzZWUTJCazdZIn0.eyJleHAiOjE3NjE4MjQ0MDAsImlhdCI6MTc2MTgyNDEwMCwianRpIjoiNjE3NGFjNzUtMzlmNi00MjNiLWEwN2UtZGY0YmJjMDkzNjY1IiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL0JlYWNvbiIsImF1ZCI6ImJlYWNvbiIsInN1YiI6IjQ3ZWZmMWIxLTc2MjEtNDU3MC1hMGJiLTAxYTcxOWZiYTBhMiIsInR5cCI6IkJlYXJlciIsImF6cCI6ImJlYWNvbiIsInNlc3Npb25fc3RhdGUiOiI3Yzg4ZmY2OS0wNmU5LTRkZGMtODI5OC0xZjFmM2VlZDY4Y2EiLCJhY3IiOiIxIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBlbWFpbCBtaWNyb3Byb2ZpbGUtand0Iiwic2lkIjoiN2M4OGZmNjktMDZlOS00ZGRjLTgyOTgtMWYxZjNlZWQ2OGNhIiwidXBuIjoiamFuZSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwibmFtZSI6IkphbmUgU21pdGgiLCJncm91cHMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXSwicHJlZmVycmVkX3VzZXJuYW1lIjoiamFuZSIsImdpdmVuX25hbWUiOiJKYW5lIiwiZmFtaWx5X25hbWUiOiJTbWl0aCIsImVtYWlsIjoiamFuZS5zbWl0aEBiZWFjb24uZ2E0Z2gifQ.IJIU0LCPXhex4hAxuLNpxQVIffbbKw4dkSqu4uUaj1Vv2ueb4mEV-aop2lZqpzo7exZscyyokNb9u5q92PHtT2CLIhNqax43aBTmVSOdcAcra5IQH4erRZpSMC9Tr1cqiRtk-VpKO0ZwpJb4G2PYotrtyYIxcFwLqAuPyqYKwM3JB4WAnPuSTcEx3AUTB2T6JITnK753HyZiSY7efcUjm_cS1oZEQkyn3XgE6ORJTqXy74yjdM7mMRzcAFtg3y9LneCICYU6lzYNrXe14NRz6P8ADCL_1PTB4vRhnDS4jApwYH6JkuM5ScxwyyQsSxcbrXmfwXQnADVhW7wziLgC_g'
 mock_access_token_false = 'public'
 #dummy test anonymous
 #dummy test login
@@ -30,8 +31,11 @@ class TestAuthN(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_fetch_idp():
                 idp_issuer, user_info, idp_client_id, idp_client_secret, idp_introspection, idp_jwks_url, algorithm, aud = fetch_idp(self, mock_access_token)
-                load_dotenv("beacon/auth/idp_providers/lifescience.env", override=True)
+                load_dotenv("beacon/auth/idp_providers/keycloak.env", override=True)
                 IDP_ISSUER = os.getenv('ISSUER')
+                IDP_ISSUER = re.findall(r'[a-zA-Z0-9:/-]', IDP_ISSUER)
+                IDP_ISSUER = "".join(r for r in IDP_ISSUER)
+                IDP_ISSUER = str(IDP_ISSUER)
                 IDP_CLIENT_ID = os.getenv('CLIENT_ID')
                 IDP_CLIENT_SECRET = os.getenv('CLIENT_SECRET')
                 IDP_USER_INFO = os.getenv('USER_INFO')
@@ -51,8 +55,11 @@ class TestAuthN(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_validate_access_token():
-                load_dotenv("beacon/auth/idp_providers/lifescience.env", override=True)
+                load_dotenv("beacon/auth/idp_providers/keycloak.env", override=True)
                 IDP_ISSUER = os.getenv('ISSUER')
+                IDP_ISSUER = re.findall(r'[a-zA-Z0-9:/-]', IDP_ISSUER)
+                IDP_ISSUER = "".join(r for r in IDP_ISSUER)
+                IDP_ISSUER = str(IDP_ISSUER)
                 IDP_CLIENT_ID = os.getenv('CLIENT_ID')
                 IDP_CLIENT_SECRET = os.getenv('CLIENT_SECRET')
                 IDP_USER_INFO = os.getenv('USER_INFO')
@@ -76,8 +83,11 @@ class TestAuthN(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_fetch_user_info():
-                load_dotenv("beacon/auth/idp_providers/lifescience.env", override=True)
+                load_dotenv("beacon/auth/idp_providers/keycloak.env", override=True)
                 IDP_ISSUER = os.getenv('ISSUER')
+                IDP_ISSUER = re.findall(r'[a-zA-Z0-9:/-]', IDP_ISSUER)
+                IDP_ISSUER = "".join(r for r in IDP_ISSUER)
+                IDP_ISSUER = str(IDP_ISSUER)
                 IDP_CLIENT_ID = os.getenv('CLIENT_ID')
                 IDP_CLIENT_SECRET = os.getenv('CLIENT_SECRET')
                 IDP_USER_INFO = os.getenv('USER_INFO')
@@ -122,7 +132,7 @@ class TestAuthN(unittest.TestCase):
                     for visa_dataset in visa_datasets:
                         try:
                             visa = {}
-                            load_dotenv("beacon/auth/idp_providers/lifescience.env", override=True)
+                            load_dotenv("beacon/auth/idp_providers/keycloak.env", override=True)
                             IDP_ISSUER = os.getenv('ISSUER')
                             visa['iss']=IDP_ISSUER
                             visa["ga4gh_visa_v1"]={}
