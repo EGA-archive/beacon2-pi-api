@@ -61,21 +61,11 @@ def query_permissions(func):
             requested_datasets = RequestAttributes.qparams.query.requestParameters["datasets"]
         except Exception:
             requested_datasets = []
-        if RequestAttributes.qparams.query.testMode == True: # TODO: Incloure budget a testMode també.
-            datasets_permissions = await PermissionsProxy.get_permissions(self, username=username, requested_datasets=requested_datasets, testMode=RequestAttributes.qparams.query.testMode)
-            response_datasets= await get_datasets_list(self, datasets_permissions)
-            response_datasets_names=[]
-            for response_dataset in response_datasets:
-                response_datasets_names.append(response_dataset.dataset)
-            for requested_dataset in requested_datasets:
-                if requested_dataset not in response_datasets_names:
-                    raise InvalidRequest('requested dataset: {} not a test dataset'.format(requested_dataset))
-        else:
-            username, list_visa_datasets = await authorization(self)
-            datasets_permissions = await PermissionsProxy.get_permissions(self, username=username, requested_datasets=requested_datasets, testMode=RequestAttributes.qparams.query.testMode)
-            time_now = check_budget(self, username)
-            for visa_dataset in list_visa_datasets:
-                datasets_permissions.append(DatasetPermission(visa_dataset, default_beacon_granularity))
+        username, list_visa_datasets = await authorization(self)
+        datasets_permissions = await PermissionsProxy.get_permissions(self, username=username, requested_datasets=requested_datasets, testMode=RequestAttributes.qparams.query.testMode)
+        time_now = check_budget(self, username)
+        for visa_dataset in list_visa_datasets:
+            datasets_permissions.append(DatasetPermission(visa_dataset, default_beacon_granularity))
         response_datasets= await get_datasets_list(self, datasets_permissions)
         return await func(self, response_datasets, username, time_now)
     return permission
