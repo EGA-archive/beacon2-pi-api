@@ -289,7 +289,7 @@ class CohortCriteria(BaseModel):
     @classmethod
     def check_genders(cls, v: list) -> list:
         for gender in v:
-            Ethnicity(**gender)
+            Sex(**gender)
         return v
     @field_validator('locations')
     @classmethod

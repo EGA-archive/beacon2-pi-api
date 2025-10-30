@@ -1,14 +1,21 @@
 from aiohttp.test_utils import TestClient, TestServer, loop_context
 from aiohttp import web
-from beacon.__main__ import Collection, PhenoGeno, Info, ServiceInfo, Map, Configuration, FilteringTerms, EntryTypes, error_middleware, create_api, _graceful_shutdown_ctx
+from beacon.views.collection import CollectionView
+from beacon.views.phenogeno import PhenoGenoView
+from beacon.views.info import InfoView
+from beacon.views.service_info import ServiceInfoView
+from beacon.views.map import MapView
+from beacon.views.configuration import ConfigurationView
+from beacon.views.filtering_terms import FilteringTermsView
+from beacon.views.entry_types import EntryTypesView
+from beacon.utils.middlewares import error_middleware
+from beacon.__main__ import create_api
 import json
 import unittest
 import beacon.conf.conf as conf
 from beacon.permissions.tests import TestAuthZ
 from beacon.auth.tests import TestAuthN
 from beacon.logs.logs import LOG
-from beacon.connections.mongo.filters import cross_query
-from unittest.mock import MagicMock
 from beacon.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run
 from aiohttp_middlewares import cors_middleware
 from beacon.validator.configuration import check_configuration
@@ -22,188 +29,188 @@ def create_app():
         ]
     )
     #app.on_startup.append(initialize)
-    app.add_routes([web.post(conf.uri_subpath+'', Info)])
-    app.add_routes([web.post(conf.uri_subpath+'/info', Info)])
-    app.add_routes([web.post(conf.uri_subpath+'/entry_types', EntryTypes)])
-    app.add_routes([web.post(conf.uri_subpath+'/service-info', ServiceInfo)])
-    app.add_routes([web.post(conf.uri_subpath+'/configuration', Configuration)])
-    app.add_routes([web.post(conf.uri_subpath+'/map', Map)])
-    app.add_routes([web.post(conf.uri_subpath+'/filtering_terms', FilteringTerms)])
-    app.add_routes([web.get(conf.uri_subpath+'', Info)])
-    app.add_routes([web.get(conf.uri_subpath+'/info', Info)])
-    app.add_routes([web.get(conf.uri_subpath+'/entry_types', EntryTypes)])
-    app.add_routes([web.get(conf.uri_subpath+'/service-info', ServiceInfo)])
-    app.add_routes([web.get(conf.uri_subpath+'/configuration', Configuration)])
-    app.add_routes([web.get(conf.uri_subpath+'/map', Map)])
-    app.add_routes([web.get(conf.uri_subpath+'/filtering_terms', FilteringTerms)])
+    app.add_routes([web.post(conf.uri_subpath+'', InfoView)])
+    app.add_routes([web.post(conf.uri_subpath+'/info', InfoView)])
+    app.add_routes([web.post(conf.uri_subpath+'/entry_types', EntryTypesView)])
+    app.add_routes([web.post(conf.uri_subpath+'/service-info', ServiceInfoView)])
+    app.add_routes([web.post(conf.uri_subpath+'/configuration', ConfigurationView)])
+    app.add_routes([web.post(conf.uri_subpath+'/map', MapView)])
+    app.add_routes([web.post(conf.uri_subpath+'/filtering_terms', FilteringTermsView)])
+    app.add_routes([web.get(conf.uri_subpath+'', InfoView)])
+    app.add_routes([web.get(conf.uri_subpath+'/info', InfoView)])
+    app.add_routes([web.get(conf.uri_subpath+'/entry_types', EntryTypesView)])
+    app.add_routes([web.get(conf.uri_subpath+'/service-info', ServiceInfoView)])
+    app.add_routes([web.get(conf.uri_subpath+'/configuration', ConfigurationView)])
+    app.add_routes([web.get(conf.uri_subpath+'/map', MapView)])
+    app.add_routes([web.get(conf.uri_subpath+'/filtering_terms', FilteringTermsView)])
     if dataset.endpoint_name != '':
-        app.add_routes([web.post(conf.uri_subpath+'/'+dataset.endpoint_name, Collection)])
-        app.add_routes([web.get(conf.uri_subpath+'/'+dataset.endpoint_name, Collection)])
+        app.add_routes([web.post(conf.uri_subpath+'/'+dataset.endpoint_name, CollectionView)])
+        app.add_routes([web.get(conf.uri_subpath+'/'+dataset.endpoint_name, CollectionView)])
         if dataset.singleEntryUrl == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}', Collection)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}', Collection)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}', CollectionView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}', CollectionView)])
         if dataset.analysis_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGeno)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGeno)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGenoView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGenoView)])
         if dataset.biosample_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGeno)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGeno)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGenoView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGenoView)])
         if dataset.cohort_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+cohort.endpoint_name, CollectionView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+cohort.endpoint_name, CollectionView)])
         if dataset.genomicVariant_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGeno)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGeno)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGenoView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGenoView)])
         if dataset.individual_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGeno)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGeno)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGenoView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGenoView)])
         if dataset.run_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGeno)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGeno)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGenoView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGenoView)])
     if cohort.endpoint_name != '':
-        app.add_routes([web.post(conf.uri_subpath+'/'+cohort.endpoint_name, Collection)])
-        app.add_routes([web.get(conf.uri_subpath+'/'+cohort.endpoint_name, Collection)])
+        app.add_routes([web.post(conf.uri_subpath+'/'+cohort.endpoint_name, CollectionView)])
+        app.add_routes([web.get(conf.uri_subpath+'/'+cohort.endpoint_name, CollectionView)])
         if cohort.singleEntryUrl == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}', Collection)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}', Collection)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}', CollectionView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}', CollectionView)])
         if cohort.analysis_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGeno)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGeno)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGenoView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGenoView)])
         if cohort.biosample_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGeno)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGeno)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGenoView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGenoView)])
         if cohort.dataset_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+dataset.endpoint_name, CollectionView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+dataset.endpoint_name, CollectionView)])
         if cohort.genomicVariant_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGeno)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGeno)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGenoView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGenoView)])
         if cohort.individual_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGeno)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGeno)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGenoView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGenoView)])
         if cohort.run_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGeno)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGeno)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGenoView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGenoView)])
     if analysis.endpoint_name != '':
-        app.add_routes([web.post(conf.uri_subpath+'/'+analysis.endpoint_name, PhenoGeno)])
-        app.add_routes([web.get(conf.uri_subpath+'/'+analysis.endpoint_name, PhenoGeno)])
+        app.add_routes([web.post(conf.uri_subpath+'/'+analysis.endpoint_name, PhenoGenoView)])
+        app.add_routes([web.get(conf.uri_subpath+'/'+analysis.endpoint_name, PhenoGenoView)])
         if analysis.singleEntryUrl == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}', PhenoGeno)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}', PhenoGeno)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}', PhenoGenoView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}', PhenoGenoView)])
         if analysis.cohort_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+cohort.endpoint_name, CollectionView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+cohort.endpoint_name, CollectionView)])
         if analysis.biosample_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGeno)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGeno)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGenoView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGenoView)])
         if analysis.dataset_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+dataset.endpoint_name, CollectionView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+dataset.endpoint_name, CollectionView)])
         if analysis.genomicVariant_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGeno)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGeno)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGenoView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGenoView)])
         if analysis.individual_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGeno)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGeno)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGenoView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGenoView)])
         if analysis.run_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGeno)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGeno)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGenoView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGenoView)])
     if biosample.endpoint_name != '':
-        app.add_routes([web.post(conf.uri_subpath+'/'+biosample.endpoint_name, PhenoGeno)])
-        app.add_routes([web.get(conf.uri_subpath+'/'+biosample.endpoint_name, PhenoGeno)])
+        app.add_routes([web.post(conf.uri_subpath+'/'+biosample.endpoint_name, PhenoGenoView)])
+        app.add_routes([web.get(conf.uri_subpath+'/'+biosample.endpoint_name, PhenoGenoView)])
         if biosample.singleEntryUrl == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}', PhenoGeno)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}', PhenoGeno)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}', PhenoGenoView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}', PhenoGenoView)])
         if biosample.cohort_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+cohort.endpoint_name, CollectionView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+cohort.endpoint_name, CollectionView)])
         if biosample.analysis_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGeno)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGeno)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGenoView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGenoView)])
         if biosample.dataset_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+dataset.endpoint_name, CollectionView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+dataset.endpoint_name, CollectionView)])
         if biosample.genomicVariant_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGeno)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGeno)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGenoView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGenoView)])
         if biosample.individual_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGeno)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGeno)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGenoView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGenoView)])
         if biosample.run_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGeno)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGeno)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGenoView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGenoView)])
     if genomicVariant.endpoint_name != '':
-        app.add_routes([web.post(conf.uri_subpath+'/'+genomicVariant.endpoint_name, PhenoGeno)])
-        app.add_routes([web.get(conf.uri_subpath+'/'+genomicVariant.endpoint_name, PhenoGeno)])
+        app.add_routes([web.post(conf.uri_subpath+'/'+genomicVariant.endpoint_name, PhenoGenoView)])
+        app.add_routes([web.get(conf.uri_subpath+'/'+genomicVariant.endpoint_name, PhenoGenoView)])
         if genomicVariant.singleEntryUrl == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}', PhenoGeno)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}', PhenoGeno)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}', PhenoGenoView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}', PhenoGenoView)])
         if genomicVariant.cohort_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+cohort.endpoint_name, CollectionView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+cohort.endpoint_name, CollectionView)])
         if genomicVariant.analysis_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGeno)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGeno)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGenoView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGenoView)])
         if genomicVariant.dataset_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+dataset.endpoint_name, CollectionView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+dataset.endpoint_name, CollectionView)])
         if genomicVariant.biosample_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGeno)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGeno)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGenoView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGenoView)])
         if genomicVariant.individual_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGeno)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGeno)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGenoView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGenoView)])
         if genomicVariant.run_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGeno)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGeno)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGenoView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGenoView)])
     if individual.endpoint_name != '':
-        app.add_routes([web.post(conf.uri_subpath+'/'+individual.endpoint_name, PhenoGeno)])
-        app.add_routes([web.get(conf.uri_subpath+'/'+individual.endpoint_name, PhenoGeno)])
+        app.add_routes([web.post(conf.uri_subpath+'/'+individual.endpoint_name, PhenoGenoView)])
+        app.add_routes([web.get(conf.uri_subpath+'/'+individual.endpoint_name, PhenoGenoView)])
         if individual.singleEntryUrl == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}', PhenoGeno)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}', PhenoGeno)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}', PhenoGenoView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}', PhenoGenoView)])
         if individual.cohort_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+cohort.endpoint_name, CollectionView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+cohort.endpoint_name, CollectionView)])
         if individual.analysis_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGeno)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGeno)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGenoView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGenoView)])
         if individual.dataset_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+dataset.endpoint_name, CollectionView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+dataset.endpoint_name, CollectionView)])
         if individual.biosample_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGeno)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGeno)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGenoView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGenoView)])
         if individual.genomicVariant_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGeno)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGeno)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGenoView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGenoView)])
         if individual.run_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGeno)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGeno)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGenoView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGenoView)])
     if run.endpoint_name != '':
-        app.add_routes([web.post(conf.uri_subpath+'/'+run.endpoint_name, PhenoGeno)])
-        app.add_routes([web.get(conf.uri_subpath+'/'+run.endpoint_name, PhenoGeno)])
+        app.add_routes([web.post(conf.uri_subpath+'/'+run.endpoint_name, PhenoGenoView)])
+        app.add_routes([web.get(conf.uri_subpath+'/'+run.endpoint_name, PhenoGenoView)])
         if run.singleEntryUrl == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+run.endpoint_name+'/{id}', PhenoGeno)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+run.endpoint_name+'/{id}', PhenoGeno)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+run.endpoint_name+'/{id}', PhenoGenoView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+run.endpoint_name+'/{id}', PhenoGenoView)])
         if run.cohort_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+cohort.endpoint_name, Collection)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+cohort.endpoint_name, CollectionView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+cohort.endpoint_name, CollectionView)])
         if run.analysis_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGeno)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGeno)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGenoView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGenoView)])
         if run.dataset_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+dataset.endpoint_name, Collection)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+dataset.endpoint_name, CollectionView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+dataset.endpoint_name, CollectionView)])
         if run.biosample_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGeno)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGeno)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGenoView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGenoView)])
         if run.genomicVariant_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGeno)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGeno)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGenoView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGenoView)])
         if run.individual_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGeno)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGeno)])
+            app.add_routes([web.post(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGenoView)])
+            app.add_routes([web.get(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGenoView)])
     return app
 
 class TestMain(unittest.TestCase):
@@ -1764,6 +1771,10 @@ class TestMain(unittest.TestCase):
                     }
                 }
             )
+                responsetext=await resp.text()
+                LOG.warning(responsetext)
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
                 assert resp.status == 200
             loop.run_until_complete(test_check_analyses_variants())
             loop.run_until_complete(client.close())
@@ -3643,6 +3654,7 @@ class TestMain(unittest.TestCase):
                 assert responsedict["responseSummary"]["numTotalResults"] == 20
             loop.run_until_complete(test_check_individuals_endpoint_is_removing_dataset())
             loop.run_until_complete(client.close())
+    
 
 class AsyncTest(unittest.IsolatedAsyncioTestCase):
     async def test_main_create_api(self):

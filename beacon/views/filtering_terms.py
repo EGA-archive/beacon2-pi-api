@@ -17,7 +17,7 @@ class FilteringTermsView(EndpointView):
         import importlib
         module = importlib.import_module(complete_module, package=None)
         count, records = module.get_filtering_terms(self)
-        self.template_path = self.template_path + filteringTermsTemplate
+        self.define_final_path(filteringTermsTemplate)
         try:
             filteringterms = FilteringTermsResults(filteringTerms=records)
             meta = InformationalMeta(returnedSchemas=[RequestAttributes.returned_schema])

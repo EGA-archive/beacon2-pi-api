@@ -12,7 +12,7 @@ from beacon.views.endpoint import EndpointView
 class ServiceInfoView(EndpointView):
     @log_with_args(level)
     async def handler(self):
-        self.template_path = self.template_path + serviceInfoTemplate
+        self.define_final_path(serviceInfoTemplate)
         try:
             self.classResponse = ServiceInfoResponse()
             response_obj = self.create_response()

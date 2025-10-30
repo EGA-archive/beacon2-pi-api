@@ -18,7 +18,7 @@ class CollectionView(EndpointView):
         import importlib
         module = importlib.import_module(complete_module, package=None)
         response_converted, count = await module.execute_collection_function(self)
-        self.template_path = self.template_path + collectionsTemplate
+        self.define_final_path(collectionsTemplate)
         try:
             meta = Meta(receivedRequestSummary=RequestAttributes.qparams.summary(),returnedGranularity=RequestAttributes.returned_granularity,returnedSchemas=RequestAttributes.returned_schema,testMode=RequestAttributes.qparams.query.testMode)
             responseSummary = ResponseSummary(exists=count>0,numTotalResults=count)

@@ -26,7 +26,7 @@ class PhenoGenoView(EndpointView):
         try:
             meta = Meta(receivedRequestSummary=RequestAttributes.qparams.summary(),returnedGranularity=RequestAttributes.returned_granularity,returnedSchemas=RequestAttributes.returned_schema,testMode=RequestAttributes.qparams.query.testMode)
             if RequestAttributes.response_type == 'resultSet':
-                self.template_path = self.template_path + resultSetsTemplate
+                self.define_final_path(resultSetsTemplate)
                 list_of_resultSets=[]
                 new_datasets=[]
                 for dataset in datasets:
@@ -41,12 +41,12 @@ class PhenoGenoView(EndpointView):
                 self.classResponse = ResultsetsResponse.return_response(ResultsetsResponse, meta, resultSets, responseSummary)
                 response_obj = self.create_response()
             elif RequestAttributes.response_type == 'count':
-                self.template_path = self.template_path + countTemplate
+                self.define_final_path(countTemplate)
                 responseSummary = CountResponseSummary.build_count_response_summary(CountResponseSummary, count)
                 self.classResponse = CountResponse(meta=meta, responseSummary=responseSummary)
                 response_obj = self.create_response()
             else:
-                self.template_path = self.template_path + booleanTemplate
+                self.define_final_path(booleanTemplate)
                 responseSummary = BooleanResponseSummary(exists=count>0)
                 self.classResponse = BooleanResponse(meta=meta, responseSummary=responseSummary)
                 response_obj = self.create_response()

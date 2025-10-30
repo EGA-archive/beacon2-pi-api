@@ -13,7 +13,7 @@ from beacon.views.endpoint import EndpointView
 class EntryTypesView(EndpointView):
     @log_with_args(level)
     async def handler(self):
-        self.template_path = self.template_path + entryTypesTemplate
+        self.define_final_path(entryTypesTemplate)
         try:
             entry_types = EntryTypesSchema.return_schema(EntryTypesSchema)
             meta = InformationalMeta(returnedSchemas=[RequestAttributes.returned_schema])
