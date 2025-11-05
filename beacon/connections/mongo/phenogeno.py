@@ -11,16 +11,16 @@ from beacon.connections.mongo.utils import get_count, get_documents_for_cohorts,
 @log_with_args(level)
 def get_phenotypic_endpoint(self, dataset: str):
     parameters_as_filters=False
-    query_parameters, parameters_as_filters = apply_request_parameters(self, {}, dataset)
+    query_parameters, parameters_as_filters = apply_request_parameters(self, {}, dataset.dataset)
     if parameters_as_filters == True and query_parameters != {'$and': []}:
-        query, parameters_as_filters = apply_request_parameters(self, {}, dataset)
+        query, parameters_as_filters = apply_request_parameters(self, {}, dataset.dataset)
         query_parameters={}
     elif query_parameters != {'$and': []}:
         query=query_parameters
     elif query_parameters == {'$and': []}:
         query_parameters = {}
         query={}
-    query = apply_filters(self, query, RequestAttributes.qparams.query.filters, query_parameters, dataset)
+    query = apply_filters(self, query, RequestAttributes.qparams.query.filters, query_parameters, dataset.dataset)
     if query == {} and query_parameters != {} and parameters_as_filters == False:
         return 0, -1, None, dataset
     include = RequestAttributes.qparams.query.includeResultsetResponses
@@ -28,22 +28,22 @@ def get_phenotypic_endpoint(self, dataset: str):
     skip = RequestAttributes.qparams.query.pagination.skip
     if limit > 100 or limit == 0:
         limit = 100
-    count, dataset_count, docs = get_docs_by_response_type(self, include, query, dataset, limit, skip)
-    return count, dataset_count, docs, dataset
+    responseClass = get_docs_by_response_type(self, include, query, dataset, limit, skip)
+    return responseClass
 
 @log_with_args(level)
 def get_phenotypic_endpoint_with_id(self, dataset: str):
     if RequestAttributes.entry_type == genomicVariant.endpoint_name:
         query = {"$and": [{"_id": RequestAttributes.entry_id}]}
-        query_parameters, parameters_as_filters = apply_request_parameters(self, query, dataset)
+        query_parameters, parameters_as_filters = apply_request_parameters(self, query, dataset.dataset)
         if parameters_as_filters == True:
-            query, parameters_as_filters = apply_request_parameters(self, {}, dataset)
+            query, parameters_as_filters = apply_request_parameters(self, {}, dataset.dataset)
             query_parameters={}
         else:
             query=query_parameters
     else:
-        query, parameters_as_filters = apply_request_parameters(self, {}, dataset)
-    query = apply_filters(self, query, RequestAttributes.qparams.query.filters, {}, dataset)
+        query, parameters_as_filters = apply_request_parameters(self, {}, dataset.dataset)
+    query = apply_filters(self, query, RequestAttributes.qparams.query.filters, {}, dataset.dataset)
     if RequestAttributes.entry_type != genomicVariant.endpoint_name:
         query = query_id(self, query, RequestAttributes.entry_id)
     include = RequestAttributes.qparams.query.includeResultsetResponses
@@ -51,14 +51,14 @@ def get_phenotypic_endpoint_with_id(self, dataset: str):
     skip = RequestAttributes.qparams.query.pagination.skip
     if limit > 100 or limit == 0:
         limit = 100
-    count, dataset_count, docs = get_docs_by_response_type(self, include, query, dataset, limit, skip)
-    return count, dataset_count, docs, dataset
+    responseClass = get_docs_by_response_type(self, include, query, dataset, limit, skip)
+    return responseClass
 
 @log_with_args(level)
 def get_variants_of_phenotypic_endpoint(self, dataset: str):
     if RequestAttributes.pre_entry_type == analysis.endpoint_name or RequestAttributes.pre_entry_type == run.endpoint_name:
         query = {"$and": [{"id": RequestAttributes.entry_id}]}
-        query = apply_filters(self, query, RequestAttributes.qparams.query.filters, {}, dataset)
+        query = apply_filters(self, query, RequestAttributes.qparams.query.filters, {}, dataset.dataset)
         if RequestAttributes.pre_entry_type == analysis.endpoint_name:
             initial_ids = analyses \
                 .find_one(query, {"biosampleId": 1, "_id": 0})
@@ -92,22 +92,22 @@ def get_variants_of_phenotypic_endpoint(self, dataset: str):
         listHGVS.append(justid)
     queryHGVS["$in"]=listHGVS
     query["identifiers.genomicHGVSId"]=queryHGVS
-    query, parameters_as_filters = apply_request_parameters(self, query, dataset)
-    query = apply_filters(self, query, RequestAttributes.qparams.query.filters, {}, dataset)
+    query, parameters_as_filters = apply_request_parameters(self, query, dataset.dataset)
+    query = apply_filters(self, query, RequestAttributes.qparams.query.filters, {}, dataset.dataset)
     include = RequestAttributes.qparams.query.includeResultsetResponses
     limit = RequestAttributes.qparams.query.pagination.limit
     skip = RequestAttributes.qparams.query.pagination.skip
     if limit > 100 or limit == 0:
         limit = 100
-    count, dataset_count, docs = get_docs_by_response_type(self, include, query, dataset, limit, skip)
-    return count, dataset_count, docs, dataset
+    responseClass = get_docs_by_response_type(self, include, query, dataset, limit, skip)
+    return responseClass
 
 @log_with_args(level)
 def get_phenotypic_endpoint_of_variants(self, dataset: str):
     query = {"$and": [{"_id": RequestAttributes.entry_id}]}
-    query_parameters, parameters_as_filters = apply_request_parameters(self, query, dataset)
+    query_parameters, parameters_as_filters = apply_request_parameters(self, query, dataset.dataset)
     if parameters_as_filters == True and query_parameters != {'$and': []}:
-        query, parameters_as_filters = apply_request_parameters(self, query, dataset)
+        query, parameters_as_filters = apply_request_parameters(self, query, dataset.dataset)
         query_parameters={}
     elif query_parameters != {'$and': []}:
         query=query_parameters
@@ -202,14 +202,14 @@ def get_phenotypic_endpoint_of_variants(self, dataset: str):
             finalquery["$or"].append(query)
         superfinalquery={}
         superfinalquery["$and"]=[finalquery]
-    query = apply_filters(self, superfinalquery, new_filters, {}, dataset)
+    query = apply_filters(self, superfinalquery, new_filters, {}, dataset.dataset)
     include = RequestAttributes.qparams.query.includeResultsetResponses
     limit = RequestAttributes.qparams.query.pagination.limit
     skip = RequestAttributes.qparams.query.pagination.skip
     if limit > 100 or limit == 0:
         limit = 100
-    count, dataset_count, docs = get_docs_by_response_type(self, include, query, dataset, limit, skip)
-    return count, dataset_count, docs, dataset
+    responseClass = get_docs_by_response_type(self, include, query, dataset, limit, skip)
+    return responseClass
 
 @log_with_args(level)
 def get_variants_of_dataset(self, dataset: str):
@@ -223,19 +223,19 @@ def get_variants_of_dataset(self, dataset: str):
         query_count["$or"].append(queryid)
     else:
         return 0, 0, None, dataset
-    query = apply_filters(self, query_count, RequestAttributes.qparams.query.filters, {}, dataset)
+    query = apply_filters(self, query_count, RequestAttributes.qparams.query.filters, {}, dataset.dataset)
     include = RequestAttributes.qparams.query.includeResultsetResponses
     limit = RequestAttributes.qparams.query.pagination.limit
     skip = RequestAttributes.qparams.query.pagination.skip
     if limit > 100 or limit == 0:
         limit = 100
-    count, dataset_count, docs = get_docs_by_response_type(self, include, query, dataset, limit, skip)
-    return count, dataset_count, docs, dataset
+    responseClass = get_docs_by_response_type(self, include, query, dataset, limit, skip)
+    return responseClass
 
 @log_with_args(level)
 def get_phenotypic_endpoint_of_dataset(self, dataset: str):
     dataset_count=0
-    query = apply_filters(self, {}, RequestAttributes.qparams.query.filters, {}, dataset)
+    query = apply_filters(self, {}, RequestAttributes.qparams.query.filters, {}, dataset.dataset)
     query = query_id(self, query, RequestAttributes.entry_id)
     count = get_count(self, datasets, query)
     dict_in={}
@@ -243,14 +243,14 @@ def get_phenotypic_endpoint_of_dataset(self, dataset: str):
         dict_in['datasetId']=RequestAttributes.entry_id
     else:
         return 0, 0, None, dataset
-    query = apply_filters(self, dict_in, RequestAttributes.qparams.query.filters, {}, dataset)
+    query = apply_filters(self, dict_in, RequestAttributes.qparams.query.filters, {}, dataset.dataset)
     include = RequestAttributes.qparams.query.includeResultsetResponses
     limit = RequestAttributes.qparams.query.pagination.limit
     skip = RequestAttributes.qparams.query.pagination.skip
     if limit > 100 or limit == 0:
         limit = 100
-    count, dataset_count, docs = get_docs_by_response_type(self, include, query, dataset, limit, skip)
-    return count, dataset_count, docs, dataset
+    responseClass = get_docs_by_response_type(self, include, query, dataset, limit, skip)
+    return responseClass
 
 @log_with_args(level)
 def get_phenotypic_endpoint_of_cohort(self, dataset: str):
@@ -264,15 +264,15 @@ def get_phenotypic_endpoint_of_cohort(self, dataset: str):
         dict_in['datasetId']=dataset_found
     else:
         return 0, 0, None, dataset
-    query = apply_filters(self, dict_in, RequestAttributes.qparams.query.filters, {}, dataset)
+    query = apply_filters(self, dict_in, RequestAttributes.qparams.query.filters, {}, dataset.dataset)
     count = get_count(self, cohorts, query)
     limit = RequestAttributes.qparams.query.pagination.limit
     include = RequestAttributes.qparams.query.includeResultsetResponses
     skip = RequestAttributes.qparams.query.pagination.skip
     if limit > 100 or limit == 0:
         limit = 100
-    count, dataset_count, docs = get_docs_by_response_type(self, include, query, dataset, limit, skip)
-    return count, dataset_count, docs, dataset
+    responseClass = get_docs_by_response_type(self, include, query, dataset, limit, skip)
+    return responseClass
 
 @log_with_args(level)
 def get_variants_of_cohort(self, dataset: str):
@@ -288,7 +288,7 @@ def get_variants_of_cohort(self, dataset: str):
         dict_in['datasetId']=dataset_found
     else:
         return 0, 0, None, dataset
-    query = apply_filters(self, dict_in, RequestAttributes.qparams.query.filters, {}, dataset)
+    query = apply_filters(self, dict_in, RequestAttributes.qparams.query.filters, {}, dataset.dataset)
     count = get_count(self, cohorts, query)
     query_count={}
     query_count["$or"]=[]
@@ -307,12 +307,12 @@ def get_variants_of_cohort(self, dataset: str):
         query_count["$or"].append(queryid)
     else:
         return 0, 0, None, dataset
-    query = apply_filters(self, query_count, RequestAttributes.qparams.query.filters, {}, dataset)
+    query = apply_filters(self, query_count, RequestAttributes.qparams.query.filters, {}, dataset.dataset)
     skip = RequestAttributes.qparams.query.pagination.skip
     if limit > 100 or limit == 0:
         limit = 100
-    count, dataset_count, docs = get_docs_by_response_type(self, include, query, dataset, limit, skip)
-    return count, dataset_count, docs, dataset
+    responseClass = get_docs_by_response_type(self, include, query, dataset, limit, skip)
+    return responseClass
 
 @log_with_args(level)
 def get_phenotypic_cross_query(self, dataset: str):
@@ -323,11 +323,11 @@ def get_phenotypic_cross_query(self, dataset: str):
     for itemfound in items_found:
         list_of_itemsfound.append(itemfound[mapping["idq2"]])
     query = {mapping["idq"]: {"$in": list_of_itemsfound}}
-    query = apply_filters(self, query, RequestAttributes.qparams.query.filters, {}, dataset)
+    query = apply_filters(self, query, RequestAttributes.qparams.query.filters, {}, dataset.dataset)
     include = RequestAttributes.qparams.query.includeResultsetResponses
     limit = RequestAttributes.qparams.query.pagination.limit
     skip = RequestAttributes.qparams.query.pagination.skip
     if limit > 100 or limit == 0:
         limit = 100
-    count, dataset_count, docs = get_docs_by_response_type(self, include, query, dataset, limit, skip)
-    return count, dataset_count, docs, dataset
+    responseClass = get_docs_by_response_type(self, include, query, dataset, limit, skip)
+    return responseClass

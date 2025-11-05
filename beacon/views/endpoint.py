@@ -6,7 +6,8 @@ from beacon.request.classes import RequestAttributes
 from beacon.utils.requests import deconstruct_request, RequestParams
 from aiohttp_cors import CorsViewMixin
 from beacon.exceptions.exceptions import AppError
-from pydantic import create_model, ConfigDict
+from pydantic import create_model, ConfigDict, Field
+from pydantic.alias_generators import to_camel
 from typing import Optional
 from beacon.conf.templates import path
 import json
@@ -40,9 +41,6 @@ class EndpointView(web.View, CorsViewMixin):
         except AppError as e:
             response_obj = self.error_builder(e.status, e.message)
             return web.Response(text=json_util.dumps(response_obj), status=e.status, content_type='application/json')
-        except Exception as e:
-            response_obj = self.error_builder(500, "Unexpected internal error: {}".format(e))
-            return web.Response(text=json_util.dumps(response_obj), status=500, content_type='application/json')
 
     async def post(self):
         try:
@@ -52,9 +50,6 @@ class EndpointView(web.View, CorsViewMixin):
         except AppError as e:
             response_obj =self.error_builder(e.status, e.message)
             return web.Response(text=json_util.dumps(response_obj), status=e.status, content_type='application/json')
-        except Exception as e:
-            response_obj = self.error_builder(500, "Unexpected system error: {}".format(e))
-            return web.Response(text=json_util.dumps(response_obj), status=500, content_type='application/json')
 
     def define_root_path(self):
         self.root_path = path + '/' + RequestAttributes.returned_apiVersion + '/'
@@ -67,7 +62,7 @@ class EndpointView(web.View, CorsViewMixin):
         with open(self.template_path, 'r') as template:
             templateJSON = json.load(template)
         # Convert the previously created class of the response to JSON:
-        classtoJSON = self.classResponse.model_dump(exclude_none=True)
+        classtoJSON = self.classResponse.model_dump(exclude_none=True, by_alias=True)
         # Create a class with the JSON of the template. The extra "ignore" will remove all extra properties when instatiating a new class from a JSON:
         modelFromTemplate = create_model('modelFromTemplate', **{k: (Optional[type(v)] if type(v) is not dict else create_model(str(k),**{k1: (Optional[type(v1)], None) for k1, v1 in v.items()}), None) for k, v in templateJSON.items()}, model_config=ConfigDict(extra='ignore'))
         # Instantiate a template class with the values from the JSON coming fro the initial response class:

@@ -7,6 +7,7 @@ from beacon.connections.mongo.request_parameters import apply_request_parameters
 from beacon.request.classes import RequestAttributes
 from beacon.connections.mongo.__init__ import datasets, cohorts
 from beacon.logs.logs import LOG
+from beacon.response.classes import CollectionsResponse
 
 @log_with_args_mongo(level)
 def get_datasets(self):
@@ -35,7 +36,7 @@ def get_full_datasets(self):
             [r for r in query] if query else []
         )
     count = len(response_converted)
-    return response_converted, count
+    return CollectionsResponse(docs=response_converted, count=count)
 
 @log_with_args_mongo(level)
 def get_list_of_datasets(self):
@@ -62,7 +63,7 @@ def get_dataset_with_id(self):
     response_converted = (
                 [r for r in docs] if docs else []
             )
-    return response_converted, count
+    return CollectionsResponse(docs=response_converted, count=count)
 
 
 @log_with_args_mongo(level)
@@ -88,7 +89,7 @@ def get_cohorts(self):
     response_converted = (
         [r for r in docs] if docs else []
     )
-    return response_converted, count
+    return CollectionsResponse(docs=response_converted, count=count)
 
 @log_with_args_mongo(level)
 def get_cohort_with_id(self):
@@ -105,7 +106,7 @@ def get_cohort_with_id(self):
     response_converted = (
         [r for r in docs] if docs else []
     )
-    return response_converted, count
+    return CollectionsResponse(docs=response_converted, count=count)
 
 @log_with_args_mongo(level)
 def get_cross_collections(self):
@@ -130,4 +131,4 @@ def get_cross_collections(self):
     response_converted = (
         [r for r in docs] if docs else []
     )
-    return response_converted, count
+    return CollectionsResponse(docs=response_converted, count=count)

@@ -2,11 +2,7 @@ from beacon.request.classes import RequestAttributes
 import yaml
 from beacon.logs.logs import LOG
 from beacon.exceptions.exceptions import NoPermissionsAvailable
-
-class DatasetPermission:
-    def __init__(self, dataset, default_granularity):
-        self.dataset = dataset
-        self.granularity = default_granularity
+from beacon.response.classes import SingleDatasetResponse
 
 
 class Permissions():
@@ -78,7 +74,7 @@ class DummyPermissions(Permissions):
                         if entry_type_id == RequestAttributes.entry_type_id:
                             default_granularity = entry_type_granularity
                 if default_granularity != None:
-                    datasetInstance = DatasetPermission(dataset, default_granularity)
+                    datasetInstance = SingleDatasetResponse(dataset=dataset, granularity=default_granularity)
                     datasets.append(datasetInstance)
             return datasets
         except Exception as e:

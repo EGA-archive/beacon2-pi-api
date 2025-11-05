@@ -2,6 +2,7 @@ from beacon.connections.mongo.__init__ import filtering_terms
 from beacon.connections.mongo.utils import get_count
 from beacon.request.classes import RequestAttributes
 from beacon.connections.mongo.utils import get_filtering_documents
+from beacon.response.classes import FilteringTermsResponse
 
 def get_filtering_terms(self):
     query = {}
@@ -15,4 +16,4 @@ def get_filtering_terms(self):
         RequestAttributes.qparams.query.pagination.skip,
         RequestAttributes.qparams.query.pagination.limit
     )
-    return count, docs
+    return FilteringTermsResponse(count=count, docs=docs)

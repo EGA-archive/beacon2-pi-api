@@ -14,6 +14,7 @@ from pydantic import ValidationError
 from beacon.exceptions.exceptions import InvalidData
 from beacon.conf.templates import resultSetsTemplate, countTemplate, booleanTemplate
 from beacon.views.endpoint import EndpointView
+from beacon.response.includeResultsetResponses import include_resultSet_responses
 
 class PhenoGenoView(EndpointView):
     @query_permissions
@@ -22,32 +23,33 @@ class PhenoGenoView(EndpointView):
         complete_module='beacon.connections.'+RequestAttributes.source+'.executor'# TODO: Comentar.
         import importlib
         module = importlib.import_module(complete_module, package=None)
-        datasets_docs, datasets_count, count, include, datasets = await module.execute_function(self, datasets) # TODO: Això s'ha de retornar en una classe.
+        initialMultipleDatasetsResponseClass = await module.execute_function(self, datasets) # TODO: Això s'ha de retornar en una classe.
+        multipleDatasetsResponseClass = include_resultSet_responses(self, initialMultipleDatasetsResponseClass)
         try:
             meta = Meta(receivedRequestSummary=RequestAttributes.qparams.summary(),returnedGranularity=RequestAttributes.returned_granularity,returnedSchemas=RequestAttributes.returned_schema,testMode=RequestAttributes.qparams.query.testMode)
             if RequestAttributes.response_type == 'resultSet':
                 self.define_final_path(resultSetsTemplate)
                 list_of_resultSets=[]
                 new_datasets=[]
-                for dataset in datasets:
+                for dataset in multipleDatasetsResponseClass.datasets_responses:
                     try:
-                        resultSet = ResultsetInstance.build_response_by_dataset(ResultsetInstance,dataset, datasets_docs, datasets_count,RequestAttributes.allowed_granularity,RequestAttributes.qparams.query.requestedGranularity)
+                        resultSet = ResultsetInstance.build_response_by_dataset(ResultsetInstance, dataset, RequestAttributes.allowed_granularity,RequestAttributes.qparams.query.requestedGranularity)
                         list_of_resultSets.append(resultSet)
                         new_datasets.append(dataset)
                     except ValidationError as v:
                         LOG.error('{} dataset is invalid: {}'.format(dataset.dataset, str(v)))
-                responseSummary = ResponseSummary.build_response_summary_by_dataset(ResponseSummary, new_datasets, datasets_count)
+                responseSummary = ResponseSummary.build_response_summary_by_dataset(ResponseSummary, new_datasets)
                 resultSets = Resultsets.return_resultSets(Resultsets, list_of_resultSets)
                 self.classResponse = ResultsetsResponse.return_response(ResultsetsResponse, meta, resultSets, responseSummary)
                 response_obj = self.create_response()
             elif RequestAttributes.response_type == 'count':
                 self.define_final_path(countTemplate)
-                responseSummary = CountResponseSummary.build_count_response_summary(CountResponseSummary, count)
+                responseSummary = CountResponseSummary.build_count_response_summary(CountResponseSummary, multipleDatasetsResponseClass.total_count)
                 self.classResponse = CountResponse(meta=meta, responseSummary=responseSummary)
                 response_obj = self.create_response()
             else:
                 self.define_final_path(booleanTemplate)
-                responseSummary = BooleanResponseSummary(exists=count>0)
+                responseSummary = BooleanResponseSummary(exists=multipleDatasetsResponseClass.total_count>0)
                 self.classResponse = BooleanResponse(meta=meta, responseSummary=responseSummary)
                 response_obj = self.create_response()
         except ValidationError as v:

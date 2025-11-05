@@ -1772,7 +1772,6 @@ class TestMain(unittest.TestCase):
                 }
             )
                 responsetext=await resp.text()
-                LOG.warning(responsetext)
                 responsedict=json.loads(responsetext)
                 assert responsedict["responseSummary"]["numTotalResults"] == 1
                 assert resp.status == 200
