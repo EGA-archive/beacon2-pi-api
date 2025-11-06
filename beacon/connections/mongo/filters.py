@@ -15,7 +15,7 @@ CURIE_REGEX = r'^([a-zA-Z0-9]*):\/?[a-zA-Z0-9./]*$'
 
 @log_with_args(level)
 def cross_query(self, query: dict, scope: str, request_parameters: dict, dataset: str):
-    if scope == 'genomicVariation' and RequestAttributes.entry_type == genomicVariant.endpoint_name or scope == RequestAttributes.entry_type[0:-1]:
+    if scope == 'genomicVariation' and RequestAttributes.entry_type == genomicVariant.endpoint_name:
         subquery={}
         subquery["$or"]=[]
         if request_parameters != {}:

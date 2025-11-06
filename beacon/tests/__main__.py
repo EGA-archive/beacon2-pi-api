@@ -2143,7 +2143,97 @@ class TestMain(unittest.TestCase):
                 assert resp.status == 200
             loop.run_until_complete(test_check_runs_variants())
             loop.run_until_complete(client.close())
+    def test_analyses_with_request_parameters(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_geneId_individual_filter():
+                resp = await client.post(conf.uri_subpath+"/"+analysis.endpoint_name, json={
+                "meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                "filters": [
+                { "id":"NCIT:C16576", "scope":"individual"}],
+                        "requestParameters": {"geneId": "SDF4" },        
+                        "includeResultsetResponses": "HIT",
+                        "pagination": {
+                            "skip": 0,
+                            "limit": 10
+                        },
+                        "testMode": False,
+                        "requestedGranularity": "record"
+                    }
+            }
+            )
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
+            loop.run_until_complete(test_check_geneId_individual_filter())
+            loop.run_until_complete(client.close())
+    def test_runs_with_request_parameters(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_geneId_individual_filter():
+                resp = await client.post(conf.uri_subpath+"/"+run.endpoint_name, json={
+                "meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                "filters": [
+                { "id":"NCIT:C16576", "scope":"individual"}],
+                        "requestParameters": {"geneId": "SDF4" },        
+                        "includeResultsetResponses": "HIT",
+                        "pagination": {
+                            "skip": 0,
+                            "limit": 10
+                        },
+                        "testMode": False,
+                        "requestedGranularity": "record"
+                    }
+            }
+            )
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
+            loop.run_until_complete(test_check_geneId_individual_filter())
+            loop.run_until_complete(client.close())
     def test_biosamples_with_request_parameters(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_geneId_individual_filter():
+                resp = await client.post(conf.uri_subpath+"/"+biosample.endpoint_name, json={
+                "meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                "filters": [
+                { "id":"NCIT:C16576", "scope":"individual"}],
+                        "requestParameters": {"geneId": "SDF4" },        
+                        "includeResultsetResponses": "HIT",
+                        "pagination": {
+                            "skip": 0,
+                            "limit": 10
+                        },
+                        "testMode": False,
+                        "requestedGranularity": "record"
+                    }
+            }
+            )
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 17
+            loop.run_until_complete(test_check_geneId_individual_filter())
+            loop.run_until_complete(client.close())
+    def test_individuals_with_request_parameters(self):
         with loop_context() as loop:
             app = create_app()
             client = TestClient(TestServer(app), loop=loop)
