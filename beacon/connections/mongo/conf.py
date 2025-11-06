@@ -5,7 +5,7 @@ mongo_conf = "beacon/connections/mongo/conf.env"
 load_dotenv(mongo_conf, override=True)
 
 database_host = ''.join(envar for envar in os.getenv('database_host', 'mongo') if envar.isalnum())
-database_port = ''.join(envar for envar in os.getenv('database_port', 27017) if envar.isalnum())
+database_port = ''.join(envar for envar in os.getenv('database_port', str(27017)) if envar.isalnum())
 database_user = ''.join(envar for envar in os.getenv('database_user', 'root') if envar.isalnum())
 database_password = ''.join(envar for envar in os.getenv('database_password', 'example') if envar.isalnum())
 database_name = ''.join(envar for envar in os.getenv('database_name', 'beacon') if envar.isalnum())
