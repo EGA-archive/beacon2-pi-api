@@ -7,9 +7,10 @@ from beacon.connections.mongo.filters import apply_filters
 from beacon.connections.mongo.utils import get_docs_by_response_type, query_id
 from beacon.connections.mongo.__init__ import genomicVariations, targets as targets_, caseLevelData, biosamples, runs, cohorts, analyses, datasets, individuals
 from beacon.connections.mongo.utils import get_count, get_documents_for_cohorts, get_phenotypic_cross_query_attributes
+from beacon.response.classes import SingleDatasetResponse
 
 @log_with_args(level)
-def get_phenotypic_endpoint(self, dataset: str):
+def get_phenotypic_endpoint(self, dataset: SingleDatasetResponse):
     parameters_as_filters=False
     query_parameters, parameters_as_filters = apply_request_parameters(self, {}, dataset.dataset)
     if parameters_as_filters == True and query_parameters != {'$and': []}:
@@ -22,7 +23,8 @@ def get_phenotypic_endpoint(self, dataset: str):
         query={}
     query = apply_filters(self, query, RequestAttributes.qparams.query.filters, query_parameters, dataset.dataset)
     if query == {} and query_parameters != {} and parameters_as_filters == False:
-        return 0, -1, None, dataset
+        dataset.dataset_count=-1
+        return dataset
     include = RequestAttributes.qparams.query.includeResultsetResponses
     limit = RequestAttributes.qparams.query.pagination.limit
     skip = RequestAttributes.qparams.query.pagination.skip
@@ -32,7 +34,7 @@ def get_phenotypic_endpoint(self, dataset: str):
     return responseClass
 
 @log_with_args(level)
-def get_phenotypic_endpoint_with_id(self, dataset: str):
+def get_phenotypic_endpoint_with_id(self, dataset: SingleDatasetResponse):
     if RequestAttributes.entry_type == genomicVariant.endpoint_name:
         query = {"$and": [{"_id": RequestAttributes.entry_id}]}
         query_parameters, parameters_as_filters = apply_request_parameters(self, query, dataset.dataset)
@@ -55,7 +57,7 @@ def get_phenotypic_endpoint_with_id(self, dataset: str):
     return responseClass
 
 @log_with_args(level)
-def get_variants_of_phenotypic_endpoint(self, dataset: str):
+def get_variants_of_phenotypic_endpoint(self, dataset: SingleDatasetResponse):
     if RequestAttributes.pre_entry_type == analysis.endpoint_name or RequestAttributes.pre_entry_type == run.endpoint_name:
         query = {"$and": [{"id": RequestAttributes.entry_id}]}
         query = apply_filters(self, query, RequestAttributes.qparams.query.filters, {}, dataset.dataset)
@@ -68,19 +70,21 @@ def get_variants_of_phenotypic_endpoint(self, dataset: str):
         RequestAttributes.entry_id = initial_ids["biosampleId"]
     try:
         targets = targets_ \
-            .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
+            .find({"datasetId": dataset.dataset}, {"biosampleIds": 1, "_id": 0})
         position=0
         bioids=targets[0]["biosampleIds"]
     except Exception:
-        return 0, -1, None, dataset
+        dataset.dataset_count=-1
+        return dataset
     for bioid in bioids:
         if bioid == RequestAttributes.entry_id:
             break
         position+=1
     if position == len(bioids):
-        return 0, -1, None, dataset
+        dataset.dataset_count=-1
+        return dataset
     position=str(position)
-    query_cl={"$or": [{ position: "10", "datasetId": dataset},{ position: "11", "datasetId": dataset}, { position: "01", "datasetId": dataset}, { position: "y", "datasetId": dataset}]}
+    query_cl={"$or": [{ position: "10", "datasetId": dataset.dataset},{ position: "11", "datasetId": dataset.dataset}, { position: "01", "datasetId": dataset.dataset}, { position: "y", "datasetId": dataset.dataset}]}
     string_of_ids = caseLevelData \
         .find(query_cl, {"id": 1, "_id": 0}).limit(RequestAttributes.qparams.query.pagination.limit).skip(RequestAttributes.qparams.query.pagination.skip)
     HGVSIds=list(string_of_ids)
@@ -103,7 +107,7 @@ def get_variants_of_phenotypic_endpoint(self, dataset: str):
     return responseClass
 
 @log_with_args(level)
-def get_phenotypic_endpoint_of_variants(self, dataset: str):
+def get_phenotypic_endpoint_of_variants(self, dataset: SingleDatasetResponse):
     query = {"$and": [{"_id": RequestAttributes.entry_id}]}
     query_parameters, parameters_as_filters = apply_request_parameters(self, query, dataset.dataset)
     if parameters_as_filters == True and query_parameters != {'$and': []}:
@@ -118,8 +122,10 @@ def get_phenotypic_endpoint_of_variants(self, dataset: str):
         .find(query, {"identifiers.genomicHGVSId": 1, "datasetId": 1, "_id": 0})
     HGVSIds=list(HGVSIds)
     HGVSDataset=HGVSIds[0]["datasetId"]
-    if dataset != HGVSDataset:
-        return 0, 0, [], dataset
+    if dataset.dataset != HGVSDataset:
+        dataset.dataset_count=0
+        dataset.docs=[]
+        return dataset
     HGVSId=HGVSIds[0]["identifiers"]["genomicHGVSId"]
     queryHGVSId={"datasetId": HGVSDataset, "id": HGVSId}
     string_of_ids = caseLevelData \
@@ -131,7 +137,9 @@ def get_phenotypic_endpoint_of_variants(self, dataset: str):
         list_of_targets=targets[0]["biosampleIds"]
         list_of_positions_strings= string_of_ids[0]
     except Exception:
-        return 0, 0, [], dataset
+        dataset.dataset_count=0
+        dataset.docs=[]
+        return dataset
     biosampleIds=[]
     biosampleIds_restricted=[]
     filters=RequestAttributes.qparams.query.filters
@@ -212,17 +220,18 @@ def get_phenotypic_endpoint_of_variants(self, dataset: str):
     return responseClass
 
 @log_with_args(level)
-def get_variants_of_dataset(self, dataset: str):
+def get_variants_of_dataset(self, dataset: SingleDatasetResponse):
     dataset_count=0
     limit = RequestAttributes.qparams.query.pagination.limit
     query_count={}
     query_count["$or"]=[]
-    if dataset == RequestAttributes.entry_id:
+    if dataset.dataset == RequestAttributes.entry_id:
         queryid={}
         queryid["datasetId"]=dataset
         query_count["$or"].append(queryid)
     else:
-        return 0, 0, None, dataset
+        dataset.dataset_count=0
+        return dataset
     query = apply_filters(self, query_count, RequestAttributes.qparams.query.filters, {}, dataset.dataset)
     include = RequestAttributes.qparams.query.includeResultsetResponses
     limit = RequestAttributes.qparams.query.pagination.limit
@@ -233,16 +242,17 @@ def get_variants_of_dataset(self, dataset: str):
     return responseClass
 
 @log_with_args(level)
-def get_phenotypic_endpoint_of_dataset(self, dataset: str):
+def get_phenotypic_endpoint_of_dataset(self, dataset: SingleDatasetResponse):
     dataset_count=0
     query = apply_filters(self, {}, RequestAttributes.qparams.query.filters, {}, dataset.dataset)
     query = query_id(self, query, RequestAttributes.entry_id)
     count = get_count(self, datasets, query)
     dict_in={}
-    if dataset == RequestAttributes.entry_id:
+    if dataset.dataset == RequestAttributes.entry_id:
         dict_in['datasetId']=RequestAttributes.entry_id
     else:
-        return 0, 0, None, dataset
+        dataset.dataset_count=0
+        return dataset
     query = apply_filters(self, dict_in, RequestAttributes.qparams.query.filters, {}, dataset.dataset)
     include = RequestAttributes.qparams.query.includeResultsetResponses
     limit = RequestAttributes.qparams.query.pagination.limit
@@ -253,17 +263,18 @@ def get_phenotypic_endpoint_of_dataset(self, dataset: str):
     return responseClass
 
 @log_with_args(level)
-def get_phenotypic_endpoint_of_cohort(self, dataset: str):
+def get_phenotypic_endpoint_of_cohort(self, dataset: SingleDatasetResponse):
     dataset_count=0
     dataset_found = cohorts \
         .find({"id": RequestAttributes.entry_id}, {"datasetId": 1, "_id": 0})
     dataset_found=list(dataset_found)
     dict_in={}
     dataset_found=dataset_found[0]["datasetId"]
-    if dataset == dataset_found:
+    if dataset.dataset == dataset_found:
         dict_in['datasetId']=dataset_found
     else:
-        return 0, 0, None, dataset
+        dataset.dataset_count=0
+        return dataset
     query = apply_filters(self, dict_in, RequestAttributes.qparams.query.filters, {}, dataset.dataset)
     count = get_count(self, cohorts, query)
     limit = RequestAttributes.qparams.query.pagination.limit
@@ -275,7 +286,7 @@ def get_phenotypic_endpoint_of_cohort(self, dataset: str):
     return responseClass
 
 @log_with_args(level)
-def get_variants_of_cohort(self, dataset: str):
+def get_variants_of_cohort(self, dataset: SingleDatasetResponse):
     dataset_count=0
     limit = RequestAttributes.qparams.query.pagination.limit
     include = RequestAttributes.qparams.query.includeResultsetResponses
@@ -284,10 +295,11 @@ def get_variants_of_cohort(self, dataset: str):
     dataset_found=list(dataset_found)
     dict_in={}
     dataset_found=dataset_found[0]["datasetId"]
-    if dataset == dataset_found:
+    if dataset.dataset == dataset_found:
         dict_in['datasetId']=dataset_found
     else:
-        return 0, 0, None, dataset
+        dataset.dataset_count=0
+        return dataset
     query = apply_filters(self, dict_in, RequestAttributes.qparams.query.filters, {}, dataset.dataset)
     count = get_count(self, cohorts, query)
     query_count={}
@@ -299,14 +311,15 @@ def get_variants_of_cohort(self, dataset: str):
         RequestAttributes.qparams.query.pagination.skip*limit
     )
     for doc in docs:
-        if doc["datasetId"] == dataset:
-            RequestAttributes.entry_id = dataset
-    if dataset == RequestAttributes.entry_id:
+        if doc["datasetId"] == dataset.dataset:
+            RequestAttributes.entry_id = dataset.dataset
+    if dataset.dataset == RequestAttributes.entry_id:
         queryid={}
-        queryid["datasetId"]=dataset
+        queryid["datasetId"]=dataset.dataset
         query_count["$or"].append(queryid)
     else:
-        return 0, 0, None, dataset
+        dataset.dataset_count=0
+        return dataset
     query = apply_filters(self, query_count, RequestAttributes.qparams.query.filters, {}, dataset.dataset)
     skip = RequestAttributes.qparams.query.pagination.skip
     if limit > 100 or limit == 0:
@@ -315,10 +328,10 @@ def get_variants_of_cohort(self, dataset: str):
     return responseClass
 
 @log_with_args(level)
-def get_phenotypic_cross_query(self, dataset: str):
+def get_phenotypic_cross_query(self, dataset: SingleDatasetResponse):
     mapping = get_phenotypic_cross_query_attributes(self, RequestAttributes.entry_type, RequestAttributes.pre_entry_type)
     items_found = mapping["secondary_collection"] \
-    .find({"id": RequestAttributes.entry_id, "datasetId": dataset}, {mapping["idq2"]: 1, "_id": 0})
+    .find({"id": RequestAttributes.entry_id, "datasetId": dataset.dataset}, {mapping["idq2"]: 1, "_id": 0})
     list_of_itemsfound=[]
     for itemfound in items_found:
         list_of_itemsfound.append(itemfound[mapping["idq2"]])

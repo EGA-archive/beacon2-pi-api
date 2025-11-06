@@ -6,7 +6,7 @@ from beacon.response.classes import FilteringTermsResponse
 
 def get_filtering_terms(self):
     query = {}
-    count = get_count(self, filtering_terms, query)
+    #count = get_count(self, filtering_terms, query)
     remove_id={'_id':0}
     docs = get_filtering_documents(
         self,
@@ -16,4 +16,4 @@ def get_filtering_terms(self):
         RequestAttributes.qparams.query.pagination.skip,
         RequestAttributes.qparams.query.pagination.limit
     )
-    return FilteringTermsResponse(count=count, docs=docs)
+    return FilteringTermsResponse(docs=docs)

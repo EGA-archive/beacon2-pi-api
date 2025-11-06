@@ -17,12 +17,12 @@ class CollectionView(EndpointView):
         complete_module='beacon.connections.'+RequestAttributes.source+'.executor'
         import importlib
         module = importlib.import_module(complete_module, package=None)
-        response_converted, count = await module.execute_collection_function(self)
+        collectionsResponseClass = await module.execute_collection_function(self)
         self.define_final_path(collectionsTemplate)
         try:
             meta = Meta(receivedRequestSummary=RequestAttributes.qparams.summary(),returnedGranularity=RequestAttributes.returned_granularity,returnedSchemas=RequestAttributes.returned_schema,testMode=RequestAttributes.qparams.query.testMode)
-            responseSummary = ResponseSummary(exists=count>0,numTotalResults=count)
-            collections = Collections(collections=response_converted)
+            responseSummary = ResponseSummary(exists=collectionsResponseClass.count>0,numTotalResults=collectionsResponseClass.count)
+            collections = Collections(collections=collectionsResponseClass.docs)
             self.classResponse = CollectionResponse(meta=meta,response=collections,responseSummary=responseSummary)
             response_obj = self.create_response()
         except ValidationError as v:

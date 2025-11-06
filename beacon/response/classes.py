@@ -15,9 +15,7 @@ class MultipleDatasetsResponse(BaseModel):
     total_count: Optional[int] = None
 
 class FilteringTermsResponse(BaseModel):
-    total_count: int
-    datasets_response: list[SingleDatasetResponse]
-    datasets: list
+    docs: list
 
 class CollectionsResponse(BaseModel):
     docs: list[dict]

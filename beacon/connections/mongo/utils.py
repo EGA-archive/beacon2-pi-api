@@ -95,7 +95,7 @@ def get_docs_by_response_type(self, include: str, query: dict, dataset: SingleDa
         query_count=query
         query_count["$or"]=[]
         queryid={}
-        queryid['datasetId']=dataset
+        queryid['datasetId']=dataset.dataset
         query_count["$or"].append(queryid)
         if query_count["$or"]!=[]:
             dataset_count = get_count(self, RequestAttributes.mongo_collection, query_count)
@@ -126,7 +126,8 @@ def get_docs_by_response_type(self, include: str, query: dict, dataset: SingleDa
         else:
             dataset_count=0
         if dataset_count !=0:
-            return dataset(dataset_count=-1)
+            dataset.dataset_count=-1
+            return dataset
     else:
         query_count=query
         query_count["$or"]=[]
@@ -149,7 +150,8 @@ def get_docs_by_response_type(self, include: str, query: dict, dataset: SingleDa
         else:
             dataset_count=0
         if dataset_count==0:
-            return dataset(dataset_count=-1)
+            dataset.dataset_count=-1
+            return dataset
     dataset.dataset_count=dataset_count
     dataset.docs=docs
     return dataset

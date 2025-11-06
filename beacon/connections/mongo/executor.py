@@ -32,8 +32,8 @@ async def execute_function(self, datasets: list):
 async def execute_collection_function(self):
     try:
         function = get_collections_function(self)
-        response_converted, count = function(self)
-        return response_converted, count
+        collectionsResponseClass = function(self)
+        return collectionsResponseClass
     except ConnectionFailure as e:
         #client.close()
         raise DatabaseIsDown(str(e))
