@@ -443,10 +443,12 @@ def apply_filters(self, query: dict, filters: List[dict], query_parameters: dict
                     .find(request_parameters, {"identifiers.genomicHGVSId": 1, "datasetId": 1, "_id": 0})
                 HGVSIds=list(HGVSIds)
                 HGVSDataset=HGVSIds[0]["datasetId"]
-                HGVSId=HGVSIds[0]["identifiers"]["genomicHGVSId"]
+                HGVSList=[]
+                for HGVSId in HGVSIds:
+                    HGVSList.append(HGVSId["identifiers"]["genomicHGVSId"])
                 if dataset != HGVSDataset:
                     return {}
-                queryHGVSId={"datasetId": dataset, "id": HGVSId}
+                queryHGVSId={"datasetId": dataset, "id": {"$in": HGVSList}}
                 string_of_ids = caseLevelData \
                     .find(queryHGVSId)
                 targets = targets_ \
@@ -493,11 +495,15 @@ def apply_filters(self, query: dict, filters: List[dict], query_parameters: dict
                 HGVSIds = genomicVariations \
                     .find(request_parameters, {"identifiers.genomicHGVSId": 1, "datasetId": 1, "_id": 0})
                 HGVSIds=list(HGVSIds)
+                if HGVSIds == []:
+                    return {}
                 HGVSDataset=HGVSIds[0]["datasetId"]
-                HGVSId=HGVSIds[0]["identifiers"]["genomicHGVSId"]
+                HGVSList=[]
+                for HGVSId in HGVSIds:
+                    HGVSList.append(HGVSId["identifiers"]["genomicHGVSId"])
                 if dataset != HGVSDataset:
                     return {}
-                queryHGVSId={"datasetId": dataset, "id": HGVSId}
+                queryHGVSId={"datasetId": dataset, "id": {"$in": HGVSList}}
                 string_of_ids = caseLevelData \
                     .find(queryHGVSId)
                 targets = targets_ \
@@ -529,10 +535,12 @@ def apply_filters(self, query: dict, filters: List[dict], query_parameters: dict
                     .find(request_parameters, {"identifiers.genomicHGVSId": 1, "datasetId": 1, "_id": 0})
                 HGVSIds=list(HGVSIds)
                 HGVSDataset=HGVSIds[0]["datasetId"]
-                HGVSId=HGVSIds[0]["identifiers"]["genomicHGVSId"]
+                HGVSList=[]
+                for HGVSId in HGVSIds:
+                    HGVSList.append(HGVSId["identifiers"]["genomicHGVSId"])
                 if dataset != HGVSDataset:
                     return {}
-                queryHGVSId={"datasetId": dataset, "id": HGVSId}
+                queryHGVSId={"datasetId": dataset, "id": {"$in": HGVSList}}
                 string_of_ids = caseLevelData \
                     .find(queryHGVSId)
                 targets = targets_ \
