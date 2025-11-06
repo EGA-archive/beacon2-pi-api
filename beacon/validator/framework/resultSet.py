@@ -32,46 +32,46 @@ class ResultsetInstance(BaseModel):
             raise ValueError('countPrecision must be one between exact, imprecise, rounded')
         return v
     
-    def build_response_by_dataset(self, dataset, data, dict_counts, allowed_granularity, granularity):
+    def build_response_by_dataset(self, datasetInstance, allowed_granularity, granularity):
         resultsHandovers=None
         countAdjustedTo=None
         countPrecision=None
         for handover in list_of_handovers_per_dataset:
-            if handover["dataset"]==dataset.dataset:
+            if handover["dataset"]==datasetInstance.dataset:
                 resultsHandovers=[handover["handover"]]
-        if dataset.granularity == 'record' and allowed_granularity=='record' and granularity =='record':                                        
+        if datasetInstance.granularity == 'record' and allowed_granularity=='record' and granularity =='record':                                        
             if conf.imprecise_count !=0:
-                if dict_counts[dataset.dataset] < conf.imprecise_count:
+                if datasetInstance.dataset_count < conf.imprecise_count:
                     resultsCount=conf.imprecise_count
                     countAdjustedTo=[conf.imprecise_count]
                     countPrecision='imprecise'
                 else:
-                    resultsCount=dict_counts[dataset.dataset]
+                    resultsCount=datasetInstance.dataset_count
                     
             elif conf.round_to_tens == True:
-                resultsCount=math.ceil(dict_counts[dataset.dataset] / 10.0) * 10
+                resultsCount=math.ceil(datasetInstance.dataset_count / 10.0) * 10
                 countAdjustedTo=['immediate ten']
                 countPrecision='rounded'
 
             elif conf.round_to_hundreds == True:
-                resultsCount=math.ceil(dict_counts[dataset.dataset] / 100.0) * 100
+                resultsCount=math.ceil(datasetInstance.dataset_count / 100.0) * 100
                 countAdjustedTo=['immediate hundred']
                 countPrecision='rounded'
             else:
-                resultsCount=dict_counts[dataset.dataset]
-            return self(id=dataset.dataset,
+                resultsCount=datasetInstance.dataset_count
+            return self(id=datasetInstance.dataset,
                         setType='dataset',
-                        exists=dict_counts[dataset.dataset]>0,
-                        results=data[dataset.dataset],
+                        exists=datasetInstance.dataset_count>0,
+                        results=datasetInstance.docs,
                         resultsCount=resultsCount,
                         countAdjustedTo=countAdjustedTo,
                         countPrecision=countPrecision,
                         resultsHandovers=resultsHandovers)
-        elif dataset.granularity != 'boolean' and allowed_granularity != 'boolean' and granularity != 'boolean':
-            resultsCount=dict_counts[dataset.dataset]
-            return self(id=dataset.dataset,
+        elif datasetInstance.granularity != 'boolean' and allowed_granularity != 'boolean' and granularity != 'boolean':
+            resultsCount=datasetInstance.dataset_count
+            return self(id=datasetInstance.dataset,
                         setType='dataset',
-                        exists=dict_counts[dataset.dataset]>0,
+                        exists=datasetInstance.dataset_count>0,
                         results=None,
                         resultsCount=resultsCount,
                         countAdjustedTo=countAdjustedTo,
@@ -79,9 +79,9 @@ class ResultsetInstance(BaseModel):
                         resultsHandovers=resultsHandovers)
         else:
             resultsCount=None
-            return self(id=dataset.dataset,
+            return self(id=datasetInstance.dataset,
                         setType='dataset',
-                        exists=dict_counts[dataset.dataset]>0,
+                        exists=datasetInstance.dataset_count>0,
                         results=None,
                         resultsCount=resultsCount,
                         countAdjustedTo=countAdjustedTo,

@@ -16,10 +16,10 @@ class FilteringTermsView(EndpointView):
         complete_module='beacon.connections.'+RequestAttributes.source+'.filtering_terms'
         import importlib
         module = importlib.import_module(complete_module, package=None)
-        count, records = module.get_filtering_terms(self)
-        self.define_final_path(filteringTermsTemplate)
+        ftResponseClass = module.get_filtering_terms(self)
+        self.get_template_path(filteringTermsTemplate)
         try:
-            filteringterms = FilteringTermsResults(filteringTerms=records)
+            filteringterms = FilteringTermsResults(filteringTerms=ftResponseClass.docs)
             meta = InformationalMeta(returnedSchemas=[RequestAttributes.returned_schema])
             self.classResponse = FilteringTermsResponse(meta=meta,response=filteringterms)
             response_obj = self.create_response()

@@ -10,10 +10,10 @@ from beacon.exceptions.exceptions import InvalidData
 from beacon.conf.templates import entryTypesTemplate
 from beacon.views.endpoint import EndpointView
 
-class EntryTypesView(EndpointView):
+class EntryTypesView(EndpointView): # TODO: nombrar-lo com entry_types_endpoint
     @log_with_args(level)
     async def handler(self):
-        self.define_final_path(entryTypesTemplate)
+        self.get_template_path(entryTypesTemplate)
         try:
             entry_types = EntryTypesSchema.return_schema(EntryTypesSchema)
             meta = InformationalMeta(returnedSchemas=[RequestAttributes.returned_schema])

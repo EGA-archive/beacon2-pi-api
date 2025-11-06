@@ -10,23 +10,23 @@ import math
 class ResponseSummary(BaseModel):
     exists: bool
     numTotalResults: Optional[int] = None
-    def build_response_summary_by_dataset(self, datasets, dict_counts):
+    def build_response_summary_by_dataset(self, datasets):
         count=0
         non_counted=0
         granularity = RequestAttributes.qparams.query.requestedGranularity
         for dataset in datasets:
             if dataset.granularity != 'boolean' and RequestAttributes.allowed_granularity != 'boolean' and granularity != 'boolean':
                 if conf.imprecise_count !=0:
-                    if dict_counts[dataset.dataset] < conf.imprecise_count:
+                    if dataset.dataset_count < conf.imprecise_count:
                         count+=conf.imprecise_count
                 elif conf.round_to_tens == True:
-                    count+=math.ceil(dict_counts[dataset.dataset] / 10.0) * 10
+                    count+=math.ceil(dataset.dataset_count / 10.0) * 10
                 elif conf.round_to_hundreds == True:
-                    count+=math.ceil(dict_counts[dataset.dataset] / 100.0) * 100
+                    count+=math.ceil(dataset.dataset_count / 100.0) * 100
                 else:
-                    count +=dict_counts[dataset.dataset]
+                    count +=dataset.dataset_count
             else:
-                non_counted+=dict_counts[dataset.dataset]
+                non_counted+=dataset.dataset_count
         if count == 0 and non_counted >0:
             RequestAttributes.returned_granularity = 'boolean'
             return self(exists=True)

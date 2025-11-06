@@ -7,6 +7,7 @@ from beacon.exceptions.exceptions import InvalidRequest
 import aiohttp.web as web
 from beacon.conf import genomicVariant, analysis, run, biosample, individual, dataset, cohort
 from beacon.request.classes import RequestAttributes
+from beacon.response.classes import SingleDatasetResponse
 
 @log_with_args_mongo(level)
 def get_cross_query(self, ids: dict, cross_type: str, collection_id: str):
@@ -89,14 +90,12 @@ def get_count(self, collection: Collection, query: dict) -> int:
         return total_counts
 
 @log_with_args_mongo(level)
-def get_docs_by_response_type(self, include: str, query: dict, dataset: str, limit: int, skip: int):
+def get_docs_by_response_type(self, include: str, query: dict, dataset: SingleDatasetResponse, limit: int, skip: int):
     if include == 'ALL':
-        count=0
         query_count=query
-        i=1
         query_count["$or"]=[]
         queryid={}
-        queryid['datasetId']=dataset
+        queryid['datasetId']=dataset.dataset
         query_count["$or"].append(queryid)
         if query_count["$or"]!=[]:
             dataset_count = get_count(self, RequestAttributes.mongo_collection, query_count)
@@ -109,12 +108,10 @@ def get_docs_by_response_type(self, include: str, query: dict, dataset: str, lim
             )
             docs=list(docs)
     elif include == 'MISS':
-        count=0
         query_count=query
-        i=1
         query_count["$or"]=[]
         queryid={}
-        queryid['datasetId']=dataset
+        queryid['datasetId']=dataset.dataset
         query_count["$or"].append(queryid)
         if query_count["$or"]!=[]:
             dataset_count = get_count(self, RequestAttributes.mongo_collection, query_count)
@@ -129,13 +126,13 @@ def get_docs_by_response_type(self, include: str, query: dict, dataset: str, lim
         else:
             dataset_count=0
         if dataset_count !=0:
-            return count, -1, None
+            dataset.dataset_count=-1
+            return dataset
     else:
-        count=0
         query_count=query
         query_count["$or"]=[]
         queryid={}
-        queryid['datasetId']=dataset
+        queryid['datasetId']=dataset.dataset
         query_count["$or"].append(queryid)
         if query_count["$or"]!=[]:
             dataset_count = get_count(self, RequestAttributes.mongo_collection, query_count)
@@ -153,8 +150,11 @@ def get_docs_by_response_type(self, include: str, query: dict, dataset: str, lim
         else:
             dataset_count=0
         if dataset_count==0:
-            return count, -1, None
-    return count, dataset_count, docs
+            dataset.dataset_count=-1
+            return dataset
+    dataset.dataset_count=dataset_count
+    dataset.docs=docs
+    return dataset
 
 @log_with_args_mongo(level)
 def get_filtering_documents(self, collection: Collection, query: dict, remove_id: dict,skip: int, limit: int) -> Cursor:
@@ -285,6 +285,4 @@ def get_phenotypic_cross_query_attributes(self, entry_type, pre_entry_type):
                         run.endpoint_name: {"idq": "id",
                                                     "idq2": "datasetId",
                                                     "secondary_collection": runs}}}
-                        
-
     return mapping[entry_type][pre_entry_type]

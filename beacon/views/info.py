@@ -13,7 +13,7 @@ from pydantic import ValidationError
 class InfoView(EndpointView):        
     @log_with_args(level)
     async def handler(self):
-        self.define_final_path(infoTemplate)
+        self.get_template_path(infoTemplate)
         try:
             info = InfoBody()
             meta = InformationalMeta(returnedSchemas=[RequestAttributes.returned_schema])

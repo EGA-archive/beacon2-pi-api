@@ -13,7 +13,7 @@ from beacon.views.endpoint import EndpointView
 class MapView(EndpointView):
     @log_with_args(level)
     async def handler(self):
-        self.define_final_path(mapTemplate)
+        self.get_template_path(mapTemplate)
         try:
             map = MapSchema.populate_endpoints(MapSchema)
             meta = InformationalMeta(returnedSchemas=[RequestAttributes.returned_schema])

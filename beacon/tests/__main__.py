@@ -1772,7 +1772,6 @@ class TestMain(unittest.TestCase):
                 }
             )
                 responsetext=await resp.text()
-                LOG.warning(responsetext)
                 responsedict=json.loads(responsetext)
                 assert responsedict["responseSummary"]["numTotalResults"] == 1
                 assert resp.status == 200
@@ -2746,7 +2745,10 @@ class TestMain(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_check_no_dataset_found():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?datasets=no_dataset")
-                assert resp.status == 401
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == False
             loop.run_until_complete(test_check_check_no_dataset_found())
             loop.run_until_complete(client.close())
     def test_main_get_double_filters(self):
