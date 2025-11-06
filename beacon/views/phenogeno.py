@@ -16,7 +16,7 @@ from beacon.conf.templates import resultSetsTemplate, countTemplate, booleanTemp
 from beacon.views.endpoint import EndpointView
 from beacon.response.includeResultsetResponses import include_resultSet_responses
 
-class PhenoGenoView(EndpointView):
+class PhenoGenoView(EndpointView): # TODO : nombrar-los non_collection_entry_types
     @query_permissions
     @log_with_args(level)
     async def handler(self, datasets, username, time_now):
@@ -28,7 +28,7 @@ class PhenoGenoView(EndpointView):
         try:
             meta = Meta(receivedRequestSummary=RequestAttributes.qparams.summary(),returnedGranularity=RequestAttributes.returned_granularity,returnedSchemas=RequestAttributes.returned_schema,testMode=RequestAttributes.qparams.query.testMode)
             if RequestAttributes.response_type == 'resultSet':
-                self.define_final_path(resultSetsTemplate)
+                self.get_template_path(resultSetsTemplate)
                 list_of_resultSets=[]
                 new_datasets=[]
                 for dataset in multipleDatasetsResponseClass.datasets_responses:
@@ -43,12 +43,12 @@ class PhenoGenoView(EndpointView):
                 self.classResponse = ResultsetsResponse.return_response(ResultsetsResponse, meta, resultSets, responseSummary)
                 response_obj = self.create_response()
             elif RequestAttributes.response_type == 'count':
-                self.define_final_path(countTemplate)
+                self.get_template_path(countTemplate)
                 responseSummary = CountResponseSummary.build_count_response_summary(CountResponseSummary, multipleDatasetsResponseClass.total_count)
                 self.classResponse = CountResponse(meta=meta, responseSummary=responseSummary)
                 response_obj = self.create_response()
             else:
-                self.define_final_path(booleanTemplate)
+                self.get_template_path(booleanTemplate)
                 responseSummary = BooleanResponseSummary(exists=multipleDatasetsResponseClass.total_count>0)
                 self.classResponse = BooleanResponse(meta=meta, responseSummary=responseSummary)
                 response_obj = self.create_response()

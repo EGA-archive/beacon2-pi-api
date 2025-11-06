@@ -17,7 +17,7 @@ class FilteringTermsView(EndpointView):
         import importlib
         module = importlib.import_module(complete_module, package=None)
         ftResponseClass = module.get_filtering_terms(self)
-        self.define_final_path(filteringTermsTemplate)
+        self.get_template_path(filteringTermsTemplate)
         try:
             filteringterms = FilteringTermsResults(filteringTerms=ftResponseClass.docs)
             meta = InformationalMeta(returnedSchemas=[RequestAttributes.returned_schema])

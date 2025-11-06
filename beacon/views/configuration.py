@@ -13,7 +13,7 @@ from beacon.views.endpoint import EndpointView
 class ConfigurationView(EndpointView):
     @log_with_args(level)
     async def handler(self):
-        self.define_final_path(configurationTemplate)
+        self.get_template_path(configurationTemplate)
         try:
             configuration = ConfigurationSchema.return_schema(ConfigurationSchema)
             meta = InformationalMeta(returnedSchemas=[RequestAttributes.returned_schema])

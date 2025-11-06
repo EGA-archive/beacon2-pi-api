@@ -3,7 +3,7 @@ from pydantic import (
 )
 from typing import Optional
 
-class SingleDatasetResponse(BaseModel):
+class SingleDatasetResponse(BaseModel): # TODO: afegir atribut boolean per si alguna connection no vol tornar counts
     count: Optional[int] = None
     dataset_count: Optional[int] = None
     docs: Optional[list[dict]] = None

@@ -36,7 +36,6 @@ class EndpointView(web.View, CorsViewMixin):
     async def get(self):
         try:
             await deconstruct_request(self, self.request)
-            self.define_root_path()
             return await self.handler()
         except AppError as e:
             response_obj = self.error_builder(e.status, e.message)
@@ -48,7 +47,6 @@ class EndpointView(web.View, CorsViewMixin):
     async def post(self):
         try:
             await deconstruct_request(self, self.request)
-            self.define_root_path()
             return await self.handler()
         except AppError as e:
             response_obj =self.error_builder(e.status, e.message)
@@ -57,10 +55,8 @@ class EndpointView(web.View, CorsViewMixin):
             response_obj = self.error_builder(500, "Unexpected internal error: {}".format(e))
             return web.Response(text=json_util.dumps(response_obj), status=500, content_type='application/json')
 
-    def define_root_path(self):
+    def get_template_path(self, template_name):
         self.root_path = path + '/' + RequestAttributes.returned_apiVersion + '/'
-
-    def define_final_path(self, template_name):
         self.template_path = self.root_path + template_name
 
     def create_response(self):
@@ -79,8 +75,7 @@ class EndpointView(web.View, CorsViewMixin):
     
     def error_builder(self, status, message):
         try:
-            self.define_root_path()
-            self.define_final_path(errorTemplate)
+            self.get_template_path(errorTemplate)
             error = BeaconError(errorCode=status,errorMessage=message)
             meta = Meta(receivedRequestSummary=RequestAttributes.qparams.summary(),returnedGranularity=RequestAttributes.returned_granularity,returnedSchemas=[{"schema": "error-v2.2.0"}],testMode=RequestAttributes.qparams.query.testMode)
             self.classResponse = ErrorResponse(meta=meta,error=error)

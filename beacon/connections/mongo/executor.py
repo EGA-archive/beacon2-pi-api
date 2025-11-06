@@ -21,7 +21,7 @@ async def execute_function(self, datasets: list):
             responseClass= task.result()
             list_of_responses.append(responseClass)
     try:
-        return MultipleDatasetsResponse(datasets_responses=list_of_responses, datasets=datasets)
+        return MultipleDatasetsResponse(datasets_responses=list_of_responses)
     except ConnectionFailure as e:
         #client.close() # No és el mateix que no trobi la base de dades que estigui malament la connexió.
         raise DatabaseIsDown(str(e))

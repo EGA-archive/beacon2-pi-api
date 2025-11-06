@@ -454,7 +454,7 @@ class Treatment(BaseModel):
         for doseInterval in v:
             DoseIntervals(**doseInterval)
         return v
-
+# TODO: fer que el que es retorna de cada connection sigui una classe de model de beacon a retornar (no un JSON)
 class Individuals(BaseModel):
     def __init__(self, **data) -> None:
         for private_key in self.__class__.__private_attributes__.keys():
