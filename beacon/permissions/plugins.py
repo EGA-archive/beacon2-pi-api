@@ -48,7 +48,7 @@ class DummyPermissions(Permissions):
                         if key == 'isTest':
                             if value == True:
                                 test_datasets.append(confdataset)
-            for dataset, security_level_dict in datasets_permissions.items(): # TODO: Tenir el llistat de datasets a retornar previ a mirar els permissos.
+            for dataset, security_level_dict in datasets_permissions.items():
                 if testMode == True:
                     if dataset not in test_datasets:
                         continue
