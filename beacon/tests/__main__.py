@@ -284,6 +284,18 @@ class TestMain(unittest.TestCase):
             async def test_check_service_info_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/service-info")
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                self.assertIn("name",responsedict)
+                self.assertIn("type",responsedict)
+                self.assertIn("id",responsedict)
+                self.assertIn("description",responsedict)
+                self.assertIn("organization",responsedict)
+                self.assertIn("contactUrl",responsedict)
+                self.assertIn("documentationUrl",responsedict)
+                self.assertIn("createdAt",responsedict)
+                self.assertIn("environment",responsedict)
+                self.assertIn("version",responsedict)
             loop.run_until_complete(test_check_service_info_endpoint_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_post_service_info_endpoint_is_working(self):
@@ -294,6 +306,18 @@ class TestMain(unittest.TestCase):
             async def test_check_post_service_info_endpoint_is_working():
                 resp = await client.post(conf.uri_subpath+"/service-info")
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                self.assertIn("name",responsedict)
+                self.assertIn("type",responsedict)
+                self.assertIn("id",responsedict)
+                self.assertIn("description",responsedict)
+                self.assertIn("organization",responsedict)
+                self.assertIn("contactUrl",responsedict)
+                self.assertIn("documentationUrl",responsedict)
+                self.assertIn("createdAt",responsedict)
+                self.assertIn("environment",responsedict)
+                self.assertIn("version",responsedict)
             loop.run_until_complete(test_check_post_service_info_endpoint_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_entry_types_endpoint_is_working(self):
@@ -304,6 +328,18 @@ class TestMain(unittest.TestCase):
             async def test_check_entry_types_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/entry_types")
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                self.assertIn("response",responsedict)
+                self.assertIn("meta",responsedict)
+                self.assertIn("entryTypes",responsedict["response"])
+                self.assertIn("analysis",responsedict["response"]["entryTypes"])
+                self.assertIn("biosample",responsedict["response"]["entryTypes"])
+                self.assertIn("cohort",responsedict["response"]["entryTypes"])
+                self.assertIn("dataset",responsedict["response"]["entryTypes"])
+                self.assertIn("genomicVariant",responsedict["response"]["entryTypes"])
+                self.assertIn("run",responsedict["response"]["entryTypes"])
+                self.assertIn("individual",responsedict["response"]["entryTypes"])
             loop.run_until_complete(test_check_entry_types_endpoint_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_post_entry_types_endpoint_is_working(self):
@@ -314,6 +350,18 @@ class TestMain(unittest.TestCase):
             async def test_check_post_entry_types_endpoint_is_working():
                 resp = await client.post(conf.uri_subpath+"/entry_types")
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                self.assertIn("response",responsedict)
+                self.assertIn("meta",responsedict)
+                self.assertIn("entryTypes",responsedict["response"])
+                self.assertIn("analysis",responsedict["response"]["entryTypes"])
+                self.assertIn("biosample",responsedict["response"]["entryTypes"])
+                self.assertIn("cohort",responsedict["response"]["entryTypes"])
+                self.assertIn("dataset",responsedict["response"]["entryTypes"])
+                self.assertIn("genomicVariant",responsedict["response"]["entryTypes"])
+                self.assertIn("run",responsedict["response"]["entryTypes"])
+                self.assertIn("individual",responsedict["response"]["entryTypes"])
             loop.run_until_complete(test_check_post_entry_types_endpoint_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_configuration_endpoint_is_working(self):
@@ -324,6 +372,24 @@ class TestMain(unittest.TestCase):
             async def test_check_configuration_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/configuration")
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                self.assertIn("response",responsedict)
+                self.assertIn("meta",responsedict)
+                self.assertIn("entryTypes",responsedict["response"])
+                self.assertIn("maturityAttributes",responsedict["response"])
+                self.assertIn("securityAttributes",responsedict["response"])
+                self.assertIn("$schema",responsedict["response"])
+                self.assertIn("apiVersion",responsedict["meta"])
+                self.assertIn("beaconId",responsedict["meta"])
+                self.assertIn("returnedSchemas",responsedict["meta"])
+                self.assertIn("analysis",responsedict["response"]["entryTypes"])
+                self.assertIn("biosample",responsedict["response"]["entryTypes"])
+                self.assertIn("cohort",responsedict["response"]["entryTypes"])
+                self.assertIn("dataset",responsedict["response"]["entryTypes"])
+                self.assertIn("genomicVariant",responsedict["response"]["entryTypes"])
+                self.assertIn("run",responsedict["response"]["entryTypes"])
+                self.assertIn("individual",responsedict["response"]["entryTypes"])
             loop.run_until_complete(test_check_configuration_endpoint_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_post_configuration_endpoint_is_working(self):
@@ -334,6 +400,24 @@ class TestMain(unittest.TestCase):
             async def test_check_post_configuration_endpoint_is_working():
                 resp = await client.post(conf.uri_subpath+"/configuration")
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                self.assertIn("response",responsedict)
+                self.assertIn("meta",responsedict)
+                self.assertIn("entryTypes",responsedict["response"])
+                self.assertIn("maturityAttributes",responsedict["response"])
+                self.assertIn("securityAttributes",responsedict["response"])
+                self.assertIn("$schema",responsedict["response"])
+                self.assertIn("apiVersion",responsedict["meta"])
+                self.assertIn("beaconId",responsedict["meta"])
+                self.assertIn("returnedSchemas",responsedict["meta"])
+                self.assertIn("analysis",responsedict["response"]["entryTypes"])
+                self.assertIn("biosample",responsedict["response"]["entryTypes"])
+                self.assertIn("cohort",responsedict["response"]["entryTypes"])
+                self.assertIn("dataset",responsedict["response"]["entryTypes"])
+                self.assertIn("genomicVariant",responsedict["response"]["entryTypes"])
+                self.assertIn("run",responsedict["response"]["entryTypes"])
+                self.assertIn("individual",responsedict["response"]["entryTypes"])
             loop.run_until_complete(test_check_post_configuration_endpoint_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_map_endpoint_is_working(self):
@@ -346,6 +430,9 @@ class TestMain(unittest.TestCase):
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
+                self.assertIn("apiVersion",responsedict["meta"])
+                self.assertIn("beaconId",responsedict["meta"])
+                self.assertIn("returnedSchemas",responsedict["meta"])
                 self.assertIn("analysis",responsedict["response"]["endpointSets"])
                 self.assertIn("biosample",responsedict["response"]["endpointSets"])
                 self.assertIn("cohort",responsedict["response"]["endpointSets"])
@@ -363,6 +450,18 @@ class TestMain(unittest.TestCase):
             async def test_check_post_map_endpoint_is_working():
                 resp = await client.post(conf.uri_subpath+"/map")
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                self.assertIn("apiVersion",responsedict["meta"])
+                self.assertIn("beaconId",responsedict["meta"])
+                self.assertIn("returnedSchemas",responsedict["meta"])
+                self.assertIn("analysis",responsedict["response"]["endpointSets"])
+                self.assertIn("biosample",responsedict["response"]["endpointSets"])
+                self.assertIn("cohort",responsedict["response"]["endpointSets"])
+                self.assertIn("dataset",responsedict["response"]["endpointSets"])
+                self.assertIn("genomicVariant",responsedict["response"]["endpointSets"])
+                self.assertIn("run",responsedict["response"]["endpointSets"])
+                self.assertIn("individual",responsedict["response"]["endpointSets"])
             loop.run_until_complete(test_check_post_map_endpoint_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_filtering_terms_endpoint_is_working(self):
@@ -373,6 +472,15 @@ class TestMain(unittest.TestCase):
             async def test_check_filtering_terms_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/filtering_terms")
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                self.assertIn("apiVersion",responsedict["meta"])
+                self.assertIn("beaconId",responsedict["meta"])
+                self.assertIn("returnedSchemas",responsedict["meta"])
+                self.assertIn("filteringTerms",responsedict["response"])
+                self.assertIn("resources",responsedict["response"])
+                from beacon.filtering_terms.resources import resources
+                self.assertIn(resources[0],responsedict["response"]["resources"])
             loop.run_until_complete(test_check_filtering_terms_endpoint_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_post_filtering_terms_endpoint_is_working(self):
@@ -383,6 +491,15 @@ class TestMain(unittest.TestCase):
             async def test_check_post_filtering_terms_endpoint_is_working():
                 resp = await client.post(conf.uri_subpath+"/filtering_terms")
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                self.assertIn("apiVersion",responsedict["meta"])
+                self.assertIn("beaconId",responsedict["meta"])
+                self.assertIn("returnedSchemas",responsedict["meta"])
+                self.assertIn("filteringTerms",responsedict["response"])
+                self.assertIn("resources",responsedict["response"])
+                from beacon.filtering_terms.resources import resources
+                self.assertIn(resources[0],responsedict["response"]["resources"])
             loop.run_until_complete(test_check_post_filtering_terms_endpoint_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_datasets_endpoint_is_working(self):
@@ -393,6 +510,17 @@ class TestMain(unittest.TestCase):
             async def test_check_datasets_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+dataset.endpoint_name+'?testMode=true')
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                self.assertIn("apiVersion",responsedict["meta"])
+                self.assertIn("beaconId",responsedict["meta"])
+                self.assertIn("returnedSchemas",responsedict["meta"])
+                self.assertIn("receivedRequestSummary",responsedict["meta"])
+                self.assertIn("returnedGranularity",responsedict["meta"])
+                self.assertIn("testMode",responsedict["meta"])
+                self.assertIn("collections",responsedict["response"])
+                self.assertIn("responseSummary",responsedict)
+                assert responsedict["responseSummary"]["exists"] == True
             loop.run_until_complete(test_check_datasets_endpoint_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_post_datasets_endpoint_is_working(self):
@@ -403,6 +531,17 @@ class TestMain(unittest.TestCase):
             async def test_check_post_datasets_endpoint_is_working():
                 resp = await client.post(conf.uri_subpath+"/"+dataset.endpoint_name)
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                self.assertIn("apiVersion",responsedict["meta"])
+                self.assertIn("beaconId",responsedict["meta"])
+                self.assertIn("returnedSchemas",responsedict["meta"])
+                self.assertIn("receivedRequestSummary",responsedict["meta"])
+                self.assertIn("returnedGranularity",responsedict["meta"])
+                self.assertIn("testMode",responsedict["meta"])
+                self.assertIn("collections",responsedict["response"])
+                self.assertIn("responseSummary",responsedict)
+                assert responsedict["responseSummary"]["exists"] == True
             loop.run_until_complete(test_check_post_datasets_endpoint_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_g_variants_endpoint_is_working(self):
@@ -413,6 +552,17 @@ class TestMain(unittest.TestCase):
             async def test_check_g_variants_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name)
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                self.assertIn("apiVersion",responsedict["meta"])
+                self.assertIn("beaconId",responsedict["meta"])
+                self.assertIn("returnedSchemas",responsedict["meta"])
+                self.assertIn("receivedRequestSummary",responsedict["meta"])
+                self.assertIn("returnedGranularity",responsedict["meta"])
+                self.assertIn("testMode",responsedict["meta"])
+                self.assertIn("resultSets",responsedict["response"])
+                self.assertIn("responseSummary",responsedict)
+                assert responsedict["responseSummary"]["exists"] == True
             loop.run_until_complete(test_check_g_variants_endpoint_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_analyses_with_limit_endpoint_is_working(self):
@@ -423,6 +573,17 @@ class TestMain(unittest.TestCase):
             async def test_check_analyses_with_limit_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+analysis.endpoint_name+"?limit=200&skip=0&requestedGranularity=record")
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                self.assertIn("apiVersion",responsedict["meta"])
+                self.assertIn("beaconId",responsedict["meta"])
+                self.assertIn("returnedSchemas",responsedict["meta"])
+                self.assertIn("receivedRequestSummary",responsedict["meta"])
+                self.assertIn("returnedGranularity",responsedict["meta"])
+                self.assertIn("testMode",responsedict["meta"])
+                self.assertIn("resultSets",responsedict["response"])
+                self.assertIn("responseSummary",responsedict)
+                assert responsedict["responseSummary"]["exists"] == True
             loop.run_until_complete(test_check_analyses_with_limit_endpoint_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_analyses_endpoint_is_working(self):
@@ -433,6 +594,17 @@ class TestMain(unittest.TestCase):
             async def test_check_analyses_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+analysis.endpoint_name)
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                self.assertIn("apiVersion",responsedict["meta"])
+                self.assertIn("beaconId",responsedict["meta"])
+                self.assertIn("returnedSchemas",responsedict["meta"])
+                self.assertIn("receivedRequestSummary",responsedict["meta"])
+                self.assertIn("returnedGranularity",responsedict["meta"])
+                self.assertIn("testMode",responsedict["meta"])
+                self.assertIn("resultSets",responsedict["response"])
+                self.assertIn("responseSummary",responsedict)
+                assert responsedict["responseSummary"]["exists"] == True
             loop.run_until_complete(test_check_analyses_endpoint_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_analyses_with_id_endpoint_is_working(self):
@@ -513,6 +685,17 @@ class TestMain(unittest.TestCase):
             async def test_check_biosamples_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+biosample.endpoint_name)
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                self.assertIn("apiVersion",responsedict["meta"])
+                self.assertIn("beaconId",responsedict["meta"])
+                self.assertIn("returnedSchemas",responsedict["meta"])
+                self.assertIn("receivedRequestSummary",responsedict["meta"])
+                self.assertIn("returnedGranularity",responsedict["meta"])
+                self.assertIn("testMode",responsedict["meta"])
+                self.assertIn("resultSets",responsedict["response"])
+                self.assertIn("responseSummary",responsedict)
+                assert responsedict["responseSummary"]["exists"] == True
             loop.run_until_complete(test_check_biosamples_endpoint_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_biosamples_with_limit_endpoint_is_working(self):
@@ -523,6 +706,17 @@ class TestMain(unittest.TestCase):
             async def test_check_biosamples_with_limit_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+biosample.endpoint_name+"?limit=200")
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                self.assertIn("apiVersion",responsedict["meta"])
+                self.assertIn("beaconId",responsedict["meta"])
+                self.assertIn("returnedSchemas",responsedict["meta"])
+                self.assertIn("receivedRequestSummary",responsedict["meta"])
+                self.assertIn("returnedGranularity",responsedict["meta"])
+                self.assertIn("testMode",responsedict["meta"])
+                self.assertIn("resultSets",responsedict["response"])
+                self.assertIn("responseSummary",responsedict)
+                assert responsedict["responseSummary"]["exists"] == True
             loop.run_until_complete(test_check_biosamples_with_limit_endpoint_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_biosamples_with_id_endpoint_is_working(self):
@@ -603,6 +797,17 @@ class TestMain(unittest.TestCase):
             async def test_check_individuals_with_limit_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+individual.endpoint_name+"?limit=200")
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                self.assertIn("apiVersion",responsedict["meta"])
+                self.assertIn("beaconId",responsedict["meta"])
+                self.assertIn("returnedSchemas",responsedict["meta"])
+                self.assertIn("receivedRequestSummary",responsedict["meta"])
+                self.assertIn("returnedGranularity",responsedict["meta"])
+                self.assertIn("testMode",responsedict["meta"])
+                self.assertIn("resultSets",responsedict["response"])
+                self.assertIn("responseSummary",responsedict)
+                assert responsedict["responseSummary"]["exists"] == True
             loop.run_until_complete(test_check_individuals_with_limit_endpoint_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_individuals_with_id_endpoint_is_working(self):
@@ -655,6 +860,17 @@ class TestMain(unittest.TestCase):
             async def test_check_runs_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+run.endpoint_name)
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                self.assertIn("apiVersion",responsedict["meta"])
+                self.assertIn("beaconId",responsedict["meta"])
+                self.assertIn("returnedSchemas",responsedict["meta"])
+                self.assertIn("receivedRequestSummary",responsedict["meta"])
+                self.assertIn("returnedGranularity",responsedict["meta"])
+                self.assertIn("testMode",responsedict["meta"])
+                self.assertIn("resultSets",responsedict["response"])
+                self.assertIn("responseSummary",responsedict)
+                assert responsedict["responseSummary"]["exists"] == True
             loop.run_until_complete(test_check_runs_endpoint_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_runs_with_limit_endpoint_is_working(self):
@@ -665,6 +881,17 @@ class TestMain(unittest.TestCase):
             async def test_check_runs_with_limit_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+run.endpoint_name+"?limit=200")
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                self.assertIn("apiVersion",responsedict["meta"])
+                self.assertIn("beaconId",responsedict["meta"])
+                self.assertIn("returnedSchemas",responsedict["meta"])
+                self.assertIn("receivedRequestSummary",responsedict["meta"])
+                self.assertIn("returnedGranularity",responsedict["meta"])
+                self.assertIn("testMode",responsedict["meta"])
+                self.assertIn("resultSets",responsedict["response"])
+                self.assertIn("responseSummary",responsedict)
+                assert responsedict["responseSummary"]["exists"] == True
             loop.run_until_complete(test_check_runs_with_limit_endpoint_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_runs_with_id_endpoint_is_working(self):
@@ -745,6 +972,17 @@ class TestMain(unittest.TestCase):
             async def test_check_cohorts_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+cohort.endpoint_name)
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                self.assertIn("apiVersion",responsedict["meta"])
+                self.assertIn("beaconId",responsedict["meta"])
+                self.assertIn("returnedSchemas",responsedict["meta"])
+                self.assertIn("receivedRequestSummary",responsedict["meta"])
+                self.assertIn("returnedGranularity",responsedict["meta"])
+                self.assertIn("testMode",responsedict["meta"])
+                self.assertIn("collections",responsedict["response"])
+                self.assertIn("responseSummary",responsedict)
+                assert responsedict["responseSummary"]["exists"] == True
             loop.run_until_complete(test_check_cohorts_endpoint_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_cohorts_with_limit_endpoint_is_working(self):
@@ -755,6 +993,17 @@ class TestMain(unittest.TestCase):
             async def test_check_cohorts_with_limit_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+cohort.endpoint_name+"?limit=200")
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                self.assertIn("apiVersion",responsedict["meta"])
+                self.assertIn("beaconId",responsedict["meta"])
+                self.assertIn("returnedSchemas",responsedict["meta"])
+                self.assertIn("receivedRequestSummary",responsedict["meta"])
+                self.assertIn("returnedGranularity",responsedict["meta"])
+                self.assertIn("testMode",responsedict["meta"])
+                self.assertIn("collections",responsedict["response"])
+                self.assertIn("responseSummary",responsedict)
+                assert responsedict["responseSummary"]["exists"] == True
             loop.run_until_complete(test_check_cohorts_with_limit_endpoint_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_cohorts_with_id_endpoint_is_working(self):
@@ -849,6 +1098,17 @@ class TestMain(unittest.TestCase):
             async def test_check_datasets_with_limit_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+dataset.endpoint_name+"?limit=200")
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                self.assertIn("apiVersion",responsedict["meta"])
+                self.assertIn("beaconId",responsedict["meta"])
+                self.assertIn("returnedSchemas",responsedict["meta"])
+                self.assertIn("receivedRequestSummary",responsedict["meta"])
+                self.assertIn("returnedGranularity",responsedict["meta"])
+                self.assertIn("testMode",responsedict["meta"])
+                self.assertIn("collections",responsedict["response"])
+                self.assertIn("responseSummary",responsedict)
+                assert responsedict["responseSummary"]["exists"] == True
             loop.run_until_complete(test_check_datasets_with_limit_endpoint_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_datasets_with_id_endpoint_is_working(self):
@@ -1019,6 +1279,16 @@ class TestMain(unittest.TestCase):
             async def test_check_g_variants_endpoint_NONE_resultSetResponse_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?includeResultsetResponses=NONE&testMode=True")
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                self.assertIn("apiVersion",responsedict["meta"])
+                self.assertIn("beaconId",responsedict["meta"])
+                self.assertIn("returnedSchemas",responsedict["meta"])
+                self.assertIn("receivedRequestSummary",responsedict["meta"])
+                self.assertIn("returnedGranularity",responsedict["meta"])
+                self.assertIn("testMode",responsedict["meta"])
+                self.assertIn("responseSummary",responsedict)
+                assert responsedict["responseSummary"]["exists"] == True
             loop.run_until_complete(test_check_g_variants_endpoint_NONE_resultSetResponse_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_g_variants_endpoint_MISS_resultSetResponse_is_working(self):
@@ -1029,6 +1299,17 @@ class TestMain(unittest.TestCase):
             async def test_check_g_variants_endpoint_MISS_resultSetResponse_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?includeResultsetResponses=MISS&testMode=True")
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                self.assertIn("apiVersion",responsedict["meta"])
+                self.assertIn("beaconId",responsedict["meta"])
+                self.assertIn("returnedSchemas",responsedict["meta"])
+                self.assertIn("receivedRequestSummary",responsedict["meta"])
+                self.assertIn("returnedGranularity",responsedict["meta"])
+                self.assertIn("testMode",responsedict["meta"])
+                self.assertIn("resultSets",responsedict["response"])
+                self.assertIn("responseSummary",responsedict)
+                assert responsedict["responseSummary"]["exists"] == False
             loop.run_until_complete(test_check_g_variants_endpoint_MISS_resultSetResponse_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_g_variants_endpoint_ALL_resultSetResponse_is_working(self):
@@ -1039,6 +1320,17 @@ class TestMain(unittest.TestCase):
             async def test_check_g_variants_endpoint_ALL_resultSetResponse_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?includeResultsetResponses=ALL&testMode=True")
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                self.assertIn("apiVersion",responsedict["meta"])
+                self.assertIn("beaconId",responsedict["meta"])
+                self.assertIn("returnedSchemas",responsedict["meta"])
+                self.assertIn("receivedRequestSummary",responsedict["meta"])
+                self.assertIn("returnedGranularity",responsedict["meta"])
+                self.assertIn("testMode",responsedict["meta"])
+                self.assertIn("resultSets",responsedict["response"])
+                self.assertIn("responseSummary",responsedict)
+                assert responsedict["responseSummary"]["exists"] == True
             loop.run_until_complete(test_check_g_variants_endpoint_ALL_resultSetResponse_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_g_variants_sequence_query(self):
@@ -1049,6 +1341,9 @@ class TestMain(unittest.TestCase):
             async def test_check_g_variants_endpoint_with_parameters_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=43045703&referenceName=17&assemblyId=GRCh37&referenceBases=G&alternateBases=A&testMode=True")
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
             loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_g_variants_range_query(self):
@@ -1085,6 +1380,9 @@ class TestMain(unittest.TestCase):
             async def test_check_g_variants_endpoint_with_parameters_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?geneId=BRCA1&testMode=True")
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
             loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_g_variants_bracket_query(self):
@@ -1095,6 +1393,9 @@ class TestMain(unittest.TestCase):
             async def test_check_g_variants_endpoint_with_parameters_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=43045703,43045704&end=43045704,43045705&referenceName=17&assemblyId=GRCh37&testMode=True")
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
             loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_g_variants_genomic_allele_query(self):
@@ -1145,6 +1446,9 @@ class TestMain(unittest.TestCase):
                 }
                 })
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 40
             loop.run_until_complete(test_check_post_cross_query_g_variants_individuals_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_post_cross_query_individuals_biosamples_is_working(self):
@@ -1182,6 +1486,19 @@ class TestMain(unittest.TestCase):
             async def test_check_request_parameters_fail():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?star=12448")
                 assert resp.status == 400
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                self.assertIn("apiVersion",responsedict["meta"])
+                self.assertIn("beaconId",responsedict["meta"])
+                self.assertIn("returnedSchemas",responsedict["meta"])
+                self.assertIn("receivedRequestSummary",responsedict["meta"])
+                self.assertIn("returnedGranularity",responsedict["meta"])
+                self.assertIn("testMode",responsedict["meta"])
+                self.assertIn("meta",responsedict)
+                self.assertIn("error",responsedict)
+                self.assertIn("errorCode",responsedict["error"])
+                self.assertIn("errorMessage",responsedict["error"])
+                assert responsedict["error"]["errorCode"] == 400
             loop.run_until_complete(test_check_request_parameters_fail())
             loop.run_until_complete(client.close())
     def test_main_check_wrong_combination_request_parameters(self):
@@ -1192,6 +1509,19 @@ class TestMain(unittest.TestCase):
             async def test_wrong_combination_request_parameters():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=12448")
                 assert resp.status == 400
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                self.assertIn("apiVersion",responsedict["meta"])
+                self.assertIn("beaconId",responsedict["meta"])
+                self.assertIn("returnedSchemas",responsedict["meta"])
+                self.assertIn("receivedRequestSummary",responsedict["meta"])
+                self.assertIn("returnedGranularity",responsedict["meta"])
+                self.assertIn("testMode",responsedict["meta"])
+                self.assertIn("meta",responsedict)
+                self.assertIn("error",responsedict)
+                self.assertIn("errorCode",responsedict["error"])
+                self.assertIn("errorMessage",responsedict["error"])
+                assert responsedict["error"]["errorCode"] == 400
             loop.run_until_complete(test_wrong_combination_request_parameters())
             loop.run_until_complete(client.close())
     def test_main_check_datasets_g_variants_endpoint_is_working(self):
@@ -1202,6 +1532,9 @@ class TestMain(unittest.TestCase):
             async def test_check_datasets_g_variants_endpoint_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?datasets=test")
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 40
             loop.run_until_complete(test_check_datasets_g_variants_endpoint_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_alphanumeric_equal_query_is_working(self):
@@ -1231,6 +1564,9 @@ class TestMain(unittest.TestCase):
             }
             )
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 20
             loop.run_until_complete(test_check_alphanumeric_equal_query_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_alphanumeric_like_query_is_working(self):
@@ -1261,6 +1597,9 @@ class TestMain(unittest.TestCase):
             )
 
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 20
             loop.run_until_complete(test_check_alphanumeric_like_query_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_alphanumeric_not_like_query_is_working(self):
@@ -1290,6 +1629,9 @@ class TestMain(unittest.TestCase):
             }
             )
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == False
             loop.run_until_complete(test_check_alphanumeric_not_like_query_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_alphanumeric_not_query_is_working(self):
@@ -1319,6 +1661,9 @@ class TestMain(unittest.TestCase):
             }
             )
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == False
             loop.run_until_complete(test_check_alphanumeric_not_query_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_iso8601duration_gt_query_is_working(self):
@@ -1380,6 +1725,10 @@ class TestMain(unittest.TestCase):
             )
 
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 20
             loop.run_until_complete(test_check_iso8601duration_ls_query_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_iso8601duration_eq_query_is_working(self):
@@ -1408,6 +1757,9 @@ class TestMain(unittest.TestCase):
             }
             )
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == False
             loop.run_until_complete(test_check_iso8601duration_eq_query_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_measurement_value_query_is_working(self):
@@ -1521,6 +1873,9 @@ class TestMain(unittest.TestCase):
             async def test_check_range_query_with_variant_min_and_max_lengths_working():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=343675&referenceName=2&assemblyId=GRCh37&end=345681&variantMinLength=0&variantMaxLength=10&testMode=true")
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 2
             loop.run_until_complete(test_check_range_query_with_variant_min_and_max_lengths_working())
             loop.run_until_complete(client.close())
     def test_main_check_filters_as_request_parameter_working(self):
@@ -1531,6 +1886,9 @@ class TestMain(unittest.TestCase):
             async def test_check_filters_as_request_parameter_working():
                 resp = await client.get(conf.uri_subpath+"/"+individual.endpoint_name+"?filters=NCIT:C16576&testMode=true")
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 20
             loop.run_until_complete(test_check_filters_as_request_parameter_working())
             loop.run_until_complete(client.close())
     def test_main_check_datasets_list_query_is_working(self):
@@ -1559,6 +1917,9 @@ class TestMain(unittest.TestCase):
             )
 
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 20
             loop.run_until_complete(test_check_datasets_list_query_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_range_query_with_variant_assemblyId_GRCh37_is_working(self):
@@ -1569,6 +1930,9 @@ class TestMain(unittest.TestCase):
             async def test_check_range_query_with_variant_assemblyId_GRCh37_working():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=343675&referenceName=2&assemblyId=GRCh37&end=345681&testMode=True")
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 6
             loop.run_until_complete(test_check_range_query_with_variant_assemblyId_GRCh37_working())
             loop.run_until_complete(client.close())
     def test_main_check_range_query_with_variant_assemblyId_NCBI36_is_working(self):
@@ -1579,6 +1943,9 @@ class TestMain(unittest.TestCase):
             async def test_check_range_query_with_variant_assemblyId_NCBI36_working():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=343675&referenceName=2&assemblyId=NCBI36&end=345681&testMode=True")
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == False
             loop.run_until_complete(test_check_range_query_with_variant_assemblyId_NCBI36_working())
             loop.run_until_complete(client.close())
     def test_main_check_NONE_count_query_is_working(self):
@@ -1668,6 +2035,9 @@ class TestMain(unittest.TestCase):
                 }
             )
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 3
             loop.run_until_complete(test_check_homozygosity())
             loop.run_until_complete(client.close())
     def test_individuals_variants_with_filter(self):
@@ -1694,6 +2064,9 @@ class TestMain(unittest.TestCase):
                 }
             )
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 16
             loop.run_until_complete(test_check_individuals_variants())
             loop.run_until_complete(client.close())
     def test_analyses_variants_with_heterozygosity(self):
@@ -1720,6 +2093,9 @@ class TestMain(unittest.TestCase):
                 }
             )
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
             loop.run_until_complete(test_check_heterozygosity())
             loop.run_until_complete(client.close())
     def test_analyses_variants_with_homozygosity(self):
@@ -1746,6 +2122,9 @@ class TestMain(unittest.TestCase):
                 }
             )
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
             loop.run_until_complete(test_check_homozygosity())
             loop.run_until_complete(client.close())
     def test_analyses_variants_with_filter(self):
@@ -1801,6 +2180,9 @@ class TestMain(unittest.TestCase):
                 }
             )
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 7
             loop.run_until_complete(test_check_heterozygosity())
             loop.run_until_complete(client.close())
     def test_biosamples_variants_with_homozygosity(self):
@@ -1827,6 +2209,9 @@ class TestMain(unittest.TestCase):
                 }
             )
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 3
             loop.run_until_complete(test_check_homozygosity())
             loop.run_until_complete(client.close())
     def test_biosamples_variants_with_filter(self):
@@ -1853,6 +2238,9 @@ class TestMain(unittest.TestCase):
                 }
             )
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 7
             loop.run_until_complete(test_check_biosamples_variants())
             loop.run_until_complete(client.close())
     def test_runs_variants_with_heterozygosity(self):
@@ -1879,6 +2267,9 @@ class TestMain(unittest.TestCase):
                 }
             )
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
             loop.run_until_complete(test_check_heterozygosity())
             loop.run_until_complete(client.close())
     def test_runs_variants_with_homozygosity(self):
@@ -1905,6 +2296,9 @@ class TestMain(unittest.TestCase):
                 }
             )
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
             loop.run_until_complete(test_check_homozygosity())
             loop.run_until_complete(client.close())
     def test_runs_variants_with_filter(self):
@@ -1931,6 +2325,9 @@ class TestMain(unittest.TestCase):
                 }
             )
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
             loop.run_until_complete(test_check_runs_variants())
             loop.run_until_complete(client.close())
     def test_variants_with_run_filter(self):
@@ -1956,6 +2353,9 @@ class TestMain(unittest.TestCase):
                 }
             )
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 21
             loop.run_until_complete(test_check_runs_variants())
             loop.run_until_complete(client.close())
     def test_individuals_with_run_filter(self):
@@ -2011,6 +2411,9 @@ class TestMain(unittest.TestCase):
             }
             )
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
             loop.run_until_complete(test_check_runs_variants())
             loop.run_until_complete(client.close())
     def test_biosamples_with_run_filter(self):
@@ -2037,6 +2440,9 @@ class TestMain(unittest.TestCase):
             }
             )
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
             loop.run_until_complete(test_check_runs_variants())
             loop.run_until_complete(client.close())
     def test_variants_with_biosample_filter(self):
@@ -2063,6 +2469,9 @@ class TestMain(unittest.TestCase):
         }
             )
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 40
             loop.run_until_complete(test_check_runs_variants())
             loop.run_until_complete(client.close())
     def test_individuals_with_biosample_filter(self):
@@ -2089,6 +2498,9 @@ class TestMain(unittest.TestCase):
         }
             )
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 20
             loop.run_until_complete(test_check_runs_variants())
             loop.run_until_complete(client.close())
     def test_analyses_with_biosample_filter(self):
@@ -2115,6 +2527,9 @@ class TestMain(unittest.TestCase):
         }
             )
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
             loop.run_until_complete(test_check_runs_variants())
             loop.run_until_complete(client.close())
     def test_runs_with_biosample_filter(self):
@@ -2141,6 +2556,9 @@ class TestMain(unittest.TestCase):
         }
             )
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
             loop.run_until_complete(test_check_runs_variants())
             loop.run_until_complete(client.close())
     def test_analyses_with_request_parameters(self):
@@ -2322,6 +2740,9 @@ class TestMain(unittest.TestCase):
             }
             )
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 15
             loop.run_until_complete(test_check_runs_variants())
             loop.run_until_complete(client.close())
     def test_analyses_with_request_parameters_2(self):
@@ -2353,6 +2774,9 @@ class TestMain(unittest.TestCase):
             }
             )
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
             loop.run_until_complete(test_check_runs_variants())
             loop.run_until_complete(client.close())
     def test_variants_with_request_parameters(self):
@@ -2384,6 +2808,9 @@ class TestMain(unittest.TestCase):
             }
             )
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
             loop.run_until_complete(test_check_variants())
             loop.run_until_complete(client.close())
     def test_main_check_g_variants_sequence_query_fails(self):
@@ -2394,6 +2821,9 @@ class TestMain(unittest.TestCase):
             async def test_check_g_variants_endpoint_with_parameters_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=43045703&referenceName=17&referenceBases=G&alternateBases=A&testMode=True")
                 assert resp.status == 400
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["error"]["errorCode"] == 400
             loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_g_variants_range_query_fails(self):
@@ -2404,6 +2834,9 @@ class TestMain(unittest.TestCase):
             async def test_check_g_variants_endpoint_with_parameters_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=345675&referenceName=2&end=345681&testMode=True")
                 assert resp.status == 400
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["error"]["errorCode"] == 400
             loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_g_variants_bracket_query_fails(self):
@@ -2414,6 +2847,9 @@ class TestMain(unittest.TestCase):
             async def test_check_g_variants_endpoint_with_parameters_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=43045703,43045704&end=43045704,43045705&referenceName=17&testMode=True")
                 assert resp.status == 400
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["error"]["errorCode"] == 400
             loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_test_mode_fails(self):
@@ -2424,6 +2860,9 @@ class TestMain(unittest.TestCase):
             async def test_check_g_variants_endpoint_with_parameters_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=43045703,43045704&end=43045704,43045705&referenceName=17&assemblyId=GRCh37&testMode=3")
                 assert resp.status == 400
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["error"]["errorCode"] == 400
             loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
             loop.run_until_complete(client.close())
     def test_descendant_terms(self):
@@ -2463,6 +2902,9 @@ class TestMain(unittest.TestCase):
             async def test_check_g_variants_endpoint_with_parameters_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=31120923&referenceName=X&assemblyId=GRCh37&end=31121924&testMode=true")
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == False
             loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_g_variants_range_query_chrY(self):
@@ -2473,6 +2915,9 @@ class TestMain(unittest.TestCase):
             async def test_check_g_variants_endpoint_with_parameters_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=31120923&referenceName=Y&assemblyId=GRCh37&end=31121924&testMode=true")
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == False
             loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_limit_query_is_working(self):
@@ -2689,6 +3134,9 @@ class TestMain(unittest.TestCase):
             }
             )
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
             loop.run_until_complete(test_check_requestedSchemas())
             loop.run_until_complete(client.close())
     def test_main_check_404_not_found_error(self):
@@ -2726,6 +3174,10 @@ class TestMain(unittest.TestCase):
             async def test_check_biosamples_endpoint_with_parameters_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+biosample.endpoint_name+"?start=43045703&referenceName=17&assemblyId=GRCh37&referenceBases=G&alternateBases=A&testMode=True")
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 15
             loop.run_until_complete(test_check_biosamples_endpoint_with_parameters_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_post_individuals_with_filter_is_working(self):
@@ -2750,6 +3202,10 @@ class TestMain(unittest.TestCase):
                 }
                 })
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 40
             loop.run_until_complete(test_check_post_individuals_with_filter_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_cross_query_individuals_g_variants_with_filter_is_working(self):
@@ -2774,6 +3230,10 @@ class TestMain(unittest.TestCase):
                 }
                 })
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 19
             loop.run_until_complete(test_check_cross_query_individuals_g_variants_with_filter_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_cross_query_analyses_g_variants_with_filter_is_working(self):
@@ -2798,6 +3258,10 @@ class TestMain(unittest.TestCase):
                 }
                 })
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
             loop.run_until_complete(test_check_cross_query_analyses_g_variants_with_filter_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_cross_query_biosamples_g_variants_with_filter_is_working(self):
@@ -2822,6 +3286,10 @@ class TestMain(unittest.TestCase):
                 }
                 })
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 19
             loop.run_until_complete(test_check_cross_query_biosamples_g_variants_with_filter_is_working())
             loop.run_until_complete(client.close())
     def test_individuals_with_request_parameters_and_filters(self):
@@ -2855,6 +3323,10 @@ class TestMain(unittest.TestCase):
             }
             )
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 15
             loop.run_until_complete(test_check_individuals_with_request_parameters_and_filters())
             loop.run_until_complete(client.close())
     def test_main_check_no_dataset_found(self):
@@ -2878,6 +3350,10 @@ class TestMain(unittest.TestCase):
             async def test_check_get_double_filters():
                 resp = await client.get(conf.uri_subpath+"/"+individual.endpoint_name+"?filters=NCIT:C16576,NCIT:C16731")
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 20
             loop.run_until_complete(test_check_get_double_filters())
             loop.run_until_complete(client.close())
     def test_main_check_configuration_validation(self):
@@ -3016,6 +3492,10 @@ class TestMain(unittest.TestCase):
             }
             )
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 15
             loop.run_until_complete(test_check_runs_variants())
             loop.run_until_complete(client.close())
     def test_individuals_with_request_parameters_with_query_string_parsing_datasets(self):
@@ -3045,6 +3525,10 @@ class TestMain(unittest.TestCase):
             }
             )
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 15
             loop.run_until_complete(test_check_runs_variants())
             loop.run_until_complete(client.close())
     def test_main_check_measurement_value_query_is_not_working_with_query_string_includeResultsetResponses(self):
@@ -3207,6 +3691,10 @@ class TestMain(unittest.TestCase):
             async def test_check_analyses_with_with_requestedSchemas_is_working():
                 resp = await client.get(conf.uri_subpath+"/"+analysis.endpoint_name+"?requestedSchemas=beacon-analysis-v2.0.0")
                 assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
             loop.run_until_complete(test_check_analyses_with_with_requestedSchemas_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_post_cross_query_analyses_individuals_is_working(self):
