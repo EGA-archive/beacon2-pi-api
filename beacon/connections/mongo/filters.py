@@ -100,13 +100,14 @@ def cross_query(self, query: dict, scope: str, request_parameters: dict, dataset
             targets=list(targets)
             list_of_targets=targets[0]["biosampleIds"]
             try:
-                list_of_positions_strings= string_of_ids[0]
+                list_of_positions_strings= string_of_ids
             except Exception:
                 return query
             biosampleIds=[]
-            for key, value in list_of_positions_strings.items():
-                if key != 'datasetId' and key != 'id' and key != '_id':
-                    biosampleIds.append(list_of_targets[int(key)])
+            for item in list_of_positions_strings:
+                for key, value in item.items():
+                    if key != 'datasetId' and key != 'id' and key != '_id' and list_of_targets[int(key)] not in biosampleIds:
+                        biosampleIds.append(list_of_targets[int(key)])
             try:
                 finalquery={}
                 finalquery["$or"]=[]
@@ -145,13 +146,14 @@ def cross_query(self, query: dict, scope: str, request_parameters: dict, dataset
             targets=list(targets)
             list_of_targets=targets[0]["biosampleIds"]
             try:
-                list_of_positions_strings= string_of_ids[0]
+                list_of_positions_strings= string_of_ids
             except Exception:
                 return query
             biosampleIds=[]
-            for key, value in list_of_positions_strings.items():
-                if key != 'datasetId' and key != 'id' and key != '_id':
-                    biosampleIds.append(list_of_targets[int(key)])
+            for item in list_of_positions_strings:
+                for key, value in item.items():
+                    if key != 'datasetId' and key != 'id' and key != '_id' and list_of_targets[int(key)] not in biosampleIds:
+                        biosampleIds.append(list_of_targets[int(key)])
             finalids=biosampleIds
             try:
                 finalids=[]
@@ -175,13 +177,14 @@ def cross_query(self, query: dict, scope: str, request_parameters: dict, dataset
             targets=list(targets)
             list_of_targets=targets[0]["biosampleIds"]
             try:
-                list_of_positions_strings= string_of_ids[0]
+                list_of_positions_strings= string_of_ids
             except Exception:
                 return query
             biosampleIds=[]
-            for key, value in list_of_positions_strings.items():
-                if key != 'datasetId' and key != 'id' and key != '_id':
-                    biosampleIds.append(list_of_targets[int(key)])
+            for item in list_of_positions_strings:
+                for key, value in item.items():
+                    if key != 'datasetId' and key != 'id' and key != '_id' and list_of_targets[int(key)] not in biosampleIds:
+                        biosampleIds.append(list_of_targets[int(key)])
             finalids=biosampleIds
             try:
                 finalids=[]

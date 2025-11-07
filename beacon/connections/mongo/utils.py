@@ -10,31 +10,6 @@ from beacon.request.classes import RequestAttributes
 from beacon.response.classes import SingleDatasetResponse
 
 @log_with_args_mongo(level)
-def get_cross_query(self, ids: dict, cross_type: str, collection_id: str):
-    id_list=[]
-    dict_in={}
-    id_dict={}
-    if cross_type == 'biosampleId' or cross_type=='id':
-        list_item=ids
-        id_list.append(str(list_item))
-        dict_in["$in"]=id_list
-        id_dict[collection_id]=dict_in
-        query = id_dict
-    elif cross_type == 'individualIds' or cross_type=='biosampleIds':
-        list_individualIds=ids
-        dict_in["$in"]=list_individualIds
-        id_dict[collection_id]=dict_in
-        query = id_dict
-    else:
-        for k, v in ids.items():
-            for item in v:
-                id_list.append(item[cross_type])
-        dict_in["$in"]=id_list
-        id_dict[collection_id]=dict_in
-        query = id_dict
-    return query
-
-@log_with_args_mongo(level)
 def lengthquery(self, collection: Collection,query: dict):
     #LOG.debug(query)
     return collection.find(query, {"_id": 1, "variation.location.interval.start.value": 1, "variation.location.interval.end.value": 1}).max_time_ms(100 * 1000)

@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 import re
 
 # for keycloak, create aud in mappers, with custom, aud and beacon for audience
-mock_access_token = 'eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJreS1tUXNxZ0ZYeHdSUVRfRUhuQlJJUGpmbVhfRXZuUTVEbzZWUTJCazdZIn0.eyJleHAiOjE3NjI0MzA4OTQsImlhdCI6MTc2MjQzMDU5NCwianRpIjoiNTdlMTFjNDYtZjA3YS00Y2IzLThjYWUtNDk2MGRhMmFjMzhkIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL0JlYWNvbiIsImF1ZCI6ImJlYWNvbiIsInN1YiI6IjQ3ZWZmMWIxLTc2MjEtNDU3MC1hMGJiLTAxYTcxOWZiYTBhMiIsInR5cCI6IkJlYXJlciIsImF6cCI6ImJlYWNvbiIsInNlc3Npb25fc3RhdGUiOiJiZTBhN2ViYi00MTVmLTQ0NDMtYmI4NC0wZjdjMjEyOGI0MDEiLCJhY3IiOiIxIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBlbWFpbCBtaWNyb3Byb2ZpbGUtand0Iiwic2lkIjoiYmUwYTdlYmItNDE1Zi00NDQzLWJiODQtMGY3YzIxMjhiNDAxIiwidXBuIjoiamFuZSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwibmFtZSI6IkphbmUgU21pdGgiLCJncm91cHMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXSwicHJlZmVycmVkX3VzZXJuYW1lIjoiamFuZSIsImdpdmVuX25hbWUiOiJKYW5lIiwiZmFtaWx5X25hbWUiOiJTbWl0aCIsImVtYWlsIjoiamFuZS5zbWl0aEBiZWFjb24uZ2E0Z2gifQ.F3HC7aMDnGQzly_-Pw4mpvIiFofNWgSFXrsqNGwQ0sxvAf4D9stFPg6LtWe_4tiSiInIZdjtg1i-NrPnf5YGVR3s-HiilsbCCXRnU_PvuWpYMsms-B8le41gfpUPzXnqYNTulY95ZgMqy_CVARcGKj92HizLm7lfg84dMS-SQzHTUUMK_xjxp1iTCSzFIe-HhMVpC-MHtjo_TA9xzkeqcIcwOhRKpvoinvHeFnsb5cRbHfuO95-vnEsScSs0V1HlucjdhLfkyuVKvwAfsWID6zT2pWuMORz2ngfPMoSWUsAvgMKDfeMSLmx848GBI8DBgQXRrTpeauP91LK5muDNqQ'
+mock_access_token = 'eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJreS1tUXNxZ0ZYeHdSUVRfRUhuQlJJUGpmbVhfRXZuUTVEbzZWUTJCazdZIn0.eyJleHAiOjE3NjI1Mjk2OTIsImlhdCI6MTc2MjUyOTM5MiwianRpIjoiMDMwMjdiMDYtZDI2Ny00ZThkLTljOTItOWM1ZGM3Nzk2N2MwIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL0JlYWNvbiIsImF1ZCI6ImJlYWNvbiIsInN1YiI6IjQ3ZWZmMWIxLTc2MjEtNDU3MC1hMGJiLTAxYTcxOWZiYTBhMiIsInR5cCI6IkJlYXJlciIsImF6cCI6ImJlYWNvbiIsInNlc3Npb25fc3RhdGUiOiJmZmMwYmU1MS1mM2RkLTQxZGMtYWRhNy05OTQ5YTAxOTVmY2IiLCJhY3IiOiIxIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBlbWFpbCBtaWNyb3Byb2ZpbGUtand0Iiwic2lkIjoiZmZjMGJlNTEtZjNkZC00MWRjLWFkYTctOTk0OWEwMTk1ZmNiIiwidXBuIjoiamFuZSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwibmFtZSI6IkphbmUgU21pdGgiLCJncm91cHMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXSwicHJlZmVycmVkX3VzZXJuYW1lIjoiamFuZSIsImdpdmVuX25hbWUiOiJKYW5lIiwiZmFtaWx5X25hbWUiOiJTbWl0aCIsImVtYWlsIjoiamFuZS5zbWl0aEBiZWFjb24uZ2E0Z2gifQ.Qz__rtxjrb0ySBhHfdD2cpr_4CQmt0SPhynjh66uePljNq3CLsfEYezVsHk_rb5_68RP2FRFZeHutUBqnEiw0QUmNliLqrJp-lPQ8RT_JnQY27tSiPcSB4MZoOL_xKxK_2cs1cTETsL4jdfx1DJSipLohMdoDZfdWswlfMyOpeTwQRbCt6W6lJhhkFIXrfK2aPE-NCpopu9xzYoUszj3Vikx-lz40gKhx0S23W9jIZKk8fJk2bMute4WmwmlnLFT0YCQIN272OuWMF5U2aWRs4V2OPx0G1gF-f_Mb5kAdc-zpNREH4mG9FvJaiGirYQiprcY5vY3cO042GI7NdOBiw'
 mock_access_token_false = 'public'
 #dummy test anonymous
 #dummy test login
@@ -33,7 +33,7 @@ class TestAuthN(unittest.TestCase):
                 idp_issuer, user_info, idp_client_id, idp_client_secret, idp_introspection, idp_jwks_url, algorithm, aud = fetch_idp(self, mock_access_token)
                 load_dotenv("beacon/auth/idp_providers/keycloak.env", override=True)
                 IDP_ISSUER = os.getenv('ISSUER')
-                IDP_ISSUER = re.findall(r'[a-zA-Z0-9:/-]', IDP_ISSUER)
+                IDP_ISSUER = re.findall(r'[a-zA-Z0-9:/._-]', IDP_ISSUER)
                 IDP_ISSUER = "".join(r for r in IDP_ISSUER)
                 IDP_ISSUER = str(IDP_ISSUER)
                 IDP_CLIENT_ID = os.getenv('CLIENT_ID')
@@ -57,7 +57,7 @@ class TestAuthN(unittest.TestCase):
             async def test_validate_access_token():
                 load_dotenv("beacon/auth/idp_providers/keycloak.env", override=True)
                 IDP_ISSUER = os.getenv('ISSUER')
-                IDP_ISSUER = re.findall(r'[a-zA-Z0-9:/-]', IDP_ISSUER)
+                IDP_ISSUER = re.findall(r'[a-zA-Z0-9:/._-]', IDP_ISSUER)
                 IDP_ISSUER = "".join(r for r in IDP_ISSUER)
                 IDP_ISSUER = str(IDP_ISSUER)
                 IDP_CLIENT_ID = os.getenv('CLIENT_ID')
