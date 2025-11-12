@@ -3,11 +3,8 @@ from beacon.conf.conf import level
 import aiohttp.web as web
 from bson import json_util
 from beacon.request.classes import RequestAttributes
-from beacon.validator.framework.meta import InformationalMeta
-from beacon.validator.framework.filtering_terms import FilteringTermsResults, FilteringTermsResponse
 from pydantic import ValidationError
 from beacon.exceptions.exceptions import InvalidData
-from beacon.conf.templates import filteringTermsTemplate
 from beacon.views.endpoint import EndpointView
 
 class FilteringTermsView(EndpointView):
@@ -17,11 +14,15 @@ class FilteringTermsView(EndpointView):
         import importlib
         module = importlib.import_module(complete_module, package=None)
         ftResponseClass = module.get_filtering_terms(self)
-        self.get_template_path(filteringTermsTemplate)
+        meta_module='beacon.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.framework.meta'
+        filtering_terms_module = 'beacon.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.framework.filtering_terms'
+        import importlib
+        module_meta = importlib.import_module(meta_module, package=None)
+        module_filtering_terms = importlib.import_module(filtering_terms_module, package=None)
         try:
-            filteringterms = FilteringTermsResults(filteringTerms=ftResponseClass.docs)
-            meta = InformationalMeta(returnedSchemas=[RequestAttributes.returned_schema])
-            self.classResponse = FilteringTermsResponse(meta=meta,response=filteringterms)
+            filteringterms = module_filtering_terms.FilteringTermsResults(filteringTerms=ftResponseClass.docs)
+            meta = module_meta.InformationalMeta(returnedSchemas=[RequestAttributes.returned_schema])
+            self.classResponse = module_filtering_terms.FilteringTermsResponse(meta=meta.model_dump(exclude_none=True),response=filteringterms.model_dump(exclude_none=True))
             response_obj = self.create_response()
         except ValidationError as v:
             raise InvalidData('{} templates or data are not correct'.format(RequestAttributes.entry_type))

@@ -25,7 +25,7 @@ class Pagination(CamelModel, extra='forbid'):
 
 class RequestMeta(CamelModel, extra='forbid'):
     requestedSchemas: Optional[List[SchemasPerEntity]] = []
-    apiVersion: str = 'Not provided' # TODO: add supported schemas parsing, by default,
+    apiVersion: str = 'Not provided'
 
 class SequenceQuery(BaseModel, extra='forbid'):
     referenceName: Union[str,int]

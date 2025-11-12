@@ -3,12 +3,8 @@ from beacon.conf.conf import level
 import aiohttp.web as web
 from bson import json_util
 from beacon.request.classes import RequestAttributes
-from beacon.validator.framework.common import ResponseSummary
-from beacon.validator.framework.meta import Meta
-from beacon.validator.framework.collection import CollectionResponse, Collections
 from pydantic import ValidationError
 from beacon.exceptions.exceptions import InvalidData
-from beacon.conf.templates import collectionsTemplate
 from beacon.views.endpoint import EndpointView
 
 class CollectionView(EndpointView): # TODO: nombrar-lo com collection_entry_types
@@ -18,12 +14,17 @@ class CollectionView(EndpointView): # TODO: nombrar-lo com collection_entry_type
         import importlib
         module = importlib.import_module(complete_module, package=None)
         collectionsResponseClass = await module.execute_collection_function(self)
-        self.get_template_path(collectionsTemplate)
+        meta_module='beacon.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.framework.meta'
+        common_module = 'beacon.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.framework.common'
+        collection_module = 'beacon.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.framework.collection'
+        import importlib
+        module_meta = importlib.import_module(meta_module, package=None)
+        module_common = importlib.import_module(common_module, package=None)
+        module_collection = importlib.import_module(collection_module, package=None)
         try:
-            meta = Meta(receivedRequestSummary=RequestAttributes.qparams.summary(),returnedGranularity=RequestAttributes.returned_granularity,returnedSchemas=RequestAttributes.returned_schema,testMode=RequestAttributes.qparams.query.testMode)
-            responseSummary = ResponseSummary(exists=collectionsResponseClass.count>0,numTotalResults=collectionsResponseClass.count)
-            collections = Collections(collections=collectionsResponseClass.docs)
-            self.classResponse = CollectionResponse(meta=meta,response=collections,responseSummary=responseSummary)
+            meta = module_meta.Meta(receivedRequestSummary=RequestAttributes.qparams.summary(),returnedGranularity=RequestAttributes.returned_granularity,returnedSchemas=RequestAttributes.returned_schema,testMode=RequestAttributes.qparams.query.testMode)
+            responseSummary = module_common.ResponseSummary(exists=collectionsResponseClass.count>0,numTotalResults=collectionsResponseClass.count)
+            self.classResponse = module_collection.CollectionResponse(meta=meta.model_dump(exclude_none=True),response=module_collection.Collections(collections=collectionsResponseClass.docs).model_dump(exclude_none=True),responseSummary=responseSummary.model_dump(exclude_none=True))
             response_obj = self.create_response()
         except ValidationError as v:
             LOG.error(str(v))
