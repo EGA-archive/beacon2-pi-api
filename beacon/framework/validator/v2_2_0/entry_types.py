@@ -1,12 +1,25 @@
 from pydantic import (
     BaseModel,
-    model_validator
+    model_validator,
+    field_validator
 )
-from beacon.validator.v2_2_0.model.genomicVariations import OntologyTerm
+import re
 from beacon.validator.v2_2_0.framework.common import ReferenceToAnSchema
 from typing import List, Optional
 from beacon.validator.v2_2_0.framework.meta import InformationalMeta
 from beacon.models.ga4gh.beacon_v2_default_model.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run
+
+class OntologyTerm(BaseModel):
+    id: str
+    label: Optional[str]=None
+    @field_validator('id')
+    @classmethod
+    def id_must_be_CURIE(cls, v: str) -> str:
+        if re.match("[A-Za-z0-9]+:[A-Za-z0-9]", v):
+            pass
+        else:
+            raise ValueError('id must be CURIE, e.g. NCIT:C42331')
+        return v
 
 class EntryTypes(BaseModel):
     aCollectionOf: Optional[List] = None

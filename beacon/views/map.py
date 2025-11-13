@@ -1,4 +1,4 @@
-from beacon.logs.logs import log_with_args
+from beacon.logs.logs import log_with_args, LOG
 from beacon.conf.conf import level
 import aiohttp.web as web
 from bson import json_util
@@ -6,6 +6,7 @@ from beacon.request.classes import RequestAttributes
 from pydantic import ValidationError
 from beacon.exceptions.exceptions import InvalidData
 from beacon.views.endpoint import EndpointView
+import os
 
 class MapView(EndpointView):
     @log_with_args(level)

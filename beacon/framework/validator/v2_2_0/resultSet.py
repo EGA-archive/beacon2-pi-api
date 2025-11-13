@@ -2,18 +2,50 @@ from pydantic import (
     BaseModel,
     field_validator
 )
-from beacon.validator.v2_2_0.model.genomicVariations import GenomicVariations
-from beacon.validator.v2_2_0.model.analyses import Analyses
-from beacon.validator.v2_2_0.model.biosamples import Biosamples
-from beacon.validator.v2_2_0.model.biosamples import Biosamples
-from beacon.validator.v2_2_0.model.individuals import Individuals
-from beacon.validator.v2_2_0.model.runs import Runs
 from typing import List, Optional, Union, Dict
 import math
 from beacon.utils.handovers import list_of_handovers_per_dataset
 from beacon.validator.v2_2_0.framework.meta import Meta
 from beacon.conf import conf
 from beacon.validator.v2_2_0.framework.common import Handover, ResponseSummary
+import os
+from beacon.logs.logs import LOG
+from beacon.request.classes import RequestAttributes
+
+list_of_resultSets=[]
+
+dirs = os.listdir("/beacon/models")
+for folder in dirs:
+    subdirs = os.listdir("/beacon/models/"+folder)
+    if "validator" in subdirs:
+        validatordirs = os.listdir("/beacon/models/"+folder+"/validator")
+        for validatorfolder in validatordirs:
+            validatorfiles = os.listdir("/beacon/models/"+folder+"/validator/"+validatorfolder)
+            for validatorfile in validatorfiles:
+                if RequestAttributes.returned_apiVersion.replace(".","_") in validatorfile:
+                    complete_module='beacon.models.'+folder+'.validator.'+validatorfolder+'.'+validatorfile
+                    complete_module=complete_module.replace('.py', '')
+                    import importlib
+                    module = importlib.import_module(complete_module, package=None)
+                    klass = getattr(module, validatorfolder.capitalize())
+                    list_of_resultSets.append(klass)
+    else:
+        for subfolder in subdirs:
+            underdirs = os.listdir("/beacon/models/"+folder+"/"+subfolder)
+            if "validator" in underdirs:
+                validatordirs = os.listdir("/beacon/models/"+folder+"/"+subfolder+"/validator")
+                for validatorfolder in validatordirs:
+                    validatorfiles = os.listdir("/beacon/models/"+folder+"/"+subfolder+"/validator/"+validatorfolder)
+                    for validatorfile in validatorfiles:
+                        if RequestAttributes.returned_apiVersion.replace(".","_") in validatorfile:
+                            complete_module='beacon.models.'+folder+'.'+subfolder+'.validator.'+validatorfolder+'.'+validatorfile
+                            complete_module=complete_module.replace('.py', '')
+                            import importlib
+                            module = importlib.import_module(complete_module, package=None)
+                            klass = getattr(module, validatorfolder.capitalize())
+                            list_of_resultSets.append(klass)
+
+union_type = Union[tuple(list_of_resultSets)]
 
 class ResultsetInstance(BaseModel):
     countAdjustedTo: Optional[List[Union[str,int]]] = None
@@ -21,7 +53,7 @@ class ResultsetInstance(BaseModel):
     exists: bool
     id: str
     info: Optional[Dict] = None
-    results: Optional[List[Union[Analyses,Biosamples,GenomicVariations,Individuals,Runs]]]=None
+    results: Optional[List[union_type]]=None
     resultsCount: Optional[int]=None
     resultsHandovers: Optional[List[Handover]] = None
     setType: str

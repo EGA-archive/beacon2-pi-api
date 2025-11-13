@@ -45,7 +45,7 @@ class DUODataUse(BaseModel):
 class DataUseConditions(BaseModel):
     duoDataUse: Optional[List[DUODataUse]] = None
 
-class Datasets(BaseModel):
+class Dataset(BaseModel):
     def __init__(self, **data) -> None:
         for private_key in self.__class__.__private_attributes__.keys():
             try:

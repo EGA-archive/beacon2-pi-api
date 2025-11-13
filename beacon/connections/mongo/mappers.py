@@ -2,7 +2,7 @@ from beacon.connections.mongo.phenogeno import get_phenotypic_cross_query, get_p
 from beacon.connections.mongo.collections import get_full_datasets, get_dataset_with_id, get_cohorts, get_cohort_with_id, get_cross_collections
 from beacon.logs.logs import log_with_args_mongo, LOG
 from beacon.request.classes import RequestAttributes
-from beacon.conf import genomicVariant, analysis, run, biosample, individual, dataset, cohort
+from beacon.models.ga4gh.beacon_v2_default_model.conf import genomicVariant, analysis, run, biosample, individual, dataset, cohort
 from beacon.conf.conf import level
 
 @log_with_args_mongo(level)

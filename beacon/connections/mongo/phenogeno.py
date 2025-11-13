@@ -1,6 +1,6 @@
 from beacon.logs.logs import log_with_args, LOG
 from beacon.conf.conf import level
-from beacon.conf import genomicVariant, analysis, run, biosample, individual
+from beacon.models.ga4gh.beacon_v2_default_model.conf import genomicVariant, analysis, run, biosample, individual
 from beacon.request.classes import RequestAttributes
 from beacon.connections.mongo.request_parameters import apply_request_parameters
 from beacon.connections.mongo.filters import apply_filters

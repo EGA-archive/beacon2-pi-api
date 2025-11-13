@@ -1,8 +1,6 @@
 from pydantic import (
     BaseModel
 )
-from beacon.validator.v2_2_0.model.cohorts import Cohorts
-from beacon.validator.v2_2_0.model.datasets import Datasets
 from typing import List, Optional, Union, Dict
 from beacon.validator.v2_2_0.framework.meta import Meta
 from beacon.validator.v2_2_0.framework.common import Handover, ResponseSummary

@@ -1,4 +1,4 @@
-from beacon.logs.logs import log_with_args_initial
+from beacon.logs.logs import log_with_args_initial, LOG
 from beacon.conf.conf import level
 from beacon.views.collection_entry_type import CollectionEntryTypeView
 from beacon.views.configuration import ConfigurationView
@@ -36,10 +36,10 @@ def append_routes(app):
             module = importlib.import_module(complete_module, package=None)
             app = module.extend_routes(app)
         else:
-            for subfolder in folder:
-                underdirs = os.listdir("/beacon/models/"+folder)
+            for subfolder in subdirs:
+                underdirs = os.listdir("/beacon/models/"+folder+'/'+subfolder)
                 if "routes" in underdirs:
-                    complete_module='beacon.models.'+subfolder+'.routes.routes'
+                    complete_module='beacon.models.'+folder+'.'+subfolder+'.routes.routes'
                     import importlib
                     module = importlib.import_module(complete_module, package=None)
                     app = module.extend_routes(app)
