@@ -8,7 +8,7 @@ from beacon.conf import conf
 from beacon.conf.filtering_terms import alphanumeric_terms
 from beacon.logs.logs import log_with_args, LOG
 from beacon.conf.conf import level
-from beacon.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run
+from beacon.models.ga4gh.beacon_v2_default_model.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run
 from beacon.request.classes import RequestAttributes
 
 CURIE_REGEX = r'^([a-zA-Z0-9]*):\/?[a-zA-Z0-9./]*$'

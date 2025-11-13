@@ -6,7 +6,7 @@ from beacon.validator.v2_2_0.model.genomicVariations import OntologyTerm
 from beacon.validator.v2_2_0.framework.common import ReferenceToAnSchema
 from typing import List, Optional
 from beacon.validator.v2_2_0.framework.meta import InformationalMeta
-from beacon.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run
+from beacon.models.ga4gh.beacon_v2_default_model.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run
 
 class EntryTypes(BaseModel):
     aCollectionOf: Optional[List] = None

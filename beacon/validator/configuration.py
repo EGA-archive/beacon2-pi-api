@@ -1,4 +1,4 @@
-from beacon.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run
+from beacon.models.ga4gh.beacon_v2_default_model.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run
 from beacon.conf import conf
 from beacon.logs.logs import LOG, log_with_args_check_configuration
 import os

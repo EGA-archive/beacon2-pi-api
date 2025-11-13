@@ -7,7 +7,8 @@ from beacon.conf.conf import level, uri, uri_subpath, api_version
 from beacon.request.classes import RequestAttributes
 from beacon.exceptions.exceptions import IncoherenceInRequestError, InvalidRequest, WrongURIPath, NoFiltersAllowed
 import html
-from beacon.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run, filtering_terms
+from beacon.models.ga4gh.beacon_v2_default_model.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run
+from beacon.conf import filtering_terms
 import os
 from beacon.request.parameters import RequestMeta, SchemasPerEntity
 from pydantic import ValidationError

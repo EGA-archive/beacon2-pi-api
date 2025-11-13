@@ -5,7 +5,7 @@ from beacon.logs.logs import log_with_args_mongo, LOG
 from beacon.conf.conf import level
 from beacon.exceptions.exceptions import InvalidRequest
 import aiohttp.web as web
-from beacon.conf import genomicVariant, analysis, run, biosample, individual, dataset, cohort
+from beacon.models.ga4gh.beacon_v2_default_model.conf import genomicVariant, analysis, run, biosample, individual, dataset, cohort
 from beacon.request.classes import RequestAttributes
 from beacon.response.classes import SingleDatasetResponse
 

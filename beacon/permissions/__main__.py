@@ -7,7 +7,7 @@ from beacon.auth.__main__ import authentication
 from beacon.logs.logs import log_with_args
 from beacon.conf.conf import level, default_beacon_granularity
 from beacon.budget.__main__ import check_budget
-from beacon.conf import dataset
+from beacon.models.ga4gh.beacon_v2_default_model.conf import dataset
 from beacon.response.classes import SingleDatasetResponse
 from beacon.request.classes import RequestAttributes
 from beacon.exceptions.exceptions import InvalidRequest, NoPermissionsAvailable
