@@ -5,9 +5,8 @@ from pydantic import (
 from typing import List, Optional, Union, Dict
 import math
 from beacon.utils.handovers import list_of_handovers_per_dataset
-from beacon.validator.v2_2_0.framework.meta import Meta
+from beacon.utils.modules import load_class
 from beacon.conf import conf
-from beacon.validator.v2_2_0.framework.common import Handover, ResponseSummary
 import os
 from beacon.logs.logs import LOG
 from beacon.request.classes import RequestAttributes
@@ -55,7 +54,7 @@ class ResultsetInstance(BaseModel):
     info: Optional[Dict] = None
     results: Optional[List[union_type]]=None
     resultsCount: Optional[int]=None
-    resultsHandovers: Optional[List[Handover]] = None
+    resultsHandovers: Optional[List[load_class("common", "Handover")]] = None
     setType: str
     @field_validator('countPrecision')
     @classmethod
@@ -127,10 +126,10 @@ class Resultsets(BaseModel):
         return self(resultSets = resultSets)
         
 class ResultsetsResponse(BaseModel):
-    meta: Meta
-    responseSummary: ResponseSummary
+    meta: load_class("meta", "Meta")
+    responseSummary: load_class("common", "ResponseSummary")
     response: Resultsets
-    beaconHandovers: Optional[List[Handover]] = None
+    beaconHandovers: Optional[List[load_class("common", "Handover")]] = None
     info: Optional[Dict] = None
     
     def return_response(self, meta, resultSets, responseSummary):

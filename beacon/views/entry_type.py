@@ -9,6 +9,7 @@ from pydantic import ValidationError
 from beacon.exceptions.exceptions import InvalidData
 from beacon.views.endpoint import EndpointView
 from beacon.response.includeResultsetResponses import include_resultSet_responses
+from beacon.utils.modules import load_framework_module
 
 class EntryTypeView(EndpointView):
     @query_permissions
@@ -19,17 +20,11 @@ class EntryTypeView(EndpointView):
         module = importlib.import_module(complete_module, package=None)
         initialMultipleDatasetsResponseClass = await module.execute_function(self, datasets)
         multipleDatasetsResponseClass = include_resultSet_responses(self, initialMultipleDatasetsResponseClass)
-        meta_module='beacon.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.framework.meta'
-        resultSet_module = 'beacon.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.framework.resultSet'
-        common_module = 'beacon.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.framework.common'
-        count_module = 'beacon.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.framework.count'
-        boolean_module = 'beacon.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.framework.boolean'
-        import importlib
-        module_meta = importlib.import_module(meta_module, package=None)
-        module_resultSet = importlib.import_module(resultSet_module, package=None)
-        module_common = importlib.import_module(common_module, package=None)
-        module_count = importlib.import_module(count_module, package=None)
-        module_boolean = importlib.import_module(boolean_module, package=None)
+        module_meta = load_framework_module(self, "meta")
+        module_resultSet = load_framework_module(self, "resultSet")
+        module_common = load_framework_module(self, "common")
+        module_count = load_framework_module(self, "count")
+        module_boolean = load_framework_module(self, "boolean")
         try:
             meta = module_meta.Meta(receivedRequestSummary=RequestAttributes.qparams.summary(),returnedGranularity=RequestAttributes.returned_granularity,returnedSchemas=RequestAttributes.returned_schema,testMode=RequestAttributes.qparams.query.testMode)
             if RequestAttributes.response_type == 'resultSet':

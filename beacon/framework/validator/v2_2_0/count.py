@@ -5,8 +5,7 @@ from pydantic import (
 from typing import List, Optional, Union, Dict
 import math
 from beacon.conf import conf
-from beacon.validator.v2_2_0.framework.common import Handover
-from beacon.validator.v2_2_0.framework.meta import Meta
+from beacon.utils.modules import load_class
 
 class CountResponseSummary(BaseModel):
     countAdjustedTo: Optional[List[Union[str,int]]] = None
@@ -47,7 +46,7 @@ class CountResponseSummary(BaseModel):
                     countPrecision=countPrecision)
     
 class CountResponse(BaseModel):
-    meta: Meta
+    meta: load_class("meta", "Meta")
     responseSummary: CountResponseSummary
     info: Optional[Dict] = None
-    beaconHandovers: Optional[List[Handover]] = None
+    beaconHandovers: Optional[List[load_class("common", "Handover")]] = None

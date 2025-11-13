@@ -5,7 +5,7 @@ from pydantic import (
     Field
 )
 from beacon.conf import conf
-from beacon.validator.v2_2_0.framework.meta import InformationalMeta
+from beacon.utils.modules import load_class
 from beacon.models.ga4gh.beacon_v2_default_model.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run
 
 class RelatedEndpoint(BaseModel):
@@ -117,5 +117,5 @@ class MapSchema(BaseModel):
                                                                                              individual=RelatedEndpoint(returnedEntryType=individual.id,url=conf.complete_url+'/'+run.endpoint_name+'/{id}/'+individual.endpoint_name) if run.individual_lookup == True else None))if run.enable_endpoint == True else None))
 
 class MapResponse(BaseModel):
-    meta: InformationalMeta
+    meta: load_class("meta", "InformationalMeta")
     response: MapSchema

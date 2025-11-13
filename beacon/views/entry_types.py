@@ -6,15 +6,13 @@ from beacon.request.classes import RequestAttributes
 from pydantic import ValidationError
 from beacon.exceptions.exceptions import InvalidData
 from beacon.views.endpoint import EndpointView
+from beacon.utils.modules import load_framework_module
 
 class EntryTypesEndpointView(EndpointView):
     @log_with_args(level)
     async def handler(self):
-        meta_module='beacon.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.framework.meta'
-        entry_types_module = 'beacon.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.framework.entry_types'
-        import importlib
-        module_meta = importlib.import_module(meta_module, package=None)
-        module_entry_types = importlib.import_module(entry_types_module, package=None)
+        module_meta = load_framework_module(self, "meta")
+        module_entry_types = load_framework_module(self, "entry_types")
         try:
             entry_types = module_entry_types.EntryTypesSchema.return_schema(module_entry_types.EntryTypesSchema)
             meta = module_meta.InformationalMeta(returnedSchemas=[RequestAttributes.returned_schema])

@@ -6,16 +6,13 @@ from beacon.request.classes import RequestAttributes
 from pydantic import ValidationError
 from beacon.exceptions.exceptions import InvalidData
 from beacon.views.endpoint import EndpointView
-import os
+from beacon.utils.modules import load_framework_module
 
 class MapView(EndpointView):
     @log_with_args(level)
     async def handler(self):
-        meta_module='beacon.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.framework.meta'
-        map_module = 'beacon.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.framework.map'
-        import importlib
-        module_meta = importlib.import_module(meta_module, package=None)
-        module_map = importlib.import_module(map_module, package=None)
+        module_meta = load_framework_module(self, "meta")
+        module_map = load_framework_module(self, "map")
         try:
             map = module_map.MapSchema.populate_endpoints(module_map.MapSchema)
             meta = module_meta.InformationalMeta(returnedSchemas=[RequestAttributes.returned_schema])

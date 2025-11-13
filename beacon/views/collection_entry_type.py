@@ -6,6 +6,7 @@ from beacon.request.classes import RequestAttributes
 from pydantic import ValidationError
 from beacon.exceptions.exceptions import InvalidData
 from beacon.views.endpoint import EndpointView
+from beacon.utils.modules import load_framework_module
 
 class CollectionEntryTypeView(EndpointView):
     @log_with_args(level)
@@ -14,13 +15,9 @@ class CollectionEntryTypeView(EndpointView):
         import importlib
         module = importlib.import_module(complete_module, package=None)
         collectionsResponseClass = await module.execute_collection_function(self)
-        meta_module='beacon.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.framework.meta'
-        common_module = 'beacon.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.framework.common'
-        collection_module = 'beacon.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.framework.collection'
-        import importlib
-        module_meta = importlib.import_module(meta_module, package=None)
-        module_common = importlib.import_module(common_module, package=None)
-        module_collection = importlib.import_module(collection_module, package=None)
+        module_meta = load_framework_module(self, "meta")
+        module_common = load_framework_module(self, "common")
+        module_collection = load_framework_module(self, "collection")
         try:
             meta = module_meta.Meta(receivedRequestSummary=RequestAttributes.qparams.summary(),returnedGranularity=RequestAttributes.returned_granularity,returnedSchemas=RequestAttributes.returned_schema,testMode=RequestAttributes.qparams.query.testMode)
             responseSummary = module_common.ResponseSummary(exists=collectionsResponseClass.count>0,numTotalResults=collectionsResponseClass.count)

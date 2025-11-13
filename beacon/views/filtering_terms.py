@@ -6,13 +6,12 @@ from beacon.request.classes import RequestAttributes
 from pydantic import ValidationError
 from beacon.exceptions.exceptions import InvalidData
 from beacon.views.endpoint import EndpointView
+from beacon.utils.modules import load_source_module
 
 class FilteringTermsView(EndpointView):
     @log_with_args(level)
     async def handler(self):
-        complete_module='beacon.connections.'+RequestAttributes.source+'.filtering_terms'
-        import importlib
-        module = importlib.import_module(complete_module, package=None)
+        module = load_source_module(self, 'filtering_terms')
         ftResponseClass = module.get_filtering_terms(self)
         meta_module='beacon.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.framework.meta'
         filtering_terms_module = 'beacon.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.framework.filtering_terms'

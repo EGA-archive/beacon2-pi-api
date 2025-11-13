@@ -6,15 +6,13 @@ from beacon.request.classes import RequestAttributes
 from beacon.exceptions.exceptions import InvalidData
 from beacon.views.endpoint import EndpointView
 from pydantic import ValidationError
+from beacon.utils.modules import load_framework_module
 
 class InfoView(EndpointView):        
     @log_with_args(level)
     async def handler(self):
-        meta_module='beacon.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.framework.meta'
-        info_module = 'beacon.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.framework.info'
-        import importlib
-        module_meta = importlib.import_module(meta_module, package=None)
-        module_info = importlib.import_module(info_module, package=None)
+        module_meta = load_framework_module(self, "meta")
+        module_info = load_framework_module(self, "info")
         try:
             info = module_info.InfoBody()
             meta = module_meta.InformationalMeta(returnedSchemas=[RequestAttributes.returned_schema])

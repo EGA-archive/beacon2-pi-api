@@ -6,13 +6,12 @@ from beacon.request.classes import RequestAttributes
 from pydantic import ValidationError
 from beacon.exceptions.exceptions import InvalidData
 from beacon.views.endpoint import EndpointView
+from beacon.utils.modules import load_framework_module
 
 class ServiceInfoView(EndpointView):
     @log_with_args(level)
     async def handler(self):
-        complete_module='beacon.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.framework.service_info'
-        import importlib
-        module = importlib.import_module(complete_module, package=None)
+        module = load_framework_module(self, "service_info")
         try:
             self.classResponse = module.ServiceInfoResponse()
             response_obj = self.create_response()

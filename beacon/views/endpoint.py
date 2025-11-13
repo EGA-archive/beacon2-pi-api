@@ -13,6 +13,7 @@ import json
 from beacon.logs.logs import LOG
 from pydantic import create_model, ValidationError
 from beacon.exceptions.exceptions import InvalidData
+from beacon.utils.modules import load_framework_module
 
 class EndpointView(web.View, CorsViewMixin):
     def __init__(self, request: Request):
@@ -57,11 +58,8 @@ class EndpointView(web.View, CorsViewMixin):
         return classtoJSON
     
     def error_builder(self, status, message):
-        meta_module='beacon.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.framework.meta'
-        error_module = 'beacon.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.framework.error'
-        import importlib
-        module_meta = importlib.import_module(meta_module, package=None)
-        module_error = importlib.import_module(error_module, package=None)
+        module_meta = load_framework_module(self, "meta")
+        module_error = load_framework_module(self, "error")
         try:
             error = module_error.BeaconError(errorCode=status,errorMessage=message)
             meta = module_meta.Meta(receivedRequestSummary=RequestAttributes.qparams.summary(),returnedGranularity=RequestAttributes.returned_granularity,returnedSchemas=[{"schema": "error-v2.2.0"}],testMode=RequestAttributes.qparams.query.testMode)

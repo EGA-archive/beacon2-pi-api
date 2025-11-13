@@ -2,15 +2,14 @@ from pydantic import (
     BaseModel
 )
 from typing import List, Optional, Union, Dict
-from beacon.validator.v2_2_0.framework.meta import Meta
-from beacon.validator.v2_2_0.framework.common import Handover, ResponseSummary
+from beacon.utils.modules import load_class
 
 class Collections(BaseModel):
     collections: List[Union[Cohorts,Datasets]]
 
 class CollectionResponse(BaseModel):
-    meta: Meta
-    responseSummary: ResponseSummary
+    meta: load_class("meta", "Meta")
+    responseSummary: load_class("common", "ResponseSummary")
     response: Collections
-    beaconHandovers: Optional[List[Handover]] = None
+    beaconHandovers: Optional[List[load_class("common", "Handover")]] = None
     info: Optional[Dict] = None
