@@ -7,7 +7,7 @@ from pydantic import ValidationError
 from beacon.exceptions.exceptions import InvalidData
 from beacon.views.endpoint import EndpointView
 
-class CollectionView(EndpointView): # TODO: nombrar-lo com collection_entry_types
+class CollectionEntryTypeView(EndpointView):
     @log_with_args(level)
     async def handler(self):
         complete_module='beacon.connections.'+RequestAttributes.source+'.executor'

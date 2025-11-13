@@ -39,7 +39,7 @@ class ResultsetInstance(BaseModel):
             resultsCount=datasetInstance.dataset_count
             return self(id=datasetInstance.dataset,
                         setType='dataset',
-                        exists=datasetInstance.dataset_count>0,
+                        exists=datasetInstance.exists,
                         results=datasetInstance.docs,
                         resultsCount=resultsCount,
                         resultsHandovers=resultsHandovers)
@@ -47,7 +47,7 @@ class ResultsetInstance(BaseModel):
             resultsCount=datasetInstance.dataset_count
             return self(id=datasetInstance.dataset,
                         setType='dataset',
-                        exists=datasetInstance.dataset_count>0,
+                        exists=datasetInstance.exists,
                         results=None,
                         resultsCount=resultsCount,
                         resultsHandovers=resultsHandovers)
@@ -55,7 +55,7 @@ class ResultsetInstance(BaseModel):
             resultsCount=None
             return self(id=datasetInstance.dataset,
                         setType='dataset',
-                        exists=datasetInstance.dataset_count>0,
+                        exists=datasetInstance.exists,
                         results=None,
                         resultsCount=resultsCount,
                         resultsHandovers=resultsHandovers)

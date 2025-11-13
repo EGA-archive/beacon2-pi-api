@@ -7,7 +7,7 @@ from pydantic import ValidationError
 from beacon.exceptions.exceptions import InvalidData
 from beacon.views.endpoint import EndpointView
 
-class EntryTypesView(EndpointView): # TODO: nombrar-lo com entry_types_endpoint
+class EntryTypesEndpointView(EndpointView):
     @log_with_args(level)
     async def handler(self):
         meta_module='beacon.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.framework.meta'

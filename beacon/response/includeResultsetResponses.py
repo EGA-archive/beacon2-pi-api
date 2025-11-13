@@ -14,12 +14,12 @@ def include_resultSet_responses(self, multipleDatasetsClass):
     finalMultiDatasetsClass = MultipleDatasetsResponse(total_count=0, datasets_responses=[])
     for dataset in multipleDatasetsClass.datasets_responses:
         if include == 'ALL':
-            if dataset.dataset_count != -1:
+            if dataset.exists != None:
                 finalMultiDatasetsClass=gather_final_datasets_to_return(self, dataset, finalMultiDatasetsClass)
         elif include == 'MISS':
             if dataset.dataset_count == 0:
                 finalMultiDatasetsClass=gather_final_datasets_to_return(self, dataset, finalMultiDatasetsClass)
         else:
-            if dataset.dataset_count != -1 and dataset.dataset_count != 0:
+            if dataset.exists == True and dataset.dataset_count != 0:
                 finalMultiDatasetsClass=gather_final_datasets_to_return(self, dataset, finalMultiDatasetsClass)
     return finalMultiDatasetsClass

@@ -23,7 +23,6 @@ def get_phenotypic_endpoint(self, dataset: SingleDatasetResponse):
         query={}
     query = apply_filters(self, query, RequestAttributes.qparams.query.filters, query_parameters, dataset.dataset)
     if query == {} and query_parameters != {} and parameters_as_filters == False:
-        dataset.dataset_count=-1
         return dataset
     include = RequestAttributes.qparams.query.includeResultsetResponses
     limit = RequestAttributes.qparams.query.pagination.limit
@@ -74,14 +73,12 @@ def get_variants_of_phenotypic_endpoint(self, dataset: SingleDatasetResponse):
         position=0
         bioids=targets[0]["biosampleIds"]
     except Exception:
-        dataset.dataset_count=-1
         return dataset
     for bioid in bioids:
         if bioid == RequestAttributes.entry_id:
             break
         position+=1
     if position == len(bioids):
-        dataset.dataset_count=-1
         return dataset
     position=str(position)
     query_cl={"$or": [{ position: "10", "datasetId": dataset.dataset},{ position: "11", "datasetId": dataset.dataset}, { position: "01", "datasetId": dataset.dataset}, { position: "y", "datasetId": dataset.dataset}]}
@@ -124,6 +121,8 @@ def get_phenotypic_endpoint_of_variants(self, dataset: SingleDatasetResponse):
     HGVSDataset=HGVSIds[0]["datasetId"]
     if dataset.dataset != HGVSDataset:
         dataset.dataset_count=0
+        dataset.exists=False
+        dataset.exists=False
         dataset.docs=[]
         return dataset
     HGVSId=HGVSIds[0]["identifiers"]["genomicHGVSId"]
@@ -138,6 +137,7 @@ def get_phenotypic_endpoint_of_variants(self, dataset: SingleDatasetResponse):
         list_of_positions_strings= string_of_ids[0]
     except Exception:
         dataset.dataset_count=0
+        dataset.exists=False
         dataset.docs=[]
         return dataset
     biosampleIds=[]
@@ -231,6 +231,7 @@ def get_variants_of_dataset(self, dataset: SingleDatasetResponse):
         query_count["$or"].append(queryid)
     else:
         dataset.dataset_count=0
+        dataset.exists=False
         return dataset
     query = apply_filters(self, query_count, RequestAttributes.qparams.query.filters, {}, dataset.dataset)
     include = RequestAttributes.qparams.query.includeResultsetResponses
@@ -252,6 +253,7 @@ def get_phenotypic_endpoint_of_dataset(self, dataset: SingleDatasetResponse):
         dict_in['datasetId']=RequestAttributes.entry_id
     else:
         dataset.dataset_count=0
+        dataset.exists=False
         return dataset
     query = apply_filters(self, dict_in, RequestAttributes.qparams.query.filters, {}, dataset.dataset)
     include = RequestAttributes.qparams.query.includeResultsetResponses
@@ -274,6 +276,7 @@ def get_phenotypic_endpoint_of_cohort(self, dataset: SingleDatasetResponse):
         dict_in['datasetId']=dataset_found
     else:
         dataset.dataset_count=0
+        dataset.exists=False
         return dataset
     query = apply_filters(self, dict_in, RequestAttributes.qparams.query.filters, {}, dataset.dataset)
     count = get_count(self, cohorts, query)
@@ -299,6 +302,7 @@ def get_variants_of_cohort(self, dataset: SingleDatasetResponse):
         dict_in['datasetId']=dataset_found
     else:
         dataset.dataset_count=0
+        dataset.exists=False
         return dataset
     query = apply_filters(self, dict_in, RequestAttributes.qparams.query.filters, {}, dataset.dataset)
     count = get_count(self, cohorts, query)
@@ -319,6 +323,7 @@ def get_variants_of_cohort(self, dataset: SingleDatasetResponse):
         query_count["$or"].append(queryid)
     else:
         dataset.dataset_count=0
+        dataset.exists=False
         return dataset
     query = apply_filters(self, query_count, RequestAttributes.qparams.query.filters, {}, dataset.dataset)
     skip = RequestAttributes.qparams.query.pagination.skip

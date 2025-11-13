@@ -10,14 +10,14 @@ from beacon.exceptions.exceptions import InvalidData
 from beacon.views.endpoint import EndpointView
 from beacon.response.includeResultsetResponses import include_resultSet_responses
 
-class PhenoGenoView(EndpointView): # TODO : nombrar-los non_collection_entry_types
+class EntryTypeView(EndpointView):
     @query_permissions
     @log_with_args(level)
     async def handler(self, datasets, username, time_now):
         complete_module='beacon.connections.'+RequestAttributes.source+'.executor'# TODO: Comentar.
         import importlib
         module = importlib.import_module(complete_module, package=None)
-        initialMultipleDatasetsResponseClass = await module.execute_function(self, datasets) # TODO: Això s'ha de retornar en una classe.
+        initialMultipleDatasetsResponseClass = await module.execute_function(self, datasets)
         multipleDatasetsResponseClass = include_resultSet_responses(self, initialMultipleDatasetsResponseClass)
         meta_module='beacon.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.framework.meta'
         resultSet_module = 'beacon.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.framework.resultSet'

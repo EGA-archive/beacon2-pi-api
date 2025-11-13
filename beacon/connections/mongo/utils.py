@@ -100,8 +100,8 @@ def get_docs_by_response_type(self, include: str, query: dict, dataset: SingleDa
             docs=list(docs)
         else:
             dataset_count=0
+            dataset.exists=False
         if dataset_count !=0:
-            dataset.dataset_count=-1
             return dataset
     else:
         query_count=query
@@ -124,9 +124,11 @@ def get_docs_by_response_type(self, include: str, query: dict, dataset: SingleDa
                 docs=list(docs)
         else:
             dataset_count=0
+            dataset.exists=False
         if dataset_count==0:
-            dataset.dataset_count=-1
             return dataset
+    if dataset_count > 0:
+        dataset.exists=True
     dataset.dataset_count=dataset_count
     dataset.docs=docs
     return dataset
