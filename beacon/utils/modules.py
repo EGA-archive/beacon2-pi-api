@@ -4,6 +4,7 @@ from typing import List, Optional, Union, Dict
 import re
 from beacon.logs.logs import LOG
 
+
 def load_framework_module(self, script_name):
     module='beacon.framework.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.'+script_name
     import importlib
@@ -92,11 +93,12 @@ def get_conf(entry_type):
         if "conf" in subdirs:
             confiles = os.listdir("/beacon/models/"+folder+"/conf")
             for confile in confiles:
-                complete_module='beacon.models.'+folder+'.conf.'+confile.replace('.py', '')
-                import importlib
-                module = importlib.import_module(complete_module, package=None)
-                if entry_type == module.endpoint_name:
-                    return module
+                if confile != '__pycache__':
+                    complete_module='beacon.models.'+folder+'.conf.'+confile.replace('.py', '')
+                    import importlib
+                    module = importlib.import_module(complete_module, package=None)
+                    if entry_type == module.endpoint_name:
+                        return module
 
         else:
             for subfolder in subdirs:
@@ -104,8 +106,38 @@ def get_conf(entry_type):
                 if "conf" in underdirs:
                     confiles = os.listdir("/beacon/models/"+folder+"/"+subfolder+"/conf")
                     for confile in confiles:
-                        complete_module='beacon.models.'+folder+'.'+subfolder+'.conf.'+confile.replace('.py', '')
-                        import importlib
-                        module = importlib.import_module(complete_module, package=None)
-                        if entry_type == module.endpoint_name:
-                            return module
+                        if confile != '__pycache__':
+                            complete_module='beacon.models.'+folder+'.'+subfolder+'.conf.'+confile.replace('.py', '')
+                            import importlib
+                            module = importlib.import_module(complete_module, package=None)
+                            if entry_type == module.endpoint_name:
+                                return module
+                        
+def get_all_modules():
+    list_of_modules=[]
+    dirs = os.listdir("/beacon/models")
+    for folder in dirs:
+        subdirs = os.listdir("/beacon/models/"+folder)
+        if "conf" in subdirs:
+            confiles = os.listdir("/beacon/models/"+folder+"/conf")
+            for confile in confiles:
+                if confile != '__pycache__':
+                    complete_module='beacon.models.'+folder+'.conf.'+confile.replace('.py', '')
+                    import importlib
+                    module = importlib.import_module(complete_module, package=None)
+                    list_of_modules.append(module)
+
+        else:
+            for subfolder in subdirs:
+                underdirs = os.listdir("/beacon/models/"+folder+"/"+subfolder)
+                if "conf" in underdirs:
+                    confiles = os.listdir("/beacon/models/"+folder+"/"+subfolder+"/conf")
+                    for confile in confiles:
+                        if confile != '__pycache__':
+                            complete_module='beacon.models.'+folder+'.'+subfolder+'.conf.'+confile.replace('.py', '')
+                            import importlib
+                            module = importlib.import_module(complete_module, package=None)
+                            list_of_modules.append(module)
+    return list_of_modules
+    
+

@@ -172,8 +172,9 @@ def set_entry_type(self, request):
                 raise WrongURIPath('path received is wrong, check your uri: {} from conf file to make sure is correct'.format(uri))
             set_entry_type_configuration(self)
             RequestAttributes.entry_id=request.match_info.get('id', None)
-    endpoint_module = get_conf(RequestAttributes.entry_type)
-    RequestAttributes.mongo_collection = endpoint_module.database_connection
+    if RequestAttributes.entry_type not in ['filtering_terms', 'map', 'configuration', 'info', 'service-info', 'entry_types']:
+        endpoint_module = get_conf(RequestAttributes.entry_type)
+        RequestAttributes.mongo_collection = endpoint_module.database_connection
 
 @log_with_args(level)
 def set_response_type(self):
@@ -195,10 +196,11 @@ def set_response_type(self):
         RequestAttributes.returned_granularity = 'record'
     else:
         RequestAttributes.returned_granularity = 'count'
-    endpoint_module = get_conf(RequestAttributes.entry_type)
-    if RequestAttributes.entry_type == endpoint_module.endpoint_name:
-        if endpoint_module.allow_queries_without_filters == False and RequestAttributes.qparams.query.filters == [] and RequestAttributes.qparams.query.requestParameters == {}:
-            raise NoFiltersAllowed("{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type))
+    if RequestAttributes.entry_type not in ['filtering_terms', 'map', 'configuration', 'info', 'service-info', 'entry_types']:
+        endpoint_module = get_conf(RequestAttributes.entry_type)
+        if RequestAttributes.entry_type == endpoint_module.endpoint_name:
+            if endpoint_module.allow_queries_without_filters == False and RequestAttributes.qparams.query.filters == [] and RequestAttributes.qparams.query.requestParameters == {}:
+                raise NoFiltersAllowed("{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type))
 
     if RequestAttributes.qparams.meta.apiVersion in os.listdir("/beacon/framework"):
         RequestAttributes.returned_apiVersion = RequestAttributes.qparams.meta.apiVersion
@@ -213,7 +215,7 @@ def set_response_type(self):
                     RequestAttributes.returned_schema = [SchemasPerEntity(entityType=endpoint_module.id,schema=schema).model_dump()]
                 else:
                     RequestAttributes.returned_schema = [SchemasPerEntity(entityType=endpoint_module.id,schema=endpoint_module.defaultSchema_id).model_dump()]
-    else:
+    elif RequestAttributes.entry_type not in ['filtering_terms', 'map', 'configuration', 'info', 'service-info', 'entry_types']:
         if RequestAttributes.entry_type == endpoint_module.endpoint_name:
             RequestAttributes.returned_schema = [SchemasPerEntity(entityType=endpoint_module.id,schema=endpoint_module.defaultSchema_id).model_dump()]
     if RequestAttributes.entry_type == 'filtering_terms':
