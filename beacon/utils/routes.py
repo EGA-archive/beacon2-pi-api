@@ -9,7 +9,7 @@ from beacon.views.map import MapView
 from beacon.views.service_info import ServiceInfoView
 from beacon.conf.conf import level, uri_subpath
 import aiohttp.web as web
-import os
+from beacon.utils.modules import load_routes
 
 @log_with_args_initial(level)
 def append_routes(app):
@@ -27,20 +27,5 @@ def append_routes(app):
     app.add_routes([web.get(uri_subpath+'/configuration', ConfigurationView)])
     app.add_routes([web.get(uri_subpath+'/map', MapView)])
     app.add_routes([web.get(uri_subpath+'/filtering_terms', FilteringTermsView)])
-    dirs = os.listdir("/beacon/models")
-    for folder in dirs:
-        subdirs = os.listdir("/beacon/models/"+folder)
-        if "routes" in subdirs:
-            complete_module='beacon.models.'+folder+'.routes.routes'
-            import importlib
-            module = importlib.import_module(complete_module, package=None)
-            app = module.extend_routes(app)
-        else:
-            for subfolder in subdirs:
-                underdirs = os.listdir("/beacon/models/"+folder+'/'+subfolder)
-                if "routes" in underdirs:
-                    complete_module='beacon.models.'+folder+'.'+subfolder+'.routes.routes'
-                    import importlib
-                    module = importlib.import_module(complete_module, package=None)
-                    app = module.extend_routes(app)
+    app=load_routes(app)
     return app

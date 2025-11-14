@@ -2,7 +2,7 @@ from beacon.conf import conf
 from typing import Optional, Dict
 from pydantic import (
     BaseModel)
-from beacon.validator.v2_1_1.framework.meta import InformationalMeta
+from beacon.utils.modules import load_class
 
 class BeaconOrganization(BaseModel):
     address: Optional[str]=conf.org_adress if conf.org_adress != "" else None
@@ -29,5 +29,5 @@ class InfoBody(BaseModel):
     organization: BeaconOrganization = BeaconOrganization().model_dump(exclude_none=True)
     
 class InfoResponse(BaseModel):
-    meta: InformationalMeta
+    meta: load_class("meta", "InformationalMeta")
     response: InfoBody

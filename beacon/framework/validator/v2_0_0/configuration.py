@@ -5,8 +5,7 @@ from pydantic import (
     Field
 )
 from beacon.conf import conf
-from beacon.validator.v2_1_1.framework.entry_types import EntryTypesSchema
-from beacon.validator.v2_1_1.framework.meta import InformationalMeta
+from beacon.utils.modules import load_class
 
 class SecurityAttributes(BaseModel):
     defaultGranularity: Optional[str] = conf.default_beacon_granularity
@@ -21,11 +20,11 @@ class SecurityAttributes(BaseModel):
 class MaturityAttributes(BaseModel):
     productionStatus: str = conf.environment.upper()
 
-class ConfigurationSchema(EntryTypesSchema):
+class ConfigurationSchema(load_class("entry_types", "EntryTypesSchema")):
     schema: str = Field(alias="$schema", default="https://raw.githubusercontent.com/ga4gh-beacon/beacon-framework-v2/main/configuration/beaconConfigurationSchema.json")
     maturityAttributes: MaturityAttributes = MaturityAttributes().model_dump(exclude_none=True)
     securityAttributes: Optional[SecurityAttributes] = SecurityAttributes().model_dump(exclude_none=True)
 
 class ConfigurationResponse(BaseModel):
-    meta: InformationalMeta
+    meta: load_class("meta", "InformationalMeta")
     response: ConfigurationSchema

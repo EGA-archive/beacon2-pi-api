@@ -1,18 +1,1 @@
-from pydantic import (
-    BaseModel
-)
-from beacon.validator.v2_1_1.model.cohorts import Cohorts
-from beacon.validator.v2_1_1.model.datasets import Datasets
-from typing import List, Optional, Union, Dict
-from beacon.validator.v2_1_1.framework.meta import Meta
-from beacon.validator.v2_1_1.framework.common import Handover, ResponseSummary
-
-class Collections(BaseModel):
-    collections: List[Union[Cohorts,Datasets]]
-
-class CollectionResponse(BaseModel):
-    meta: Meta
-    responseSummary: ResponseSummary
-    response: Collections
-    beaconHandovers: Optional[List[Handover]] = None
-    info: Optional[Dict] = None
+from beacon.framework.validator.v2_0_0.collection import CollectionResponse

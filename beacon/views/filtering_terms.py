@@ -6,18 +6,15 @@ from beacon.request.classes import RequestAttributes
 from pydantic import ValidationError
 from beacon.exceptions.exceptions import InvalidData
 from beacon.views.endpoint import EndpointView
-from beacon.utils.modules import load_source_module
+from beacon.utils.modules import load_source_module, load_framework_module
 
 class FilteringTermsView(EndpointView):
     @log_with_args(level)
     async def handler(self):
         module = load_source_module(self, 'filtering_terms')
         ftResponseClass = module.get_filtering_terms(self)
-        meta_module='beacon.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.framework.meta'
-        filtering_terms_module = 'beacon.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.framework.filtering_terms'
-        import importlib
-        module_meta = importlib.import_module(meta_module, package=None)
-        module_filtering_terms = importlib.import_module(filtering_terms_module, package=None)
+        module_meta = load_framework_module(self, "meta")
+        module_filtering_terms = load_framework_module(self, "filtering_terms")
         try:
             filteringterms = module_filtering_terms.FilteringTermsResults(filteringTerms=ftResponseClass.docs)
             meta = module_meta.InformationalMeta(returnedSchemas=[RequestAttributes.returned_schema])

@@ -2,26 +2,19 @@ from pydantic import (
     BaseModel,
     field_validator
 )
-from beacon.validator.v2_1_1.model.genomicVariations import GenomicVariations
-from beacon.validator.v2_1_1.model.analyses import Analyses
-from beacon.validator.v2_1_1.model.biosamples import Biosamples
-from beacon.validator.v2_1_1.model.biosamples import Biosamples
-from beacon.validator.v2_1_1.model.individuals import Individuals
-from beacon.validator.v2_1_1.model.runs import Runs
 from typing import List, Optional, Union, Dict
 import math
 from beacon.utils.handovers import list_of_handovers_per_dataset
-from beacon.validator.v2_1_1.framework.meta import Meta
 from beacon.conf import conf
-from beacon.validator.v2_1_1.framework.common import Handover, ResponseSummary
+from beacon.utils.modules import load_types_of_results, load_class
 
 class ResultsetInstance(BaseModel):
     exists: bool
     id: str
     info: Optional[Dict] = None
-    results: List[Union[Analyses,Biosamples,GenomicVariations,Individuals,Runs]]
+    results: Optional[List[load_types_of_results()]]=None
     resultsCount: int
-    resultsHandovers: Optional[List[Handover]] = None
+    resultsHandovers: Optional[List[load_class("common", "Handover")]] = None
     setType: str
     @field_validator('countPrecision')
     @classmethod

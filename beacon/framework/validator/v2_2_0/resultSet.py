@@ -5,46 +5,8 @@ from pydantic import (
 from typing import List, Optional, Union, Dict
 import math
 from beacon.utils.handovers import list_of_handovers_per_dataset
-from beacon.utils.modules import load_class
 from beacon.conf import conf
-import os
-from beacon.logs.logs import LOG
-from beacon.request.classes import RequestAttributes
-
-list_of_resultSets=[]
-
-dirs = os.listdir("/beacon/models")
-for folder in dirs:
-    subdirs = os.listdir("/beacon/models/"+folder)
-    if "validator" in subdirs:
-        validatordirs = os.listdir("/beacon/models/"+folder+"/validator")
-        for validatorfolder in validatordirs:
-            validatorfiles = os.listdir("/beacon/models/"+folder+"/validator/"+validatorfolder)
-            for validatorfile in validatorfiles:
-                if RequestAttributes.returned_apiVersion.replace(".","_") in validatorfile:
-                    complete_module='beacon.models.'+folder+'.validator.'+validatorfolder+'.'+validatorfile
-                    complete_module=complete_module.replace('.py', '')
-                    import importlib
-                    module = importlib.import_module(complete_module, package=None)
-                    klass = getattr(module, validatorfolder.capitalize())
-                    list_of_resultSets.append(klass)
-    else:
-        for subfolder in subdirs:
-            underdirs = os.listdir("/beacon/models/"+folder+"/"+subfolder)
-            if "validator" in underdirs:
-                validatordirs = os.listdir("/beacon/models/"+folder+"/"+subfolder+"/validator")
-                for validatorfolder in validatordirs:
-                    validatorfiles = os.listdir("/beacon/models/"+folder+"/"+subfolder+"/validator/"+validatorfolder)
-                    for validatorfile in validatorfiles:
-                        if RequestAttributes.returned_apiVersion.replace(".","_") in validatorfile:
-                            complete_module='beacon.models.'+folder+'.'+subfolder+'.validator.'+validatorfolder+'.'+validatorfile
-                            complete_module=complete_module.replace('.py', '')
-                            import importlib
-                            module = importlib.import_module(complete_module, package=None)
-                            klass = getattr(module, validatorfolder.capitalize())
-                            list_of_resultSets.append(klass)
-
-union_type = Union[tuple(list_of_resultSets)]
+from beacon.utils.modules import load_types_of_results, load_class
 
 class ResultsetInstance(BaseModel):
     countAdjustedTo: Optional[List[Union[str,int]]] = None
@@ -52,7 +14,7 @@ class ResultsetInstance(BaseModel):
     exists: bool
     id: str
     info: Optional[Dict] = None
-    results: Optional[List[union_type]]=None
+    results: Optional[List[load_types_of_results("non_collections")]]=None
     resultsCount: Optional[int]=None
     resultsHandovers: Optional[List[load_class("common", "Handover")]] = None
     setType: str

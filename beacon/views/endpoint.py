@@ -37,9 +37,6 @@ class EndpointView(web.View, CorsViewMixin):
         except AppError as e:
             response_obj = self.error_builder(e.status, e.message)
             return web.Response(text=json_util.dumps(response_obj), status=e.status, content_type='application/json')
-        except Exception as e:
-            response_obj = self.error_builder(500, "Unexpected internal error: {}".format(e))
-            return web.Response(text=json_util.dumps(response_obj), status=500, content_type='application/json')
 
     async def post(self):
         try:

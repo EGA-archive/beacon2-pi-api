@@ -1,4 +1,7 @@
 from beacon.request.classes import RequestAttributes
+import os
+from typing import List, Optional, Union, Dict
+import re
 
 def load_framework_module(self, script_name):
     module='beacon.framework.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.'+script_name
@@ -18,3 +21,65 @@ def load_class(script_name, className):
     loaded_module = importlib.import_module(module, package=None)
     klass = getattr(loaded_module, className)
     return klass
+
+def load_types_of_results(response_type):
+    list_of_results_classes_accepted=[]
+    version_catch = re.search(r"(v\d+(\.\d+)*)", RequestAttributes.returned_schema[0]["schema"])
+    if version_catch:
+        version = version_catch.group(1)
+    
+    underscored_version = version.replace(".","_")
+    dirs = os.listdir("/beacon/models")
+    for folder in dirs:
+        subdirs = os.listdir("/beacon/models/"+folder)
+        if "validator" in subdirs:
+            validatordirs = os.listdir("/beacon/models/"+folder+"/validator/"+response_type)
+            for validatorfolder in validatordirs:
+                validatorfiles = os.listdir("/beacon/models/"+folder+"/validator/"+response_type+"/"+validatorfolder)
+                for validatorfile in validatorfiles:
+                    if underscored_version in validatorfile:
+                        complete_module='beacon.models.'+folder+'.validator.'+response_type+'.'+validatorfolder+'.'+validatorfile
+                        complete_module=complete_module.replace('.py', '')
+                        import importlib
+                        module = importlib.import_module(complete_module, package=None)
+                        klass = getattr(module, validatorfolder.capitalize())
+                        list_of_results_classes_accepted.append(klass)
+        else:
+            for subfolder in subdirs:
+                underdirs = os.listdir("/beacon/models/"+folder+"/"+subfolder)
+                if "validator" in underdirs:
+                    try:
+                        validatordirs = os.listdir("/beacon/models/"+folder+"/"+subfolder+"/validator/"+response_type)
+                    except Exception:
+                        return None
+                    for validatorfolder in validatordirs:
+                        validatorfiles = os.listdir("/beacon/models/"+folder+"/"+subfolder+"/validator/"+response_type+"/"+validatorfolder)
+                        for validatorfile in validatorfiles:
+                            if underscored_version in validatorfile:
+                                complete_module='beacon.models.'+folder+'.'+subfolder+'.validator.'+response_type+'.'+validatorfolder+'.'+validatorfile
+                                complete_module=complete_module.replace('.py', '')
+                                import importlib
+                                module = importlib.import_module(complete_module, package=None)
+                                klass = getattr(module, validatorfolder.capitalize())
+                                list_of_results_classes_accepted.append(klass)
+    union_type = Union[tuple(list_of_results_classes_accepted)]
+    return union_type
+
+def load_routes(app):
+    dirs = os.listdir("/beacon/models")
+    for folder in dirs:
+        subdirs = os.listdir("/beacon/models/"+folder)
+        if "routes" in subdirs:
+            complete_module='beacon.models.'+folder+'.routes.routes'
+            import importlib
+            module = importlib.import_module(complete_module, package=None)
+            app = module.extend_routes(app)
+        else:
+            for subfolder in subdirs:
+                underdirs = os.listdir("/beacon/models/"+folder+'/'+subfolder)
+                if "routes" in underdirs:
+                    complete_module='beacon.models.'+folder+'.'+subfolder+'.routes.routes'
+                    import importlib
+                    module = importlib.import_module(complete_module, package=None)
+                    app = module.extend_routes(app)
+    return app

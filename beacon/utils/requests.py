@@ -251,7 +251,7 @@ def set_response_type(self):
     elif RequestAttributes.entry_type == run.endpoint_name:
         if run.allow_queries_without_filters == False and RequestAttributes.qparams.query.filters == [] and RequestAttributes.qparams.query.requestParameters == {}:
             raise NoFiltersAllowed("{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type))
-    if RequestAttributes.qparams.meta.apiVersion in os.listdir():
+    if RequestAttributes.qparams.meta.apiVersion in os.listdir("/beacon/framework"):
         RequestAttributes.returned_apiVersion = RequestAttributes.qparams.meta.apiVersion
     else:
         RequestAttributes.returned_apiVersion = api_version
