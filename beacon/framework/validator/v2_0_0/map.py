@@ -7,6 +7,7 @@ from pydantic import (
 from beacon.conf import conf
 from beacon.utils.modules import load_class
 from beacon.models.ga4gh.beacon_v2_default_model.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run
+from beacon.utils.modules import get_conf
 
 class RelatedEndpoint(BaseModel):
     returnedEntryType: str
@@ -52,6 +53,7 @@ class MapSchema(BaseModel):
     schema: str = Field(alias="$schema", default="https://raw.githubusercontent.com/ga4gh-beacon/beacon-framework-v2/main/configuration/beaconConfigurationSchema.json")
     endpointSets: EndpointEntries
     def populate_endpoints(self):
+        # Load all_modules and do a loop per populating EndpointEntries(loaded_module=Endpoint...) and loading the variables _lookup = True by name, getting endpoint_names per each lookup = True.
         return self(endpointSets=EndpointEntries(analysis=Endpoint(id=analysis.id,openAPIEndpointsDefinition=analysis.open_api_endpoints_definition,
                                                             entryType=analysis.id,
                                                             rootUrl=conf.complete_url+'/'+analysis.endpoint_name, singleEntryUrl=conf.complete_url+'/'+analysis.endpoint_name+'/{id}' if analysis.singleEntryUrl==True else None,

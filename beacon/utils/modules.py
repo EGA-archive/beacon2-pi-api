@@ -2,6 +2,7 @@ from beacon.request.classes import RequestAttributes
 import os
 from typing import List, Optional, Union, Dict
 import re
+from beacon.logs.logs import LOG
 
 def load_framework_module(self, script_name):
     module='beacon.framework.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.'+script_name
@@ -83,3 +84,28 @@ def load_routes(app):
                     module = importlib.import_module(complete_module, package=None)
                     app = module.extend_routes(app)
     return app
+
+def get_conf(entry_type):
+    dirs = os.listdir("/beacon/models")
+    for folder in dirs:
+        subdirs = os.listdir("/beacon/models/"+folder)
+        if "conf" in subdirs:
+            confiles = os.listdir("/beacon/models/"+folder+"/conf")
+            for confile in confiles:
+                complete_module='beacon.models.'+folder+'.conf.'+confile.replace('.py', '')
+                import importlib
+                module = importlib.import_module(complete_module, package=None)
+                if entry_type == module.endpoint_name:
+                    return module
+
+        else:
+            for subfolder in subdirs:
+                underdirs = os.listdir("/beacon/models/"+folder+"/"+subfolder)
+                if "conf" in underdirs:
+                    confiles = os.listdir("/beacon/models/"+folder+"/"+subfolder+"/conf")
+                    for confile in confiles:
+                        complete_module='beacon.models.'+folder+'.'+subfolder+'.conf.'+confile.replace('.py', '')
+                        import importlib
+                        module = importlib.import_module(complete_module, package=None)
+                        if entry_type == module.endpoint_name:
+                            return module

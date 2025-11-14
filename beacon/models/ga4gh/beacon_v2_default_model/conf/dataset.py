@@ -1,7 +1,10 @@
+from beacon.connections.mongo.__init__ import datasets
+
 endpoint_name='datasets' # Leave it blank ('') to deactivate the endpoint.
 enable_endpoint=True
 open_api_endpoints_definition='https://raw.githubusercontent.com/ga4gh-beacon/beacon-v2/main/models/json/beacon-v2-default-model/datasets/endpoints.json'
 database='mongo' # The name must match the folder's name in connection that belongs to the desired database.
+database_connection=datasets
 
 # Granularity accepted: boolean, count or record
 granularity='record'

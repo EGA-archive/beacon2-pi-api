@@ -12,7 +12,7 @@ from beacon.conf import filtering_terms
 import os
 from beacon.request.parameters import RequestMeta, SchemasPerEntity
 from pydantic import ValidationError
-from beacon.connections.mongo.__init__ import analyses, biosamples, genomicVariations,individuals, runs, datasets, cohorts
+from beacon.utils.modules import get_conf
 
 @log_with_args(level)
 def parse_query_string(self, request):
@@ -115,35 +115,7 @@ def set_entry_type_configuration(self):
     On the action of checking if there is a match between the endpoint queried an entry type in configuration, we then grab the database (source), max_granularity (allowed_granularity)
     and id name of the records of the entry type to keep them in the RequestAttributes object for later.
     '''
-    if RequestAttributes.entry_type == genomicVariant.endpoint_name:
-        RequestAttributes.source = genomicVariant.database
-        RequestAttributes.allowed_granularity = genomicVariant.granularity
-        RequestAttributes.entry_type_id = genomicVariant.id
-    elif RequestAttributes.entry_type == analysis.endpoint_name:
-        RequestAttributes.source = analysis.database
-        RequestAttributes.allowed_granularity = analysis.granularity
-        RequestAttributes.entry_type_id = analysis.id
-    elif RequestAttributes.entry_type == biosample.endpoint_name:
-        RequestAttributes.source = biosample.database
-        RequestAttributes.allowed_granularity = biosample.granularity
-        RequestAttributes.entry_type_id = biosample.id
-    elif RequestAttributes.entry_type == individual.endpoint_name:
-        RequestAttributes.source = individual.database
-        RequestAttributes.allowed_granularity = individual.granularity
-        RequestAttributes.entry_type_id = individual.id
-    elif RequestAttributes.entry_type == run.endpoint_name:
-        RequestAttributes.source = run.database
-        RequestAttributes.allowed_granularity = run.granularity
-        RequestAttributes.entry_type_id = run.id
-    elif RequestAttributes.entry_type == cohort.endpoint_name:
-        RequestAttributes.source = cohort.database
-        RequestAttributes.allowed_granularity = cohort.granularity
-        RequestAttributes.entry_type_id = cohort.id
-    elif RequestAttributes.entry_type == dataset.endpoint_name:
-        RequestAttributes.source = dataset.database
-        RequestAttributes.allowed_granularity = dataset.granularity
-        RequestAttributes.entry_type_id = dataset.id
-    elif RequestAttributes.entry_type == 'filtering_terms':
+    if RequestAttributes.entry_type == 'filtering_terms':
         RequestAttributes.source = filtering_terms.database
         RequestAttributes.allowed_granularity = 'record'
     elif RequestAttributes.entry_type == 'map':
@@ -156,6 +128,11 @@ def set_entry_type_configuration(self):
         RequestAttributes.allowed_granularity = 'record'
     elif RequestAttributes.entry_type == 'entry_types':
         RequestAttributes.allowed_granularity = 'record'
+    else:
+        endpoint_module = get_conf(RequestAttributes.entry_type)
+        RequestAttributes.source = endpoint_module.database
+        RequestAttributes.allowed_granularity = endpoint_module.granularity
+        RequestAttributes.entry_type_id = endpoint_module.id
     
 @log_with_args(level)
 def set_entry_type(self, request):
@@ -195,20 +172,8 @@ def set_entry_type(self, request):
                 raise WrongURIPath('path received is wrong, check your uri: {} from conf file to make sure is correct'.format(uri))
             set_entry_type_configuration(self)
             RequestAttributes.entry_id=request.match_info.get('id', None)
-    if RequestAttributes.entry_type==genomicVariant.endpoint_name:
-        RequestAttributes.mongo_collection=genomicVariations
-    elif RequestAttributes.entry_type==analysis.endpoint_name:
-        RequestAttributes.mongo_collection=analyses
-    elif RequestAttributes.entry_type==biosample.endpoint_name:
-        RequestAttributes.mongo_collection=biosamples
-    elif RequestAttributes.entry_type==individual.endpoint_name:
-        RequestAttributes.mongo_collection=individuals
-    elif RequestAttributes.entry_type==run.endpoint_name:
-        RequestAttributes.mongo_collection=runs
-    elif RequestAttributes.entry_type==dataset.endpoint_name:
-        RequestAttributes.mongo_collection=datasets
-    elif RequestAttributes.entry_type==cohort.endpoint_name:
-        RequestAttributes.mongo_collection=cohorts
+    endpoint_module = get_conf(RequestAttributes.entry_type)
+    RequestAttributes.mongo_collection = endpoint_module.database_connection
 
 @log_with_args(level)
 def set_response_type(self):
@@ -230,97 +195,27 @@ def set_response_type(self):
         RequestAttributes.returned_granularity = 'record'
     else:
         RequestAttributes.returned_granularity = 'count'
-    if RequestAttributes.entry_type == genomicVariant.endpoint_name:
-        if genomicVariant.allow_queries_without_filters == False and RequestAttributes.qparams.query.filters == [] and RequestAttributes.qparams.query.requestParameters == {}:
+    endpoint_module = get_conf(RequestAttributes.entry_type)
+    if RequestAttributes.entry_type == endpoint_module.endpoint_name:
+        if endpoint_module.allow_queries_without_filters == False and RequestAttributes.qparams.query.filters == [] and RequestAttributes.qparams.query.requestParameters == {}:
             raise NoFiltersAllowed("{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type))
-    elif RequestAttributes.entry_type == analysis.endpoint_name:
-        if analysis.allow_queries_without_filters == False and RequestAttributes.qparams.query.filters == [] and RequestAttributes.qparams.query.requestParameters == {}:
-            raise NoFiltersAllowed("{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type))
-    elif RequestAttributes.entry_type == biosample.endpoint_name:
-        if biosample.allow_queries_without_filters == False and RequestAttributes.qparams.query.filters == [] and RequestAttributes.qparams.query.requestParameters == {}:
-            raise NoFiltersAllowed("{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type))
-    elif RequestAttributes.entry_type == cohort.endpoint_name:
-        if cohort.allow_queries_without_filters == False and RequestAttributes.qparams.query.filters == [] and RequestAttributes.qparams.query.requestParameters == {}:
-            raise NoFiltersAllowed("{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type))
-    elif RequestAttributes.entry_type == dataset.endpoint_name:
-        if dataset.allow_queries_without_filters == False and RequestAttributes.qparams.query.filters == [] and RequestAttributes.qparams.query.requestParameters == {}:
-            raise NoFiltersAllowed("{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type))
-    elif RequestAttributes.entry_type == individual.endpoint_name:
-        if individual.allow_queries_without_filters == False and RequestAttributes.qparams.query.filters == [] and RequestAttributes.qparams.query.requestParameters == {}:
-            raise NoFiltersAllowed("{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type))
-    elif RequestAttributes.entry_type == run.endpoint_name:
-        if run.allow_queries_without_filters == False and RequestAttributes.qparams.query.filters == [] and RequestAttributes.qparams.query.requestParameters == {}:
-            raise NoFiltersAllowed("{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type))
+
     if RequestAttributes.qparams.meta.apiVersion in os.listdir("/beacon/framework"):
         RequestAttributes.returned_apiVersion = RequestAttributes.qparams.meta.apiVersion
     else:
         RequestAttributes.returned_apiVersion = api_version
     if RequestAttributes.qparams.meta.requestedSchemas != []:
         for schema in RequestAttributes.qparams.meta.requestedSchemas:
-            if RequestAttributes.entry_type == genomicVariant.endpoint_name:
-                if schema == genomicVariant.defaultSchema_id:
-                    RequestAttributes.returned_schema = [SchemasPerEntity(entityType=genomicVariant.id,schema=schema).model_dump()]
-                elif schema in genomicVariant.aditionally_supported_schemas:
-                    RequestAttributes.returned_schema = [SchemasPerEntity(entityType=genomicVariant.id,schema=schema).model_dump()]
+            if RequestAttributes.entry_type == endpoint_module.endpoint_name:
+                if schema == endpoint_module.defaultSchema_id:
+                    RequestAttributes.returned_schema = [SchemasPerEntity(entityType=endpoint_module.id,schema=schema).model_dump()]
+                elif schema in endpoint_module.aditionally_supported_schemas:
+                    RequestAttributes.returned_schema = [SchemasPerEntity(entityType=endpoint_module.id,schema=schema).model_dump()]
                 else:
-                    RequestAttributes.returned_schema = [SchemasPerEntity(entityType=genomicVariant.id,schema=genomicVariant.defaultSchema_id).model_dump()]
-            elif RequestAttributes.entry_type == analysis.endpoint_name:
-                if schema == analysis.defaultSchema_id:
-                    RequestAttributes.returned_schema = [SchemasPerEntity(entityType=analysis.id,schema=schema).model_dump()]
-                elif schema in analysis.aditionally_supported_schemas:
-                    RequestAttributes.returned_schema = [SchemasPerEntity(entityType=analysis.id,schema=schema).model_dump()]
-                else:
-                    RequestAttributes.returned_schema = [SchemasPerEntity(entityType=analysis.id,schema=analysis.defaultSchema_id).model_dump()]
-            elif RequestAttributes.entry_type == biosample.endpoint_name:
-                if schema == biosample.defaultSchema_id:
-                    RequestAttributes.returned_schema = [SchemasPerEntity(entityType=biosample.id,schema=schema).model_dump()]
-                elif schema in biosample.aditionally_supported_schemas:
-                    RequestAttributes.returned_schema = [SchemasPerEntity(entityType=biosample.id,schema=schema).model_dump()]
-                else:
-                    RequestAttributes.returned_schema = [SchemasPerEntity(entityType=biosample.id,schema=biosample.defaultSchema_id).model_dump()]
-            elif RequestAttributes.entry_type == cohort.endpoint_name:
-                if schema == cohort.defaultSchema_id:
-                    RequestAttributes.returned_schema = [SchemasPerEntity(entityType=cohort.id,schema=schema).model_dump()]
-                elif schema in cohort.aditionally_supported_schemas:
-                    RequestAttributes.returned_schema = [SchemasPerEntity(entityType=cohort.id,schema=schema).model_dump()]
-                else:
-                    RequestAttributes.returned_schema = [SchemasPerEntity(entityType=cohort.id,schema=cohort.defaultSchema_id).model_dump()]
-            elif RequestAttributes.entry_type == dataset.endpoint_name:
-                if schema == dataset.defaultSchema_id:
-                    RequestAttributes.returned_schema = [SchemasPerEntity(entityType=dataset.id,schema=schema).model_dump()]
-                elif schema in dataset.aditionally_supported_schemas:
-                    RequestAttributes.returned_schema = [SchemasPerEntity(entityType=dataset.id,schema=schema).model_dump()]
-                else:
-                    RequestAttributes.returned_schema = [SchemasPerEntity(entityType=dataset.id,schema=dataset.defaultSchema_id).model_dump()]
-            elif RequestAttributes.entry_type == individual.endpoint_name:
-                if schema == individual.defaultSchema_id:
-                    RequestAttributes.returned_schema = [SchemasPerEntity(entityType=individual.id,schema=schema).model_dump()]
-                elif schema in individual.aditionally_supported_schemas:
-                    RequestAttributes.returned_schema = [SchemasPerEntity(entityType=individual.id,schema=schema).model_dump()]
-                else:
-                    RequestAttributes.returned_schema = [SchemasPerEntity(entityType=individual.id,schema=individual.defaultSchema_id).model_dump()]
-            elif RequestAttributes.entry_type == run.endpoint_name:
-                if schema == run.defaultSchema_id:
-                    RequestAttributes.returned_schema = [SchemasPerEntity(entityType=run.id,schema=schema).model_dump()]
-                elif schema in run.aditionally_supported_schemas:
-                    RequestAttributes.returned_schema = [SchemasPerEntity(entityType=run.id,schema=schema).model_dump()]
-                else:
-                    RequestAttributes.returned_schema =[SchemasPerEntity(entityType=run.id,schema=run.defaultSchema_id).model_dump()]
+                    RequestAttributes.returned_schema = [SchemasPerEntity(entityType=endpoint_module.id,schema=endpoint_module.defaultSchema_id).model_dump()]
     else:
-        if RequestAttributes.entry_type == genomicVariant.endpoint_name:
-            RequestAttributes.returned_schema = [SchemasPerEntity(entityType=genomicVariant.id,schema=genomicVariant.defaultSchema_id).model_dump()]
-        elif RequestAttributes.entry_type == analysis.endpoint_name:
-            RequestAttributes.returned_schema = [SchemasPerEntity(entityType=analysis.id,schema=analysis.defaultSchema_id).model_dump()]
-        elif RequestAttributes.entry_type == biosample.endpoint_name:
-            RequestAttributes.returned_schema = [SchemasPerEntity(entityType=biosample.id,schema=biosample.defaultSchema_id).model_dump()]
-        elif RequestAttributes.entry_type == cohort.endpoint_name:
-            RequestAttributes.returned_schema = [SchemasPerEntity(entityType=cohort.id,schema=cohort.defaultSchema_id).model_dump()]
-        elif RequestAttributes.entry_type == dataset.endpoint_name:
-            RequestAttributes.returned_schema = [SchemasPerEntity(entityType=dataset.id,schema=dataset.defaultSchema_id).model_dump()]
-        elif RequestAttributes.entry_type == individual.endpoint_name:
-            RequestAttributes.returned_schema = [SchemasPerEntity(entityType=individual.id,schema=individual.defaultSchema_id).model_dump()]
-        elif RequestAttributes.entry_type == run.endpoint_name:
-            RequestAttributes.returned_schema = [SchemasPerEntity(entityType=run.id,schema=run.defaultSchema_id).model_dump()]
+        if RequestAttributes.entry_type == endpoint_module.endpoint_name:
+            RequestAttributes.returned_schema = [SchemasPerEntity(entityType=endpoint_module.id,schema=endpoint_module.defaultSchema_id).model_dump()]
     if RequestAttributes.entry_type == 'filtering_terms':
         RequestAttributes.returned_schema = {"schema": "filtering_terms-{}".format(RequestAttributes.returned_apiVersion)}
     elif RequestAttributes.entry_type == 'map':
