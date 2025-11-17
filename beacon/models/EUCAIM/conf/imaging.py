@@ -7,7 +7,7 @@ database='mongoEUCAIM' # The name must match the folder's name in connection tha
 granularity='record'
 
 # Entry type configuration
-id=''
+id='imaging'
 name=''
 ontology_id=''
 ontology_name=''

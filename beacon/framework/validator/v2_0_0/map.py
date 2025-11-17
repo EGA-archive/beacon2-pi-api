@@ -35,7 +35,7 @@ class Endpoint(BaseModel):
     endpoints: RelatedEndpointEntries
     entryType: str
     openAPIEndpointsDefinition: Optional[str] = None
-    entryType=analysis.id,
+    entryType: str
     rootUrl: str
     singleEntryUrl: Optional[str] = None
 

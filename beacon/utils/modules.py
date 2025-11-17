@@ -99,7 +99,6 @@ def get_conf(entry_type):
                     module = importlib.import_module(complete_module, package=None)
                     if entry_type == module.endpoint_name:
                         return module
-
         else:
             for subfolder in subdirs:
                 underdirs = os.listdir("/beacon/models/"+folder+"/"+subfolder)
@@ -126,7 +125,6 @@ def get_all_modules():
                     import importlib
                     module = importlib.import_module(complete_module, package=None)
                     list_of_modules.append(module)
-
         else:
             for subfolder in subdirs:
                 underdirs = os.listdir("/beacon/models/"+folder+"/"+subfolder)
