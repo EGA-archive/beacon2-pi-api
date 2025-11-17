@@ -1,1 +1,1 @@
-from beacon.framework.validator.v2_1_1.filtering_terms import FilteringTermsResponse
+from beacon.framework.validator.v2_1_1.filtering_terms import FilteringTermsResponse, FilteringTermsResults

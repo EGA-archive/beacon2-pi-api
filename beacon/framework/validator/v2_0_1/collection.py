@@ -1,1 +1,1 @@
-from beacon.framework.validator.v2_0_0.collection import CollectionResponse
+from beacon.framework.validator.v2_0_0.collection import CollectionResponse, Collections

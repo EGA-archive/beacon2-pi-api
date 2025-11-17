@@ -1,1 +1,1 @@
-from beacon.framework.validator.v2_0_0.entry_types import EntryTypesResponse
+from beacon.framework.validator.v2_0_0.entry_types import EntryTypesResponse, EntryTypesSchema
