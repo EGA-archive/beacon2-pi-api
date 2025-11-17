@@ -32,8 +32,7 @@ class RelatedEndpointEntries(RelatedEndpointEntries):
 
 
 class Endpoint(BaseModel):
-    endpoints: RelatedEndpointEntries
-    entryType: str
+    endpoints: Optional[RelatedEndpointEntries]=None
     openAPIEndpointsDefinition: Optional[str] = None
     entryType: str
     rootUrl: str
@@ -70,7 +69,10 @@ class MapSchema(BaseModel):
                     relatedEndpointEntries_values_to_set[module.id]=values_to_set
                 else:
                     relatedEndpointEntries_values_to_set[module.id]=None
-            Endpoints = RelatedEndpointEntries(**relatedEndpointEntries_values_to_set)
+            if relatedEndpointEntries_values_to_set != {}:
+                Endpoints = RelatedEndpointEntries(**relatedEndpointEntries_values_to_set)
+            else:
+                Endpoints=None
             rootUrl=conf.complete_url+'/'+module2.endpoint_name
             singleEntryUrl=conf.complete_url+'/'+module2.endpoint_name+'/{id}' if module2.singleEntryUrl==True else None
             openAPIEndpointsDefinition=module2.open_api_endpoints_definition
