@@ -121,7 +121,6 @@ def scope_is_not_entry_type(self, original_id, final_id, def_list, mongo_collect
         def_list.append(new_id)
     query={}
     query['$or']=def_list
-    LOG.warning(query)
     return query
 
 @log_with_args(level)
