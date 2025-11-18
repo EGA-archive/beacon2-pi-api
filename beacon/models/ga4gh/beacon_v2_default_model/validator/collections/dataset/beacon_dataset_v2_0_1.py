@@ -1,1 +1,1 @@
-from beacon.models.ga4gh.beacon_v2_default_model.validator.dataset.beacon_dataset_v2_0_0 import Dataset
+from beacon.models.ga4gh.beacon_v2_default_model.validator.collections.dataset.beacon_dataset_v2_0_0 import Dataset

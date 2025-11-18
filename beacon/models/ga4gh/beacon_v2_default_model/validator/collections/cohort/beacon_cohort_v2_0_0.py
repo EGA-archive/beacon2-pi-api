@@ -8,20 +8,9 @@ from pydantic import (
     Field,
     PrivateAttr
 )
+from beacon.framework.validator.v2_0_0.common import OntologyTerm
 
 from typing import Optional, Union
-
-class OntologyTerm(BaseModel):
-    id: str
-    label: Optional[str]=None
-    @field_validator('id')
-    @classmethod
-    def id_must_be_CURIE(cls, v: str) -> str:
-        if re.match("[A-Za-z0-9]+:[A-Za-z0-9]", v):
-            pass
-        else:
-            raise ValueError('id must be CURIE, e.g. NCIT:C42331')
-        return v
 
 class Age(BaseModel):
     iso8601duration: Optional[str]=None

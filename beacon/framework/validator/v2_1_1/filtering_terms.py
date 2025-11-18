@@ -3,6 +3,7 @@ from typing import Optional, List
 from pydantic import (
     BaseModel, field_validator)
 from beacon.utils.modules import load_class
+from beacon.framework.validator.v2_0_0.filtering_terms import Resource
 
 class FilteringTermInResponse(BaseModel):
     id: str
@@ -16,14 +17,6 @@ class FilteringTermInResponse(BaseModel):
         if v not in ['alphanumeric', 'ontology', 'custom']:
             raise ValueError('type must be one between alphanumeric, ontology, custom')
         return v
-    
-class Resource(BaseModel):
-    id: str
-    iriPrefix: Optional[str] = None
-    name: Optional[str] = None
-    nameSpacePrefix: Optional[str] = None
-    url: Optional[str] = None
-    version: Optional[str] = None
 
 class FilteringTermsResults(BaseModel):
     filteringTerms: Optional[List[FilteringTermInResponse]] = None

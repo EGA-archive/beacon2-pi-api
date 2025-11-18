@@ -9,51 +9,8 @@ from pydantic import (
 )
 
 from typing import Optional, Union
-
-
-class OntologyTerm(BaseModel):
-    id: str
-    label: Optional[str]=None
-    @field_validator('id')
-    @classmethod
-    def id_must_be_CURIE(cls, v: str) -> str:
-        if re.match("[A-Za-z0-9]+:[A-Za-z0-9]", v):
-            pass
-        else:
-            raise ValueError('id must be CURIE, e.g. NCIT:C42331')
-        return v
-
-class Age(BaseModel):
-    iso8601duration: Optional[str]=None
-
-class AgeRange(BaseModel):
-    end: Optional[Age]=None
-    start: Optional[Age]=None
-
-class GestationalAge(BaseModel):
-    days: Optional[int] = None
-    weeks: int
-
-class TimeInterval(BaseModel):
-    end: str
-    start: str
-
-class ReferenceRange(BaseModel):
-    high: Union[int,float]
-    low: Union[int, float]
-    unit: OntologyTerm
-
-class Quantity(BaseModel):
-    referenceRange: Optional[ReferenceRange] = None
-    unit: OntologyTerm
-    value: Union[int, float]
-
-class TypedQuantity(BaseModel):
-    quantity: Quantity
-    quantityType: OntologyTerm
-
-class TypedQuantities(BaseModel):
-    typedQuantities: Optional[TypedQuantity]=None
+from beacon.framework.validator.v2_0_0.common import OntologyTerm
+from beacon.models.ga4gh.beacon_v2_default_model.validator.non_collections.biosample.beacon_biosample_v2_1_0 import GestationalAge, TimeInterval, Quantity, Age, AgeRange, TypedQuantities
 
 class Members(BaseModel):
     affected: bool
