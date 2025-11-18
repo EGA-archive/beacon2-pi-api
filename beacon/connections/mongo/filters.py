@@ -13,6 +13,116 @@ from beacon.request.classes import RequestAttributes
 CURIE_REGEX = r'^([a-zA-Z0-9]*):\/?[a-zA-Z0-9./]*$'
 
 @log_with_args(level)
+def cross_query_entry_type_is_genomicVariant_and_scope_is_not(self, mongo_collection, original_id, query, dataset):
+    join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
+    if join_ids == []:
+        return query
+    targets = targets_ \
+        .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
+    bioids=targets[0]["biosampleIds"]
+    positions_list=[]
+    for id_item in join_ids:
+        biosampleId=id_item.pop(original_id)
+        try:
+            position=bioids.index(biosampleId)
+        except Exception:
+            continue
+        positions_list.append(position)
+    query_cl={}
+    query_cl["$or"]=[]
+    for position in positions_list:
+        position=str(position)
+        query_cl["$or"].append({ position: "10", "datasetId": dataset})
+        query_cl["$or"].append({ position: "11", "datasetId": dataset})
+        query_cl["$or"].append({ position: "01", "datasetId": dataset})
+    if query_cl["$or"]==[]:
+        return query
+    string_of_ids = caseLevelData \
+        .find(query_cl, {"id": 1, "_id": 0})
+    HGVSIds=list(string_of_ids)
+    query={}
+    queryHGVS={}
+    listHGVS=[]
+    for HGVSId in HGVSIds:
+        justid=HGVSId["id"]
+        listHGVS.append(justid)
+    queryHGVS["$in"]=listHGVS
+    query["identifiers.genomicHGVSId"]=queryHGVS
+    return query
+
+@log_with_args(level)
+def cross_query_scope_is_genomicVariant_and_entry_type_is_not(self, original_id, query, dataset):
+    HGVSIds = genomicVariations \
+        .find(query, {"identifiers.genomicHGVSId": 1, "_id": 0})
+    HGVSIds=list(HGVSIds)
+    list_of_variants_found=[]
+    for variant_found in HGVSIds:
+        list_of_variants_found.append(variant_found["identifiers"]["genomicHGVSId"])
+    queryHGVSId={"datasetId": dataset, "id": {"$in": list_of_variants_found}}
+    string_of_ids = caseLevelData \
+        .find(queryHGVSId)
+    targets = targets_ \
+        .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
+    targets=list(targets)
+    list_of_targets=targets[0]["biosampleIds"]
+    try:
+        list_of_positions_strings= string_of_ids
+    except Exception:
+        return query
+    biosampleIds=[]
+    for item in list_of_positions_strings:
+        for key, value in item.items():
+            if key != 'datasetId' and key != 'id' and key != '_id' and list_of_targets[int(key)] not in biosampleIds:
+                biosampleIds.append(list_of_targets[int(key)])
+    if original_id == 'individualId':
+        try:
+            finalquery={}
+            finalquery["$or"]=[]
+            for finalid in biosampleIds:
+                query = {"id": finalid}
+                finalquery["$or"].append(query)
+            individual_id = biosamples \
+                .find(finalquery, {original_id: 1, "_id": 0})
+            try:
+                finalids=[]
+                for indid in individual_id:
+                    finalids.append(indid[original_id])
+            except Exception:
+                finalids=[]
+            if finalids==[]:
+                finalids=biosampleIds
+        except Exception:
+            finalids=biosampleIds
+        query={}
+        query["$or"]=[]
+        for finalid in finalids:
+            finalquery = {"id": finalid}
+            query["$or"].append(finalquery)
+    else:
+        finalids=biosampleIds
+        try:
+            finalids=[]
+            for bioid in biosampleIds:
+                finalids.append({original_id: bioid})
+        except Exception:
+            finalids=[]
+        query = {"$and": [{"$or": finalids}]}
+    return query
+
+@log_with_args(level)
+def scope_is_not_entry_type(self, original_id, final_id, def_list, mongo_collection, query, dataset):
+    join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
+    if join_ids == []:
+        return query
+    for id_item in join_ids:
+        new_id={}
+        new_id[final_id] = id_item.pop(original_id)
+        def_list.append(new_id)
+    query={}
+    query['$or']=def_list
+    return query
+
+@log_with_args(level)
 def cross_query(self, query: dict, scope: str, request_parameters: dict, dataset: str):
     if scope == 'genomicVariation' and RequestAttributes.entry_type == genomicVariant.endpoint_name:
         subquery={}
@@ -34,382 +144,113 @@ def cross_query(self, query: dict, scope: str, request_parameters: dict, dataset
                 pass
     else:
         def_list=[]                
-        if scope == 'individual' and RequestAttributes.entry_type == genomicVariant.endpoint_name:
+        if scope == 'individual':
             mongo_collection=individuals
             original_id="id"
-            join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
-            if join_ids == []:
-                return query
-            targets = targets_ \
-                .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
-            bioids=targets[0]["biosampleIds"]
-            positions_list=[]
-            for id_item in join_ids:
-                new_id={}
-                biosampleId=id_item.pop(original_id)
-                try:
-                    position=bioids.index(biosampleId)
-                except Exception:
-                    continue
-                positions_list.append(position)
-            query_cl={}
-            query_cl["$or"]=[]
-            for position in positions_list:
-                position=str(position)
-                query_cl["$or"].append({ position: "10", "datasetId": dataset})
-                query_cl["$or"].append({ position: "11", "datasetId": dataset})
-                query_cl["$or"].append({ position: "01", "datasetId": dataset})
-                query_cl["$or"].append({ position: "y", "datasetId": dataset})
-            string_of_ids = caseLevelData \
-                .find(query_cl, {"id": 1, "_id": 0})
-            HGVSIds=list(string_of_ids)
-            query={}
-            queryHGVS={}
-            listHGVS=[]
-            for HGVSId in HGVSIds:
-                justid=HGVSId["id"]
-                listHGVS.append(justid)
-            queryHGVS["$in"]=listHGVS
-            query["identifiers.genomicHGVSId"]=queryHGVS
-        elif scope == 'individual' and RequestAttributes.entry_type in [run.endpoint_name,biosample.endpoint_name,analysis.endpoint_name]:
-            mongo_collection=individuals
-            original_id="id"
-            join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
-            if join_ids == []:
-                return query
             final_id="individualId"
-            for id_item in join_ids:
-                new_id={}
-                new_id[final_id] = id_item.pop(original_id)
-                def_list.append(new_id)
-            query={}
-            query['$or']=def_list
+            if RequestAttributes.entry_type == genomicVariant.endpoint_name:
+                query=cross_query_entry_type_is_genomicVariant_and_scope_is_not(self,mongo_collection, original_id, query, dataset)
+            elif RequestAttributes.entry_type in [run.endpoint_name,biosample.endpoint_name,analysis.endpoint_name]:
+                query=scope_is_not_entry_type(self, original_id, final_id, def_list, mongo_collection, query, dataset)
         elif scope == 'genomicVariation' and RequestAttributes.entry_type == individual.endpoint_name:
-            HGVSIds = genomicVariations \
-                .find(query, {"identifiers.genomicHGVSId": 1, "_id": 0})
-            HGVSIds=list(HGVSIds)
-            list_of_variants_found=[]
-            for variant_found in HGVSIds:
-                list_of_variants_found.append(variant_found["identifiers"]["genomicHGVSId"])
-            queryHGVSId={"datasetId": dataset, "id": {"$in": list_of_variants_found}}
-            string_of_ids = caseLevelData \
-                .find(queryHGVSId)
-            targets = targets_ \
-                .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
-            targets=list(targets)
-            list_of_targets=targets[0]["biosampleIds"]
-            try:
-                list_of_positions_strings= string_of_ids
-            except Exception:
-                return query
-            biosampleIds=[]
-            for item in list_of_positions_strings:
-                for key, value in item.items():
-                    if key != 'datasetId' and key != 'id' and key != '_id' and list_of_targets[int(key)] not in biosampleIds:
-                        biosampleIds.append(list_of_targets[int(key)])
-            try:
-                finalquery={}
-                finalquery["$or"]=[]
-                for finalid in biosampleIds:
-                    query = {"id": finalid}
-                    finalquery["$or"].append(query)
-                individual_id = biosamples \
-                    .find(finalquery, {"individualId": 1, "_id": 0})
-                try:
-                    finalids=[]
-                    for indid in individual_id:
-                        finalids.append(indid["individualId"])
-                except Exception:
-                    finalids=[]
-                if finalids==[]:
-                    finalids=biosampleIds
-            except Exception:
-                finalids=biosampleIds
-            query={}
-            query["$or"]=[]
-            for finalid in finalids:
-                finalquery = {"id": finalid}
-                query["$or"].append(finalquery)
+            query = cross_query_scope_is_genomicVariant_and_entry_type_is_not(self, "individualId", query, dataset)
         elif scope == 'genomicVariation' and RequestAttributes.entry_type == biosample.endpoint_name:
-            HGVSIds = genomicVariations \
-                .find(query, {"identifiers.genomicHGVSId": 1, "_id": 0})
-            HGVSIds=list(HGVSIds)
-            list_of_variants_found=[]
-            for variant_found in HGVSIds:
-                list_of_variants_found.append(variant_found["identifiers"]["genomicHGVSId"])
-            queryHGVSId={"datasetId": dataset, "id": {"$in": list_of_variants_found}}
-            string_of_ids = caseLevelData \
-                .find(queryHGVSId)
-            targets = targets_ \
-                .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
-            targets=list(targets)
-            list_of_targets=targets[0]["biosampleIds"]
-            try:
-                list_of_positions_strings= string_of_ids
-            except Exception:
-                return query
-            biosampleIds=[]
-            for item in list_of_positions_strings:
-                for key, value in item.items():
-                    if key != 'datasetId' and key != 'id' and key != '_id' and list_of_targets[int(key)] not in biosampleIds:
-                        biosampleIds.append(list_of_targets[int(key)])
-            finalids=biosampleIds
-            try:
-                finalids=[]
-                for bioid in biosampleIds:
-                    finalids.append({"id": bioid})
-            except Exception:
-                finalids=[]
-            query = {"$and": [{"$or": finalids}]}
+            query = cross_query_scope_is_genomicVariant_and_entry_type_is_not(self, "id", query, dataset)
         elif scope == 'genomicVariation' and RequestAttributes.entry_type in [analysis.endpoint_name,run.endpoint_name]:
-            HGVSIds = genomicVariations \
-                .find(query, {"identifiers.genomicHGVSId": 1, "_id": 0})
-            HGVSIds=list(HGVSIds)
-            list_of_variants_found=[]
-            for variant_found in HGVSIds:
-                list_of_variants_found.append(variant_found["identifiers"]["genomicHGVSId"])
-            queryHGVSId={"datasetId": dataset, "id": {"$in": list_of_variants_found}}
-            string_of_ids = caseLevelData \
-                .find(queryHGVSId)
-            targets = targets_ \
-                .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
-            targets=list(targets)
-            list_of_targets=targets[0]["biosampleIds"]
-            try:
-                list_of_positions_strings= string_of_ids
-            except Exception:
-                return query
-            biosampleIds=[]
-            for item in list_of_positions_strings:
-                for key, value in item.items():
-                    if key != 'datasetId' and key != 'id' and key != '_id' and list_of_targets[int(key)] not in biosampleIds:
-                        biosampleIds.append(list_of_targets[int(key)])
-            finalids=biosampleIds
-            try:
-                finalids=[]
-                for bioid in biosampleIds:
-                    finalids.append({"biosampleId": bioid})
-            except Exception:
-                finalids=[]
-            query = {"$and": [{"$or": finalids}]}
+            query = cross_query_scope_is_genomicVariant_and_entry_type_is_not(self, "biosampleId", query, dataset)
         elif scope == 'run' and RequestAttributes.entry_type != run.endpoint_name:
             mongo_collection=runs
             if RequestAttributes.entry_type == genomicVariant.endpoint_name:
                 original_id="biosampleId"
-                join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
-                if join_ids == []:
-                    return query
-                targets = targets_ \
-                    .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
-                bioids=targets[0]["biosampleIds"]
-                positions_list=[]
-                for id_item in join_ids:
-                    new_id={}
-                    biosampleId=id_item.pop(original_id)
-                    position=bioids.index(biosampleId)
-                    positions_list.append(position)
-                query_cl={}
-                query_cl["$or"]=[]
-                for position in positions_list:
-                    position=str(position)
-                    query_cl["$or"].append({ position: "10", "datasetId": dataset})
-                    query_cl["$or"].append({ position: "11", "datasetId": dataset})
-                    query_cl["$or"].append({ position: "01", "datasetId": dataset})
-                if query_cl["$or"]==[]:
-                    return query
-                string_of_ids = caseLevelData \
-                    .find(query_cl, {"id": 1, "_id": 0})
-                HGVSIds=list(string_of_ids)
-                query={}
-                queryHGVS={}
-                listHGVS=[]
-                for HGVSId in HGVSIds:
-                    justid=HGVSId["id"]
-                    listHGVS.append(justid)
-                queryHGVS["$in"]=listHGVS
-                query["identifiers.genomicHGVSId"]=queryHGVS
+                query = cross_query_entry_type_is_genomicVariant_and_scope_is_not(self, mongo_collection, original_id, query, dataset)
             elif RequestAttributes.entry_type == individual.endpoint_name:
                 original_id="individualId"
-                join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
-                if join_ids == []:
-                    return query
                 final_id="id"
-                for id_item in join_ids:
-                    new_id={}
-                    new_id[final_id] = id_item.pop(original_id)
-                    def_list.append(new_id)
-                    query={}
-                    query['$or']=def_list
+                query=scope_is_not_entry_type(self, original_id, final_id, def_list, mongo_collection, query, dataset)
             elif RequestAttributes.entry_type == analysis.endpoint_name:
                 original_id="biosampleId"
-                join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
-                if join_ids == []:
-                    return query
                 final_id="biosampleId"
-                for id_item in join_ids:
-                    new_id={}
-                    new_id[final_id] = id_item.pop(original_id)
-                    def_list.append(new_id)
-                    query={}
-                    query['$or']=def_list
+                query=scope_is_not_entry_type(self, original_id, final_id, def_list, mongo_collection, query, dataset)
             elif RequestAttributes.entry_type == biosample.endpoint_name:
                 original_id="biosampleId"
-                join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
-                if join_ids == []:
-                    return query
                 final_id="id"
-                for id_item in join_ids:
-                    new_id={}
-                    new_id[final_id] = id_item.pop(original_id)
-                    def_list.append(new_id)
-                    query={}
-                    query['$or']=def_list
+                query=scope_is_not_entry_type(self, original_id, final_id, def_list, mongo_collection, query, dataset)
         elif scope == 'analysis' and RequestAttributes.entry_type != analysis.endpoint_name:
             mongo_collection=analyses
             if RequestAttributes.entry_type == genomicVariant.endpoint_name:
                 original_id="biosampleId"
-                join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
-                if join_ids == []:
-                    return query
-                targets = targets_ \
-                    .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
-                bioids=targets[0]["biosampleIds"]
-                positions_list=[]
-                for id_item in join_ids:
-                    new_id={}
-                    biosampleId=id_item.pop(original_id)
-                    position=bioids.index(biosampleId)
-                    positions_list.append(position)
-                query_cl={}
-                query_cl["$or"]=[]
-                for position in positions_list:
-                    position=str(position)
-                    query_cl["$or"].append({ position: "10", "datasetId": dataset})
-                    query_cl["$or"].append({ position: "11", "datasetId": dataset})
-                    query_cl["$or"].append({ position: "01", "datasetId": dataset})
-                if query_cl["$or"]==[]:
-                    return query
-                string_of_ids = caseLevelData \
-                    .find(query_cl, {"id": 1, "_id": 0})
-                HGVSIds=list(string_of_ids)
-                query={}
-                queryHGVS={}
-                listHGVS=[]
-                for HGVSId in HGVSIds:
-                    justid=HGVSId["id"]
-                    listHGVS.append(justid)
-                queryHGVS["$in"]=listHGVS
-                query["identifiers.genomicHGVSId"]=queryHGVS
+                query = cross_query_entry_type_is_genomicVariant_and_scope_is_not(self, mongo_collection, original_id, query, dataset)
             elif RequestAttributes.entry_type == individual.endpoint_name:
                 original_id="individualId"
-                join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
-                if join_ids == []:
-                    return query
                 final_id="id"
-                for id_item in join_ids:
-                    new_id={}
-                    new_id[final_id] = id_item.pop(original_id)
-                    def_list.append(new_id)
-                query={}
-                query['$or']=def_list
+                query=scope_is_not_entry_type(self, original_id, final_id, def_list, mongo_collection, query, dataset)
             elif RequestAttributes.entry_type == run.endpoint_name:
                 original_id="biosampleId"
-                join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
-                if join_ids == []:
-                    return query
                 final_id="biosampleId"
-                for id_item in join_ids:
-                    new_id={}
-                    new_id[final_id] = id_item.pop(original_id)
-                    def_list.append(new_id)
-                query={}
-                query['$or']=def_list
+                query=scope_is_not_entry_type(self, original_id, final_id, def_list, mongo_collection, query, dataset)
             elif RequestAttributes.entry_type == biosample.endpoint_name:
                 original_id="biosampleId"
-                join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
-                if join_ids == []:
-                    return query
                 final_id="id"
-                for id_item in join_ids:
-                    new_id={}
-                    new_id[final_id] = id_item.pop(original_id)
-                    def_list.append(new_id)
-                query={}
-                query['$or']=def_list
+                query=scope_is_not_entry_type(self, original_id, final_id, def_list, mongo_collection, query, dataset)
         elif scope == 'biosample' and RequestAttributes.entry_type != biosample.endpoint_name:
             mongo_collection=biosamples
             if RequestAttributes.entry_type == genomicVariant.endpoint_name:
                 original_id="id"
-                join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
-                if join_ids == []:
-                    return query
-                targets = targets_ \
-                    .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
-                bioids=targets[0]["biosampleIds"]
-                positions_list=[]
-                for id_item in join_ids:
-                    new_id={}
-                    biosampleId=id_item.pop(original_id)
-                    position=bioids.index(biosampleId)
-                    positions_list.append(position)
-                query_cl={}
-                query_cl["$or"]=[]
-                for position in positions_list:
-                    position=str(position)
-                    query_cl["$or"].append({ position: "10", "datasetId": dataset})
-                    query_cl["$or"].append({ position: "11", "datasetId": dataset})
-                    query_cl["$or"].append({ position: "01", "datasetId": dataset})
-                if query_cl["$or"]==[]:
-                    return query
-                string_of_ids = caseLevelData \
-                    .find(query_cl, {"id": 1, "_id": 0})
-                HGVSIds=list(string_of_ids)
-                query={}
-                queryHGVS={}
-                listHGVS=[]
-                for HGVSId in HGVSIds:
-                    justid=HGVSId["id"]
-                    listHGVS.append(justid)
-                queryHGVS["$in"]=listHGVS
-                query["identifiers.genomicHGVSId"]=queryHGVS
+                query = cross_query_entry_type_is_genomicVariant_and_scope_is_not(self, mongo_collection, original_id, query, dataset)
             elif RequestAttributes.entry_type == individual.endpoint_name:
                 original_id="individualId"
-                join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
-                if join_ids == []:
-                    return query
                 final_id="id"
-                for id_item in join_ids:
-                    new_id={}
-                    new_id[final_id] = id_item.pop(original_id)
-                    def_list.append(new_id)
-                query={}
-                query['$or']=def_list
-            elif RequestAttributes.entry_type == analysis.endpoint_name:
+                query = scope_is_not_entry_type(self, original_id, final_id, def_list, mongo_collection, query, dataset)
+            elif RequestAttributes.entry_type in [analysis.endpoint_name, run.endpoint_name]:
                 original_id="id"
-                join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
-                if join_ids == []:
-                    return query
                 final_id="biosampleId"
-                for id_item in join_ids:
-                    new_id={}
-                    new_id[final_id] = id_item.pop(original_id)
-                    def_list.append(new_id)
-                query={}
-                query['$or']=def_list
-            elif RequestAttributes.entry_type == run.endpoint_name:
-                original_id="id"
-                join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
-                if join_ids == []:
-                    return query
-                final_id="biosampleId"
-                for id_item in join_ids:
-                    new_id={}
-                    new_id[final_id] = id_item.pop(original_id)
-                    def_list.append(new_id)
-                query={}
-                query['$or']=def_list
+                query = scope_is_not_entry_type(self, original_id, final_id, def_list, mongo_collection, query, dataset)
     return query
 
+@log_with_args(level)
+def get_biosampleIds(self, request_parameters, query, dataset):
+    HGVSIds = genomicVariations \
+        .find(request_parameters, {"identifiers.genomicHGVSId": 1, "datasetId": 1, "_id": 0})
+    HGVSIds=list(HGVSIds)
+    if HGVSIds == []:
+        return {}
+    HGVSDataset=HGVSIds[0]["datasetId"]
+    HGVSList=[]
+    for HGVSId in HGVSIds:
+        HGVSList.append(HGVSId["identifiers"]["genomicHGVSId"])
+    if dataset != HGVSDataset:
+        return {}
+    queryHGVSId={"datasetId": dataset, "id": {"$in": HGVSList}}
+    string_of_ids = caseLevelData \
+        .find(queryHGVSId)
+    targets = targets_ \
+        .find({"datasetId": HGVSDataset}, {"biosampleIds": 1, "_id": 0})
+    targets=list(targets)
+    list_of_targets=targets[0]["biosampleIds"]
+    try:
+        list_of_positions_strings= string_of_ids[0]
+    except Exception:
+        return query
+    biosampleIds=[]
+    for key, value in list_of_positions_strings.items():
+        if key != 'datasetId' and key != 'id' and key != '_id':
+            biosampleIds.append(list_of_targets[int(key)])
+    return biosampleIds
+
+@log_with_args(level)
+def get_total_query(self, biosampleIds, total_query, original_id):
+    try:
+        finalids=[]
+        for bioid in biosampleIds:
+            finalids.append({original_id: bioid})
+    except Exception:
+        finalids=[]
+    try:
+        total_query["$and"].append({"$or": finalids})
+    except Exception:
+        total_query["$and"]=[]
+        total_query["$and"].append({"$or": finalids})
+    return total_query
 
 
 @log_with_args(level)
@@ -439,145 +280,50 @@ def apply_filters(self, query: dict, filters: List[dict], query_parameters: dict
             if total_query["$and"] == [{'$or': []}] or total_query['$and'] == []:
                 total_query = {}
     if request_parameters != {}:
-        try:
-            if RequestAttributes.entry_type == individual.endpoint_name:
-                HGVSIds = genomicVariations \
-                    .find(request_parameters, {"identifiers.genomicHGVSId": 1, "datasetId": 1, "_id": 0})
-                HGVSIds=list(HGVSIds)
-                HGVSDataset=HGVSIds[0]["datasetId"]
-                HGVSList=[]
-                for HGVSId in HGVSIds:
-                    HGVSList.append(HGVSId["identifiers"]["genomicHGVSId"])
-                if dataset != HGVSDataset:
-                    return {}
-                queryHGVSId={"datasetId": dataset, "id": {"$in": HGVSList}}
-                string_of_ids = caseLevelData \
-                    .find(queryHGVSId)
-                targets = targets_ \
-                    .find({"datasetId": HGVSDataset}, {"biosampleIds": 1, "_id": 0})
-                targets=list(targets)
-                list_of_targets=targets[0]["biosampleIds"]
-                try:
-                    list_of_positions_strings= string_of_ids[0]
-                except Exception:
-                    return query
-                biosampleIds=[]
-                for key, value in list_of_positions_strings.items():
-                    if key != 'datasetId' and key != 'id' and key != '_id':
-                        biosampleIds.append(list_of_targets[int(key)])
-                try:
-                    finalquery={}
-                    finalquery["$or"]=[]
-                    for finalid in biosampleIds:
-                        query = {"id": finalid}
-                        finalquery["$or"].append(query)
-                    individual_id = biosamples \
-                        .find(finalquery, {"individualId": 1, "_id": 0})
-                    try:
-                        finalids=[]
-                        for indid in individual_id:
-                            finalids.append(indid["individualId"])
-                    except Exception:
-                        finalids=[]
-                    if finalids==[]:
-                        finalids=biosampleIds
-                except Exception:
-                    finalids=biosampleIds
+        if RequestAttributes.entry_type == individual.endpoint_name:
+            biosampleIds=get_biosampleIds(self, request_parameters, query, dataset)
+            try:
                 finalquery={}
                 finalquery["$or"]=[]
-                for finalid in finalids:
+                for finalid in biosampleIds:
                     query = {"id": finalid}
                     finalquery["$or"].append(query)
+                individual_id = biosamples \
+                    .find(finalquery, {"individualId": 1, "_id": 0})
                 try:
-                    total_query["$and"].append(finalquery)
+                    finalids=[]
+                    for indid in individual_id:
+                        finalids.append(indid["individualId"])
                 except Exception:
-                    total_query["$and"]=[]
-                    total_query["$and"].append(finalquery)
-            elif RequestAttributes.entry_type == biosample.endpoint_name:
-                HGVSIds = genomicVariations \
-                    .find(request_parameters, {"identifiers.genomicHGVSId": 1, "datasetId": 1, "_id": 0})
-                HGVSIds=list(HGVSIds)
-                if HGVSIds == []:
-                    return {}
-                HGVSDataset=HGVSIds[0]["datasetId"]
-                HGVSList=[]
-                for HGVSId in HGVSIds:
-                    HGVSList.append(HGVSId["identifiers"]["genomicHGVSId"])
-                if dataset != HGVSDataset:
-                    return {}
-                queryHGVSId={"datasetId": dataset, "id": {"$in": HGVSList}}
-                string_of_ids = caseLevelData \
-                    .find(queryHGVSId)
-                targets = targets_ \
-                    .find({"datasetId": HGVSDataset}, {"biosampleIds": 1, "_id": 0})
-                targets=list(targets)
-                list_of_targets=targets[0]["biosampleIds"]
-                try:
-                    list_of_positions_strings= string_of_ids[0]
-                except Exception:
-                    return query
-                biosampleIds=[]
-                for key, value in list_of_positions_strings.items():
-                    if key != 'datasetId' and key != 'id' and key != '_id':
-                        biosampleIds.append(list_of_targets[int(key)])
+                    finalids=[]
+                if finalids==[]:
+                    finalids=biosampleIds
+            except Exception:
                 finalids=biosampleIds
-                try:
-                    finalids=[]
-                    for bioid in biosampleIds:
-                        finalids.append({"id": bioid})
-                except Exception:
-                    finalids=[]
-                try:
-                    total_query["$and"].append({"$or": finalids})
-                except Exception:
-                    total_query["$and"]=[]
-                    total_query["$and"].append({"$or": finalids})
-            elif RequestAttributes.entry_type == analysis.endpoint_name or RequestAttributes.entry_type == run.endpoint_name:
-                HGVSIds = genomicVariations \
-                    .find(request_parameters, {"identifiers.genomicHGVSId": 1, "datasetId": 1, "_id": 0})
-                HGVSIds=list(HGVSIds)
-                HGVSDataset=HGVSIds[0]["datasetId"]
-                HGVSList=[]
-                for HGVSId in HGVSIds:
-                    HGVSList.append(HGVSId["identifiers"]["genomicHGVSId"])
-                if dataset != HGVSDataset:
-                    return {}
-                queryHGVSId={"datasetId": dataset, "id": {"$in": HGVSList}}
-                string_of_ids = caseLevelData \
-                    .find(queryHGVSId)
-                targets = targets_ \
-                    .find({"datasetId": HGVSDataset}, {"biosampleIds": 1, "_id": 0})
-                targets=list(targets)
-                list_of_targets=targets[0]["biosampleIds"]
-                try:
-                    list_of_positions_strings= string_of_ids[0]
-                except Exception:
-                    return query
-                biosampleIds=[]
-                for key, value in list_of_positions_strings.items():
-                    if key != 'datasetId' and key != 'id' and key != '_id':
-                        biosampleIds.append(list_of_targets[int(key)])
-                try:
-                    finalids=[]
-                    for bioid in biosampleIds:
-                        finalids.append({"biosampleId": bioid})
-                except Exception:
-                    finalids=[]
-                try:
-                    total_query["$and"].append({"$or": finalids})
-                except Exception:
-                    total_query["$and"]=[]
-                    total_query["$and"].append({"$or": finalids})
-            else:
-                try:
-                    total_query["$and"].append(request_parameters)
-                except Exception:
-                    total_query["$and"]=[]
-                    total_query["$and"].append(request_parameters)
-            if total_query["$and"] == [{'$or': []}] or total_query['$and'] == []:
-                total_query = {}
-        except Exception:
-            pass
+            finalquery={}
+            finalquery["$or"]=[]
+            for finalid in finalids:
+                query = {"id": finalid}
+                finalquery["$or"].append(query)
+            try:
+                total_query["$and"].append(finalquery)
+            except Exception:
+                total_query["$and"]=[]
+                total_query["$and"].append(finalquery)
+        elif RequestAttributes.entry_type == biosample.endpoint_name:
+            biosampleIds=get_biosampleIds(self, request_parameters, query, dataset)
+            total_query=get_total_query(self, biosampleIds, total_query, "id")
+        elif RequestAttributes.entry_type == analysis.endpoint_name or RequestAttributes.entry_type == run.endpoint_name:
+            biosampleIds=get_biosampleIds(self, request_parameters, query, dataset)
+            total_query=get_total_query(self, biosampleIds, total_query, "biosampleId")
+        else:
+            try:
+                total_query["$and"].append(request_parameters)
+            except Exception:
+                total_query["$and"]=[]
+                total_query["$and"].append(request_parameters)
+        if total_query["$and"] == [{'$or': []}] or total_query['$and'] == []:
+            total_query = {}
     if total_query == {} and query != {}:
         total_query=query
     return total_query
