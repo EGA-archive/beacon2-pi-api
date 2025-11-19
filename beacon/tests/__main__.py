@@ -3689,7 +3689,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_analyses_with_with_requestedSchemas_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+analysis.endpoint_name+"?requestedSchemas=beacon-analysis-v2.0.0")
+                resp = await client.get(conf.uri_subpath+"/"+analysis.endpoint_name+"?requestedSchemas=beacon-analysis-v2.0.0&testMode=true")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -4256,7 +4256,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_individuals_endpoint_is_removing_dataset():
-                resp = await client.get(conf.uri_subpath+"/"+individual.endpoint_name)
+                resp = await client.get(conf.uri_subpath+"/"+individual.endpoint_name+'?testMode=true')
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)

@@ -32,10 +32,56 @@ def parse_query_string(self, request):
             else:
                 v_list.append(v)
             query_string_body["query"]["filters"]=[]
+            is_or = False
+            or_list=[]
             for id in v_list:
                 v_dict={}
-                v_dict['id']=id
-                query_string_body["query"]["filters"].append(v_dict)
+                new_id=id
+                if '&gt;' in new_id:
+                    split_id = new_id.split('&gt;')
+                    v_dict["id"]=split_id[0]
+                    new_id=split_id[0]
+                    v_dict["operator"]='>'
+                    v_dict["value"]=split_id[1]
+                elif '&lt;' in new_id:
+                    split_id = new_id.split('&lt;')
+                    v_dict["id"]=split_id[0]
+                    new_id=split_id[0]
+                    v_dict["operator"]='<'
+                    v_dict["value"]=split_id[1]
+                elif '=' in new_id:
+                    split_id = new_id.split('=')
+                    v_dict["id"]=split_id[0]
+                    new_id=split_id[0]
+                    v_dict["operator"]='='
+                    v_dict["value"]=split_id[1]
+                elif '!' in new_id:
+                    split_id = new_id.split('!')
+                    v_dict["id"]=split_id[0]
+                    new_id=split_id[0]
+                    v_dict["operator"]='!'
+                    v_dict["value"]=split_id[1]
+                if '[' and ']' in new_id:
+                    new_id = new_id.replace('[','')
+                    new_id = new_id.replace(']','')
+                    v_dict['id'] = new_id
+                    is_or=False
+                elif '[' in new_id:
+                    v_dict['id'] = new_id.replace('[','')
+                    is_or=True
+                elif ']' in new_id:
+                    v_dict['id'] = new_id.replace(']','')
+                    is_or=False
+                else:
+                    v_dict['id']=new_id
+                if is_or == True:
+                    or_list.append(v_dict)
+                elif is_or == False and or_list != []:
+                    or_list.append(v_dict)
+                    query_string_body["query"]["filters"].append(or_list)
+                    or_list = []
+                elif is_or == False:
+                    query_string_body["query"]["filters"].append(v_dict)
         elif k == 'includeResultsetResponses':
             query_string_body["query"]["includeResultsetResponses"] = v
         elif k == 'skip':

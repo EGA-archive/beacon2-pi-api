@@ -10,7 +10,6 @@ class OntologyFilter(CamelModel, extra='forbid'):
     scope: Optional[str] =None
     includeDescendantTerms: Optional[bool] = True
     similarity: Optional[Similarity] = Similarity.EXACT
-    logic: Optional[str]=None
     @field_validator('id')
     @classmethod
     def id__ontology_filter_must_be_CURIE(cls, v: str) -> str:
@@ -25,7 +24,6 @@ class AlphanumericFilter(CamelModel, extra='forbid'):
     value: Union[str, int, List[int]]
     scope: Optional[str] =None
     operator: Operator = Operator.EQUAL
-    logic: Optional[str]=None
     @field_validator('id')
     @classmethod
     def id__alphanumeric_filter_must_not_be_CURIE(cls, v: str) -> str:
@@ -36,4 +34,3 @@ class AlphanumericFilter(CamelModel, extra='forbid'):
 class CustomFilter(CamelModel, extra='forbid'):
     id: str
     scope: Optional[str] =None
-    logic: Optional[str]=None

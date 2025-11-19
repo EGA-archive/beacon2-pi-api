@@ -148,7 +148,7 @@ class DatasetsRequested(BaseModel, extra='forbid'):
     datasets: list[str]
 
 class RequestQuery(CamelModel, extra='forbid'):
-    filters: List[Union[AlphanumericFilter,OntologyFilter,CustomFilter,List[AlphanumericFilter],List[OntologyFilter],List[CustomFilter]]] = []
+    filters: List[Union[AlphanumericFilter,OntologyFilter,CustomFilter,List[Union[AlphanumericFilter,OntologyFilter,CustomFilter]]]] = []
     includeResultsetResponses: IncludeResultsetResponses = IncludeResultsetResponses.HIT
     pagination: Pagination = Pagination()
     requestParameters: Union[SequenceQuery,RangeQuery,BracketQuery,AminoacidChangeQuery,GeneIdQuery,GenomicAlleleQuery,DatasetsRequested] = {}
@@ -195,7 +195,12 @@ class RequestParams(CamelModel, extra='forbid'):
         return {
             "apiVersion": self.meta.apiVersion,
             "requestedSchemas": self.meta.requestedSchemas,
-            "filters": [filtering_term["id"] for filtering_term in self.query.filters],
+            
+            "filters": [
+                    item["id"]
+                    for filtering_term in self.query.filters
+                    for item in (filtering_term if isinstance(filtering_term, list) else [filtering_term])
+                ],
             "requestParameters": self.query.requestParameters,
             "includeResultsetResponses": self.query.includeResultsetResponses,
             "pagination": self.query.pagination.dict(),
