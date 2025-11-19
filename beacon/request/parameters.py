@@ -148,7 +148,7 @@ class DatasetsRequested(BaseModel, extra='forbid'):
     datasets: list[str]
 
 class RequestQuery(CamelModel, extra='forbid'):
-    filters: List[Union[AlphanumericFilter,OntologyFilter,CustomFilter]] = []
+    filters: List[Union[AlphanumericFilter,OntologyFilter,CustomFilter,List[AlphanumericFilter],List[OntologyFilter],List[CustomFilter]]] = []
     includeResultsetResponses: IncludeResultsetResponses = IncludeResultsetResponses.HIT
     pagination: Pagination = Pagination()
     requestParameters: Union[SequenceQuery,RangeQuery,BracketQuery,AminoacidChangeQuery,GeneIdQuery,GenomicAlleleQuery,DatasetsRequested] = {}
