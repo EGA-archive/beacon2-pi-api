@@ -13,7 +13,7 @@ from beacon.request.classes import RequestAttributes
 from beacon.exceptions.exceptions import InvalidRequest, NoPermissionsAvailable
 
 source=dataset.database
-complete_module='beacon.connections.'+source+'.collections'
+complete_module='beacon.connections.'+source+'.models.ga4gh.collections'
 import importlib
 module = importlib.import_module(complete_module, package=None)
 

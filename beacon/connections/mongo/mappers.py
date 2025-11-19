@@ -1,5 +1,5 @@
-from beacon.connections.mongo.ga4gh.non_collections import get_phenotypic_cross_query, get_phenotypic_endpoint, get_phenotypic_endpoint_with_id, get_phenotypic_endpoint_of_cohort, get_phenotypic_endpoint_of_dataset, get_phenotypic_endpoint_of_variants, get_variants_of_cohort, get_variants_of_dataset, get_variants_of_phenotypic_endpoint
-from beacon.connections.mongo.ga4gh.collections import get_full_datasets, get_dataset_with_id, get_cohorts, get_cohort_with_id, get_cross_collections
+from beacon.connections.mongo.models.ga4gh.non_collections import get_phenotypic_cross_query, get_phenotypic_endpoint, get_phenotypic_endpoint_with_id, get_phenotypic_endpoint_of_cohort, get_phenotypic_endpoint_of_dataset, get_phenotypic_endpoint_of_variants, get_variants_of_cohort, get_variants_of_dataset, get_variants_of_phenotypic_endpoint
+from beacon.connections.mongo.models.ga4gh.collections import get_full_datasets, get_dataset_with_id, get_cohorts, get_cohort_with_id, get_cross_collections
 from beacon.logs.logs import log_with_args_mongo, LOG
 from beacon.request.classes import RequestAttributes
 from beacon.models.ga4gh.beacon_v2_default_model.conf import genomicVariant, analysis, run, biosample, individual, dataset, cohort

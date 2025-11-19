@@ -17,6 +17,8 @@ class RelatedEndpoint(BaseModel):
 
 prelist_of_modules = get_all_modules()
 
+LOG.warning(prelist_of_modules)
+
 list_of_modules=[x for x in prelist_of_modules if x.id != ""]
 
 fields_related = {str(field_name.id): (Optional[RelatedEndpoint],None) for field_name in list_of_modules}

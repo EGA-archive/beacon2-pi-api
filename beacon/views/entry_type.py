@@ -9,15 +9,13 @@ from pydantic import ValidationError
 from beacon.exceptions.exceptions import InvalidData
 from beacon.views.endpoint import EndpointView
 from beacon.response.includeResultsetResponses import include_resultSet_responses
-from beacon.utils.modules import load_framework_module
+from beacon.utils.modules import load_framework_module, load_source_module
 
 class EntryTypeView(EndpointView):
     @query_permissions
     @log_with_args(level)
     async def handler(self, datasets, username, time_now):
-        complete_module='beacon.connections.'+RequestAttributes.source+'.executor'# TODO: Comentar.
-        import importlib
-        module = importlib.import_module(complete_module, package=None)
+        module = load_source_module(self, "executor")
         initialMultipleDatasetsResponseClass = await module.execute_function(self, datasets)
         multipleDatasetsResponseClass = include_resultSet_responses(self, initialMultipleDatasetsResponseClass)
         module_meta = load_framework_module(self, "meta")

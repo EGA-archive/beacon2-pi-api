@@ -6,14 +6,12 @@ from beacon.request.classes import RequestAttributes
 from pydantic import ValidationError
 from beacon.exceptions.exceptions import InvalidData
 from beacon.views.endpoint import EndpointView
-from beacon.utils.modules import load_framework_module
+from beacon.utils.modules import load_framework_module, load_source_module
 
 class CollectionEntryTypeView(EndpointView):
     @log_with_args(level)
     async def handler(self):
-        complete_module='beacon.connections.'+RequestAttributes.source+'.executor'
-        import importlib
-        module = importlib.import_module(complete_module, package=None)
+        module = load_source_module(self, 'executor')
         collectionsResponseClass = await module.execute_collection_function(self)
         module_meta = load_framework_module(self, "meta")
         module_common = load_framework_module(self, "common")
