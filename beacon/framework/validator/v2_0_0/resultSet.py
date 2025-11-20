@@ -36,6 +36,7 @@ def make_ResultsetInstance():
     def countPrecision_validator(cls, v):
         return validate_count_precision(v)
 
+    @classmethod
     def build_response_by_dataset(cls, datasetInstance, allowed_granularity, granularity):
         resultsHandovers = None
 
@@ -70,6 +71,7 @@ def make_ResultsetInstance():
                         resultsCount=resultsCount,
                         resultsHandovers=resultsHandovers)
 
+    @classmethod
     def create(cls, **kwargs):
         if 'results' not in kwargs or kwargs['results'] is None:
             kwargs['results'] = [ResultType]
@@ -93,8 +95,8 @@ def make_ResultsetInstance():
         }
     )
 
-    setattr(model, "create", classmethod(create))
-    setattr(model, "build_response_by_dataset", classmethod(build_response_by_dataset))
+    setattr(model, "create", create)
+    setattr(model, "build_response_by_dataset", build_response_by_dataset)
 
     return model
 

@@ -2,7 +2,7 @@ from beacon.logs.logs import log_with_args_mongo
 from beacon.conf.conf import level
 from beacon.connections.mongo.utils import get_count, get_documents, query_id, get_documents_for_cohorts, get_phenotypic_cross_query_attributes
 from beacon.connections.mongo.filters import apply_filters
-from beacon.connections.mongo.request_parameters import apply_request_parameters
+from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.request_parameters import apply_request_parameters
 from beacon.request.classes import RequestAttributes
 from beacon.connections.mongo.__init__ import datasets, cohorts
 from beacon.logs.logs import LOG

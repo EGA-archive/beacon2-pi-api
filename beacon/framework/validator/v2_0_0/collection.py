@@ -8,6 +8,7 @@ from beacon.utils.modules import load_class, load_types_of_results
 def make_Collections():
     CollectionType = load_types_of_results("collections")
 
+    @classmethod
     def create(cls, collections: List[Union[CollectionType]]):
         return cls(collections=collections)
 
@@ -18,7 +19,7 @@ def make_Collections():
     )
 
 
-    setattr(model, "create", classmethod(create))
+    setattr(model, "create", create)
 
     return model
 
@@ -27,6 +28,7 @@ def make_CollectionResponse(Collections):
     ResponseSummaryType = load_class("common", "ResponseSummary")
     HandoverType = load_class("common", "Handover")
 
+    @classmethod
     def create(cls, meta, response: Collections, responseSummary, beaconHandovers=None, info=None):
         return cls(
             meta=meta,
@@ -46,5 +48,5 @@ def make_CollectionResponse(Collections):
         __base__=BaseModel
     )
 
-    setattr(model, "create", classmethod(create))
+    setattr(model, "create", create)
     return model
