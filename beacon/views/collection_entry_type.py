@@ -16,10 +16,12 @@ class CollectionEntryTypeView(EndpointView):
         module_meta = load_framework_module(self, "meta")
         module_common = load_framework_module(self, "common")
         module_collection = load_framework_module(self, "collection")
+        Collections = module_collection.make_Collections()
+        CollectionResponse = module_collection.make_CollectionResponse(Collections)
         try:
             meta = module_meta.Meta(receivedRequestSummary=RequestAttributes.qparams.summary(),returnedGranularity=RequestAttributes.returned_granularity,returnedSchemas=RequestAttributes.returned_schema,testMode=RequestAttributes.qparams.query.testMode)
             responseSummary = module_common.ResponseSummary(exists=collectionsResponseClass.count>0,numTotalResults=collectionsResponseClass.count)
-            self.classResponse = module_collection.CollectionResponse(meta=meta.model_dump(exclude_none=True),response=module_collection.Collections(collections=collectionsResponseClass.docs).model_dump(exclude_none=True),responseSummary=responseSummary.model_dump(exclude_none=True))
+            self.classResponse = CollectionResponse(meta=meta.model_dump(exclude_none=True),response=Collections(collections=collectionsResponseClass.docs).model_dump(exclude_none=True),responseSummary=responseSummary.model_dump(exclude_none=True))
             response_obj = self.create_response()
         except ValidationError as v:
             LOG.error(str(v))

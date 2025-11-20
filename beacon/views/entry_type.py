@@ -28,16 +28,17 @@ class EntryTypeView(EndpointView):
             if RequestAttributes.response_type == 'resultSet':
                 list_of_resultSets=[]
                 new_datasets=[]
+                ResultsetInstance, Resultsets, ResultsetsResponse = module_resultSet.build_full_dynamic_response()
                 for dataset in multipleDatasetsResponseClass.datasets_responses:
                     try:
-                        resultSet = module_resultSet.ResultsetInstance.build_response_by_dataset(module_resultSet.ResultsetInstance, dataset, RequestAttributes.allowed_granularity,RequestAttributes.qparams.query.requestedGranularity)
+                        resultSet = ResultsetInstance.build_response_by_dataset(dataset, RequestAttributes.allowed_granularity,RequestAttributes.qparams.query.requestedGranularity)
                         list_of_resultSets.append(resultSet)
                         new_datasets.append(dataset)
                     except ValidationError as v:
                         LOG.error('{} dataset is invalid: {}'.format(dataset.dataset, str(v)))
                 responseSummary = module_common.ResponseSummary.build_response_summary_by_dataset(module_common.ResponseSummary, new_datasets)
-                resultSets = module_resultSet.Resultsets.return_resultSets(module_resultSet.Resultsets, list_of_resultSets)
-                self.classResponse = module_resultSet.ResultsetsResponse.return_response(module_resultSet.ResultsetsResponse, meta, resultSets, responseSummary)
+                resultSets = Resultsets.return_resultSets(list_of_resultSets)
+                self.classResponse = ResultsetsResponse.return_response(meta, resultSets, responseSummary)
                 response_obj = self.create_response()
             elif RequestAttributes.response_type == 'count':
                 responseSummary = module_count.CountResponseSummary.build_count_response_summary(module_count.CountResponseSummary, multipleDatasetsResponseClass.total_count)

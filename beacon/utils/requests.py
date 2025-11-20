@@ -182,6 +182,8 @@ def set_response_type(self):
     We receive an absolute url with a host and a port, the endpoint queried and the query string. We check that the url and host match with the beacon uri in conf and then
     we keep the name of the endpoint checking if it matches an entry type in configuration and the internal id queried, if there is one.
     '''
+    endpoint_module = get_conf(RequestAttributes.entry_type)
+    LOG.warning(endpoint_module)
     if RequestAttributes.qparams.query.includeResultsetResponses != 'NONE':
         RequestAttributes.response_type = 'resultSet'
     elif RequestAttributes.qparams.query.includeResultsetResponses == 'NONE' and RequestAttributes.allowed_granularity in ['count','record'] and RequestAttributes.qparams.query.requestedGranularity in ['count', 'record']:
@@ -197,7 +199,6 @@ def set_response_type(self):
     else:
         RequestAttributes.returned_granularity = 'count'
     if RequestAttributes.entry_type not in ['filtering_terms', 'map', 'configuration', 'info', 'service-info', 'entry_types']:
-        endpoint_module = get_conf(RequestAttributes.entry_type)
         if RequestAttributes.entry_type == endpoint_module.endpoint_name:
             if endpoint_module.allow_queries_without_filters == False and RequestAttributes.qparams.query.filters == [] and RequestAttributes.qparams.query.requestParameters == {}:
                 raise NoFiltersAllowed("{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type))

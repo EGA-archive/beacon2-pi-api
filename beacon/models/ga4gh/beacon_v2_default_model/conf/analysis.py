@@ -30,4 +30,5 @@ cohort_lookup=True # True if your beacon enables endpoint analyses/{id}/cohorts
 dataset_lookup=True # True if your beacon enables endpoint analyses/{id}/datasets
 genomicVariant_lookup=True # True if your beacon enables endpoint analyses/{id}/g_variants
 individual_lookup=True # True if your beacon enables endpoint analyses/{id}/individuals
+# TODO: afegir noms de urls pels lookups amb la variable example: individual_lookup_url=""
 run_lookup=True # True if your beacon enables endpoint analyses/{id}/runs
