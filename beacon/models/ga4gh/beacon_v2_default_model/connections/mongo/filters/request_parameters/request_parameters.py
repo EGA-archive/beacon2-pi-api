@@ -1,5 +1,13 @@
- 
-def cross_request_parameters(self, total_query): 
+from beacon.connections.mongo.__init__ import biosamples
+from beacon.conf.conf import level
+from beacon.logs.logs import log_with_args, LOG
+from beacon.models.ga4gh.beacon_v2_default_model.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run
+from beacon.request.classes import RequestAttributes
+from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.cross_queries.get_biosampleIds import get_biosampleIds
+from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.cross_queries.get_total_query import get_total_query
+
+@log_with_args(level)
+def request_parameters(self, total_query, request_parameters): 
     if RequestAttributes.entry_type == individual.endpoint_name:
         biosampleIds=get_biosampleIds(self, request_parameters, query, dataset)
         try:

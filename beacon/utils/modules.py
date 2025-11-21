@@ -86,7 +86,27 @@ def load_routes(app):
                     app = module.extend_routes(app)
     return app
 
-def get_conf(entry_type):
+def get_all_modules_mongo_connections_script(script):
+    list_of_modules=[]
+    dirs = os.listdir("/beacon/models")
+    for folder in dirs:
+        subdirs = os.listdir("/beacon/models/"+folder)
+        if "connections" in subdirs:
+            complete_module='beacon.models.'+folder+'.connections.mongo.filters.'+script
+            import importlib
+            module = importlib.import_module(complete_module, package=None)
+            list_of_modules.append(module)
+        else:
+            for subfolder in subdirs:
+                underdirs = os.listdir("/beacon/models/"+folder+"/"+subfolder)
+                if "connections" in underdirs:
+                    complete_module='beacon.models.'+folder+'.'+subfolder+'.connections.mongo.filters.'+script
+                    import importlib
+                    module = importlib.import_module(complete_module, package=None)
+                    list_of_modules.append(module)
+    return list_of_modules
+                            
+def get_one_module_conf(entry_type):
     dirs = os.listdir("/beacon/models")
     for folder in dirs:
         subdirs = os.listdir("/beacon/models/"+folder)
@@ -112,7 +132,7 @@ def get_conf(entry_type):
                             if entry_type == module.endpoint_name:
                                 return module
                         
-def get_all_modules():
+def get_all_modules_conf():
     list_of_modules=[]
     dirs = os.listdir("/beacon/models")
     for folder in dirs:

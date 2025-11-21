@@ -1,15 +1,12 @@
-from typing import List, Union
+from typing import List
 import re
 from beacon.request.parameters import AlphanumericFilter, CustomFilter, OntologyFilter
-from beacon.request.classes import Operator, Similarity
-from beacon.connections.mongo.utils import get_documents, join_query, choose_scope
-from beacon.connections.mongo.__init__ import client, genomicVariations, individuals, datasets, cohorts, analyses, biosamples, runs, targets as targets_, caseLevelData, filtering_terms, similarities, synonyms as synonyms_
-from beacon.conf.filtering_terms import alphanumeric_terms
 from beacon.logs.logs import log_with_args, LOG
 from beacon.conf.conf import level
-from beacon.models.ga4gh.beacon_v2_default_model.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run
-from beacon.request.classes import RequestAttributes
-from beacon.connections.mongo.filters.cross_request_parameters import cross_request_parameters 
+from beacon.connections.mongo.filters.request_parameters import request_parameters_from_modules
+from beacon.connections.mongo.filters.alphanumeric import apply_alphanumeric_filter
+from beacon.connections.mongo.filters.ontology import apply_ontology_filter
+from beacon.connections.mongo.filters.custom import apply_custom_filter
 
 CURIE_REGEX = r'^([a-zA-Z0-9]*):\/?[a-zA-Z0-9./]*$'
 
@@ -40,7 +37,7 @@ def apply_filters(self, query: dict, filters: List[dict], query_parameters: dict
             if total_query["$and"] == [{'$or': []}] or total_query['$and'] == []:
                 total_query = {}
     if request_parameters != {}:
-        total_query = cross_request_parameters(self, total_query)
+        total_query = request_parameters_from_modules(self, total_query, request_parameters)
         if total_query["$and"] == [{'$or': []}] or total_query['$and'] == []:
             total_query = {}
     if total_query == {} and query != {}:

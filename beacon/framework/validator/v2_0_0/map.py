@@ -8,14 +8,14 @@ from pydantic import (
 from beacon.conf import conf
 from beacon.utils.modules import load_class
 from beacon.models.ga4gh.beacon_v2_default_model.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run
-from beacon.utils.modules import get_all_modules
+from beacon.utils.modules import get_all_modules_conf
 from beacon.logs.logs import LOG
 
 class RelatedEndpoint(BaseModel):
     returnedEntryType: str
     url: str
 
-prelist_of_modules = get_all_modules()
+prelist_of_modules = get_all_modules_conf()
 
 LOG.warning(prelist_of_modules)
 

@@ -6,7 +6,7 @@ from pydantic import (
 )
 import re
 from typing import List, Optional
-from beacon.utils.modules import load_class, get_all_modules
+from beacon.utils.modules import load_class, get_all_modules_conf
 from beacon.models.ga4gh.beacon_v2_default_model.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run
 
 class OntologyTerm(BaseModel):
@@ -32,7 +32,7 @@ class EntryTypes(BaseModel):
     ontologyTermForThisType: Optional[OntologyTerm] = None
     partOfSpecification: str
 
-prelist_of_modules = get_all_modules()
+prelist_of_modules = get_all_modules_conf()
 
 list_of_modules=[x for x in prelist_of_modules if x.id != ""]
 

@@ -2,8 +2,8 @@ from beacon.logs.logs import log_with_args, LOG
 from beacon.conf.conf import level
 from beacon.models.ga4gh.beacon_v2_default_model.conf import genomicVariant, analysis, run, biosample, individual
 from beacon.request.classes import RequestAttributes
-from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.request_parameters import apply_request_parameters
-from beacon.connections.mongo.filters import apply_filters
+from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.request_parameters.apply_request_parameters import apply_request_parameters
+from beacon.connections.mongo.filters.custom import apply_filters
 from beacon.connections.mongo.utils import get_docs_by_response_type, query_id
 from beacon.connections.mongo.__init__ import genomicVariations, targets as targets_, caseLevelData, biosamples, runs, cohorts, analyses, datasets, individuals
 from beacon.connections.mongo.utils import get_count, get_documents_for_cohorts, get_phenotypic_cross_query_attributes

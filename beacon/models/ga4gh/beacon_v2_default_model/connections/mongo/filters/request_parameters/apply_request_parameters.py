@@ -1,88 +1,15 @@
 from beacon.request.parameters import AlphanumericFilter
-from beacon.request.classes import Operator
 from typing import List, Dict
 from beacon.logs.logs import log_with_args, LOG
 from beacon.conf.conf import level
-from aiohttp import web
-from beacon.connections.mongo.filters import apply_alphanumeric_filter
-from beacon.connections.mongo.__init__ import client, genomicVariations
+from beacon.connections.mongo.filters.alphanumeric import apply_alphanumeric_filter
+from beacon.connections.mongo.__init__ import genomicVariations
 from beacon.connections.mongo.utils import lengthquery
 from beacon.request.classes import RequestAttributes
-
-VARIANTS_PROPERTY_MAP = {
-    "start": "variation.location.interval.start.value",
-    "end": "variation.location.interval.end.value",
-    "assemblyId": "assemblyId",
-    "referenceName": "identifiers.genomicHGVSId",
-    "referenceBases": "variation.referenceBases",
-    "alternateBases": "variation.alternateBases",
-    "variantType": "variation.variantType",
-    "variantMinLength": "variation.alternateBases",
-    "variantMaxLength": "variation.alternateBases",
-    "geneId": "molecularAttributes.geneIds",
-    "genomicAlleleShortForm": "identifiers.genomicHGVSId",
-    "aminoacidChange": "molecularAttributes.aminoacidChanges",
-    "clinicalRelevance": "caseLevelData.clinicalInterpretations.clinicalRelevance",
-    "mateName": "identifiers.genomicHGVSId"
-}
-
-@log_with_args(level)
-def generate_position_filter_start(self, key: str, value: List[int]) -> List[AlphanumericFilter]:
-    filters = []
-    if len(value) == 1:
-        filters.append(AlphanumericFilter(
-            id=VARIANTS_PROPERTY_MAP[key],
-            value=value[0],
-            operator=Operator.GREATER_EQUAL
-        ))
-    elif len(value) == 2:
-        filters.append(AlphanumericFilter(
-            id=VARIANTS_PROPERTY_MAP[key],
-            value=value[0],
-            operator=Operator.GREATER_EQUAL
-        ))
-        filters.append(AlphanumericFilter(
-            id=VARIANTS_PROPERTY_MAP[key],
-            value=value[1],
-            operator=Operator.LESS_EQUAL
-        ))
-    return filters
-
-
-@log_with_args(level)
-def generate_position_filter_end(self, key: str, value: List[int]) -> List[AlphanumericFilter]:
-    filters = []
-    if len(value) == 1:
-        filters.append(AlphanumericFilter(
-            id=VARIANTS_PROPERTY_MAP[key],
-            value=value[0],
-            operator=Operator.LESS
-        ))
-    elif len(value) == 2:
-        filters.append(AlphanumericFilter(
-            id=VARIANTS_PROPERTY_MAP[key],
-            value=value[0],
-            operator=Operator.GREATER_EQUAL
-        ))
-        filters.append(AlphanumericFilter(
-            id=VARIANTS_PROPERTY_MAP[key],
-            value=value[1],
-            operator=Operator.LESS_EQUAL
-        ))
-    return filters
-
-@log_with_args(level)
-def generate_position_filter_start_sequence_query(self, key: str, value: List[int]) -> List[AlphanumericFilter]:
-    filters = []
-    if len(value) == 1:
-        filters.append(AlphanumericFilter(
-            id=VARIANTS_PROPERTY_MAP[key],
-            value=value[0],
-            operator=Operator.EQUAL
-        ))
-    return filters
-
-
+from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.request_parameters.start import generate_position_filter_start
+from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.request_parameters.sequence import generate_position_filter_start_sequence_query
+from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.request_parameters.end import generate_position_filter_end
+from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.request_parameters.mapping import VARIANTS_PROPERTY_MAP
 
 @log_with_args(level)
 def apply_request_parameters(self, query: Dict[str, List[dict]], dataset: str):

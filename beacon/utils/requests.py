@@ -12,7 +12,7 @@ from beacon.conf import filtering_terms
 import os
 from beacon.request.parameters import RequestMeta, SchemasPerEntity
 from pydantic import ValidationError
-from beacon.utils.modules import get_conf
+from beacon.utils.modules import get_one_module_conf
 
 @log_with_args(level)
 def parse_query_string(self, request):
@@ -129,7 +129,7 @@ def set_entry_type_configuration(self):
     elif RequestAttributes.entry_type == 'entry_types':
         RequestAttributes.allowed_granularity = 'record'
     else:
-        endpoint_module = get_conf(RequestAttributes.entry_type)
+        endpoint_module = get_one_module_conf(RequestAttributes.entry_type)
         RequestAttributes.source = endpoint_module.database
         RequestAttributes.allowed_granularity = endpoint_module.granularity
         RequestAttributes.entry_type_id = endpoint_module.id
@@ -173,7 +173,7 @@ def set_entry_type(self, request):
             set_entry_type_configuration(self)
             RequestAttributes.entry_id=request.match_info.get('id', None)
     if RequestAttributes.entry_type not in ['filtering_terms', 'map', 'configuration', 'info', 'service-info', 'entry_types']:
-        endpoint_module = get_conf(RequestAttributes.entry_type)
+        endpoint_module = get_one_module_conf(RequestAttributes.entry_type)
         RequestAttributes.mongo_collection = endpoint_module.database_connection
 
 @log_with_args(level)
@@ -182,7 +182,7 @@ def set_response_type(self):
     We receive an absolute url with a host and a port, the endpoint queried and the query string. We check that the url and host match with the beacon uri in conf and then
     we keep the name of the endpoint checking if it matches an entry type in configuration and the internal id queried, if there is one.
     '''
-    endpoint_module = get_conf(RequestAttributes.entry_type)
+    endpoint_module = get_one_module_conf(RequestAttributes.entry_type)
     LOG.warning(endpoint_module)
     if RequestAttributes.qparams.query.includeResultsetResponses != 'NONE':
         RequestAttributes.response_type = 'resultSet'
