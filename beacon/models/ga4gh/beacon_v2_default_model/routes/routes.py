@@ -2,7 +2,7 @@ from beacon.logs.logs import log_with_args_initial
 from beacon.conf.conf import level
 from beacon.conf.conf import level, uri_subpath
 import aiohttp.web as web
-from beacon.models.ga4gh.beacon_v2_default_model.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run
+from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import analysis, biosample, cohort, dataset, genomicVariant, individual, run
 from beacon.views.collection_entry_type import CollectionEntryTypeView
 from beacon.views.entry_type import EntryTypeView 
 

@@ -7,7 +7,6 @@ from pydantic import (
 import re
 from typing import List, Optional
 from beacon.utils.modules import load_class, get_all_modules_conf
-from beacon.models.ga4gh.beacon_v2_default_model.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run
 
 class OntologyTerm(BaseModel):
     id: str

@@ -7,15 +7,10 @@ from beacon.auth.__main__ import authentication
 from beacon.logs.logs import log_with_args
 from beacon.conf.conf import level, default_beacon_granularity
 from beacon.budget.__main__ import check_budget
-from beacon.models.ga4gh.beacon_v2_default_model.conf import dataset
+from beacon.utils.modules import get_all_modules_datasets
 from beacon.response.classes import SingleDatasetResponse
 from beacon.request.classes import RequestAttributes
 from beacon.exceptions.exceptions import InvalidRequest, NoPermissionsAvailable
-
-source=dataset.database
-complete_module='beacon.connections.'+source+'.models.ga4gh.collections'
-import importlib
-module = importlib.import_module(complete_module, package=None)
 
 @log_with_args(level)
 async def authorization(self):
@@ -44,7 +39,15 @@ async def get_datasets_list(self, authorized_datasets):
         specific_datasets = RequestAttributes.qparams.query.requestParameters['datasets']
     except Exception as e:
         specific_datasets = []
-    beacon_datasets = module.get_list_of_datasets(self)
+    list_of_datasets_confs = get_all_modules_datasets()
+    beacon_datasets=[]
+    for dataset_conf in list_of_datasets_confs:
+        try:
+            datasets = dataset_conf.get_list_of_datasets(self)
+        except Exception:
+            continue
+        for dataset in datasets:
+            beacon_datasets.append(dataset)
     # Get response
     if specific_datasets != []:
         response_datasets =  [element for element in authorized_datasets if element.dataset in [r['id'] for r in beacon_datasets] and element.dataset in specific_datasets]

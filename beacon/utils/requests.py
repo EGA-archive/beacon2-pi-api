@@ -7,7 +7,6 @@ from beacon.conf.conf import level, uri, uri_subpath, api_version
 from beacon.request.classes import RequestAttributes
 from beacon.exceptions.exceptions import IncoherenceInRequestError, InvalidRequest, WrongURIPath, NoFiltersAllowed
 import html
-from beacon.models.ga4gh.beacon_v2_default_model.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run
 from beacon.conf import filtering_terms
 import os
 from beacon.request.parameters import RequestMeta, SchemasPerEntity
@@ -183,7 +182,6 @@ def set_response_type(self):
     we keep the name of the endpoint checking if it matches an entry type in configuration and the internal id queried, if there is one.
     '''
     endpoint_module = get_one_module_conf(RequestAttributes.entry_type)
-    LOG.warning(endpoint_module)
     if RequestAttributes.qparams.query.includeResultsetResponses != 'NONE':
         RequestAttributes.response_type = 'resultSet'
     elif RequestAttributes.qparams.query.includeResultsetResponses == 'NONE' and RequestAttributes.allowed_granularity in ['count','record'] and RequestAttributes.qparams.query.requestedGranularity in ['count', 'record']:

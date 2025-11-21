@@ -12,7 +12,7 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, dat
     formatted_value = format_value(self, filter.value)
     formatted_operator = format_operator(self, filter.operator)
     if isRequestParameter == True:
-        list_modules = get_all_modules_mongo_connections_script("request_parameters.alphanumeric")
+        list_modules = get_all_modules_mongo_connections_script("filters.request_parameters.alphanumeric")
         for module in list_modules:
             query = module.parse_request_parameters(self, query)
     elif isinstance(formatted_value,str):
@@ -37,7 +37,7 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, dat
                 query_id={}
                 query_id[query_term]=regex_dict
                 query['$or'].append(query_id)
-                list_modules = get_all_modules_mongo_connections_script("cross_queries.cross_query")
+                list_modules = get_all_modules_mongo_connections_script("filters.cross_queries.cross_query")
                 for module in list_modules:
                     query = module.cross_query(self, query, scope, {}, dataset)
                 
@@ -52,7 +52,7 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, dat
                 query_id={}
                 query_id[query_term]=filter.value
                 query['$or'].append(query_id) 
-                list_modules = get_all_modules_mongo_connections_script("cross_queries.cross_query")
+                list_modules = get_all_modules_mongo_connections_script("filters.cross_queries.cross_query")
                 for module in list_modules:
                     query = module.cross_query(self, query, scope, {}, dataset)
                 
@@ -113,7 +113,7 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, dat
                 dict_in={}
                 dict_in["$regex"]=new_age_list
                 query[filter.id] = dict_in
-                list_modules = get_all_modules_mongo_connections_script("cross_queries.cross_query")
+                list_modules = get_all_modules_mongo_connections_script("filters.cross_queries.cross_query")
                 for module in list_modules:
                     query = module.cross_query(self, query, scope, {}, dataset)
             elif '<' in filter.operator:
@@ -139,7 +139,7 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, dat
                 dict_in={}
                 dict_in["$regex"]=new_age_list
                 query[filter.id] = dict_in
-                list_modules = get_all_modules_mongo_connections_script("cross_queries.cross_query")
+                list_modules = get_all_modules_mongo_connections_script("filters.cross_queries.cross_query")
                 for module in list_modules:
                     query = module.cross_query(self, query, scope, {}, dataset)
             elif '=' in filter.operator:
@@ -155,7 +155,7 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, dat
                 dict_in={}
                 dict_in["$regex"]=newagechar
                 query[filter.id] = dict_in
-                list_modules = get_all_modules_mongo_connections_script("cross_queries.cross_query")
+                list_modules = get_all_modules_mongo_connections_script("filters.cross_queries.cross_query")
                 for module in list_modules:
                     query = module.cross_query(self, query, scope, {}, dataset)
         else:
@@ -197,7 +197,7 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, dat
             dict_measures={}
             dict_measures[measuresfield]=dict_elemmatch
             query = dict_measures
-            list_modules = get_all_modules_mongo_connections_script("cross_queries.cross_query")
+            list_modules = get_all_modules_mongo_connections_script("filters.cross_queries.cross_query")
             for module in list_modules:
                 query = module.cross_query(self, query, scope, {}, dataset)
     return query

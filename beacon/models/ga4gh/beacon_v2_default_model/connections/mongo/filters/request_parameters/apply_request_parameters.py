@@ -4,7 +4,7 @@ from beacon.logs.logs import log_with_args, LOG
 from beacon.conf.conf import level
 from beacon.connections.mongo.filters.alphanumeric import apply_alphanumeric_filter
 from beacon.connections.mongo.__init__ import genomicVariations
-from beacon.connections.mongo.utils import lengthquery
+from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.utils import lengthquery
 from beacon.request.classes import RequestAttributes
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.request_parameters.start import generate_position_filter_start
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.request_parameters.sequence import generate_position_filter_start_sequence_query

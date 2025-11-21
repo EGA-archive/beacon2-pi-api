@@ -4,7 +4,7 @@ from beacon.connections.mongo.filters.cross_queries.scope_is_not_entry_type impo
 from beacon.connections.mongo.__init__ import genomicVariations, individuals, analyses, biosamples, runs
 from beacon.logs.logs import log_with_args, LOG
 from beacon.conf.conf import level
-from beacon.models.ga4gh.beacon_v2_default_model.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run
+from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import analysis, biosample, cohort, dataset, genomicVariant, individual, run
 from beacon.request.classes import RequestAttributes
 
 @log_with_args(level)

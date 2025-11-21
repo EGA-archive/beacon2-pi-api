@@ -15,7 +15,7 @@ def apply_custom_filter(self, query: dict, filter: CustomFilter, dataset: str) -
     else:
         query_term = value_splitted[0] + '.label'
     query[query_term]=value_splitted[1]
-    list_modules = get_all_modules_mongo_connections_script("cross_queries.cross_query")
+    list_modules = get_all_modules_mongo_connections_script("filters.cross_queries.cross_query")
     for module in list_modules:
         query = module.cross_query(self, query, scope, {}, dataset)
 

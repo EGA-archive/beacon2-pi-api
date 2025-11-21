@@ -115,7 +115,7 @@ def apply_ontology_filter(self, query: dict, filter: OntologyFilter, request_par
             query_id[query_term]=simil
             new_query['$or'].append(query_id)
         query = new_query
-    list_modules = get_all_modules_mongo_connections_script("cross_queries.cross_query")
+    list_modules = get_all_modules_mongo_connections_script("filters.cross_queries.cross_query")
     for module in list_modules:
         query = module.cross_query(self, query, scope, request_parameters, dataset)
     return query
