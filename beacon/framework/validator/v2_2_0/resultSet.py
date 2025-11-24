@@ -65,7 +65,7 @@ def make_ResultsetInstance():
                         setType='dataset',
                         exists=datasetInstance.exists,
                         results=None,
-                        resultsCount=None,
+                        resultsCount=resultsCount,
                         countAdjustedTo=countAdjustedTo,
                         countPrecision=None,
                         resultsHandovers=resultsHandovers)
@@ -75,7 +75,7 @@ def make_ResultsetInstance():
                         setType='dataset',
                         exists=datasetInstance.exists,
                         results=None,
-                        resultsCount=resultsCount,
+                        resultsCount=None,
                         countAdjustedTo=countAdjustedTo,
                         countPrecision=None,
                         resultsHandovers=resultsHandovers)

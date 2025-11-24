@@ -1,1 +1,1 @@
-from beacon.framework.validator.v2_0_0.boolean import BooleanResponse
+from beacon.framework.validator.v2_0_0.boolean import BooleanResponse, BooleanResponseSummary

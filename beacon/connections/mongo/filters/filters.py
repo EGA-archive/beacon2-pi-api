@@ -37,9 +37,7 @@ def apply_filters(self, query: dict, filters: List[dict], query_parameters: dict
             if total_query["$and"] == [{'$or': []}] or total_query['$and'] == []:
                 total_query = {}
     if request_parameters != {}:
-        total_query = request_parameters_from_modules(self, total_query, request_parameters)
-        if total_query["$and"] == [{'$or': []}] or total_query['$and'] == []:
-            total_query = {}
+        total_query = request_parameters_from_modules(self, total_query, request_parameters, dataset)
     if total_query == {} and query != {}:
         total_query=query
     return total_query

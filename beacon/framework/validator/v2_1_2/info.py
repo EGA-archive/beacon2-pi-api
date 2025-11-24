@@ -1,1 +1,1 @@
-from beacon.framework.validator.v2_0_0.info import InfoResponse
+from beacon.framework.validator.v2_0_0.info import InfoResponse, InfoBody

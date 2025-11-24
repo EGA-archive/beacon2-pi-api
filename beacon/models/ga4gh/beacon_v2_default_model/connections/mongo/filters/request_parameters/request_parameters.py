@@ -7,9 +7,9 @@ from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.cross
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.cross_queries.get_total_query import get_total_query
 
 @log_with_args(level)
-def request_parameters(self, total_query, request_parameters): 
+def request_parameters(self, total_query, request_parameters, dataset): 
     if RequestAttributes.entry_type == individual.endpoint_name:
-        biosampleIds=get_biosampleIds(self, request_parameters, query, dataset)
+        biosampleIds=get_biosampleIds(self, request_parameters, dataset)
         try:
             finalquery={}
             finalquery["$or"]=[]
@@ -39,10 +39,10 @@ def request_parameters(self, total_query, request_parameters):
             total_query["$and"]=[]
             total_query["$and"].append(finalquery)
     elif RequestAttributes.entry_type == biosample.endpoint_name:
-        biosampleIds=get_biosampleIds(self, request_parameters, query, dataset)
+        biosampleIds=get_biosampleIds(self, request_parameters, dataset)
         total_query=get_total_query(self, biosampleIds, total_query, "id")
     elif RequestAttributes.entry_type == analysis.endpoint_name or RequestAttributes.entry_type == run.endpoint_name:
-        biosampleIds=get_biosampleIds(self, request_parameters, query, dataset)
+        biosampleIds=get_biosampleIds(self, request_parameters, dataset)
         total_query=get_total_query(self, biosampleIds, total_query, "biosampleId")
     else:
         try:

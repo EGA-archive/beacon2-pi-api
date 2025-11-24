@@ -1,13 +1,13 @@
 from aiohttp.test_utils import TestClient, TestServer, loop_context
 from aiohttp import web
-from beacon.views.model.collection_entry_type import CollectionEntryTypeView
-from beacon.views.model.entry_type import EntryTypeView
-from beacon.views.framework.info import InfoView
-from beacon.views.framework.service_info import ServiceInfoView
-from beacon.views.framework.map import MapView
-from beacon.views.framework.configuration import ConfigurationView
-from beacon.views.framework.filtering_terms import FilteringTermsView
-from beacon.views.framework.entry_types import EntryTypesEndpointView
+from beacon.views.collection_entry_type import CollectionEntryTypeView
+from beacon.views.entry_type import EntryTypeView
+from beacon.views.info import InfoView
+from beacon.views.service_info import ServiceInfoView
+from beacon.views.map import MapView
+from beacon.views.configuration import ConfigurationView
+from beacon.views.filtering_terms import FilteringTermsView
+from beacon.views.entry_types import EntryTypesEndpointView
 from beacon.utils.middlewares import error_middleware
 from beacon.__main__ import create_api
 import json
@@ -16,7 +16,7 @@ import beacon.conf.conf as conf
 from beacon.permissions.tests import TestAuthZ
 from beacon.auth.tests import TestAuthN
 from beacon.logs.logs import LOG
-from beacon.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run
+from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import analysis, biosample, cohort, dataset, genomicVariant, individual, run
 from aiohttp_middlewares import cors_middleware
 from beacon.validator.configuration import check_configuration
 import asyncio

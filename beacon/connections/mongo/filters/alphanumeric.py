@@ -14,7 +14,7 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, dat
     if isRequestParameter == True:
         list_modules = get_all_modules_mongo_connections_script("filters.request_parameters.alphanumeric")
         for module in list_modules:
-            query = module.parse_request_parameters(self, query)
+            query = module.parse_request_parameters(self, query, filter)
     elif isinstance(formatted_value,str):
         scope = filter.scope
         scope=choose_scope(self, scope, filter)

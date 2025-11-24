@@ -3,7 +3,7 @@ from beacon.logs.logs import log_with_args, LOG
 from beacon.conf.conf import level
 
 @log_with_args(level)
-def get_biosampleIds(self, request_parameters, query, dataset):
+def get_biosampleIds(self, request_parameters, dataset):
     HGVSIds = genomicVariations \
         .find(request_parameters, {"identifiers.genomicHGVSId": 1, "datasetId": 1, "_id": 0})
     HGVSIds=list(HGVSIds)
@@ -25,7 +25,7 @@ def get_biosampleIds(self, request_parameters, query, dataset):
     try:
         list_of_positions_strings= string_of_ids[0]
     except Exception:
-        return query
+        return []
     biosampleIds=[]
     for key, value in list_of_positions_strings.items():
         if key != 'datasetId' and key != 'id' and key != '_id':
