@@ -5,7 +5,7 @@ from aiohttp import ClientSession, BasicAuth, FormData
 from aiohttp import web
 import os
 from dotenv import load_dotenv
-from beacon.logs.logs import log_with_args
+from beacon.logs.logs import log_with_args, LOG
 from beacon.conf.conf import level
 from beacon.exceptions.exceptions import NoPermissionsAvailable
 import re

@@ -66,8 +66,6 @@ class MapSchema(BaseModel):
                     except Exception:
                         continue
                     relatedEndpointEntries_values_to_set[module.id]=values_to_set
-                else:
-                    relatedEndpointEntries_values_to_set[module.id]=None
             if relatedEndpointEntries_values_to_set != {}:
                 Endpoints = RelatedEndpointEntries(**relatedEndpointEntries_values_to_set)
             else:
@@ -76,7 +74,8 @@ class MapSchema(BaseModel):
             singleEntryUrl=conf.complete_url+'/'+module2.endpoint_name+'/{id}' if module2.singleEntryUrl==True else None
             openAPIEndpointsDefinition=module2.open_api_endpoints_definition
             id = module2.id
-            fields[str(module2.id)]=Endpoint(id=id,openAPIEndpointsDefinition=openAPIEndpointsDefinition,entryType=module2.id,rootUrl=rootUrl,singleEntryUrl=singleEntryUrl,endpoints=Endpoints)
+            if module2.enable_endpoint == True:
+                fields[str(module2.id)]=Endpoint(id=id,openAPIEndpointsDefinition=openAPIEndpointsDefinition,entryType=module2.id,rootUrl=rootUrl,singleEntryUrl=singleEntryUrl,endpoints=Endpoints)
         endpointEntriesClass=EndpointEntries(**fields)
         return self(endpointSets=endpointEntriesClass)
 

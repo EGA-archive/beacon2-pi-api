@@ -4,7 +4,7 @@ from beacon.tests.__main__ import create_app
 import unittest
 import beacon.conf.conf as conf
 from beacon.logs.logs import LOG
-from beacon.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run
+from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import analysis, biosample, cohort, dataset, genomicVariant, individual, run
 from aiohttp_middlewares import cors_middleware
 from beacon.validator.configuration import contains_special_characters, check_configuration
 import logging
@@ -44,7 +44,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             conf.cors_urls = ["http://localhost:3003", "http://localhost:3000"]
     def test_analyses_contains_special_chars(self):
         with loop_context() as loop:
-            from beacon.conf import analysis
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import analysis
             analysis.endpoint_name="%aydga&-_al)"
             async def test_check_endpoint_contains_special_chars():
                 try:
@@ -55,7 +55,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             analysis.endpoint_name="analyses"
     def test_biosamples_contains_special_chars(self):
         with loop_context() as loop:
-            from beacon.conf import biosample
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import biosample
             biosample.endpoint_name="%aydga&-_al)"
             async def test_check_endpoint_contains_special_chars():
                 try:
@@ -66,7 +66,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             biosample.endpoint_name="biosamples"
     def test_cohorts_contains_special_chars(self):
         with loop_context() as loop:
-            from beacon.conf import cohort
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import cohort
             cohort.endpoint_name="%aydga&-_al)"
             async def test_check_endpoint_contains_special_chars():
                 try:
@@ -77,7 +77,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             cohort.endpoint_name="cohorts"
     def test_datasets_contains_special_chars(self):
         with loop_context() as loop:
-            from beacon.conf import dataset
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import dataset
             dataset.endpoint_name="%aydga&-_al)"
             async def test_check_endpoint_contains_special_chars():
                 try:
@@ -88,7 +88,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             dataset.endpoint_name="datasets"
     def test_g_variants_contains_special_chars(self):
         with loop_context() as loop:
-            from beacon.conf import genomicVariant
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import genomicVariant
             genomicVariant.endpoint_name="%aydga&-_al)"
             async def test_check_endpoint_contains_special_chars():
                 try:
@@ -99,7 +99,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             genomicVariant.endpoint_name="g_variants"
     def test_runs_contains_special_chars(self):
         with loop_context() as loop:
-            from beacon.conf import run
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import run
             run.endpoint_name="%aydga&-_al)"
             async def test_check_endpoint_contains_special_chars():
                 try:
@@ -110,7 +110,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             run.endpoint_name="runs"
     def test_individuals_contains_special_chars(self):
         with loop_context() as loop:
-            from beacon.conf import individual
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import individual
             individual.endpoint_name="%aydga&-_al)"
             async def test_check_endpoint_contains_special_chars():
                 try:
@@ -121,7 +121,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             individual.endpoint_name="individuals"
     def test_analyses_open_api_endpoints_definition(self):
         with loop_context() as loop:
-            from beacon.conf import analysis
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import analysis
             analysis.open_api_endpoints_definition=3
             async def test_check_analyses_open_api_endpoints_definition():
                 try:
@@ -132,7 +132,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             analysis.open_api_endpoints_definition="string"
     def test_analyses_id(self):
         with loop_context() as loop:
-            from beacon.conf import analysis
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import analysis
             analysis.id="something"
             async def test_check_analyses_id():
                 try:
@@ -143,7 +143,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             analysis.id="analysis"
     def test_analyses_name(self):
         with loop_context() as loop:
-            from beacon.conf import analysis
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import analysis
             analysis.name=3
             async def test_check_analyses_name():
                 try:
@@ -154,7 +154,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             analysis.name="string"
     def test_analyses_ontology_id(self):
         with loop_context() as loop:
-            from beacon.conf import analysis
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import analysis
             analysis.ontology_id="NOT13132 CURIE_!"
             async def test_check_analyses_ontology_id():
                 try:
@@ -165,7 +165,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             analysis.ontology_id="CURIE:12345"
     def test_analyses_ontology_name(self):
         with loop_context() as loop:
-            from beacon.conf import analysis
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import analysis
             analysis.ontology_name=3
             async def test_check_analyses_ontology_name():
                 try:
@@ -176,7 +176,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             analysis.ontology_name="string"
     def test_analyses_specification(self):
         with loop_context() as loop:
-            from beacon.conf import analysis
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import analysis
             analysis.specification=3
             async def test_check_analyses_specification():
                 try:
@@ -187,7 +187,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             analysis.specification="string"
     def test_analyses_description(self):
         with loop_context() as loop:
-            from beacon.conf import analysis
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import analysis
             analysis.description=3
             async def test_check_analyses_description():
                 try:
@@ -198,7 +198,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             analysis.description="string"
     def test_analyses_default_schema_id(self):
         with loop_context() as loop:
-            from beacon.conf import analysis
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import analysis
             analysis.defaultSchema_id=3
             async def test_check_analyses_default_schema_id():
                 try:
@@ -209,7 +209,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             analysis.defaultSchema_id="string"
     def test_analyses_default_schema_name(self):
         with loop_context() as loop:
-            from beacon.conf import analysis
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import analysis
             analysis.defaultSchema_name=3
             async def test_check_analyses_default_schema_name():
                 try:
@@ -220,7 +220,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             analysis.defaultSchema_name="string"
     def test_analyses_reference_to_schema_definition(self):
         with loop_context() as loop:
-            from beacon.conf import analysis
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import analysis
             analysis.defaultSchema_reference_to_schema_definition=3
             async def test_check_analyses_reference_to_schema_definition():
                 try:
@@ -231,7 +231,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             analysis.defaultSchema_reference_to_schema_definition="string"
     def test_analyses_default_schema_version(self):
         with loop_context() as loop:
-            from beacon.conf import analysis
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import analysis
             analysis.defaultSchema_schema_version=3
             async def test_check_analyses_default_schema_version():
                 try:
@@ -242,7 +242,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             analysis.defaultSchema_schema_version="string"
     def test_analyses_additionally_supported_schemas(self):
         with loop_context() as loop:
-            from beacon.conf import analysis
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import analysis
             analysis.aditionally_supported_schemas=3
             async def test_check_analyses_additionally_supported_schemas():
                 try:
@@ -253,7 +253,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             analysis.aditionally_supported_schemas=["string"]
     def test_analyses_allow_queries_without_filters(self):
         with loop_context() as loop:
-            from beacon.conf import analysis
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import analysis
             analysis.allow_queries_without_filters=3
             async def test_check_analyses_allow_queries_without_filters():
                 try:
@@ -264,7 +264,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             analysis.allow_queries_without_filters=True
     def test_analyses_singleEntryUrl(self):
         with loop_context() as loop:
-            from beacon.conf import analysis
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import analysis
             analysis.singleEntryUrl=3
             async def test_check_analyses_singleEntryUrl():
                 try:
@@ -275,7 +275,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             analysis.singleEntryUrl=True
     def test_analyses_biosample_lookup(self):
         with loop_context() as loop:
-            from beacon.conf import analysis
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import analysis
             analysis.biosample_lookup=3
             async def test_check_analyses_biosample_lookup():
                 try:
@@ -286,7 +286,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             analysis.biosample_lookup=True
     def test_analyses_cohort_lookup(self):
         with loop_context() as loop:
-            from beacon.conf import analysis
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import analysis
             analysis.cohort_lookup=3
             async def test_check_analyses_cohort_lookup():
                 try:
@@ -297,7 +297,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             analysis.cohort_lookup=True
     def test_analyses_dataset_lookup(self):
         with loop_context() as loop:
-            from beacon.conf import analysis
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import analysis
             analysis.dataset_lookup=3
             async def test_check_analyses_dataset_lookup():
                 try:
@@ -308,7 +308,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             analysis.dataset_lookup=True
     def test_analyses_genomicVariant_lookup(self):
         with loop_context() as loop:
-            from beacon.conf import analysis
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import analysis
             analysis.genomicVariant_lookup=3
             async def test_check_analyses_genomicVariant_lookup():
                 try:
@@ -319,7 +319,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             analysis.genomicVariant_lookup=True
     def test_analyses_individual_lookup(self):
         with loop_context() as loop:
-            from beacon.conf import analysis
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import analysis
             analysis.individual_lookup=3
             async def test_check_analyses_individual_lookup():
                 try:
@@ -330,7 +330,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             analysis.individual_lookup=True
     def test_analyses_run_lookup(self):
         with loop_context() as loop:
-            from beacon.conf import analysis
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import analysis
             analysis.run_lookup=3
             async def test_check_analyses_run_lookup():
                 try:
@@ -341,7 +341,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             analysis.run_lookup=True
     def test_biosamples_open_api_endpoints_definition(self):
         with loop_context() as loop:
-            from beacon.conf import biosample
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import biosample
             biosample.open_api_endpoints_definition=3
             async def test_check_biosamples_open_api_endpoints_definition():
                 try:
@@ -352,7 +352,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             biosample.open_api_endpoints_definition="string"
     def test_biosamples_id(self):
         with loop_context() as loop:
-            from beacon.conf import biosample
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import biosample
             biosample.id="something"
             async def test_check_biosamples_id():
                 try:
@@ -363,7 +363,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             biosample.id="biosample"
     def test_biosamples_name(self):
         with loop_context() as loop:
-            from beacon.conf import biosample
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import biosample
             biosample.name=3
             async def test_check_biosamples_name():
                 try:
@@ -374,7 +374,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             biosample.name="string"
     def test_biosamples_ontology_id(self):
         with loop_context() as loop:
-            from beacon.conf import biosample
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import biosample
             biosample.ontology_id="NOT CURIE"
             async def test_check_biosamples_ontology_id():
                 try:
@@ -385,7 +385,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             biosample.ontology_id="CURIE:12345"
     def test_biosamples_ontology_name(self):
         with loop_context() as loop:
-            from beacon.conf import biosample
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import biosample
             biosample.ontology_name=3
             async def test_check_biosamples_ontology_name():
                 try:
@@ -396,7 +396,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             biosample.ontology_name="string"
     def test_biosamples_specification(self):
         with loop_context() as loop:
-            from beacon.conf import biosample
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import biosample
             biosample.specification=3
             async def test_check_biosamples_specification():
                 try:
@@ -407,7 +407,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             biosample.specification="string"
     def test_biosamples_description(self):
         with loop_context() as loop:
-            from beacon.conf import biosample
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import biosample
             biosample.description=3
             async def test_check_biosamples_description():
                 try:
@@ -418,7 +418,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             biosample.description="string"
     def test_biosamples_default_schema_id(self):
         with loop_context() as loop:
-            from beacon.conf import biosample
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import biosample
             biosample.defaultSchema_id=3
             async def test_check_biosamples_default_schema_id():
                 try:
@@ -429,7 +429,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             biosample.defaultSchema_id="string"
     def test_biosamples_default_schema_name(self):
         with loop_context() as loop:
-            from beacon.conf import biosample
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import biosample
             biosample.defaultSchema_name=3
             async def test_check_biosamples_default_schema_name():
                 try:
@@ -440,7 +440,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             biosample.defaultSchema_name="string"
     def test_biosamples_reference_to_schema_definition(self):
         with loop_context() as loop:
-            from beacon.conf import biosample
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import biosample
             biosample.defaultSchema_reference_to_schema_definition=3
             async def test_check_biosamples_reference_to_schema_definition():
                 try:
@@ -451,7 +451,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             biosample.defaultSchema_reference_to_schema_definition="string"
     def test_biosamples_default_schema_version(self):
         with loop_context() as loop:
-            from beacon.conf import biosample
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import biosample
             biosample.defaultSchema_schema_version=3
             async def test_check_biosamples_default_schema_version():
                 try:
@@ -462,7 +462,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             biosample.defaultSchema_schema_version="string"
     def test_biosamples_additionally_supported_schemas(self):
         with loop_context() as loop:
-            from beacon.conf import biosample
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import biosample
             biosample.aditionally_supported_schemas=3
             async def test_check_biosamples_additionally_supported_schemas():
                 try:
@@ -473,7 +473,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             biosample.aditionally_supported_schemas=["string"]
     def test_biosamples_allow_queries_without_filters(self):
         with loop_context() as loop:
-            from beacon.conf import biosample
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import biosample
             biosample.allow_queries_without_filters=3
             async def test_check_biosamples_allow_queries_without_filters():
                 try:
@@ -484,7 +484,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             biosample.allow_queries_without_filters=True
     def test_biosamples_singleEntryUrl(self):
         with loop_context() as loop:
-            from beacon.conf import biosample
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import biosample
             biosample.singleEntryUrl=3
             async def test_check_biosamples_singleEntryUrl():
                 try:
@@ -495,7 +495,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             biosample.singleEntryUrl=True
     def test_biosamples_analysis_lookup(self):
         with loop_context() as loop:
-            from beacon.conf import biosample
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import biosample
             biosample.analysis_lookup=3
             async def test_check_biosamples_analysis_lookup():
                 try:
@@ -506,7 +506,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             biosample.analysis_lookup=True
     def test_biosamples_cohort_lookup(self):
         with loop_context() as loop:
-            from beacon.conf import biosample
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import biosample
             biosample.cohort_lookup=3
             async def test_check_biosamples_cohort_lookup():
                 try:
@@ -517,7 +517,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             biosample.cohort_lookup=True
     def test_biosamples_dataset_lookup(self):
         with loop_context() as loop:
-            from beacon.conf import biosample
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import biosample
             biosample.dataset_lookup=3
             async def test_check_biosamples_dataset_lookup():
                 try:
@@ -528,7 +528,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             biosample.dataset_lookup=True
     def test_biosamples_genomicVariant_lookup(self):
         with loop_context() as loop:
-            from beacon.conf import biosample
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import biosample
             biosample.genomicVariant_lookup=3
             async def test_check_biosamples_genomicVariant_lookup():
                 try:
@@ -539,7 +539,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             biosample.genomicVariant_lookup=True
     def test_biosamples_individual_lookup(self):
         with loop_context() as loop:
-            from beacon.conf import biosample
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import biosample
             biosample.individual_lookup=3
             async def test_check_biosamples_individual_lookup():
                 try:
@@ -550,7 +550,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             biosample.individual_lookup=True
     def test_biosamples_run_lookup(self):
         with loop_context() as loop:
-            from beacon.conf import biosample
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import biosample
             biosample.run_lookup=3
             async def test_check_biosamples_run_lookup():
                 try:
@@ -561,7 +561,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             biosample.run_lookup=True
     def test_cohorts_open_api_endpoints_definition(self):
         with loop_context() as loop:
-            from beacon.conf import cohort
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import cohort
             cohort.open_api_endpoints_definition=3
             async def test_check_cohorts_open_api_endpoints_definition():
                 try:
@@ -572,7 +572,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             cohort.open_api_endpoints_definition="string"
     def test_cohorts_id(self):
         with loop_context() as loop:
-            from beacon.conf import cohort
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import cohort
             cohort.id="something"
             async def test_check_cohorts_id():
                 try:
@@ -583,7 +583,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             cohort.id="cohort"
     def test_cohorts_name(self):
         with loop_context() as loop:
-            from beacon.conf import cohort
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import cohort
             cohort.name=3
             async def test_check_cohorts_name():
                 try:
@@ -594,7 +594,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             cohort.name="string"
     def test_cohorts_ontology_id(self):
         with loop_context() as loop:
-            from beacon.conf import cohort
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import cohort
             cohort.ontology_id="NOT CURIE"
             async def test_check_cohorts_ontology_id():
                 try:
@@ -605,7 +605,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             cohort.ontology_id="CURIE:12345"
     def test_cohorts_ontology_name(self):
         with loop_context() as loop:
-            from beacon.conf import cohort
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import cohort
             cohort.ontology_name=3
             async def test_check_cohorts_ontology_name():
                 try:
@@ -616,7 +616,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             cohort.ontology_name="string"
     def test_cohorts_specification(self):
         with loop_context() as loop:
-            from beacon.conf import cohort
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import cohort
             cohort.specification=3
             async def test_check_cohorts_specification():
                 try:
@@ -627,7 +627,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             cohort.specification="string"
     def test_cohorts_description(self):
         with loop_context() as loop:
-            from beacon.conf import cohort
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import cohort
             cohort.description=3
             async def test_check_cohorts_description():
                 try:
@@ -638,7 +638,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             cohort.description="string"
     def test_cohorts_default_schema_id(self):
         with loop_context() as loop:
-            from beacon.conf import cohort
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import cohort
             cohort.defaultSchema_id=3
             async def test_check_cohorts_default_schema_id():
                 try:
@@ -649,7 +649,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             cohort.defaultSchema_id="string"
     def test_cohorts_default_schema_name(self):
         with loop_context() as loop:
-            from beacon.conf import cohort
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import cohort
             cohort.defaultSchema_name=3
             async def test_check_cohorts_default_schema_name():
                 try:
@@ -660,7 +660,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             cohort.defaultSchema_name="string"
     def test_cohorts_reference_to_schema_definition(self):
         with loop_context() as loop:
-            from beacon.conf import cohort
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import cohort
             cohort.defaultSchema_reference_to_schema_definition=3
             async def test_check_cohorts_reference_to_schema_definition():
                 try:
@@ -671,7 +671,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             cohort.defaultSchema_reference_to_schema_definition="string"
     def test_cohorts_default_schema_version(self):
         with loop_context() as loop:
-            from beacon.conf import cohort
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import cohort
             cohort.defaultSchema_schema_version=3
             async def test_check_cohorts_default_schema_version():
                 try:
@@ -682,7 +682,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             cohort.defaultSchema_schema_version="string"
     def test_cohorts_additionally_supported_schemas(self):
         with loop_context() as loop:
-            from beacon.conf import cohort
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import cohort
             cohort.aditionally_supported_schemas=3
             async def test_check_cohorts_additionally_supported_schemas():
                 try:
@@ -693,7 +693,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             cohort.aditionally_supported_schemas=["string"]
     def test_cohorts_allow_queries_without_filters(self):
         with loop_context() as loop:
-            from beacon.conf import cohort
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import cohort
             cohort.allow_queries_without_filters=3
             async def test_check_cohorts_allow_queries_without_filters():
                 try:
@@ -704,7 +704,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             cohort.allow_queries_without_filters=True
     def test_cohorts_singleEntryUrl(self):
         with loop_context() as loop:
-            from beacon.conf import cohort
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import cohort
             cohort.singleEntryUrl=3
             async def test_check_cohorts_singleEntryUrl():
                 try:
@@ -715,7 +715,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             cohort.singleEntryUrl=True
     def test_cohorts_analysis_lookup(self):
         with loop_context() as loop:
-            from beacon.conf import cohort
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import cohort
             cohort.analysis_lookup=3
             async def test_check_cohorts_analysis_lookup():
                 try:
@@ -726,7 +726,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             cohort.analysis_lookup=True
     def test_cohorts_biosample_lookup(self):
         with loop_context() as loop:
-            from beacon.conf import cohort
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import cohort
             cohort.biosample_lookup=3
             async def test_check_cohorts_biosample_lookup():
                 try:
@@ -737,7 +737,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             cohort.biosample_lookup=True
     def test_cohorts_dataset_lookup(self):
         with loop_context() as loop:
-            from beacon.conf import cohort
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import cohort
             cohort.dataset_lookup=3
             async def test_check_cohorts_dataset_lookup():
                 try:
@@ -748,7 +748,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             cohort.dataset_lookup=True
     def test_cohorts_genomicVariant_lookup(self):
         with loop_context() as loop:
-            from beacon.conf import cohort
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import cohort
             cohort.genomicVariant_lookup=3
             async def test_check_cohorts_genomicVariant_lookup():
                 try:
@@ -759,7 +759,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             cohort.genomicVariant_lookup=True
     def test_cohorts_individual_lookup(self):
         with loop_context() as loop:
-            from beacon.conf import cohort
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import cohort
             cohort.individual_lookup=3
             async def test_check_cohorts_individual_lookup():
                 try:
@@ -770,7 +770,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             cohort.individual_lookup=True
     def test_cohorts_run_lookup(self):
         with loop_context() as loop:
-            from beacon.conf import cohort
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import cohort
             cohort.run_lookup=3
             async def test_check_cohorts_run_lookup():
                 try:
@@ -781,7 +781,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             cohort.run_lookup=True
     def test_datasets_open_api_endpoints_definition(self):
         with loop_context() as loop:
-            from beacon.conf import dataset
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import dataset
             dataset.open_api_endpoints_definition=3
             async def test_check_datasets_open_api_endpoints_definition():
                 try:
@@ -792,7 +792,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             dataset.open_api_endpoints_definition="string"
     def test_datasets_id(self):
         with loop_context() as loop:
-            from beacon.conf import dataset
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import dataset
             dataset.id="something"
             async def test_check_datasets_id():
                 try:
@@ -803,7 +803,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             dataset.id="dataset"
     def test_datasets_name(self):
         with loop_context() as loop:
-            from beacon.conf import dataset
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import dataset
             dataset.name=3
             async def test_check_datasets_name():
                 try:
@@ -814,7 +814,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             dataset.name="string"
     def test_datasets_ontology_id(self):
         with loop_context() as loop:
-            from beacon.conf import dataset
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import dataset
             dataset.ontology_id="NOT CURIE"
             async def test_check_datasets_ontology_id():
                 try:
@@ -825,7 +825,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             dataset.ontology_id="CURIE:12345"
     def test_datasets_ontology_name(self):
         with loop_context() as loop:
-            from beacon.conf import dataset
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import dataset
             dataset.ontology_name=3
             async def test_check_datasets_ontology_name():
                 try:
@@ -836,7 +836,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             dataset.ontology_name="string"
     def test_datasets_specification(self):
         with loop_context() as loop:
-            from beacon.conf import dataset
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import dataset
             dataset.specification=3
             async def test_check_datasets_specification():
                 try:
@@ -847,7 +847,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             dataset.specification="string"
     def test_datasets_description(self):
         with loop_context() as loop:
-            from beacon.conf import dataset
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import dataset
             dataset.description=3
             async def test_check_datasets_description():
                 try:
@@ -858,7 +858,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             dataset.description="string"
     def test_datasets_default_schema_id(self):
         with loop_context() as loop:
-            from beacon.conf import dataset
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import dataset
             dataset.defaultSchema_id=3
             async def test_check_datasets_default_schema_id():
                 try:
@@ -869,7 +869,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             dataset.defaultSchema_id="string"
     def test_datasets_default_schema_name(self):
         with loop_context() as loop:
-            from beacon.conf import dataset
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import dataset
             dataset.defaultSchema_name=3
             async def test_check_datasets_default_schema_name():
                 try:
@@ -880,7 +880,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             dataset.defaultSchema_name="string"
     def test_datasets_reference_to_schema_definition(self):
         with loop_context() as loop:
-            from beacon.conf import dataset
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import dataset
             dataset.defaultSchema_reference_to_schema_definition=3
             async def test_check_datasets_reference_to_schema_definition():
                 try:
@@ -891,7 +891,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             dataset.defaultSchema_reference_to_schema_definition="string"
     def test_datasets_default_schema_version(self):
         with loop_context() as loop:
-            from beacon.conf import dataset
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import dataset
             dataset.defaultSchema_schema_version=3
             async def test_check_datasets_default_schema_version():
                 try:
@@ -902,7 +902,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             dataset.defaultSchema_schema_version="string"
     def test_datasets_additionally_supported_schemas(self):
         with loop_context() as loop:
-            from beacon.conf import dataset
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import dataset
             dataset.aditionally_supported_schemas=3
             async def test_check_datasets_additionally_supported_schemas():
                 try:
@@ -913,7 +913,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             dataset.aditionally_supported_schemas=["string"]
     def test_datasets_allow_queries_without_filters(self):
         with loop_context() as loop:
-            from beacon.conf import dataset
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import dataset
             dataset.allow_queries_without_filters=3
             async def test_check_datasets_allow_queries_without_filters():
                 try:
@@ -924,7 +924,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             dataset.allow_queries_without_filters=True
     def test_datasets_singleEntryUrl(self):
         with loop_context() as loop:
-            from beacon.conf import dataset
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import dataset
             dataset.singleEntryUrl=3
             async def test_check_datasets_singleEntryUrl():
                 try:
@@ -935,7 +935,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             dataset.singleEntryUrl=True
     def test_datasets_analysis_lookup(self):
         with loop_context() as loop:
-            from beacon.conf import dataset
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import dataset
             dataset.analysis_lookup=3
             async def test_check_datasets_analysis_lookup():
                 try:
@@ -946,7 +946,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             dataset.analysis_lookup=True
     def test_datasets_biosample_lookup(self):
         with loop_context() as loop:
-            from beacon.conf import dataset
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import dataset
             dataset.biosample_lookup=3
             async def test_check_datasets_biosample_lookup():
                 try:
@@ -957,7 +957,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             dataset.biosample_lookup=True
     def test_datasets_cohort_lookup(self):
         with loop_context() as loop:
-            from beacon.conf import dataset
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import dataset
             dataset.cohort_lookup=3
             async def test_check_datasets_cohort_lookup():
                 try:
@@ -968,7 +968,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             dataset.cohort_lookup=True
     def test_datasets_genomicVariant_lookup(self):
         with loop_context() as loop:
-            from beacon.conf import dataset
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import dataset
             dataset.genomicVariant_lookup=3
             async def test_check_datasets_genomicVariant_lookup():
                 try:
@@ -979,7 +979,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             dataset.genomicVariant_lookup=True
     def test_datasets_individual_lookup(self):
         with loop_context() as loop:
-            from beacon.conf import dataset
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import dataset
             dataset.individual_lookup=3
             async def test_check_datasets_individual_lookup():
                 try:
@@ -990,7 +990,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             dataset.individual_lookup=True
     def test_datasets_run_lookup(self):
         with loop_context() as loop:
-            from beacon.conf import dataset
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import dataset
             dataset.run_lookup=3
             async def test_check_datasets_run_lookup():
                 try:
@@ -1001,7 +1001,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             dataset.run_lookup=True
     def test_g_variants_open_api_endpoints_definition(self):
         with loop_context() as loop:
-            from beacon.conf import genomicVariant
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import genomicVariant
             genomicVariant.open_api_endpoints_definition=3
             async def test_check_g_variants_open_api_endpoints_definition():
                 try:
@@ -1012,7 +1012,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             genomicVariant.open_api_endpoints_definition="string"
     def test_g_variants_id(self):
         with loop_context() as loop:
-            from beacon.conf import genomicVariant
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import genomicVariant
             genomicVariant.id="something"
             async def test_check_g_variants_id():
                 try:
@@ -1023,7 +1023,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             genomicVariant.id="genomicVariant"
     def test_g_variants_name(self):
         with loop_context() as loop:
-            from beacon.conf import genomicVariant
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import genomicVariant
             genomicVariant.name=3
             async def test_check_g_variants_name():
                 try:
@@ -1034,7 +1034,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             genomicVariant.name="string"
     def test_g_variants_ontology_id(self):
         with loop_context() as loop:
-            from beacon.conf import genomicVariant
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import genomicVariant
             genomicVariant.ontology_id="NOT CURIE"
             async def test_check_g_variants_ontology_id():
                 try:
@@ -1045,7 +1045,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             genomicVariant.ontology_id="CURIE:12345"
     def test_g_variants_ontology_name(self):
         with loop_context() as loop:
-            from beacon.conf import genomicVariant
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import genomicVariant
             genomicVariant.ontology_name=3
             async def test_check_g_variants_ontology_name():
                 try:
@@ -1056,7 +1056,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             genomicVariant.ontology_name="string"
     def test_g_variants_specification(self):
         with loop_context() as loop:
-            from beacon.conf import genomicVariant
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import genomicVariant
             genomicVariant.specification=3
             async def test_check_g_variants_specification():
                 try:
@@ -1067,7 +1067,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             genomicVariant.specification="string"
     def test_g_variants_description(self):
         with loop_context() as loop:
-            from beacon.conf import genomicVariant
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import genomicVariant
             genomicVariant.description=3
             async def test_check_g_variants_description():
                 try:
@@ -1078,7 +1078,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             genomicVariant.description="string"
     def test_g_variants_default_schema_id(self):
         with loop_context() as loop:
-            from beacon.conf import genomicVariant
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import genomicVariant
             genomicVariant.defaultSchema_id=3
             async def test_check_g_variants_default_schema_id():
                 try:
@@ -1089,7 +1089,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             genomicVariant.defaultSchema_id="string"
     def test_g_variants_default_schema_name(self):
         with loop_context() as loop:
-            from beacon.conf import genomicVariant
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import genomicVariant
             genomicVariant.defaultSchema_name=3
             async def test_check_g_variants_default_schema_name():
                 try:
@@ -1100,7 +1100,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             genomicVariant.defaultSchema_name="string"
     def test_g_variants_reference_to_schema_definition(self):
         with loop_context() as loop:
-            from beacon.conf import genomicVariant
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import genomicVariant
             genomicVariant.defaultSchema_reference_to_schema_definition=3
             async def test_check_g_variants_reference_to_schema_definition():
                 try:
@@ -1111,7 +1111,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             genomicVariant.defaultSchema_reference_to_schema_definition="string"
     def test_g_variants_default_schema_version(self):
         with loop_context() as loop:
-            from beacon.conf import genomicVariant
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import genomicVariant
             genomicVariant.defaultSchema_schema_version=3
             async def test_check_g_variants_default_schema_version():
                 try:
@@ -1122,7 +1122,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             genomicVariant.defaultSchema_schema_version="string"
     def test_g_variants_additionally_supported_schemas(self):
         with loop_context() as loop:
-            from beacon.conf import genomicVariant
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import genomicVariant
             genomicVariant.aditionally_supported_schemas=3
             async def test_check_g_variants_additionally_supported_schemas():
                 try:
@@ -1133,7 +1133,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             genomicVariant.aditionally_supported_schemas=["string"]
     def test_g_variants_allow_queries_without_filters(self):
         with loop_context() as loop:
-            from beacon.conf import genomicVariant
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import genomicVariant
             genomicVariant.allow_queries_without_filters=3
             async def test_check_g_variants_allow_queries_without_filters():
                 try:
@@ -1144,7 +1144,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             genomicVariant.allow_queries_without_filters=True
     def test_g_variants_singleEntryUrl(self):
         with loop_context() as loop:
-            from beacon.conf import genomicVariant
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import genomicVariant
             genomicVariant.singleEntryUrl=3
             async def test_check_g_variants_singleEntryUrl():
                 try:
@@ -1155,7 +1155,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             genomicVariant.singleEntryUrl=True
     def test_g_variants_analysis_lookup(self):
         with loop_context() as loop:
-            from beacon.conf import genomicVariant
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import genomicVariant
             genomicVariant.analysis_lookup=3
             async def test_check_g_variants_analysis_lookup():
                 try:
@@ -1166,7 +1166,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             genomicVariant.analysis_lookup=True
     def test_g_variants_biosample_lookup(self):
         with loop_context() as loop:
-            from beacon.conf import genomicVariant
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import genomicVariant
             genomicVariant.biosample_lookup=3
             async def test_check_g_variants_biosample_lookup():
                 try:
@@ -1177,7 +1177,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             genomicVariant.biosample_lookup=True
     def test_g_variants_cohort_lookup(self):
         with loop_context() as loop:
-            from beacon.conf import genomicVariant
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import genomicVariant
             genomicVariant.cohort_lookup=3
             async def test_check_g_variants_cohort_lookup():
                 try:
@@ -1188,7 +1188,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             genomicVariant.cohort_lookup=True
     def test_g_variants_dataset_lookup(self):
         with loop_context() as loop:
-            from beacon.conf import genomicVariant
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import genomicVariant
             genomicVariant.dataset_lookup=3
             async def test_check_g_variants_dataset_lookup():
                 try:
@@ -1199,7 +1199,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             genomicVariant.dataset_lookup=True
     def test_g_variants_individual_lookup(self):
         with loop_context() as loop:
-            from beacon.conf import genomicVariant
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import genomicVariant
             genomicVariant.individual_lookup=3
             async def test_check_g_variants_individual_lookup():
                 try:
@@ -1210,7 +1210,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             genomicVariant.individual_lookup=True
     def test_g_variants_run_lookup(self):
         with loop_context() as loop:
-            from beacon.conf import genomicVariant
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import genomicVariant
             genomicVariant.run_lookup=3
             async def test_check_g_variants_run_lookup():
                 try:
@@ -1221,7 +1221,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             genomicVariant.run_lookup=True
     def test_individuals_open_api_endpoints_definition(self):
         with loop_context() as loop:
-            from beacon.conf import individual
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import individual
             individual.open_api_endpoints_definition=3
             async def test_check_individuals_open_api_endpoints_definition():
                 try:
@@ -1232,7 +1232,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             individual.open_api_endpoints_definition="string"
     def test_individuals_id(self):
         with loop_context() as loop:
-            from beacon.conf import individual
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import individual
             individual.id="something"
             async def test_check_individuals_id():
                 try:
@@ -1243,7 +1243,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             individual.id="individual"
     def test_individuals_name(self):
         with loop_context() as loop:
-            from beacon.conf import individual
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import individual
             individual.name=3
             async def test_check_individuals_name():
                 try:
@@ -1254,7 +1254,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             individual.name="string"
     def test_individuals_ontology_id(self):
         with loop_context() as loop:
-            from beacon.conf import individual
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import individual
             individual.ontology_id="NOT CURIE"
             async def test_check_individuals_ontology_id():
                 try:
@@ -1265,7 +1265,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             individual.ontology_id="CURIE:12345"
     def test_individuals_ontology_name(self):
         with loop_context() as loop:
-            from beacon.conf import individual
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import individual
             individual.ontology_name=3
             async def test_check_individuals_ontology_name():
                 try:
@@ -1276,7 +1276,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             individual.ontology_name="string"
     def test_individuals_specification(self):
         with loop_context() as loop:
-            from beacon.conf import individual
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import individual
             individual.specification=3
             async def test_check_individuals_specification():
                 try:
@@ -1287,7 +1287,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             individual.specification="string"
     def test_individuals_description(self):
         with loop_context() as loop:
-            from beacon.conf import individual
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import individual
             individual.description=3
             async def test_check_individuals_description():
                 try:
@@ -1298,7 +1298,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             individual.description="string"
     def test_individuals_default_schema_id(self):
         with loop_context() as loop:
-            from beacon.conf import individual
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import individual
             individual.defaultSchema_id=3
             async def test_check_individuals_default_schema_id():
                 try:
@@ -1309,7 +1309,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             individual.defaultSchema_id="string"
     def test_individuals_default_schema_name(self):
         with loop_context() as loop:
-            from beacon.conf import individual
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import individual
             individual.defaultSchema_name=3
             async def test_check_individuals_default_schema_name():
                 try:
@@ -1320,7 +1320,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             individual.defaultSchema_name="string"
     def test_individuals_reference_to_schema_definition(self):
         with loop_context() as loop:
-            from beacon.conf import individual
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import individual
             individual.defaultSchema_reference_to_schema_definition=3
             async def test_check_individuals_reference_to_schema_definition():
                 try:
@@ -1331,7 +1331,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             individual.defaultSchema_reference_to_schema_definition="string"
     def test_individuals_default_schema_version(self):
         with loop_context() as loop:
-            from beacon.conf import individual
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import individual
             individual.defaultSchema_schema_version=3
             async def test_check_individuals_default_schema_version():
                 try:
@@ -1342,7 +1342,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             individual.defaultSchema_schema_version="string"
     def test_individuals_additionally_supported_schemas(self):
         with loop_context() as loop:
-            from beacon.conf import individual
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import individual
             individual.aditionally_supported_schemas=3
             async def test_check_individuals_additionally_supported_schemas():
                 try:
@@ -1353,7 +1353,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             individual.aditionally_supported_schemas=["string"]
     def test_individuals_allow_queries_without_filters(self):
         with loop_context() as loop:
-            from beacon.conf import individual
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import individual
             individual.allow_queries_without_filters=3
             async def test_check_individuals_allow_queries_without_filters():
                 try:
@@ -1364,7 +1364,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             individual.allow_queries_without_filters=True
     def test_individuals_singleEntryUrl(self):
         with loop_context() as loop:
-            from beacon.conf import individual
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import individual
             individual.singleEntryUrl=3
             async def test_check_individuals_singleEntryUrl():
                 try:
@@ -1375,7 +1375,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             individual.singleEntryUrl=True
     def test_individuals_analysis_lookup(self):
         with loop_context() as loop:
-            from beacon.conf import individual
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import individual
             individual.analysis_lookup=3
             async def test_check_individuals_analysis_lookup():
                 try:
@@ -1386,7 +1386,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             individual.analysis_lookup=True
     def test_individuals_biosample_lookup(self):
         with loop_context() as loop:
-            from beacon.conf import individual
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import individual
             individual.biosample_lookup=3
             async def test_check_individuals_biosample_lookup():
                 try:
@@ -1397,7 +1397,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             individual.biosample_lookup=True
     def test_individuals_cohort_lookup(self):
         with loop_context() as loop:
-            from beacon.conf import individual
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import individual
             individual.cohort_lookup=3
             async def test_check_individuals_cohort_lookup():
                 try:
@@ -1408,7 +1408,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             individual.cohort_lookup=True
     def test_individuals_dataset_lookup(self):
         with loop_context() as loop:
-            from beacon.conf import individual
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import individual
             individual.dataset_lookup=3
             async def test_check_individuals_dataset_lookup():
                 try:
@@ -1419,7 +1419,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             individual.dataset_lookup=True
     def test_individuals_genomicVariant_lookup(self):
         with loop_context() as loop:
-            from beacon.conf import individual
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import individual
             individual.genomicVariant_lookup=3
             async def test_check_individuals_genomicVariant_lookup():
                 try:
@@ -1430,7 +1430,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             individual.genomicVariant_lookup=True
     def test_individuals_run_lookup(self):
         with loop_context() as loop:
-            from beacon.conf import individual
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import individual
             individual.run_lookup=3
             async def test_check_individuals_run_lookup():
                 try:
@@ -1441,7 +1441,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             individual.run_lookup=True
     def test_runs_open_api_endpoints_definition(self):
         with loop_context() as loop:
-            from beacon.conf import run
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import run
             run.open_api_endpoints_definition=3
             async def test_check_runs_open_api_endpoints_definition():
                 try:
@@ -1452,7 +1452,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             run.open_api_endpoints_definition="string"
     def test_runs_id(self):
         with loop_context() as loop:
-            from beacon.conf import run
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import run
             run.id="something"
             async def test_check_runs_id():
                 try:
@@ -1463,7 +1463,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             run.id="run"
     def test_runs_name(self):
         with loop_context() as loop:
-            from beacon.conf import run
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import run
             run.name=3
             async def test_check_runs_name():
                 try:
@@ -1474,7 +1474,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             run.name="string"
     def test_runs_ontology_id(self):
         with loop_context() as loop:
-            from beacon.conf import run
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import run
             run.ontology_id="NOT CURIE"
             async def test_check_runs_ontology_id():
                 try:
@@ -1485,7 +1485,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             run.ontology_id="CURIE:12345"
     def test_runs_ontology_name(self):
         with loop_context() as loop:
-            from beacon.conf import run
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import run
             run.ontology_name=3
             async def test_check_runs_ontology_name():
                 try:
@@ -1496,7 +1496,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             run.ontology_name="string"
     def test_runs_specification(self):
         with loop_context() as loop:
-            from beacon.conf import run
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import run
             run.specification=3
             async def test_check_runs_specification():
                 try:
@@ -1507,7 +1507,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             run.specification="string"
     def test_runs_description(self):
         with loop_context() as loop:
-            from beacon.conf import run
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import run
             run.description=3
             async def test_check_runs_description():
                 try:
@@ -1518,7 +1518,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             run.description="string"
     def test_runs_default_schema_id(self):
         with loop_context() as loop:
-            from beacon.conf import run
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import run
             run.defaultSchema_id=3
             async def test_check_runs_default_schema_id():
                 try:
@@ -1529,7 +1529,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             run.defaultSchema_id="string"
     def test_runs_default_schema_name(self):
         with loop_context() as loop:
-            from beacon.conf import run
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import run
             run.defaultSchema_name=3
             async def test_check_runs_default_schema_name():
                 try:
@@ -1540,7 +1540,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             run.defaultSchema_name="string"
     def test_runs_reference_to_schema_definition(self):
         with loop_context() as loop:
-            from beacon.conf import run
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import run
             run.defaultSchema_reference_to_schema_definition=3
             async def test_check_runs_reference_to_schema_definition():
                 try:
@@ -1551,7 +1551,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             run.defaultSchema_reference_to_schema_definition="string"
     def test_runs_default_schema_version(self):
         with loop_context() as loop:
-            from beacon.conf import run
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import run
             run.defaultSchema_schema_version=3
             async def test_check_runs_default_schema_version():
                 try:
@@ -1562,7 +1562,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             run.defaultSchema_schema_version="string"
     def test_runs_additionally_supported_schemas(self):
         with loop_context() as loop:
-            from beacon.conf import run
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import run
             run.aditionally_supported_schemas=3
             async def test_check_runs_additionally_supported_schemas():
                 try:
@@ -1573,7 +1573,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             run.aditionally_supported_schemas=["string"]
     def test_runs_allow_queries_without_filters(self):
         with loop_context() as loop:
-            from beacon.conf import run
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import run
             run.allow_queries_without_filters=3
             async def test_check_runs_allow_queries_without_filters():
                 try:
@@ -1584,7 +1584,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             run.allow_queries_without_filters=True
     def test_runs_singleEntryUrl(self):
         with loop_context() as loop:
-            from beacon.conf import run
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import run
             run.singleEntryUrl=3
             async def test_check_runs_singleEntryUrl():
                 try:
@@ -1595,7 +1595,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             run.singleEntryUrl=True
     def test_runs_analysis_lookup(self):
         with loop_context() as loop:
-            from beacon.conf import run
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import run
             run.analysis_lookup=3
             async def test_check_runs_analysis_lookup():
                 try:
@@ -1606,7 +1606,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             run.analysis_lookup=True
     def test_runs_biosample_lookup(self):
         with loop_context() as loop:
-            from beacon.conf import run
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import run
             run.biosample_lookup=3
             async def test_check_runs_biosample_lookup():
                 try:
@@ -1617,7 +1617,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             run.biosample_lookup=True
     def test_runs_cohort_lookup(self):
         with loop_context() as loop:
-            from beacon.conf import run
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import run
             run.cohort_lookup=3
             async def test_check_runs_cohort_lookup():
                 try:
@@ -1628,7 +1628,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             run.cohort_lookup=True
     def test_runs_dataset_lookup(self):
         with loop_context() as loop:
-            from beacon.conf import run
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import run
             run.dataset_lookup=3
             async def test_check_runs_dataset_lookup():
                 try:
@@ -1639,7 +1639,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             run.dataset_lookup=True
     def test_runs_genomicVariant_lookup(self):
         with loop_context() as loop:
-            from beacon.conf import run
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import run
             run.genomicVariant_lookup=3
             async def test_check_runs_genomicVariant_lookup():
                 try:
@@ -1650,7 +1650,7 @@ class TestConfigurationExceptions(unittest.TestCase):
             run.genomicVariant_lookup=True
     def test_runs_individual_lookup(self):
         with loop_context() as loop:
-            from beacon.conf import run
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import run
             run.individual_lookup=3
             async def test_check_runs_individual_lookup():
                 try:

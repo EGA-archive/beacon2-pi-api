@@ -9,7 +9,7 @@ from beacon.validator.configuration import check_configuration
 class TestNoFilters(unittest.TestCase):
     def test_no_filters_analysis_query_without_filters_allowed(self):
         with loop_context() as loop:
-            from beacon.conf import analysis
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import analysis
             analysis.allow_queries_without_filters=False
             app = create_app()
             client = TestClient(TestServer(app), loop=loop)
@@ -22,7 +22,7 @@ class TestNoFilters(unittest.TestCase):
             analysis.allow_queries_without_filters=True
     def test_no_filters_biosample_query_without_filters_allowed(self):
         with loop_context() as loop:
-            from beacon.conf import biosample
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import biosample
             biosample.allow_queries_without_filters=False
             app = create_app()
             client = TestClient(TestServer(app), loop=loop)
@@ -35,7 +35,7 @@ class TestNoFilters(unittest.TestCase):
             biosample.allow_queries_without_filters=True
     def test_no_filters_cohort_query_without_filters_allowed(self):
         with loop_context() as loop:
-            from beacon.conf import cohort
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import cohort
             cohort.allow_queries_without_filters=False
             app = create_app()
             client = TestClient(TestServer(app), loop=loop)
@@ -48,7 +48,7 @@ class TestNoFilters(unittest.TestCase):
             cohort.allow_queries_without_filters=True
     def test_no_filters_dataset_query_without_filters_allowed(self):
         with loop_context() as loop:
-            from beacon.conf import dataset
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import dataset
             dataset.allow_queries_without_filters=False
             app = create_app()
             client = TestClient(TestServer(app), loop=loop)
@@ -61,7 +61,7 @@ class TestNoFilters(unittest.TestCase):
             dataset.allow_queries_without_filters=True
     def test_no_filters_genomicVariation_query_without_filters_allowed(self):
         with loop_context() as loop:
-            from beacon.conf import genomicVariant
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import genomicVariant
             genomicVariant.allow_queries_without_filters=False
             app = create_app()
             client = TestClient(TestServer(app), loop=loop)
@@ -74,7 +74,7 @@ class TestNoFilters(unittest.TestCase):
             genomicVariant.allow_queries_without_filters=True
     def test_no_filters_individual_query_without_filters_allowed(self):
         with loop_context() as loop:
-            from beacon.conf import individual
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import individual
             individual.allow_queries_without_filters=False
             app = create_app()
             client = TestClient(TestServer(app), loop=loop)
@@ -87,7 +87,7 @@ class TestNoFilters(unittest.TestCase):
             individual.allow_queries_without_filters=True
     def test_no_filters_run_query_without_filters_allowed(self):
         with loop_context() as loop:
-            from beacon.conf import run
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import run
             run.allow_queries_without_filters=False
             app = create_app()
             client = TestClient(TestServer(app), loop=loop)
@@ -100,7 +100,7 @@ class TestNoFilters(unittest.TestCase):
             run.allow_queries_without_filters=True
     def test_map_endpoint_response_with_disabled_endpoint(self):
         with loop_context() as loop:
-            from beacon.conf import analysis
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import analysis
             analysis.enable_endpoint=False
             app = create_app()
             client = TestClient(TestServer(app), loop=loop)
@@ -116,7 +116,7 @@ class TestNoFilters(unittest.TestCase):
             analysis.enable_endpoint=True
     def test_configuration_endpoint_response_with_disabled_endpoint(self):
         with loop_context() as loop:
-            from beacon.conf import analysis
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import analysis
             analysis.enable_endpoint=False
             app = create_app()
             client = TestClient(TestServer(app), loop=loop)
@@ -132,7 +132,7 @@ class TestNoFilters(unittest.TestCase):
             analysis.enable_endpoint=True
     def test_main_check_configuration_with_wrong_analysis_enable_endpoint(self):
         with loop_context() as loop:
-            from beacon.conf import analysis
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import analysis
             analysis.enable_endpoint="no Boolean"
             app = create_app()
             client = TestClient(TestServer(app), loop=loop)
@@ -147,7 +147,7 @@ class TestNoFilters(unittest.TestCase):
             analysis.enable_endpoint=True
     def test_main_check_configuration_with_wrong_biosample_enable_endpoint(self):
         with loop_context() as loop:
-            from beacon.conf import biosample
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import biosample
             biosample.enable_endpoint="no Boolean"
             app = create_app()
             client = TestClient(TestServer(app), loop=loop)
@@ -162,7 +162,7 @@ class TestNoFilters(unittest.TestCase):
             biosample.enable_endpoint=True
     def test_main_check_configuration_with_wrong_cohort_enable_endpoint(self):
         with loop_context() as loop:
-            from beacon.conf import cohort
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import cohort
             cohort.enable_endpoint="no Boolean"
             app = create_app()
             client = TestClient(TestServer(app), loop=loop)
@@ -177,7 +177,7 @@ class TestNoFilters(unittest.TestCase):
             cohort.enable_endpoint=True
     def test_main_check_configuration_with_wrong_dataset_enable_endpoint(self):
         with loop_context() as loop:
-            from beacon.conf import dataset
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import dataset
             dataset.enable_endpoint="no Boolean"
             app = create_app()
             client = TestClient(TestServer(app), loop=loop)
@@ -192,7 +192,7 @@ class TestNoFilters(unittest.TestCase):
             dataset.enable_endpoint=True
     def test_main_check_configuration_with_wrong_individual_enable_endpoint(self):
         with loop_context() as loop:
-            from beacon.conf import individual
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import individual
             individual.enable_endpoint="no Boolean"
             app = create_app()
             client = TestClient(TestServer(app), loop=loop)
@@ -207,7 +207,7 @@ class TestNoFilters(unittest.TestCase):
             individual.enable_endpoint=True
     def test_main_check_configuration_with_wrong_genomicVariant_enable_endpoint(self):
         with loop_context() as loop:
-            from beacon.conf import genomicVariant
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import genomicVariant
             genomicVariant.enable_endpoint="no Boolean"
             app = create_app()
             client = TestClient(TestServer(app), loop=loop)
@@ -222,7 +222,7 @@ class TestNoFilters(unittest.TestCase):
             genomicVariant.enable_endpoint=True
     def test_main_check_configuration_with_wrong_run_enable_endpoint(self):
         with loop_context() as loop:
-            from beacon.conf import run
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import run
             run.enable_endpoint="no Boolean"
             app = create_app()
             client = TestClient(TestServer(app), loop=loop)
@@ -237,7 +237,7 @@ class TestNoFilters(unittest.TestCase):
             run.enable_endpoint=True
     def test_main_check_configuration_with_wrong_analysis_granularity(self):
         with loop_context() as loop:
-            from beacon.conf import analysis
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import analysis
             analysis.granularity="no Boolean"
             app = create_app()
             client = TestClient(TestServer(app), loop=loop)
@@ -252,7 +252,7 @@ class TestNoFilters(unittest.TestCase):
             analysis.granularity="record"
     def test_main_check_configuration_with_wrong_biosample_granularity(self):
         with loop_context() as loop:
-            from beacon.conf import biosample
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import biosample
             biosample.granularity="no Boolean"
             app = create_app()
             client = TestClient(TestServer(app), loop=loop)
@@ -267,7 +267,7 @@ class TestNoFilters(unittest.TestCase):
             biosample.granularity="record"
     def test_main_check_configuration_with_wrong_cohort_granularity(self):
         with loop_context() as loop:
-            from beacon.conf import cohort
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import cohort
             cohort.granularity="no Boolean"
             app = create_app()
             client = TestClient(TestServer(app), loop=loop)
@@ -282,7 +282,7 @@ class TestNoFilters(unittest.TestCase):
             cohort.granularity="record"
     def test_main_check_configuration_with_wrong_dataset_granularity(self):
         with loop_context() as loop:
-            from beacon.conf import dataset
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import dataset
             dataset.granularity="no Boolean"
             app = create_app()
             client = TestClient(TestServer(app), loop=loop)
@@ -297,7 +297,7 @@ class TestNoFilters(unittest.TestCase):
             dataset.granularity="record"
     def test_main_check_configuration_with_wrong_individual_granularity(self):
         with loop_context() as loop:
-            from beacon.conf import individual
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import individual
             individual.granularity="no Boolean"
             app = create_app()
             client = TestClient(TestServer(app), loop=loop)
@@ -312,7 +312,7 @@ class TestNoFilters(unittest.TestCase):
             individual.granularity="record"
     def test_main_check_configuration_with_wrong_genomicVariant_granularity(self):
         with loop_context() as loop:
-            from beacon.conf import genomicVariant
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import genomicVariant
             genomicVariant.granularity="no Boolean"
             app = create_app()
             client = TestClient(TestServer(app), loop=loop)
@@ -327,7 +327,7 @@ class TestNoFilters(unittest.TestCase):
             genomicVariant.granularity="record"
     def test_main_check_configuration_with_wrong_run_granularity(self):
         with loop_context() as loop:
-            from beacon.conf import run
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import run
             run.granularity="no Boolean"
             app = create_app()
             client = TestClient(TestServer(app), loop=loop)
@@ -458,7 +458,7 @@ class TestNoFilters(unittest.TestCase):
             conf.query_budget_database="mongo"
     def test_main_check_configuration_with_wrong_analysis_database(self):
         with loop_context() as loop:
-            from beacon.conf import analysis
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import analysis
             analysis.database="no Boolean"
             app = create_app()
             client = TestClient(TestServer(app), loop=loop)
@@ -473,7 +473,7 @@ class TestNoFilters(unittest.TestCase):
             analysis.database="mongo"
     def test_main_check_configuration_with_wrong_biosample_database(self):
         with loop_context() as loop:
-            from beacon.conf import biosample
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import biosample
             biosample.database="no Boolean"
             app = create_app()
             client = TestClient(TestServer(app), loop=loop)
@@ -488,7 +488,7 @@ class TestNoFilters(unittest.TestCase):
             biosample.database="mongo"
     def test_main_check_configuration_with_wrong_cohort_database(self):
         with loop_context() as loop:
-            from beacon.conf import cohort
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import cohort
             cohort.database="no Boolean"
             app = create_app()
             client = TestClient(TestServer(app), loop=loop)
@@ -503,7 +503,7 @@ class TestNoFilters(unittest.TestCase):
             cohort.database="mongo"
     def test_main_check_configuration_with_wrong_dataset_database(self):
         with loop_context() as loop:
-            from beacon.conf import dataset
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import dataset
             dataset.database="no Boolean"
             app = create_app()
             client = TestClient(TestServer(app), loop=loop)
@@ -518,7 +518,7 @@ class TestNoFilters(unittest.TestCase):
             dataset.database="mongo"
     def test_main_check_configuration_with_wrong_individual_database(self):
         with loop_context() as loop:
-            from beacon.conf import individual
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import individual
             individual.database="no Boolean"
             app = create_app()
             client = TestClient(TestServer(app), loop=loop)
@@ -533,7 +533,7 @@ class TestNoFilters(unittest.TestCase):
             individual.database="mongo"
     def test_main_check_configuration_with_wrong_genomicVariant_database(self):
         with loop_context() as loop:
-            from beacon.conf import genomicVariant
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import genomicVariant
             genomicVariant.database="no Boolean"
             app = create_app()
             client = TestClient(TestServer(app), loop=loop)
@@ -548,7 +548,7 @@ class TestNoFilters(unittest.TestCase):
             genomicVariant.database="mongo"
     def test_main_check_configuration_with_wrong_run_database(self):
         with loop_context() as loop:
-            from beacon.conf import run
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import run
             run.database="no Boolean"
             app = create_app()
             client = TestClient(TestServer(app), loop=loop)
@@ -585,7 +585,7 @@ class TestNoFilters(unittest.TestCase):
             conf.default_beacon_granularity="record"
     def test_analyses_endpoint_name_is_string(self):
         with loop_context() as loop:
-            from beacon.conf import analysis
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import analysis
             analysis.endpoint_name=3
             async def test_check_endpoint_endpoint_name_is_string():
                 try:
@@ -596,7 +596,7 @@ class TestNoFilters(unittest.TestCase):
             analysis.endpoint_name="analyses"
     def test_biosamples_endpoint_name_is_string(self):
         with loop_context() as loop:
-            from beacon.conf import biosample
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import biosample
             biosample.endpoint_name=3
             async def test_check_endpoint_endpoint_name_is_string():
                 try:
@@ -607,7 +607,7 @@ class TestNoFilters(unittest.TestCase):
             biosample.endpoint_name="biosamples"
     def test_cohorts_endpoint_name_is_string(self):
         with loop_context() as loop:
-            from beacon.conf import cohort
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import cohort
             cohort.endpoint_name=3
             async def test_check_endpoint_endpoint_name_is_string():
                 try:
@@ -618,7 +618,7 @@ class TestNoFilters(unittest.TestCase):
             cohort.endpoint_name="cohorts"
     def test_datasets_endpoint_name_is_string(self):
         with loop_context() as loop:
-            from beacon.conf import dataset
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import dataset
             dataset.endpoint_name=3
             async def test_check_endpoint_endpoint_name_is_string():
                 try:
@@ -629,7 +629,7 @@ class TestNoFilters(unittest.TestCase):
             dataset.endpoint_name="datasets"
     def test_g_variants_endpoint_name_is_string(self):
         with loop_context() as loop:
-            from beacon.conf import genomicVariant
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import genomicVariant
             genomicVariant.endpoint_name=3
             async def test_check_endpoint_endpoint_name_is_string():
                 try:
@@ -640,7 +640,7 @@ class TestNoFilters(unittest.TestCase):
             genomicVariant.endpoint_name="g_variants"
     def test_runs_endpoint_name_is_string(self):
         with loop_context() as loop:
-            from beacon.conf import run
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import run
             run.endpoint_name=3
             async def test_check_endpoint_endpoint_name_is_string():
                 try:
@@ -651,7 +651,7 @@ class TestNoFilters(unittest.TestCase):
             run.endpoint_name="runs"
     def test_individuals_endpoint_name_is_string(self):
         with loop_context() as loop:
-            from beacon.conf import individual
+            from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import individual
             individual.endpoint_name=3
             async def test_check_endpoint_endpoint_name_is_string():
                 try:
