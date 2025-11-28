@@ -4,7 +4,7 @@ from beacon.conf.conf import level
 
 @log_with_args_mongo(level)
 def get_function(self):
-    # Load all the mappers from each of model's mongo connection and execute the choose_function from it
+    # Load all the mappers from each of model's mongo connection and execute the choose_function from it to get the function to use
     list_modules = get_all_modules_mongo_connections_script("mappers")
     for module in list_modules:
         function = module.choose_function(self)
