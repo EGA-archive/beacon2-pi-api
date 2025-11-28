@@ -4,6 +4,9 @@ from beacon.conf.conf import level
 
 @log_with_args(level)
 def scope_is_not_entry_type(self, original_id, final_id, def_list, mongo_collection, query, dataset):
+    """
+    If the scope is not the entry type, perform the id translation for the intersection of the ids of the cross query.
+    """
     join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
     if join_ids == []:
         return query

@@ -12,8 +12,10 @@ CURIE_REGEX = r'^([a-zA-Z0-9]*):\/?[a-zA-Z0-9./]*$'
 
 @log_with_args(level)
 def apply_filters(self, query: dict, filters: List[dict], query_parameters: dict, dataset: str) -> dict:
+    # Initiate the wrapper query dictionary and save the request parameters in a new variable to differentiate it from the variable arrived in the args
     request_parameters = query_parameters
     total_query={}
+    # Check if there are filters and process them depending of ther nature: alphanumeric, ontology or custom and save the query syntax obtained for each filter in total query
     if len(filters) >= 1:
         total_query["$and"] = []
         if query != {} and request_parameters == {}:
@@ -36,6 +38,7 @@ def apply_filters(self, query: dict, filters: List[dict], query_parameters: dict
             total_query["$and"].append(partial_query)
             if total_query["$and"] == [{'$or': []}] or total_query['$and'] == []:
                 total_query = {}
+    # If there are request parameters, apply them and save the query syntax in the wrapper query dictionary total_query
     if request_parameters != {}:
         total_query = request_parameters_from_modules(self, total_query, request_parameters, dataset)
     if total_query == {} and query != {}:

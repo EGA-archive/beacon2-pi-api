@@ -9,17 +9,23 @@ from beacon.response.classes import MultipleDatasetsResponse
 
 @log_with_args(level)
 async def execute_function(self, datasets: list):
+    # Initiate the list where the different dataset classes are returned populated from the queries
     list_of_responses=[]
+    # Get the function that will be the one to use for the query performed
     function = get_function(self)
+    # Get the current process where the app is being run
     loop = asyncio.get_running_loop()
     if datasets != []:
+        # If there is more than one datasets to query, start a thread for each of the datasets and execute the previously chosen function in parallel and asynchronously
         with ThreadPoolExecutor() as pool:
             done, pending = await asyncio.wait(fs=[loop.run_in_executor(pool, function, self, dataset) for dataset in datasets],
             return_when=asyncio.ALL_COMPLETED
             )
+        # When each of the queries finishes, append the dataset instance class populated in a list
         for task in done:
             responseClass= task.result()
             list_of_responses.append(responseClass)
+    # When all the queries per dataset finish, return the array of datasets in a wrapper class of the single dataset instances
     try:
         return MultipleDatasetsResponse(datasets_responses=list_of_responses)
     except ConnectionFailure as e:
@@ -31,7 +37,9 @@ async def execute_function(self, datasets: list):
 @log_with_args(level)
 async def execute_collection_function(self):
     try:
+        # Get the function that will be the one to use for the query performed
         function = get_collections_function(self)
+        # Perform the query and return the class to return for the chosen collection
         collectionsResponseClass = function(self)
         return collectionsResponseClass
     except ConnectionFailure as e:

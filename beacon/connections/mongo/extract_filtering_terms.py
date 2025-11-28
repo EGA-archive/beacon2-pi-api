@@ -30,12 +30,14 @@ class MyProgressBar:
 
 
 def get_ontology_field_name(ontology_id:str, term_id:str, collection:str):
+    # Select the properties to map for extracting the ontologies
     biosamples=['biosampleStatus.id','diagnosticMarkers.id','histologicalDiagnosis.id','measurements.assayCode.id','measurements.measurementValue.id','measurements.measurementValue.referenceRange.unit.id','measurements.measurementValue.typedQuantities.quantity.unit.id','measurements.measurementValue.unit.id','measurements.observationMoment.id','measurements.procedure.bodySite.id','measurements.procedure.procedureCode.id','pathologicalStage.id','pathologicalTnmFinding.id','phenotypicFeatures.evidence.evidenceCode.id','phenotypicFeatures.evidence.reference.id','phenotypicFeatures.featureType.id','phenotypicFeatures.modifiers.id','phenotypicFeatures.onset.id','phenotypicFeatures.resolution.id','phenotypicFeatures.severity.id','sampleOriginDetail.id','sampleOriginType.id','sampleProcessing.id','sampleStorage.id','tumorGrade.id','tumorProgression.id']
     cohorts=['cohortDataTypes.id','cohortDesign.id','exclusionCriteria.diseaseConditions.diseaseCode.id','exclusionCriteria.diseaseConditions.severity.id','exclusionCriteria.diseaseConditions.stage.id','exclusionCriteria.ethnicities.id','exclusionCriteria.genders.id','exclusionCriteria.locations.id','exclusionCriteria.phenotypicConditions.featureType.id','exclusionCriteria.phenotypicConditions.severity.id','inclusionCriteria.diseaseConditions.diseaseCode.id','inclusionCriteria.diseaseConditions.severity.id','inclusionCriteria.diseaseConditions.stage.id','inclusionCriteria.ethnicities.id','inclusionCriteria.genders.id','inclusionCriteria.locations.id','inclusionCriteria.phenotypicConditions.featureType.id','inclusionCriteria.phenotypicConditions.severity.id']
     datasets=['dataUseConditions.duoDataUse.id']
     genomicVariations=['caseLevelData.alleleOrigin.id','caseLevelData.clinicalInterpretations.category.id','caseLevelData.clinicalInterpretations.effect.id','caseLevelData.clinicalInterpretations.evidenceType.id','caseLevelData.id','caseLevelData.phenotypicEffects.category.id','caseLevelData.phenotypicEffects.effect.id','caseLevelData.phenotypicEffects.evidenceType.id','caseLevelData.zygosity.id','identifiers.variantAlternativeIds.id','molecularAttributes.molecularEffects.id','variantLevelData.clinicalInterpretations.category.id','variantLevelData.clinicalInterpretations.effect.id','variantLevelData.clinicalInterpretations.evidenceType.id','variantLevelData.phenotypicEffects.category.id','variantLevelData.phenotypicEffects.effect.id','variantLevelData.phenotypicEffects.evidenceType.id']
     individuals=['diseases.ageOfOnset.id','diseases.diseaseCode.id','diseases.severity.id','diseases.stage.id','ethnicity.id','exposures.exposureCode.id','exposures.unit.id','geographicOrigin.id','interventionsOrProcedures.ageAtProcedure.id','interventionsOrProcedures.bodySite.id','interventionsOrProcedures.procedureCode.id','measures.assayCode.id','measures.measurementValue.id','measures.measurementValue.typedQuantities.quantity.unit.id','measures.measurementValue.unit.id','measures.observationMoment.id','measures.procedure.bodySite.id','measures.procedure.procedureCode.id','pedigrees.disease.diseaseCode.id','pedigrees.disease.severity.id','pedigrees.disease.stage.id','pedigrees.id','pedigrees.members.role.id','phenotypicFeatures.evidence.evidenceCode.id','phenotypicFeatures.evidence.reference.id','phenotypicFeatures.featureType.id','phenotypicFeatures.modifiers.id','phenotypicFeatures.onset.id','phenotypicFeatures.resolution.id','phenotypicFeatures.severity.id','sex.id','treatments.cumulativeDose.referenceRange.id','treatments.doseIntervals.id','treatments.routeOfAdministration.id','treatments.treatmentCode.id']
     runs=['librarySource.id','platformModel.id']
+    # Save the properties in a common array variable
     array=[]
     if collection == 'biosamples':
         array=biosamples
@@ -49,13 +51,16 @@ def get_ontology_field_name(ontology_id:str, term_id:str, collection:str):
         array=individuals
     elif collection == 'runs':
         array=runs
+    # Generate the query syntax for the ontology search for all the requested fields/properties
     query={}
     query['$or']=[]
     for field in array:
         fieldquery={}
         fieldquery[field]=ontology_id + ":" + term_id
         query['$or'].append(fieldquery)
+    # Execute the query
     results = client[dbname].get_collection(collection).find(query).limit(1)
+    # Get the results in a dictionary and extract the labels of the ontologies
     try:
         results = list(results)
         results = dumps(results)
@@ -162,7 +167,7 @@ def get_ontology_field_name(ontology_id:str, term_id:str, collection:str):
                                                                     break
                                                             break 
 
-
+        # Return a dictionary with the field and the label obtained
         if '.' in field:
             try:
                 final_field = ''
@@ -199,6 +204,7 @@ def find_ontology_terms_used(collection_name: str) -> List[Dict]:
     print(collection_name)
     terms_ids = []
     count = client[dbname].get_collection(collection_name).estimated_document_count()
+    # In case there are more than 50.000 docs, only scan the first 50.000 docs to populate the filtering terms with the ontologies found in these docs
     if count < 50000:
         num_total=count
     else:
@@ -240,6 +246,9 @@ def find_ontology_terms_used(collection_name: str) -> List[Dict]:
 
 
 def get_filtering_object(terms_ids: list, collection_name: str):
+    """
+    Create the filtering term object Beacon v2 compliant with the fields/properties and labels found when scanning the database storing them in an array of terms.
+    """
     terms = []
     list_of_ontologies=[]
     #ontologies = dict()
@@ -340,6 +349,9 @@ def get_properties_of_document(document, prefix="") -> List[str]:
     return properties
 
 def merge_ontology_terms():
+    """
+    Scan all the filtering terms of type ontology found and remove the duplicated ones.
+    """
     filtering_terms = filtering_terms_.find({"type": "ontology"})
     array_of_ids=[]
     repeated_ids=[]
@@ -376,6 +388,9 @@ def merge_ontology_terms():
         
     
 def merge_alphanumeric_terms():
+    """
+    Scan all the filtering terms of type alphanumeric found and remove the duplicated ones.
+    """
     alphanumterms=[]
     for alphanumeric_term in alphanumeric_terms_analyses:
         alphanumterms.append({
@@ -472,6 +487,9 @@ def merge_alphanumeric_terms():
         filtering_terms_.insert_many(new_terms)
     
 def merge_custom_terms():
+    """
+    Scan all the filtering terms of type custom found and remove the duplicated ones.
+    """
     filtering_terms = filtering_terms_.find({"type": "custom"})
     array_of_ids=[]
     repeated_ids=[]

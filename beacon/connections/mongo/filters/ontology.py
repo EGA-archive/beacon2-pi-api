@@ -8,6 +8,7 @@ from beacon.utils.modules import get_all_modules_mongo_connections_script
 
 @log_with_args(level)
 def apply_ontology_filter(self, query: dict, filter: OntologyFilter, request_parameters: dict, dataset: str) -> dict:
+    # Search for synonyms in the query filter
     final_term_list=[]    
     query_synonyms={}
     query_synonyms['id']=filter.id
@@ -17,7 +18,6 @@ def apply_ontology_filter(self, query: dict, filter: OntologyFilter, request_par
         0,
         1
     )
-
     try:
         synonym_id=synonyms[0]['synonym']
     except Exception:
@@ -64,6 +64,7 @@ def apply_ontology_filter(self, query: dict, filter: OntologyFilter, request_par
             pass
     final_term_list.append(filter.id)
 
+    # Create the query syntax for the filtering term to match the field with the ontology label
     query_filtering={}
     query_filtering['$and']=[]
     dict_id={}
@@ -81,6 +82,8 @@ def apply_ontology_filter(self, query: dict, filter: OntologyFilter, request_par
 
     for doc_term in docs:
         label = doc_term['label']
+    
+    # Get the alphanumeric pair of the ontology filtering term
     query_filtering={}
     query_filtering['$and']=[]
     dict_regex={}
@@ -101,11 +104,14 @@ def apply_ontology_filter(self, query: dict, filter: OntologyFilter, request_par
         0,
         1
     )
+
+    # Extract the field/property to look at
     for doc2 in docs_2:
         query_terms = doc2['id']
         query_terms = query_terms.split(':')
         query_term = query_terms[0] + '.id'
     
+    # Generate the filter
     if final_term_list !=[]:
         new_query={}
         query_id={}
@@ -115,6 +121,7 @@ def apply_ontology_filter(self, query: dict, filter: OntologyFilter, request_par
             query_id[query_term]=simil
             new_query['$or'].append(query_id)
         query = new_query
+    # Execute the cross query in case it's needed
     list_modules = get_all_modules_mongo_connections_script("filters.cross_queries.cross_query")
     for module in list_modules:
         query = module.cross_query(self, query, scope, request_parameters, dataset)

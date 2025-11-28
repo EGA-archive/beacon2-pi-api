@@ -5,10 +5,12 @@ from beacon.request.classes import RequestAttributes
 
 @log_with_args_mongo(level)
 def get_remaining_budget_by_user(self, username, start_budget_time):
+    # Validate if there is any budget table initiated and create one if there isn't
     try:
         client[query_budget_db_name].validate_collection(query_budget_table)
     except Exception:
         client[query_budget_db_name].create_collection(name=query_budget_table)
+    # Initiate the dictionary to create the query syntax for getting the remaining budget of the user that is performing the query
     budget_query={}
     budget_query["username"]=username
     budget_query["date"]={ "$gt": start_budget_time }
@@ -18,6 +20,7 @@ def get_remaining_budget_by_user(self, username, start_budget_time):
 
 @log_with_args_mongo(level)
 def insert_budget(self, username, time_now):
+    # Insert in the database one of the uses of the budget for the user/ip performing the query
     budget_query={}
     budget_query["username"]=username
     budget_query["ip"]=RequestAttributes.ip
@@ -26,6 +29,7 @@ def insert_budget(self, username, time_now):
 
 @log_with_args_mongo(level)
 def get_remaining_budget_by_ip(self, start_budget_time):
+    # Initiate the dictionary to create the query syntax for getting the remaining budget of the ip that is performing the query
     budget_query={}
     budget_query["ip"]=RequestAttributes.ip
     budget_query["date"]={ "$gt": start_budget_time }

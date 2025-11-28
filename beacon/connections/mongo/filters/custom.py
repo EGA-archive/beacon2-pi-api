@@ -7,6 +7,7 @@ from beacon.utils.modules import get_all_modules_mongo_connections_script
 
 @log_with_args(level)
 def apply_custom_filter(self, query: dict, filter: CustomFilter, dataset: str) -> dict:
+    # Check if there is a valid scope for the filter and build the query syntax for the custom filter
     scope = filter.scope
     scope=choose_scope(self, scope, filter)
     value_splitted = filter.id.split(':')

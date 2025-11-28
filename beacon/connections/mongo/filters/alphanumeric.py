@@ -9,20 +9,27 @@ from beacon.utils.modules import get_all_modules_mongo_connections_script
 
 @log_with_args(level)
 def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, dataset: str, isRequestParameter: bool) -> dict:
+    # Format the vale and operator of the incoming alphanumeric filter
     formatted_value = format_value(self, filter.value)
     formatted_operator = format_operator(self, filter.operator)
+    # If the filter is a request parameter, apply the request parameters function
     if isRequestParameter == True:
         list_modules = get_all_modules_mongo_connections_script("filters.request_parameters.alphanumeric")
         for module in list_modules:
             query = module.parse_request_parameters(self, query, filter)
+    # Otherwise, apply them as regular alphanumeric filter
     elif isinstance(formatted_value,str):
+        # Check if the filter has a valid scope
         scope = filter.scope
         scope=choose_scope(self, scope, filter)
+        # Check if the filter needs to add a label in the id or not for mapping it in the database
         if filter.id in alphanumeric_terms:
             query_term = filter.id
         else:
             query_term = filter.id + '.' + 'label'
+        # If the operator is =
         if formatted_operator == "$eq":
+            # If is a like query, add the $regex dictionary and build the query syntax
             if '%' in filter.value:
                 try: 
                     if query['$or']:
@@ -40,7 +47,7 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, dat
                 list_modules = get_all_modules_mongo_connections_script("filters.cross_queries.cross_query")
                 for module in list_modules:
                     query = module.cross_query(self, query, scope, {}, dataset)
-                
+            # Otherwise, build it as a whole text match
             else:
                 try: 
                     if query['$or']:
@@ -56,8 +63,9 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, dat
                 for module in list_modules:
                     query = module.cross_query(self, query, scope, {}, dataset)
                 
-
+        # If the operator is ! (not equal)
         elif formatted_operator == "$ne":
+            # If is a like query, add the $regex dictionary and build the query syntax
             if '%' in filter.value:
                 try: 
                     if query['$nor']:
@@ -72,6 +80,7 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, dat
                 query_id={}
                 query_id[query_term]=regex_dict
                 query['$nor'].append(query_id)
+            # Otherwise, build it as a whole text match
             else:
                 try: 
                     if query['$nor']:
@@ -84,11 +93,14 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, dat
                 query_id={}
                 query_id[query_term]=filter.value
                 query['$nor'].append(query_id) 
-        
+    # If the value is a number
     else:
+        # Check if the scope of the filtering term requested is valid
         scope = filter.scope
         scope=choose_scope(self, scope, filter)
+        # Check if is an age filter
         if "iso8601duration" in filter.id:
+            # Harmonize the oeprators and the iso values
             if '>' in filter.operator:
                 age_in_number=""
                 for char in filter.value:
@@ -158,7 +170,9 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, dat
                 list_modules = get_all_modules_mongo_connections_script("filters.cross_queries.cross_query")
                 for module in list_modules:
                     query = module.cross_query(self, query, scope, {}, dataset)
+        # If it's not an age filter, is a measurement filter
         else:
+            # Find the filter in filtering terms
             query_filtering={}
             query_filtering['$and']=[]
             dict_type={}
@@ -179,6 +193,7 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, dat
                 0,
                 1
             )
+            # Check if it's measures or measurements
             for doc in docs:
                 prefield_splitted = doc['id'].split(':')
                 prefield = prefield_splitted[0]
@@ -189,7 +204,7 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, dat
             measuresfield=fieldsplitted[0]
 
             field = field.replace(measuresfield+'.', '')
-
+            # Build the final query syntax
             query[field] = { formatted_operator: float(formatted_value) }
             query[assayfield]=filter.id
             dict_elemmatch={}

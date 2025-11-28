@@ -131,10 +131,12 @@ def get_docs_by_response_type(self, include: str, query: dict, dataset: SingleDa
 @log_with_args_mongo(level)
 def get_filtering_documents(self, collection: Collection, query: dict, remove_id: dict,skip: int, limit: int) -> Cursor:
     ##LOG.debug("FINAL QUERY: {}".format(query))
+    # Get the docs by removing the unwanted id
     return collection.find(query,remove_id).skip(skip).limit(limit).max_time_ms(100 * 1000)
 
 @log_with_args_mongo(level)
 def choose_scope(self, scope, filter):
+    # Initiate the dictionaries and create the syntax to query the filtering terms database to get the available scopes
     query_filtering={}
     query_filtering['$and']=[]
     dict_id={}
@@ -147,6 +149,7 @@ def choose_scope(self, scope, filter):
     1
     )
     docs = list(docs)
+    # If there are no docs with the requested filtering term, raise an exception
     if docs == []:
         raise InvalidRequest("The filtering term: {} is not a valid filtering term.".format(filter.id))
     try:
@@ -154,30 +157,37 @@ def choose_scope(self, scope, filter):
         scopes=fterm["scopes"]
     except Exception:
         scopes=[]
+    # If there is no scope requested, check if there are any scopes in the filtering term requested
     if scope is None:
         if scopes == []:
+            # If there aren't any, check if the filtering term is not a zygosity term
             if filter.id not in ["GENO:0000136", "GENO:0000458"]:
+                # If it's not a zygosity term, add the entry type as scop
                 if RequestAttributes.entry_type == genomicVariant.endpoint_name:
                     scope = 'genomicVariation'
                 else:
                     scope = RequestAttributes.entry_type[0:-1]
-            else:
+            else: # If it's a zygosity term, return scope = None, as this is an internal filtering term
                 scope = None
             return scope
         else:
             for scoped in scopes:
+                # If there are scopes and is an array, check if any scope is equal to the entry type requested, to assign it as the scope
                 if str(scoped)+'s'==RequestAttributes.entry_type and RequestAttributes.entry_type != genomicVariant.endpoint_name:
                     scope=str(scoped)
                     return scope
                 elif str(scoped)=='genomicVariation' and RequestAttributes.entry_type==genomicVariant.endpoint_name:
                     scope=str(scoped)
                     return scope
+            # If there is only one scope for the filtering term, assign this scope
             if len(scopes) == 1:
                 scope = scopes[0]
                 return scope
+            # Otherwise, make compulsory to select a scope for the filtering term
             else:
                 raise InvalidRequest("Look at filtering terms endpoint and select a scope from one of the available scope values for this filtering term: {}".format(filter.id))
     else:
+        # If a scope is requested, use it as the scope
         for scoped in scopes:
             if scope == scoped:
                 return scope
