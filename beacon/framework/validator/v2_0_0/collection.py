@@ -24,10 +24,11 @@ def make_Collections():
     return model
 
 def make_CollectionResponse(Collections):
+    # Create the types of the meta, responseSumarry and the handovers depending on the existing entry types in the models
     MetaType = load_class("meta", "Meta")
     ResponseSummaryType = load_class("common", "ResponseSummary")
     HandoverType = load_class("common", "Handover")
-
+    # Create a function to obtain the class with the properties values of the Collections to come by args
     @classmethod
     def create(cls, meta, response: Collections, responseSummary, beaconHandovers=None, info=None):
         return cls(
@@ -37,7 +38,7 @@ def make_CollectionResponse(Collections):
             beaconHandovers=beaconHandovers,
             info=info
         )
-
+    # Create the dynamic class with the properties and types defined previously
     model = create_model(
         "CollectionResponse",
         meta=(MetaType, ...),
@@ -47,6 +48,6 @@ def make_CollectionResponse(Collections):
         info=(Optional[Dict], None),
         __base__=BaseModel
     )
-
+    # Assign the function create for the dynamic class to be able to be used to instantiate a class of it
     setattr(model, "create", create)
     return model

@@ -11,11 +11,12 @@ from beacon.response.classes import SingleDatasetResponse
 
 @log_with_args_mongo(level)
 def lengthquery(self, collection: Collection,query: dict):
-    #LOG.debug(query)
+    # Return the length of al the records for the query
     return collection.find(query, {"_id": 1, "variation.location.interval.start.value": 1, "variation.location.interval.end.value": 1}).max_time_ms(100 * 1000)
 
 @log_with_args_mongo(level)
 def get_phenotypic_cross_query_attributes(self, entry_type, pre_entry_type):
+    # For cross queries, save the attributes for the translation (linkage) between endpoints (idq to idq2) and the name of the collection for the initial endpoint queried (secondary_collection)
     mapping = {individual.endpoint_name: {analysis.endpoint_name: {"idq": "id",
                                                          "idq2": "individualId",
                                                          "secondary_collection": analyses},

@@ -1,3 +1,4 @@
+# Add all the filters allowed to be used in case the ontology pair for it doesn't exist (direct alphanumeric terms inserted, not from the ontology terms)
 database='mongo'
 alphanumeric_terms_runs = ['libraryStrategy']
 alphanumeric_terms_analyses = ['variantCaller']

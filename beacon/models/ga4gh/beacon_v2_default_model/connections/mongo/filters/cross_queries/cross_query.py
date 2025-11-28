@@ -9,10 +9,12 @@ from beacon.request.classes import RequestAttributes
 
 @log_with_args(level)
 def cross_query(self, query: dict, scope: str, request_parameters: dict, dataset: str):
+    # Check for the different scopes and entry types to apply a different query syntax built.
     if scope == 'genomicVariation' and RequestAttributes.entry_type == genomicVariant.endpoint_name:
         subquery={}
         subquery["$or"]=[]
         if request_parameters != {}:
+            # If there are request parameters, get the ids of the query performed with the request parameters received
             listHGVS=[]
             queryHGVS={}
             HGVSIds = genomicVariations.find(request_parameters, {"identifiers.genomicHGVSId": 1, "_id": 0})
@@ -20,6 +22,7 @@ def cross_query(self, query: dict, scope: str, request_parameters: dict, dataset
             for HGVSId in HGVSIds:
                 justid=HGVSId["identifiers"]["genomicHGVSId"]
                 listHGVS.append(justid)
+            # Add the ids obtained in a dictionary
             queryHGVS["$in"]=listHGVS
             queryHGVSId={"datasetId": dataset, "identifiers.genomicHGVSId": queryHGVS}
             try:
@@ -28,7 +31,9 @@ def cross_query(self, query: dict, scope: str, request_parameters: dict, dataset
             except Exception:
                 pass
     else:
-        def_list=[]                
+       # Initiate a list to get the final ids for the performed fist stage queries of the cross query
+        def_list=[]             
+        # Set the id to point at when performing the first stage queries (original_id) and the id for the second stage queries (final_id)  
         if scope == 'individual':
             mongo_collection=individuals
             original_id="id"

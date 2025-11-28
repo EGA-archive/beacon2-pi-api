@@ -10,15 +10,15 @@ database_connection=analyses
 granularity='record'
 
 # Entry type configuration
-id='imaging'
+id='patient'
 name=''
-ontology_id='EDAM:3382'
-ontology_name='Imaging'
+ontology_id='ICO:0000422'
+ontology_name='Patient'
 specification=''
 description=''
-defaultSchema_id='EUCAIM-imaging_v0.0.1'
+defaultSchema_id='EUCAIM-patient_v0.0.1'
 defaultSchema_name=''
-defaultSchema_reference_to_schema_definition='https://raw.githubusercontent.com/EGA-archive/EUCAIM-Schema/refs/heads/main/ImagingMetadata.json'
+defaultSchema_reference_to_schema_definition='https://raw.githubusercontent.com/EGA-archive/EUCAIM-Schema/refs/heads/main/PatientMetadata.json'
 defaultSchema_schema_version=''
 aditionally_supported_schemas=[]
 allow_queries_without_filters=True

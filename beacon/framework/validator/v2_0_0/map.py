@@ -14,6 +14,8 @@ class RelatedEndpoint(BaseModel):
     returnedEntryType: str
     url: str
 
+# Get all the models conf values of the entry types and assign them as properties in a class called RelatedEndpointEntries
+
 prelist_of_modules = get_all_modules_conf()
 
 list_of_modules=[x for x in prelist_of_modules if x.id != ""]
@@ -36,6 +38,8 @@ class Endpoint(BaseModel):
     entryType: str
     rootUrl: str
     singleEntryUrl: Optional[str] = None
+
+# Get all the models conf values of the entry types and assign them as properties in a class called EndpointEntries
 
 fields = {str(field_name.id): (Optional[Endpoint],None) for field_name in list_of_modules}
 
@@ -70,6 +74,7 @@ class MapSchema(BaseModel):
                 Endpoints = RelatedEndpointEntries(**relatedEndpointEntries_values_to_set)
             else:
                 Endpoints=None
+            # Add the rest of the properties for each of the entry type that is particular to them and doesn't depend on a lookup
             rootUrl=conf.complete_url+'/'+module2.endpoint_name
             singleEntryUrl=conf.complete_url+'/'+module2.endpoint_name+'/{id}' if module2.singleEntryUrl==True else None
             openAPIEndpointsDefinition=module2.open_api_endpoints_definition

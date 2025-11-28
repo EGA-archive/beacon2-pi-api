@@ -65,7 +65,7 @@ def load_types_of_results(response_type):
     union_type = Union[tuple(list_of_results_classes_accepted)]
     return union_type
 
-def load_routes(app):
+def load_routes(app):# TODO: add routes per model configuration
     dirs = os.listdir("/beacon/models")
     for folder in dirs:
         subdirs = os.listdir("/beacon/models/"+folder)

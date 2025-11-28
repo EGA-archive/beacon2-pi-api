@@ -8,9 +8,11 @@ from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.cross
 
 @log_with_args(level)
 def request_parameters(self, total_query, request_parameters, dataset): 
+    # Check wich is the entry type to know how to do the id translation for the request parameters (if any)
     if RequestAttributes.entry_type == individual.endpoint_name:
         biosampleIds=get_biosampleIds(self, request_parameters, dataset)
         try:
+            # Build the query to get the individual ids from biosamples
             finalquery={}
             finalquery["$or"]=[]
             for finalid in biosampleIds:
@@ -18,6 +20,7 @@ def request_parameters(self, total_query, request_parameters, dataset):
                 finalquery["$or"].append(query)
             individual_id = biosamples \
                 .find(finalquery, {"individualId": 1, "_id": 0})
+            # Just keep the individual ids
             try:
                 finalids=[]
                 for indid in individual_id:
@@ -28,6 +31,7 @@ def request_parameters(self, total_query, request_parameters, dataset):
                 finalids=biosampleIds
         except Exception:
             finalids=biosampleIds
+        # Build the query with the ids obtained previously
         finalquery={}
         finalquery["$or"]=[]
         for finalid in finalids:
@@ -39,12 +43,15 @@ def request_parameters(self, total_query, request_parameters, dataset):
             total_query["$and"]=[]
             total_query["$and"].append(finalquery)
     elif RequestAttributes.entry_type == biosample.endpoint_name:
+        # Get the biosampleIds obtained from the request parameters query and build the query with these ids as id because is against biosamples.
         biosampleIds=get_biosampleIds(self, request_parameters, dataset)
         total_query=get_total_query(self, biosampleIds, total_query, "id")
     elif RequestAttributes.entry_type == analysis.endpoint_name or RequestAttributes.entry_type == run.endpoint_name:
+        # Get the biosampleIds obtained from the request parameters query and build the query with these ids as id because is against analyses/runs.
         biosampleIds=get_biosampleIds(self, request_parameters, dataset)
         total_query=get_total_query(self, biosampleIds, total_query, "biosampleId")
     else:
+        # As the query is pointing to variants, just build the query with the request parameters received
         try:
             total_query["$and"].append(request_parameters)
         except Exception:

@@ -7,8 +7,9 @@ from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.reque
 
 @log_with_args(level)
 def generate_position_filter_start_sequence_query(self, key: str, value: List[int]) -> List[AlphanumericFilter]:
+    # Initiate variable for filters to process depending on value length.
     filters = []
-    if len(value) == 1:
+    if len(value) == 1: # If length is 1, just apply the = of the start value.
         filters.append(AlphanumericFilter(
             id=VARIANTS_PROPERTY_MAP[key],
             value=value[0],

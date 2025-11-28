@@ -1,3 +1,4 @@
+# Mapping of the name of the request parameter and the location inside the schema (mongoDB object)
 VARIANTS_PROPERTY_MAP = {
     "start": "variation.location.interval.start.value",
     "end": "variation.location.interval.end.value",

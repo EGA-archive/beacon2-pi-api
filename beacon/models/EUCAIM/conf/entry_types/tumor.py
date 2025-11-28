@@ -10,15 +10,15 @@ database_connection=analyses
 granularity='record'
 
 # Entry type configuration
-id='imaging'
+id='tumor'
 name=''
-ontology_id='EDAM:3382'
-ontology_name='Imaging'
+ontology_id='MONDO:0005070'
+ontology_name='Neoplasm'
 specification=''
 description=''
-defaultSchema_id='EUCAIM-imaging_v0.0.1'
+defaultSchema_id='EUCAIM-tumor_v0.0.1'
 defaultSchema_name=''
-defaultSchema_reference_to_schema_definition='https://raw.githubusercontent.com/EGA-archive/EUCAIM-Schema/refs/heads/main/ImagingMetadata.json'
+defaultSchema_reference_to_schema_definition='https://raw.githubusercontent.com/EGA-archive/EUCAIM-Schema/refs/heads/main/TumorMetadata.json'
 defaultSchema_schema_version=''
 aditionally_supported_schemas=[]
 allow_queries_without_filters=True

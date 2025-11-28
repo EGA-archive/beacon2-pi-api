@@ -5,12 +5,17 @@ from beacon.request.classes import RequestAttributes
 
 @log_with_args(level)
 def parse_request_parameters(self, query, filter):
+    # Processing the request parameters as filters, checking which is the id of the property mapped by the request parameter (where the requestParameter points at, several can apply to one property)
     if filter.id == "identifiers.genomicHGVSId":
+        # Initialize a dictionary to use for the chromosome query and create the list of chromosome values accepted that come from requestParameters
         list_chromosomes = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','X','Y','chr1','chr2','chr3','chr4','chr5','chr6','chr7','chr8','chr9','chr10','chr11','chr12','chr13','chr14','chr15','chr16','chr17','chr18','chr19','chr20','chr21','chr22','chr23','chr24','chrX','chrY']
         dict_regex={}
+        # Check if the value of the chromosome is accepted
         if filter.value in list_chromosomes:
+            # If is a mitochondrial, build the root of the HGVSId as specified
             if filter.value == 'MT':
                 dict_regex['$regex']='NC_012920.1:m'
+            # If is not mitochondrial, taking the ref genome and the value of the chromosome, build the root of the HGVSId
             else:
                 if 'chr' in filter.value:
                     filter.value=filter.value.replace('chr', '')
@@ -67,9 +72,11 @@ def parse_request_parameters(self, query, filter):
                         dict_regex['$regex']=prehgvs+filter.value+'.'+'13:g'
                     elif RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'GRCh38':
                         dict_regex['$regex']=prehgvs+filter.value+'.'+'14:g'
+        # If there is &gt; in the value, replace it by >
         elif '&gt;' in filter.value:
             newvalue=filter.value.replace("&gt;",">")
             dict_regex=newvalue
+        # If there is a dot in the value, execute a "si" query, to ignore end of the value 
         elif '.' in filter.value:
             dict_regex['$regex']=filter.value
             dict_regex['$options']= "si"
@@ -81,6 +88,7 @@ def parse_request_parameters(self, query, filter):
     elif filter.id == "caseLevelData.clinicalInterpretations.clinicalRelevance":
         query[filter.id] = filter.value
     elif filter.id == "variation.alternateBases":
+        # If a max is sent in the value of the request parameter, count the number of bases of the variant to limit the max length value. The strLenCP counts length of bases in a string in mongoDB.
         if 'max' in filter.value:
             valuereplaced = filter.value.replace('max', '')
             length=int(valuereplaced)+2
@@ -110,6 +118,7 @@ def parse_request_parameters(self, query, filter):
 
 
         elif 'min' in filter.value:
+            # If a min is sent in the value of the request parameter, count the number of bases of the variant to limit the min length value. The strLenCP counts length of bases in a string in mongoDB.
             valuereplaced = filter.value.replace('min', '')
             length=int(valuereplaced)
             array_min=[]

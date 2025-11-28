@@ -1,12 +1,11 @@
 import re
-from dateutil.parser import parse
 
 from pydantic import (
     BaseModel,
     field_validator,
     PrivateAttr
 )
-from typing import Optional
+from typing import Optional, List
 
 class OntologyTerm(BaseModel):
     id: str
@@ -20,7 +19,7 @@ class OntologyTerm(BaseModel):
             raise ValueError('id must be CURIE, e.g. EUCAIM:COM1001288')
         return v.title()
 
-class Imaging(BaseModel, extra='forbid'):
+class Disease(BaseModel, extra='forbid'):
     def __init__(self, **data) -> None:
         for private_key in self.__class__.__private_attributes__.keys():
             try:
@@ -30,19 +29,23 @@ class Imaging(BaseModel, extra='forbid'):
 
         super().__init__(**data)
     _id: Optional[str] = PrivateAttr()
-    imageId: str
+    diseaseId: str
     patientId: str
-    diseaseId: Optional[str]=None
-    imageModality: OntologyTerm
-    imageBodyPart: OntologyTerm
-    imageManufacturer: OntologyTerm
-    dateOfImageAcquisition: str
-    @field_validator('dateOfImageAcquisition')
+    ageAtDiagnosis: float
+    diagnosis: OntologyTerm
+    yearOfDiagnosis:  Optional[int]=None
+    dateOfFirstTreatment: Optional[str]=None
+    pathologyConfirmation: Optional[OntologyTerm]=None
+    pathology: Optional[list]=None
+    imagingProcedureProtocol: Optional[OntologyTerm]=None
+    treatment: Optional[List]=None
+    @field_validator('pathology')
     @classmethod
-    def check_dateOfImageAcquisition(cls, v: str) -> str:
-        if isinstance(v, str):
-            try:
-                parse(v)
-            except Exception as e:
-                raise ValueError('dateOfImageAcquisition, if string, must be a date, getting this error: {}'.format(e))
-            return v
+    def check_pathology(cls, v):
+        for pathology in v:
+            OntologyTerm(**pathology)
+    @field_validator('treatment')
+    @classmethod
+    def check_treatment(cls, v):
+        for treatment in v:
+            OntologyTerm(**treatment)

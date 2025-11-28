@@ -75,8 +75,7 @@ def parse_query_string(self, request):
     return query_string_body
 
 @log_with_args(level)
-async def get_qparams(self, request): # anomenar query string en comptes de qparams
-    # Bad Request not priority
+async def get_qparams(self, request):
     '''
     The function will catch all the parameters in the query string and see if they also exist in a json body of the request. If a parameter is found in both places and is different, we
     will return a Bad Request. After that, the params request will be validated against a pydantic class RequestParams and an instance of the object class will be 

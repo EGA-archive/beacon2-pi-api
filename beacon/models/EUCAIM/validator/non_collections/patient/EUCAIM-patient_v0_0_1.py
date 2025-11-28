@@ -1,6 +1,4 @@
 import re
-from dateutil.parser import parse
-
 from pydantic import (
     BaseModel,
     field_validator,
@@ -20,7 +18,7 @@ class OntologyTerm(BaseModel):
             raise ValueError('id must be CURIE, e.g. EUCAIM:COM1001288')
         return v.title()
 
-class Imaging(BaseModel, extra='forbid'):
+class Patient(BaseModel, extra='forbid'):
     def __init__(self, **data) -> None:
         for private_key in self.__class__.__private_attributes__.keys():
             try:
@@ -30,19 +28,5 @@ class Imaging(BaseModel, extra='forbid'):
 
         super().__init__(**data)
     _id: Optional[str] = PrivateAttr()
-    imageId: str
     patientId: str
-    diseaseId: Optional[str]=None
-    imageModality: OntologyTerm
-    imageBodyPart: OntologyTerm
-    imageManufacturer: OntologyTerm
-    dateOfImageAcquisition: str
-    @field_validator('dateOfImageAcquisition')
-    @classmethod
-    def check_dateOfImageAcquisition(cls, v: str) -> str:
-        if isinstance(v, str):
-            try:
-                parse(v)
-            except Exception as e:
-                raise ValueError('dateOfImageAcquisition, if string, must be a date, getting this error: {}'.format(e))
-            return v
+    sex: OntologyTerm
