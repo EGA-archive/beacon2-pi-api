@@ -35,6 +35,12 @@ datasets=client[dbname].datasets
 genomicVariations=client[dbname].genomicVariations
 individuals=client[dbname].individuals
 runs=client[dbname].runs
+
+diseases=client[dbname].diseases
+images=client[dbname].images
+tumors=client[dbname].tumors
+patients=client[dbname].patients
+
 filtering_terms=client[dbname].filtering_terms
 caseLevelData=client[dbname].caseLevelData
 targets=client[dbname].targets

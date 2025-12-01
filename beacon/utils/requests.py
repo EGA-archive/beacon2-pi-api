@@ -153,6 +153,7 @@ def set_entry_type(self, request):
     else:
         path_list = abs_url[starting_endpoint:].split('/')
         path_list = list(filter(None, path_list))
+        LOG.warning(path_list)
         if path_list == []:
             raise WrongURIPath('the {} parameter from conf.py is not the same as the root one received in request: {}. Configure you uri accordingly.'.format(uri, abs_url))
         if len(path_list) > 2:

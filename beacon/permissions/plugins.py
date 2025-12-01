@@ -13,7 +13,7 @@ class Permissions():
     async def initialize(self):
         raise NotImplementedError('Overload this function in a subclass')
 
-    async def get(self, username):
+    async def get(self, username, requested_datasets=None):
         """Return an iterable for the granted datasets for the given username and within a requested list of datasets."""
         raise NotImplementedError('Overload this function in a subclass')
 
@@ -26,7 +26,7 @@ class DummyPermissions(Permissions):
     async def initialize(self):
         pass
     
-    async def get_permissions(self, username, testMode=False):
+    async def get_permissions(self, username, requested_datasets=None, testMode=False):
         # Initialize the list of datasets that will be returned depending on the permissions.
         datasets = []
         try:

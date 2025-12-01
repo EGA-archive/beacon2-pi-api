@@ -1,10 +1,10 @@
-from beacon.connections.mongo.__init__ import analyses
+from beacon.connections.mongo.__init__ import diseases
 
 endpoint_name="diseases"
 enable_endpoint=True
 open_api_endpoints_definition=''
 database='mongo' # The name must match the folder's name in connection that belongs to the desired database.
-database_connection=analyses
+database_connection=diseases
 
 # Granularity accepted: boolean, count or record
 granularity='record'
@@ -25,3 +25,6 @@ allow_queries_without_filters=True
 
 # Map configuration
 singleEntryUrl=True # True if your beacon enables endpoint images/{id}
+imaging_lookup=True # True if your beacon enables endpoint analyses/{id}/biosamples
+patient_lookup=True # True if your beacon enables endpoint analyses/{id}/cohorts
+tumor_lookup=True # True if your beacon enables endpoint analyses/{id}/datasets
