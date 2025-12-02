@@ -3,6 +3,7 @@ import os
 from typing import List, Optional, Union, Dict
 import re
 from beacon.logs.logs import LOG
+import yaml
 
 def load_framework_module(self, script_name):
     module='beacon.framework.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.'+script_name
@@ -65,24 +66,42 @@ def load_types_of_results(response_type):
     union_type = Union[tuple(list_of_results_classes_accepted)]
     return union_type
 
-def load_routes(app):# TODO: add routes per model configuration
+def load_routes():
     dirs = os.listdir("/beacon/models")
+    routes_to_add={}
     for folder in dirs:
         subdirs = os.listdir("/beacon/models/"+folder)
-        if "routes" in subdirs:
-            complete_module='beacon.models.'+folder+'.routes.routes'
-            import importlib
-            module = importlib.import_module(complete_module, package=None)
-            app = module.extend_routes(app)
+        if "conf" in subdirs:
+            confiles = os.listdir("/beacon/models/"+folder+"/conf/entry_types/")
+            for confile in confiles:
+                if confile != '__pycache__':
+                    with open("/beacon/models/"+folder+"/conf/entry_types/" + confile, 'r') as pfile:
+                        entry_type_confile = yaml.safe_load(pfile)
+                    pfile.close()
+                    for entry_type_id, conf_entry_type_param in entry_type_confile.items():
+                        routes_to_add[conf_entry_type_param['endpoint_name']]=[conf_entry_type_param['response_type']]
+                        routes_to_add[conf_entry_type_param['endpoint_name']+'/{id}']=[conf_entry_type_param['response_type']]
+                        for conf_param, value_param in conf_entry_type_param.items():
+                            if conf_param == 'lookups':
+                                for lookup_id, lookup_value in value_param.items():
+                                    if isinstance(lookup_value, dict):
+                                        routes_to_add[lookup_value['endpoint_name']]=[lookup_value['response_type']]
         else:
             for subfolder in subdirs:
-                underdirs = os.listdir("/beacon/models/"+folder+'/'+subfolder)
-                if "routes" in underdirs:
-                    complete_module='beacon.models.'+folder+'.'+subfolder+'.routes.routes'
-                    import importlib
-                    module = importlib.import_module(complete_module, package=None)
-                    app = module.extend_routes(app)
-    return app
+                underdirs = os.listdir("/beacon/models/"+folder+"/"+subfolder)
+                if "conf" in underdirs:
+                    with open("/beacon/models/"+folder+"/"+subfolder+"/conf/entry_types/" + confile, 'r') as pfile:
+                        entry_type_confile = yaml.safe_load(pfile)
+                    pfile.close()
+                    for entry_type_id, conf_entry_type_param in entry_type_confile.items():
+                        routes_to_add[conf_entry_type_param['endpoint_name']]=[conf_entry_type_param['response_type']]
+                        routes_to_add[conf_entry_type_param['endpoint_name']+'/{id}']=[conf_entry_type_param['response_type']]
+                        for conf_param, value_param in conf_entry_type_param.items():
+                            if conf_param == 'lookups':
+                                for lookup_id, lookup_value in value_param.items():
+                                    if isinstance(lookup_value, dict):
+                                        routes_to_add[lookup_value['endpoint_name']]=[lookup_value['response_type']]
+    return routes_to_add
 
 def get_all_modules_mongo_connections_script(script):
     list_of_modules=[]
@@ -170,7 +189,7 @@ def get_all_modules_conf():
             confiles = os.listdir("/beacon/models/"+folder+"/conf/entry_types/")
             for confile in confiles:
                 if confile != '__pycache__':
-                    complete_module='beacon.models.'+folder+'.conf.entry_types.'+confile.replace('.py', '')
+                    complete_module='beacon.models.'+folder+'.conf.entry_types.'+confile.replace('.yml', '')
                     import importlib
                     module = importlib.import_module(complete_module, package=None)
                     list_of_modules.append(module)

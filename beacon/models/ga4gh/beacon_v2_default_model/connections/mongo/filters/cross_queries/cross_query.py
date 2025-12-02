@@ -1,11 +1,12 @@
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.cross_queries.entry_type_is_variant import cross_query_entry_type_is_genomicVariant_and_scope_is_not
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.cross_queries.scope_is_variant import cross_query_scope_is_genomicVariant_and_entry_type_is_not
 from beacon.connections.mongo.filters.cross_queries.scope_is_not_entry_type import scope_is_not_entry_type
-from beacon.connections.mongo.__init__ import genomicVariations, individuals, analyses, biosamples, runs
+from beacon.connections.mongo.__init__ import genomicVariations, individuals, analyses, biosamples, runs, datasets
 from beacon.logs.logs import log_with_args, LOG
 from beacon.conf.conf import level
-from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import analysis, biosample, cohort, dataset, genomicVariant, individual, run
+from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import analysis, biosample, cohort, dataset as dataset_, genomicVariant, individual, run
 from beacon.request.classes import RequestAttributes
+from beacon.connections.mongo.utils import join_query
 
 @log_with_args(level)
 def cross_query(self, query: dict, scope: str, request_parameters: dict, dataset: str):
@@ -65,6 +66,10 @@ def cross_query(self, query: dict, scope: str, request_parameters: dict, dataset
                 original_id="biosampleId"
                 final_id="id"
                 query=scope_is_not_entry_type(self, original_id, final_id, def_list, mongo_collection, query, dataset)
+            elif RequestAttributes.entry_type in [cohort.endpoint_name, dataset_.endpoint_name]:
+                original_id="datasetId"
+                final_id="datasetId"
+                query = scope_is_not_entry_type(self, original_id, final_id, def_list, mongo_collection, query, dataset)
         elif scope == 'analysis' and RequestAttributes.entry_type != analysis.endpoint_name:
             mongo_collection=analyses
             if RequestAttributes.entry_type == genomicVariant.endpoint_name:
@@ -82,6 +87,10 @@ def cross_query(self, query: dict, scope: str, request_parameters: dict, dataset
                 original_id="biosampleId"
                 final_id="id"
                 query=scope_is_not_entry_type(self, original_id, final_id, def_list, mongo_collection, query, dataset)
+            elif RequestAttributes.entry_type in [cohort.endpoint_name, dataset_.endpoint_name]:
+                original_id="datasetId"
+                final_id="datasetId"
+                query = scope_is_not_entry_type(self, original_id, final_id, def_list, mongo_collection, query, dataset)
         elif scope == 'biosample' and RequestAttributes.entry_type != biosample.endpoint_name:
             mongo_collection=biosamples
             if RequestAttributes.entry_type == genomicVariant.endpoint_name:
@@ -95,4 +104,12 @@ def cross_query(self, query: dict, scope: str, request_parameters: dict, dataset
                 original_id="id"
                 final_id="biosampleId"
                 query = scope_is_not_entry_type(self, original_id, final_id, def_list, mongo_collection, query, dataset)
+            elif RequestAttributes.entry_type in [cohort.endpoint_name, dataset_.endpoint_name]:
+                original_id="datasetId"
+                final_id="datasetId"
+                query = scope_is_not_entry_type(self, original_id, final_id, def_list, mongo_collection, query, dataset)
+        elif scope == 'dataset' and RequestAttributes.entry_type != dataset_.endpoint_name:
+            query = scope_is_not_entry_type(self, "id", "datasetId", def_list, datasets, query, dataset)
+        elif scope == 'cohort' and RequestAttributes.entry_type != cohort.endpoint_name:
+            query = scope_is_not_entry_type(self, "id", "datasetId", def_list, datasets, query, dataset)
     return query

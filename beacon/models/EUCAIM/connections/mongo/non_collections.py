@@ -55,7 +55,6 @@ def get_endpoint_with_id(self, dataset: SingleDatasetResponse):
 def get_endpoint_cross_query(self, dataset: SingleDatasetResponse):
     # Get the translation of ids for the entry types lookup for the cross query.
     mapping = get_non_collections_cross_query_attributes(self, RequestAttributes.entry_type, RequestAttributes.pre_entry_type)
-    LOG.warning(mapping)
     # Get the ids found for the initial entry type query.
     items_found = mapping["secondary_collection"] \
     .find({mapping["idq"]: RequestAttributes.entry_id, "datasetId": dataset.dataset}, {mapping["idq2"]: 1, "_id": 0})
@@ -63,7 +62,6 @@ def get_endpoint_cross_query(self, dataset: SingleDatasetResponse):
     list_of_itemsfound=[]
     for itemfound in items_found:
         list_of_itemsfound.append(itemfound[mapping["idq2"]])
-    LOG.warning(list_of_itemsfound)
     query = {mapping["idq2"]: {"$in": list_of_itemsfound}}
     # Process filters.
     query = apply_filters(self, query, RequestAttributes.qparams.query.filters, {}, dataset.dataset)

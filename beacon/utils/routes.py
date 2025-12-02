@@ -1,6 +1,7 @@
 from beacon.logs.logs import log_with_args_initial, LOG
 from beacon.conf.conf import level
-from beacon.views.collection_entry_type import CollectionEntryTypeView
+from beacon.views.collection import CollectionEntryTypeView
+from beacon.views.non_collection import EntryTypeView 
 from beacon.views.configuration import ConfigurationView
 from beacon.views.entry_types import EntryTypesEndpointView
 from beacon.views.filtering_terms import FilteringTermsView
@@ -27,5 +28,12 @@ def append_routes(app):
     app.add_routes([web.get(uri_subpath+'/configuration', ConfigurationView)])
     app.add_routes([web.get(uri_subpath+'/map', MapView)])
     app.add_routes([web.get(uri_subpath+'/filtering_terms', FilteringTermsView)])
-    app=load_routes(app)
+    routes_to_add = load_routes()
+    for url, response_type in routes_to_add.items():
+        if response_type == 'non_collection':
+            app.add_routes([web.get(uri_subpath+'/'+url, EntryTypeView)])
+            app.add_routes([web.post(uri_subpath+'/'+url, EntryTypeView)])
+        elif response_type == 'collection':
+            app.add_routes([web.get(uri_subpath+'/'+url, CollectionEntryTypeView)])
+            app.add_routes([web.post(uri_subpath+'/'+url, CollectionEntryTypeView)])
     return app

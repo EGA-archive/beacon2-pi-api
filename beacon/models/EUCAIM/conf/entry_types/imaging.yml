@@ -1,0 +1,69 @@
+imaging:
+  entry_type_enabled: True
+  max_granularity: record
+  endpoint_name: images
+  open_api_definition: 
+  allow_queries_without_filters: True
+  allow_id_query: True # endpoint_name/{id}
+  response_type: non_collection
+  connection:
+    name: mongo
+    database: beacon
+    table: images
+    functions:
+      function_name_assigned: get_endpoint
+      id_query_function_name_assigned: get_endpoint_with_id
+  info:
+    name: 
+    ontology_id: EDAM:3382
+    ontology_name: Imaging
+    description: 
+  schema:
+    specification: EUCAIM v0
+    default_schema_id: EUCAIM-imaging_v0.0.1
+    default_schema_name: 
+    reference_to_default_schema_definition: https://raw.githubusercontent.com/EGA-archive/EUCAIM-Schema/refs/heads/main/ImagingMetadata.json
+    default_schema_version: v0.0.1
+    supported_schemas:
+      - EUCAIM-imaging_v0.0.1
+  lookups:
+    dataset:
+      endpoint_name: images/{id}/datasets
+      response_type: non_collection
+      endpoint_enabled: True
+      connection:
+        name: mongo
+        database: beacon
+        table: datasets
+        functions:
+          function_name_assigned: get_endpoint_cross_query
+    disease:
+      endpoint_name: images/{id}/diseases
+      response_type: non_collection
+      endpoint_enabled: True
+      connection:
+        name: mongo
+        database: beacon
+        table: diseases
+        functions:
+          function_name_assigned: get_endpoint_cross_query
+    patient:
+      endpoint_name: images/{id}/patients
+      response_type: non_collection
+      endpoint_enabled: True
+      connection:
+        name: mongo
+        database: beacon
+        table: patients
+        functions:
+          function_name_assigned: get_cross_collections
+    tumor:
+      endpoint_name: images/{id}/tumors
+      response_type: non_collection
+      endpoint_enabled: True
+      connection:
+        name: mongo
+        database: beacon
+        table: tumors
+        functions:
+          function_name_assigned: get_cross_collections

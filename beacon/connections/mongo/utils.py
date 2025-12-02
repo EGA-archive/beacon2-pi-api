@@ -5,9 +5,13 @@ from beacon.logs.logs import log_with_args_mongo, LOG
 from beacon.conf.conf import level
 from beacon.exceptions.exceptions import InvalidRequest
 import aiohttp.web as web
-from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import genomicVariant, analysis, run, biosample, individual, dataset, cohort
 from beacon.request.classes import RequestAttributes
 from beacon.response.classes import SingleDatasetResponse
+import yaml
+
+with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/genomicVariant.yml", 'r') as pfile:
+    genomicVariant_confile= yaml.safe_load(pfile)
+pfile.close()
 
 @log_with_args_mongo(level)
 def query_id(self, query: dict, document_id) -> dict:
@@ -104,7 +108,6 @@ def get_docs_by_response_type(self, include: str, query: dict, dataset: SingleDa
         queryid={}
         queryid['datasetId']=dataset.dataset
         query_count["$or"].append(queryid)
-        LOG.warning(query_count)
         if query_count["$or"]!=[]:
             dataset_count = get_count(self, RequestAttributes.mongo_collection, query_count)
             if dataset_count == 0:
@@ -164,7 +167,7 @@ def choose_scope(self, scope, filter):
             # If there aren't any, check if the filtering term is not a zygosity term
             if filter.id not in ["GENO:0000136", "GENO:0000458"]:
                 # If it's not a zygosity term, add the entry type as scop
-                if RequestAttributes.entry_type == genomicVariant.endpoint_name:
+                if RequestAttributes.entry_type == genomicVariant_confile["genomicVariant"]["endpoint_name"]:
                     scope = 'genomicVariation'
                 else:
                     scope = RequestAttributes.entry_type[0:-1]
@@ -174,10 +177,10 @@ def choose_scope(self, scope, filter):
         else:
             for scoped in scopes:
                 # If there are scopes and is an array, check if any scope is equal to the entry type requested, to assign it as the scope
-                if str(scoped)+'s'==RequestAttributes.entry_type and RequestAttributes.entry_type != genomicVariant.endpoint_name:
+                if str(scoped)+'s'==RequestAttributes.entry_type and RequestAttributes.entry_type != genomicVariant_confile["genomicVariant"]["endpoint_name"]:
                     scope=str(scoped)
                     return scope
-                elif str(scoped)=='genomicVariation' and RequestAttributes.entry_type==genomicVariant.endpoint_name:
+                elif str(scoped)=='genomicVariation' and RequestAttributes.entry_type==genomicVariant_confile["genomicVariant"]["endpoint_name"]:
                     scope=str(scoped)
                     return scope
             # If there is only one scope for the filtering term, assign this scope

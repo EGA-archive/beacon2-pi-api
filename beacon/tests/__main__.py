@@ -1,7 +1,7 @@
 from aiohttp.test_utils import TestClient, TestServer, loop_context
 from aiohttp import web
-from beacon.views.collection_entry_type import CollectionEntryTypeView
-from beacon.views.entry_type import EntryTypeView
+from beacon.views.collection import CollectionEntryTypeView
+from beacon.views.non_collection import EntryTypeView
 from beacon.views.info import InfoView
 from beacon.views.service_info import ServiceInfoView
 from beacon.views.map import MapView
