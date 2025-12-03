@@ -6,7 +6,7 @@ from pydantic import (
 )
 import re
 from typing import List, Optional
-from beacon.utils.modules import load_class, get_all_modules_conf
+from beacon.utils.modules import load_class, get_modules_confiles
 
 class OntologyTerm(BaseModel):
     id: str
@@ -31,11 +31,9 @@ class EntryTypes(BaseModel):
     ontologyTermForThisType: Optional[OntologyTerm] = None
     partOfSpecification: str
 
-prelist_of_modules = get_all_modules_conf()
+list_of_modules=get_modules_confiles()
 
-list_of_modules=[x for x in prelist_of_modules if x.id != ""]
-
-fields_related = {str(field_name.id): (Optional[EntryTypes],None) for field_name in list_of_modules}
+fields_related = {str(key): (Optional[EntryTypes],None) for field_name in list_of_modules for key, value in field_name.items() }
 
 Entries = create_model("Entries", **fields_related)
 
@@ -55,20 +53,20 @@ class EntryTypesSchema(BaseModel):
         Entries_values_to_Set={}
         for module in list_of_modules:
             values_to_set = {}
-            
-            if module.enable_endpoint == True:
-                values_to_set["id"] = module.id
-                values_to_set["name"] = module.name
-                values_to_set["ontologyTermForThisType"] = OntologyTerm(id=module.ontology_id,label=module.ontology_name)
-                values_to_set["partOfSpecification"] = module.specification
-                values_to_set["description"] = module.description
-                values_to_set["defaultSchema"] = ReferenceToAnSchema(id=module.defaultSchema_id,name=module.defaultSchema_name,
-                                                                                       referenceToSchemaDefinition=module.defaultSchema_reference_to_schema_definition,
-                                                                                       schemaVersion=module.defaultSchema_schema_version)
-                values_to_set["additionallySupportedSchemas"] = module.aditionally_supported_schemas
-                values_to_set["nonFilteredQueriesAllowed"] =module.allow_queries_without_filters
+            for entry_type, set_of_params in module.items():
+                if set_of_params["entry_type_enabled"] == True:
+                    values_to_set["id"] = entry_type
+                    values_to_set["name"] = set_of_params["info"]["name"]
+                    values_to_set["ontologyTermForThisType"] = OntologyTerm(id=set_of_params["info"]["ontology_id"],label=set_of_params["info"]["ontology_name"])
+                    values_to_set["partOfSpecification"] = set_of_params["schema"]["specification"]
+                    values_to_set["description"] = set_of_params["info"]["description"]
+                    values_to_set["defaultSchema"] = ReferenceToAnSchema(id=set_of_params["schema"]["default_schema_id"],name=set_of_params["schema"]["default_schema_name"],
+                                                                                        referenceToSchemaDefinition=set_of_params["schema"]["reference_to_default_schema_definition"],
+                                                                                        schemaVersion=set_of_params["schema"]["default_schema_version"])
+                    values_to_set["additionallySupportedSchemas"] = set_of_params["schema"]["supported_schemas"]
+                    values_to_set["nonFilteredQueriesAllowed"] =set_of_params["allow_queries_without_filters"]
 
-                Entries_values_to_Set[module.id]=values_to_set
+                    Entries_values_to_Set[entry_type]=values_to_set
 
 
             

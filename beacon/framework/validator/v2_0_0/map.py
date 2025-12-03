@@ -6,8 +6,7 @@ from pydantic import (
     create_model
 )
 from beacon.conf import conf
-from beacon.utils.modules import load_class
-from beacon.utils.modules import get_all_modules_conf
+from beacon.utils.modules import load_class, get_modules_confiles
 from beacon.logs.logs import LOG
 
 class RelatedEndpoint(BaseModel):
@@ -16,11 +15,9 @@ class RelatedEndpoint(BaseModel):
 
 # Get all the models conf values of the entry types and assign them as properties in a class called RelatedEndpointEntries
 
-prelist_of_modules = get_all_modules_conf()
+list_of_modules=get_modules_confiles()
 
-list_of_modules=[x for x in prelist_of_modules if x.id != ""]
-
-fields_related = {str(field_name.id): (Optional[RelatedEndpoint],None) for field_name in list_of_modules}
+fields_related = {str(key): (Optional[RelatedEndpoint],None) for field_name in list_of_modules for key, value in field_name.items() }
 
 RelatedEndpointEntries = create_model("RelatedEndpointEntries", **fields_related)
 
@@ -41,7 +38,7 @@ class Endpoint(BaseModel):
 
 # Get all the models conf values of the entry types and assign them as properties in a class called EndpointEntries
 
-fields = {str(field_name.id): (Optional[Endpoint],None) for field_name in list_of_modules}
+fields = {str(key): (Optional[Endpoint],None) for field_name in list_of_modules for key, value in field_name.items() }
 
 EndpointEntries = create_model("EndpointEntries", **fields)
 
@@ -58,30 +55,29 @@ class MapSchema(BaseModel):
     def populate_endpoints(self):
         # Load all_modules and do a loop per populating EndpointEntries(loaded_module=Endpoint...) and loading the variables _lookup = True by name, getting endpoint_names per each lookup = True.
         fields={}
-        for module2 in list_of_modules:
-            relatedEndpointEntries_values_to_set={}
-            for module in list_of_modules:
-                values_to_set = {}
-                if module2.enable_endpoint == True:
-                    lookup = module.id + "_lookup"
-                    values_to_set["returnedEntryType"] = module.id
-                    try:
-                        values_to_set["url"] = conf.complete_url+'/'+module2.endpoint_name+'/{id}/'+module.endpoint_name if getattr(module2, lookup) == True else None
-                    except Exception:
-                        continue
-                    relatedEndpointEntries_values_to_set[module.id]=values_to_set
-            if relatedEndpointEntries_values_to_set != {}:
-                Endpoints = RelatedEndpointEntries(**relatedEndpointEntries_values_to_set)
-            else:
-                Endpoints=None
-            # Add the rest of the properties for each of the entry type that is particular to them and doesn't depend on a lookup
-            rootUrl=conf.complete_url+'/'+module2.endpoint_name
-            singleEntryUrl=conf.complete_url+'/'+module2.endpoint_name+'/{id}' if module2.singleEntryUrl==True else None
-            openAPIEndpointsDefinition=module2.open_api_endpoints_definition
-            id = module2.id
-            if module2.enable_endpoint == True:
-                fields[str(module2.id)]=Endpoint(id=id,openAPIEndpointsDefinition=openAPIEndpointsDefinition,entryType=module2.id,rootUrl=rootUrl,singleEntryUrl=singleEntryUrl,endpoints=Endpoints)
-        endpointEntriesClass=EndpointEntries(**fields)
+        relatedEndpointEntries_values_to_set={}
+        for module in list_of_modules:
+            values_to_set = {}
+            for entry_type, set_of_params in module.items():
+                if set_of_params["entry_type_enabled"] == True:
+                    values_to_set["returnedEntryType"] = entry_type
+                    for lookup_entry_type, lookup_set_of_params in set_of_params["lookups"].items():
+                        try:
+                            values_to_set["url"] = conf.complete_url+'/'+lookup_set_of_params["endpoint_name"] if lookup_set_of_params["endpoint_enabled"] == True else None
+                        except Exception:
+                            continue
+                    relatedEndpointEntries_values_to_set[entry_type]=values_to_set
+                if relatedEndpointEntries_values_to_set != {}:
+                    Endpoints = RelatedEndpointEntries(**relatedEndpointEntries_values_to_set)
+                else:
+                    Endpoints=None
+                # Add the rest of the properties for each of the entry type that is particular to them and doesn't depend on a lookup
+                rootUrl=conf.complete_url+'/'+set_of_params["endpoint_name"]
+                singleEntryUrl=conf.complete_url+'/'+set_of_params["endpoint_name"]+'/{id}' if set_of_params["allow_id_query"]==True else None
+                openAPIEndpointsDefinition=set_of_params["open_api_definition"]
+                if set_of_params["entry_type_enabled"] == True:
+                    fields[str(entry_type)]=Endpoint(id=entry_type,openAPIEndpointsDefinition=openAPIEndpointsDefinition,entryType=entry_type,rootUrl=rootUrl,singleEntryUrl=singleEntryUrl,endpoints=Endpoints)
+            endpointEntriesClass=EndpointEntries(**fields)
         return self(endpointSets=endpointEntriesClass)
 
 class MapResponse(BaseModel):

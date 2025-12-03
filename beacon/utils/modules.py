@@ -90,17 +90,20 @@ def load_routes():
             for subfolder in subdirs:
                 underdirs = os.listdir("/beacon/models/"+folder+"/"+subfolder)
                 if "conf" in underdirs:
-                    with open("/beacon/models/"+folder+"/"+subfolder+"/conf/entry_types/" + confile, 'r') as pfile:
-                        entry_type_confile = yaml.safe_load(pfile)
-                    pfile.close()
-                    for entry_type_id, conf_entry_type_param in entry_type_confile.items():
-                        routes_to_add[conf_entry_type_param['endpoint_name']]=[conf_entry_type_param['response_type']]
-                        routes_to_add[conf_entry_type_param['endpoint_name']+'/{id}']=[conf_entry_type_param['response_type']]
-                        for conf_param, value_param in conf_entry_type_param.items():
-                            if conf_param == 'lookups':
-                                for lookup_id, lookup_value in value_param.items():
-                                    if isinstance(lookup_value, dict):
-                                        routes_to_add[lookup_value['endpoint_name']]=[lookup_value['response_type']]
+                    confiles = os.listdir("/beacon/models/"+folder+"/"+subfolder+"/conf/entry_types/")
+                    for confile in confiles:
+                        if confile != '__pycache__':
+                            with open("/beacon/models/"+folder+"/"+subfolder+"/conf/entry_types/" + confile, 'r') as pfile:
+                                entry_type_confile = yaml.safe_load(pfile)
+                            pfile.close()
+                            for entry_type_id, conf_entry_type_param in entry_type_confile.items():
+                                routes_to_add[conf_entry_type_param['endpoint_name']]=[conf_entry_type_param['response_type']]
+                                routes_to_add[conf_entry_type_param['endpoint_name']+'/{id}']=[conf_entry_type_param['response_type']]
+                                for conf_param, value_param in conf_entry_type_param.items():
+                                    if conf_param == 'lookups':
+                                        for lookup_id, lookup_value in value_param.items():
+                                            if isinstance(lookup_value, dict):
+                                                routes_to_add[lookup_value['endpoint_name']]=[lookup_value['response_type']]
     return routes_to_add
 
 def get_all_modules_mongo_connections_script(script):
@@ -205,5 +208,31 @@ def get_all_modules_conf():
                             module = importlib.import_module(complete_module, package=None)
                             list_of_modules.append(module)
     return list_of_modules
+
+def get_modules_confiles():
+    dirs = os.listdir("/beacon/models")
+    list_of_confiles=[]
+    for folder in dirs:
+        subdirs = os.listdir("/beacon/models/"+folder)
+        if "conf" in subdirs:
+            confiles = os.listdir("/beacon/models/"+folder+"/conf/entry_types/")
+            for confile in confiles:
+                if confile != '__pycache__':
+                    with open("/beacon/models/"+folder+"/conf/entry_types/" + confile, 'r') as pfile:
+                        entry_type_confile = yaml.safe_load(pfile)
+                    pfile.close()
+                list_of_confiles.append(confile)
+        else:
+            for subfolder in subdirs:
+                underdirs = os.listdir("/beacon/models/"+folder+"/"+subfolder)
+                if "conf" in underdirs:
+                    confiles = os.listdir("/beacon/models/"+folder+"/"+subfolder+"/conf/entry_types/")
+                    for confile in confiles:
+                        if confile != '__pycache__':
+                            with open("/beacon/models/"+folder+"/"+subfolder+"/conf/entry_types/" + confile, 'r') as pfile:
+                                entry_type_confile = yaml.safe_load(pfile)
+                            pfile.close()
+                            list_of_confiles.append(confile)
+    return list_of_confiles
     
 

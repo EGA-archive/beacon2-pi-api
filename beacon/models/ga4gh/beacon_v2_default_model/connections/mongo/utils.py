@@ -5,9 +5,49 @@ from beacon.logs.logs import log_with_args_mongo, LOG
 from beacon.conf.conf import level
 from beacon.exceptions.exceptions import InvalidRequest
 import aiohttp.web as web
-from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import genomicVariant, analysis, run, biosample, individual, dataset, cohort
-from beacon.request.classes import RequestAttributes
-from beacon.response.classes import SingleDatasetResponse
+import yaml
+
+def import_genomicVariant_confile():
+    with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/genomicVariant.yml", 'r') as pfile:
+        genomicVariant_confile= yaml.safe_load(pfile)
+    pfile.close()
+    return genomicVariant_confile
+
+def import_dataset_confile():
+    with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/dataset.yml", 'r') as pfile:
+        dataset_confile= yaml.safe_load(pfile)
+    pfile.close()
+    return dataset_confile
+
+def import_analysis_confile():
+    with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/analysis.yml", 'r') as pfile:
+        analysis_confile= yaml.safe_load(pfile)
+    pfile.close()
+    return analysis_confile
+
+def import_biosample_confile():
+    with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/biosample.yml", 'r') as pfile:
+        biosample_confile= yaml.safe_load(pfile)
+    pfile.close()
+    return biosample_confile
+
+def import_cohort_confile():
+    with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/cohort.yml", 'r') as pfile:
+        cohort_confile= yaml.safe_load(pfile)
+    pfile.close()
+    return cohort_confile
+
+def import_individual_confile():
+    with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/individual.yml", 'r') as pfile:
+        individual_confile= yaml.safe_load(pfile)
+    pfile.close()
+    return individual_confile
+
+def import_run_confile():
+    with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/run.yml", 'r') as pfile:
+        run_confile= yaml.safe_load(pfile)
+    pfile.close()
+    return run_confile
 
 @log_with_args_mongo(level)
 def lengthquery(self, collection: Collection,query: dict):
@@ -16,77 +56,84 @@ def lengthquery(self, collection: Collection,query: dict):
 
 @log_with_args_mongo(level)
 def get_phenotypic_cross_query_attributes(self, entry_type, pre_entry_type):
+    individual_confile = import_individual_confile()
+    analysis_confile = import_analysis_confile()
+    biosample_confile = import_biosample_confile()
+    cohort_confile = import_cohort_confile()
+    dataset_confile = import_dataset_confile()
+    genomicVariant_confile = import_genomicVariant_confile()
+    run_confile = import_run_confile()
     # For cross queries, save the attributes for the translation (linkage) between endpoints (idq to idq2) and the name of the collection for the initial endpoint queried (secondary_collection)
-    mapping = {individual.endpoint_name: {analysis.endpoint_name: {"idq": "id",
+    mapping = {individual_confile["endpoint_name"]: {analysis_confile["endpoint_name"]: {"idq": "id",
                                                          "idq2": "individualId",
                                                          "secondary_collection": analyses},
-                                        biosample.endpoint_name: {"idq": "id",
+                                        biosample_confile["endpoint_name"]: {"idq": "id",
                                                          "idq2": "individualId",
                                                          "secondary_collection": biosamples},
-                                        run.endpoint_name: {"idq": "id",
+                                        run_confile["endpoint_name"]: {"idq": "id",
                                                         "idq2": "individualId",
                                                         "secondary_collection": runs}},
-    biosample.endpoint_name: {analysis.endpoint_name: {"idq": "id",
+    biosample_confile["endpoint_name"]: {analysis_confile["endpoint_name"]: {"idq": "id",
                                                     "idq2": "biosampleId",
                                                     "secondary_collection": analyses},
-                            individual.endpoint_name: {"idq": "individualId",
+                            individual_confile["endpoint_name"]: {"idq": "individualId",
                                                     "idq2": "id",
                                                     "secondary_collection": individuals},
-                            run.endpoint_name: {"idq": "id",
+                            run_confile["endpoint_name"]: {"idq": "id",
                                                     "idq2": "biosampleId",
                                                     "secondary_collection": runs}},
-    analysis.endpoint_name: {run.endpoint_name: {"idq": "biosampleId",
+    analysis_confile["endpoint_name"]: {run_confile["endpoint_name"]: {"idq": "biosampleId",
                                                     "idq2": "biosampleId",
                                                     "secondary_collection": runs},
-                            biosample.endpoint_name: {"idq": "biosampleId",
+                            biosample_confile["endpoint_name"]: {"idq": "biosampleId",
                                                     "idq2": "id",
                                                     "secondary_collection": biosamples},
-                            individual.endpoint_name: {"idq": "individualId",
+                            individual_confile["endpoint_name"]: {"idq": "individualId",
                                                     "idq2": "id",
                                                     "secondary_collection": individuals}},
-    run.endpoint_name: {biosample.endpoint_name: {"idq": "biosampleId",
+    run_confile["endpoint_name"]: {biosample_confile["endpoint_name"]: {"idq": "biosampleId",
                                                     "idq2": "id",
                                                     "secondary_collection": biosamples},
-                        analysis.endpoint_name: {"idq": "biosampleId",
+                        analysis_confile["endpoint_name"]: {"idq": "biosampleId",
                                                     "idq2": "biosampleId",
                                                     "secondary_collection": analyses},
-                        individual.endpoint_name: {"idq": "individualId",
+                        individual_confile["endpoint_name"]: {"idq": "individualId",
                                                     "idq2": "id",
                                                     "secondary_collection": individuals}},                                                                                                                                                                                                                                                                                                                                                                                                                                  
-    cohort.endpoint_name: {biosample.endpoint_name: {"idq": "datasetId",
+    cohort_confile["endpoint_name"]: {biosample_confile["endpoint_name"]: {"idq": "datasetId",
                                                     "idq2": "datasetId",
                                                     "secondary_collection": biosamples},
-                        analysis.endpoint_name: {"idq": "datasetId",
+                        analysis_confile["endpoint_name"]: {"idq": "datasetId",
                                                     "idq2": "datasetId",
                                                     "secondary_collection": analyses},
-                        dataset.endpoint_name: {"idq": "datasetId",
+                        dataset_confile["endpoint_name"]: {"idq": "datasetId",
                                                     "idq2": "id",
                                                     "secondary_collection": datasets},
-                        genomicVariant.endpoint_name: {"idq": "datasetId",
+                        genomicVariant_confile["endpoint_name"]: {"idq": "datasetId",
                                                     "idq2": "datasetId",
                                                     "secondary_collection": genomicVariations},
-                        individual.endpoint_name: {"idq": "datasetId",
+                        individual_confile["endpoint_name"]: {"idq": "datasetId",
                                                     "idq2": "datasetId",
                                                     "secondary_collection": individuals},
-                        run.endpoint_name: {"idq": "datasetId",
+                        run_confile["endpoint_name"]: {"idq": "datasetId",
                                                     "idq2": "datasetId",
                                                     "secondary_collection": runs}},
-    dataset.endpoint_name: {biosample.endpoint_name: {"idq": "id",
+    dataset_confile["endpoint_name"]: {biosample_confile["endpoint_name"]: {"idq": "id",
                                                     "idq2": "datasetId",
                                                     "secondary_collection": biosamples},
-                        analysis.endpoint_name: {"idq": "id",
+                        analysis_confile["endpoint_name"]: {"idq": "id",
                                                     "idq2": "datasetId",
                                                     "secondary_collection": analyses},
-                        cohort.endpoint_name: {"idq": "id",
+                        cohort_confile["endpoint_name"]: {"idq": "id",
                                                     "idq2": "datasetId",
                                                     "secondary_collection": cohorts},
-                        genomicVariant.endpoint_name: {"idq": "id",
+                        genomicVariant_confile["endpoint_name"]: {"idq": "id",
                                                     "idq2": "datasetId",
                                                     "secondary_collection": genomicVariations},
-                        individual.endpoint_name: {"idq": "id",
+                        individual_confile["endpoint_name"]: {"idq": "id",
                                                     "idq2": "datasetId",
                                                     "secondary_collection": individuals},
-                        run.endpoint_name: {"idq": "id",
+                        run_confile["endpoint_name"]: {"idq": "id",
                                                     "idq2": "datasetId",
                                                     "secondary_collection": runs}}}
     return mapping[entry_type][pre_entry_type]

@@ -1,11 +1,10 @@
-from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import analysis, biosample, cohort, dataset, genomicVariant, individual, run
 from beacon.conf import conf
 from beacon.logs.logs import LOG, log_with_args_check_configuration
 import os
 import re
 import logging
 import yaml
-import aiohttp.web as web
+from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.utils import import_dataset_confile, import_analysis_confile, import_biosample_confile, import_cohort_confile, import_individual_confile, import_genomicVariant_confile, import_run_confile
 
 def contains_special_characters(string):
     for char in string:
@@ -17,47 +16,54 @@ def contains_special_characters(string):
 
 @log_with_args_check_configuration(conf.level)
 def check_configuration():
-    if isinstance(analysis.enable_endpoint, bool):
+    analysis_confile=import_analysis_confile()
+    biosample_confile=import_biosample_confile()
+    cohort_confile=import_cohort_confile()
+    dataset_confile=import_dataset_confile()
+    genomicVariant_confile=import_genomicVariant_confile()
+    individual_confile=import_individual_confile()
+    run_confile=import_run_confile()
+    if isinstance(analysis_confile["analysis"]["entry_type_enabled"], bool):
         pass
     else:
         raise Exception("{}.enable_endpoint variable from {}.py must be boolean".format('analysis', 'analysis'))
-    if isinstance(biosample.enable_endpoint, bool):
+    if isinstance(biosample_confile["biosample"]["entry_type_enabled"], bool):
         pass
     else:
         raise Exception("{}.enable_endpoint variable from {}.py must be boolean".format('biosample', 'biosample'))
-    if isinstance(cohort.enable_endpoint, bool):
+    if isinstance(cohort_confile["cohort"]["entry_type_enabled"], bool):
         pass
     else:
         raise Exception("{}.enable_endpoint variable from {}.py must be boolean".format('cohort', 'cohort'))
-    if isinstance(dataset.enable_endpoint, bool):
+    if isinstance(dataset_confile["dataset"]["entry_type_enabled"], bool):
         pass
     else:
         raise Exception("{}.enable_endpoint variable from {}.py must be boolean".format('dataset', 'dataset'))
-    if isinstance(genomicVariant.enable_endpoint, bool):
+    if isinstance(genomicVariant_confile["genomicVariant"]["entry_type_enabled"], bool):
         pass
     else:
         raise Exception("{}.enable_endpoint variable from {}.py must be boolean".format('genomicVariant', 'genomicVariant'))
-    if isinstance(individual.enable_endpoint, bool):
+    if isinstance(individual_confile["individual"]["entry_type_enabled"], bool):
         pass
     else:
         raise Exception("{}.enable_endpoint variable from {}.py must be boolean".format('individual', 'individual'))
-    if isinstance(run.enable_endpoint, bool):
+    if isinstance(run_confile["run"]["entry_type_enabled"], bool):
         pass
     else:
         raise Exception("{}.enable_endpoint variable from {}.py must be boolean".format('run', 'run'))
-    if analysis.endpoint_name != '' and analysis.granularity not in ['boolean', 'count', 'record']:
+    if analysis_confile["analysis"]["endpoint_name"] != '' and analysis_confile["analysis"]["max_granularity"] not in ['boolean', 'count', 'record']:
         raise Exception("analysis granularity must be one string between boolean, count or record")
-    if biosample.endpoint_name != '' and biosample.granularity not in ['boolean', 'count', 'record']:
+    if biosample_confile["biosample"]["endpoint_name"] != '' and biosample_confile["biosample"]["max_granularity"] not in ['boolean', 'count', 'record']:
         raise Exception("biosample granularity must be one string between boolean, count or record")
-    if cohort.endpoint_name != '' and cohort.granularity not in ['boolean', 'count', 'record']:
+    if cohort_confile["cohort"]["endpoint_name"] != '' and cohort_confile["cohort"]["endpoint_name"] not in ['boolean', 'count', 'record']:
         raise Exception("cohort granularity must be one string between boolean, count or record")
-    if dataset.endpoint_name != '' and dataset.granularity not in ['boolean', 'count', 'record']:
+    if dataset_confile["dataset"]["endpoint_name"] != '' and dataset_confile["dataset"]["max_granularity"] not in ['boolean', 'count', 'record']:
         raise Exception("dataset granularity must be one string between boolean, count or record")
-    if genomicVariant.endpoint_name != '' and genomicVariant.granularity not in ['boolean', 'count', 'record']:
+    if genomicVariant_confile["genomicVariant"]["endpoint_name"] != '' and genomicVariant_confile["genomicVariant"]["max_granularity"] not in ['boolean', 'count', 'record']:
         raise Exception("genomicVariant granularity must be one string between boolean, count or record")
-    if individual.endpoint_name != '' and individual.granularity not in ['boolean', 'count', 'record']:
+    if individual_confile["individual"]["endpoint_name"] != '' and individual_confile["individual"]["max_granularity"] not in ['boolean', 'count', 'record']:
         raise Exception("individual granularity must be one string between boolean, count or record")
-    if run.endpoint_name != '' and run.granularity not in ['boolean', 'count', 'record']:
+    if run_confile["run"]["endpoint_name"] != '' and run_confile["run"]["max_granularity"] not in ['boolean', 'count', 'record']:
         raise Exception("run granularity must be one string between boolean, count or record")
     if conf.uri.startswith('http://'):
         LOG.warning('The uri of your beacon is not https. Please change to https as soon as you can.')
@@ -83,20 +89,20 @@ def check_configuration():
         raise Exception("The query budget per ip parameter must be boolean.")
     if conf.query_budget_database not in [name for name in os.listdir("/beacon/connections") if os.path.isdir(os.path.join("/beacon/connections", name))]:
         raise Exception('The database {} for budget needs to match a directory name in the beacon/connections folder'.format(conf.query_budget_database))
-    if run.database not in [name for name in os.listdir("/beacon/connections") if os.path.isdir(os.path.join("/beacon/connections", name))]:
-        raise Exception('The database {} for run records needs to match a directory name in the beacon/connections folder'.format(run.database))
-    if individual.database not in [name for name in os.listdir("/beacon/connections") if os.path.isdir(os.path.join("/beacon/connections", name))]:
-        raise Exception('The database {} for individual records needs to match a directory name in the beacon/connections folder'.format(individual.database))
-    if genomicVariant.database not in [name for name in os.listdir("/beacon/connections") if os.path.isdir(os.path.join("/beacon/connections", name))]:
-        raise Exception('The database {} for genomicVariant records needs to match a directory name in the beacon/connections folder'.format(genomicVariant.database))
-    if dataset.database not in [name for name in os.listdir("/beacon/connections") if os.path.isdir(os.path.join("/beacon/connections", name))]:
-        raise Exception('The database {} for dataset records needs to match a directory name in the beacon/connections folder'.format(dataset.database))
-    if cohort.database not in [name for name in os.listdir("/beacon/connections") if os.path.isdir(os.path.join("/beacon/connections", name))]:
-        raise Exception('The database {} for cohort records needs to match a directory name in the beacon/connections folder'.format(cohort.database))
-    if biosample.database not in [name for name in os.listdir("/beacon/connections") if os.path.isdir(os.path.join("/beacon/connections", name))]:
-        raise Exception('The database {} for biosample records needs to match a directory name in the beacon/connections folder'.format(biosample.database))
-    if analysis.database not in [name for name in os.listdir("/beacon/connections") if os.path.isdir(os.path.join("/beacon/connections", name))]:
-        raise Exception('The database {} for analysis records needs to match a directory name in the beacon/connections folder'.format(analysis.database))
+    if run_confile["run"]["connection"]["name"] not in [name for name in os.listdir("/beacon/connections") if os.path.isdir(os.path.join("/beacon/connections", name))]:
+        raise Exception('The database {} for run records needs to match a directory name in the beacon/connections folder'.format(run_confile["run"]["connection"]["name"]))
+    if individual_confile["individual"]["connection"]["name"] not in [name for name in os.listdir("/beacon/connections") if os.path.isdir(os.path.join("/beacon/connections", name))]:
+        raise Exception('The database {} for individual records needs to match a directory name in the beacon/connections folder'.format(individual_confile["individual"]["connection"]["name"]))
+    if genomicVariant_confile["genomicVariant"]["connection"]["name"] not in [name for name in os.listdir("/beacon/connections") if os.path.isdir(os.path.join("/beacon/connections", name))]:
+        raise Exception('The database {} for genomicVariant records needs to match a directory name in the beacon/connections folder'.format(genomicVariant_confile["genomicVariant"]["connection"]["name"]))
+    if dataset_confile["dataset"]["connection"]["name"] not in [name for name in os.listdir("/beacon/connections") if os.path.isdir(os.path.join("/beacon/connections", name))]:
+        raise Exception('The database {} for dataset records needs to match a directory name in the beacon/connections folder'.format(dataset_confile["dataset"]["connection"]["name"]))
+    if cohort_confile["cohort"]["connection"]["name"] not in [name for name in os.listdir("/beacon/connections") if os.path.isdir(os.path.join("/beacon/connections", name))]:
+        raise Exception('The database {} for cohort records needs to match a directory name in the beacon/connections folder'.format(cohort_confile["cohort"]["connection"]["name"]))
+    if biosample_confile["biosample"]["connection"]["name"] not in [name for name in os.listdir("/beacon/connections") if os.path.isdir(os.path.join("/beacon/connections", name))]:
+        raise Exception('The database {} for biosample records needs to match a directory name in the beacon/connections folder'.format(biosample_confile["biosample"]["connection"]["name"]))
+    if analysis_confile["analysis"]["connection"]["name"] not in [name for name in os.listdir("/beacon/connections") if os.path.isdir(os.path.join("/beacon/connections", name))]:
+        raise Exception('The database {} for analysis records needs to match a directory name in the beacon/connections folder'.format(analysis_confile["analysis"]["connection"]["name"]))
     if conf.environment not in ['dev', 'test', 'prod', 'DEV', 'TEST', 'PROD']:
         raise Exception('The environment variable in conf must be one between test, dev, prod')
     if conf.default_beacon_granularity not in ['boolean', 'count', 'record']:
@@ -112,320 +118,236 @@ def check_configuration():
         if not cors_url.startswith('http://'):
             if not cors_url.startswith('https://'):
                 raise Exception('The url {} in cors_urls variable must start with http protocol'.format(cors_url))
-    if not isinstance(run.endpoint_name, str):
-        raise Exception('The run.endpoint_name variable must be of type string')
-    if contains_special_characters(run.endpoint_name):
-        raise Exception('The run.endpoint_name variable can not have special characters')
-    if not isinstance(individual.endpoint_name, str):
-        raise Exception('The individual.endpoint_name variable must be of type string')
-    if contains_special_characters(individual.endpoint_name):
-        raise Exception('The individual.endpoint_name variable can not have special characters')
-    if not isinstance(genomicVariant.endpoint_name, str):
-        raise Exception('The genomicVariant.endpoint_name variable must be of type string')
-    if contains_special_characters(genomicVariant.endpoint_name):
-        raise Exception('The genomicVariant.endpoint_name variable can not have special characters')
-    if not isinstance(dataset.endpoint_name, str):
-        raise Exception('The dataset.endpoint_name variable must be of type string')
-    if contains_special_characters(dataset.endpoint_name):
-        raise Exception('The dataset.endpoint_name variable can not have special characters')
-    if not isinstance(cohort.endpoint_name, str):
-        raise Exception('The cohort.endpoint_name variable must be of type string')
-    if contains_special_characters(cohort.endpoint_name):
-        raise Exception('The cohort.endpoint_name variable can not have special characters')
-    if not isinstance(biosample.endpoint_name, str):
-        raise Exception('The biosample.endpoint_name variable must be of type string')
-    if contains_special_characters(biosample.endpoint_name):
-        raise Exception('The biosample.endpoint_name variable can not have special characters')
-    if not isinstance(analysis.endpoint_name, str):
-        raise Exception('The analysis.endpoint_name variable must be of type string')
-    if contains_special_characters(analysis.endpoint_name):
-        raise Exception('The analysis.endpoint_name variable can not have special characters')
-    if not isinstance(analysis.open_api_endpoints_definition, str):
-        raise Exception('The analysis.open_api_endpoints_definition must be of type string.')
-    if analysis.id != 'analysis':
-        raise Exception('The analysis.id variable must be analysis.')
-    if not isinstance(analysis.name, str):
-        raise Exception('The analysis.name must be of type string.')
-    if not isinstance(analysis.ontology_id, str) or not re.match("[A-Za-z0-9]+:[A-Za-z0-9]", analysis.ontology_id):
-        raise Exception('The analysis.ontology_id must be of type string and CURIE.')
-    if not isinstance(analysis.ontology_name, str):
-        raise Exception('The analysis.ontology_name must be of type string.')
-    if not isinstance(analysis.specification, str):
-        raise Exception('The analysis.specification must be of type string.')
-    if not isinstance(analysis.description, str):
-        raise Exception('The analysis.description must be of type string.')
-    if not isinstance(analysis.defaultSchema_id, str):
-        raise Exception('The analysis.defaultSchema_id must be of type string.')
-    if not isinstance(analysis.defaultSchema_name, str):
-        raise Exception('The analysis.defaultSchema_name must be of type string.')
-    if not isinstance(analysis.defaultSchema_reference_to_schema_definition, str):
-        raise Exception('The analysis.defaultSchema_reference_to_schema_definition must be of type string.')
-    if not isinstance(analysis.defaultSchema_schema_version, str):
-        raise Exception('The analysis.defaultSchema_schema_version must be of type string.')
-    if not isinstance(analysis.aditionally_supported_schemas, list):
-        raise Exception('The analysis.aditionally_supported_schemas must be of type list.')
-    if not isinstance(analysis.allow_queries_without_filters, bool):
-        raise Exception('The analysis.allow_queries_without_filters must be of type bool.')
-    if not isinstance(analysis.singleEntryUrl, bool):
-        raise Exception('The analysis.singleEntryUrl must be of type bool.')
-    if not isinstance(analysis.biosample_lookup, bool):
-        raise Exception('The analysis.biosample_lookup must be of type bool.')
-    if not isinstance(analysis.cohort_lookup, bool):
-        raise Exception('The analysis.cohort_lookup must be of type bool.')
-    if not isinstance(analysis.dataset_lookup, bool):
-        raise Exception('The analysis.dataset_lookup must be of type bool.')
-    if not isinstance(analysis.genomicVariant_lookup, bool):
-        raise Exception('The analysis.genomicVariant_lookup must be of type bool.')
-    if not isinstance(analysis.individual_lookup, bool):
-        raise Exception('The analysis.individual_lookup must be of type bool.')
-    if not isinstance(analysis.run_lookup, bool):
-        raise Exception('The analysis.run_lookup must be of type bool.')
-    if not isinstance(biosample.open_api_endpoints_definition, str):
-        raise Exception('The biosample.open_api_endpoints_definition must be of type string.')
-    if biosample.id != 'biosample':
-        raise Exception('The biosample.id variable must be biosample.')
-    if not isinstance(biosample.name, str):
-        raise Exception('The biosample.name must be of type string.')
-    if not isinstance(biosample.ontology_id, str) or not re.match("[A-Za-z0-9]+:[A-Za-z0-9]", biosample.ontology_id):
-        raise Exception('The biosample.ontology_id must be of type string and CURIE.')
-    if not isinstance(biosample.ontology_name, str):
-        raise Exception('The biosample.ontology_name must be of type string.')
-    if not isinstance(biosample.specification, str):
-        raise Exception('The biosample.specification must be of type string.')
-    if not isinstance(biosample.description, str):
-        raise Exception('The biosample.description must be of type string.')
-    if not isinstance(biosample.defaultSchema_id, str):
-        raise Exception('The biosample.defaultSchema_id must be of type string.')
-    if not isinstance(biosample.defaultSchema_name, str):
-        raise Exception('The biosample.defaultSchema_name must be of type string.')
-    if not isinstance(biosample.defaultSchema_reference_to_schema_definition, str):
-        raise Exception('The biosample.defaultSchema_reference_to_schema_definition must be of type string.')
-    if not isinstance(biosample.defaultSchema_schema_version, str):
-        raise Exception('The biosample.defaultSchema_schema_version must be of type string.')
-    if not isinstance(biosample.aditionally_supported_schemas, list):
-        raise Exception('The biosample.aditionally_supported_schemas must be of type list.')
-    if not isinstance(biosample.allow_queries_without_filters, bool):
-        raise Exception('The biosample.allow_queries_without_filters must be of type bool.')
-    if not isinstance(biosample.singleEntryUrl, bool):
-        raise Exception('The biosample.singleEntryUrl must be of type bool.')
-    if not isinstance(biosample.analysis_lookup, bool):
-        raise Exception('The biosample.analysis_lookup must be of type bool.')
-    if not isinstance(biosample.cohort_lookup, bool):
-        raise Exception('The biosample.cohort_lookup must be of type bool.')
-    if not isinstance(biosample.dataset_lookup, bool):
-        raise Exception('The biosample.dataset_lookup must be of type bool.')
-    if not isinstance(biosample.genomicVariant_lookup, bool):
-        raise Exception('The biosample.genomicVariant_lookup must be of type bool.')
-    if not isinstance(biosample.individual_lookup, bool):
-        raise Exception('The biosample.individual_lookup must be of type bool.')
-    if not isinstance(biosample.run_lookup, bool):
-        raise Exception('The biosample.run_lookup must be of type bool.')
-    if not isinstance(cohort.open_api_endpoints_definition, str):
-        raise Exception('The cohort.open_api_endpoints_definition must be of type string.')
-    if cohort.id != 'cohort':
-        raise Exception('The cohort.id variable must be cohort.')
-    if not isinstance(cohort.name, str):
-        raise Exception('The cohort.name must be of type string.')
-    if not isinstance(cohort.ontology_id, str) or not re.match("[A-Za-z0-9]+:[A-Za-z0-9]", cohort.ontology_id):
-        raise Exception('The cohort.ontology_id must be of type string and CURIE.')
-    if not isinstance(cohort.ontology_name, str):
-        raise Exception('The cohort.ontology_name must be of type string.')
-    if not isinstance(cohort.specification, str):
-        raise Exception('The cohort.specification must be of type string.')
-    if not isinstance(cohort.description, str):
-        raise Exception('The cohort.description must be of type string.')
-    if not isinstance(cohort.defaultSchema_id, str):
-        raise Exception('The cohort.defaultSchema_id must be of type string.')
-    if not isinstance(cohort.defaultSchema_name, str):
-        raise Exception('The cohort.defaultSchema_name must be of type string.')
-    if not isinstance(cohort.defaultSchema_reference_to_schema_definition, str):
-        raise Exception('The cohort.defaultSchema_reference_to_schema_definition must be of type string.')
-    if not isinstance(cohort.defaultSchema_schema_version, str):
-        raise Exception('The cohort.defaultSchema_schema_version must be of type string.')
-    if not isinstance(cohort.aditionally_supported_schemas, list):
-        raise Exception('The cohort.aditionally_supported_schemas must be of type list.')
-    if not isinstance(cohort.allow_queries_without_filters, bool):
-        raise Exception('The cohort.allow_queries_without_filters must be of type bool.')
-    if not isinstance(cohort.singleEntryUrl, bool):
-        raise Exception('The cohort.singleEntryUrl must be of type bool.')
-    if not isinstance(cohort.analysis_lookup, bool):
-        raise Exception('The cohort.analysis_lookup must be of type bool.')
-    if not isinstance(cohort.biosample_lookup, bool):
-        raise Exception('The cohort.biosample_lookup must be of type bool.')
-    if not isinstance(cohort.dataset_lookup, bool):
-        raise Exception('The cohort.dataset_lookup must be of type bool.')
-    if not isinstance(cohort.genomicVariant_lookup, bool):
-        raise Exception('The cohort.genomicVariant_lookup must be of type bool.')
-    if not isinstance(cohort.individual_lookup, bool):
-        raise Exception('The cohort.individual_lookup must be of type bool.')
-    if not isinstance(cohort.run_lookup, bool):
-        raise Exception('The cohort.run_lookup must be of type bool.')
-    if not isinstance(dataset.open_api_endpoints_definition, str):
-        raise Exception('The dataset.open_api_endpoints_definition must be of type string.')
-    if dataset.id != 'dataset':
-        raise Exception('The dataset.id variable must be dataset.')
-    if not isinstance(dataset.name, str):
-        raise Exception('The dataset.name must be of type string.')
-    if not isinstance(dataset.ontology_id, str) or not re.match("[A-Za-z0-9]+:[A-Za-z0-9]", dataset.ontology_id):
-        raise Exception('The dataset.ontology_id must be of type string and CURIE.')
-    if not isinstance(dataset.ontology_name, str):
-        raise Exception('The dataset.ontology_name must be of type string.')
-    if not isinstance(dataset.specification, str):
-        raise Exception('The dataset.specification must be of type string.')
-    if not isinstance(dataset.description, str):
-        raise Exception('The dataset.description must be of type string.')
-    if not isinstance(dataset.defaultSchema_id, str):
-        raise Exception('The dataset.defaultSchema_id must be of type string.')
-    if not isinstance(dataset.defaultSchema_name, str):
-        raise Exception('The dataset.defaultSchema_name must be of type string.')
-    if not isinstance(dataset.defaultSchema_reference_to_schema_definition, str):
-        raise Exception('The dataset.defaultSchema_reference_to_schema_definition must be of type string.')
-    if not isinstance(dataset.defaultSchema_schema_version, str):
-        raise Exception('The dataset.defaultSchema_schema_version must be of type string.')
-    if not isinstance(dataset.aditionally_supported_schemas, list):
-        raise Exception('The dataset.aditionally_supported_schemas must be of type list.')
-    if not isinstance(dataset.allow_queries_without_filters, bool):
-        raise Exception('The dataset.allow_queries_without_filters must be of type bool.')
-    if not isinstance(dataset.singleEntryUrl, bool):
-        raise Exception('The dataset.singleEntryUrl must be of type bool.')
-    if not isinstance(dataset.analysis_lookup, bool):
-        raise Exception('The dataset.analysis_lookup must be of type bool.')
-    if not isinstance(dataset.biosample_lookup, bool):
-        raise Exception('The dataset.biosample_lookup must be of type bool.')
-    if not isinstance(dataset.cohort_lookup, bool):
-        raise Exception('The dataset.cohort_lookup must be of type bool.')
-    if not isinstance(dataset.genomicVariant_lookup, bool):
-        raise Exception('The dataset.genomicVariant_lookup must be of type bool.')
-    if not isinstance(dataset.individual_lookup, bool):
-        raise Exception('The dataset.individual_lookup must be of type bool.')
-    if not isinstance(dataset.run_lookup, bool):
-        raise Exception('The dataset.run_lookup must be of type bool.')
-    if not isinstance(genomicVariant.open_api_endpoints_definition, str):
-        raise Exception('The genomicVariant.open_api_endpoints_definition must be of type string.')
-    if genomicVariant.id != 'genomicVariant':
-        raise Exception('The genomicVariant.id variable must be genomicVariant.')
-    if not isinstance(genomicVariant.name, str):
-        raise Exception('The genomicVariant.name must be of type string.')
-    if not isinstance(genomicVariant.ontology_id, str) or not re.match("[A-Za-z0-9]+:[A-Za-z0-9]", genomicVariant.ontology_id):
-        raise Exception('The genomicVariant.ontology_id must be of type string and CURIE.')
-    if not isinstance(genomicVariant.ontology_name, str):
-        raise Exception('The genomicVariant.ontology_name must be of type string.')
-    if not isinstance(genomicVariant.specification, str):
-        raise Exception('The genomicVariant.specification must be of type string.')
-    if not isinstance(genomicVariant.description, str):
-        raise Exception('The genomicVariant.description must be of type string.')
-    if not isinstance(genomicVariant.defaultSchema_id, str):
-        raise Exception('The genomicVariant.defaultSchema_id must be of type string.')
-    if not isinstance(genomicVariant.defaultSchema_name, str):
-        raise Exception('The genomicVariant.defaultSchema_name must be of type string.')
-    if not isinstance(genomicVariant.defaultSchema_reference_to_schema_definition, str):
-        raise Exception('The genomicVariant.defaultSchema_reference_to_schema_definition must be of type string.')
-    if not isinstance(genomicVariant.defaultSchema_schema_version, str):
-        raise Exception('The genomicVariant.defaultSchema_schema_version must be of type string.')
-    if not isinstance(genomicVariant.aditionally_supported_schemas, list):
-        raise Exception('The genomicVariant.aditionally_supported_schemas must be of type list.')
-    if not isinstance(genomicVariant.allow_queries_without_filters, bool):
-        raise Exception('The genomicVariant.allow_queries_without_filters must be of type bool.')
-    if not isinstance(genomicVariant.singleEntryUrl, bool):
-        raise Exception('The genomicVariant.singleEntryUrl must be of type bool.')
-    if not isinstance(genomicVariant.analysis_lookup, bool):
-        raise Exception('The genomicVariant.analysis_lookup must be of type bool.')
-    if not isinstance(genomicVariant.biosample_lookup, bool):
-        raise Exception('The genomicVariant.biosample_lookup must be of type bool.')
-    if not isinstance(genomicVariant.cohort_lookup, bool):
-        raise Exception('The genomicVariant.cohort_lookup must be of type bool.')
-    if not isinstance(genomicVariant.dataset_lookup, bool):
-        raise Exception('The genomicVariant.dataset_lookup must be of type bool.')
-    if not isinstance(genomicVariant.individual_lookup, bool):
-        raise Exception('The genomicVariant.individual_lookup must be of type bool.')
-    if not isinstance(genomicVariant.run_lookup, bool):
-        raise Exception('The genomicVariant.run_lookup must be of type bool.')
-    if not isinstance(individual.open_api_endpoints_definition, str):
-        raise Exception('The individual.open_api_endpoints_definition must be of type string.')
-    if individual.id != 'individual':
-        raise Exception('The individual.id variable must be individual.')
-    if not isinstance(individual.name, str):
-        raise Exception('The individual.name must be of type string.')
-    if not isinstance(individual.ontology_id, str) or not re.match("[A-Za-z0-9]+:[A-Za-z0-9]", individual.ontology_id):
-        raise Exception('The individual.ontology_id must be of type string and CURIE.')
-    if not isinstance(individual.ontology_name, str):
-        raise Exception('The individual.ontology_name must be of type string.')
-    if not isinstance(individual.specification, str):
-        raise Exception('The individual.specification must be of type string.')
-    if not isinstance(individual.description, str):
-        raise Exception('The individual.description must be of type string.')
-    if not isinstance(individual.defaultSchema_id, str):
-        raise Exception('The individual.defaultSchema_id must be of type string.')
-    if not isinstance(individual.defaultSchema_name, str):
-        raise Exception('The individual.defaultSchema_name must be of type string.')
-    if not isinstance(individual.defaultSchema_reference_to_schema_definition, str):
-        raise Exception('The individual.defaultSchema_reference_to_schema_definition must be of type string.')
-    if not isinstance(individual.defaultSchema_schema_version, str):
-        raise Exception('The individual.defaultSchema_schema_version must be of type string.')
-    if not isinstance(individual.aditionally_supported_schemas, list):
-        raise Exception('The individual.aditionally_supported_schemas must be of type list.')
-    if not isinstance(individual.allow_queries_without_filters, bool):
-        raise Exception('The individual.allow_queries_without_filters must be of type bool.')
-    if not isinstance(individual.singleEntryUrl, bool):
-        raise Exception('The individual.singleEntryUrl must be of type bool.')
-    if not isinstance(individual.analysis_lookup, bool):
-        raise Exception('The individual.analysis_lookup must be of type bool.')
-    if not isinstance(individual.biosample_lookup, bool):
-        raise Exception('The individual.biosample_lookup must be of type bool.')
-    if not isinstance(individual.cohort_lookup, bool):
-        raise Exception('The individual.cohort_lookup must be of type bool.')
-    if not isinstance(individual.dataset_lookup, bool):
-        raise Exception('The individual.dataset_lookup must be of type bool.')
-    if not isinstance(individual.genomicVariant_lookup, bool):
-        raise Exception('The individual.genomicVariant_lookup must be of type bool.')
-    if not isinstance(individual.run_lookup, bool):
-        raise Exception('The individual.run_lookup must be of type bool.')
-    if not isinstance(run.open_api_endpoints_definition, str):
-        raise Exception('The run.open_api_endpoints_definition must be of type string.')
-    if run.id != 'run':
-        raise Exception('The run.id variable must be run.')
-    if not isinstance(run.name, str):
-        raise Exception('The run.name must be of type string.')
-    if not isinstance(run.ontology_id, str) or not re.match("[A-Za-z0-9]+:[A-Za-z0-9]", run.ontology_id):
-        raise Exception('The run.ontology_id must be of type string and CURIE.')
-    if not isinstance(run.ontology_name, str):
-        raise Exception('The run.ontology_name must be of type string.')
-    if not isinstance(run.specification, str):
-        raise Exception('The run.specification must be of type string.')
-    if not isinstance(run.description, str):
-        raise Exception('The run.description must be of type string.')
-    if not isinstance(run.defaultSchema_id, str):
-        raise Exception('The run.defaultSchema_id must be of type string.')
-    if not isinstance(run.defaultSchema_name, str):
-        raise Exception('The run.defaultSchema_name must be of type string.')
-    if not isinstance(run.defaultSchema_reference_to_schema_definition, str):
-        raise Exception('The run.defaultSchema_reference_to_schema_definition must be of type string.')
-    if not isinstance(run.defaultSchema_schema_version, str):
-        raise Exception('The run.defaultSchema_schema_version must be of type string.')
-    if not isinstance(run.aditionally_supported_schemas, list):
-        raise Exception('The run.aditionally_supported_schemas must be of type list.')
-    if not isinstance(run.allow_queries_without_filters, bool):
-        raise Exception('The run.allow_queries_without_filters must be of type bool.')
-    if not isinstance(run.singleEntryUrl, bool):
-        raise Exception('The run.singleEntryUrl must be of type bool.')
-    if not isinstance(run.analysis_lookup, bool):
-        raise Exception('The run.analysis_lookup must be of type bool.')
-    if not isinstance(run.biosample_lookup, bool):
-        raise Exception('The run.biosample_lookup must be of type bool.')
-    if not isinstance(run.cohort_lookup, bool):
-        raise Exception('The run.cohort_lookup must be of type bool.')
-    if not isinstance(run.dataset_lookup, bool):
-        raise Exception('The run.dataset_lookup must be of type bool.')
-    if not isinstance(run.genomicVariant_lookup, bool):
-        raise Exception('The run.genomicVariant_lookup must be of type bool.')
-    if not isinstance(run.individual_lookup, bool):
-        raise Exception('The run.individual_lookup must be of type bool.')
+    if not isinstance(run_confile["run"]["endpoint_name"], str):
+        raise Exception('The run_confile["run"]["endpoint_name"] variable must be of type string')
+    if contains_special_characters(run_confile["run"]["endpoint_name"]):
+        raise Exception('The run_confile["run"]["endpoint_name"] variable can not have special characters')
+    if not isinstance(individual_confile["individual"]["endpoint_name"], str):
+        raise Exception('The individual_confile["individual"]["endpoint_name"] variable must be of type string')
+    if contains_special_characters(individual_confile["individual"]["endpoint_name"]):
+        raise Exception('The individual_confile["individual"]["endpoint_name"] variable can not have special characters')
+    if not isinstance(genomicVariant_confile["genomicVariant"]["endpoint_name"], str):
+        raise Exception('The genomicVariant_confile["genomicVariant"]["endpoint_name"] variable must be of type string')
+    if contains_special_characters(genomicVariant_confile["genomicVariant"]["endpoint_name"]):
+        raise Exception('The genomicVariant_confile["genomicVariant"]["endpoint_name"] variable can not have special characters')
+    if not isinstance(dataset_confile["dataset"]["endpoint_name"], str):
+        raise Exception('The dataset_confile["dataset"]["endpoint_name"] variable must be of type string')
+    if contains_special_characters(dataset_confile["dataset"]["endpoint_name"]):
+        raise Exception('The dataset_confile["dataset"]["endpoint_name"] variable can not have special characters')
+    if not isinstance(cohort_confile["cohort"]["endpoint_name"], str):
+        raise Exception('The cohort_confile["cohort"]["endpoint_name"] variable must be of type string')
+    if contains_special_characters(cohort_confile["cohort"]["endpoint_name"]):
+        raise Exception('The cohort_confile["cohort"]["endpoint_name"] variable can not have special characters')
+    if not isinstance(biosample_confile["biosample"]["endpoint_name"], str):
+        raise Exception('The biosample_confile["biosample"]["endpoint_name"] variable must be of type string')
+    if contains_special_characters(biosample_confile["biosample"]["endpoint_name"]):
+        raise Exception('The biosample_confile["biosample"]["endpoint_name"] variable can not have special characters')
+    if not isinstance(analysis_confile["analysis"]["endpoint_name"], str):
+        raise Exception('The analysis_confile["analysis"]["endpoint_name"] variable must be of type string')
+    if contains_special_characters(analysis_confile["analysis"]["endpoint_name"]):
+        raise Exception('The analysis_confile["analysis"]["endpoint_name"] variable can not have special characters')
+    if not isinstance(analysis_confile["analysis"]["open_api_definition"], str):
+        raise Exception('The analysis open_api_definition must be of type string.')
+    if 'analysis' not in analysis_confile:
+        raise Exception('The analysis id variable must be analysis_confile')
+    if not isinstance(analysis_confile["analysis"]["info"]["name"], str):
+        raise Exception('The analysis info name must be of type string.')
+    if not isinstance(analysis_confile["analysis"]["info"]["ontology_id"], str) or not re.match("[A-Za-z0-9]+:[A-Za-z0-9]", analysis_confile["analysis"]["info"]["ontology_id"]):
+        raise Exception('The analysis ["info"]["ontology_id"] must be of type string and CURIE.')
+    if not isinstance(analysis_confile["analysis"]["info"]["ontology_name"], str):
+        raise Exception('The analysis ["info"]["ontology_name"] must be of type string.')
+    if not isinstance(analysis_confile["analysis"]["schema"]["description"], str):
+        raise Exception('The analysis schema ["schema"]["specification"] must be of type string.')
+    if not isinstance(analysis_confile["analysis"]["info"]["description"], str):
+        raise Exception('The analysis description must be of type string.')
+    if not isinstance(analysis_confile["schema"]["default_schema_id"], str):
+        raise Exception('The analysis default_schema_id must be of type string.')
+    if not isinstance(analysis_confile["schema"]["default_schema_name"], str):
+        raise Exception('The analysis default_schema_name must be of type string.')
+    if not isinstance(analysis_confile["schema"]["reference_to_default_schema_definition"], str):
+        raise Exception('The analysis reference_to_default_schema_definition must be of type string.')
+    if not isinstance(analysis_confile["schema"]["default_schema_version"], str):
+        raise Exception('The analysis_confile["schema"]["default_schema_version"] must be of type string.')
+    if not isinstance(analysis_confile["schema"]["supported_schemas"], list):
+        raise Exception('The analysis supported_schemas must be of type list.')
+    if not isinstance(analysis_confile["allow_queries_without_filters"], bool):
+        raise Exception('The analysis allow_queries_without_filters must be of type bool.')
+    if not isinstance(analysis_confile["allow_id_query"], bool):
+        raise Exception('The analysis allow id query must be of type bool.')
+    if not isinstance(biosample_confile["open_api_definition"], str):
+        raise Exception('The biosample_confile["open_api_definition"] must be of type string.')
+    if 'biosample' not in biosample_confile:
+        raise Exception('The biosample_confileid variable must be biosample_confile')
+    if not isinstance(biosample_confile["info"]["name"], str):
+        raise Exception('The biosample_confile["info"]["name"] must be of type string.')
+    if not isinstance(biosample_confile["info"]["ontology_id"], str) or not re.match("[A-Za-z0-9]+:[A-Za-z0-9]", biosample_confile["info"]["ontology_id"]):
+        raise Exception('The biosample_confile["info"]["ontology_id"] must be of type string and CURIE.')
+    if not isinstance(biosample_confile["info"]["ontology_name"], str):
+        raise Exception('The biosample_confile["info"]["ontology_name"] must be of type string.')
+    if not isinstance(biosample_confile["schema"]["specification"], str):
+        raise Exception('The biosample_confile["schema"]["specification"] must be of type string.')
+    if not isinstance(biosample_confile["info"]["description"], str):
+        raise Exception('The biosample_confile["info"]["description"] must be of type string.')
+    if not isinstance(biosample_confile["schema"]["default_schema_id"], str):
+        raise Exception('The biosample_confile["schema"]["default_schema_id"] must be of type string.')
+    if not isinstance(biosample_confile["schema"]["default_schema_name"], str):
+        raise Exception('The biosample_confile["schema"]["default_schema_name"] must be of type string.')
+    if not isinstance(biosample_confile["schema"]["reference_to_default_schema_definition"], str):
+        raise Exception('The biosample_confile["schema"]["reference_to_default_schema_definition"] must be of type string.')
+    if not isinstance(biosample_confile["schema"]["default_schema_version"], str):
+        raise Exception('The biosample_confile["schema"]["default_schema_version"] must be of type string.')
+    if not isinstance(biosample_confile["schema"]["supported_schemas"], list):
+        raise Exception('The biosample_confile["schema"]["supported_schemas"] must be of type list.')
+    if not isinstance(biosample_confile["allow_queries_without_filters"], bool):
+        raise Exception('The biosample_confile["allow_queries_without_filters"] must be of type bool.')
+    if not isinstance(biosample_confile["allow_id_query"], bool):
+        raise Exception('The biosample_confile["allow_id_query"] must be of type bool.')
+    if not isinstance(cohort_confile["open_api_definition"], str):
+        raise Exception('The cohort_confile["open_api_definition"] must be of type string.')
+    if 'cohort' not in cohort_confile:
+        raise Exception('The cohort_confileid variable must be cohort_confile')
+    if not isinstance(cohort_confile["info"]["name"], str):
+        raise Exception('The cohort_confile["info"]["name"] must be of type string.')
+    if not isinstance(cohort_confile["info"]["ontology_id"], str) or not re.match("[A-Za-z0-9]+:[A-Za-z0-9]", cohort_confile["info"]["ontology_id"]):
+        raise Exception('The cohort_confile["info"]["ontology_id"] must be of type string and CURIE.')
+    if not isinstance(cohort_confile["info"]["ontology_name"], str):
+        raise Exception('The cohort_confile["info"]["ontology_name"] must be of type string.')
+    if not isinstance(cohort_confile["schema"]["specification"], str):
+        raise Exception('The cohort_confile["schema"]["specification"] must be of type string.')
+    if not isinstance(cohort_confile["info"]["description"], str):
+        raise Exception('The cohort_confile["info"]["description"] must be of type string.')
+    if not isinstance(cohort_confile["schema"]["default_schema_id"], str):
+        raise Exception('The cohort_confile["schema"]["default_schema_id"] must be of type string.')
+    if not isinstance(cohort_confile["schema"]["default_schema_name"], str):
+        raise Exception('The cohort_confile["schema"]["default_schema_name"] must be of type string.')
+    if not isinstance(cohort_confile["schema"]["reference_to_default_schema_definition"], str):
+        raise Exception('The cohort_confile["schema"]["reference_to_default_schema_definition"] must be of type string.')
+    if not isinstance(cohort_confile["schema"]["default_schema_version"], str):
+        raise Exception('The cohort_confile["schema"]["default_schema_version"] must be of type string.')
+    if not isinstance(cohort_confile["schema"]["supported_schemas"], list):
+        raise Exception('The cohort_confile["schema"]["supported_schemas"] must be of type list.')
+    if not isinstance(cohort_confile["allow_queries_without_filters"], bool):
+        raise Exception('The cohort_confile["allow_queries_without_filters"] must be of type bool.')
+    if not isinstance(cohort_confile["allow_id_query"], bool):
+        raise Exception('The cohort_confile["allow_id_query"] must be of type bool.')
+    if not isinstance(dataset_confile["open_api_definition"], str):
+        raise Exception('The dataset_confile["open_api_definition"] must be of type string.')
+    if 'dataset' not in dataset_confile:
+        raise Exception('The dataset_confileid variable must be dataset_confile')
+    if not isinstance(dataset_confile["info"]["name"], str):
+        raise Exception('The dataset_confilename must be of type string.')
+    if not isinstance(dataset_confile["info"]["ontology_id"], str) or not re.match("[A-Za-z0-9]+:[A-Za-z0-9]", dataset_confile["info"]["ontology_id"]):
+        raise Exception('The dataset_confile["info"]["ontology_id"] must be of type string and CURIE.')
+    if not isinstance(dataset_confile["info"]["ontology_name"], str):
+        raise Exception('The dataset_confile["info"]["ontology_name"] must be of type string.')
+    if not isinstance(dataset_confile["schema"]["specification"], str):
+        raise Exception('The dataset_confile["schema"]["specification"] must be of type string.')
+    if not isinstance(dataset_confile["info"]["description"], str):
+        raise Exception('The dataset_confiledescription must be of type string.')
+    if not isinstance(dataset_confile["schema"]["default_schema_id"], str):
+        raise Exception('The dataset_confile["schema"]["default_schema_id"] must be of type string.')
+    if not isinstance(dataset_confile["schema"]["default_schema_name"], str):
+        raise Exception('The dataset_confile["schema"]["default_schema_name"] must be of type string.')
+    if not isinstance(dataset_confile["schema"]["reference_to_default_schema_definition"], str):
+        raise Exception('The dataset_confile["schema"]["reference_to_default_schema_definition"] must be of type string.')
+    if not isinstance(dataset_confile["schema"]["default_schema_version"], str):
+        raise Exception('The dataset_confile["schema"]["default_schema_version"] must be of type string.')
+    if not isinstance(dataset_confile["schema"]["supported_schemas"], list):
+        raise Exception('The dataset_confile["schema"]["supported_schemas"] must be of type list.')
+    if not isinstance(dataset_confile["allow_queries_without_filters"], bool):
+        raise Exception('The dataset_confile["allow_queries_without_filters"] must be of type bool.')
+    if not isinstance(dataset_confile["allow_id_query"], bool):
+        raise Exception('The dataset_confile["allow_id_query"] must be of type bool.')
+    if not isinstance(genomicVariant_confile["open_api_definition"], str):
+        raise Exception('The genomicVariant_confile["open_api_definition"] must be of type string.')
+    if 'genomicVariant' not in genomicVariant_confile:
+        raise Exception('The genomicVariant_confileid variable must be genomicVariant_confile')
+    if not isinstance(genomicVariant_confile["info"]["name"], str):
+        raise Exception('The genomicVariant_confilename must be of type string.')
+    if not isinstance(genomicVariant_confile["info"]["ontology_id"], str) or not re.match("[A-Za-z0-9]+:[A-Za-z0-9]", genomicVariant_confile["info"]["ontology_id"]):
+        raise Exception('The genomicVariant_confile["info"]["ontology_id"] must be of type string and CURIE.')
+    if not isinstance(genomicVariant_confile["info"]["ontology_name"], str):
+        raise Exception('The genomicVariant_confile["info"]["ontology_name"] must be of type string.')
+    if not isinstance(genomicVariant_confile["schema"]["specification"], str):
+        raise Exception('The genomicVariant_confile["schema"]["specification"] must be of type string.')
+    if not isinstance(genomicVariant_confile["info"]["description"], str):
+        raise Exception('The genomicVariant_confiledescription must be of type string.')
+    if not isinstance(genomicVariant_confile["schema"]["default_schema_id"], str):
+        raise Exception('The genomicVariant_confile["schema"]["default_schema_id"] must be of type string.')
+    if not isinstance(genomicVariant_confile["schema"]["default_schema_name"], str):
+        raise Exception('The genomicVariant_confile["schema"]["default_schema_name"] must be of type string.')
+    if not isinstance(genomicVariant_confile["schema"]["reference_to_default_schema_definition"], str):
+        raise Exception('The genomicVariant_confile["schema"]["reference_to_default_schema_definition"] must be of type string.')
+    if not isinstance(genomicVariant_confile["schema"]["default_schema_version"], str):
+        raise Exception('The genomicVariant_confile["schema"]["default_schema_version"] must be of type string.')
+    if not isinstance(genomicVariant_confile["schema"]["supported_schemas"], list):
+        raise Exception('The genomicVariant_confile["schema"]["supported_schemas"] must be of type list.')
+    if not isinstance(genomicVariant_confile["allow_queries_without_filters"], bool):
+        raise Exception('The genomicVariant_confile["allow_queries_without_filters"] must be of type bool.')
+    if not isinstance(genomicVariant_confile["allow_id_query"], bool):
+        raise Exception('The genomicVariant_confile["allow_id_query"] must be of type bool.')
+    if not isinstance(individual_confile["open_api_definition"], str):
+        raise Exception('The individual_confile["open_api_definition"] must be of type string.')
+    if 'individual' not in individual_confile:
+        raise Exception('The individual_confileid variable must be individual_confile')
+    if not isinstance(individual_confile["info"]["name"], str):
+        raise Exception('The individual_confilename must be of type string.')
+    if not isinstance(individual_confile["info"]["ontology_id"], str) or not re.match("[A-Za-z0-9]+:[A-Za-z0-9]", individual_confile["info"]["ontology_id"]):
+        raise Exception('The individual_confile["info"]["ontology_id"] must be of type string and CURIE.')
+    if not isinstance(individual_confile["info"]["ontology_name"], str):
+        raise Exception('The individual_confile["info"]["ontology_name"] must be of type string.')
+    if not isinstance(individual_confile["schema"]["specification"], str):
+        raise Exception('The individual_confile["schema"]["specification"] must be of type string.')
+    if not isinstance(individual_confile["info"]["description"], str):
+        raise Exception('The individual_confiledescription must be of type string.')
+    if not isinstance(individual_confile["schema"]["default_schema_id"], str):
+        raise Exception('The individual_confile["schema"]["default_schema_id"] must be of type string.')
+    if not isinstance(individual_confile["schema"]["default_schema_name"], str):
+        raise Exception('The individual_confile["schema"]["default_schema_name"] must be of type string.')
+    if not isinstance(individual_confile["schema"]["reference_to_default_schema_definition"], str):
+        raise Exception('The individual_confile["schema"]["reference_to_default_schema_definition"] must be of type string.')
+    if not isinstance(individual_confile["schema"]["default_schema_version"], str):
+        raise Exception('The individual_confile["schema"]["default_schema_version"] must be of type string.')
+    if not isinstance(individual_confile["schema"]["supported_schemas"], list):
+        raise Exception('The individual_confile["schema"]["supported_schemas"] must be of type list.')
+    if not isinstance(individual_confile["allow_queries_without_filters"], bool):
+        raise Exception('The individual_confile["allow_queries_without_filters"] must be of type bool.')
+    if not isinstance(individual_confile["allow_id_query"], bool):
+        raise Exception('The individual_confile["allow_id_query"] must be of type bool.')
+    if not isinstance(run_confile["open_api_definition"], str):
+        raise Exception('The run_confile["open_api_definition"] must be of type string.')
+    if 'run' not in run_confile:
+        raise Exception('The run_confileid variable must be run_confile')
+    if not isinstance(run_confile["info"]["name"], str):
+        raise Exception('The run_confilename must be of type string.')
+    if not isinstance(run_confile["info"]["ontology_id"], str) or not re.match("[A-Za-z0-9]+:[A-Za-z0-9]", run_confile["info"]["ontology_id"]):
+        raise Exception('The run_confile["info"]["ontology_id"] must be of type string and CURIE.')
+    if not isinstance(run_confile["info"]["ontology_name"], str):
+        raise Exception('The run_confile["info"]["ontology_name"] must be of type string.')
+    if not isinstance(run_confile["schema"]["specification"], str):
+        raise Exception('The run_confile["schema"]["specification"] must be of type string.')
+    if not isinstance(run_confile["info"]["description"], str):
+        raise Exception('The run_confiledescription must be of type string.')
+    if not isinstance(run_confile["schema"]["default_schema_id"], str):
+        raise Exception('The run_confile["schema"]["default_schema_id"] must be of type string.')
+    if not isinstance(run_confile["schema"]["default_schema_name"], str):
+        raise Exception('The run_confile["schema"]["default_schema_name"] must be of type string.')
+    if not isinstance(run_confile["schema"]["reference_to_default_schema_definition"], str):
+        raise Exception('The run_confile["schema"]["reference_to_default_schema_definition"] must be of type string.')
+    if not isinstance(run_confile["schema"]["default_schema_version"], str):
+        raise Exception('The run_confile["schema"]["default_schema_version"] must be of type string.')
+    if not isinstance(run_confile["schema"]["supported_schemas"], list):
+        raise Exception('The run_confile["schema"]["supported_schemas"] must be of type list.')
+    if not isinstance(run_confile["allow_queries_without_filters"], bool):
+        raise Exception('The run_confile["allow_queries_without_filters"] must be of type bool.')
+    if not isinstance(run_confile["allow_id_query"], bool):
+        raise Exception('The run_confile["allow_id_query"] must be of type bool.')
     if conf.level not in [logging.NOTSET, logging.INFO, logging.DEBUG, logging.WARNING, logging.ERROR, logging.FATAL, logging.CRITICAL]:
         raise Exception('The config parameter level must be one possible logging library level (NOTSET, DEBUG, INFO, etc...')
     if not isinstance(conf.log_file, str):
         if conf.log_file != None:
             raise Exception('The config parameter log_file must be a string with the path to the dir where to store the logs or a variable None for not storing any log')
-    if not isinstance(conf.beacon_name, str):
+    if not isinstance(conf.beacon_["info"]["name"], str):
         raise Exception('The beacon_name config parameter must be a string')
     if not isinstance(conf.beacon_id, str):
         raise Exception('The beacon_id config parameter must be a string')

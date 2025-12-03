@@ -7,11 +7,7 @@ from beacon.exceptions.exceptions import InvalidRequest
 import aiohttp.web as web
 from beacon.request.classes import RequestAttributes
 from beacon.response.classes import SingleDatasetResponse
-import yaml
-
-with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/genomicVariant.yml", 'r') as pfile:
-    genomicVariant_confile= yaml.safe_load(pfile)
-pfile.close()
+from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.utils import import_genomicVariant_confile
 
 @log_with_args_mongo(level)
 def query_id(self, query: dict, document_id) -> dict:
@@ -167,6 +163,7 @@ def choose_scope(self, scope, filter):
             # If there aren't any, check if the filtering term is not a zygosity term
             if filter.id not in ["GENO:0000136", "GENO:0000458"]:
                 # If it's not a zygosity term, add the entry type as scop
+                genomicVariant_confile= import_genomicVariant_confile()
                 if RequestAttributes.entry_type == genomicVariant_confile["genomicVariant"]["endpoint_name"]:
                     scope = 'genomicVariation'
                 else:
