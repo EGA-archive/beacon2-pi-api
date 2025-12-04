@@ -162,40 +162,15 @@ def get_one_module_conf(entry_type):
     for folder in dirs:
         subdirs = os.listdir("/beacon/models/"+folder)
         if "conf" in subdirs:
-            confiles = os.listdir("/beacon/models/"+folder+"/conf/entry_types")
-            for confile in confiles:
-                if confile != '__pycache__':
-                    complete_module='beacon.models.'+folder+'.conf.entry_types.'+confile.replace('.py', '')
-                    import importlib
-                    module = importlib.import_module(complete_module, package=None)
-                    if entry_type == module.endpoint_name:
-                        return module
-        else:
-            for subfolder in subdirs:
-                underdirs = os.listdir("/beacon/models/"+folder+"/"+subfolder)
-                if "conf" in underdirs:
-                    confiles = os.listdir("/beacon/models/"+folder+"/"+subfolder+"/conf/entry_types")
-                    for confile in confiles:
-                        if confile != '__pycache__':
-                            complete_module='beacon.models.'+folder+'.'+subfolder+'.conf.entry_types.'+confile.replace('.py', '')
-                            import importlib
-                            module = importlib.import_module(complete_module, package=None)
-                            if entry_type == module.endpoint_name:
-                                return module
-                        
-def get_all_modules_conf():
-    list_of_modules=[]
-    dirs = os.listdir("/beacon/models")
-    for folder in dirs:
-        subdirs = os.listdir("/beacon/models/"+folder)
-        if "conf" in subdirs:
             confiles = os.listdir("/beacon/models/"+folder+"/conf/entry_types/")
             for confile in confiles:
                 if confile != '__pycache__':
-                    complete_module='beacon.models.'+folder+'.conf.entry_types.'+confile.replace('.yml', '')
-                    import importlib
-                    module = importlib.import_module(complete_module, package=None)
-                    list_of_modules.append(module)
+                    with open("/beacon/models/"+folder+"/conf/entry_types/" + confile, 'r') as pfile:
+                        entry_type_confile = yaml.safe_load(pfile)
+                    pfile.close()
+                for entry_type_id, entry_type_params in entry_type_confile.items():
+                    if entry_type_params["endpoint_name"] == entry_type:
+                        return entry_type_confile
         else:
             for subfolder in subdirs:
                 underdirs = os.listdir("/beacon/models/"+folder+"/"+subfolder)
@@ -203,11 +178,12 @@ def get_all_modules_conf():
                     confiles = os.listdir("/beacon/models/"+folder+"/"+subfolder+"/conf/entry_types/")
                     for confile in confiles:
                         if confile != '__pycache__':
-                            complete_module='beacon.models.'+folder+'.'+subfolder+'.conf.entry_types.'+confile.replace('.py', '')
-                            import importlib
-                            module = importlib.import_module(complete_module, package=None)
-                            list_of_modules.append(module)
-    return list_of_modules
+                            with open("/beacon/models/"+folder+"/"+subfolder+"/conf/entry_types/" + confile, 'r') as pfile:
+                                entry_type_confile = yaml.safe_load(pfile)
+                            pfile.close()
+                        for entry_type_id, entry_type_params in entry_type_confile.items():
+                            if entry_type_params["endpoint_name"] == entry_type:
+                                return entry_type_confile
 
 def get_modules_confiles():
     dirs = os.listdir("/beacon/models")
@@ -221,7 +197,7 @@ def get_modules_confiles():
                     with open("/beacon/models/"+folder+"/conf/entry_types/" + confile, 'r') as pfile:
                         entry_type_confile = yaml.safe_load(pfile)
                     pfile.close()
-                list_of_confiles.append(confile)
+                list_of_confiles.append(entry_type_confile)
         else:
             for subfolder in subdirs:
                 underdirs = os.listdir("/beacon/models/"+folder+"/"+subfolder)
@@ -232,7 +208,7 @@ def get_modules_confiles():
                             with open("/beacon/models/"+folder+"/"+subfolder+"/conf/entry_types/" + confile, 'r') as pfile:
                                 entry_type_confile = yaml.safe_load(pfile)
                             pfile.close()
-                            list_of_confiles.append(confile)
+                            list_of_confiles.append(entry_type_confile)
     return list_of_confiles
     
 

@@ -14,14 +14,14 @@ disease:
       function_name_assigned: get_endpoint
       id_query_function_name_assigned: get_endpoint_with_id
   info:
-    name: 
+    name: Diseases for a patient
     ontology_id: EFO:0000408
     ontology_name: Disease
     description: 
   schema:
     specification: EUCAIM v0
     default_schema_id: EUCAIM-disease_v0.0.1
-    default_schema_name: 
+    default_schema_name: Default schema for a disease
     reference_to_default_schema_definition: https://raw.githubusercontent.com/EGA-archive/EUCAIM-Schema/refs/heads/main/DiseaseMetadata.json
     default_schema_version: v0.0.1
     supported_schemas:

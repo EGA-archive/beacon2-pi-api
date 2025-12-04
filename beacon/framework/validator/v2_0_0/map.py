@@ -22,11 +22,36 @@ fields_related = {str(key): (Optional[RelatedEndpoint],None) for field_name in l
 RelatedEndpointEntries = create_model("RelatedEndpointEntries", **fields_related)
 
 class RelatedEndpointEntries(RelatedEndpointEntries):
-    @model_validator(mode="before")
-    def at_least_one_not_related_none(cls, values):
-        if not any(value is not None for value in values.values()):
-            raise ValueError("At least one entry type must be active for the beacon")
-        return values
+
+    def merge(self, other: "RelatedEndpointEntries"):
+        """Merge another RelatedEndpointEntries object into this one."""
+        for field_name in self.model_fields.keys():
+            current = getattr(self, field_name)
+            incoming = getattr(other, field_name)
+
+            # Rule: If incoming is None → ignore
+            if incoming is None:
+                continue
+
+            # If current is None, take incoming
+            if current is None:
+                setattr(self, field_name, incoming)
+                continue
+
+            # Both exist → merge recursively if it's a Pydantic model
+            if isinstance(current, BaseModel) and isinstance(incoming, BaseModel):
+                current_dict = current.model_dump()
+                incoming_dict = incoming.model_dump()
+
+                # simple rule: incoming overrides any None values
+                merged = {k: incoming_dict.get(k) or current_dict.get(k)
+                          for k in current_dict.keys()}
+
+                setattr(self, field_name, current.__class__(**merged))
+                continue
+
+            # Otherwise overwrite or define your own custom rule
+            setattr(self, field_name, incoming)
 
 
 class Endpoint(BaseModel):
@@ -55,10 +80,11 @@ class MapSchema(BaseModel):
     def populate_endpoints(self):
         # Load all_modules and do a loop per populating EndpointEntries(loaded_module=Endpoint...) and loading the variables _lookup = True by name, getting endpoint_names per each lookup = True.
         fields={}
-        relatedEndpointEntries_values_to_set={}
+        
         for module in list_of_modules:
-            values_to_set = {}
+            relatedEndpointEntries_values_to_set={}
             for entry_type, set_of_params in module.items():
+                values_to_set = {}
                 if set_of_params["entry_type_enabled"] == True:
                     values_to_set["returnedEntryType"] = entry_type
                     for lookup_entry_type, lookup_set_of_params in set_of_params["lookups"].items():
@@ -66,7 +92,8 @@ class MapSchema(BaseModel):
                             values_to_set["url"] = conf.complete_url+'/'+lookup_set_of_params["endpoint_name"] if lookup_set_of_params["endpoint_enabled"] == True else None
                         except Exception:
                             continue
-                    relatedEndpointEntries_values_to_set[entry_type]=values_to_set
+                        LOG.warning(values_to_set)
+                        relatedEndpointEntries_values_to_set[lookup_entry_type]=values_to_set
                 if relatedEndpointEntries_values_to_set != {}:
                     Endpoints = RelatedEndpointEntries(**relatedEndpointEntries_values_to_set)
                 else:
@@ -76,8 +103,11 @@ class MapSchema(BaseModel):
                 singleEntryUrl=conf.complete_url+'/'+set_of_params["endpoint_name"]+'/{id}' if set_of_params["allow_id_query"]==True else None
                 openAPIEndpointsDefinition=set_of_params["open_api_definition"]
                 if set_of_params["entry_type_enabled"] == True:
-                    fields[str(entry_type)]=Endpoint(id=entry_type,openAPIEndpointsDefinition=openAPIEndpointsDefinition,entryType=entry_type,rootUrl=rootUrl,singleEntryUrl=singleEntryUrl,endpoints=Endpoints)
-            endpointEntriesClass=EndpointEntries(**fields)
+                    if str(entry_type) not in fields:
+                        fields[str(entry_type)]=Endpoint(id=entry_type,openAPIEndpointsDefinition=openAPIEndpointsDefinition,entryType=entry_type,rootUrl=rootUrl,singleEntryUrl=singleEntryUrl,endpoints=Endpoints)
+                    else:
+                        fields[str(entry_type)].endpoints.merge(Endpoints)
+        endpointEntriesClass=EndpointEntries(**fields)
         return self(endpointSets=endpointEntriesClass)
 
 class MapResponse(BaseModel):

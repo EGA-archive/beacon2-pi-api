@@ -55,7 +55,7 @@ def check_configuration():
         raise Exception("analysis granularity must be one string between boolean, count or record")
     if biosample_confile["biosample"]["endpoint_name"] != '' and biosample_confile["biosample"]["max_granularity"] not in ['boolean', 'count', 'record']:
         raise Exception("biosample granularity must be one string between boolean, count or record")
-    if cohort_confile["cohort"]["endpoint_name"] != '' and cohort_confile["cohort"]["endpoint_name"] not in ['boolean', 'count', 'record']:
+    if cohort_confile["cohort"]["endpoint_name"] != '' and cohort_confile["cohort"]["max_granularity"] not in ['boolean', 'count', 'record']:
         raise Exception("cohort granularity must be one string between boolean, count or record")
     if dataset_confile["dataset"]["endpoint_name"] != '' and dataset_confile["dataset"]["max_granularity"] not in ['boolean', 'count', 'record']:
         raise Exception("dataset granularity must be one string between boolean, count or record")
@@ -156,198 +156,198 @@ def check_configuration():
         raise Exception('The analysis ["info"]["ontology_id"] must be of type string and CURIE.')
     if not isinstance(analysis_confile["analysis"]["info"]["ontology_name"], str):
         raise Exception('The analysis ["info"]["ontology_name"] must be of type string.')
-    if not isinstance(analysis_confile["analysis"]["schema"]["description"], str):
+    if not isinstance(analysis_confile["analysis"]["schema"]["specification"], str):
         raise Exception('The analysis schema ["schema"]["specification"] must be of type string.')
     if not isinstance(analysis_confile["analysis"]["info"]["description"], str):
         raise Exception('The analysis description must be of type string.')
-    if not isinstance(analysis_confile["schema"]["default_schema_id"], str):
+    if not isinstance(analysis_confile["analysis"]["schema"]["default_schema_id"], str):
         raise Exception('The analysis default_schema_id must be of type string.')
-    if not isinstance(analysis_confile["schema"]["default_schema_name"], str):
+    if not isinstance(analysis_confile["analysis"]["schema"]["default_schema_name"], str):
         raise Exception('The analysis default_schema_name must be of type string.')
-    if not isinstance(analysis_confile["schema"]["reference_to_default_schema_definition"], str):
+    if not isinstance(analysis_confile["analysis"]["schema"]["reference_to_default_schema_definition"], str):
         raise Exception('The analysis reference_to_default_schema_definition must be of type string.')
-    if not isinstance(analysis_confile["schema"]["default_schema_version"], str):
-        raise Exception('The analysis_confile["schema"]["default_schema_version"] must be of type string.')
-    if not isinstance(analysis_confile["schema"]["supported_schemas"], list):
+    if not isinstance(analysis_confile["analysis"]["schema"]["default_schema_version"], str):
+        raise Exception('The analysis_confile["analysis"]["schema"]["default_schema_version"] must be of type string.')
+    if not isinstance(analysis_confile["analysis"]["schema"]["supported_schemas"], list):
         raise Exception('The analysis supported_schemas must be of type list.')
-    if not isinstance(analysis_confile["allow_queries_without_filters"], bool):
+    if not isinstance(analysis_confile["analysis"]["allow_queries_without_filters"], bool):
         raise Exception('The analysis allow_queries_without_filters must be of type bool.')
-    if not isinstance(analysis_confile["allow_id_query"], bool):
+    if not isinstance(analysis_confile["analysis"]["allow_id_query"], bool):
         raise Exception('The analysis allow id query must be of type bool.')
-    if not isinstance(biosample_confile["open_api_definition"], str):
-        raise Exception('The biosample_confile["open_api_definition"] must be of type string.')
+    if not isinstance(biosample_confile["biosample"]["open_api_definition"], str):
+        raise Exception('The biosample_confile["cohort"]["open_api_definition"] must be of type string.')
     if 'biosample' not in biosample_confile:
         raise Exception('The biosample_confileid variable must be biosample_confile')
-    if not isinstance(biosample_confile["info"]["name"], str):
-        raise Exception('The biosample_confile["info"]["name"] must be of type string.')
-    if not isinstance(biosample_confile["info"]["ontology_id"], str) or not re.match("[A-Za-z0-9]+:[A-Za-z0-9]", biosample_confile["info"]["ontology_id"]):
-        raise Exception('The biosample_confile["info"]["ontology_id"] must be of type string and CURIE.')
-    if not isinstance(biosample_confile["info"]["ontology_name"], str):
-        raise Exception('The biosample_confile["info"]["ontology_name"] must be of type string.')
-    if not isinstance(biosample_confile["schema"]["specification"], str):
-        raise Exception('The biosample_confile["schema"]["specification"] must be of type string.')
-    if not isinstance(biosample_confile["info"]["description"], str):
-        raise Exception('The biosample_confile["info"]["description"] must be of type string.')
-    if not isinstance(biosample_confile["schema"]["default_schema_id"], str):
-        raise Exception('The biosample_confile["schema"]["default_schema_id"] must be of type string.')
-    if not isinstance(biosample_confile["schema"]["default_schema_name"], str):
-        raise Exception('The biosample_confile["schema"]["default_schema_name"] must be of type string.')
-    if not isinstance(biosample_confile["schema"]["reference_to_default_schema_definition"], str):
-        raise Exception('The biosample_confile["schema"]["reference_to_default_schema_definition"] must be of type string.')
-    if not isinstance(biosample_confile["schema"]["default_schema_version"], str):
-        raise Exception('The biosample_confile["schema"]["default_schema_version"] must be of type string.')
-    if not isinstance(biosample_confile["schema"]["supported_schemas"], list):
-        raise Exception('The biosample_confile["schema"]["supported_schemas"] must be of type list.')
-    if not isinstance(biosample_confile["allow_queries_without_filters"], bool):
-        raise Exception('The biosample_confile["allow_queries_without_filters"] must be of type bool.')
-    if not isinstance(biosample_confile["allow_id_query"], bool):
-        raise Exception('The biosample_confile["allow_id_query"] must be of type bool.')
-    if not isinstance(cohort_confile["open_api_definition"], str):
-        raise Exception('The cohort_confile["open_api_definition"] must be of type string.')
+    if not isinstance(biosample_confile["biosample"]["info"]["name"], str):
+        raise Exception('The biosample_confile["biosample"]["info"]["name"] must be of type string.')
+    if not isinstance(biosample_confile["biosample"]["info"]["ontology_id"], str) or not re.match("[A-Za-z0-9]+:[A-Za-z0-9]", biosample_confile["biosample"]["info"]["ontology_id"]):
+        raise Exception('The biosample_confile["biosample"]["info"]["ontology_id"] must be of type string and CURIE.')
+    if not isinstance(biosample_confile["biosample"]["info"]["ontology_name"], str):
+        raise Exception('The biosample_confile["biosample"]["info"]["ontology_name"] must be of type string.')
+    if not isinstance(biosample_confile["biosample"]["schema"]["specification"], str):
+        raise Exception('The biosample_confile["biosample"]["schema"]["specification"] must be of type string.')
+    if not isinstance(biosample_confile["biosample"]["info"]["description"], str):
+        raise Exception('The biosample_confile["biosample"]["info"]["description"] must be of type string.')
+    if not isinstance(biosample_confile["biosample"]["schema"]["default_schema_id"], str):
+        raise Exception('The biosample_confile["biosample"]["schema"]["default_schema_id"] must be of type string.')
+    if not isinstance(biosample_confile["biosample"]["schema"]["default_schema_name"], str):
+        raise Exception('The biosample_confile["biosample"]["schema"]["default_schema_name"] must be of type string.')
+    if not isinstance(biosample_confile["biosample"]["schema"]["reference_to_default_schema_definition"], str):
+        raise Exception('The biosample_confile["biosample"]["schema"]["reference_to_default_schema_definition"] must be of type string.')
+    if not isinstance(biosample_confile["biosample"]["schema"]["default_schema_version"], str):
+        raise Exception('The biosample_confile["biosample"]["schema"]["default_schema_version"] must be of type string.')
+    if not isinstance(biosample_confile["biosample"]["schema"]["supported_schemas"], list):
+        raise Exception('The biosample_confile["biosample"]["schema"]["supported_schemas"] must be of type list.')
+    if not isinstance(biosample_confile["biosample"]["allow_queries_without_filters"], bool):
+        raise Exception('The biosample_confile["analysis"]["allow_queries_without_filters"] must be of type bool.')
+    if not isinstance(biosample_confile["biosample"]["allow_id_query"], bool):
+        raise Exception('The biosample_confile["analysis"]["allow_id_query"] must be of type bool.')
+    if not isinstance(cohort_confile["cohort"]["open_api_definition"], str):
+        raise Exception('The cohort_confile["cohort"]["open_api_definition"] must be of type string.')
     if 'cohort' not in cohort_confile:
         raise Exception('The cohort_confileid variable must be cohort_confile')
-    if not isinstance(cohort_confile["info"]["name"], str):
-        raise Exception('The cohort_confile["info"]["name"] must be of type string.')
-    if not isinstance(cohort_confile["info"]["ontology_id"], str) or not re.match("[A-Za-z0-9]+:[A-Za-z0-9]", cohort_confile["info"]["ontology_id"]):
-        raise Exception('The cohort_confile["info"]["ontology_id"] must be of type string and CURIE.')
-    if not isinstance(cohort_confile["info"]["ontology_name"], str):
-        raise Exception('The cohort_confile["info"]["ontology_name"] must be of type string.')
-    if not isinstance(cohort_confile["schema"]["specification"], str):
-        raise Exception('The cohort_confile["schema"]["specification"] must be of type string.')
-    if not isinstance(cohort_confile["info"]["description"], str):
-        raise Exception('The cohort_confile["info"]["description"] must be of type string.')
-    if not isinstance(cohort_confile["schema"]["default_schema_id"], str):
-        raise Exception('The cohort_confile["schema"]["default_schema_id"] must be of type string.')
-    if not isinstance(cohort_confile["schema"]["default_schema_name"], str):
-        raise Exception('The cohort_confile["schema"]["default_schema_name"] must be of type string.')
-    if not isinstance(cohort_confile["schema"]["reference_to_default_schema_definition"], str):
-        raise Exception('The cohort_confile["schema"]["reference_to_default_schema_definition"] must be of type string.')
-    if not isinstance(cohort_confile["schema"]["default_schema_version"], str):
-        raise Exception('The cohort_confile["schema"]["default_schema_version"] must be of type string.')
-    if not isinstance(cohort_confile["schema"]["supported_schemas"], list):
-        raise Exception('The cohort_confile["schema"]["supported_schemas"] must be of type list.')
-    if not isinstance(cohort_confile["allow_queries_without_filters"], bool):
-        raise Exception('The cohort_confile["allow_queries_without_filters"] must be of type bool.')
-    if not isinstance(cohort_confile["allow_id_query"], bool):
-        raise Exception('The cohort_confile["allow_id_query"] must be of type bool.')
-    if not isinstance(dataset_confile["open_api_definition"], str):
-        raise Exception('The dataset_confile["open_api_definition"] must be of type string.')
+    if not isinstance(cohort_confile["cohort"]["info"]["name"], str):
+        raise Exception('The cohort_confile["cohort"]["info"]["name"] must be of type string.')
+    if not isinstance(cohort_confile["cohort"]["info"]["ontology_id"], str) or not re.match("[A-Za-z0-9]+:[A-Za-z0-9]", cohort_confile["cohort"]["info"]["ontology_id"]):
+        raise Exception('The cohort_confile["cohort"]["info"]["ontology_id"] must be of type string and CURIE.')
+    if not isinstance(cohort_confile["cohort"]["info"]["ontology_name"], str):
+        raise Exception('The cohort_confile["cohort"]["info"]["ontology_name"] must be of type string.')
+    if not isinstance(cohort_confile["cohort"]["schema"]["specification"], str):
+        raise Exception('The cohort_confile["cohort"]["schema"]["specification"] must be of type string.')
+    if not isinstance(cohort_confile["cohort"]["info"]["description"], str):
+        raise Exception('The cohort_confile["cohort"]["info"]["description"] must be of type string.')
+    if not isinstance(cohort_confile["cohort"]["schema"]["default_schema_id"], str):
+        raise Exception('The cohort_confile["cohort"]["schema"]["default_schema_id"] must be of type string.')
+    if not isinstance(cohort_confile["cohort"]["schema"]["default_schema_name"], str):
+        raise Exception('The cohort_confile["cohort"]["schema"]["default_schema_name"] must be of type string.')
+    if not isinstance(cohort_confile["cohort"]["schema"]["reference_to_default_schema_definition"], str):
+        raise Exception('The cohort_confile["cohort"]["schema"]["reference_to_default_schema_definition"] must be of type string.')
+    if not isinstance(cohort_confile["cohort"]["schema"]["default_schema_version"], str):
+        raise Exception('The cohort_confile["cohort"]["schema"]["default_schema_version"] must be of type string.')
+    if not isinstance(cohort_confile["cohort"]["schema"]["supported_schemas"], list):
+        raise Exception('The cohort_confile["cohort"]["schema"]["supported_schemas"] must be of type list.')
+    if not isinstance(cohort_confile["cohort"]["allow_queries_without_filters"], bool):
+        raise Exception('The cohort_confile["analysis"]["allow_queries_without_filters"] must be of type bool.')
+    if not isinstance(cohort_confile["cohort"]["allow_id_query"], bool):
+        raise Exception('The cohort_confile["analysis"]["allow_id_query"] must be of type bool.')
+    if not isinstance(dataset_confile["dataset"]["open_api_definition"], str):
+        raise Exception('The dataset_confile["cohort"]["open_api_definition"] must be of type string.')
     if 'dataset' not in dataset_confile:
         raise Exception('The dataset_confileid variable must be dataset_confile')
-    if not isinstance(dataset_confile["info"]["name"], str):
+    if not isinstance(dataset_confile["dataset"]["info"]["name"], str):
         raise Exception('The dataset_confilename must be of type string.')
-    if not isinstance(dataset_confile["info"]["ontology_id"], str) or not re.match("[A-Za-z0-9]+:[A-Za-z0-9]", dataset_confile["info"]["ontology_id"]):
-        raise Exception('The dataset_confile["info"]["ontology_id"] must be of type string and CURIE.')
-    if not isinstance(dataset_confile["info"]["ontology_name"], str):
-        raise Exception('The dataset_confile["info"]["ontology_name"] must be of type string.')
-    if not isinstance(dataset_confile["schema"]["specification"], str):
-        raise Exception('The dataset_confile["schema"]["specification"] must be of type string.')
-    if not isinstance(dataset_confile["info"]["description"], str):
+    if not isinstance(dataset_confile["dataset"]["info"]["ontology_id"], str) or not re.match("[A-Za-z0-9]+:[A-Za-z0-9]", dataset_confile["dataset"]["info"]["ontology_id"]):
+        raise Exception('The dataset_confile["dataset"]["info"]["ontology_id"] must be of type string and CURIE.')
+    if not isinstance(dataset_confile["dataset"]["info"]["ontology_name"], str):
+        raise Exception('The dataset_confile["dataset"]["info"]["ontology_name"] must be of type string.')
+    if not isinstance(dataset_confile["dataset"]["schema"]["specification"], str):
+        raise Exception('The dataset_confile["dataset"]["schema"]["specification"] must be of type string.')
+    if not isinstance(dataset_confile["dataset"]["info"]["description"], str):
         raise Exception('The dataset_confiledescription must be of type string.')
-    if not isinstance(dataset_confile["schema"]["default_schema_id"], str):
-        raise Exception('The dataset_confile["schema"]["default_schema_id"] must be of type string.')
-    if not isinstance(dataset_confile["schema"]["default_schema_name"], str):
-        raise Exception('The dataset_confile["schema"]["default_schema_name"] must be of type string.')
-    if not isinstance(dataset_confile["schema"]["reference_to_default_schema_definition"], str):
-        raise Exception('The dataset_confile["schema"]["reference_to_default_schema_definition"] must be of type string.')
-    if not isinstance(dataset_confile["schema"]["default_schema_version"], str):
-        raise Exception('The dataset_confile["schema"]["default_schema_version"] must be of type string.')
-    if not isinstance(dataset_confile["schema"]["supported_schemas"], list):
-        raise Exception('The dataset_confile["schema"]["supported_schemas"] must be of type list.')
-    if not isinstance(dataset_confile["allow_queries_without_filters"], bool):
-        raise Exception('The dataset_confile["allow_queries_without_filters"] must be of type bool.')
-    if not isinstance(dataset_confile["allow_id_query"], bool):
-        raise Exception('The dataset_confile["allow_id_query"] must be of type bool.')
-    if not isinstance(genomicVariant_confile["open_api_definition"], str):
-        raise Exception('The genomicVariant_confile["open_api_definition"] must be of type string.')
+    if not isinstance(dataset_confile["dataset"]["schema"]["default_schema_id"], str):
+        raise Exception('The dataset_confile["dataset"]["schema"]["default_schema_id"] must be of type string.')
+    if not isinstance(dataset_confile["dataset"]["schema"]["default_schema_name"], str):
+        raise Exception('The dataset_confile["dataset"]["schema"]["default_schema_name"] must be of type string.')
+    if not isinstance(dataset_confile["dataset"]["schema"]["reference_to_default_schema_definition"], str):
+        raise Exception('The dataset_confile["dataset"]["schema"]["reference_to_default_schema_definition"] must be of type string.')
+    if not isinstance(dataset_confile["dataset"]["schema"]["default_schema_version"], str):
+        raise Exception('The dataset_confile["dataset"]["schema"]["default_schema_version"] must be of type string.')
+    if not isinstance(dataset_confile["dataset"]["schema"]["supported_schemas"], list):
+        raise Exception('The dataset_confile["dataset"]["schema"]["supported_schemas"] must be of type list.')
+    if not isinstance(dataset_confile["dataset"]["allow_queries_without_filters"], bool):
+        raise Exception('The dataset_confile["analysis"]["allow_queries_without_filters"] must be of type bool.')
+    if not isinstance(dataset_confile["dataset"]["allow_id_query"], bool):
+        raise Exception('The dataset_confile["analysis"]["allow_id_query"] must be of type bool.')
+    if not isinstance(genomicVariant_confile["genomicVariant"]["open_api_definition"], str):
+        raise Exception('The genomicVariant_confile["cohort"]["open_api_definition"] must be of type string.')
     if 'genomicVariant' not in genomicVariant_confile:
         raise Exception('The genomicVariant_confileid variable must be genomicVariant_confile')
-    if not isinstance(genomicVariant_confile["info"]["name"], str):
+    if not isinstance(genomicVariant_confile["genomicVariant"]["info"]["name"], str):
         raise Exception('The genomicVariant_confilename must be of type string.')
-    if not isinstance(genomicVariant_confile["info"]["ontology_id"], str) or not re.match("[A-Za-z0-9]+:[A-Za-z0-9]", genomicVariant_confile["info"]["ontology_id"]):
-        raise Exception('The genomicVariant_confile["info"]["ontology_id"] must be of type string and CURIE.')
-    if not isinstance(genomicVariant_confile["info"]["ontology_name"], str):
-        raise Exception('The genomicVariant_confile["info"]["ontology_name"] must be of type string.')
-    if not isinstance(genomicVariant_confile["schema"]["specification"], str):
-        raise Exception('The genomicVariant_confile["schema"]["specification"] must be of type string.')
-    if not isinstance(genomicVariant_confile["info"]["description"], str):
+    if not isinstance(genomicVariant_confile["genomicVariant"]["info"]["ontology_id"], str) or not re.match("[A-Za-z0-9]+:[A-Za-z0-9]", genomicVariant_confile["genomicVariant"]["info"]["ontology_id"]):
+        raise Exception('The genomicVariant_confile["dataset"]["info"]["ontology_id"] must be of type string and CURIE.')
+    if not isinstance(genomicVariant_confile["genomicVariant"]["info"]["ontology_name"], str):
+        raise Exception('The genomicVariant_confile["dataset"]["info"]["ontology_name"] must be of type string.')
+    if not isinstance(genomicVariant_confile["genomicVariant"]["schema"]["specification"], str):
+        raise Exception('The genomicVariant_confile["genomicVariant"]["schema"]["specification"] must be of type string.')
+    if not isinstance(genomicVariant_confile["genomicVariant"]["info"]["description"], str):
         raise Exception('The genomicVariant_confiledescription must be of type string.')
-    if not isinstance(genomicVariant_confile["schema"]["default_schema_id"], str):
-        raise Exception('The genomicVariant_confile["schema"]["default_schema_id"] must be of type string.')
-    if not isinstance(genomicVariant_confile["schema"]["default_schema_name"], str):
-        raise Exception('The genomicVariant_confile["schema"]["default_schema_name"] must be of type string.')
-    if not isinstance(genomicVariant_confile["schema"]["reference_to_default_schema_definition"], str):
-        raise Exception('The genomicVariant_confile["schema"]["reference_to_default_schema_definition"] must be of type string.')
-    if not isinstance(genomicVariant_confile["schema"]["default_schema_version"], str):
-        raise Exception('The genomicVariant_confile["schema"]["default_schema_version"] must be of type string.')
-    if not isinstance(genomicVariant_confile["schema"]["supported_schemas"], list):
-        raise Exception('The genomicVariant_confile["schema"]["supported_schemas"] must be of type list.')
-    if not isinstance(genomicVariant_confile["allow_queries_without_filters"], bool):
-        raise Exception('The genomicVariant_confile["allow_queries_without_filters"] must be of type bool.')
-    if not isinstance(genomicVariant_confile["allow_id_query"], bool):
-        raise Exception('The genomicVariant_confile["allow_id_query"] must be of type bool.')
-    if not isinstance(individual_confile["open_api_definition"], str):
-        raise Exception('The individual_confile["open_api_definition"] must be of type string.')
+    if not isinstance(genomicVariant_confile["genomicVariant"]["schema"]["default_schema_id"], str):
+        raise Exception('The genomicVariant_confile["genomicVariant"]["schema"]["default_schema_id"] must be of type string.')
+    if not isinstance(genomicVariant_confile["genomicVariant"]["schema"]["default_schema_name"], str):
+        raise Exception('The genomicVariant_confile["genomicVariant"]["schema"]["default_schema_name"] must be of type string.')
+    if not isinstance(genomicVariant_confile["genomicVariant"]["schema"]["reference_to_default_schema_definition"], str):
+        raise Exception('The genomicVariant_confile["genomicVariant"]["schema"]["reference_to_default_schema_definition"] must be of type string.')
+    if not isinstance(genomicVariant_confile["genomicVariant"]["schema"]["default_schema_version"], str):
+        raise Exception('The genomicVariant_confile["genomicVariant"]["schema"]["default_schema_version"] must be of type string.')
+    if not isinstance(genomicVariant_confile["genomicVariant"]["schema"]["supported_schemas"], list):
+        raise Exception('The genomicVariant_confile["genomicVariant"]["schema"]["supported_schemas"] must be of type list.')
+    if not isinstance(genomicVariant_confile["genomicVariant"]["allow_queries_without_filters"], bool):
+        raise Exception('The genomicVariant_confile["analysis"]["allow_queries_without_filters"] must be of type bool.')
+    if not isinstance(genomicVariant_confile["genomicVariant"]["allow_id_query"], bool):
+        raise Exception('The genomicVariant_confile["analysis"]["allow_id_query"] must be of type bool.')
+    if not isinstance(individual_confile["individual"]["open_api_definition"], str):
+        raise Exception('The individual_confile["cohort"]["open_api_definition"] must be of type string.')
     if 'individual' not in individual_confile:
         raise Exception('The individual_confileid variable must be individual_confile')
-    if not isinstance(individual_confile["info"]["name"], str):
+    if not isinstance(individual_confile["individual"]["info"]["name"], str):
         raise Exception('The individual_confilename must be of type string.')
-    if not isinstance(individual_confile["info"]["ontology_id"], str) or not re.match("[A-Za-z0-9]+:[A-Za-z0-9]", individual_confile["info"]["ontology_id"]):
-        raise Exception('The individual_confile["info"]["ontology_id"] must be of type string and CURIE.')
-    if not isinstance(individual_confile["info"]["ontology_name"], str):
-        raise Exception('The individual_confile["info"]["ontology_name"] must be of type string.')
-    if not isinstance(individual_confile["schema"]["specification"], str):
-        raise Exception('The individual_confile["schema"]["specification"] must be of type string.')
-    if not isinstance(individual_confile["info"]["description"], str):
+    if not isinstance(individual_confile["individual"]["info"]["ontology_id"], str) or not re.match("[A-Za-z0-9]+:[A-Za-z0-9]", individual_confile["individual"]["info"]["ontology_id"]):
+        raise Exception('The individual_confile["dataset"]["info"]["ontology_id"] must be of type string and CURIE.')
+    if not isinstance(individual_confile["individual"]["info"]["ontology_name"], str):
+        raise Exception('The individual_confile["dataset"]["info"]["ontology_name"] must be of type string.')
+    if not isinstance(individual_confile["individual"]["schema"]["specification"], str):
+        raise Exception('The individual_confile["genomicVariant"]["schema"]["specification"] must be of type string.')
+    if not isinstance(individual_confile["individual"]["info"]["description"], str):
         raise Exception('The individual_confiledescription must be of type string.')
-    if not isinstance(individual_confile["schema"]["default_schema_id"], str):
-        raise Exception('The individual_confile["schema"]["default_schema_id"] must be of type string.')
-    if not isinstance(individual_confile["schema"]["default_schema_name"], str):
-        raise Exception('The individual_confile["schema"]["default_schema_name"] must be of type string.')
-    if not isinstance(individual_confile["schema"]["reference_to_default_schema_definition"], str):
-        raise Exception('The individual_confile["schema"]["reference_to_default_schema_definition"] must be of type string.')
-    if not isinstance(individual_confile["schema"]["default_schema_version"], str):
-        raise Exception('The individual_confile["schema"]["default_schema_version"] must be of type string.')
-    if not isinstance(individual_confile["schema"]["supported_schemas"], list):
-        raise Exception('The individual_confile["schema"]["supported_schemas"] must be of type list.')
-    if not isinstance(individual_confile["allow_queries_without_filters"], bool):
-        raise Exception('The individual_confile["allow_queries_without_filters"] must be of type bool.')
-    if not isinstance(individual_confile["allow_id_query"], bool):
-        raise Exception('The individual_confile["allow_id_query"] must be of type bool.')
-    if not isinstance(run_confile["open_api_definition"], str):
-        raise Exception('The run_confile["open_api_definition"] must be of type string.')
+    if not isinstance(individual_confile["individual"]["schema"]["default_schema_id"], str):
+        raise Exception('The individual_confile["genomicVariant"]["schema"]["default_schema_id"] must be of type string.')
+    if not isinstance(individual_confile["individual"]["schema"]["default_schema_name"], str):
+        raise Exception('The individual_confile["genomicVariant"]["schema"]["default_schema_name"] must be of type string.')
+    if not isinstance(individual_confile["individual"]["schema"]["reference_to_default_schema_definition"], str):
+        raise Exception('The individual_confile["genomicVariant"]["schema"]["reference_to_default_schema_definition"] must be of type string.')
+    if not isinstance(individual_confile["individual"]["schema"]["default_schema_version"], str):
+        raise Exception('The individual_confile["genomicVariant"]["schema"]["default_schema_version"] must be of type string.')
+    if not isinstance(individual_confile["individual"]["schema"]["supported_schemas"], list):
+        raise Exception('The individual_confile["genomicVariant"]["schema"]["supported_schemas"] must be of type list.')
+    if not isinstance(individual_confile["individual"]["allow_queries_without_filters"], bool):
+        raise Exception('The individual_confile["analysis"]["allow_queries_without_filters"] must be of type bool.')
+    if not isinstance(individual_confile["individual"]["allow_id_query"], bool):
+        raise Exception('The individual_confile["analysis"]["allow_id_query"] must be of type bool.')
+    if not isinstance(run_confile["run"]["open_api_definition"], str):
+        raise Exception('The run_confile["cohort"]["open_api_definition"] must be of type string.')
     if 'run' not in run_confile:
         raise Exception('The run_confileid variable must be run_confile')
-    if not isinstance(run_confile["info"]["name"], str):
+    if not isinstance(run_confile["run"]["info"]["name"], str):
         raise Exception('The run_confilename must be of type string.')
-    if not isinstance(run_confile["info"]["ontology_id"], str) or not re.match("[A-Za-z0-9]+:[A-Za-z0-9]", run_confile["info"]["ontology_id"]):
-        raise Exception('The run_confile["info"]["ontology_id"] must be of type string and CURIE.')
-    if not isinstance(run_confile["info"]["ontology_name"], str):
-        raise Exception('The run_confile["info"]["ontology_name"] must be of type string.')
-    if not isinstance(run_confile["schema"]["specification"], str):
-        raise Exception('The run_confile["schema"]["specification"] must be of type string.')
-    if not isinstance(run_confile["info"]["description"], str):
+    if not isinstance(run_confile["run"]["info"]["ontology_id"], str) or not re.match("[A-Za-z0-9]+:[A-Za-z0-9]", run_confile["run"]["info"]["ontology_id"]):
+        raise Exception('The run_confile["dataset"]["info"]["ontology_id"] must be of type string and CURIE.')
+    if not isinstance(run_confile["run"]["info"]["ontology_name"], str):
+        raise Exception('The run_confile["dataset"]["info"]["ontology_name"] must be of type string.')
+    if not isinstance(run_confile["run"]["schema"]["specification"], str):
+        raise Exception('The run_confile["genomicVariant"]["schema"]["specification"] must be of type string.')
+    if not isinstance(run_confile["run"]["info"]["description"], str):
         raise Exception('The run_confiledescription must be of type string.')
-    if not isinstance(run_confile["schema"]["default_schema_id"], str):
-        raise Exception('The run_confile["schema"]["default_schema_id"] must be of type string.')
-    if not isinstance(run_confile["schema"]["default_schema_name"], str):
-        raise Exception('The run_confile["schema"]["default_schema_name"] must be of type string.')
-    if not isinstance(run_confile["schema"]["reference_to_default_schema_definition"], str):
-        raise Exception('The run_confile["schema"]["reference_to_default_schema_definition"] must be of type string.')
-    if not isinstance(run_confile["schema"]["default_schema_version"], str):
-        raise Exception('The run_confile["schema"]["default_schema_version"] must be of type string.')
-    if not isinstance(run_confile["schema"]["supported_schemas"], list):
-        raise Exception('The run_confile["schema"]["supported_schemas"] must be of type list.')
-    if not isinstance(run_confile["allow_queries_without_filters"], bool):
-        raise Exception('The run_confile["allow_queries_without_filters"] must be of type bool.')
-    if not isinstance(run_confile["allow_id_query"], bool):
-        raise Exception('The run_confile["allow_id_query"] must be of type bool.')
+    if not isinstance(run_confile["run"]["schema"]["default_schema_id"], str):
+        raise Exception('The run_confile["genomicVariant"]["schema"]["default_schema_id"] must be of type string.')
+    if not isinstance(run_confile["run"]["schema"]["default_schema_name"], str):
+        raise Exception('The run_confile["genomicVariant"]["schema"]["default_schema_name"] must be of type string.')
+    if not isinstance(run_confile["run"]["schema"]["reference_to_default_schema_definition"], str):
+        raise Exception('The run_confile["genomicVariant"]["schema"]["reference_to_default_schema_definition"] must be of type string.')
+    if not isinstance(run_confile["run"]["schema"]["default_schema_version"], str):
+        raise Exception('The run_confile["genomicVariant"]["schema"]["default_schema_version"] must be of type string.')
+    if not isinstance(run_confile["run"]["schema"]["supported_schemas"], list):
+        raise Exception('The run_confile["genomicVariant"]["schema"]["supported_schemas"] must be of type list.')
+    if not isinstance(run_confile["run"]["allow_queries_without_filters"], bool):
+        raise Exception('The run_confile["analysis"]["allow_queries_without_filters"] must be of type bool.')
+    if not isinstance(run_confile["run"]["allow_id_query"], bool):
+        raise Exception('The run_confile["analysis"]["allow_id_query"] must be of type bool.')
     if conf.level not in [logging.NOTSET, logging.INFO, logging.DEBUG, logging.WARNING, logging.ERROR, logging.FATAL, logging.CRITICAL]:
         raise Exception('The config parameter level must be one possible logging library level (NOTSET, DEBUG, INFO, etc...')
     if not isinstance(conf.log_file, str):
         if conf.log_file != None:
             raise Exception('The config parameter log_file must be a string with the path to the dir where to store the logs or a variable None for not storing any log')
-    if not isinstance(conf.beacon_["info"]["name"], str):
+    if not isinstance(conf.beacon_name, str):
         raise Exception('The beacon_name config parameter must be a string')
     if not isinstance(conf.beacon_id, str):
         raise Exception('The beacon_id config parameter must be a string')

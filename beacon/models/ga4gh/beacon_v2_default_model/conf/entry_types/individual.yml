@@ -32,6 +32,16 @@ individual:
       - beacon-individual-v2.1.2
       - beacon-individual-v2.2.0
   lookups:
+    analysis:
+      endpoint_name: individuals/{id}/analyses
+      response_type: non_collection
+      endpoint_enabled: True
+      connection:
+        name: mongo
+        database: beacon
+        table: individuals
+        functions:
+          function_name_assigned: get_phenotypic_cross_query
     biosample:
       endpoint_name: individuals/{id}/biosamples
       response_type: non_collection
@@ -72,16 +82,6 @@ individual:
         table: genomicVariations
         functions:
           function_name_assigned: get_variants_of_phenotypic_endpoint
-    individual:
-      endpoint_name: individuals/{id}/individuals
-      response_type: non_collection
-      endpoint_enabled: True
-      connection:
-        name: mongo
-        database: beacon
-        table: individuals
-        functions:
-          function_name_assigned: get_phenotypic_cross_query
     run:
       endpoint_name: individuals/{id}/runs
       response_type: non_collection

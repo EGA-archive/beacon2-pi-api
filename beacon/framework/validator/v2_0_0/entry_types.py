@@ -7,6 +7,7 @@ from pydantic import (
 import re
 from typing import List, Optional
 from beacon.utils.modules import load_class, get_modules_confiles
+from beacon.logs.logs import LOG
 
 class OntologyTerm(BaseModel):
     id: str
@@ -52,8 +53,8 @@ class EntryTypesSchema(BaseModel):
     def return_schema(self):
         Entries_values_to_Set={}
         for module in list_of_modules:
-            values_to_set = {}
             for entry_type, set_of_params in module.items():
+                values_to_set = {}
                 if set_of_params["entry_type_enabled"] == True:
                     values_to_set["id"] = entry_type
                     values_to_set["name"] = set_of_params["info"]["name"]
@@ -63,7 +64,10 @@ class EntryTypesSchema(BaseModel):
                     values_to_set["defaultSchema"] = ReferenceToAnSchema(id=set_of_params["schema"]["default_schema_id"],name=set_of_params["schema"]["default_schema_name"],
                                                                                         referenceToSchemaDefinition=set_of_params["schema"]["reference_to_default_schema_definition"],
                                                                                         schemaVersion=set_of_params["schema"]["default_schema_version"])
-                    values_to_set["additionallySupportedSchemas"] = set_of_params["schema"]["supported_schemas"]
+                    list_of_supported_schemas=[]
+                    for supported_schema in set_of_params["schema"]["supported_schemas"]:
+                        list_of_supported_schemas.append(ReferenceToAnSchema(id=supported_schema,name=supported_schema,referenceToSchemaDefinition=set_of_params["schema"]["reference_to_default_schema_definition"]))
+                    values_to_set["additionallySupportedSchemas"] = list_of_supported_schemas
                     values_to_set["nonFilteredQueriesAllowed"] =set_of_params["allow_queries_without_filters"]
 
                     Entries_values_to_Set[entry_type]=values_to_set
@@ -71,6 +75,7 @@ class EntryTypesSchema(BaseModel):
 
             
         if Entries_values_to_Set !={}:
+            LOG.warning(Entries_values_to_Set)
             entryTypes_values_to_set = Entries(**Entries_values_to_Set)
         else:
             entryTypes_values_to_set = None
