@@ -8,4 +8,4 @@ alphanumeric_terms_biosamples = ['diseases.ageOfOnset.iso8601duration','phenotyp
 alphanumeric_terms_datasets = []
 alphanumeric_terms_cohorts = []
 
-alphanumeric_terms = alphanumeric_terms_runs + alphanumeric_terms_analyses + alphanumeric_terms_g_variants + alphanumeric_terms_individuals + alphanumeric_terms_biosamples + alphanumeric_terms_datasets +alphanumeric_terms_cohorts
+alphanumeric_terms = ['imageStudy.disease.tumorMetadata.PSA']
