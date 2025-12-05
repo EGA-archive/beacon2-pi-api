@@ -75,7 +75,6 @@ class EntryTypesSchema(BaseModel):
 
             
         if Entries_values_to_Set !={}:
-            LOG.warning(Entries_values_to_Set)
             entryTypes_values_to_set = Entries(**Entries_values_to_Set)
         else:
             entryTypes_values_to_set = None

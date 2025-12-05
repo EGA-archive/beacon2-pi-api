@@ -1,11 +1,10 @@
 from beacon.logs.logs import log_with_args, LOG
 from beacon.conf.conf import level
-from beacon.models.EUCAIM.conf.entry_types import imaging, disease, tumor, patient
 from beacon.request.classes import RequestAttributes
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.request_parameters.apply_request_parameters import apply_request_parameters
 from beacon.connections.mongo.filters.filters import apply_filters
 from beacon.connections.mongo.utils import get_docs_by_response_type, query_id
-from beacon.models.EUCAIM.connections.mongo.utils import import_imaging_confile, import_disease_confile, import_patient_confile, import_tumor_confile
+from beacon.models.EUCAIM.connections.mongo.utils import import_patients_confile
 from beacon.models.EUCAIM.connections.mongo.utils import get_non_collections_cross_query_attributes
 from beacon.response.classes import SingleDatasetResponse
 
@@ -29,21 +28,12 @@ def get_endpoint(self, dataset: SingleDatasetResponse):
 
 @log_with_args(level)
 def get_endpoint_with_id(self, dataset: SingleDatasetResponse):
-    imaging_confile=import_imaging_confile()
-    disease_confile=import_disease_confile()
-    patient_confile=import_patient_confile()
-    tumor_confile=import_tumor_confile()
+    patients_confile=import_patients_confile()
     query = {}
     # Process filters
     query = apply_filters(self, query, RequestAttributes.qparams.query.filters, {}, dataset.dataset)
     # If the entry type records are not variants, include the id queried in the query.
-    if RequestAttributes.entry_type == imaging_confile["imaging"]["endpoint_name"]:
-        query["imageId"] = RequestAttributes.entry_id
-    elif RequestAttributes.entry_type == disease_confile["disease"]["endpoint_name"]:
-        query["diseaseId"] = RequestAttributes.entry_id
-    elif RequestAttributes.entry_type == tumor_confile["tumor"]["endpoint_name"]:
-        query["tumorId"] = RequestAttributes.entry_id
-    elif RequestAttributes.entry_type == patient_confile["patient"]["endpoint_name"]:
+    if RequestAttributes.entry_type == patients_confile["patients"]["endpoint_name"]:
         query["patientId"] = RequestAttributes.entry_id
     # Save the include, limit and skip parameters so they are used later.
     include = RequestAttributes.qparams.query.includeResultsetResponses

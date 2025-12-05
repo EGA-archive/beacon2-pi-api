@@ -48,3 +48,4 @@ class RequestAttributes():
         self.returned_apiVersion="v2.2.0" # The framework version
         self.returned_schema=None # The returned schema values
         self.mongo_collection=None # The connection to mongo needed to be used for the query
+        self.function=None

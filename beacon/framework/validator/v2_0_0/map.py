@@ -92,7 +92,6 @@ class MapSchema(BaseModel):
                             values_to_set["url"] = conf.complete_url+'/'+lookup_set_of_params["endpoint_name"] if lookup_set_of_params["endpoint_enabled"] == True else None
                         except Exception:
                             continue
-                        LOG.warning(values_to_set)
                         relatedEndpointEntries_values_to_set[lookup_entry_type]=values_to_set
                 if relatedEndpointEntries_values_to_set != {}:
                     Endpoints = RelatedEndpointEntries(**relatedEndpointEntries_values_to_set)

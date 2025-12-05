@@ -23,6 +23,7 @@ def get_full_datasets(self):
         query = {}
     else:
         query = {'id': RequestAttributes.entry_id}
+    query = apply_filters(self, {}, RequestAttributes.qparams.query.filters, {}, None)
     query = datasets.find(query, {"_id": 0})
     try:
         # Collect all the datasets found with the query performed.

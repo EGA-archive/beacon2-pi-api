@@ -18,11 +18,13 @@ def query_id(self, query: dict, document_id) -> dict:
 def join_query(self, mongo_collection, query: dict, original_id, dataset: str):
     #LOG.debug(query)
     excluding_fields={"_id": 0, original_id: 1}
-    try:
-        query["$and"].append({"datasetId": dataset})
-    except Exception:
-        query["$and"]=[]
-        query["$and"].append({"datasetId": dataset})
+    if dataset != None:
+        try:
+            query["$and"].append({"datasetId": dataset})
+        except Exception:
+            query["$and"]=[]
+            query["$and"].append({"datasetId": dataset})
+    LOG.warning(query)
     return mongo_collection.find(query, excluding_fields).max_time_ms(100 * 1000)
 
 @log_with_args_mongo(level)

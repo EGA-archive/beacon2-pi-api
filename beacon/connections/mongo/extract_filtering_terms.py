@@ -39,10 +39,7 @@ def get_ontology_field_name(ontology_id:str, term_id:str, collection:str):
     individuals=['diseases.ageOfOnset.id','diseases.diseaseCode.id','diseases.severity.id','diseases.stage.id','ethnicity.id','exposures.exposureCode.id','exposures.unit.id','geographicOrigin.id','interventionsOrProcedures.ageAtProcedure.id','interventionsOrProcedures.bodySite.id','interventionsOrProcedures.procedureCode.id','measures.assayCode.id','measures.measurementValue.id','measures.measurementValue.typedQuantities.quantity.unit.id','measures.measurementValue.unit.id','measures.observationMoment.id','measures.procedure.bodySite.id','measures.procedure.procedureCode.id','pedigrees.disease.diseaseCode.id','pedigrees.disease.severity.id','pedigrees.disease.stage.id','pedigrees.id','pedigrees.members.role.id','phenotypicFeatures.evidence.evidenceCode.id','phenotypicFeatures.evidence.reference.id','phenotypicFeatures.featureType.id','phenotypicFeatures.modifiers.id','phenotypicFeatures.onset.id','phenotypicFeatures.resolution.id','phenotypicFeatures.severity.id','sex.id','treatments.cumulativeDose.referenceRange.id','treatments.doseIntervals.id','treatments.routeOfAdministration.id','treatments.treatmentCode.id']
     runs=['librarySource.id','platformModel.id']
     """
-    images=['imageModality.id', 'imageBodyPart.id', 'imageManufacturer.id']
-    diseases=['diagnosis.id', 'pathologyConfirmation.id', 'pathology.id', 'imagingProcedureProtocol.id', 'treatment.id']
-    patients=['sex.id']
-    tumors=['tumorMarkerTestResult.id', 'cancerStageCMCategory.id', 'cancerStagePMCategory.id', 'histologicGraceGleasonScore.id', 'histologicGradeISUP.id', 'tumorBIRADSAssesment.id', 'tumorPIRADSAssesment.id']
+    patients=['imageStudy.disease.diagnosis.id', 'imageStudy.imagingProcedureProtocol.id', 'imageStudy.pathologyConfirmation.id', 'imageStudy.imageModality.id', 'imageStudy.imageBodyPart.id', 'imageStudy.imageManufacturer.id', 'sex.id']
     # Save the properties in a common array variable
     array=[]
     """
@@ -59,14 +56,8 @@ def get_ontology_field_name(ontology_id:str, term_id:str, collection:str):
     elif collection == 'runs':
         array=runs
     """
-    if collection == 'images':
-        array=images
-    elif collection == 'diseases':
-        array=diseases
-    elif collection == 'patients':
+    if collection == 'patients':
         array=patients
-    elif collection == 'tumors':
-        array=tumors
     # Generate the query syntax for the ontology search for all the requested fields/properties
     query={}
     query['$or']=[]
@@ -290,10 +281,7 @@ def get_filtering_object(terms_ids: list, collection_name: str):
             if field is not None:
                 if onto not in list_of_ontologies:
                     list_of_ontologies.append(onto)
-                    if collection_name != 'images':
-                        colname = collection_name[0:-1]
-                    else:
-                        colname = 'imaging'
+                    colname = 'patients'
                     if label:
                         terms.append({
                                         'type': 'ontology',

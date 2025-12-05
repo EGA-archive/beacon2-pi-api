@@ -211,4 +211,3 @@ def get_modules_confiles():
                             list_of_confiles.append(entry_type_confile)
     return list_of_confiles
     
-

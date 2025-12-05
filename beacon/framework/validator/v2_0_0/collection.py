@@ -4,17 +4,17 @@ from pydantic import (
 )
 from typing import List, Optional, Union, Dict
 from beacon.utils.modules import load_class, load_types_of_results
+from beacon.models.EUCAIM.validator.collections.collections.EUCAIM_collections_v0_0_1 import Collections as Collections_
 
 def make_Collections():
-    CollectionType = load_types_of_results("collections")
-
+    Collections = Collections_
     @classmethod
-    def create(cls, collections: List[Union[CollectionType]]):
+    def create(cls, collections: List[Union[Collections]]):
         return cls(collections=collections)
 
     model = create_model(
         "Collections",
-        collections=(List[Union[CollectionType]], ...),
+        collections=(List[Union[Collections]], ...),
         __base__=BaseModel
     )
 

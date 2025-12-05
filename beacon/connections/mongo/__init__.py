@@ -36,9 +36,8 @@ genomicVariations=client[dbname].genomicVariations
 individuals=client[dbname].individuals
 runs=client[dbname].runs
 
-diseases=client[dbname].diseases
-images=client[dbname].images
-tumors=client[dbname].tumors
+collections=client[dbname].collections
+imagestudies=client[dbname].imagestudies
 patients=client[dbname].patients
 
 filtering_terms=client[dbname].filtering_terms

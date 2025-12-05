@@ -30,10 +30,10 @@ def append_routes(app):
     app.add_routes([web.get(uri_subpath+'/filtering_terms', FilteringTermsView)])
     routes_to_add = load_routes()
     for url, response_type in routes_to_add.items():
-        if response_type == 'non_collection':
+        if response_type == ['non_collection']:
             app.add_routes([web.get(uri_subpath+'/'+url, EntryTypeView)])
             app.add_routes([web.post(uri_subpath+'/'+url, EntryTypeView)])
-        elif response_type == 'collection':
+        elif response_type == ['collection']:
             app.add_routes([web.get(uri_subpath+'/'+url, CollectionEntryTypeView)])
             app.add_routes([web.post(uri_subpath+'/'+url, CollectionEntryTypeView)])
     return app

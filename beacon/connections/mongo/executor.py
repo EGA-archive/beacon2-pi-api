@@ -4,15 +4,21 @@ from beacon.logs.logs import log_with_args, level, LOG
 from beacon.connections.mongo.__init__ import client
 from beacon.exceptions.exceptions import NoPermissionsAvailable, DatabaseIsDown
 from pymongo.errors import ConnectionFailure
-from beacon.connections.mongo.mappers import get_function, get_collections_function
 from beacon.response.classes import MultipleDatasetsResponse
+from beacon.request.classes import RequestAttributes
+from beacon.utils.modules import get_all_modules_mongo_connections_script
 
 @log_with_args(level)
 async def execute_function(self, datasets: list):
     # Initiate the list where the different dataset classes are returned populated from the queries
     list_of_responses=[]
     # Get the function that will be the one to use for the query performed
-    function = get_function(self)
+    list_of_non_collection_modules = get_all_modules_mongo_connections_script("non_collections")
+    for non_collection_module in list_of_non_collection_modules:
+        try:
+            function = getattr(non_collection_module, RequestAttributes.function)
+        except Exception:
+            continue
     # Get the current process where the app is being run
     loop = asyncio.get_running_loop()
     if datasets != []:
@@ -38,7 +44,12 @@ async def execute_function(self, datasets: list):
 async def execute_collection_function(self):
     try:
         # Get the function that will be the one to use for the query performed
-        function = get_collections_function(self)
+        list_of_collection_modules = get_all_modules_mongo_connections_script("collections")
+        for collection_module in list_of_collection_modules:
+            try:
+                function = getattr(collection_module, RequestAttributes.function)
+            except Exception:
+                continue
         # Perform the query and return the class to return for the chosen collection
         collectionsResponseClass = function(self)
         return collectionsResponseClass

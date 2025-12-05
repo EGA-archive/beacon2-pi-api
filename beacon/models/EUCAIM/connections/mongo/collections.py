@@ -5,7 +5,7 @@ from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.utils import 
 from beacon.connections.mongo.filters.filters import apply_filters
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.request_parameters.apply_request_parameters import apply_request_parameters
 from beacon.request.classes import RequestAttributes
-from beacon.connections.mongo.__init__ import datasets, cohorts
+from beacon.connections.mongo.__init__ import collections
 from beacon.logs.logs import LOG
 from beacon.response.classes import CollectionsResponse
 
@@ -13,7 +13,7 @@ from beacon.response.classes import CollectionsResponse
 def get_datasets(self):
     # Find all the datasets in the mongo database.
     query = {}
-    query = datasets.find(query)
+    query = collections.find(query)
     return query
 
 @log_with_args_mongo(level)
@@ -23,7 +23,8 @@ def get_full_datasets(self):
         query = {}
     else:
         query = {'id': RequestAttributes.entry_id}
-    query = datasets.find(query, {"_id": 0})
+    query = apply_filters(self, {}, RequestAttributes.qparams.query.filters, {}, None)
+    query = collections.find(query, {"_id": 0})
     try:
         # Collect all the datasets found with the query performed.
         if RequestAttributes.qparams.query.requestParameters["datasets"] != []: # If there are datasets requested, then, query just for those datasets.
@@ -61,10 +62,10 @@ def get_dataset_with_id(self):
     # Include the id queried in the query.
     query = query_id(self, query, RequestAttributes.entry_id)
     # Count all the datasets to be returned in response.
-    count = get_count(self, datasets, query)
+    count = get_count(self, collections, query)
     # Find the datasets to be returned in response.
     docs = get_documents(self,
-        datasets,
+        collections,
         query,
         RequestAttributes.qparams.query.pagination.skip,
         RequestAttributes.qparams.query.pagination.skip*limit

@@ -12,6 +12,7 @@ import os
 from beacon.request.parameters import RequestMeta, SchemasPerEntity
 from pydantic import ValidationError
 from beacon.utils.modules import get_one_module_conf
+import importlib
 
 @log_with_args(level)
 def parse_query_string(self, request):
@@ -128,9 +129,53 @@ def set_entry_type_configuration(self):
         RequestAttributes.allowed_granularity = 'record'
     else:
         endpoint_module = get_one_module_conf(RequestAttributes.entry_type)
-        RequestAttributes.source = endpoint_module.database
-        RequestAttributes.allowed_granularity = endpoint_module.granularity
-        RequestAttributes.entry_type_id = endpoint_module.id
+        for entry_typeid, params in endpoint_module.items():
+            RequestAttributes.entry_type_id = entry_typeid
+            for param_key, param_value in params.items():
+                if param_key == 'max_granularity':
+                    RequestAttributes.allowed_granularity = param_value
+                elif param_key == 'connection':
+                    RequestAttributes.source = param_value["name"]
+                    if RequestAttributes.entry_type not in ['filtering_terms', 'map', 'configuration', 'info', 'service-info', 'entry_types']:
+                        if param_value["name"] == 'mongo':
+                            mod = importlib.import_module("beacon.connections.mongo.__init__")
+                            connection = getattr(mod, param_value["table"])
+                            RequestAttributes.mongo_collection = connection
+                    if RequestAttributes.entry_id != None:
+                        if RequestAttributes.pre_entry_type == None:
+                            RequestAttributes.function = param_value["functions"]["id_query_function_name_assigned"]
+                        else:
+                            LOG.warning('yesss')
+                            pre_endpoint_module = get_one_module_conf(RequestAttributes.pre_entry_type)
+                            for pre_entry_typeid, preparams in pre_endpoint_module.items():
+                                for pre_param_key, pre_param_value in preparams.items():
+                                    if pre_param_key == 'lookups' and RequestAttributes.pre_entry_type != None:
+                                        for lookup_param_entry_id, lookup_param_value in pre_param_value.items():
+                                            endpoint_splitted = lookup_param_value["endpoint_name"].split('/')
+                                            LOG.warning(endpoint_splitted)
+                                            if endpoint_splitted[0] == RequestAttributes.pre_entry_type and endpoint_splitted[2] == RequestAttributes.entry_type:
+                                                RequestAttributes.function = lookup_param_value["connection"]["functions"]["function_name_assigned"]
+                    else:
+                        RequestAttributes.function = param_value["functions"]["function_name_assigned"]
+                elif param_key == 'allow_queries_without_filters':
+                    if RequestAttributes.entry_type not in ['filtering_terms', 'map', 'configuration', 'info', 'service-info', 'entry_types']:
+                            if param_value == False and RequestAttributes.qparams.query.filters == [] and RequestAttributes.qparams.query.requestParameters == {}:
+                                raise NoFiltersAllowed("{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type))
+                elif param_key == 'schema':
+                    if RequestAttributes.qparams.meta.requestedSchemas != []:
+                        for schema in RequestAttributes.qparams.meta.requestedSchemas:
+                            if schema == param_value["default_schema_id"]:
+                                RequestAttributes.returned_schema = [SchemasPerEntity(entityType=entry_typeid,schema=schema).model_dump()]
+                            elif schema in param_value["supported_schemas"]:
+                                RequestAttributes.returned_schema = [SchemasPerEntity(entityType=entry_typeid,schema=schema).model_dump()]
+                            else:
+                                RequestAttributes.returned_schema = [SchemasPerEntity(entityType=entry_typeid,schema=param_value["default_schema_id"]).model_dump()]
+                    elif RequestAttributes.entry_type not in ['filtering_terms', 'map', 'configuration', 'info', 'service-info', 'entry_types']:
+                        RequestAttributes.returned_schema = [SchemasPerEntity(entityType=entry_typeid,schema=param_value["default_schema_id"]).model_dump()]
+
+
+
+        
     
 @log_with_args(level)
 def set_entry_type(self, request):
@@ -161,18 +206,17 @@ def set_entry_type(self, request):
                 RequestAttributes.entry_type=path_list[2]
             except Exception:
                 raise WrongURIPath('path received is wrong, check your uri: {} from conf file to make sure is correct'.format(uri))
-            set_entry_type_configuration(self)
             RequestAttributes.entry_id=request.match_info.get('id', None)
+            set_entry_type_configuration(self)
+            
         else:
             try:
                 RequestAttributes.entry_type=path_list[0]
             except Exception:
                 raise WrongURIPath('path received is wrong, check your uri: {} from conf file to make sure is correct'.format(uri))
-            set_entry_type_configuration(self)
             RequestAttributes.entry_id=request.match_info.get('id', None)
-    if RequestAttributes.entry_type not in ['filtering_terms', 'map', 'configuration', 'info', 'service-info', 'entry_types']:
-        endpoint_module = get_one_module_conf(RequestAttributes.entry_type)
-        RequestAttributes.mongo_collection = endpoint_module.database_connection
+            set_entry_type_configuration(self)
+            
 
 @log_with_args(level)
 def set_response_type(self):
@@ -180,7 +224,6 @@ def set_response_type(self):
     We receive an absolute url with a host and a port, the endpoint queried and the query string. We check that the url and host match with the beacon uri in conf and then
     we keep the name of the endpoint checking if it matches an entry type in configuration and the internal id queried, if there is one.
     '''
-    endpoint_module = get_one_module_conf(RequestAttributes.entry_type)
     if RequestAttributes.qparams.query.includeResultsetResponses != 'NONE':
         RequestAttributes.response_type = 'resultSet'
     elif RequestAttributes.qparams.query.includeResultsetResponses == 'NONE' and RequestAttributes.allowed_granularity in ['count','record'] and RequestAttributes.qparams.query.requestedGranularity in ['count', 'record']:
@@ -195,27 +238,11 @@ def set_response_type(self):
         RequestAttributes.returned_granularity = 'record'
     else:
         RequestAttributes.returned_granularity = 'count'
-    if RequestAttributes.entry_type not in ['filtering_terms', 'map', 'configuration', 'info', 'service-info', 'entry_types']:
-        if RequestAttributes.entry_type == endpoint_module.endpoint_name:
-            if endpoint_module.allow_queries_without_filters == False and RequestAttributes.qparams.query.filters == [] and RequestAttributes.qparams.query.requestParameters == {}:
-                raise NoFiltersAllowed("{} endpoint doesn't allow query without filters".format(RequestAttributes.entry_type))
-
     if RequestAttributes.qparams.meta.apiVersion in os.listdir("/beacon/framework"):
         RequestAttributes.returned_apiVersion = RequestAttributes.qparams.meta.apiVersion
     else:
         RequestAttributes.returned_apiVersion = api_version
-    if RequestAttributes.qparams.meta.requestedSchemas != []:
-        for schema in RequestAttributes.qparams.meta.requestedSchemas:
-            if RequestAttributes.entry_type == endpoint_module.endpoint_name:
-                if schema == endpoint_module.defaultSchema_id:
-                    RequestAttributes.returned_schema = [SchemasPerEntity(entityType=endpoint_module.id,schema=schema).model_dump()]
-                elif schema in endpoint_module.aditionally_supported_schemas:
-                    RequestAttributes.returned_schema = [SchemasPerEntity(entityType=endpoint_module.id,schema=schema).model_dump()]
-                else:
-                    RequestAttributes.returned_schema = [SchemasPerEntity(entityType=endpoint_module.id,schema=endpoint_module.defaultSchema_id).model_dump()]
-    elif RequestAttributes.entry_type not in ['filtering_terms', 'map', 'configuration', 'info', 'service-info', 'entry_types']:
-        if RequestAttributes.entry_type == endpoint_module.endpoint_name:
-            RequestAttributes.returned_schema = [SchemasPerEntity(entityType=endpoint_module.id,schema=endpoint_module.defaultSchema_id).model_dump()]
+
     if RequestAttributes.entry_type == 'filtering_terms':
         RequestAttributes.returned_schema = {"schema": "filtering_terms-{}".format(RequestAttributes.returned_apiVersion)}
     elif RequestAttributes.entry_type == 'map':
@@ -246,6 +273,6 @@ async def deconstruct_request(self, request):
     '''
     set_ip(self, request)
     set_headers(self, request)
-    set_entry_type(self, request)
     await get_qparams(self, self.request)
+    set_entry_type(self, request)
     set_response_type(self)
