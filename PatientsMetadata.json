@@ -1,0 +1,5002 @@
+[
+    {
+        "patientId": "subject001",
+        "imageStudy": [
+            {
+                "imageStudyId": "img001",
+                "disease": {
+                    "ageAtDiagnosis": "50.2",
+                    "dateOfFirstTreatment": "2024-02-24T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d001",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t001",
+                        "KI67": "1.5",
+                        "PSA": "0"
+                    },
+                    "yearOfDiagnosis": "2023"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2022-04-09T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "b581fb8dea9dd40f268415f354db9f8eaec07b93ceccd6118658b877fab559f5",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject002",
+        "imageStudy": [
+            {
+                "imageStudyId": "img002",
+                "disease": {
+                    "ageAtDiagnosis": "44.3",
+                    "dateOfFirstTreatment": "2023-10-27T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d002",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t002",
+                        "KI67": "9",
+                        "PSA": "0.3"
+                    },
+                    "yearOfDiagnosis": "2022"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2018-10-20T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "7df8087e4adc9583ef2725588a71946d99a77f1927844488250c3f81f2e9f53b",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject003",
+        "imageStudy": [
+            {
+                "imageStudyId": "img003",
+                "disease": {
+                    "ageAtDiagnosis": "29.9",
+                    "dateOfFirstTreatment": "2021-10-21T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d003",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t003",
+                        "KI67": "9.2",
+                        "PSA": "0.8"
+                    },
+                    "yearOfDiagnosis": "2020"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2016-07-22T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "badf87765c3b58ce4250b2a881b591426f36ee5d1898b854010b8a61dfa61605",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject004",
+        "imageStudy": [
+            {
+                "imageStudyId": "img004",
+                "disease": {
+                    "ageAtDiagnosis": "77.2",
+                    "dateOfFirstTreatment": "2015-07-21T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d004",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t004",
+                        "KI67": "5.6",
+                        "PSA": "0.6"
+                    },
+                    "yearOfDiagnosis": "2014"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2024-08-10T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "6a20e12e6ca125e50bc7835e26406f75ffdda6b956442258cd32e424b4a73efc",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject005",
+        "imageStudy": [
+            {
+                "imageStudyId": "img005",
+                "disease": {
+                    "ageAtDiagnosis": "83.3",
+                    "dateOfFirstTreatment": "2023-08-24T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d005",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t005",
+                        "KI67": "3.5",
+                        "PSA": "0.4"
+                    },
+                    "yearOfDiagnosis": "2022"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2015-03-13T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "6bc75c15f9b891200b5a06302f965cb38637c3c4be63a3d5889bcf8d26dff986",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject006",
+        "imageStudy": [
+            {
+                "imageStudyId": "img006",
+                "disease": {
+                    "ageAtDiagnosis": "37.3",
+                    "dateOfFirstTreatment": "2021-06-04T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d006",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t006",
+                        "KI67": "9.1",
+                        "PSA": "0.5"
+                    },
+                    "yearOfDiagnosis": "2020"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2018-11-08T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "56ba5f961c4951b19f114f4935af0ce20c344913a1b6d42949f6420206a4c6ca",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject007",
+        "imageStudy": [
+            {
+                "imageStudyId": "img007",
+                "disease": {
+                    "ageAtDiagnosis": "83.2",
+                    "dateOfFirstTreatment": "2015-02-05T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d007",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t007",
+                        "KI67": "3.4",
+                        "PSA": "0.7"
+                    },
+                    "yearOfDiagnosis": "2014"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2020-06-11T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "67566e4833b10eb2ae8f718bfe47415cb24bd8dd51f7a7c6e0436e34d85478a5",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject008",
+        "imageStudy": [
+            {
+                "imageStudyId": "img008",
+                "disease": {
+                    "ageAtDiagnosis": "53.7",
+                    "dateOfFirstTreatment": "2020-09-27T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d008",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t008",
+                        "KI67": "3.9",
+                        "PSA": "0.5"
+                    },
+                    "yearOfDiagnosis": "2019"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2022-02-14T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "5355216338faa45efd469cf3049fd3fc4c78943c4cbf46493c524beced56df3c",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject009",
+        "imageStudy": [
+            {
+                "imageStudyId": "img009",
+                "disease": {
+                    "ageAtDiagnosis": "46.4",
+                    "dateOfFirstTreatment": "2020-09-23T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d009",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t009",
+                        "KI67": "4.3",
+                        "PSA": "0.4"
+                    },
+                    "yearOfDiagnosis": "2019"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2020-06-02T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "b2722fee4f5a90c55c77085116f60f5bee68cf1e31e563ff1964a194b4de4201",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject010",
+        "imageStudy": [
+            {
+                "imageStudyId": "img010",
+                "disease": {
+                    "ageAtDiagnosis": "94.7",
+                    "dateOfFirstTreatment": "2023-05-09T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d010",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t010",
+                        "KI67": "1.9",
+                        "PSA": "0.4"
+                    },
+                    "yearOfDiagnosis": "2022"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2021-04-04T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "3c9ef6b631920fe9754782d059963ecc1d3ebe4f510c56b68e912b87b93a9901",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject011",
+        "imageStudy": [
+            {
+                "imageStudyId": "img011",
+                "disease": {
+                    "ageAtDiagnosis": "69.8",
+                    "dateOfFirstTreatment": "2023-12-02T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d011",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t011",
+                        "KI67": "6.9",
+                        "PSA": "0.3"
+                    },
+                    "yearOfDiagnosis": "2022"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2025-03-22T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "f8a70a0541c34938b4932e2cab109e8ce518c270c445f22754768e717e26b5dc",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject012",
+        "imageStudy": [
+            {
+                "imageStudyId": "img012",
+                "disease": {
+                    "ageAtDiagnosis": "83.1",
+                    "dateOfFirstTreatment": "2022-02-01T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d012",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t012",
+                        "KI67": "0",
+                        "PSA": "0.2"
+                    },
+                    "yearOfDiagnosis": "2021"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2017-11-16T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "efac8fa8c88faf609e9718e8030d5f8e6b78096b2c8e59cb95b30cab28038e20",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject013",
+        "imageStudy": [
+            {
+                "imageStudyId": "img013",
+                "disease": {
+                    "ageAtDiagnosis": "44.5",
+                    "dateOfFirstTreatment": "2018-02-19T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d013",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t013",
+                        "KI67": "6.2",
+                        "PSA": "0.6"
+                    },
+                    "yearOfDiagnosis": "2017"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2018-02-25T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "16e618cb1329ab830a7f5623a4101fcfe46c0eda1ba191ec74f254dc47504453",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject014",
+        "imageStudy": [
+            {
+                "imageStudyId": "img014",
+                "disease": {
+                    "ageAtDiagnosis": "74.3",
+                    "dateOfFirstTreatment": "2019-03-12T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d014",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t014",
+                        "KI67": "2",
+                        "PSA": "0.5"
+                    },
+                    "yearOfDiagnosis": "2018"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2020-05-14T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "76a676c2e1b2d366548b745ac4724545a1697648aff827e9c0e6b7febbc19939",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject015",
+        "imageStudy": [
+            {
+                "imageStudyId": "img015",
+                "disease": {
+                    "ageAtDiagnosis": "64.5",
+                    "dateOfFirstTreatment": "2021-07-04T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d015",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t015",
+                        "KI67": "4",
+                        "PSA": "0.5"
+                    },
+                    "yearOfDiagnosis": "2020"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2024-06-19T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "5d69cfde9f5b23d9ea305beed51c6b1c0b8d95fbb63a72fd0e3e4d5613507533",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject016",
+        "imageStudy": [
+            {
+                "imageStudyId": "img016",
+                "disease": {
+                    "ageAtDiagnosis": "36.4",
+                    "dateOfFirstTreatment": "2021-03-09T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d016",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t016",
+                        "KI67": "0.8",
+                        "PSA": "0"
+                    },
+                    "yearOfDiagnosis": "2020"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2021-07-13T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001288",
+            "label": "Unspecified"
+        },
+        "_id": "3b963ce7c8bbf39b76a427c095e8e943e8ac2d368df763ee7ed61dd781cd90ae",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject017",
+        "imageStudy": [
+            {
+                "imageStudyId": "img017",
+                "disease": {
+                    "ageAtDiagnosis": "50.8",
+                    "dateOfFirstTreatment": "2015-03-20T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d017",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t017",
+                        "KI67": "2.2",
+                        "PSA": "0"
+                    },
+                    "yearOfDiagnosis": "2014"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2021-11-07T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001288",
+            "label": "Unspecified"
+        },
+        "_id": "c8b3b5c1107a5425e802f4157c3544b129913c5f5dcedf93266304046fa42d3e",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject018",
+        "imageStudy": [
+            {
+                "imageStudyId": "img018",
+                "disease": {
+                    "ageAtDiagnosis": "94.2",
+                    "dateOfFirstTreatment": "2019-02-27T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d018",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t018",
+                        "KI67": "4",
+                        "PSA": "0"
+                    },
+                    "yearOfDiagnosis": "2018"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2016-03-21T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001288",
+            "label": "Unspecified"
+        },
+        "_id": "6e56688aa2b6881cc515a6b4870039e7669a2f463d1c983d82278257eb2f88fe",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject019",
+        "imageStudy": [
+            {
+                "imageStudyId": "img019",
+                "disease": {
+                    "ageAtDiagnosis": "64.8",
+                    "dateOfFirstTreatment": "2018-09-24T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d019",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t019",
+                        "KI67": "0.2",
+                        "PSA": "0"
+                    },
+                    "yearOfDiagnosis": "2017"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2025-02-20T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "35c54ce7b470a2375542f8be3eb0f7793b492fe2603fc12e6ca407640da38b53",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject020",
+        "imageStudy": [
+            {
+                "imageStudyId": "img020",
+                "disease": {
+                    "ageAtDiagnosis": "65.9",
+                    "dateOfFirstTreatment": "2021-10-07T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d020",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t020",
+                        "KI67": "6.9",
+                        "PSA": "0.1"
+                    },
+                    "yearOfDiagnosis": "2020"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2019-08-10T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001288",
+            "label": "Unspecified"
+        },
+        "_id": "086672a2c1fcf73ac041198ba92fb016fcc8bd2feb1e3e7dc21615423d17c495",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject021",
+        "imageStudy": [
+            {
+                "imageStudyId": "img021",
+                "disease": {
+                    "ageAtDiagnosis": "55.3",
+                    "dateOfFirstTreatment": "2024-09-25T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d021",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t021",
+                        "KI67": "6.9",
+                        "PSA": "0.6"
+                    },
+                    "yearOfDiagnosis": "2023"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2015-10-14T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "66433fcc4df1ad50bd4eb07d271753db3581bf503e0d9f0d656c029391a6d9b6",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject022",
+        "imageStudy": [
+            {
+                "imageStudyId": "img022",
+                "disease": {
+                    "ageAtDiagnosis": "63.2",
+                    "dateOfFirstTreatment": "2016-02-19T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d022",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t022",
+                        "KI67": "0.3",
+                        "PSA": "0.2"
+                    },
+                    "yearOfDiagnosis": "2015"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2024-08-01T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "2522a1115a43783b53c73353006ac30f0ee9084e910e60ea30a9075a46372f71",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject023",
+        "imageStudy": [
+            {
+                "imageStudyId": "img023",
+                "disease": {
+                    "ageAtDiagnosis": "31.2",
+                    "dateOfFirstTreatment": "2020-02-05T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d023",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t023",
+                        "KI67": "9.2",
+                        "PSA": "0.2"
+                    },
+                    "yearOfDiagnosis": "2019"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2020-03-18T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "7202d5be8e3f3bda64880a6bc73e50d3338f5206a7c4c5a44112991e9023400b",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject024",
+        "imageStudy": [
+            {
+                "imageStudyId": "img024",
+                "disease": {
+                    "ageAtDiagnosis": "94.5",
+                    "dateOfFirstTreatment": "2021-03-17T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d024",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t024",
+                        "KI67": "8.9",
+                        "PSA": "0.1"
+                    },
+                    "yearOfDiagnosis": "2020"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2017-01-15T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "107909a4476252297353a055e8d15636bf2e1e38a39c8de4080a5c78e6a7fc87",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject025",
+        "imageStudy": [
+            {
+                "imageStudyId": "img025",
+                "disease": {
+                    "ageAtDiagnosis": "32.3",
+                    "dateOfFirstTreatment": "2022-04-08T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d025",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t025",
+                        "KI67": "8.7",
+                        "PSA": "0.5"
+                    },
+                    "yearOfDiagnosis": "2021"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2017-06-12T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "46d773fa7c73a1c24b5a99a9df4f2730749ce4884298452835c79c8aed6c8d2c",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject026",
+        "imageStudy": [
+            {
+                "imageStudyId": "img026",
+                "disease": {
+                    "ageAtDiagnosis": "47.2",
+                    "dateOfFirstTreatment": "2017-12-27T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d026",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t026",
+                        "KI67": "1.4",
+                        "PSA": "0"
+                    },
+                    "yearOfDiagnosis": "2016"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2015-06-11T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "d5d3c7ff20f3d1d3185fefc05d51db4a8467205ff1ead7e28a0a38cfb05fce14",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject027",
+        "imageStudy": [
+            {
+                "imageStudyId": "img027",
+                "disease": {
+                    "ageAtDiagnosis": "76.8",
+                    "dateOfFirstTreatment": "2016-09-04T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d027",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t027",
+                        "KI67": "9.1",
+                        "PSA": "0.4"
+                    },
+                    "yearOfDiagnosis": "2015"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2018-09-11T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "12c648b7aff8160c3914778d2c3a1dbc9063f7cc5fc194e09a46033f7b51d0ae",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject028",
+        "imageStudy": [
+            {
+                "imageStudyId": "img028",
+                "disease": {
+                    "ageAtDiagnosis": "46.6",
+                    "dateOfFirstTreatment": "2023-11-16T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d028",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t028",
+                        "KI67": "7.2",
+                        "PSA": "0.4"
+                    },
+                    "yearOfDiagnosis": "2022"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2022-09-19T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "dbe94a8111265dd837dbc2cdbdfb11a70f2d8941927d3e301497184e91b9eeb5",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject029",
+        "imageStudy": [
+            {
+                "imageStudyId": "img029",
+                "disease": {
+                    "ageAtDiagnosis": "74.2",
+                    "dateOfFirstTreatment": "2025-04-22T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d029",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t029",
+                        "KI67": "4.8",
+                        "PSA": "0.3"
+                    },
+                    "yearOfDiagnosis": "2024"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2024-12-17T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "5b6d6b05ac101965f55e3d2a308ef871dd796663b3dacedce0d55af0960ec252",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject030",
+        "imageStudy": [
+            {
+                "imageStudyId": "img030",
+                "disease": {
+                    "ageAtDiagnosis": "84.5",
+                    "dateOfFirstTreatment": "2022-05-13T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d030",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t030",
+                        "KI67": "9",
+                        "PSA": "0.9"
+                    },
+                    "yearOfDiagnosis": "2021"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2024-12-19T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "a938d4e72e16dcc1838584b22f35ab13c2fa2ee4a73f0e242103009cd728d022",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject031",
+        "imageStudy": [
+            {
+                "imageStudyId": "img031",
+                "disease": {
+                    "ageAtDiagnosis": "73.9",
+                    "dateOfFirstTreatment": "2015-01-09T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d031",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t031",
+                        "KI67": "8.8",
+                        "PSA": "0"
+                    },
+                    "yearOfDiagnosis": "2014"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2024-02-27T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "47e821cedd17c9714d6d6d9843194a7a6b6e19c4e4c45f5afb90daa3c6642919",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject032",
+        "imageStudy": [
+            {
+                "imageStudyId": "img032",
+                "disease": {
+                    "ageAtDiagnosis": "31.3",
+                    "dateOfFirstTreatment": "2025-05-18T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d032",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t032",
+                        "KI67": "5.9",
+                        "PSA": "0.8"
+                    },
+                    "yearOfDiagnosis": "2024"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2021-09-03T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "5da680a5897fbea2e08e3959b38dcc635a79ec54fbd28a2174c4b79971a6716f",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject033",
+        "imageStudy": [
+            {
+                "imageStudyId": "img033",
+                "disease": {
+                    "ageAtDiagnosis": "74.4",
+                    "dateOfFirstTreatment": "2022-10-26T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d033",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t033",
+                        "KI67": "9.5",
+                        "PSA": "0.7"
+                    },
+                    "yearOfDiagnosis": "2021"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2025-12-27T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "4d4eef6c92c05f5bc90ab5665d57d8d997bd4381e48a5fa6f0312b58b21cf61a",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject034",
+        "imageStudy": [
+            {
+                "imageStudyId": "img034",
+                "disease": {
+                    "ageAtDiagnosis": "21.9",
+                    "dateOfFirstTreatment": "2022-03-05T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d034",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t034",
+                        "KI67": "5.3",
+                        "PSA": "0.4"
+                    },
+                    "yearOfDiagnosis": "2021"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2025-10-01T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "6723cd7d1de03f508914954af5f1b0967f2d96b790775fd9ec1e7aedfe718153",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject035",
+        "imageStudy": [
+            {
+                "imageStudyId": "img035",
+                "disease": {
+                    "ageAtDiagnosis": "61.6",
+                    "dateOfFirstTreatment": "2024-08-05T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d035",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t035",
+                        "KI67": "7.4",
+                        "PSA": "0.9"
+                    },
+                    "yearOfDiagnosis": "2023"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2015-07-15T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "cb3d05dd7d584664ac224d3f3c8b475e12868bc869b6ad12ca96998e86089a24",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject036",
+        "imageStudy": [
+            {
+                "imageStudyId": "img036",
+                "disease": {
+                    "ageAtDiagnosis": "91.7",
+                    "dateOfFirstTreatment": "2023-06-09T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d036",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t036",
+                        "KI67": "5.7",
+                        "PSA": "0.4"
+                    },
+                    "yearOfDiagnosis": "2022"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2022-04-07T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "6e0b3d82621dc9014d30e075678706f2c9a80db7e82c55eab66b306215a1651b",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject037",
+        "imageStudy": [
+            {
+                "imageStudyId": "img037",
+                "disease": {
+                    "ageAtDiagnosis": "77.3",
+                    "dateOfFirstTreatment": "2020-08-13T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d037",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t037",
+                        "KI67": "6.7",
+                        "PSA": "0.3"
+                    },
+                    "yearOfDiagnosis": "2019"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2019-04-18T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "d80d751cb934acfa5a57630438fcc5536146de1b0d46431569b0f38a19033379",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject038",
+        "imageStudy": [
+            {
+                "imageStudyId": "img038",
+                "disease": {
+                    "ageAtDiagnosis": "63.4",
+                    "dateOfFirstTreatment": "2016-05-05T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d038",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t038",
+                        "KI67": "7.9",
+                        "PSA": "0.6"
+                    },
+                    "yearOfDiagnosis": "2015"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2022-07-18T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "04d9e6ec3fdde3ee27bd5c1c326aef4dc416fdf004792a2eef70957eeff85430",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject039",
+        "imageStudy": [
+            {
+                "imageStudyId": "img039",
+                "disease": {
+                    "ageAtDiagnosis": "21.1",
+                    "dateOfFirstTreatment": "2022-11-28T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d039",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t039",
+                        "KI67": "4.4",
+                        "PSA": "0.1"
+                    },
+                    "yearOfDiagnosis": "2021"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2016-07-23T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "3ce46a9fe39634920c556d5b7c986ea0b5051dd5502b2084f1b69357e8bdd202",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject040",
+        "imageStudy": [
+            {
+                "imageStudyId": "img040",
+                "disease": {
+                    "ageAtDiagnosis": "82.7",
+                    "dateOfFirstTreatment": "2016-06-28T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d040",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t040",
+                        "KI67": "0.5",
+                        "PSA": "0"
+                    },
+                    "yearOfDiagnosis": "2015"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2019-10-17T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "a721e5b1108fb92d3cbfc119bf86811b1da57a055ef99b7adff828ce5b96e194",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject041",
+        "imageStudy": [
+            {
+                "imageStudyId": "img041",
+                "disease": {
+                    "ageAtDiagnosis": "46.5",
+                    "dateOfFirstTreatment": "2018-12-17T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d041",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t041",
+                        "KI67": "5.3",
+                        "PSA": "0.8"
+                    },
+                    "yearOfDiagnosis": "2017"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2017-06-13T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001288",
+            "label": "Unspecified"
+        },
+        "_id": "f529eb421eb95100dac448f779b67fd7f52e584f4d855320c7c5cd82997914d7",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject042",
+        "imageStudy": [
+            {
+                "imageStudyId": "img042",
+                "disease": {
+                    "ageAtDiagnosis": "19.1",
+                    "dateOfFirstTreatment": "2023-03-13T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d042",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t042",
+                        "KI67": "2.5",
+                        "PSA": "0.9"
+                    },
+                    "yearOfDiagnosis": "2022"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2025-02-02T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001288",
+            "label": "Unspecified"
+        },
+        "_id": "7aec15f8f787451f673de6dea727c03ded4d52d941122c7fe8e5031add804f1b",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject043",
+        "imageStudy": [
+            {
+                "imageStudyId": "img043",
+                "disease": {
+                    "ageAtDiagnosis": "84.2",
+                    "dateOfFirstTreatment": "2023-11-20T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d043",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t043",
+                        "KI67": "1.7",
+                        "PSA": "0"
+                    },
+                    "yearOfDiagnosis": "2022"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2025-03-09T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "80829f51ff6c6aec348ff438381944cf7a6730fbbe01e820a2ad877fc24740b0",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject044",
+        "imageStudy": [
+            {
+                "imageStudyId": "img044",
+                "disease": {
+                    "ageAtDiagnosis": "71.4",
+                    "dateOfFirstTreatment": "2020-12-12T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d044",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t044",
+                        "KI67": "5.1",
+                        "PSA": "0.6"
+                    },
+                    "yearOfDiagnosis": "2019"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2023-11-23T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "da4226e11fa772382cb69c1eb1207a78af82ec1743b8b6e415e3407df67826a6",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject045",
+        "imageStudy": [
+            {
+                "imageStudyId": "img045",
+                "disease": {
+                    "ageAtDiagnosis": "78.2",
+                    "dateOfFirstTreatment": "2022-09-18T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d045",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t045",
+                        "KI67": "9.9",
+                        "PSA": "0.1"
+                    },
+                    "yearOfDiagnosis": "2021"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2020-12-13T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "bdeef5d4c2ceeab8a67fca6e27d02858f1d3aaa53dd77255c1389f74af83b826",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject046",
+        "imageStudy": [
+            {
+                "imageStudyId": "img046",
+                "disease": {
+                    "ageAtDiagnosis": "34",
+                    "dateOfFirstTreatment": "2019-10-26T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d046",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t046",
+                        "KI67": "7.7",
+                        "PSA": "0.6"
+                    },
+                    "yearOfDiagnosis": "2018"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2025-12-21T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "71dac32b48f3c59b39b54f8542befb2639da18d5e3c0efd9d23e4c3efc91f094",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject047",
+        "imageStudy": [
+            {
+                "imageStudyId": "img047",
+                "disease": {
+                    "ageAtDiagnosis": "81.9",
+                    "dateOfFirstTreatment": "2019-10-08T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d047",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t047",
+                        "KI67": "6.7",
+                        "PSA": "0.8"
+                    },
+                    "yearOfDiagnosis": "2018"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2020-02-04T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001288",
+            "label": "Unspecified"
+        },
+        "_id": "8933aad67366e9ff656690ff367fb3c7525b03889673bc0befe72f82a7c5590c",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject048",
+        "imageStudy": [
+            {
+                "imageStudyId": "img048",
+                "disease": {
+                    "ageAtDiagnosis": "40.8",
+                    "dateOfFirstTreatment": "2020-05-01T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d048",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t048",
+                        "KI67": "9.9",
+                        "PSA": "0.3"
+                    },
+                    "yearOfDiagnosis": "2019"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2017-08-20T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "402524627b3159c6cb300c4235cc138c4ecb87f9d184cf35cf509e433323d5ff",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject049",
+        "imageStudy": [
+            {
+                "imageStudyId": "img049",
+                "disease": {
+                    "ageAtDiagnosis": "49",
+                    "dateOfFirstTreatment": "2024-03-19T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d049",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t049",
+                        "KI67": "9.4",
+                        "PSA": "0.6"
+                    },
+                    "yearOfDiagnosis": "2023"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2015-01-21T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001288",
+            "label": "Unspecified"
+        },
+        "_id": "3f2790115bcf4aaf634e253dab85197c88db4afd3801148f4e8c0cc165e5d172",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject050",
+        "imageStudy": [
+            {
+                "imageStudyId": "img050",
+                "disease": {
+                    "ageAtDiagnosis": "66.3",
+                    "dateOfFirstTreatment": "2021-03-16T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d050",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t050",
+                        "KI67": "5.6",
+                        "PSA": "0.3"
+                    },
+                    "yearOfDiagnosis": "2020"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2023-11-11T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001288",
+            "label": "Unspecified"
+        },
+        "_id": "9fd418274ae39c718bf6db20919f160f1566f2d4feafef26fc09d4f51de45395",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject051",
+        "imageStudy": [
+            {
+                "imageStudyId": "img051",
+                "disease": {
+                    "ageAtDiagnosis": "20.8",
+                    "dateOfFirstTreatment": "2023-04-12T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d051",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t051",
+                        "KI67": "1.8",
+                        "PSA": "0.1"
+                    },
+                    "yearOfDiagnosis": "2022"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2021-01-27T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001288",
+            "label": "Unspecified"
+        },
+        "_id": "5bf482cf8f8bb3b1e35c7a707bdf752f19afae7f338187d6acf1579d31abd2d7",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject052",
+        "imageStudy": [
+            {
+                "imageStudyId": "img052",
+                "disease": {
+                    "ageAtDiagnosis": "66.9",
+                    "dateOfFirstTreatment": "2019-10-23T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d052",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t052",
+                        "KI67": "1.8",
+                        "PSA": "0.6"
+                    },
+                    "yearOfDiagnosis": "2018"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2024-06-20T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001288",
+            "label": "Unspecified"
+        },
+        "_id": "501d03487d86afbf63b86b7c62e94860bb8d83a6cea20ee6bc197ab0c5530781",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject053",
+        "imageStudy": [
+            {
+                "imageStudyId": "img053",
+                "disease": {
+                    "ageAtDiagnosis": "70.3",
+                    "dateOfFirstTreatment": "2017-07-21T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d053",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t053",
+                        "KI67": "8.5",
+                        "PSA": "0.1"
+                    },
+                    "yearOfDiagnosis": "2016"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2022-01-15T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "2240b9fbffd9e13ba0cd5547908089c8b62dc8137195fb52e9d650e9d311327a",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject054",
+        "imageStudy": [
+            {
+                "imageStudyId": "img054",
+                "disease": {
+                    "ageAtDiagnosis": "87.5",
+                    "dateOfFirstTreatment": "2022-12-24T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d054",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t054",
+                        "KI67": "6.6",
+                        "PSA": "0.8"
+                    },
+                    "yearOfDiagnosis": "2021"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2023-02-12T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001288",
+            "label": "Unspecified"
+        },
+        "_id": "e17d1f9cac61844e2468a61fa89079d6dc711aa6c93db818563dc3eb5f46cad8",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject055",
+        "imageStudy": [
+            {
+                "imageStudyId": "img055",
+                "disease": {
+                    "ageAtDiagnosis": "81.4",
+                    "dateOfFirstTreatment": "2020-09-09T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d055",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t055",
+                        "KI67": "5",
+                        "PSA": "0.2"
+                    },
+                    "yearOfDiagnosis": "2019"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2023-10-16T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "165fb2d84efb6fcf01a8c7c7885b03086e911166f013b7c57bf1d295386c4597",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject056",
+        "imageStudy": [
+            {
+                "imageStudyId": "img056",
+                "disease": {
+                    "ageAtDiagnosis": "78.3",
+                    "dateOfFirstTreatment": "2024-10-01T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d056",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t056",
+                        "KI67": "2.1",
+                        "PSA": "0.1"
+                    },
+                    "yearOfDiagnosis": "2023"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2015-12-09T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001288",
+            "label": "Unspecified"
+        },
+        "_id": "88922d283800ef7502d4cb6251fa0323b7e81e48a4f7a03ddb942c09029258b1",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject057",
+        "imageStudy": [
+            {
+                "imageStudyId": "img057",
+                "disease": {
+                    "ageAtDiagnosis": "86.7",
+                    "dateOfFirstTreatment": "2023-02-24T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d057",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t057",
+                        "KI67": "3.9",
+                        "PSA": "0.9"
+                    },
+                    "yearOfDiagnosis": "2022"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2021-03-10T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "f623145a87aca548c59f3e9da20e12869bd01ea0e6736be795c5aaf54aef7276",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject058",
+        "imageStudy": [
+            {
+                "imageStudyId": "img058",
+                "disease": {
+                    "ageAtDiagnosis": "55.9",
+                    "dateOfFirstTreatment": "2017-09-18T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d058",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t058",
+                        "KI67": "1.9",
+                        "PSA": "0.1"
+                    },
+                    "yearOfDiagnosis": "2016"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2015-09-14T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "3633f9c1e17347e78c34bfb1f8e72ca9e018b8dfc75e84de9b486df375896647",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject059",
+        "imageStudy": [
+            {
+                "imageStudyId": "img059",
+                "disease": {
+                    "ageAtDiagnosis": "87.6",
+                    "dateOfFirstTreatment": "2021-04-20T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d059",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t059",
+                        "KI67": "6.5",
+                        "PSA": "0.1"
+                    },
+                    "yearOfDiagnosis": "2020"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2016-05-22T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "75acfae842c7dd90e62a24ef99a5fbc296c2303e12017a0b0223e54ac0125135",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject060",
+        "imageStudy": [
+            {
+                "imageStudyId": "img060",
+                "disease": {
+                    "ageAtDiagnosis": "83.3",
+                    "dateOfFirstTreatment": "2025-06-25T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d060",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t060",
+                        "KI67": "0.1",
+                        "PSA": "0.5"
+                    },
+                    "yearOfDiagnosis": "2024"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2020-03-06T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "ffbd437cf04de613802cd0b0d77140224f00cfc620f23961693c46c7f7a41ec9",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject061",
+        "imageStudy": [
+            {
+                "imageStudyId": "img061",
+                "disease": {
+                    "ageAtDiagnosis": "25.4",
+                    "dateOfFirstTreatment": "2016-05-19T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d061",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t061",
+                        "KI67": "4.2",
+                        "PSA": "0.7"
+                    },
+                    "yearOfDiagnosis": "2015"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2025-06-05T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "1f133024e0469d9d5ac28b422ec24dba2ea3598db95ba9c4a7f3e20514bc6cd1",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject062",
+        "imageStudy": [
+            {
+                "imageStudyId": "img062",
+                "disease": {
+                    "ageAtDiagnosis": "62.3",
+                    "dateOfFirstTreatment": "2022-03-18T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d062",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t062",
+                        "KI67": "9.7",
+                        "PSA": "0.3"
+                    },
+                    "yearOfDiagnosis": "2021"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2018-02-22T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "09a298e3b24cdeafbe8b73c2c594f8e74674651d4005cc606162dc3213628be4",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject063",
+        "imageStudy": [
+            {
+                "imageStudyId": "img063",
+                "disease": {
+                    "ageAtDiagnosis": "80.5",
+                    "dateOfFirstTreatment": "2019-08-06T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d063",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t063",
+                        "KI67": "6.8",
+                        "PSA": "0.7"
+                    },
+                    "yearOfDiagnosis": "2018"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2016-11-28T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "f9b92d8bbbbdaae40c65821b4fbc5b169e91a5a24e301fba1afb52cb50209c35",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject064",
+        "imageStudy": [
+            {
+                "imageStudyId": "img064",
+                "disease": {
+                    "ageAtDiagnosis": "32.1",
+                    "dateOfFirstTreatment": "2017-04-28T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d064",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t064",
+                        "KI67": "4",
+                        "PSA": "0.6"
+                    },
+                    "yearOfDiagnosis": "2016"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2024-05-09T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "6354f9d01b45f0326e6831b5abdb29b01475f603c77ff45304cc69a474aa8e2e",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject065",
+        "imageStudy": [
+            {
+                "imageStudyId": "img065",
+                "disease": {
+                    "ageAtDiagnosis": "41.1",
+                    "dateOfFirstTreatment": "2015-01-27T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d065",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t065",
+                        "KI67": "6.2",
+                        "PSA": "0.6"
+                    },
+                    "yearOfDiagnosis": "2014"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2018-09-23T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "7d7638213b1c24aee5d0dba424fcceda1f20feb4c9b1866a2c8f827560d6fc2f",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject066",
+        "imageStudy": [
+            {
+                "imageStudyId": "img066",
+                "disease": {
+                    "ageAtDiagnosis": "58.6",
+                    "dateOfFirstTreatment": "2015-06-23T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d066",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t066",
+                        "KI67": "5.3",
+                        "PSA": "0.7"
+                    },
+                    "yearOfDiagnosis": "2014"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2021-08-05T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "eb2e750be6167a4ddbcc5f1184582dbd363cdd1277e7965430cc1050c6fe7b6a",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject067",
+        "imageStudy": [
+            {
+                "imageStudyId": "img067",
+                "disease": {
+                    "ageAtDiagnosis": "24.5",
+                    "dateOfFirstTreatment": "2024-09-22T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d067",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t067",
+                        "KI67": "5.8",
+                        "PSA": "0.8"
+                    },
+                    "yearOfDiagnosis": "2023"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2022-07-05T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "93fde39ed264a5b5b89ac900d2638b72eec880fd8679c9c1dc23fabc6c69a26f",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject068",
+        "imageStudy": [
+            {
+                "imageStudyId": "img068",
+                "disease": {
+                    "ageAtDiagnosis": "37.5",
+                    "dateOfFirstTreatment": "2025-05-12T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d068",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t068",
+                        "KI67": "2.1",
+                        "PSA": "0"
+                    },
+                    "yearOfDiagnosis": "2024"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2016-08-08T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "9f13cc851fec87ae9a733e87a6b66c36acc77bfa6f6cbb34a28df287b766b5f5",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject069",
+        "imageStudy": [
+            {
+                "imageStudyId": "img069",
+                "disease": {
+                    "ageAtDiagnosis": "48.4",
+                    "dateOfFirstTreatment": "2015-12-15T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d069",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t069",
+                        "KI67": "0.4",
+                        "PSA": "0.6"
+                    },
+                    "yearOfDiagnosis": "2014"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2023-01-28T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "f43ef686778c6ca017d1da96094913319b6416b07285b99c3e6e4c6aa54910bd",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject070",
+        "imageStudy": [
+            {
+                "imageStudyId": "img070",
+                "disease": {
+                    "ageAtDiagnosis": "73.3",
+                    "dateOfFirstTreatment": "2019-10-01T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d070",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t070",
+                        "KI67": "4.5",
+                        "PSA": "0.1"
+                    },
+                    "yearOfDiagnosis": "2018"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2024-08-28T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "c9aab4b1a4affdfa641734bc07776ffbe87b61bb6f8ddb0ee7b878188639cc63",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject071",
+        "imageStudy": [
+            {
+                "imageStudyId": "img071",
+                "disease": {
+                    "ageAtDiagnosis": "23",
+                    "dateOfFirstTreatment": "2015-09-12T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d071",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t071",
+                        "KI67": "7.4",
+                        "PSA": "0.6"
+                    },
+                    "yearOfDiagnosis": "2014"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2016-06-02T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "26cba24acdf4d40a1a6410a55e8d396537f92fe2e7e7ab1dc4cfd2dbc1b5af8b",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject072",
+        "imageStudy": [
+            {
+                "imageStudyId": "img072",
+                "disease": {
+                    "ageAtDiagnosis": "72.8",
+                    "dateOfFirstTreatment": "2023-09-04T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d072",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t072",
+                        "KI67": "6.4",
+                        "PSA": "0.5"
+                    },
+                    "yearOfDiagnosis": "2022"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2015-04-19T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "f3843f293a1f347a0535489e193dbdb9967e371df37a6f9eefaee86d32abf3ec",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject073",
+        "imageStudy": [
+            {
+                "imageStudyId": "img073",
+                "disease": {
+                    "ageAtDiagnosis": "59.1",
+                    "dateOfFirstTreatment": "2015-05-07T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d073",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t073",
+                        "KI67": "2.2",
+                        "PSA": "0.2"
+                    },
+                    "yearOfDiagnosis": "2014"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2021-01-18T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "2fc845e661c935efbcbedb214160ce650bbde73be3ad500efd8de3e56885b131",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject074",
+        "imageStudy": [
+            {
+                "imageStudyId": "img074",
+                "disease": {
+                    "ageAtDiagnosis": "34.1",
+                    "dateOfFirstTreatment": "2022-12-21T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d074",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t074",
+                        "KI67": "0.6",
+                        "PSA": "0.3"
+                    },
+                    "yearOfDiagnosis": "2021"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2016-10-13T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "142b14b0b141672ceeecb0ac84c37fc90df0df51346a2113c6af3b8bbc0d7df4",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject075",
+        "imageStudy": [
+            {
+                "imageStudyId": "img075",
+                "disease": {
+                    "ageAtDiagnosis": "19.1",
+                    "dateOfFirstTreatment": "2022-05-01T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d075",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t075",
+                        "KI67": "5.2",
+                        "PSA": "0.8"
+                    },
+                    "yearOfDiagnosis": "2021"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2019-11-09T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "f231709f1f29df937f3260e8e7dbf495298cc3d63ce946b7841f7adda382509b",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject076",
+        "imageStudy": [
+            {
+                "imageStudyId": "img076",
+                "disease": {
+                    "ageAtDiagnosis": "45.3",
+                    "dateOfFirstTreatment": "2017-09-05T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d076",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t076",
+                        "KI67": "6.4",
+                        "PSA": "0.2"
+                    },
+                    "yearOfDiagnosis": "2016"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2016-12-13T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "7290587762a925cf506657c22733a15f6717b9b991507afac09262a6fe593978",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject077",
+        "imageStudy": [
+            {
+                "imageStudyId": "img077",
+                "disease": {
+                    "ageAtDiagnosis": "81.5",
+                    "dateOfFirstTreatment": "2025-01-24T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d077",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t077",
+                        "KI67": "8.5",
+                        "PSA": "0.3"
+                    },
+                    "yearOfDiagnosis": "2024"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2018-11-06T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "c45ac44f11528e6c6719d59e8c27442e18e6bde2107ed8f46ddccd0d6ab353ab",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject078",
+        "imageStudy": [
+            {
+                "imageStudyId": "img078",
+                "disease": {
+                    "ageAtDiagnosis": "33",
+                    "dateOfFirstTreatment": "2021-09-20T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d078",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t078",
+                        "KI67": "7.9",
+                        "PSA": "0.8"
+                    },
+                    "yearOfDiagnosis": "2020"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2021-07-06T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "833f4e832a56d2fcc90af04c6b18f3dcdb91214ee5babec1d4cc51fb85ad61ca",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject079",
+        "imageStudy": [
+            {
+                "imageStudyId": "img079",
+                "disease": {
+                    "ageAtDiagnosis": "37.7",
+                    "dateOfFirstTreatment": "2024-05-06T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d079",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t079",
+                        "KI67": "0.5",
+                        "PSA": "0"
+                    },
+                    "yearOfDiagnosis": "2023"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2015-04-04T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "1f2ef26d6b68a1b91ceb780aa8880d8fff53d12f3865f80f246ca273b8471e46",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject080",
+        "imageStudy": [
+            {
+                "imageStudyId": "img080",
+                "disease": {
+                    "ageAtDiagnosis": "54.4",
+                    "dateOfFirstTreatment": "2015-12-16T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d080",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t080",
+                        "KI67": "5.7",
+                        "PSA": "0.4"
+                    },
+                    "yearOfDiagnosis": "2014"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2023-12-07T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "a0ab13c90838e73f52fdd1722dada9da0fab3b023247e2d6c87249563d8cc1d3",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject081",
+        "imageStudy": [
+            {
+                "imageStudyId": "img081",
+                "disease": {
+                    "ageAtDiagnosis": "40.9",
+                    "dateOfFirstTreatment": "2016-03-23T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d081",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t081",
+                        "KI67": "2.9",
+                        "PSA": "0.9"
+                    },
+                    "yearOfDiagnosis": "2015"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2022-11-17T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "68b3680b058f51a8ec08b2f0816fc00be1add6b7a89c4a6641bd9e5bcb2eb25c",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject082",
+        "imageStudy": [
+            {
+                "imageStudyId": "img082",
+                "disease": {
+                    "ageAtDiagnosis": "25.9",
+                    "dateOfFirstTreatment": "2025-07-10T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d082",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t082",
+                        "KI67": "1.9",
+                        "PSA": "0.6"
+                    },
+                    "yearOfDiagnosis": "2024"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2021-01-12T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "91e5a8f3ff04b1a8dc91fbf7126364383104f60a6ac2113f2d9ae2c112f32e85",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject083",
+        "imageStudy": [
+            {
+                "imageStudyId": "img083",
+                "disease": {
+                    "ageAtDiagnosis": "28.5",
+                    "dateOfFirstTreatment": "2018-02-11T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d083",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t083",
+                        "KI67": "6.9",
+                        "PSA": "0.2"
+                    },
+                    "yearOfDiagnosis": "2017"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2021-01-11T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "6d6ab526a5704696ec1ac1f6533b3dd846a5c3027b14e2583c48db2bd7e51b47",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject084",
+        "imageStudy": [
+            {
+                "imageStudyId": "img084",
+                "disease": {
+                    "ageAtDiagnosis": "73.2",
+                    "dateOfFirstTreatment": "2025-07-15T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d084",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t084",
+                        "KI67": "3.3",
+                        "PSA": "0"
+                    },
+                    "yearOfDiagnosis": "2024"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2017-04-10T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "cad9f43556443af919c75bd7eefa1626a95b99ebbd0a98907437b966762548e8",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject085",
+        "imageStudy": [
+            {
+                "imageStudyId": "img085",
+                "disease": {
+                    "ageAtDiagnosis": "51.4",
+                    "dateOfFirstTreatment": "2020-10-02T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d085",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t085",
+                        "KI67": "0.5",
+                        "PSA": "0"
+                    },
+                    "yearOfDiagnosis": "2019"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2020-04-03T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001288",
+            "label": "Unspecified"
+        },
+        "_id": "70d391fd349377cb42670f487ba22ea4915ec65486b973a84b2eb74bbc14609c",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject086",
+        "imageStudy": [
+            {
+                "imageStudyId": "img086",
+                "disease": {
+                    "ageAtDiagnosis": "83.5",
+                    "dateOfFirstTreatment": "2020-06-26T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d086",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t086",
+                        "KI67": "6.1",
+                        "PSA": "0.6"
+                    },
+                    "yearOfDiagnosis": "2019"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2020-06-22T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "93b4d79aee154c4fb05a8cfd7521a35a4e440557deebed7f68c2d3a991b588e3",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject087",
+        "imageStudy": [
+            {
+                "imageStudyId": "img087",
+                "disease": {
+                    "ageAtDiagnosis": "91.6",
+                    "dateOfFirstTreatment": "2024-11-17T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d087",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t087",
+                        "KI67": "4.5",
+                        "PSA": "0.5"
+                    },
+                    "yearOfDiagnosis": "2023"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2022-06-27T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "558b529ac4b9a4e45867a4ae155336cccee7f311e57dc2f8976b80954120215c",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject088",
+        "imageStudy": [
+            {
+                "imageStudyId": "img088",
+                "disease": {
+                    "ageAtDiagnosis": "77.1",
+                    "dateOfFirstTreatment": "2024-08-01T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d088",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t088",
+                        "KI67": "7.3",
+                        "PSA": "0.2"
+                    },
+                    "yearOfDiagnosis": "2023"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2024-10-13T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "9e3b6f3f5e1ab03b3932c0cd7a73433dbcf45bd31c305f878c6d109f67021d99",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject089",
+        "imageStudy": [
+            {
+                "imageStudyId": "img089",
+                "disease": {
+                    "ageAtDiagnosis": "50",
+                    "dateOfFirstTreatment": "2023-06-05T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d089",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t089",
+                        "KI67": "7.4",
+                        "PSA": "0.8"
+                    },
+                    "yearOfDiagnosis": "2022"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2018-03-11T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "75bbe4a8d9941257537c01c0f680ba296a44997d0c9e8a24cd95fdbf7afa2889",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject090",
+        "imageStudy": [
+            {
+                "imageStudyId": "img090",
+                "disease": {
+                    "ageAtDiagnosis": "66.1",
+                    "dateOfFirstTreatment": "2023-01-05T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d090",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t090",
+                        "KI67": "2.3",
+                        "PSA": "0.4"
+                    },
+                    "yearOfDiagnosis": "2022"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2015-03-18T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "afd94fce2c0e69c5df123d70541860d3fa5f0730b1036ad0c20e44e10d97d61d",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject091",
+        "imageStudy": [
+            {
+                "imageStudyId": "img091",
+                "disease": {
+                    "ageAtDiagnosis": "69.3",
+                    "dateOfFirstTreatment": "2021-05-28T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d091",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t091",
+                        "KI67": "2.7",
+                        "PSA": "0.1"
+                    },
+                    "yearOfDiagnosis": "2020"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2019-09-28T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "1236ce47240c84d6d199f0d8d594b20bd962e73ff912c1ee2894b2e543cd46c2",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject092",
+        "imageStudy": [
+            {
+                "imageStudyId": "img092",
+                "disease": {
+                    "ageAtDiagnosis": "41.2",
+                    "dateOfFirstTreatment": "2016-05-03T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d092",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t092",
+                        "KI67": "7.6",
+                        "PSA": "0.3"
+                    },
+                    "yearOfDiagnosis": "2015"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2017-05-24T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "bd3e9fb0ade56fa20b01a961fb27a4e83876197db9da889916906f8fa995199d",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject093",
+        "imageStudy": [
+            {
+                "imageStudyId": "img093",
+                "disease": {
+                    "ageAtDiagnosis": "32.7",
+                    "dateOfFirstTreatment": "2023-09-03T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d093",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t093",
+                        "KI67": "8.3",
+                        "PSA": "0.5"
+                    },
+                    "yearOfDiagnosis": "2022"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2025-08-18T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "93a79cce54b0998f5cf2d88aadb8c89af58ea1fc5cb6abd8f9db64a4f2baff85",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject094",
+        "imageStudy": [
+            {
+                "imageStudyId": "img094",
+                "disease": {
+                    "ageAtDiagnosis": "68.6",
+                    "dateOfFirstTreatment": "2023-05-09T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d094",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t094",
+                        "KI67": "4",
+                        "PSA": "0.9"
+                    },
+                    "yearOfDiagnosis": "2022"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2022-03-04T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "11745d1df857c1207d66a53591e965be78f0e30033989bd71c17159cbb8e319f",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject095",
+        "imageStudy": [
+            {
+                "imageStudyId": "img095",
+                "disease": {
+                    "ageAtDiagnosis": "57",
+                    "dateOfFirstTreatment": "2020-09-12T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d095",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t095",
+                        "KI67": "1.7",
+                        "PSA": "0.9"
+                    },
+                    "yearOfDiagnosis": "2019"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2020-03-05T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001288",
+            "label": "Unspecified"
+        },
+        "_id": "0eb48013376716587a16f9a8cda8a981d7772e4559b93bf63e99045081df21e0",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject096",
+        "imageStudy": [
+            {
+                "imageStudyId": "img096",
+                "disease": {
+                    "ageAtDiagnosis": "24.4",
+                    "dateOfFirstTreatment": "2025-07-04T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d096",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t096",
+                        "KI67": "5.5",
+                        "PSA": "0.3"
+                    },
+                    "yearOfDiagnosis": "2024"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2018-10-23T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001288",
+            "label": "Unspecified"
+        },
+        "_id": "299bf8b1468d1175a666b9e2a351a4d67f1ea01ed59ea75b9cb27fd8a3b5127e",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject097",
+        "imageStudy": [
+            {
+                "imageStudyId": "img097",
+                "disease": {
+                    "ageAtDiagnosis": "38",
+                    "dateOfFirstTreatment": "2019-07-22T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d097",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t097",
+                        "KI67": "1.5",
+                        "PSA": "0.3"
+                    },
+                    "yearOfDiagnosis": "2018"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2021-07-07T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "3e4c3f57aa476fb789763664050e7cb8dfd6d50d2c2bc4397609dc21d79f23de",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject098",
+        "imageStudy": [
+            {
+                "imageStudyId": "img098",
+                "disease": {
+                    "ageAtDiagnosis": "84.1",
+                    "dateOfFirstTreatment": "2016-01-22T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d098",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t098",
+                        "KI67": "3.1",
+                        "PSA": "0.8"
+                    },
+                    "yearOfDiagnosis": "2015"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2022-06-25T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001288",
+            "label": "Unspecified"
+        },
+        "_id": "68721c1b23f32c6b6e190925d7fec8d3e3690ff72cd3e1b85b3c5f6f86317c46",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject099",
+        "imageStudy": [
+            {
+                "imageStudyId": "img099",
+                "disease": {
+                    "ageAtDiagnosis": "57.3",
+                    "dateOfFirstTreatment": "2016-06-17T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d099",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000076",
+                        "label": "CT of thorax with contrast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1004598",
+                        "label": "Excision"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t099",
+                        "KI67": "7.8",
+                        "PSA": "0.7"
+                    },
+                    "yearOfDiagnosis": "2015"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000067",
+                    "label": "Chest"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000047",
+                    "label": "General Electric"
+                },
+                "dateOfImageAcquisition": "2022-02-13T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001288",
+            "label": "Unspecified"
+        },
+        "_id": "337bf30144a6fce77fa8eddc658c429296ae73b2234b1083f820e6e78e6b064c",
+        "datasetId": "DemoDatasetBreast"
+    },
+    {
+        "patientId": "subject100",
+        "imageStudy": [
+            {
+                "imageStudyId": "img100",
+                "disease": {
+                    "ageAtDiagnosis": "59.8",
+                    "dateOfFirstTreatment": "2018-07-20T00:00:00Z",
+                    "diagnosis": {
+                        "id": "EUCAIM:CLIN1000060",
+                        "label": "Malignant neoplasm of breast"
+                    },
+                    "diseaseId": "d100",
+                    "imagingProcedureProtocol": {
+                        "id": "EUCAIM:IMG1000078",
+                        "label": "CT of breast"
+                    },
+                    "pathologyConfirmation": {
+                        "id": "EUCAIM:CLIN1001712",
+                        "label": "Biopsy"
+                    },
+                    "tumorMetadata": {
+                        "tumorId": "t100",
+                        "KI67": "1.9",
+                        "PSA": "0.9"
+                    },
+                    "yearOfDiagnosis": "2017"
+                },
+                "imageModality": {
+                    "id": "EUCAIM:IMG1000026",
+                    "label": "Computed tomography"
+                },
+                "imageBodyPart": {
+                    "id": "EUCAIM:BP1000270",
+                    "label": "Breast"
+                },
+                "imageManufacturer": {
+                    "id": "EUCAIM:IMG1000044",
+                    "label": "Siemens"
+                },
+                "dateOfImageAcquisition": "2017-01-14T00:00:00Z"
+            }
+        ],
+        "sex": {
+            "id": "EUCAIM:COM1001370",
+            "label": "Female"
+        },
+        "_id": "ed099440ec58b82a46e5043cbb697881826095558d64b645a786b31850081033",
+        "datasetId": "DemoDatasetBreast"
+    }
+]

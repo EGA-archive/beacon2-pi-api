@@ -1,0 +1,26 @@
+[
+    {
+        "name": "EUCAIM Breast Cancer DEMO",
+        "id": "DemoDatasetBreast",
+        "description": "Dataset with synthetic metadata for breast cancer",
+        "subjectsCount": 100,
+        "studiesCount": 1,
+        "ageRange": {
+            "min": 19.1,
+            "max": 94.7
+        },
+        "modalities": [
+            "CT"
+        ],
+        "bodyParts": [
+            "Chest",
+            "Breast"
+        ],
+        "gender": [
+            "Female",
+            "Unspecified"
+        ],
+        "datasetId": "DemoDatasetBreast",
+        "_id": "41a90d5d294fc5b5489614bd73ee5611d0d311b08d0a586b20d381788b2a5b8d"
+    }
+]
