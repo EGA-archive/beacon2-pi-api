@@ -79,13 +79,14 @@ def load_routes():
                         entry_type_confile = yaml.safe_load(pfile)
                     pfile.close()
                     for entry_type_id, conf_entry_type_param in entry_type_confile.items():
-                        routes_to_add[conf_entry_type_param['endpoint_name']]=[conf_entry_type_param['response_type']]
-                        routes_to_add[conf_entry_type_param['endpoint_name']+'/{id}']=[conf_entry_type_param['response_type']]
-                        for conf_param, value_param in conf_entry_type_param.items():
-                            if conf_param == 'lookups':
-                                for lookup_id, lookup_value in value_param.items():
-                                    if isinstance(lookup_value, dict):
-                                        routes_to_add[lookup_value['endpoint_name']]=[lookup_value['response_type']]
+                        if conf_entry_type_param['entry_type_enabled'] == True:
+                            routes_to_add[conf_entry_type_param['endpoint_name']]=[conf_entry_type_param['response_type']]
+                            routes_to_add[conf_entry_type_param['endpoint_name']+'/{id}']=[conf_entry_type_param['response_type']]
+                            for conf_param, value_param in conf_entry_type_param.items():
+                                if conf_param == 'lookups':
+                                    for lookup_id, lookup_value in value_param.items():
+                                        if isinstance(lookup_value, dict):
+                                            routes_to_add[lookup_value['endpoint_name']]=[lookup_value['response_type']]
         else:
             for subfolder in subdirs:
                 underdirs = os.listdir("/beacon/models/"+folder+"/"+subfolder)
@@ -97,13 +98,14 @@ def load_routes():
                                 entry_type_confile = yaml.safe_load(pfile)
                             pfile.close()
                             for entry_type_id, conf_entry_type_param in entry_type_confile.items():
-                                routes_to_add[conf_entry_type_param['endpoint_name']]=[conf_entry_type_param['response_type']]
-                                routes_to_add[conf_entry_type_param['endpoint_name']+'/{id}']=[conf_entry_type_param['response_type']]
-                                for conf_param, value_param in conf_entry_type_param.items():
-                                    if conf_param == 'lookups':
-                                        for lookup_id, lookup_value in value_param.items():
-                                            if isinstance(lookup_value, dict):
-                                                routes_to_add[lookup_value['endpoint_name']]=[lookup_value['response_type']]
+                                if conf_entry_type_param['entry_type_enabled'] == True:
+                                    routes_to_add[conf_entry_type_param['endpoint_name']]=[conf_entry_type_param['response_type']]
+                                    routes_to_add[conf_entry_type_param['endpoint_name']+'/{id}']=[conf_entry_type_param['response_type']]
+                                    for conf_param, value_param in conf_entry_type_param.items():
+                                        if conf_param == 'lookups':
+                                            for lookup_id, lookup_value in value_param.items():
+                                                if isinstance(lookup_value, dict):
+                                                    routes_to_add[lookup_value['endpoint_name']]=[lookup_value['response_type']]
     return routes_to_add
 
 def get_all_modules_mongo_connections_script(script):

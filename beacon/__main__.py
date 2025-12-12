@@ -10,7 +10,7 @@ from beacon.validator.configuration import check_configuration
 import aiohttp_autoreload
 from beacon.utils.routes import append_routes
 from beacon.utils.middlewares import error_middleware
-from beacon.utils.shutters import _graceful_shutdown_ctx, initialize
+from beacon.utils.shutters import _graceful_shutdown_ctx, on_startup as on_start
 
 async def create_api(port):
     try:
@@ -25,7 +25,7 @@ async def create_api(port):
         )
 
         # Add initialization and graceful shutdown
-        app.on_startup.append(initialize)
+        app.on_startup.append(on_start) # Added for file conf restart, not conflicting with asynchronous requests handling
         app.cleanup_ctx.append(_graceful_shutdown_ctx)
 
         # Add routes
