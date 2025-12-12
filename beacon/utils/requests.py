@@ -145,14 +145,12 @@ def set_entry_type_configuration(self):
                         if RequestAttributes.pre_entry_type == None:
                             RequestAttributes.function = param_value["functions"]["id_query_function_name_assigned"]
                         else:
-                            LOG.warning('yesss')
                             pre_endpoint_module = get_one_module_conf(RequestAttributes.pre_entry_type)
                             for pre_entry_typeid, preparams in pre_endpoint_module.items():
                                 for pre_param_key, pre_param_value in preparams.items():
                                     if pre_param_key == 'lookups' and RequestAttributes.pre_entry_type != None:
                                         for lookup_param_entry_id, lookup_param_value in pre_param_value.items():
                                             endpoint_splitted = lookup_param_value["endpoint_name"].split('/')
-                                            LOG.warning(endpoint_splitted)
                                             if endpoint_splitted[0] == RequestAttributes.pre_entry_type and endpoint_splitted[2] == RequestAttributes.entry_type:
                                                 RequestAttributes.function = lookup_param_value["connection"]["functions"]["function_name_assigned"]
                     else:

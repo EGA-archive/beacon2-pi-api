@@ -7,17 +7,17 @@ from beacon.utils.modules import load_class, load_types_of_results
 from beacon.models.EUCAIM.validator.collections.collections.EUCAIM_collections_v0_0_1 import Collections as Collections_
 
 def make_Collections():
-    Collections = Collections_
+    CollectionType = load_types_of_results("collections")
+
     @classmethod
-    def create(cls, collections: List[Union[Collections]]):
+    def create(cls, collections: List[Union[CollectionType]]):
         return cls(collections=collections)
 
     model = create_model(
         "Collections",
-        collections=(List[Union[Collections]], ...),
+        collections=(List[Union[CollectionType]], ...),
         __base__=BaseModel
     )
-
 
     setattr(model, "create", create)
 

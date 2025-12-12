@@ -11,7 +11,7 @@ collections:
     database: beacon
     table: collections
     functions:
-      function_name_assigned: get_full_datasets
+      function_name_assigned: get_full_collections
       id_query_function_name_assigned: get_datasets_with_id
   info:
     name: collections
@@ -20,17 +20,12 @@ collections:
     description: A collections is a collection of records, like rows in a database or cards in a cardholder.
   schema:
     specification: Beacon v2
-    default_schema_id: beacon-collections-v2.0.0
-    default_schema_name: Default schema for collectionss
+    default_schema_id: EUCAIM-collections_v0.0.1
+    default_schema_name: Default schema for collections
     reference_to_default_schema_definition: https://github.com/EGA-archive/EUCAIM-Schema/blob/main/CollectionsMetadata.json
-    default_schema_version: v2.0.0
+    default_schema_version: v0.0.1
     supported_schemas:
-      - beacon-collections-v2.0.0
-      - beacon-collections-v2.0.1
-      - beacon-collections-v2.1.0
-      - beacon-collections-v2.1.1
-      - beacon-collections-v2.1.2
-      - beacon-collections-v2.2.0
+      - EUCAIM-collections_v0.0.1
   lookups:
     patients:
       endpoint_name: collections/{id}/patients

@@ -8,7 +8,9 @@ from bson.json_util import dumps
 import json
 import os
 from beacon.connections.mongo.__init__ import dbname, filtering_terms as filtering_terms_, client
-from beacon.conf.filtering_terms import alphanumeric_terms_individuals, alphanumeric_terms_g_variants, alphanumeric_terms_analyses, alphanumeric_terms_biosamples, alphanumeric_terms_cohorts, alphanumeric_terms_datasets, alphanumeric_terms_runs
+from beacon.conf.filtering_terms import alphanumeric_terms_individuals, alphanumeric_terms_g_variants, alphanumeric_terms_analyses, alphanumeric_terms_biosamples, alphanumeric_terms_cohorts, alphanumeric_terms_datasets, alphanumeric_terms_runs, alphanumeric_terms_patients
+from beacon.utils.modules import get_modules_confiles
+from beacon.connections.mongo.__init__ import biosamples, cohorts, datasets, genomicVariations, imagestudies, individuals, patients, runs
 
 ONTOLOGY_REGEX = re.compile(r"([_A-Za-z0-9]+):([_A-Za-z0-9^\-]+)")
 ICD_REGEX = re.compile(r"(ICD[_A-Za-z0-9]+):([_A-Za-z0-9^\./-]+)")
@@ -29,39 +31,13 @@ class MyProgressBar:
             self.pbar.finish()
 
 
-def get_ontology_field_name(ontology_id:str, term_id:str, collection:str):
-    # Select the properties to map for extracting the ontologies
-    """
-    biosamples=['biosampleStatus.id','diagnosticMarkers.id','histologicalDiagnosis.id','measurements.assayCode.id','measurements.measurementValue.id','measurements.measurementValue.referenceRange.unit.id','measurements.measurementValue.typedQuantities.quantity.unit.id','measurements.measurementValue.unit.id','measurements.observationMoment.id','measurements.procedure.bodySite.id','measurements.procedure.procedureCode.id','pathologicalStage.id','pathologicalTnmFinding.id','phenotypicFeatures.evidence.evidenceCode.id','phenotypicFeatures.evidence.reference.id','phenotypicFeatures.featureType.id','phenotypicFeatures.modifiers.id','phenotypicFeatures.onset.id','phenotypicFeatures.resolution.id','phenotypicFeatures.severity.id','sampleOriginDetail.id','sampleOriginType.id','sampleProcessing.id','sampleStorage.id','tumorGrade.id','tumorProgression.id']
-    cohorts=['cohortDataTypes.id','cohortDesign.id','exclusionCriteria.diseaseConditions.diseaseCode.id','exclusionCriteria.diseaseConditions.severity.id','exclusionCriteria.diseaseConditions.stage.id','exclusionCriteria.ethnicities.id','exclusionCriteria.genders.id','exclusionCriteria.locations.id','exclusionCriteria.phenotypicConditions.featureType.id','exclusionCriteria.phenotypicConditions.severity.id','inclusionCriteria.diseaseConditions.diseaseCode.id','inclusionCriteria.diseaseConditions.severity.id','inclusionCriteria.diseaseConditions.stage.id','inclusionCriteria.ethnicities.id','inclusionCriteria.genders.id','inclusionCriteria.locations.id','inclusionCriteria.phenotypicConditions.featureType.id','inclusionCriteria.phenotypicConditions.severity.id']
-    datasets=['dataUseConditions.duoDataUse.id']
-    genomicVariations=['caseLevelData.alleleOrigin.id','caseLevelData.clinicalInterpretations.category.id','caseLevelData.clinicalInterpretations.effect.id','caseLevelData.clinicalInterpretations.evidenceType.id','caseLevelData.id','caseLevelData.phenotypicEffects.category.id','caseLevelData.phenotypicEffects.effect.id','caseLevelData.phenotypicEffects.evidenceType.id','caseLevelData.zygosity.id','identifiers.variantAlternativeIds.id','molecularAttributes.molecularEffects.id','variantLevelData.clinicalInterpretations.category.id','variantLevelData.clinicalInterpretations.effect.id','variantLevelData.clinicalInterpretations.evidenceType.id','variantLevelData.phenotypicEffects.category.id','variantLevelData.phenotypicEffects.effect.id','variantLevelData.phenotypicEffects.evidenceType.id']
-    individuals=['diseases.ageOfOnset.id','diseases.diseaseCode.id','diseases.severity.id','diseases.stage.id','ethnicity.id','exposures.exposureCode.id','exposures.unit.id','geographicOrigin.id','interventionsOrProcedures.ageAtProcedure.id','interventionsOrProcedures.bodySite.id','interventionsOrProcedures.procedureCode.id','measures.assayCode.id','measures.measurementValue.id','measures.measurementValue.typedQuantities.quantity.unit.id','measures.measurementValue.unit.id','measures.observationMoment.id','measures.procedure.bodySite.id','measures.procedure.procedureCode.id','pedigrees.disease.diseaseCode.id','pedigrees.disease.severity.id','pedigrees.disease.stage.id','pedigrees.id','pedigrees.members.role.id','phenotypicFeatures.evidence.evidenceCode.id','phenotypicFeatures.evidence.reference.id','phenotypicFeatures.featureType.id','phenotypicFeatures.modifiers.id','phenotypicFeatures.onset.id','phenotypicFeatures.resolution.id','phenotypicFeatures.severity.id','sex.id','treatments.cumulativeDose.referenceRange.id','treatments.doseIntervals.id','treatments.routeOfAdministration.id','treatments.treatmentCode.id']
-    runs=['librarySource.id','platformModel.id']
-    """
-    patients=['imageStudy.disease.diagnosis.id', 'imageStudy.imagingProcedureProtocol.id', 'imageStudy.pathologyConfirmation.id', 'imageStudy.imageModality.id', 'imageStudy.imageBodyPart.id', 'imageStudy.imageManufacturer.id', 'sex.id']
+def get_ontology_field_name(ontology_id:str, term_id:str, collection:str, fields):
+
     # Save the properties in a common array variable
-    array=[]
-    """
-    if collection == 'biosamples':
-        array=biosamples
-    elif collection == 'cohorts':
-        array=cohorts
-    elif collection == 'datasets':
-        array=datasets
-    elif collection == 'genomicVariations':
-        array=genomicVariations
-    elif collection == 'individuals':
-        array=individuals
-    elif collection == 'runs':
-        array=runs
-    """
-    if collection == 'patients':
-        array=patients
     # Generate the query syntax for the ontology search for all the requested fields/properties
     query={}
     query['$or']=[]
-    for field in array:
+    for field in fields:
         fieldquery={}
         fieldquery[field]=ontology_id + ":" + term_id
         query['$or'].append(fieldquery)
@@ -194,23 +170,103 @@ def get_ontology_field_name(ontology_id:str, term_id:str, collection:str):
         else:
             pass
 
+def insert_found_terms(collection, fields_names):
+    if collection.name not in ['counts', 'similarities', 'synonyms', 'caseLevelData', 'targets', 'budget']:
+        terms_ids = find_ontology_terms_used(collection)
+        terms = get_filtering_object(terms_ids, collection, fields_names)
+        if len(terms) > 0:
+            filtering_terms_.insert_many(terms)
+
 
 def insert_all_ontology_terms_used():
-    collections = client[dbname].list_collection_names()
-    if 'filtering_terms' in collections:
-        collections.remove('filtering_terms')
-    print("Collections:", collections)
-    for c_name in collections:
-        if c_name not in ['counts', 'similarities', 'synonyms', 'caseLevelData', 'targets']:
-            terms_ids = find_ontology_terms_used(c_name)
-            terms = get_filtering_object(terms_ids, c_name)
-            if len(terms) > 0:
-                filtering_terms_.insert_many(terms)
+    #Get all the yml conf files for each entity
+    list_of_modules=get_modules_confiles()
+    #Map the files and if they are enabled, give the relationship of fields that host ontologies
+    alphanumterms=[]
+    for module in list_of_modules:
+        for entity, params in module.items():
+            if params['entry_type_enabled']==True:
+                if entity == 'analysis':
+                    for alphanumeric_term in alphanumeric_terms_analyses:
+                        alphanumterms.append({
+                                                'type': 'alphanumeric',
+                                                'id': alphanumeric_term,
+                                                'scopes': ['analysis']
+                                            })
+                if entity == 'biosample':
+                    biosamples_fields=['biosampleStatus.id','diagnosticMarkers.id','histologicalDiagnosis.id','measurements.assayCode.id','measurements.measurementValue.id','measurements.measurementValue.referenceRange.unit.id','measurements.measurementValue.typedQuantities.quantity.unit.id','measurements.measurementValue.unit.id','measurements.observationMoment.id','measurements.procedure.bodySite.id','measurements.procedure.procedureCode.id','pathologicalStage.id','pathologicalTnmFinding.id','phenotypicFeatures.evidence.evidenceCode.id','phenotypicFeatures.evidence.reference.id','phenotypicFeatures.featureType.id','phenotypicFeatures.modifiers.id','phenotypicFeatures.onset.id','phenotypicFeatures.resolution.id','phenotypicFeatures.severity.id','sampleOriginDetail.id','sampleOriginType.id','sampleProcessing.id','sampleStorage.id','tumorGrade.id','tumorProgression.id']
+                    insert_found_terms(biosamples, biosamples_fields)
+                    for alphanumeric_term in alphanumeric_terms_biosamples:
+                        alphanumterms.append({
+                                                'type': 'alphanumeric',
+                                                'id': alphanumeric_term,
+                                                'scopes': ['biosample']
+                                            })
+                elif entity == 'cohort':
+                    cohorts_fields=['cohortDataTypes.id','cohortDesign.id','exclusionCriteria.diseaseConditions.diseaseCode.id','exclusionCriteria.diseaseConditions.severity.id','exclusionCriteria.diseaseConditions.stage.id','exclusionCriteria.ethnicities.id','exclusionCriteria.genders.id','exclusionCriteria.locations.id','exclusionCriteria.phenotypicConditions.featureType.id','exclusionCriteria.phenotypicConditions.severity.id','inclusionCriteria.diseaseConditions.diseaseCode.id','inclusionCriteria.diseaseConditions.severity.id','inclusionCriteria.diseaseConditions.stage.id','inclusionCriteria.ethnicities.id','inclusionCriteria.genders.id','inclusionCriteria.locations.id','inclusionCriteria.phenotypicConditions.featureType.id','inclusionCriteria.phenotypicConditions.severity.id']
+                    insert_found_terms(cohorts, cohorts_fields)
+                    for alphanumeric_term in alphanumeric_terms_cohorts:
+                        alphanumterms.append({
+                                                'type': 'alphanumeric',
+                                                'id': alphanumeric_term,
+                                                'scopes': ['cohort']
+                                            })
+                elif entity == 'dataset':
+                    datasets_fields=['dataUseConditions.duoDataUse.id']
+                    insert_found_terms(datasets, datasets_fields)
+                    for alphanumeric_term in alphanumeric_terms_datasets:
+                        alphanumterms.append({
+                                                'type': 'alphanumeric',
+                                                'id': alphanumeric_term,
+                                                'scopes': ['dataset']
+                                            })
+                elif entity == 'genomicVariant':
+                    genomicVariations_fields=['caseLevelData.alleleOrigin.id','caseLevelData.clinicalInterpretations.category.id','caseLevelData.clinicalInterpretations.effect.id','caseLevelData.clinicalInterpretations.evidenceType.id','caseLevelData.id','caseLevelData.phenotypicEffects.category.id','caseLevelData.phenotypicEffects.effect.id','caseLevelData.phenotypicEffects.evidenceType.id','caseLevelData.zygosity.id','identifiers.variantAlternativeIds.id','molecularAttributes.molecularEffects.id','variantLevelData.clinicalInterpretations.category.id','variantLevelData.clinicalInterpretations.effect.id','variantLevelData.clinicalInterpretations.evidenceType.id','variantLevelData.phenotypicEffects.category.id','variantLevelData.phenotypicEffects.effect.id','variantLevelData.phenotypicEffects.evidenceType.id']
+                    insert_found_terms(genomicVariations, genomicVariations_fields)
+                    for alphanumeric_term in alphanumeric_terms_g_variants:
+                        alphanumterms.append({
+                                                'type': 'alphanumeric',
+                                                'id': alphanumeric_term,
+                                                'scopes': ['genomicVariation']
+                                            })
+                    insert_zygosity_terms()
+                elif entity == 'individual':
+                    individuals_fields=['diseases.ageOfOnset.id','diseases.diseaseCode.id','diseases.severity.id','diseases.stage.id','ethnicity.id','exposures.exposureCode.id','exposures.unit.id','geographicOrigin.id','interventionsOrProcedures.ageAtProcedure.id','interventionsOrProcedures.bodySite.id','interventionsOrProcedures.procedureCode.id','measures.assayCode.id','measures.measurementValue.id','measures.measurementValue.typedQuantities.quantity.unit.id','measures.measurementValue.unit.id','measures.observationMoment.id','measures.procedure.bodySite.id','measures.procedure.procedureCode.id','pedigrees.disease.diseaseCode.id','pedigrees.disease.severity.id','pedigrees.disease.stage.id','pedigrees.id','pedigrees.members.role.id','phenotypicFeatures.evidence.evidenceCode.id','phenotypicFeatures.evidence.reference.id','phenotypicFeatures.featureType.id','phenotypicFeatures.modifiers.id','phenotypicFeatures.onset.id','phenotypicFeatures.resolution.id','phenotypicFeatures.severity.id','sex.id','treatments.cumulativeDose.referenceRange.id','treatments.doseIntervals.id','treatments.routeOfAdministration.id','treatments.treatmentCode.id']
+                    insert_found_terms(individuals, individuals_fields)
+                    for alphanumeric_term in alphanumeric_terms_individuals:
+                        alphanumterms.append({
+                                                'type': 'alphanumeric',
+                                                'id': alphanumeric_term,
+                                                'scopes': ['individual']
+                                            })
+                elif entity == 'run':
+                    runs_fields=['librarySource.id','platformModel.id']
+                    insert_found_terms(runs, runs_fields)
+                    for alphanumeric_term in alphanumeric_terms_runs:
+                        alphanumterms.append({
+                                                'type': 'alphanumeric',
+                                                'id': alphanumeric_term,
+                                                'scopes': ['run']
+                                            })
+                elif entity == 'patients':
+                    patients_fields=['disease.diagnosis.id' ,'disease.imagingProcedureProtocol.id', 'disease.pathology.id', 'disease.pathologyConfirmation.id', 'disease.treatment.id', 'disease.tumorMetadata.ER.id', 'disease.tumorMetadata.PR.id', 'disease.tumorMetadata.HER2.id', 'disease.tumorMetadata.cancerStageCMCategory.id', 'disease.tumorMetadata.cancerStagePMCategory.id', 'disease.tumorMetadata.histologicGraceGleasonScore.id', 'disease.tumorMetadata.histologicGradeISUP.id', 'disease.tumorMetadata.tumorBIRADSAssesment.id', 'disease.tumorMetadata.tumorPIRADSAssesment.id', 'imageStudy.disease.diagnosis.id' ,'imageStudy.disease.imagingProcedureProtocol.id', 'imageStudy.disease.pathology.id', 'imageStudy.disease.pathologyConfirmation.id', 'imageStudy.disease.treatment.id', 'imageStudy.disease.tumorMetadata.ER.id', 'imageStudy.disease.tumorMetadata.PR.id', 'imageStudy.disease.tumorMetadata.HER2.id', 'imageStudy.disease.tumorMetadata.cancerStageCMCategory.id', 'imageStudy.disease.tumorMetadata.cancerStagePMCategory.id', 'imageStudy.disease.tumorMetadata.histologicGraceGleasonScore.id', 'imageStudy.disease.tumorMetadata.histologicGradeISUP.id', 'imageStudy.disease.tumorMetadata.tumorBIRADSAssesment.id', 'imageStudy.disease.tumorMetadata.tumorPIRADSAssesment.id', 'imageStudy.imageModality.id', 'imageStudy.imageBodyPart.id', 'imageStudy.imageManufacturer.id', 'sex.id']
+                    insert_found_terms(patients, patients_fields)
+                    for alphanumeric_term in alphanumeric_terms_patients:
+                        alphanumterms.append({
+                                                'type': 'alphanumeric',
+                                                'id': alphanumeric_term,
+                                                'scopes': ['patients']
+                                            })
+                elif entity == 'imagestudies':
+                    imagestudies_fields=['disease.diagnosis.id' ,'disease.imagingProcedureProtocol.id', 'disease.pathology.id', 'disease.pathologyConfirmation.id', 'disease.treatment.id', 'disease.tumorMetadata.ER.id', 'disease.tumorMetadata.PR.id', 'disease.tumorMetadata.HER2.id', 'disease.tumorMetadata.cancerStageCMCategory.id', 'disease.tumorMetadata.cancerStagePMCategory.id', 'disease.tumorMetadata.histologicGraceGleasonScore.id', 'disease.tumorMetadata.histologicGradeISUP.id', 'disease.tumorMetadata.tumorBIRADSAssesment.id', 'disease.tumorMetadata.tumorPIRADSAssesment.id', 'imageModality.id', 'imageBodyPart.id', 'imageManufacturer.id']
+                    insert_found_terms(imagestudies, imagestudies_fields)
+    if alphanumterms != []:
+        filtering_terms_.insert_many(alphanumterms)
 
-def find_ontology_terms_used(collection_name: str) -> List[Dict]:
-    print(collection_name)
+def find_ontology_terms_used(collection) -> List[Dict]:
+    print(collection.name)
     terms_ids = []
-    count = client[dbname].get_collection(collection_name).estimated_document_count()
+    count = collection.estimated_document_count()
     # In case there are more than 50.000 docs, only scan the first 50.000 docs to populate the filtering terms with the ontologies found in these docs
     if count < 50000:
         num_total=count
@@ -219,7 +275,7 @@ def find_ontology_terms_used(collection_name: str) -> List[Dict]:
     i=0
     if count > 50000:
         while i < count:
-            xs = client[dbname].get_collection(collection_name).find().skip(i).limit(50000)
+            xs = collection.find().skip(i).limit(50000)
             for r in tqdm(xs, total=num_total):
                 matches = ONTOLOGY_REGEX.findall(str(r))
                 icd_matches = ICD_REGEX.findall(str(r))
@@ -236,7 +292,7 @@ def find_ontology_terms_used(collection_name: str) -> List[Dict]:
                 break
             print(i)
     else:
-        xs = client[dbname].get_collection(collection_name).find().skip(0).limit(50000)
+        xs = collection.find().skip(0).limit(50000)
         for r in tqdm(xs, total=num_total):
             matches = ONTOLOGY_REGEX.findall(str(r))
             icd_matches = ICD_REGEX.findall(str(r))
@@ -252,7 +308,7 @@ def find_ontology_terms_used(collection_name: str) -> List[Dict]:
 
 
 
-def get_filtering_object(terms_ids: list, collection_name: str):
+def get_filtering_object(terms_ids: list, collection, fields):
     """
     Create the filtering term object Beacon v2 compliant with the fields/properties and labels found when scanning the database storing them in an array of terms.
     """
@@ -266,7 +322,7 @@ def get_filtering_object(terms_ids: list, collection_name: str):
         #if ontology_id not in ontologies:
             #ontologies[ontology_id] = load_ontology(ontology_id)
         if ontology_id.isupper():
-            field_dict = get_ontology_field_name(ontology_id, term_id, collection_name)
+            field_dict = get_ontology_field_name(ontology_id, term_id, collection.name, fields)
         else:
             continue
         try:
@@ -281,7 +337,14 @@ def get_filtering_object(terms_ids: list, collection_name: str):
             if field is not None:
                 if onto not in list_of_ontologies:
                     list_of_ontologies.append(onto)
-                    colname = 'patients'
+                    if collection.name == 'patients' or collection.name == 'collections':
+                        colname = collection.name
+                    elif collection.name == 'analyses':
+                        colname = 'analysis'
+                    elif collection.name == 'imagestudies':
+                        colname = 'imageStudies'
+                    else:
+                        colname = collection.name[0:-1]
                     if label:
                         terms.append({
                                         'type': 'ontology',
@@ -399,69 +462,6 @@ def merge_alphanumeric_terms():
     """
     Scan all the filtering terms of type alphanumeric found and remove the duplicated ones.
     """
-    alphanumterms=[]
-    for alphanumeric_term in alphanumeric_terms_analyses:
-        alphanumterms.append({
-                                'type': 'alphanumeric',
-                                'id': alphanumeric_term,
-                                'scopes': ['analysis']
-                            })
-    if alphanumterms != []:
-        filtering_terms_.insert_many(alphanumterms)
-    alphanumterms=[]
-    for alphanumeric_term in alphanumeric_terms_biosamples:
-        alphanumterms.append({
-                                'type': 'alphanumeric',
-                                'id': alphanumeric_term,
-                                'scopes': ['biosample']
-                            })
-    if alphanumterms != []:
-        filtering_terms_.insert_many(alphanumterms)
-    alphanumterms=[]
-    for alphanumeric_term in alphanumeric_terms_cohorts:
-        alphanumterms.append({
-                                'type': 'alphanumeric',
-                                'id': alphanumeric_term,
-                                'scopes': ['cohort']
-                            })
-    if alphanumterms != []:
-        filtering_terms_.insert_many(alphanumterms)
-    alphanumterms=[]
-    for alphanumeric_term in alphanumeric_terms_datasets:
-        alphanumterms.append({
-                                'type': 'alphanumeric',
-                                'id': alphanumeric_term,
-                                'scopes': ['dataset']
-                            })
-    if alphanumterms != []:
-        filtering_terms_.insert_many(alphanumterms)
-    alphanumterms=[]
-    for alphanumeric_term in alphanumeric_terms_g_variants:
-        alphanumterms.append({
-                                'type': 'alphanumeric',
-                                'id': alphanumeric_term,
-                                'scopes': ['genomicVariation']
-                            })
-    if alphanumterms != []:
-        filtering_terms_.insert_many(alphanumterms)
-    alphanumterms=[]
-    for alphanumeric_term in alphanumeric_terms_individuals:
-        alphanumterms.append({
-                                'type': 'alphanumeric',
-                                'id': alphanumeric_term,
-                                'scopes': ['individual']
-                            })
-    if alphanumterms != []:
-        filtering_terms_.insert_many(alphanumterms)
-    alphanumterms=[]
-    for alphanumeric_term in alphanumeric_terms_runs:
-        alphanumterms.append({
-                                'type': 'alphanumeric',
-                                'id': alphanumeric_term,
-                                'scopes': ['run']
-                            })
-    if alphanumterms != []:
-        filtering_terms_.insert_many(alphanumterms)
     filtering_terms = filtering_terms_.find({"type": "alphanumeric"})
     array_of_ids=[]
     repeated_ids=[]
@@ -552,4 +552,3 @@ insert_all_ontology_terms_used()
 merge_ontology_terms()
 merge_alphanumeric_terms()
 merge_custom_terms()
-insert_zygosity_terms()

@@ -24,7 +24,6 @@ def join_query(self, mongo_collection, query: dict, original_id, dataset: str):
         except Exception:
             query["$and"]=[]
             query["$and"].append({"datasetId": dataset})
-    LOG.warning(query)
     return mongo_collection.find(query, excluding_fields).max_time_ms(100 * 1000)
 
 @log_with_args_mongo(level)

@@ -170,7 +170,7 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, dat
                 list_modules = get_all_modules_mongo_connections_script("filters.cross_queries.cross_query")
                 for module in list_modules:
                     query = module.cross_query(self, query, scope, {}, dataset)
-        elif 'PSA' in filter.id:
+        elif '.' in filter.id:
             if '>' in filter.operator:
                 oper = '$lte'
             elif '<' in filter.operator:
@@ -178,9 +178,10 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, dat
             elif '=' in filter.operator:
                 oper = '$eq'
             splitfilterid= filter.id.split('.')
+            keyfilterid = ".".join(splitfilterid[1:])
             dict_in={}
             dict_in["$elemMatch"]= {
-                "disease.tumorMetadata.PSA": { oper: 2 }
+                keyfilterid: { oper: 2 }
                 }
             query[splitfilterid[0]]=dict_in
             list_modules = get_all_modules_mongo_connections_script("filters.cross_queries.cross_query")

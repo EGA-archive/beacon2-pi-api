@@ -17,7 +17,7 @@ def get_datasets(self):
     return query
 
 @log_with_args_mongo(level)
-def get_full_datasets(self):
+def get_full_collections(self):
     # Create the query syntax depending on it there is any entry id queried.
     if RequestAttributes.entry_id == None:
         query = {}

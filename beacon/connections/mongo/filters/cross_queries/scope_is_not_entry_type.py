@@ -7,12 +7,7 @@ def scope_is_not_entry_type(self, original_id, final_id, def_list, mongo_collect
     """
     If the scope is not the entry type, perform the id translation for the intersection of the ids of the cross query.
     """
-    LOG.warning(original_id)
-    LOG.warning(final_id)
-    LOG.warning(query)
-    LOG.warning(mongo_collection)
     join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
-    LOG.warning(join_ids)
     if join_ids == []:
         return query
     for id_item in join_ids:
