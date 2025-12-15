@@ -12,6 +12,7 @@ from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.utils import 
 @log_with_args_mongo(config.level)
 def query_id(self, query: dict, document_id) -> dict:
     query["id"] = document_id
+    LOG.warning(query)
     return query
 
 @log_with_args_mongo(config.level)

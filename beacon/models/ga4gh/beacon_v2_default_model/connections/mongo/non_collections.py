@@ -42,7 +42,7 @@ def get_phenotypic_endpoint(self, dataset: SingleDatasetResponse):
 def get_phenotypic_endpoint_with_id(self, dataset: SingleDatasetResponse):
     genomicVariant_confile=import_genomicVariant_confile()
     # If the entry type records to return are variants, apply request parameters checking if they come by query string or not. Otherwise, just process the parameters as usual.
-    if RequestAttributes.entry_type == genomicVariant_confile["endpoint_name"]:
+    if RequestAttributes.entry_type == genomicVariant_confile["genomicVariant"]["endpoint_name"]:
         query = {"$and": [{"_id": RequestAttributes.entry_id}]}
         query_parameters, parameters_as_filters = apply_request_parameters(self, query, dataset.dataset)
         if parameters_as_filters == True:
@@ -55,7 +55,7 @@ def get_phenotypic_endpoint_with_id(self, dataset: SingleDatasetResponse):
     # Process filters
     query = apply_filters(self, query, RequestAttributes.qparams.query.filters, {}, dataset.dataset)
     # If the entry type records are not variants, include the id queried in the query.
-    if RequestAttributes.entry_type != genomicVariant_confile["endpoint_name"]:
+    if RequestAttributes.entry_type != genomicVariant_confile["genomicVariant"]["endpoint_name"]:
         query = query_id(self, query, RequestAttributes.entry_id)
     # Save the include, limit and skip parameters so they are used later.
     include = RequestAttributes.qparams.query.includeResultsetResponses
@@ -69,13 +69,13 @@ def get_phenotypic_endpoint_with_id(self, dataset: SingleDatasetResponse):
 
 @log_with_args(config.level)
 def get_variants_of_phenotypic_endpoint(self, dataset: SingleDatasetResponse):
-    analysis_confile=import_analysis_confile(self)
-    run_confile=import_run_confile(self)
+    analysis_confile=import_analysis_confile()
+    run_confile=import_run_confile()
     # Check which is the queried initial entry type of the cross query and process and get the ids to convert to the final entry type response.
-    if RequestAttributes.pre_entry_type == analysis_confile["endpoint_name"] or RequestAttributes.pre_entry_type == run_confile["endpoint_name"]:
+    if RequestAttributes.pre_entry_type == analysis_confile["analysis"]["endpoint_name"] or RequestAttributes.pre_entry_type == run_confile["run"]["endpoint_name"]:
         query = {"$and": [{"id": RequestAttributes.entry_id}]}
         query = apply_filters(self, query, RequestAttributes.qparams.query.filters, {}, dataset.dataset)
-        if RequestAttributes.pre_entry_type == analysis_confile["endpoint_name"]:
+        if RequestAttributes.pre_entry_type == analysis_confile["analysis"]["endpoint_name"]:
             initial_ids = analyses \
                 .find_one(query, {"biosampleId": 1, "_id": 0})
         else:
@@ -200,14 +200,14 @@ def get_phenotypic_endpoint_of_variants(self, dataset: SingleDatasetResponse):
                 biosampleIds.remove(biosampleId)
     elif biosampleIds_restricted != [] and biosampleIds == []:
         biosampleIds = biosampleIds_restricted
-    individual_confile=import_individual_confile(self)
-    biosample_confile=import_biosample_confile(self)
+    individual_confile=import_individual_confile()
+    biosample_confile=import_biosample_confile()
     # Build the query translating the biosampleIds to individualIds in case the entry type needed is individuals.
-    if RequestAttributes.entry_type != individual_confile["endpoint_name"]:
+    if RequestAttributes.entry_type != individual_confile["individual"]["endpoint_name"]:
         finalids=biosampleIds
         try:
             finalids=[]
-            if RequestAttributes.entry_type == biosample_confile["endpoint_name"]:
+            if RequestAttributes.entry_type == biosample_confile["biosample"]["endpoint_name"]:
                 idq = 'id'
             else:
                 idq = 'biosampleId'

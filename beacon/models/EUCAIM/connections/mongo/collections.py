@@ -1,5 +1,5 @@
 from beacon.logs.logs import log_with_args_mongo
-from beacon.conf.conf import level
+from beacon.conf.conf_override import config
 from beacon.connections.mongo.utils import get_count, get_documents, query_id, get_documents_for_cohorts
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.utils import get_phenotypic_cross_query_attributes
 from beacon.connections.mongo.filters.filters import apply_filters
@@ -9,14 +9,14 @@ from beacon.connections.mongo.__init__ import collections
 from beacon.logs.logs import LOG
 from beacon.response.classes import CollectionsResponse
 
-@log_with_args_mongo(level)
-def get_datasets(self):
+@log_with_args_mongo(config.level)
+def get_collections(self):
     # Find all the datasets in the mongo database.
     query = {}
     query = collections.find(query)
     return query
 
-@log_with_args_mongo(level)
+@log_with_args_mongo(config.level)
 def get_full_collections(self):
     # Create the query syntax depending on it there is any entry id queried.
     if RequestAttributes.entry_id == None:
@@ -43,15 +43,15 @@ def get_full_collections(self):
     count = len(response_converted)
     return CollectionsResponse(docs=response_converted, count=count)
 
-@log_with_args_mongo(level)
-def get_list_of_datasets(self):
+@log_with_args_mongo(config.level)
+def get_list_of_collections(self):
     # Get all the datasets to be returned in response and put them in a list.
-    datasets = get_datasets(self)
+    datasets = get_collections(self)
     beacon_datasets = [ r for r in datasets ]
     return beacon_datasets
 
-@log_with_args_mongo(level)
-def get_dataset_with_id(self):
+@log_with_args_mongo(config.level)
+def get_collections_with_id(self):
     limit = RequestAttributes.qparams.query.pagination.limit
     # Handle the request parameters and create the first built of the query.
     query_parameters, parameters_as_filters = apply_request_parameters(self, {}, RequestAttributes.entry_id)
@@ -73,4 +73,5 @@ def get_dataset_with_id(self):
     response_converted = (
                 [r for r in docs] if docs else []
             )
+    LOG.warning(response_converted)
     return CollectionsResponse(docs=response_converted, count=count)

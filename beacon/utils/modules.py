@@ -119,8 +119,11 @@ def get_all_modules_mongo_connections_script(script):
                 if dir == 'mongo':
                     complete_module='beacon.models.'+folder+'.connections.mongo.'+script
                     import importlib
-                    module = importlib.import_module(complete_module, package=None)
-                    list_of_modules.append(module)
+                    try:
+                        module = importlib.import_module(complete_module, package=None)
+                        list_of_modules.append(module)
+                    except Exception:
+                        continue
         else:
             for subfolder in subdirs:
                 underdirs = os.listdir("/beacon/models/"+folder+"/"+subfolder)

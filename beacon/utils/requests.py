@@ -175,6 +175,8 @@ def set_entry_type_configuration(self):
         RequestAttributes.allowed_granularity = 'record'
     else:
         endpoint_module = get_one_module_conf(RequestAttributes.entry_type)
+        LOG.warning('this is the entry type')
+        LOG.warning(RequestAttributes.entry_type)
         for entry_typeid, params in endpoint_module.items():
             RequestAttributes.entry_type_id = entry_typeid
             for param_key, param_value in params.items():
@@ -242,6 +244,7 @@ def set_entry_type(self, request):
     else:
         path_list = abs_url[starting_endpoint:].split('/')
         path_list = list(filter(None, path_list))
+        LOG.warning(path_list)
         if path_list == []:
             raise WrongURIPath('the {} parameter from conf.py is not the same as the root one received in request: {}. Configure you uri accordingly.'.format(config.uri, abs_url))
         if len(path_list) > 2:

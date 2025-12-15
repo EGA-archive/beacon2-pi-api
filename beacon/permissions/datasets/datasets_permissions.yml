@@ -42,11 +42,11 @@ AV_Dataset:
         entry_types_exceptions:
           - individual: record
 
-DemoDatasetBreast:
-  public:
-    default_entry_types_granularity: record
-    entry_types_exceptions:
-      - individual: record
+#DemoDatasetBreast:
+  #public:
+    #default_entry_types_granularity: record
+    #entry_types_exceptions:
+      #- individual: record
       
 
 

@@ -1,6 +1,7 @@
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
-from beacon.logs.logs import log_with_args, level, LOG
+from beacon.logs.logs import log_with_args, LOG
+from beacon.conf.conf_override import config
 from beacon.connections.mongo.__init__ import client
 from beacon.exceptions.exceptions import NoPermissionsAvailable, DatabaseIsDown
 from pymongo.errors import ConnectionFailure
@@ -8,7 +9,7 @@ from beacon.response.classes import MultipleDatasetsResponse
 from beacon.request.classes import RequestAttributes
 from beacon.utils.modules import get_all_modules_mongo_connections_script
 
-@log_with_args(level)
+@log_with_args(config.level)
 async def execute_function(self, datasets: list):
     # Initiate the list where the different dataset classes are returned populated from the queries
     list_of_responses=[]
@@ -40,7 +41,7 @@ async def execute_function(self, datasets: list):
     except Exception:
         raise NoPermissionsAvailable("No datasets found. Check out the permissions or the datasets requested if a response was expected.")
     
-@log_with_args(level)
+@log_with_args(config.level)
 async def execute_collection_function(self):
     try:
         # Get the function that will be the one to use for the query performed

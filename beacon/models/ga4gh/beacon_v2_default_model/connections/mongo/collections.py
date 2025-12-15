@@ -9,14 +9,14 @@ from beacon.connections.mongo.__init__ import datasets, cohorts
 from beacon.logs.logs import LOG
 from beacon.response.classes import CollectionsResponse
 
-@log_with_args_mongo(config)
+@log_with_args_mongo(config.level)
 def get_datasets(self):
     # Find all the datasets in the mongo database.
     query = {}
     query = datasets.find(query)
     return query
 
-@log_with_args_mongo(config)
+@log_with_args_mongo(config.level)
 def get_full_datasets(self):
     # Create the query syntax depending on it there is any entry id queried.
     if RequestAttributes.entry_id == None:
@@ -43,14 +43,14 @@ def get_full_datasets(self):
     count = len(response_converted)
     return CollectionsResponse(docs=response_converted, count=count)
 
-@log_with_args_mongo(config)
+@log_with_args_mongo(config.level)
 def get_list_of_datasets(self):
     # Get all the datasets to be returned in response and put them in a list.
     datasets = get_datasets(self)
     beacon_datasets = [ r for r in datasets ]
     return beacon_datasets
 
-@log_with_args_mongo(config)
+@log_with_args_mongo(config.level)
 def get_dataset_with_id(self):
     limit = RequestAttributes.qparams.query.pagination.limit
     # Handle the request parameters and create the first built of the query.
@@ -76,7 +76,7 @@ def get_dataset_with_id(self):
     return CollectionsResponse(docs=response_converted, count=count)
 
 
-@log_with_args_mongo(config)
+@log_with_args_mongo(config.level)
 def get_cohorts(self):
     limit = RequestAttributes.qparams.query.pagination.limit
     # Process filters
@@ -105,7 +105,7 @@ def get_cohorts(self):
     )
     return CollectionsResponse(docs=response_converted, count=count)
 
-@log_with_args_mongo(config)
+@log_with_args_mongo(config.level)
 def get_cohort_with_id(self):
     limit = RequestAttributes.qparams.query.pagination.limit
     # Process filters
@@ -126,7 +126,7 @@ def get_cohort_with_id(self):
     )
     return CollectionsResponse(docs=response_converted, count=count)
 
-@log_with_args_mongo(config)
+@log_with_args_mongo(config.level)
 def get_cross_collections(self):
     limit = RequestAttributes.qparams.query.pagination.limit
     # Process filters

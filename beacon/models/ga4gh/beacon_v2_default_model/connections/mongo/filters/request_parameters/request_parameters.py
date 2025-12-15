@@ -15,7 +15,7 @@ def request_parameters(self, total_query, request_parameters, dataset):
     biosample_confile=import_biosample_confile()
     run_confile=import_run_confile()
     # Check wich is the entry type to know how to do the id translation for the request parameters (if any)
-    if RequestAttributes.entry_type == individual_confile["endpoint_name"]:
+    if RequestAttributes.entry_type == individual_confile["individual"]["endpoint_name"]:
         biosampleIds=get_biosampleIds(self, request_parameters, dataset)
         try:
             # Build the query to get the individual ids from biosamples
@@ -48,11 +48,11 @@ def request_parameters(self, total_query, request_parameters, dataset):
         except Exception:
             total_query["$and"]=[]
             total_query["$and"].append(finalquery)
-    elif RequestAttributes.entry_type == biosample_confile["endpoint_name"]:
+    elif RequestAttributes.entry_type == biosample_confile["biosample"]["endpoint_name"]:
         # Get the biosampleIds obtained from the request parameters query and build the query with these ids as id because is against biosamples.
         biosampleIds=get_biosampleIds(self, request_parameters, dataset)
         total_query=get_total_query(self, biosampleIds, total_query, "id")
-    elif RequestAttributes.entry_type == analysis_confile["endpoint_name"] or RequestAttributes.entry_type == run_confile["endpoint_name"]:
+    elif RequestAttributes.entry_type == analysis_confile["analysis"]["endpoint_name"] or RequestAttributes.entry_type == run_confile["run"]["endpoint_name"]:
         # Get the biosampleIds obtained from the request parameters query and build the query with these ids as id because is against analyses/runs.
         biosampleIds=get_biosampleIds(self, request_parameters, dataset)
         total_query=get_total_query(self, biosampleIds, total_query, "biosampleId")
