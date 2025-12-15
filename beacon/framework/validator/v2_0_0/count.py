@@ -4,7 +4,7 @@ from pydantic import (
 )
 from typing import List, Optional, Union, Dict
 import math
-from beacon.conf import conf
+from beacon.conf import conf_override
 from beacon.utils.modules import load_class
 
 class CountResponseSummary(BaseModel):
@@ -21,20 +21,20 @@ class CountResponseSummary(BaseModel):
     def build_count_response_summary(self, count):
         countAdjustedTo=None
         countPrecision=None                                    
-        if conf.imprecise_count !=0:
-            if count < conf.imprecise_count:
-                resultsCount=conf.imprecise_count
-                countAdjustedTo=[conf.imprecise_count]
+        if conf_override.config.imprecise_count !=0:
+            if count < conf_override.config.imprecise_count:
+                resultsCount=conf_override.config.imprecise_count
+                countAdjustedTo=[conf_override.config.imprecise_count]
                 countPrecision='imprecise'
             else:
                 resultsCount=count
                 
-        elif conf.round_to_tens == True:
+        elif conf_override.config.round_to_tens == True:
             resultsCount=math.ceil(count / 10.0) * 10
             countAdjustedTo=['immediate ten']
             countPrecision='rounded'
 
-        elif conf.round_to_hundreds == True:
+        elif conf_override.config.round_to_hundreds == True:
             resultsCount=math.ceil(count / 100.0) * 100
             countAdjustedTo=['immediate hundred']
             countPrecision='rounded'

@@ -5,7 +5,7 @@ from pydantic import (
     Field,
     create_model
 )
-from beacon.conf import conf
+from beacon.conf import conf_override
 from beacon.utils.modules import load_class, get_modules_confiles
 from beacon.logs.logs import LOG
 
@@ -89,7 +89,7 @@ class MapSchema(BaseModel):
                     values_to_set["returnedEntryType"] = entry_type
                     for lookup_entry_type, lookup_set_of_params in set_of_params["lookups"].items():
                         try:
-                            values_to_set["url"] = conf.complete_url+'/'+lookup_set_of_params["endpoint_name"] if lookup_set_of_params["endpoint_enabled"] == True else None
+                            values_to_set["url"] = conf_override.config.complete_url+'/'+lookup_set_of_params["endpoint_name"] if lookup_set_of_params["endpoint_enabled"] == True else None
                         except Exception:
                             continue
                         relatedEndpointEntries_values_to_set[lookup_entry_type]=values_to_set
@@ -98,8 +98,8 @@ class MapSchema(BaseModel):
                 else:
                     Endpoints=None
                 # Add the rest of the properties for each of the entry type that is particular to them and doesn't depend on a lookup
-                rootUrl=conf.complete_url+'/'+set_of_params["endpoint_name"]
-                singleEntryUrl=conf.complete_url+'/'+set_of_params["endpoint_name"]+'/{id}' if set_of_params["allow_id_query"]==True else None
+                rootUrl=conf_override.config.complete_url+'/'+set_of_params["endpoint_name"]
+                singleEntryUrl=conf_override.config.complete_url+'/'+set_of_params["endpoint_name"]+'/{id}' if set_of_params["allow_id_query"]==True else None
                 openAPIEndpointsDefinition=set_of_params["open_api_definition"]
                 if set_of_params["entry_type_enabled"] == True:
                     if str(entry_type) not in fields:

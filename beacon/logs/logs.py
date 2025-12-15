@@ -1,21 +1,20 @@
 import logging
 import time
-from beacon.conf.conf import level
-from beacon.conf.conf import log_file
+from beacon.conf.conf_override import config
 from typing import Optional
 
 LOG = logging.getLogger(__name__)
 fmt = '%(levelname)s - %(asctime)s - %(message)s'
 formatter = logging.Formatter(fmt)
 
-if log_file:
-    fh = logging.FileHandler(log_file)
-    fh.setLevel(level)
+if config.log_file:
+    fh = logging.FileHandler(config.log_file)
+    fh.setLevel(config.level)
     fh.setFormatter(formatter)
     LOG.addHandler(fh)
 else:
     sh = logging.StreamHandler()
-    sh.setLevel(level)
+    sh.setLevel(config.level)
     sh.setFormatter(formatter)
     LOG.addHandler(sh)
 

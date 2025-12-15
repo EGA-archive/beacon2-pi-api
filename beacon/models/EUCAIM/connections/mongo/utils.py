@@ -1,6 +1,6 @@
 from beacon.connections.mongo.__init__ import collections, imagestudies, patients
 from beacon.logs.logs import log_with_args_mongo, LOG
-from beacon.conf.conf import level
+from beacon.conf.conf_override import config
 import yaml
 
 def import_collections_confile():
@@ -16,7 +16,7 @@ def import_patients_confile():
     return patients_confile
 
 
-@log_with_args_mongo(level)
+@log_with_args_mongo(config.level)
 def get_non_collections_cross_query_attributes(self, entry_type, pre_entry_type):
     patients_confile=import_patients_confile()
     collections_confile=import_collections_confile()

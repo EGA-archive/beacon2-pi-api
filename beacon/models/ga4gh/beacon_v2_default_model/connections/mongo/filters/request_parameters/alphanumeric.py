@@ -1,9 +1,9 @@
 from beacon.logs.logs import log_with_args, LOG
-from beacon.conf.conf import level
+from beacon.conf.conf_override import config
 from beacon.connections.mongo.filters.format import format_value, format_operator
 from beacon.request.classes import RequestAttributes
 
-@log_with_args(level)
+@log_with_args(config.level)
 def parse_request_parameters(self, query, filter):
     # Processing the request parameters as filters, checking which is the id of the property mapped by the request parameter (where the requestParameter points at, several can apply to one property)
     if filter.id == "identifiers.genomicHGVSId":

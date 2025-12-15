@@ -1,7 +1,7 @@
 from beacon.request.parameters import AlphanumericFilter
 from typing import List, Dict
 from beacon.logs.logs import log_with_args, LOG
-from beacon.conf.conf import level
+from beacon.conf.conf_override import config
 from beacon.connections.mongo.filters.alphanumeric import apply_alphanumeric_filter
 from beacon.connections.mongo.__init__ import genomicVariations
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.utils import lengthquery
@@ -11,7 +11,7 @@ from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.reque
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.request_parameters.end import generate_position_filter_end
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.request_parameters.mapping import VARIANTS_PROPERTY_MAP
 
-@log_with_args(level)
+@log_with_args(config.level)
 def apply_request_parameters(self, query: Dict[str, List[dict]], dataset: str):
     # Initiate the $and operator in case is not inside the query syntax
     if len(RequestAttributes.qparams.query.requestParameters) > 0 and "$and" not in query:

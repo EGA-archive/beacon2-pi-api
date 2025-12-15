@@ -5,14 +5,14 @@ from .plugins import DummyPermissions as PermissionsProxy
 from beacon.logs.logs import LOG
 from beacon.auth.__main__ import authentication
 from beacon.logs.logs import log_with_args
-from beacon.conf.conf import level, default_beacon_granularity
+from beacon.conf.conf_override import config
 from beacon.budget.__main__ import check_budget
 from beacon.utils.modules import get_all_modules_datasets
 from beacon.response.classes import SingleDatasetResponse
 from beacon.request.classes import RequestAttributes
 from beacon.exceptions.exceptions import InvalidRequest, NoPermissionsAvailable
 
-@log_with_args(level)
+@log_with_args(config.level)
 async def authorization(self):
     try:
         # Get the token from the headeer Authorization
@@ -37,7 +37,7 @@ async def authorization(self):
         return username, list_visa_datasets
     return username, list_visa_datasets
 
-@log_with_args(level)
+@log_with_args(config.level)
 async def get_datasets_list(self, authorized_datasets):
     try:
         # Get the requested datasets and save them in a list.
@@ -62,7 +62,7 @@ async def get_datasets_list(self, authorized_datasets):
     return response_datasets
 
 def query_permissions(func):
-    @log_with_args(level)
+    @log_with_args(config.level)
     async def permission(self):
         # Initialize the variables of the time where the request is made and the username.
         time_now=None
@@ -80,7 +80,7 @@ def query_permissions(func):
         time_now = check_budget(self, username)
         # Add as well in the list of dataset classes, the dataset classes that have permissions for the query coming from visas.
         for visa_dataset in list_visa_datasets:
-            datasets_permissions.append(SingleDatasetResponse(dataset=visa_dataset, granularity=default_beacon_granularity))
+            datasets_permissions.append(SingleDatasetResponse(dataset=visa_dataset, granularity=config.default_beacon_granularity))
         # Using the list of dataset classes, get rid of the ones thet are not found in the databases.
         response_datasets= await get_datasets_list(self, datasets_permissions)
         return await func(self, response_datasets, username, time_now)

@@ -1,5 +1,5 @@
 from beacon.logs.logs import log_with_args, LOG
-from beacon.conf.conf import level
+from beacon.conf.conf_override import config
 from beacon.request.classes import RequestAttributes
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.request_parameters.apply_request_parameters import apply_request_parameters
 from beacon.connections.mongo.filters.filters import apply_filters
@@ -8,7 +8,7 @@ from beacon.models.EUCAIM.connections.mongo.utils import import_patients_confile
 from beacon.models.EUCAIM.connections.mongo.utils import get_non_collections_cross_query_attributes
 from beacon.response.classes import SingleDatasetResponse
 
-@log_with_args(level)
+@log_with_args(config.level)
 def get_endpoint(self, dataset: SingleDatasetResponse):
     # Initialize the query dictionary.
     query = {}
@@ -26,7 +26,7 @@ def get_endpoint(self, dataset: SingleDatasetResponse):
     responseClass = get_docs_by_response_type(self, include, query, dataset, limit, skip)
     return responseClass
 
-@log_with_args(level)
+@log_with_args(config.level)
 def get_endpoint_with_id(self, dataset: SingleDatasetResponse):
     patients_confile=import_patients_confile()
     query = {}
@@ -45,7 +45,7 @@ def get_endpoint_with_id(self, dataset: SingleDatasetResponse):
     responseClass = get_docs_by_response_type(self, include, query, dataset, limit, skip)
     return responseClass
 
-@log_with_args(level)
+@log_with_args(config.level)
 def get_endpoint_cross_query(self, dataset: SingleDatasetResponse):
     # Get the translation of ids for the entry types lookup for the cross query.
     mapping = get_non_collections_cross_query_attributes(self, RequestAttributes.entry_type, RequestAttributes.pre_entry_type)

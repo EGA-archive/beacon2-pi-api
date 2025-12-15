@@ -1,5 +1,5 @@
 from beacon.logs.logs import log_with_args, LOG
-from beacon.conf.conf import level
+from beacon.conf.conf_override import config
 import aiohttp.web as web
 from beacon.permissions.__main__ import query_permissions
 from bson import json_util
@@ -13,7 +13,7 @@ from beacon.utils.modules import load_framework_module, load_source_module
 
 class EntryTypeView(EndpointView):
     @query_permissions
-    @log_with_args(level)
+    @log_with_args(config.level)
     async def handler(self, datasets, username, time_now):
         # Load the executor from the module that owns the source of the entry type
         module = load_source_module(self, "executor")

@@ -1,10 +1,10 @@
-from beacon.conf import conf
+from beacon.conf import conf_override
 
 #### Please, all the handovers you need for beacon to show like the handover_1 example below #####
 
 handover_1={
     "note": "Description of the handover",
-    "url": conf.uri,
+    "url": conf_override.config.uri,
     "handoverType": {
                     'id': 'NCIT:C189151',
                     'label': 'Study Data Repository'

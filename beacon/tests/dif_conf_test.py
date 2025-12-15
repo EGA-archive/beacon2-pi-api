@@ -2,7 +2,7 @@ from aiohttp.test_utils import TestClient, TestServer, loop_context
 from beacon.tests.__main__ import create_app
 import json
 import unittest
-import beacon.conf.conf as conf
+import beacon.conf.conf_override as conf_override
 from beacon.logs.logs import LOG
 from beacon.validator.configuration import check_configuration
 
@@ -15,7 +15,7 @@ class TestNoFilters(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_analysis_query_without_filters_allowed():
-                resp = await client.get(conf.uri_subpath+"/"+analysis.endpoint_name)
+                resp = await client.get(conf_override.config.uri_subpath+"/"+analysis.endpoint_name)
                 assert resp.status == 400
             loop.run_until_complete(test_analysis_query_without_filters_allowed())
             loop.run_until_complete(client.close())
@@ -28,7 +28,7 @@ class TestNoFilters(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_biosample_query_without_filters_allowed():
-                resp = await client.get(conf.uri_subpath+"/"+biosample.endpoint_name)
+                resp = await client.get(conf_override.config.uri_subpath+"/"+biosample.endpoint_name)
                 assert resp.status == 400
             loop.run_until_complete(test_biosample_query_without_filters_allowed())
             loop.run_until_complete(client.close())
@@ -41,7 +41,7 @@ class TestNoFilters(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_cohort_query_without_filters_allowed():
-                resp = await client.get(conf.uri_subpath+"/"+cohort.endpoint_name)
+                resp = await client.get(conf_override.config.uri_subpath+"/"+cohort.endpoint_name)
                 assert resp.status == 400
             loop.run_until_complete(test_cohort_query_without_filters_allowed())
             loop.run_until_complete(client.close())
@@ -54,7 +54,7 @@ class TestNoFilters(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_dataset_query_without_filters_allowed():
-                resp = await client.get(conf.uri_subpath+"/"+dataset.endpoint_name)
+                resp = await client.get(conf_override.config.uri_subpath+"/"+dataset.endpoint_name)
                 assert resp.status == 400
             loop.run_until_complete(test_dataset_query_without_filters_allowed())
             loop.run_until_complete(client.close())
@@ -67,7 +67,7 @@ class TestNoFilters(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_genomicVariant_query_without_filters_allowed():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name)
+                resp = await client.get(conf_override.config.uri_subpath+"/"+genomicVariant.endpoint_name)
                 assert resp.status == 400
             loop.run_until_complete(test_genomicVariant_query_without_filters_allowed())
             loop.run_until_complete(client.close())
@@ -80,7 +80,7 @@ class TestNoFilters(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_individual_query_without_filters_allowed():
-                resp = await client.get(conf.uri_subpath+"/"+individual.endpoint_name)
+                resp = await client.get(conf_override.config.uri_subpath+"/"+individual.endpoint_name)
                 assert resp.status == 400
             loop.run_until_complete(test_individual_query_without_filters_allowed())
             loop.run_until_complete(client.close())
@@ -93,7 +93,7 @@ class TestNoFilters(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_run_query_without_filters_allowed():
-                resp = await client.get(conf.uri_subpath+"/"+run.endpoint_name)
+                resp = await client.get(conf_override.config.uri_subpath+"/"+run.endpoint_name)
                 assert resp.status == 400
             loop.run_until_complete(test_run_query_without_filters_allowed())
             loop.run_until_complete(client.close())
@@ -106,7 +106,7 @@ class TestNoFilters(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_map_endpoint_response_with_disabled_endpoint():
-                resp = await client.get(conf.uri_subpath+"/map")
+                resp = await client.get(conf_override.config.uri_subpath+"/map")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -122,7 +122,7 @@ class TestNoFilters(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_configuration_endpoint_response_with_disabled_endpoint():
-                resp = await client.get(conf.uri_subpath+"/configuration")
+                resp = await client.get(conf_override.config.uri_subpath+"/configuration")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -342,8 +342,8 @@ class TestNoFilters(unittest.TestCase):
             run.granularity="record"
     def test_main_check_configuration_http(self):
         with loop_context() as loop:
-            from beacon.conf import conf
-            conf.uri="https://localhost:5010"
+            from beacon.conf import conf_override
+            conf_override.config.uri="https://localhost:5010"
             app = create_app()
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
@@ -351,22 +351,22 @@ class TestNoFilters(unittest.TestCase):
                 check_configuration()
             loop.run_until_complete(test_check_configuration_http())
             loop.run_until_complete(client.close())
-            conf.uri="http://localhost:50101"
+            conf_override.config.uri="http://localhost:50101"
     def test_main_check_configuration_wrong_uri(self):
         with loop_context() as loop:
-            from beacon.conf import conf
-            conf.uri="afafsafas"
+            from beacon.conf import conf_override
+            conf_override.config.uri="afafsafas"
             async def test_check_configuration_wrong_uri():
                 try:
                     check_configuration()
                 except Exception:
                     pass
             loop.run_until_complete(test_check_configuration_wrong_uri())
-            conf.uri="http://localhost:50101"
+            conf_override.config.uri="http://localhost:50101"
     def test_main_check_configuration_wrong_uri_trailing_slash(self):
         with loop_context() as loop:
-            from beacon.conf import conf
-            conf.uri="http://localhost:50101/"
+            from beacon.conf import conf_override
+            conf_override.config.uri="http://localhost:50101/"
 
             async def test_check_configuration_wrong_uri_trailing_slash():
                 try:
@@ -374,33 +374,33 @@ class TestNoFilters(unittest.TestCase):
                 except Exception:
                     pass
             loop.run_until_complete(test_check_configuration_wrong_uri_trailing_slash())
-            conf.uri="http://localhost:50101"
+            conf_override.config.uri="http://localhost:50101"
     def test_main_check_configuration_wrong_uri_subpath_trailing_slash(self):
         with loop_context() as loop:
-            from beacon.conf import conf
-            conf.uri_subpath="/api/"
+            from beacon.conf import conf_override
+            conf_override.config.uri_subpath="/api/"
             async def test_check_configuration_wrong_uri_subpath_trailing_slash():
                 try:
                     check_configuration()
                 except Exception:
                     pass
             loop.run_until_complete(test_check_configuration_wrong_uri_subpath_trailing_slash())
-            conf.uri_subpath="/api"
+            conf_override.config.uri_subpath="/api"
     def test_main_check_configuration_wrong_uri_subpath_starting_slash_missing(self):
         with loop_context() as loop:
-            from beacon.conf import conf
-            conf.uri_subpath="api"
+            from beacon.conf import conf_override
+            conf_override.config.uri_subpath="api"
             async def test_check_configuration_wrong_uri_subpath_starting_slash():
                 try:
                     check_configuration()
                 except Exception:
                     pass
             loop.run_until_complete(test_check_configuration_wrong_uri_subpath_starting_slash())
-            conf.uri_subpath="/api"
+            conf_override.config.uri_subpath="/api"
     def test_main_check_configuration_wrong_query_budget_amount(self):
         with loop_context() as loop:
-            from beacon.conf import conf
-            conf.query_budget_amount="api"
+            from beacon.conf import conf_override
+            conf_override.config.query_budget_amount="api"
             app = create_app()
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
@@ -411,51 +411,51 @@ class TestNoFilters(unittest.TestCase):
                     pass
             loop.run_until_complete(test_check_configuration_wrong_query_budget_amount())
             loop.run_until_complete(client.close())
-            conf.query_budget_amount=3
+            conf_override.config.query_budget_amount=3
     def test_main_check_configuration_wrong_query_budget_time(self):
         with loop_context() as loop:
-            from beacon.conf import conf
-            conf.query_budget_time_in_seconds="api"
+            from beacon.conf import conf_override
+            conf_override.config.query_budget_time_in_seconds="api"
             async def test_check_configuration_wrong_query_budget_time():
                 try:
                     check_configuration()
                 except Exception:
                     pass
             loop.run_until_complete(test_check_configuration_wrong_query_budget_time())
-            conf.query_budget_time_in_seconds=3
+            conf_override.config.query_budget_time_in_seconds=3
     def test_main_check_configuration_wrong_query_budget_user(self):
         with loop_context() as loop:
-            from beacon.conf import conf
-            conf.query_budget_per_user="api"
+            from beacon.conf import conf_override
+            conf_override.config.query_budget_per_user="api"
             async def test_check_configuration_wrong_query_budget_user():
                 try:
                     check_configuration()
                 except Exception:
                     pass
             loop.run_until_complete(test_check_configuration_wrong_query_budget_user())
-            conf.query_budget_per_user=False
+            conf_override.config.query_budget_per_user=False
     def test_main_check_configuration_wrong_query_budget_ip(self):
         with loop_context() as loop:
-            from beacon.conf import conf
-            conf.query_budget_per_ip="api"
+            from beacon.conf import conf_override
+            conf_override.config.query_budget_per_ip="api"
             async def test_check_configuration_wrong_query_budget_ip():
                 try:
                     check_configuration()
                 except Exception:
                     pass
             loop.run_until_complete(test_check_configuration_wrong_query_budget_ip())
-            conf.query_budget_per_ip=False
+            conf_override.config.query_budget_per_ip=False
     def test_main_check_configuration_wrong_query_budget_database(self):
         with loop_context() as loop:
-            from beacon.conf import conf
-            conf.query_budget_database="api"
+            from beacon.conf import conf_override
+            conf_override.config.query_budget_database="api"
             async def test_check_configuration_wrong_query_budget_database():
                 try:
                     check_configuration()
                 except Exception:
                     pass
             loop.run_until_complete(test_check_configuration_wrong_query_budget_database())
-            conf.query_budget_database="mongo"
+            conf_override.config.query_budget_database="mongo"
     def test_main_check_configuration_with_wrong_analysis_database(self):
         with loop_context() as loop:
             from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import analysis
@@ -563,26 +563,26 @@ class TestNoFilters(unittest.TestCase):
             run.database="mongo"
     def test_main_check_configuration_wrong_environment(self):
         with loop_context() as loop:
-            from beacon.conf import conf
-            conf.environment="api"
+            from beacon.conf import conf_override
+            conf_override.config.environment="api"
             async def test_check_configuration_wrong_environment():
                 try:
                     check_configuration()
                 except Exception:
                     pass
             loop.run_until_complete(test_check_configuration_wrong_environment())
-            conf.environment="dev"
+            conf_override.config.environment="dev"
     def test_main_check_configuration_wrong_default_granularity(self):
         with loop_context() as loop:
-            from beacon.conf import conf
-            conf.default_beacon_granularity="api"
+            from beacon.conf import conf_override
+            conf_override.config.default_beacon_granularity="api"
             async def test_check_configuration_wrong_granularity():
                 try:
                     check_configuration()
                 except Exception:
                     pass
             loop.run_until_complete(test_check_configuration_wrong_granularity())
-            conf.default_beacon_granularity="record"
+            conf_override.config.default_beacon_granularity="record"
     def test_analyses_endpoint_name_is_string(self):
         with loop_context() as loop:
             from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import analysis

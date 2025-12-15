@@ -1,8 +1,8 @@
 from beacon.connections.mongo.__init__ import genomicVariations, biosamples, targets as targets_, caseLevelData
 from beacon.logs.logs import log_with_args, LOG
-from beacon.conf.conf import level
+from beacon.conf.conf_override import config
 
-@log_with_args(level)
+@log_with_args(config.level)
 def cross_query_scope_is_genomicVariant_and_entry_type_is_not(self, original_id, query, dataset):
     HGVSIds = genomicVariations \
         .find(query, {"identifiers.genomicHGVSId": 1, "_id": 0})

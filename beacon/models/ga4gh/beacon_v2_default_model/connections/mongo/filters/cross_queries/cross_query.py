@@ -3,11 +3,11 @@ from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.cross
 from beacon.connections.mongo.filters.cross_queries.scope_is_not_entry_type import scope_is_not_entry_type
 from beacon.connections.mongo.__init__ import genomicVariations, individuals, analyses, biosamples, runs, datasets
 from beacon.logs.logs import log_with_args, LOG
-from beacon.conf.conf import level
+from beacon.conf.conf_override import config
 from beacon.request.classes import RequestAttributes
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.utils import import_dataset_confile, import_analysis_confile, import_biosample_confile, import_cohort_confile, import_individual_confile, import_genomicVariant_confile, import_run_confile
 
-@log_with_args(level)
+@log_with_args(config.level)
 def cross_query(self, query: dict, scope: str, request_parameters: dict, dataset: str):
     # Check for the different scopes and entry types to apply a different query syntax built.
     if scope == 'genomicVariation' and RequestAttributes.entry_type == genomicVariant_confile["endpoint_name"]:

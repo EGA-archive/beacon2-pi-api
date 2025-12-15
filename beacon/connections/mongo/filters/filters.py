@@ -2,7 +2,7 @@ from typing import List
 import re
 from beacon.request.parameters import AlphanumericFilter, CustomFilter, OntologyFilter
 from beacon.logs.logs import log_with_args, LOG
-from beacon.conf.conf import level
+from beacon.conf.conf_override import config
 from beacon.connections.mongo.filters.request_parameters import request_parameters_from_modules
 from beacon.connections.mongo.filters.alphanumeric import apply_alphanumeric_filter
 from beacon.connections.mongo.filters.ontology import apply_ontology_filter
@@ -10,8 +10,8 @@ from beacon.connections.mongo.filters.custom import apply_custom_filter
 
 CURIE_REGEX = r'^([a-zA-Z0-9]*):\/?[a-zA-Z0-9./]*$'
 
-@log_with_args(level)
-def apply_filters(self, query: dict, filters: List[dict], query_parameters: dict, dataset: str) -> dict:
+@log_with_args(config.level)
+def apply_filters(self, query: dict, filters: List, query_parameters: dict, dataset: str) -> dict:
     # Initiate the wrapper query dictionary and save the request parameters in a new variable to differentiate it from the variable arrived in the args
     request_parameters = query_parameters
     total_query={}
@@ -21,21 +21,42 @@ def apply_filters(self, query: dict, filters: List[dict], query_parameters: dict
         if query != {} and request_parameters == {}:
             total_query["$and"].append(query)
         for filter in filters:
-            partial_query = {}
-            if "value" in filter:
-                filter = AlphanumericFilter(**filter)
-                partial_query = apply_alphanumeric_filter(self, partial_query, filter, dataset, False)
-            elif "includeDescendantTerms" not in filter and '.' not in filter["id"] and filter["id"].isupper():
-                filter=OntologyFilter(**filter)
-                filter.includeDescendantTerms=True
-                partial_query = apply_ontology_filter(self, partial_query, filter, request_parameters, dataset)
-            elif "similarity" in filter or "includeDescendantTerms" in filter or re.match(CURIE_REGEX, filter["id"]) and filter["id"].isupper():
-                filter = OntologyFilter(**filter)
-                partial_query = apply_ontology_filter(self, partial_query, filter, request_parameters, dataset)
+            if isinstance(filter, List):
+                nested_query={}
+                nested_query["$or"]=[]
+                for nested_filter in filter:
+                    partial_query = {}
+                    if "value" in nested_filter:
+                        nested_filter = AlphanumericFilter(**nested_filter)
+                        partial_query = apply_alphanumeric_filter(self, partial_query, nested_filter, dataset, False)
+                    elif "includeDescendantTerms" not in nested_filter and '.' not in nested_filter["id"] and nested_filter["id"].isupper():
+                        nested_filter=OntologyFilter(**nested_filter)
+                        nested_filter.includeDescendantTerms=True
+                        partial_query = apply_ontology_filter(self, partial_query, nested_filter, request_parameters, dataset)
+                    elif "similarity" in nested_filter or "includeDescendantTerms" in nested_filter or re.match(CURIE_REGEX, nested_filter["id"]) and nested_filter["id"].isupper():
+                        nested_filter = OntologyFilter(**nested_filter)
+                        partial_query = apply_ontology_filter(self, partial_query, nested_filter, request_parameters, dataset)
+                    else:
+                        nested_filter = CustomFilter(**nested_filter)
+                        partial_query = apply_custom_filter(self, partial_query, nested_filter, dataset)
+                    nested_query["$or"].append(partial_query)
+                total_query["$and"].append(nested_query)
             else:
-                filter = CustomFilter(**filter)
-                partial_query = apply_custom_filter(self, partial_query, filter, dataset)
-            total_query["$and"].append(partial_query)
+                partial_query = {}
+                if "value" in filter:
+                    filter = AlphanumericFilter(**filter)
+                    partial_query = apply_alphanumeric_filter(self, partial_query, filter, dataset, False)
+                elif "includeDescendantTerms" not in filter and '.' not in filter["id"] and filter["id"].isupper():
+                    filter=OntologyFilter(**filter)
+                    filter.includeDescendantTerms=True
+                    partial_query = apply_ontology_filter(self, partial_query, filter, request_parameters, dataset)
+                elif "similarity" in filter or "includeDescendantTerms" in filter or re.match(CURIE_REGEX, filter["id"]) and filter["id"].isupper():
+                    filter = OntologyFilter(**filter)
+                    partial_query = apply_ontology_filter(self, partial_query, filter, request_parameters, dataset)
+                else:
+                    filter = CustomFilter(**filter)
+                    partial_query = apply_custom_filter(self, partial_query, filter, dataset)
+                total_query["$and"].append(partial_query)
             if total_query["$and"] == [{'$or': []}] or total_query['$and'] == []:
                 total_query = {}
     # If there are request parameters, apply them and save the query syntax in the wrapper query dictionary total_query

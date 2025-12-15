@@ -1,9 +1,9 @@
 from beacon.connections.mongo.utils import join_query
 from beacon.logs.logs import log_with_args, LOG
-from beacon.conf.conf import level
+from beacon.conf.conf_override import config
 from beacon.connections.mongo.__init__ import targets as targets_, caseLevelData
 
-@log_with_args(level)
+@log_with_args(config.level)
 def cross_query_entry_type_is_genomicVariant_and_scope_is_not(self, mongo_collection, original_id, query, dataset):
     join_ids=list(join_query(self, mongo_collection, query, original_id, dataset))
     if join_ids == []:

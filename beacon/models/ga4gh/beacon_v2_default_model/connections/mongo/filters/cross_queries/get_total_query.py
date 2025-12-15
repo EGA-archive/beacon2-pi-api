@@ -1,7 +1,7 @@
 from beacon.logs.logs import log_with_args, LOG
-from beacon.conf.conf import level
+from beacon.conf.conf_override import config
 
-@log_with_args(level)
+@log_with_args(config.level)
 def get_total_query(self, biosampleIds, total_query, original_id):
     try:
         finalids=[]

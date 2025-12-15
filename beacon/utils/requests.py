@@ -3,7 +3,7 @@ from aiohttp.web_request import Request
 from aiohttp import web
 from beacon.request.parameters import RequestParams
 from beacon.logs.logs import log_with_args, LOG
-from beacon.conf.conf import level, uri, uri_subpath, api_version
+from beacon.conf.conf_override import config
 from beacon.request.classes import RequestAttributes
 from beacon.exceptions.exceptions import IncoherenceInRequestError, InvalidRequest, WrongURIPath, NoFiltersAllowed
 import html
@@ -14,7 +14,7 @@ from pydantic import ValidationError
 from beacon.utils.modules import get_one_module_conf
 import importlib
 
-@log_with_args(level)
+@log_with_args(config.level)
 def parse_query_string(self, request):
     '''
     Here we process the query string dictionary, which comes in a multidict (request.query) with each of the parameters as key of the dict and we transform it in a dictionary
@@ -33,10 +33,56 @@ def parse_query_string(self, request):
             else:
                 v_list.append(v)
             query_string_body["query"]["filters"]=[]
+            is_or = False
+            or_list=[]
             for id in v_list:
                 v_dict={}
-                v_dict['id']=id
-                query_string_body["query"]["filters"].append(v_dict)
+                new_id=id
+                if '&gt;' in new_id:
+                    split_id = new_id.split('&gt;')
+                    v_dict["id"]=split_id[0]
+                    new_id=split_id[0]
+                    v_dict["operator"]='>'
+                    v_dict["value"]=split_id[1]
+                elif '&lt;' in new_id:
+                    split_id = new_id.split('&lt;')
+                    v_dict["id"]=split_id[0]
+                    new_id=split_id[0]
+                    v_dict["operator"]='<'
+                    v_dict["value"]=split_id[1]
+                elif '=' in new_id:
+                    split_id = new_id.split('=')
+                    v_dict["id"]=split_id[0]
+                    new_id=split_id[0]
+                    v_dict["operator"]='='
+                    v_dict["value"]=split_id[1]
+                elif '!' in new_id:
+                    split_id = new_id.split('!')
+                    v_dict["id"]=split_id[0]
+                    new_id=split_id[0]
+                    v_dict["operator"]='!'
+                    v_dict["value"]=split_id[1]
+                if '[' and ']' in new_id:
+                    new_id = new_id.replace('[','')
+                    new_id = new_id.replace(']','')
+                    v_dict['id'] = new_id
+                    is_or=False
+                elif '[' in new_id:
+                    v_dict['id'] = new_id.replace('[','')
+                    is_or=True
+                elif ']' in new_id:
+                    v_dict['id'] = new_id.replace(']','')
+                    is_or=False
+                else:
+                    v_dict['id']=new_id
+                if is_or == True:
+                    or_list.append(v_dict)
+                elif is_or == False and or_list != []:
+                    or_list.append(v_dict)
+                    query_string_body["query"]["filters"].append(or_list)
+                    or_list = []
+                elif is_or == False:
+                    query_string_body["query"]["filters"].append(v_dict)
         elif k == 'includeResultsetResponses':
             query_string_body["query"]["includeResultsetResponses"] = v
         elif k == 'skip':
@@ -75,7 +121,7 @@ def parse_query_string(self, request):
         query_string_body.pop("query")
     return query_string_body
 
-@log_with_args(level)
+@log_with_args(config.level)
 async def get_qparams(self, request):
     '''
     The function will catch all the parameters in the query string and see if they also exist in a json body of the request. If a parameter is found in both places and is different, we
@@ -108,7 +154,7 @@ async def get_qparams(self, request):
     except ValidationError:
         raise InvalidRequest('set of meta/query parameters: {} not allowed'.format(post_data))
     
-@log_with_args(level)
+@log_with_args(config.level)
 def set_entry_type_configuration(self):
     '''
     On the action of checking if there is a match between the endpoint queried an entry type in configuration, we then grab the database (source), max_granularity (allowed_granularity)
@@ -175,7 +221,7 @@ def set_entry_type_configuration(self):
 
         
     
-@log_with_args(level)
+@log_with_args(config.level)
 def set_entry_type(self, request):
     '''
     We receive an absolute url with a host and a port, the endpoint queried and the query string. We check that the url and host match with the beacon uri in conf and then
@@ -184,12 +230,12 @@ def set_entry_type(self, request):
     abs_url_with_query_string=str(request.url)
     abs_url=abs_url_with_query_string.split('?')
     abs_url=abs_url[0]
-    starting_endpoint = len(uri) + len(uri_subpath)
-    def_uri = uri + uri_subpath
+    starting_endpoint = len(config.uri) + len(config.uri_subpath)
+    def_uri = config.uri + config.uri_subpath
     if 'https' not in abs_url and 'https' in def_uri:
         abs_url = abs_url.replace('http', 'https')
     if abs_url[:starting_endpoint] != def_uri :
-        LOG.warning('configuration variable uri: {} not the same as where the beacon is hosted'.format(uri))
+        LOG.warning('configuration variable uri: {} not the same as where the beacon is hosted'.format(config.uri))
     if abs_url_with_query_string.endswith('/api'):
         RequestAttributes.entry_type='info'
         set_entry_type_configuration(self)
@@ -197,13 +243,13 @@ def set_entry_type(self, request):
         path_list = abs_url[starting_endpoint:].split('/')
         path_list = list(filter(None, path_list))
         if path_list == []:
-            raise WrongURIPath('the {} parameter from conf.py is not the same as the root one received in request: {}. Configure you uri accordingly.'.format(uri, abs_url))
+            raise WrongURIPath('the {} parameter from conf.py is not the same as the root one received in request: {}. Configure you uri accordingly.'.format(config.uri, abs_url))
         if len(path_list) > 2:
             try:
                 RequestAttributes.pre_entry_type=path_list[0]
                 RequestAttributes.entry_type=path_list[2]
             except Exception:
-                raise WrongURIPath('path received is wrong, check your uri: {} from conf file to make sure is correct'.format(uri))
+                raise WrongURIPath('path received is wrong, check your uri: {} from conf file to make sure is correct'.format(config.uri))
             RequestAttributes.entry_id=request.match_info.get('id', None)
             set_entry_type_configuration(self)
             
@@ -211,12 +257,12 @@ def set_entry_type(self, request):
             try:
                 RequestAttributes.entry_type=path_list[0]
             except Exception:
-                raise WrongURIPath('path received is wrong, check your uri: {} from conf file to make sure is correct'.format(uri))
+                raise WrongURIPath('path received is wrong, check your uri: {} from conf file to make sure is correct'.format(config.uri))
             RequestAttributes.entry_id=request.match_info.get('id', None)
             set_entry_type_configuration(self)
             
 
-@log_with_args(level)
+@log_with_args(config.level)
 def set_response_type(self):
     '''
     We receive an absolute url with a host and a port, the endpoint queried and the query string. We check that the url and host match with the beacon uri in conf and then
@@ -239,7 +285,7 @@ def set_response_type(self):
     if RequestAttributes.qparams.meta.apiVersion in os.listdir("/beacon/framework"):
         RequestAttributes.returned_apiVersion = RequestAttributes.qparams.meta.apiVersion
     else:
-        RequestAttributes.returned_apiVersion = api_version
+        RequestAttributes.returned_apiVersion = config.api_version
 
     if RequestAttributes.entry_type == 'filtering_terms':
         RequestAttributes.returned_schema = {"schema": "filtering_terms-{}".format(RequestAttributes.returned_apiVersion)}
@@ -254,16 +300,16 @@ def set_response_type(self):
     elif RequestAttributes.entry_type == 'entry_types':
         RequestAttributes.returned_schema = {"schema": "entry_types-{}".format(RequestAttributes.returned_apiVersion)}
 
-@log_with_args(level)
+@log_with_args(config.level)
 def set_ip(self, request):
     RequestAttributes.ip=request.remote
 
-@log_with_args(level)
+@log_with_args(config.level)
 def set_headers(self, request):
     RequestAttributes.headers=request.headers
 
     
-@log_with_args(level)
+@log_with_args(config.level)
 async def deconstruct_request(self, request):
     '''
     Here we grab the attributes that come from a request: ip, headers, entry_type related attributes and request parameters in four different steps, the order of which is

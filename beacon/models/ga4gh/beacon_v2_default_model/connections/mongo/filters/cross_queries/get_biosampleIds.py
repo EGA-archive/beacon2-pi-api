@@ -1,8 +1,8 @@
 from beacon.connections.mongo.__init__ import genomicVariations, caseLevelData, targets as targets_
 from beacon.logs.logs import log_with_args, LOG
-from beacon.conf.conf import level
+from beacon.conf.conf_override import config
 
-@log_with_args(level)
+@log_with_args(config.level)
 def get_biosampleIds(self, request_parameters, dataset):
     HGVSIds = genomicVariations \
         .find(request_parameters, {"identifiers.genomicHGVSId": 1, "datasetId": 1, "_id": 0})

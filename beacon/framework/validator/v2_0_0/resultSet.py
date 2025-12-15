@@ -5,7 +5,6 @@ from pydantic import (
 from typing import List, Optional, Union, Dict
 import math
 from beacon.utils.handovers import list_of_handovers_per_dataset
-from beacon.conf import conf
 from beacon.utils.modules import load_types_of_results, load_class
 
 from pydantic import (
@@ -16,7 +15,6 @@ from pydantic import (
 from typing import List, Optional, Union, Dict
 import math
 from beacon.utils.handovers import list_of_handovers_per_dataset
-from beacon.conf import conf
 from beacon.utils.modules import load_types_of_results, load_class
 
 

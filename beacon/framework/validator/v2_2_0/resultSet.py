@@ -6,7 +6,7 @@ from pydantic import (
 from typing import List, Optional, Union, Dict
 import math
 from beacon.utils.handovers import list_of_handovers_per_dataset
-from beacon.conf import conf
+from beacon.conf import conf_override
 from beacon.utils.modules import load_types_of_results, load_class
 
 
@@ -39,15 +39,15 @@ def make_ResultsetInstance():
         resultsCount = datasetInstance.dataset_count
 
         if datasetInstance.granularity == 'record' and allowed_granularity == 'record' and granularity == 'record':
-            if conf.imprecise_count != 0 and datasetInstance.dataset_count < conf.imprecise_count:
-                resultsCount = conf.imprecise_count
-                countAdjustedTo = [conf.imprecise_count]
+            if conf_override.config.imprecise_count != 0 and datasetInstance.dataset_count < conf_override.config.imprecise_count:
+                resultsCount = conf_override.config.imprecise_count
+                countAdjustedTo = [conf_override.config.imprecise_count]
                 countPrecision = 'imprecise'
-            elif conf.round_to_tens:
+            elif conf_override.config.round_to_tens:
                 resultsCount = math.ceil(datasetInstance.dataset_count / 10.0) * 10
                 countAdjustedTo = ['immediate ten']
                 countPrecision = 'rounded'
-            elif conf.round_to_hundreds:
+            elif conf_override.config.round_to_hundreds:
                 resultsCount = math.ceil(datasetInstance.dataset_count / 100.0) * 100
                 countAdjustedTo = ['immediate hundred']
                 countPrecision = 'rounded'

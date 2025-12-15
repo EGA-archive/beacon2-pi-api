@@ -4,7 +4,7 @@ import asyncio
 import aiohttp.web as web
 import os
 from aiohttp_middlewares import cors_middleware
-from beacon.conf import conf
+from beacon.conf.conf_override import config
 import ssl
 from beacon.validator.configuration import check_configuration
 import aiohttp_autoreload
@@ -20,7 +20,7 @@ async def create_api(port):
         # Create the web app with middlewares for allowing CORS for the specific urls and to handle Not Found and other non related app errors with error_middleware
         app = web.Application(
             middlewares=[
-                cors_middleware(origins=conf.cors_urls), error_middleware
+                cors_middleware(origins=config.cors_urls), error_middleware
             ]
         )
 
@@ -33,9 +33,9 @@ async def create_api(port):
 
         # Optional: add ssl certificates to encrypt communication from the app
         ssl_context = None
-        if (os.path.isfile(conf.beacon_server_key)) and (os.path.isfile(conf.beacon_server_crt)):
+        if (os.path.isfile(config.beacon_server_key)) and (os.path.isfile(config.beacon_server_crt)):
             ssl_context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
-            ssl_context.load_cert_chain(certfile=conf.beacon_server_crt, keyfile=conf.beacon_server_key)
+            ssl_context.load_cert_chain(certfile=config.beacon_server_crt, keyfile=config.beacon_server_key)
         
         # Add a reloader in case any file is modified, so the app is restarted automatically
         aiohttp_autoreload.start()

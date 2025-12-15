@@ -2,10 +2,10 @@ from typing import Optional
 from beacon.connections.beaconCLI.__init__ import client
 import subprocess
 from beacon.logs.logs import log_with_args, LOG
-from beacon.conf.conf import level
+from beacon.conf.conf_override import config
 from beacon.exceptions.exceptions import DatabaseIsDown
 
-@log_with_args(level)
+@log_with_args(config.level)
 def get_variants(self, entry_id: Optional[str], dataset: str):
     stdin, stdout, stderr = client.exec_command('cd /CLItest && python3 main.py -rg 37 -c 1 -p 1 --range 1000000000 --public')
     try:

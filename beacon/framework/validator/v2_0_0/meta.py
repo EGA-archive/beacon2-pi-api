@@ -3,7 +3,7 @@ from pydantic import (
 )
 from typing import List, Optional, Dict
 from beacon.request.parameters import SchemasPerEntity, Pagination
-from beacon.conf import conf
+from beacon.conf import conf_override
 
 class ReceivedRequestSummary(BaseModel):
     apiVersion: str
@@ -16,14 +16,14 @@ class ReceivedRequestSummary(BaseModel):
     includeResultsetResponses: Optional[str] = None
 
 class Meta(BaseModel):
-    apiVersion: str=conf.api_version
-    beaconId: str=conf.beacon_id
+    apiVersion: str=conf_override.config.api_version
+    beaconId: str=conf_override.config.beacon_id
     receivedRequestSummary: ReceivedRequestSummary
     returnedGranularity: str
     returnedSchemas: List[SchemasPerEntity]
     testMode: Optional[bool] = None
 
 class InformationalMeta(BaseModel):
-    apiVersion: str=conf.api_version
-    beaconId: str=conf.beacon_id
+    apiVersion: str=conf_override.config.api_version
+    beaconId: str=conf_override.config.beacon_id
     returnedSchemas: List[SchemasPerEntity]

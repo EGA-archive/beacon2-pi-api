@@ -1,8 +1,8 @@
 from beacon.connections.mongo.utils import join_query
 from beacon.logs.logs import log_with_args, LOG
-from beacon.conf.conf import level
+from beacon.conf.conf_override import config
 
-@log_with_args(level)
+@log_with_args(config.level)
 def scope_is_not_entry_type(self, original_id, final_id, def_list, mongo_collection, query, dataset):
     """
     If the scope is not the entry type, perform the id translation for the intersection of the ids of the cross query.

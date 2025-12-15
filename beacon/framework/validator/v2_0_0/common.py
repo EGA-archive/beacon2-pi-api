@@ -4,7 +4,7 @@ from pydantic import (
 )
 from typing import Optional
 from beacon.request.classes import RequestAttributes
-from beacon.conf import conf
+from beacon.conf import conf_override
 import math
 import re
 
@@ -29,12 +29,12 @@ class ResponseSummary(BaseModel):
         granularity = RequestAttributes.qparams.query.requestedGranularity
         for dataset in datasets:
             if dataset.granularity != 'boolean' and RequestAttributes.allowed_granularity != 'boolean' and granularity != 'boolean':
-                if conf.imprecise_count !=0:
-                    if dataset.dataset_count < conf.imprecise_count:
-                        count+=conf.imprecise_count
-                elif conf.round_to_tens == True:
+                if conf_override.config.imprecise_count !=0:
+                    if dataset.dataset_count < conf_override.config.imprecise_count:
+                        count+=conf_override.config.imprecise_count
+                elif conf_override.config.round_to_tens == True:
                     count+=math.ceil(dataset.dataset_count / 10.0) * 10
-                elif conf.round_to_hundreds == True:
+                elif conf_override.config.round_to_hundreds == True:
                     count+=math.ceil(dataset.dataset_count / 100.0) * 100
                 else:
                     count +=dataset.dataset_count

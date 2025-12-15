@@ -1,4 +1,4 @@
-from beacon.conf import conf
+from beacon.conf import conf_override
 from beacon.logs.logs import LOG, log_with_args_check_configuration
 import os
 import re
@@ -14,7 +14,7 @@ def contains_special_characters(string):
             return True
     return False
 
-@log_with_args_check_configuration(conf.level)
+@log_with_args_check_configuration(conf_override.config.level)
 def check_configuration():
     analysis_confile=import_analysis_confile()
     biosample_confile=import_biosample_confile()
@@ -65,30 +65,30 @@ def check_configuration():
         raise Exception("individual granularity must be one string between boolean, count or record")
     if run_confile["run"]["endpoint_name"] != '' and run_confile["run"]["max_granularity"] not in ['boolean', 'count', 'record']:
         raise Exception("run granularity must be one string between boolean, count or record")
-    if conf.uri.startswith('http://'):
+    if conf_override.config.uri.startswith('http://'):
         LOG.warning('The uri of your beacon is not https. Please change to https as soon as you can.')
-    elif conf.uri.startswith('https://'):
+    elif conf_override.config.uri.startswith('https://'):
         pass
     else:
         raise Exception("The uri of your beacon must start with https protocol.")
-    if conf.uri.endswith('/'):
+    if conf_override.config.uri.endswith('/'):
         raise Exception("The uri can't end with trailing slash /")
-    if conf.uri_subpath.endswith('/'):
+    if conf_override.config.uri_subpath.endswith('/'):
         raise Exception("The uri_subpath can't end with trailing slash /, leave it empty if you don't want to add any subpath.")
-    if conf.uri_subpath.startswith('/'):
+    if conf_override.config.uri_subpath.startswith('/'):
         pass
     else:
         raise Exception("The uri_subpath has to start with slash /.")
-    if not isinstance(conf.query_budget_amount, int) or conf.query_budget_amount<0:
+    if not isinstance(conf_override.config.query_budget_amount, int) or conf_override.config.query_budget_amount<0:
         raise Exception("The amount of query budget attempts allowed must be a natural number.")
-    if not isinstance(conf.query_budget_time_in_seconds, int) or conf.query_budget_time_in_seconds<0:
+    if not isinstance(conf_override.config.query_budget_time_in_seconds, int) or conf_override.config.query_budget_time_in_seconds<0:
         raise Exception("The rate of query time in seconds for the budget must be a natural number.")
-    if not isinstance(conf.query_budget_per_user, bool):
+    if not isinstance(conf_override.config.query_budget_per_user, bool):
         raise Exception("The query budget per user parameter must be boolean.")
-    if not isinstance(conf.query_budget_per_ip, bool):
+    if not isinstance(conf_override.config.query_budget_per_ip, bool):
         raise Exception("The query budget per ip parameter must be boolean.")
-    if conf.query_budget_database not in [name for name in os.listdir("/beacon/connections") if os.path.isdir(os.path.join("/beacon/connections", name))]:
-        raise Exception('The database {} for budget needs to match a directory name in the beacon/connections folder'.format(conf.query_budget_database))
+    if conf_override.config.query_budget_database not in [name for name in os.listdir("/beacon/connections") if os.path.isdir(os.path.join("/beacon/connections", name))]:
+        raise Exception('The database {} for budget needs to match a directory name in the beacon/connections folder'.format(conf_override.config.query_budget_database))
     if run_confile["run"]["connection"]["name"] not in [name for name in os.listdir("/beacon/connections") if os.path.isdir(os.path.join("/beacon/connections", name))]:
         raise Exception('The database {} for run records needs to match a directory name in the beacon/connections folder'.format(run_confile["run"]["connection"]["name"]))
     if individual_confile["individual"]["connection"]["name"] not in [name for name in os.listdir("/beacon/connections") if os.path.isdir(os.path.join("/beacon/connections", name))]:
@@ -103,18 +103,18 @@ def check_configuration():
         raise Exception('The database {} for biosample records needs to match a directory name in the beacon/connections folder'.format(biosample_confile["biosample"]["connection"]["name"]))
     if analysis_confile["analysis"]["connection"]["name"] not in [name for name in os.listdir("/beacon/connections") if os.path.isdir(os.path.join("/beacon/connections", name))]:
         raise Exception('The database {} for analysis records needs to match a directory name in the beacon/connections folder'.format(analysis_confile["analysis"]["connection"]["name"]))
-    if conf.environment not in ['dev', 'test', 'prod', 'DEV', 'TEST', 'PROD']:
+    if conf_override.config.environment not in ['dev', 'test', 'prod', 'DEV', 'TEST', 'PROD']:
         raise Exception('The environment variable in conf must be one between test, dev, prod')
-    if conf.default_beacon_granularity not in ['boolean', 'count', 'record']:
+    if conf_override.config.default_beacon_granularity not in ['boolean', 'count', 'record']:
         raise Exception("Configuration parameter default_beacon_granularity must be one string between boolean, count or record")
-    if not isinstance(conf.security_levels, list):
+    if not isinstance(conf_override.config.security_levels, list):
         raise Exception("Configuration parameter security_levels must be of type array")
-    for security_level in conf.security_levels:
+    for security_level in conf_override.config.security_levels:
         if security_level not in ['PUBLIC', 'REGISTERED', 'CONTROLLED']:
             raise Exception("Security levels can only have PUBLIC, REGISTERED or CONTROLLED level.")
-    if not isinstance(conf.cors_urls, list):
+    if not isinstance(conf_override.config.cors_urls, list):
         raise Exception("Configuration parameter cors_urls must be of type array")
-    for cors_url in conf.cors_urls:
+    for cors_url in conf_override.config.cors_urls:
         if not cors_url.startswith('http://'):
             if not cors_url.startswith('https://'):
                 raise Exception('The url {} in cors_urls variable must start with http protocol'.format(cors_url))
@@ -342,38 +342,38 @@ def check_configuration():
         raise Exception('The run_confile["analysis"]["allow_queries_without_filters"] must be of type bool.')
     if not isinstance(run_confile["run"]["allow_id_query"], bool):
         raise Exception('The run_confile["analysis"]["allow_id_query"] must be of type bool.')
-    if conf.level not in [logging.NOTSET, logging.INFO, logging.DEBUG, logging.WARNING, logging.ERROR, logging.FATAL, logging.CRITICAL]:
+    if conf_override.config.level not in [logging.NOTSET, logging.INFO, logging.DEBUG, logging.WARNING, logging.ERROR, logging.FATAL, logging.CRITICAL]:
         raise Exception('The config parameter level must be one possible logging library level (NOTSET, DEBUG, INFO, etc...')
-    if not isinstance(conf.log_file, str):
-        if conf.log_file != None:
+    if not isinstance(conf_override.config.log_file, str):
+        if conf_override.config.log_file != None:
             raise Exception('The config parameter log_file must be a string with the path to the dir where to store the logs or a variable None for not storing any log')
-    if not isinstance(conf.beacon_name, str):
+    if not isinstance(conf_override.config.beacon_name, str):
         raise Exception('The beacon_name config parameter must be a string')
-    if not isinstance(conf.beacon_id, str):
+    if not isinstance(conf_override.config.beacon_id, str):
         raise Exception('The beacon_id config parameter must be a string')
-    if not isinstance(conf.api_version, str):
+    if not isinstance(conf_override.config.api_version, str):
         raise Exception('The api_version config parameter must be a string')
-    if not isinstance(conf.description, str):
+    if not isinstance(conf_override.config.description, str):
         raise Exception('The description config parameter must be a string')
-    if not isinstance(conf.welcome_url, str):
+    if not isinstance(conf_override.config.welcome_url, str):
         raise Exception('The welcome_url config parameter must be a string')
-    if not isinstance(conf.alternative_url, str):
+    if not isinstance(conf_override.config.alternative_url, str):
         raise Exception('The alternative_url config parameter must be a string')
-    if not isinstance(conf.create_datetime, str):
+    if not isinstance(conf_override.config.create_datetime, str):
         raise Exception('The create_datetime config parameter must be a string')
-    if not isinstance(conf.update_datetime, str):
+    if not isinstance(conf_override.config.update_datetime, str):
         raise Exception('The update_datetime config parameter must be a string')
-    if not isinstance(conf.documentation_url, str):
+    if not isinstance(conf_override.config.documentation_url, str):
         raise Exception('The documentation_url config parameter must be a string')
-    if not conf.welcome_url.startswith('http://'):
-        if not conf.welcome_url.startswith('https://'):
-            raise Exception('The url {} in welcome_url variable must start with http protocol'.format(conf.welcome_url))
-    if not conf.alternative_url.startswith('http://'):
-        if not conf.alternative_url.startswith('https://'):
-            raise Exception('The url {} in alternative_url variable must start with http protocol'.format(conf.alternative_url))
-    if not conf.documentation_url.startswith('http://'):
-        if not conf.documentation_url.startswith('https://'):
-            raise Exception('The url {} in documentation_url variable must start with http protocol'.format(conf.documentation_url))
+    if not conf_override.config.welcome_url.startswith('http://'):
+        if not conf_override.config.welcome_url.startswith('https://'):
+            raise Exception('The url {} in welcome_url variable must start with http protocol'.format(conf_override.config.welcome_url))
+    if not conf_override.config.alternative_url.startswith('http://'):
+        if not conf_override.config.alternative_url.startswith('https://'):
+            raise Exception('The url {} in alternative_url variable must start with http protocol'.format(conf_override.config.alternative_url))
+    if not conf_override.config.documentation_url.startswith('http://'):
+        if not conf_override.config.documentation_url.startswith('https://'):
+            raise Exception('The url {} in documentation_url variable must start with http protocol'.format(conf_override.config.documentation_url))
     try:
         with open("/beacon/permissions/datasets/datasets_permissions.yml", 'r') as pfile:
             datasets = yaml.safe_load(pfile)

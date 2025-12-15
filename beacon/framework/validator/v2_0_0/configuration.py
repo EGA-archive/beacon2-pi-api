@@ -4,12 +4,12 @@ from pydantic import (
     field_validator,
     Field
 )
-from beacon.conf import conf
+from beacon.conf.conf_override import config
 from beacon.utils.modules import load_class
 
 class SecurityAttributes(BaseModel):
-    defaultGranularity: Optional[str] = conf.default_beacon_granularity
-    securityLevels: Optional[List[str]] = conf.security_levels
+    defaultGranularity: Optional[str] = config.default_beacon_granularity
+    securityLevels: Optional[List[str]] = config.security_levels
     @field_validator('defaultGranularity')
     @classmethod
     def defaultGranularity_must_be_boolean_count_record(cls, v: str) -> str:
@@ -18,7 +18,7 @@ class SecurityAttributes(BaseModel):
         return v
 
 class MaturityAttributes(BaseModel):
-    productionStatus: str = conf.environment.upper()
+    productionStatus: str = config.environment.upper()
 
 class ConfigurationSchema(load_class("entry_types", "EntryTypesSchema")):
     schema: str = Field(alias="$schema", default="https://raw.githubusercontent.com/ga4gh-beacon/beacon-framework-v2/main/configuration/beaconConfigurationSchema.json")

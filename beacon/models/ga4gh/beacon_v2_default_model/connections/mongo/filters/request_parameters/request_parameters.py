@@ -1,5 +1,5 @@
 from beacon.connections.mongo.__init__ import biosamples
-from beacon.conf.conf import level
+from beacon.conf.conf_override import config
 from beacon.logs.logs import log_with_args, LOG
 from beacon.request.classes import RequestAttributes
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.cross_queries.get_biosampleIds import get_biosampleIds
@@ -7,7 +7,7 @@ from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.cross
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.utils import import_analysis_confile, import_biosample_confile, import_individual_confile, import_run_confile
 
 
-@log_with_args(level)
+@log_with_args(config.level)
 def request_parameters(self, total_query, request_parameters, dataset): 
     # Import all the configuration files for the entry types
     individual_confile=import_individual_confile()

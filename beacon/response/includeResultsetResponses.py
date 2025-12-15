@@ -1,15 +1,16 @@
 from beacon.request.classes import RequestAttributes
-from beacon.logs.logs import log_with_args, LOG, level
+from beacon.logs.logs import log_with_args, LOG
+from beacon.conf.conf_override import config
 from beacon.response.classes import MultipleDatasetsResponse
 
-@log_with_args(level)
+@log_with_args(config.level)
 def gather_final_datasets_to_return(self, responseClass, finalMultiDatasetsClass):
     # Get the total count adding up the different datasets' counts for the responses and instantiate the dataset instance and the total counts in a wrapper class.
     finalMultiDatasetsClass.total_count+=responseClass.dataset_count
     finalMultiDatasetsClass.datasets_responses.append(responseClass)
     return finalMultiDatasetsClass
 
-@log_with_args(level)
+@log_with_args(config.level)
 def include_resultSet_responses(self, multipleDatasetsClass):
     # Load the include resultSet response from the request attributes.
     include = RequestAttributes.qparams.query.includeResultsetResponses

@@ -2,19 +2,19 @@ from pymongo.cursor import Cursor
 from beacon.connections.mongo.__init__ import client, counts as counts_, filtering_terms
 from pymongo.collection import Collection
 from beacon.logs.logs import log_with_args_mongo, LOG
-from beacon.conf.conf import level
+from beacon.conf.conf_override import config
 from beacon.exceptions.exceptions import InvalidRequest
 import aiohttp.web as web
 from beacon.request.classes import RequestAttributes
 from beacon.response.classes import SingleDatasetResponse
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.utils import import_genomicVariant_confile
 
-@log_with_args_mongo(level)
+@log_with_args_mongo(config.level)
 def query_id(self, query: dict, document_id) -> dict:
     query["id"] = document_id
     return query
 
-@log_with_args_mongo(level)
+@log_with_args_mongo(config.level)
 def join_query(self, mongo_collection, query: dict, original_id, dataset: str):
     #LOG.debug(query)
     excluding_fields={"_id": 0, original_id: 1}
@@ -26,15 +26,15 @@ def join_query(self, mongo_collection, query: dict, original_id, dataset: str):
             query["$and"].append({"datasetId": dataset})
     return mongo_collection.find(query, excluding_fields).max_time_ms(100 * 1000)
 
-@log_with_args_mongo(level)
+@log_with_args_mongo(config.level)
 def get_documents(self, collection: Collection, query: dict, skip: int, limit: int) -> Cursor:
     return collection.find(query,{"_id": 0, "datasetId": 0}).skip(skip).limit(limit).max_time_ms(100 * 1000)
 
-@log_with_args_mongo(level)
+@log_with_args_mongo(config.level)
 def get_documents_for_cohorts(self, collection: Collection, query: dict, skip: int, limit: int) -> Cursor:
     return collection.find(query,{"_id": 0}).skip(skip).limit(limit).max_time_ms(100 * 1000)
 
-@log_with_args_mongo(level)
+@log_with_args_mongo(config.level)
 def get_count(self, collection: Collection, query: dict) -> int:
     if not query:
         return collection.estimated_document_count()
@@ -60,7 +60,7 @@ def get_count(self, collection: Collection, query: dict) -> int:
             insert_total=counts_.insert_one(insert_dict)
         return total_counts
 
-@log_with_args_mongo(level)
+@log_with_args_mongo(config.level)
 def get_docs_by_response_type(self, include: str, query: dict, dataset: SingleDatasetResponse, limit: int, skip: int):
     if include == 'ALL':
         query_count=query
@@ -129,13 +129,13 @@ def get_docs_by_response_type(self, include: str, query: dict, dataset: SingleDa
     dataset.docs=docs
     return dataset
 
-@log_with_args_mongo(level)
+@log_with_args_mongo(config.level)
 def get_filtering_documents(self, collection: Collection, query: dict, remove_id: dict,skip: int, limit: int) -> Cursor:
     ##LOG.debug("FINAL QUERY: {}".format(query))
     # Get the docs by removing the unwanted id
     return collection.find(query,remove_id).skip(skip).limit(limit).max_time_ms(100 * 1000)
 
-@log_with_args_mongo(level)
+@log_with_args_mongo(config.level)
 def choose_scope(self, scope, filter):
     # Initiate the dictionaries and create the syntax to query the filtering terms database to get the available scopes
     query_filtering={}

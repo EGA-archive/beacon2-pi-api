@@ -2,7 +2,7 @@ from aiohttp.test_utils import TestClient, TestServer, loop_context
 from aiohttp import web
 from beacon.tests.__main__ import create_app
 import unittest
-import beacon.conf.conf as conf
+import beacon.conf.conf_override as conf_override
 from beacon.logs.logs import LOG
 from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import analysis, biosample, cohort, dataset, genomicVariant, individual, run
 from aiohttp_middlewares import cors_middleware
@@ -14,34 +14,34 @@ import yaml
 class TestConfigurationExceptions(unittest.TestCase):
     def test_main_check_configuration_wrong_security_levels(self):
         with loop_context() as loop:
-            from beacon.conf import conf
-            conf.security_levels="api"
+            from beacon.conf import conf_override
+            conf_override.config.security_levels="api"
             async def test_check_configuration_wrong_security_levels():
                 try:
                     check_configuration()
                 except Exception:
                     try:
-                        conf.security_levels=["api"]
+                        conf_override.config.security_levels=["api"]
                         check_configuration()
                     except Exception:
                         pass
             loop.run_until_complete(test_check_configuration_wrong_security_levels())
-            conf.security_levels=['PUBLIC', 'REGISTERED', 'CONTROLLED']
+            conf_override.config.security_levels=['PUBLIC', 'REGISTERED', 'CONTROLLED']
     def test_main_check_configuration_wrong_cors_urls(self):
         with loop_context() as loop:
-            from beacon.conf import conf
-            conf.cors_urls="api"
+            from beacon.conf import conf_override
+            conf_override.config.cors_urls="api"
             async def test_check_configuration_wrong_cors_urls():
                 try:
                     check_configuration()
                 except Exception:
                     try:
-                        conf.cors_urls=["api"]
+                        conf_override.config.cors_urls=["api"]
                         check_configuration()
                     except Exception:
                         pass
             loop.run_until_complete(test_check_configuration_wrong_cors_urls())
-            conf.cors_urls = ["http://localhost:3003", "http://localhost:3000"]
+            conf_override.config.cors_urls = ["http://localhost:3003", "http://localhost:3000"]
     def test_analyses_contains_special_chars(self):
         with loop_context() as loop:
             from beacon.models.ga4gh.beacon_v2_default_model.conf.entry_types import analysis
@@ -1661,158 +1661,158 @@ class TestConfigurationExceptions(unittest.TestCase):
             run.individual_lookup=True
     def test_conf_level_wrong(self):
         with loop_context() as loop:
-            from beacon.conf import conf
-            conf.level='something'
+            from beacon.conf import conf_override
+            conf_override.config.level='something'
             async def test_conf_level_wrong():
                 try:
                     check_configuration()
                 except Exception:
                     pass
             loop.run_until_complete(test_conf_level_wrong())
-            conf.level=logging.NOTSET
+            conf_override.config.level=logging.NOTSET
     def test_conf_log_file_wrong(self):
         with loop_context() as loop:
-            from beacon.conf import conf
-            conf.log_file=3
+            from beacon.conf import conf_override
+            conf_override.config.log_file=3
             async def test_conf_log_file_wrong():
                 try:
                     check_configuration()
                 except Exception:
                     pass
             loop.run_until_complete(test_conf_log_file_wrong())
-            conf.log_file=None
+            conf_override.config.log_file=None
     def test_conf_wrong_beacon_id(self):
         with loop_context() as loop:
-            from beacon.conf import conf
-            conf.beacon_id=3
+            from beacon.conf import conf_override
+            conf_override.config.beacon_id=3
             async def test_conf_wrong_beacon_id():
                 try:
                     check_configuration()
                 except Exception:
                     pass
             loop.run_until_complete(test_conf_wrong_beacon_id())
-            conf.beacon_id="string"
+            conf_override.config.beacon_id="string"
     def test_conf_wrong_beacon_name(self):
         with loop_context() as loop:
-            from beacon.conf import conf
-            conf.beacon_name=3
+            from beacon.conf import conf_override
+            conf_override.config.beacon_name=3
             async def test_conf_wrong_beacon_name():
                 try:
                     check_configuration()
                 except Exception:
                     pass
             loop.run_until_complete(test_conf_wrong_beacon_name())
-            conf.beacon_name="string"
+            conf_override.config.beacon_name="string"
     def test_conf_wrong_api_version(self):
         with loop_context() as loop:
-            from beacon.conf import conf
-            conf.api_version=3
+            from beacon.conf import conf_override
+            conf_override.config.api_version=3
             async def test_conf_wrong_api_version():
                 try:
                     check_configuration()
                 except Exception:
                     pass
             loop.run_until_complete(test_conf_wrong_api_version())
-            conf.api_version="string"
+            conf_override.config.api_version="string"
     def test_conf_wrong_description(self):
         with loop_context() as loop:
-            from beacon.conf import conf
-            conf.description=3
+            from beacon.conf import conf_override
+            conf_override.config.description=3
             async def test_conf_wrong_description():
                 try:
                     check_configuration()
                 except Exception:
                     pass
             loop.run_until_complete(test_conf_wrong_description())
-            conf.description="string"
+            conf_override.config.description="string"
     def test_conf_wrong_welcome_url(self):
         with loop_context() as loop:
-            from beacon.conf import conf
-            conf.welcome_url=3
+            from beacon.conf import conf_override
+            conf_override.config.welcome_url=3
             async def test_conf_wrong_welcome_url():
                 try:
                     check_configuration()
                 except Exception:
                     pass
             loop.run_until_complete(test_conf_wrong_welcome_url())
-            conf.welcome_url="string"
+            conf_override.config.welcome_url="string"
     def test_conf_wrong_alternative_url(self):
         with loop_context() as loop:
-            from beacon.conf import conf
-            conf.alternative_url=3
+            from beacon.conf import conf_override
+            conf_override.config.alternative_url=3
             async def test_conf_wrong_alternative_url():
                 try:
                     check_configuration()
                 except Exception:
                     pass
             loop.run_until_complete(test_conf_wrong_alternative_url())
-            conf.alternative_url="string"
+            conf_override.config.alternative_url="string"
     def test_conf_wrong_create_datetime(self):
         with loop_context() as loop:
-            from beacon.conf import conf
-            conf.create_datetime=3
+            from beacon.conf import conf_override
+            conf_override.config.create_datetime=3
             async def test_conf_wrong_create_datetime():
                 try:
                     check_configuration()
                 except Exception:
                     pass
             loop.run_until_complete(test_conf_wrong_create_datetime())
-            conf.create_datetime="string"
+            conf_override.config.create_datetime="string"
     def test_conf_wrong_update_datetime(self):
         with loop_context() as loop:
-            from beacon.conf import conf
-            conf.update_datetime=3
+            from beacon.conf import conf_override
+            conf_override.config.update_datetime=3
             async def test_conf_wrong_update_datetime():
                 try:
                     check_configuration()
                 except Exception:
                     pass
             loop.run_until_complete(test_conf_wrong_update_datetime())
-            conf.update_datetime="string"
+            conf_override.config.update_datetime="string"
     def test_conf_wrong_documentation_url(self):
         with loop_context() as loop:
-            from beacon.conf import conf
-            conf.documentation_url=3
+            from beacon.conf import conf_override
+            conf_override.config.documentation_url=3
             async def test_conf_wrong_documentation_url():
                 try:
                     check_configuration()
                 except Exception:
                     pass
             loop.run_until_complete(test_conf_wrong_documentation_url())
-            conf.documentation_url="string"
+            conf_override.config.documentation_url="string"
     def test_conf_wrong_welcome_url_no_http(self):
         with loop_context() as loop:
-            from beacon.conf import conf
-            conf.welcome_url="something"
+            from beacon.conf import conf_override
+            conf_override.config.welcome_url="something"
             async def test_conf_wrong_welcome_url():
                 try:
                     check_configuration()
                 except Exception:
                     pass
             loop.run_until_complete(test_conf_wrong_welcome_url())
-            conf.welcome_url="https://beacon.ega-archive.org/"
+            conf_override.config.welcome_url="https://beacon.ega-archive.org/"
     def test_conf_wrong_alternative_url_no_http(self):
         with loop_context() as loop:
-            from beacon.conf import conf
-            conf.alternative_url="something"
+            from beacon.conf import conf_override
+            conf_override.config.alternative_url="something"
             async def test_conf_wrong_alternative_url():
                 try:
                     check_configuration()
                 except Exception:
                     pass
             loop.run_until_complete(test_conf_wrong_alternative_url())
-            conf.alternative_url="https://beacon.ega-archive.org/api"
+            conf_override.config.alternative_url="https://beacon.ega-archive.org/api"
     def test_conf_wrong_documentation_url_no_http(self):
         with loop_context() as loop:
-            from beacon.conf import conf
-            conf.documentation_url="string"
+            from beacon.conf import conf_override
+            conf_override.config.documentation_url="string"
             async def test_conf_wrong_documentation_url():
                 try:
                     check_configuration()
                 except Exception:
                     pass
             loop.run_until_complete(test_conf_wrong_documentation_url())
-            conf.documentation_url="https://b2ri-documentation-demo.ega-archive.org/"
+            conf_override.config.documentation_url="https://b2ri-documentation-demo.ega-archive.org/"
     def test_wrong_datasets_permissions(self):
         with loop_context() as loop:
             data={

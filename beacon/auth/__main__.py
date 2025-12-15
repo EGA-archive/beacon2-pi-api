@@ -6,11 +6,11 @@ from aiohttp import web
 import os
 from dotenv import load_dotenv
 from beacon.logs.logs import log_with_args, LOG
-from beacon.conf.conf import level
+from beacon.conf.conf_override import config
 from beacon.exceptions.exceptions import NoPermissionsAvailable
 import re
 
-@log_with_args(level)
+@log_with_args(config.level)
 def validate_access_token(self, access_token, idp_issuer, jwks_url, algorithm, aud):
     if not jwt.algorithms.has_crypto:
         raise NoPermissionsAvailable("Unauthorized. The token is not encrypted with an algorithm.")
@@ -37,7 +37,7 @@ def validate_access_token(self, access_token, idp_issuer, jwks_url, algorithm, a
     except jwt.exceptions.PyJWTError as err:
         pass
 
-@log_with_args(level)
+@log_with_args(config.level)
 def fetch_idp(self, access_token):
     try:
         # Get the payload values of the token
@@ -82,7 +82,7 @@ def fetch_idp(self, access_token):
     return idp_issuer, user_info, idp_client_id, idp_client_secret, idp_introspection, idp_jwks_url, algorithm, aud
 
 '''
-@log_with_args(level)
+@log_with_args(config.level)
 async def introspection(self, idp_introspection, idp_client_id, idp_client_secret, access_token, list_visa_datasets):
     async with ClientSession() as session:
         async with session.post(idp_introspection,
@@ -96,7 +96,7 @@ async def introspection(self, idp_introspection, idp_client_id, idp_client_secre
                 return False
 '''
 
-@log_with_args(level)
+@log_with_args(config.level)
 async def fetch_user_info(self, access_token, user_info, idp_issuer, list_visa_datasets):
     # Get the user info endoint of the idp with the token and the idp parameters provided
     async with ClientSession(trust_env=True) as session:
@@ -129,7 +129,7 @@ async def fetch_user_info(self, access_token, user_info, idp_issuer, list_visa_d
             else:
                 raise NoPermissionsAvailable("Unauthorized. Could not fetch the user info from the token.")
 
-@log_with_args(level)
+@log_with_args(config.level)
 async def authentication(self, access_token):
     # Initiate the lisst of the datasets permissions that come from visas
     list_visa_datasets=[]

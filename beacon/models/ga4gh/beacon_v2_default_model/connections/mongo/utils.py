@@ -2,7 +2,7 @@ from pymongo.cursor import Cursor
 from beacon.connections.mongo.__init__ import genomicVariations, biosamples, runs, cohorts, analyses, datasets, individuals
 from pymongo.collection import Collection
 from beacon.logs.logs import log_with_args_mongo, LOG
-from beacon.conf.conf import level
+from beacon.conf.conf_override import config
 from beacon.exceptions.exceptions import InvalidRequest
 import aiohttp.web as web
 import yaml
@@ -49,12 +49,12 @@ def import_run_confile():
     pfile.close()
     return run_confile
 
-@log_with_args_mongo(level)
+@log_with_args_mongo(config.level)
 def lengthquery(self, collection: Collection,query: dict):
     # Return the length of al the records for the query
     return collection.find(query, {"_id": 1, "variation.location.interval.start.value": 1, "variation.location.interval.end.value": 1}).max_time_ms(100 * 1000)
 
-@log_with_args_mongo(level)
+@log_with_args_mongo(config.level)
 def get_phenotypic_cross_query_attributes(self, entry_type, pre_entry_type):
     individual_confile = import_individual_confile()
     analysis_confile = import_analysis_confile()
