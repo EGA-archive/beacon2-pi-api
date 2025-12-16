@@ -5,3 +5,4 @@ beacon/connections/mongo/data/db/*
 *.json.gz
 adminui/node_modules
 *.vcf.bgz
+ri-tools/files/vcf/files_to_read/*
