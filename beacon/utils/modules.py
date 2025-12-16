@@ -25,6 +25,9 @@ def load_class(script_name, className):
     return klass
 
 def load_types_of_results(response_type):
+    with open("/beacon/conf/models/models_conf.yml", 'r') as pfile:
+        models_confile= yaml.safe_load(pfile)
+    pfile.close()
     list_of_results_classes_accepted=[]
     version_catch = re.search(r"(v\d+(\.\d+)*)", RequestAttributes.returned_schema[0]["schema"])
     if version_catch:
@@ -34,6 +37,9 @@ def load_types_of_results(response_type):
     dirs = os.listdir("/beacon/models")
     for folder in dirs:
         subdirs = os.listdir("/beacon/models/"+folder)
+        if folder in models_confile:
+            if models_confile[folder]["model_enabled"] == False:
+                continue
         if "validator" in subdirs:
             validatordirs = os.listdir("/beacon/models/"+folder+"/validator/"+response_type)
             for validatorfolder in validatordirs:
@@ -48,6 +54,9 @@ def load_types_of_results(response_type):
                         list_of_results_classes_accepted.append(klass)
         for subfolder in subdirs:
             underdirs = os.listdir("/beacon/models/"+folder+"/"+subfolder)
+            if  folder+'/'+subfolder in models_confile:
+                if models_confile[folder+'/'+subfolder ]["model_enabled"] == False:
+                    continue
             if "validator" in underdirs:
                 try:
                     validatordirs = os.listdir("/beacon/models/"+folder+"/"+subfolder+"/validator/"+response_type)
@@ -67,10 +76,16 @@ def load_types_of_results(response_type):
     return union_type
 
 def load_routes():
+    with open("/beacon/conf/models/models_conf.yml", 'r') as pfile:
+        models_confile= yaml.safe_load(pfile)
+    pfile.close()
     dirs = os.listdir("/beacon/models")
     routes_to_add={}
     for folder in dirs:
         subdirs = os.listdir("/beacon/models/"+folder)
+        if folder in models_confile:
+            if models_confile[folder]["model_enabled"] == False:
+                continue
         if "conf" in subdirs:
             confiles = os.listdir("/beacon/models/"+folder+"/conf/entry_types/")
             for confile in confiles:
@@ -90,6 +105,9 @@ def load_routes():
         else:
             for subfolder in subdirs:
                 underdirs = os.listdir("/beacon/models/"+folder+"/"+subfolder)
+                if folder+'/'+subfolder in models_confile:
+                    if models_confile[folder+'/'+subfolder ]["model_enabled"] == False:
+                        continue
                 if "conf" in underdirs:
                     confiles = os.listdir("/beacon/models/"+folder+"/"+subfolder+"/conf/entry_types/")
                     for confile in confiles:
@@ -191,12 +209,18 @@ def get_one_module_conf(entry_type):
                                 return entry_type_confile
 
 def get_modules_confiles():
+    with open("/beacon/conf/models/models_conf.yml", 'r') as pfile:
+        models_confile= yaml.safe_load(pfile)
+    pfile.close()
     dirs = os.listdir("/beacon/models")
     list_of_confiles=[]
     for folder in dirs:
         subdirs = os.listdir("/beacon/models/"+folder)
         if "conf" in subdirs:
             confiles = os.listdir("/beacon/models/"+folder+"/conf/entry_types/")
+            if folder in models_confile:
+                if models_confile[folder]["model_enabled"] == False:
+                    continue
             for confile in confiles:
                 if confile != '__pycache__':
                     with open("/beacon/models/"+folder+"/conf/entry_types/" + confile, 'r') as pfile:
@@ -206,6 +230,9 @@ def get_modules_confiles():
         else:
             for subfolder in subdirs:
                 underdirs = os.listdir("/beacon/models/"+folder+"/"+subfolder)
+                if folder+'/'+subfolder in models_confile:
+                    if models_confile[folder+'/'+subfolder ]["model_enabled"] == False:
+                        continue
                 if "conf" in underdirs:
                     confiles = os.listdir("/beacon/models/"+folder+"/"+subfolder+"/conf/entry_types/")
                     for confile in confiles:
