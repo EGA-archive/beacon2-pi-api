@@ -47,6 +47,9 @@ PATHS_TO_RESTART = [
     "/beacon/models",
     "/beacon/conf/models"
 ]
+async def config_test_watcher(app):
+    pass
+
 
 async def config_watcher(app):
     initial_times = {}

@@ -14,7 +14,11 @@ services:
       - "5050:5050"
     entrypoint: ['python','-m','beacon']
     volumes:
-      - ./beacon/:/beacon
+      - ./beacon/logs/logs.log:/beacon/logs/logs.log
+      - ./beacon/conf/conf.py:/beacon/conf/conf.py
+      - ./beacon/permissions:/beacon/permissions
+      - ./beacon/models:/beacon/models
+      - ./beacon/conf/models:/beacon/conf/models
     networks:
       - pub
 
