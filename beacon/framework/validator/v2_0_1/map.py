@@ -1,0 +1,1 @@
+from beacon.framework.validator.v2_0_0.map import MapResponse, MapSchema

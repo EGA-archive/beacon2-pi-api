@@ -65,7 +65,7 @@
                     "label": "anatomical entity"
                 },
                 "date": "2024-11-08",
-                "measurementValue": [
+                "measurementValue": 
                     {
                         "referenceRange": {
                             "high": 50,
@@ -81,7 +81,7 @@
                         },
                         "value": 50
                     }
-                ],
+                ,
                 "notes": "Bear in mind that all this information is synthetic",
                 "observationMoment": {
                     "iso8601duration": "P32Y6M1D"
@@ -268,7 +268,7 @@
                     "label": "anatomical entity"
                 },
                 "date": "2024-11-08",
-                "measurementValue": [
+                "measurementValue": 
                     {
                         "referenceRange": {
                             "high": 50,
@@ -284,7 +284,7 @@
                         },
                         "value": 50
                     }
-                ],
+                ,
                 "notes": "Bear in mind that all this information is synthetic",
                 "observationMoment": {
                     "iso8601duration": "P32Y6M1D"
@@ -471,7 +471,7 @@
                     "label": "anatomical entity"
                 },
                 "date": "2024-11-08",
-                "measurementValue": [
+                "measurementValue": 
                     {
                         "referenceRange": {
                             "high": 50,
@@ -487,7 +487,7 @@
                         },
                         "value": 50
                     }
-                ],
+                ,
                 "notes": "Bear in mind that all this information is synthetic",
                 "observationMoment": {
                     "iso8601duration": "P32Y6M1D"
@@ -674,7 +674,7 @@
                     "label": "anatomical entity"
                 },
                 "date": "2024-11-08",
-                "measurementValue": [
+                "measurementValue": 
                     {
                         "referenceRange": {
                             "high": 50,
@@ -690,7 +690,7 @@
                         },
                         "value": 50
                     }
-                ],
+                ,
                 "notes": "Bear in mind that all this information is synthetic",
                 "observationMoment": {
                     "iso8601duration": "P32Y6M1D"
@@ -877,7 +877,7 @@
                     "label": "anatomical entity"
                 },
                 "date": "2024-11-08",
-                "measurementValue": [
+                "measurementValue": 
                     {
                         "referenceRange": {
                             "high": 50,
@@ -893,7 +893,7 @@
                         },
                         "value": 50
                     }
-                ],
+                ,
                 "notes": "Bear in mind that all this information is synthetic",
                 "observationMoment": {
                     "iso8601duration": "P32Y6M1D"
@@ -1080,7 +1080,7 @@
                     "label": "anatomical entity"
                 },
                 "date": "2024-11-08",
-                "measurementValue": [
+                "measurementValue": 
                     {
                         "referenceRange": {
                             "high": 50,
@@ -1096,7 +1096,7 @@
                         },
                         "value": 50
                     }
-                ],
+                ,
                 "notes": "Bear in mind that all this information is synthetic",
                 "observationMoment": {
                     "iso8601duration": "P32Y6M1D"
@@ -1283,7 +1283,7 @@
                     "label": "anatomical entity"
                 },
                 "date": "2024-11-08",
-                "measurementValue": [
+                "measurementValue": 
                     {
                         "referenceRange": {
                             "high": 50,
@@ -1299,7 +1299,7 @@
                         },
                         "value": 50
                     }
-                ],
+                ,
                 "notes": "Bear in mind that all this information is synthetic",
                 "observationMoment": {
                     "iso8601duration": "P32Y6M1D"
@@ -1486,7 +1486,7 @@
                     "label": "anatomical entity"
                 },
                 "date": "2024-11-08",
-                "measurementValue": [
+                "measurementValue": 
                     {
                         "referenceRange": {
                             "high": 50,
@@ -1502,7 +1502,7 @@
                         },
                         "value": 50
                     }
-                ],
+                ,
                 "notes": "Bear in mind that all this information is synthetic",
                 "observationMoment": {
                     "iso8601duration": "P32Y6M1D"
@@ -1689,7 +1689,7 @@
                     "label": "anatomical entity"
                 },
                 "date": "2024-11-08",
-                "measurementValue": [
+                "measurementValue": 
                     {
                         "referenceRange": {
                             "high": 50,
@@ -1705,7 +1705,7 @@
                         },
                         "value": 50
                     }
-                ],
+                ,
                 "notes": "Bear in mind that all this information is synthetic",
                 "observationMoment": {
                     "iso8601duration": "P32Y6M1D"
@@ -1892,7 +1892,7 @@
                     "label": "anatomical entity"
                 },
                 "date": "2024-11-08",
-                "measurementValue": [
+                "measurementValue": 
                     {
                         "referenceRange": {
                             "high": 50,
@@ -1908,7 +1908,7 @@
                         },
                         "value": 50
                     }
-                ],
+                ,
                 "notes": "Bear in mind that all this information is synthetic",
                 "observationMoment": {
                     "iso8601duration": "P32Y6M1D"
@@ -2095,7 +2095,7 @@
                     "label": "anatomical entity"
                 },
                 "date": "2024-11-08",
-                "measurementValue": [
+                "measurementValue": 
                     {
                         "referenceRange": {
                             "high": 50,
@@ -2111,7 +2111,7 @@
                         },
                         "value": 50
                     }
-                ],
+                ,
                 "notes": "Bear in mind that all this information is synthetic",
                 "observationMoment": {
                     "iso8601duration": "P32Y6M1D"
@@ -2298,7 +2298,7 @@
                     "label": "anatomical entity"
                 },
                 "date": "2024-11-08",
-                "measurementValue": [
+                "measurementValue": 
                     {
                         "referenceRange": {
                             "high": 50,
@@ -2314,7 +2314,7 @@
                         },
                         "value": 50
                     }
-                ],
+                ,
                 "notes": "Bear in mind that all this information is synthetic",
                 "observationMoment": {
                     "iso8601duration": "P32Y6M1D"
@@ -2501,7 +2501,7 @@
                     "label": "anatomical entity"
                 },
                 "date": "2024-11-08",
-                "measurementValue": [
+                "measurementValue": 
                     {
                         "referenceRange": {
                             "high": 50,
@@ -2517,7 +2517,7 @@
                         },
                         "value": 50
                     }
-                ],
+                ,
                 "notes": "Bear in mind that all this information is synthetic",
                 "observationMoment": {
                     "iso8601duration": "P32Y6M1D"
@@ -2704,7 +2704,7 @@
                     "label": "anatomical entity"
                 },
                 "date": "2024-11-08",
-                "measurementValue": [
+                "measurementValue": 
                     {
                         "referenceRange": {
                             "high": 50,
@@ -2720,7 +2720,7 @@
                         },
                         "value": 50
                     }
-                ],
+                ,
                 "notes": "Bear in mind that all this information is synthetic",
                 "observationMoment": {
                     "iso8601duration": "P32Y6M1D"
@@ -2907,7 +2907,7 @@
                     "label": "anatomical entity"
                 },
                 "date": "2024-11-08",
-                "measurementValue": [
+                "measurementValue": 
                     {
                         "referenceRange": {
                             "high": 50,
@@ -2923,7 +2923,7 @@
                         },
                         "value": 50
                     }
-                ],
+                ,
                 "notes": "Bear in mind that all this information is synthetic",
                 "observationMoment": {
                     "iso8601duration": "P32Y6M1D"
@@ -3110,7 +3110,7 @@
                     "label": "anatomical entity"
                 },
                 "date": "2024-11-08",
-                "measurementValue": [
+                "measurementValue": 
                     {
                         "referenceRange": {
                             "high": 50,
@@ -3126,7 +3126,7 @@
                         },
                         "value": 50
                     }
-                ],
+                ,
                 "notes": "Bear in mind that all this information is synthetic",
                 "observationMoment": {
                     "iso8601duration": "P32Y6M1D"
@@ -3313,7 +3313,7 @@
                     "label": "anatomical entity"
                 },
                 "date": "2024-11-08",
-                "measurementValue": [
+                "measurementValue": 
                     {
                         "referenceRange": {
                             "high": 50,
@@ -3329,7 +3329,7 @@
                         },
                         "value": 50
                     }
-                ],
+                ,
                 "notes": "Bear in mind that all this information is synthetic",
                 "observationMoment": {
                     "iso8601duration": "P32Y6M1D"
@@ -3516,7 +3516,7 @@
                     "label": "anatomical entity"
                 },
                 "date": "2024-11-08",
-                "measurementValue": [
+                "measurementValue": 
                     {
                         "referenceRange": {
                             "high": 50,
@@ -3532,7 +3532,7 @@
                         },
                         "value": 50
                     }
-                ],
+                ,
                 "notes": "Bear in mind that all this information is synthetic",
                 "observationMoment": {
                     "iso8601duration": "P32Y6M1D"
@@ -3719,7 +3719,7 @@
                     "label": "anatomical entity"
                 },
                 "date": "2024-11-08",
-                "measurementValue": [
+                "measurementValue": 
                     {
                         "referenceRange": {
                             "high": 50,
@@ -3735,7 +3735,7 @@
                         },
                         "value": 50
                     }
-                ],
+                ,
                 "notes": "Bear in mind that all this information is synthetic",
                 "observationMoment": {
                     "iso8601duration": "P32Y6M1D"
@@ -3922,7 +3922,7 @@
                     "label": "anatomical entity"
                 },
                 "date": "2024-11-08",
-                "measurementValue": [
+                "measurementValue": 
                     {
                         "referenceRange": {
                             "high": 50,
@@ -3938,7 +3938,7 @@
                         },
                         "value": 50
                     }
-                ],
+                ,
                 "notes": "Bear in mind that all this information is synthetic",
                 "observationMoment": {
                     "iso8601duration": "P32Y6M1D"

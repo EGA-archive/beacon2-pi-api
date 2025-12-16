@@ -1,23 +1,27 @@
-from beacon.logs.logs import log_with_args
-from beacon.conf.conf import level
+from beacon.logs.logs import log_with_args, LOG
+from beacon.conf.conf_override import config
 import aiohttp.web as web
 from bson import json_util
 from beacon.request.classes import RequestAttributes
-from beacon.validator.framework.meta import InformationalMeta
-from beacon.validator.framework.map import MapResponse, MapSchema
 from pydantic import ValidationError
 from beacon.exceptions.exceptions import InvalidData
-from beacon.conf.templates import mapTemplate
 from beacon.views.endpoint import EndpointView
+from beacon.utils.modules import load_framework_module
 
 class MapView(EndpointView):
-    @log_with_args(level)
+    @log_with_args(config.level)
     async def handler(self):
-        self.get_template_path(mapTemplate)
+        # Load the modules that will serve as the meta and the map part of the response
+        module_meta = load_framework_module(self, "meta")
+        module_map = load_framework_module(self, "map")
         try:
-            map = MapSchema.populate_endpoints(MapSchema)
-            meta = InformationalMeta(returnedSchemas=[RequestAttributes.returned_schema])
-            self.classResponse = MapResponse(meta=meta,response=map)
+            # Generate the Map class for the map part of the response and populate it with data from the configuration
+            map = module_map.MapSchema.populate_endpoints(module_map.MapSchema)
+            # Generate the Meta class for the meta part of the response and populate it with data from the configuration
+            meta = module_meta.InformationalMeta(returnedSchemas=[RequestAttributes.returned_schema])
+            # Create the response class that will allocate both Meta and Map parts of the response
+            self.classResponse = module_map.MapResponse(meta=meta.model_dump(exclude_none=True),response=map.model_dump(exclude_none=True))
+            # Convert the class to JSON to return it in the final stream response
             response_obj = self.create_response()
         except ValidationError as v:
             raise InvalidData('{} templates or data are not correct'.format(RequestAttributes.entry_type))

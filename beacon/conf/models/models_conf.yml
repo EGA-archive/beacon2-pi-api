@@ -1,0 +1,5 @@
+ga4gh/beacon_v2_default_model:
+  model_enabled: True
+
+EUCAIM:
+  model_enabled: True

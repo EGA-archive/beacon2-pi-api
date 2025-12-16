@@ -2,7 +2,7 @@ from django import forms
 import yaml
 import logging
 import os
-from beacon.conf.conf import uri, uri_subpath
+from beacon.conf.conf_override import config
 
 LOG = logging.getLogger(__name__)
 fmt = '%(levelname)s - %(asctime)s - %(message)s'
@@ -104,6 +104,6 @@ class ChooseConnection(forms.Form):
 class LinkConnection(forms.Form):
     def __init__(self, *args, **kwargs):
         super(LinkConnection,self).__init__(*args,**kwargs)
-        self.initial['Connection'] = uri + uri_subpath
+        self.initial['Connection'] = config.uri + config.uri_subpath
     Connection = forms.URLField()
     

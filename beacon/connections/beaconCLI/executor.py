@@ -1,12 +1,12 @@
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
 from beacon.logs.logs import log_with_args
-from beacon.conf.conf import level
+from beacon.conf.conf_override import config
 from typing import Optional
 from beacon.request.classes import RequestAttributes
 from beacon.connections.beaconCLI.g_variants import get_variants
 
-@log_with_args(level)
+@log_with_args(config.level)
 async def execute_function(self, entry_type: str, datasets: list, entry_id: Optional[str]):
     include = RequestAttributes.qparams.query.includeResultsetResponses
     limit = RequestAttributes.qparams.query.pagination.limit

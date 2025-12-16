@@ -1,216 +1,47 @@
 from aiohttp.test_utils import TestClient, TestServer, loop_context
 from aiohttp import web
-from beacon.views.collection import CollectionView
-from beacon.views.phenogeno import PhenoGenoView
+from beacon.views.collection import CollectionEntryTypeView
+from beacon.views.non_collection import EntryTypeView
 from beacon.views.info import InfoView
 from beacon.views.service_info import ServiceInfoView
 from beacon.views.map import MapView
 from beacon.views.configuration import ConfigurationView
 from beacon.views.filtering_terms import FilteringTermsView
-from beacon.views.entry_types import EntryTypesView
+from beacon.views.entry_types import EntryTypesEndpointView
 from beacon.utils.middlewares import error_middleware
 from beacon.__main__ import create_api
 import json
 import unittest
-import beacon.conf.conf as conf
+import beacon.conf.conf_override as conf_override
 from beacon.permissions.tests import TestAuthZ
 from beacon.auth.tests import TestAuthN
 from beacon.logs.logs import LOG
-from beacon.conf import analysis, biosample, cohort, dataset, genomicVariant, individual, run
 from aiohttp_middlewares import cors_middleware
 from beacon.validator.configuration import check_configuration
 import asyncio
+from beacon.utils.routes import append_routes
+from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.utils import import_analysis_confile, import_biosample_confile, import_genomicVariant_confile, import_individual_confile, import_run_confile, import_cohort_confile, import_dataset_confile
+from beacon.models.EUCAIM.connections.mongo.utils import import_collections_confile, import_patients_confile
+
+analysis = import_analysis_confile()
+biosample = import_biosample_confile()
+cohort = import_cohort_confile()
+dataset = import_dataset_confile()
+genomicVariant = import_genomicVariant_confile()
+run = import_run_confile()
+individual = import_individual_confile()
+patients = import_patients_confile()
+collections = import_collections_confile()
 
 def create_app():
     app = web.Application()
     app = web.Application(
         middlewares=[
-            cors_middleware(origins=conf.cors_urls), error_middleware
+            cors_middleware(origins=conf_override.config.cors_urls), error_middleware
         ]
     )
     #app.on_startup.append(initialize)
-    app.add_routes([web.post(conf.uri_subpath+'', InfoView)])
-    app.add_routes([web.post(conf.uri_subpath+'/info', InfoView)])
-    app.add_routes([web.post(conf.uri_subpath+'/entry_types', EntryTypesView)])
-    app.add_routes([web.post(conf.uri_subpath+'/service-info', ServiceInfoView)])
-    app.add_routes([web.post(conf.uri_subpath+'/configuration', ConfigurationView)])
-    app.add_routes([web.post(conf.uri_subpath+'/map', MapView)])
-    app.add_routes([web.post(conf.uri_subpath+'/filtering_terms', FilteringTermsView)])
-    app.add_routes([web.get(conf.uri_subpath+'', InfoView)])
-    app.add_routes([web.get(conf.uri_subpath+'/info', InfoView)])
-    app.add_routes([web.get(conf.uri_subpath+'/entry_types', EntryTypesView)])
-    app.add_routes([web.get(conf.uri_subpath+'/service-info', ServiceInfoView)])
-    app.add_routes([web.get(conf.uri_subpath+'/configuration', ConfigurationView)])
-    app.add_routes([web.get(conf.uri_subpath+'/map', MapView)])
-    app.add_routes([web.get(conf.uri_subpath+'/filtering_terms', FilteringTermsView)])
-    if dataset.endpoint_name != '':
-        app.add_routes([web.post(conf.uri_subpath+'/'+dataset.endpoint_name, CollectionView)])
-        app.add_routes([web.get(conf.uri_subpath+'/'+dataset.endpoint_name, CollectionView)])
-        if dataset.singleEntryUrl == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}', CollectionView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}', CollectionView)])
-        if dataset.analysis_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGenoView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGenoView)])
-        if dataset.biosample_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGenoView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGenoView)])
-        if dataset.cohort_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+cohort.endpoint_name, CollectionView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+cohort.endpoint_name, CollectionView)])
-        if dataset.genomicVariant_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGenoView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGenoView)])
-        if dataset.individual_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGenoView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGenoView)])
-        if dataset.run_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGenoView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+dataset.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGenoView)])
-    if cohort.endpoint_name != '':
-        app.add_routes([web.post(conf.uri_subpath+'/'+cohort.endpoint_name, CollectionView)])
-        app.add_routes([web.get(conf.uri_subpath+'/'+cohort.endpoint_name, CollectionView)])
-        if cohort.singleEntryUrl == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}', CollectionView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}', CollectionView)])
-        if cohort.analysis_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGenoView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGenoView)])
-        if cohort.biosample_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGenoView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGenoView)])
-        if cohort.dataset_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+dataset.endpoint_name, CollectionView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+dataset.endpoint_name, CollectionView)])
-        if cohort.genomicVariant_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGenoView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGenoView)])
-        if cohort.individual_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGenoView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGenoView)])
-        if cohort.run_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGenoView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+cohort.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGenoView)])
-    if analysis.endpoint_name != '':
-        app.add_routes([web.post(conf.uri_subpath+'/'+analysis.endpoint_name, PhenoGenoView)])
-        app.add_routes([web.get(conf.uri_subpath+'/'+analysis.endpoint_name, PhenoGenoView)])
-        if analysis.singleEntryUrl == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}', PhenoGenoView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}', PhenoGenoView)])
-        if analysis.cohort_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+cohort.endpoint_name, CollectionView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+cohort.endpoint_name, CollectionView)])
-        if analysis.biosample_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGenoView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGenoView)])
-        if analysis.dataset_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+dataset.endpoint_name, CollectionView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+dataset.endpoint_name, CollectionView)])
-        if analysis.genomicVariant_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGenoView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGenoView)])
-        if analysis.individual_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGenoView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGenoView)])
-        if analysis.run_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGenoView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+analysis.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGenoView)])
-    if biosample.endpoint_name != '':
-        app.add_routes([web.post(conf.uri_subpath+'/'+biosample.endpoint_name, PhenoGenoView)])
-        app.add_routes([web.get(conf.uri_subpath+'/'+biosample.endpoint_name, PhenoGenoView)])
-        if biosample.singleEntryUrl == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}', PhenoGenoView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}', PhenoGenoView)])
-        if biosample.cohort_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+cohort.endpoint_name, CollectionView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+cohort.endpoint_name, CollectionView)])
-        if biosample.analysis_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGenoView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGenoView)])
-        if biosample.dataset_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+dataset.endpoint_name, CollectionView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+dataset.endpoint_name, CollectionView)])
-        if biosample.genomicVariant_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGenoView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGenoView)])
-        if biosample.individual_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGenoView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGenoView)])
-        if biosample.run_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGenoView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+biosample.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGenoView)])
-    if genomicVariant.endpoint_name != '':
-        app.add_routes([web.post(conf.uri_subpath+'/'+genomicVariant.endpoint_name, PhenoGenoView)])
-        app.add_routes([web.get(conf.uri_subpath+'/'+genomicVariant.endpoint_name, PhenoGenoView)])
-        if genomicVariant.singleEntryUrl == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}', PhenoGenoView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}', PhenoGenoView)])
-        if genomicVariant.cohort_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+cohort.endpoint_name, CollectionView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+cohort.endpoint_name, CollectionView)])
-        if genomicVariant.analysis_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGenoView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGenoView)])
-        if genomicVariant.dataset_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+dataset.endpoint_name, CollectionView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+dataset.endpoint_name, CollectionView)])
-        if genomicVariant.biosample_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGenoView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGenoView)])
-        if genomicVariant.individual_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGenoView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGenoView)])
-        if genomicVariant.run_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGenoView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+genomicVariant.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGenoView)])
-    if individual.endpoint_name != '':
-        app.add_routes([web.post(conf.uri_subpath+'/'+individual.endpoint_name, PhenoGenoView)])
-        app.add_routes([web.get(conf.uri_subpath+'/'+individual.endpoint_name, PhenoGenoView)])
-        if individual.singleEntryUrl == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}', PhenoGenoView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}', PhenoGenoView)])
-        if individual.cohort_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+cohort.endpoint_name, CollectionView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+cohort.endpoint_name, CollectionView)])
-        if individual.analysis_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGenoView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGenoView)])
-        if individual.dataset_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+dataset.endpoint_name, CollectionView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+dataset.endpoint_name, CollectionView)])
-        if individual.biosample_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGenoView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGenoView)])
-        if individual.genomicVariant_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGenoView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGenoView)])
-        if individual.run_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGenoView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+individual.endpoint_name+'/{id}/'+run.endpoint_name, PhenoGenoView)])
-    if run.endpoint_name != '':
-        app.add_routes([web.post(conf.uri_subpath+'/'+run.endpoint_name, PhenoGenoView)])
-        app.add_routes([web.get(conf.uri_subpath+'/'+run.endpoint_name, PhenoGenoView)])
-        if run.singleEntryUrl == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+run.endpoint_name+'/{id}', PhenoGenoView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+run.endpoint_name+'/{id}', PhenoGenoView)])
-        if run.cohort_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+cohort.endpoint_name, CollectionView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+cohort.endpoint_name, CollectionView)])
-        if run.analysis_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGenoView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+analysis.endpoint_name, PhenoGenoView)])
-        if run.dataset_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+dataset.endpoint_name, CollectionView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+dataset.endpoint_name, CollectionView)])
-        if run.biosample_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGenoView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+biosample.endpoint_name, PhenoGenoView)])
-        if run.genomicVariant_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGenoView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+genomicVariant.endpoint_name, PhenoGenoView)])
-        if run.individual_lookup == True:
-            app.add_routes([web.post(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGenoView)])
-            app.add_routes([web.get(conf.uri_subpath+'/'+run.endpoint_name+'/{id}/'+individual.endpoint_name, PhenoGenoView)])
+    app = append_routes(app)
     return app
 
 class TestMain(unittest.TestCase):
@@ -220,7 +51,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_slash_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"")
+                resp = await client.get(conf_override.config.uri_subpath+"")
                 assert resp.status == 200
             loop.run_until_complete(test_check_slash_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -230,7 +61,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_post_slash_endpoint_is_working():
-                resp = await client.post(conf.uri_subpath+"")
+                resp = await client.post(conf_override.config.uri_subpath+"")
                 assert resp.status == 200
             loop.run_until_complete(test_check_post_slash_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -240,7 +71,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_info_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/info")
+                resp = await client.get(conf_override.config.uri_subpath+"/info")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -261,7 +92,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_post_info_endpoint_is_working():
-                resp = await client.post(conf.uri_subpath+"/info")
+                resp = await client.post(conf_override.config.uri_subpath+"/info")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -282,7 +113,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_service_info_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/service-info")
+                resp = await client.get(conf_override.config.uri_subpath+"/service-info")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -304,7 +135,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_post_service_info_endpoint_is_working():
-                resp = await client.post(conf.uri_subpath+"/service-info")
+                resp = await client.post(conf_override.config.uri_subpath+"/service-info")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -326,7 +157,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_entry_types_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/entry_types")
+                resp = await client.get(conf_override.config.uri_subpath+"/entry_types")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -348,7 +179,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_post_entry_types_endpoint_is_working():
-                resp = await client.post(conf.uri_subpath+"/entry_types")
+                resp = await client.post(conf_override.config.uri_subpath+"/entry_types")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -370,7 +201,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_configuration_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/configuration")
+                resp = await client.get(conf_override.config.uri_subpath+"/configuration")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -398,7 +229,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_post_configuration_endpoint_is_working():
-                resp = await client.post(conf.uri_subpath+"/configuration")
+                resp = await client.post(conf_override.config.uri_subpath+"/configuration")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -426,7 +257,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_map_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/map")
+                resp = await client.get(conf_override.config.uri_subpath+"/map")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -448,7 +279,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_post_map_endpoint_is_working():
-                resp = await client.post(conf.uri_subpath+"/map")
+                resp = await client.post(conf_override.config.uri_subpath+"/map")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -470,7 +301,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_filtering_terms_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/filtering_terms")
+                resp = await client.get(conf_override.config.uri_subpath+"/filtering_terms")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -479,8 +310,6 @@ class TestMain(unittest.TestCase):
                 self.assertIn("returnedSchemas",responsedict["meta"])
                 self.assertIn("filteringTerms",responsedict["response"])
                 self.assertIn("resources",responsedict["response"])
-                from beacon.filtering_terms.resources import resources
-                self.assertIn(resources[0],responsedict["response"]["resources"])
             loop.run_until_complete(test_check_filtering_terms_endpoint_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_post_filtering_terms_endpoint_is_working(self):
@@ -489,7 +318,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_post_filtering_terms_endpoint_is_working():
-                resp = await client.post(conf.uri_subpath+"/filtering_terms")
+                resp = await client.post(conf_override.config.uri_subpath+"/filtering_terms")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -498,8 +327,6 @@ class TestMain(unittest.TestCase):
                 self.assertIn("returnedSchemas",responsedict["meta"])
                 self.assertIn("filteringTerms",responsedict["response"])
                 self.assertIn("resources",responsedict["response"])
-                from beacon.filtering_terms.resources import resources
-                self.assertIn(resources[0],responsedict["response"]["resources"])
             loop.run_until_complete(test_check_post_filtering_terms_endpoint_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_datasets_endpoint_is_working(self):
@@ -508,7 +335,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_datasets_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+dataset.endpoint_name+'?testMode=true')
+                resp = await client.get(conf_override.config.uri_subpath+"/"+dataset["dataset"]["endpoint_name"]+'?testMode=true')
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -529,7 +356,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_post_datasets_endpoint_is_working():
-                resp = await client.post(conf.uri_subpath+"/"+dataset.endpoint_name)
+                resp = await client.post(conf_override.config.uri_subpath+"/"+dataset["dataset"]["endpoint_name"])
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -550,7 +377,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name)
+                resp = await client.get(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"])
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -571,7 +398,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_analyses_with_limit_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+analysis.endpoint_name+"?limit=200&skip=0&requestedGranularity=record")
+                resp = await client.get(conf_override.config.uri_subpath+"/"+analysis["analysis"]["endpoint_name"]+"?limit=200&skip=0&requestedGranularity=record")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -592,7 +419,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_analyses_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+analysis.endpoint_name)
+                resp = await client.get(conf_override.config.uri_subpath+"/"+analysis["analysis"]["endpoint_name"])
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -613,7 +440,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_analyses_with_id_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+analysis.endpoint_name+"/EGA-testing")
+                resp = await client.get(conf_override.config.uri_subpath+"/"+analysis["analysis"]["endpoint_name"]+"/EGA-testing")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -627,7 +454,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_analyses_g_variants_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+analysis.endpoint_name+"/EGA-testing/"+genomicVariant.endpoint_name)
+                resp = await client.get(conf_override.config.uri_subpath+"/"+analysis["analysis"]["endpoint_name"]+"/EGA-testing/"+genomicVariant["genomicVariant"]["endpoint_name"])
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -641,7 +468,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_analyses_runs_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+analysis.endpoint_name+"/EGA-testing/"+run.endpoint_name)
+                resp = await client.get(conf_override.config.uri_subpath+"/"+analysis["analysis"]["endpoint_name"]+"/EGA-testing/"+run["run"]["endpoint_name"])
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -655,7 +482,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_analyses_individuals_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+analysis.endpoint_name+"/EGA-testing/"+individual.endpoint_name)
+                resp = await client.get(conf_override.config.uri_subpath+"/"+analysis["analysis"]["endpoint_name"]+"/EGA-testing/"+individual["individual"]["endpoint_name"])
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -669,7 +496,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_analyses_biosmples_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+analysis.endpoint_name+"/EGA-testing/"+biosample.endpoint_name)
+                resp = await client.get(conf_override.config.uri_subpath+"/"+analysis["analysis"]["endpoint_name"]+"/EGA-testing/"+biosample["biosample"]["endpoint_name"])
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -683,7 +510,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_biosamples_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+biosample.endpoint_name)
+                resp = await client.get(conf_override.config.uri_subpath+"/"+biosample["biosample"]["endpoint_name"])
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -704,7 +531,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_biosamples_with_limit_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+biosample.endpoint_name+"?limit=200")
+                resp = await client.get(conf_override.config.uri_subpath+"/"+biosample["biosample"]["endpoint_name"]+"?limit=200")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -725,7 +552,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_biosamples_with_id_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+biosample.endpoint_name+"/SAMPLE3")
+                resp = await client.get(conf_override.config.uri_subpath+"/"+biosample["biosample"]["endpoint_name"]+"/SAMPLE3")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -739,7 +566,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_biosamples_g_variants_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+biosample.endpoint_name+"/SAMPLE3/"+genomicVariant.endpoint_name)
+                resp = await client.get(conf_override.config.uri_subpath+"/"+biosample["biosample"]["endpoint_name"]+"/SAMPLE3/"+genomicVariant["genomicVariant"]["endpoint_name"])
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -753,7 +580,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_biosamples_runs_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+biosample.endpoint_name+"/SAMPLE1/"+run.endpoint_name)
+                resp = await client.get(conf_override.config.uri_subpath+"/"+biosample["biosample"]["endpoint_name"]+"/SAMPLE1/"+run["run"]["endpoint_name"])
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -767,7 +594,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_biosamples_analyses_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+biosample.endpoint_name+"/SAMPLE1/"+analysis.endpoint_name)
+                resp = await client.get(conf_override.config.uri_subpath+"/"+biosample["biosample"]["endpoint_name"]+"/SAMPLE1/"+analysis["analysis"]["endpoint_name"])
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -781,7 +608,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_individuals_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+individual.endpoint_name + '?testMode=true')
+                resp = await client.get(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"] + '?testMode=true')
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -795,7 +622,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_individuals_with_limit_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+individual.endpoint_name+"?limit=200")
+                resp = await client.get(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"]+"?limit=200")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -816,7 +643,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_individuals_with_id_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+individual.endpoint_name+"/SAMPLE2")
+                resp = await client.get(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"]+"/SAMPLE2")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -830,7 +657,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_individuals_g_variants_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+individual.endpoint_name+"/SAMPLE2/"+genomicVariant.endpoint_name)
+                resp = await client.get(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"]+"/SAMPLE2/"+genomicVariant["genomicVariant"]["endpoint_name"])
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -844,7 +671,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_individuals_biosamples_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+individual.endpoint_name+"/SAMPLE2/"+biosample.endpoint_name)
+                resp = await client.get(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"]+"/SAMPLE2/"+biosample["biosample"]["endpoint_name"])
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -858,7 +685,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+run.endpoint_name)
+                resp = await client.get(conf_override.config.uri_subpath+"/"+run["run"]["endpoint_name"])
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -879,7 +706,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_with_limit_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+run.endpoint_name+"?limit=200")
+                resp = await client.get(conf_override.config.uri_subpath+"/"+run["run"]["endpoint_name"]+"?limit=200")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -900,7 +727,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_with_id_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+run.endpoint_name+"/EGA-testing")
+                resp = await client.get(conf_override.config.uri_subpath+"/"+run["run"]["endpoint_name"]+"/EGA-testing")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -914,7 +741,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_g_variants_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+run.endpoint_name+"/EGA-testing/"+genomicVariant.endpoint_name)
+                resp = await client.get(conf_override.config.uri_subpath+"/"+run["run"]["endpoint_name"]+"/EGA-testing/"+genomicVariant["genomicVariant"]["endpoint_name"])
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -928,7 +755,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_analyses_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+run.endpoint_name+"/EGA-testing/"+analysis.endpoint_name)
+                resp = await client.get(conf_override.config.uri_subpath+"/"+run["run"]["endpoint_name"]+"/EGA-testing/"+analysis["analysis"]["endpoint_name"])
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -942,7 +769,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_biosamples_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+run.endpoint_name+"/EGA-testing/"+biosample.endpoint_name)
+                resp = await client.get(conf_override.config.uri_subpath+"/"+run["run"]["endpoint_name"]+"/EGA-testing/"+biosample["biosample"]["endpoint_name"])
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -956,7 +783,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_individuals_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+run.endpoint_name+"/EGA-testing/"+individual.endpoint_name)
+                resp = await client.get(conf_override.config.uri_subpath+"/"+run["run"]["endpoint_name"]+"/EGA-testing/"+individual["individual"]["endpoint_name"])
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -970,7 +797,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_cohorts_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+cohort.endpoint_name)
+                resp = await client.get(conf_override.config.uri_subpath+"/"+cohort["cohort"]["endpoint_name"])
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -991,7 +818,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_cohorts_with_limit_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+cohort.endpoint_name+"?limit=200")
+                resp = await client.get(conf_override.config.uri_subpath+"/"+cohort["cohort"]["endpoint_name"]+"?limit=200")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -1012,7 +839,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_cohorts_with_id_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+cohort.endpoint_name+"/EGA-testing")
+                resp = await client.get(conf_override.config.uri_subpath+"/"+cohort["cohort"]["endpoint_name"]+"/EGA-testing")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -1026,7 +853,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_cohorts_runs_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+cohort.endpoint_name+"/EGA-testing/"+run.endpoint_name)
+                resp = await client.get(conf_override.config.uri_subpath+"/"+cohort["cohort"]["endpoint_name"]+"/EGA-testing/"+run["run"]["endpoint_name"])
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -1040,7 +867,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_cohorts_biosamples_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+cohort.endpoint_name+"/EGA-testing/"+biosample.endpoint_name)
+                resp = await client.get(conf_override.config.uri_subpath+"/"+cohort["cohort"]["endpoint_name"]+"/EGA-testing/"+biosample["biosample"]["endpoint_name"])
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -1054,7 +881,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_cohorts_analyses_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+cohort.endpoint_name+"/EGA-testing/"+analysis.endpoint_name)
+                resp = await client.get(conf_override.config.uri_subpath+"/"+cohort["cohort"]["endpoint_name"]+"/EGA-testing/"+analysis["analysis"]["endpoint_name"])
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -1068,7 +895,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_cohorts_inividuals_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+cohort.endpoint_name+"/EGA-testing/"+individual.endpoint_name)
+                resp = await client.get(conf_override.config.uri_subpath+"/"+cohort["cohort"]["endpoint_name"]+"/EGA-testing/"+individual["individual"]["endpoint_name"])
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -1082,7 +909,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_cohorts_g_variants_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+cohort.endpoint_name+"/EGA-testing/"+genomicVariant.endpoint_name)
+                resp = await client.get(conf_override.config.uri_subpath+"/"+cohort["cohort"]["endpoint_name"]+"/EGA-testing/"+genomicVariant["genomicVariant"]["endpoint_name"])
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -1096,7 +923,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_datasets_with_limit_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+dataset.endpoint_name+"?limit=200")
+                resp = await client.get(conf_override.config.uri_subpath+"/"+dataset["dataset"]["endpoint_name"]+"?limit=200")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -1117,7 +944,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_datasets_with_id_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+dataset.endpoint_name+"/test")
+                resp = await client.get(conf_override.config.uri_subpath+"/"+dataset["dataset"]["endpoint_name"]+"/test")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -1131,7 +958,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_datasets_runs_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+dataset.endpoint_name+"/test/"+run.endpoint_name)
+                resp = await client.get(conf_override.config.uri_subpath+"/"+dataset["dataset"]["endpoint_name"]+"/test/"+run["run"]["endpoint_name"])
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -1145,7 +972,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_datasets_g_variants_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+dataset.endpoint_name+"/test/"+genomicVariant.endpoint_name)
+                resp = await client.get(conf_override.config.uri_subpath+"/"+dataset["dataset"]["endpoint_name"]+"/test/"+genomicVariant["genomicVariant"]["endpoint_name"])
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -1159,7 +986,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_datasets_biosamples_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+dataset.endpoint_name+"/test/"+biosample.endpoint_name)
+                resp = await client.get(conf_override.config.uri_subpath+"/"+dataset["dataset"]["endpoint_name"]+"/test/"+biosample["biosample"]["endpoint_name"])
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -1173,7 +1000,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_datasets_analyses_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+dataset.endpoint_name+"/test/"+analysis.endpoint_name)
+                resp = await client.get(conf_override.config.uri_subpath+"/"+dataset["dataset"]["endpoint_name"]+"/test/"+analysis["analysis"]["endpoint_name"])
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -1187,7 +1014,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_datasets_inividuals_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+dataset.endpoint_name+"/test/"+individual.endpoint_name)
+                resp = await client.get(conf_override.config.uri_subpath+"/"+dataset["dataset"]["endpoint_name"]+"/test/"+individual["individual"]["endpoint_name"])
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -1201,7 +1028,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_with_limit_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?limit=200")
+                resp = await client.get(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"?limit=200")
                 assert resp.status == 200
             loop.run_until_complete(test_check_g_variants_with_limit_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -1211,7 +1038,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_with_id_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/c4143367c9ecad58cbf87b08c11288149e801a70f71a5e114a8476607fe163a1")
+                resp = await client.get(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"/c4143367c9ecad58cbf87b08c11288149e801a70f71a5e114a8476607fe163a1")
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
                 assert responsedict["responseSummary"]["numTotalResults"] == 1
@@ -1224,7 +1051,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_runs_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/c4143367c9ecad58cbf87b08c11288149e801a70f71a5e114a8476607fe163a1/"+run.endpoint_name)
+                resp = await client.get(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"/c4143367c9ecad58cbf87b08c11288149e801a70f71a5e114a8476607fe163a1/"+run["run"]["endpoint_name"])
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
                 assert responsedict["responseSummary"]["numTotalResults"] == 1
@@ -1237,7 +1064,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_biosamples_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/c4143367c9ecad58cbf87b08c11288149e801a70f71a5e114a8476607fe163a1/"+biosample.endpoint_name)
+                resp = await client.get(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"/c4143367c9ecad58cbf87b08c11288149e801a70f71a5e114a8476607fe163a1/"+biosample["biosample"]["endpoint_name"])
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
                 assert responsedict["responseSummary"]["numTotalResults"] == 15
@@ -1250,7 +1077,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_analyses_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/c4143367c9ecad58cbf87b08c11288149e801a70f71a5e114a8476607fe163a1/"+analysis.endpoint_name)
+                resp = await client.get(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"/c4143367c9ecad58cbf87b08c11288149e801a70f71a5e114a8476607fe163a1/"+analysis["analysis"]["endpoint_name"])
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
                 assert responsedict["responseSummary"]["numTotalResults"] == 1
@@ -1264,7 +1091,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_inividuals_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/c4143367c9ecad58cbf87b08c11288149e801a70f71a5e114a8476607fe163a1/"+individual.endpoint_name)
+                resp = await client.get(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"/c4143367c9ecad58cbf87b08c11288149e801a70f71a5e114a8476607fe163a1/"+individual["individual"]["endpoint_name"])
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
                 assert responsedict["responseSummary"]["numTotalResults"] == 15
@@ -1277,7 +1104,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_NONE_resultSetResponse_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?includeResultsetResponses=NONE&testMode=True")
+                resp = await client.get(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"?includeResultsetResponses=NONE&testMode=True")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -1297,7 +1124,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_MISS_resultSetResponse_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?includeResultsetResponses=MISS&testMode=True")
+                resp = await client.get(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"?includeResultsetResponses=MISS&testMode=True")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -1318,7 +1145,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_ALL_resultSetResponse_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?includeResultsetResponses=ALL&testMode=True")
+                resp = await client.get(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"?includeResultsetResponses=ALL&testMode=True")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -1339,7 +1166,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=43045703&referenceName=17&assemblyId=GRCh37&referenceBases=G&alternateBases=A&testMode=True")
+                resp = await client.get(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"?start=43045703&referenceName=17&assemblyId=GRCh37&referenceBases=G&alternateBases=A&testMode=True")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -1352,7 +1179,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=343675&referenceName=2&assemblyId=GRCh37&end=345681&testMode=True")
+                resp = await client.get(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"?start=343675&referenceName=2&assemblyId=GRCh37&end=345681&testMode=True")
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
                 assert responsedict["responseSummary"]["numTotalResults"] == 6
@@ -1365,7 +1192,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=343675&referenceName=chr2&assemblyId=GRCh37&end=345681&testMode=True")
+                resp = await client.get(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"?start=343675&referenceName=chr2&assemblyId=GRCh37&end=345681&testMode=True")
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
                 assert responsedict["responseSummary"]["numTotalResults"] == 6
@@ -1378,7 +1205,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?geneId=BRCA1&testMode=True")
+                resp = await client.get(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"?geneId=BRCA1&testMode=True")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -1391,7 +1218,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=43045703,43045704&end=43045704,43045705&referenceName=17&assemblyId=GRCh37&testMode=True")
+                resp = await client.get(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"?start=43045703,43045704&end=43045704,43045705&referenceName=17&assemblyId=GRCh37&testMode=True")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -1404,7 +1231,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?genomicAlleleShortForm=NC_000008.10:g.467881_467885delinsA&testMode=True")
+                resp = await client.get(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"?genomicAlleleShortForm=NC_000008.10:g.467881_467885delinsA&testMode=True")
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
                 assert responsedict["responseSummary"]["numTotalResults"] == 1
@@ -1417,7 +1244,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?aminoacidChange=Pro1856Ser&geneId=BRCA1&testMode=True")
+                resp = await client.get(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"?aminoacidChange=Pro1856Ser&geneId=BRCA1&testMode=True")
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
                 assert responsedict["responseSummary"]["numTotalResults"] == 1
@@ -1430,7 +1257,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_post_cross_query_g_variants_individuals_is_working():
-                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name, json={"meta": {
+                resp = await client.post(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"], json={"meta": {
                     "apiVersion": "2.0"
                 },
                 "query": {
@@ -1457,7 +1284,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_post_cross_query_biosamples_individuals_is_working():
-                resp = await client.post(conf.uri_subpath+"/"+biosample.endpoint_name, json={"meta": {
+                resp = await client.post(conf_override.config.uri_subpath+"/"+biosample["biosample"]["endpoint_name"], json={"meta": {
                     "apiVersion": "2.0"
                 },
                 "query": {
@@ -1484,7 +1311,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_request_parameters_fail():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?star=12448")
+                resp = await client.get(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"?star=12448")
                 assert resp.status == 400
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -1507,7 +1334,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_wrong_combination_request_parameters():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=12448")
+                resp = await client.get(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"?start=12448")
                 assert resp.status == 400
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -1530,7 +1357,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_datasets_g_variants_endpoint_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?datasets=test")
+                resp = await client.get(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"?datasets=test")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -1543,7 +1370,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_alphanumeric_equal_query_is_working():
-                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"], json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -1575,7 +1402,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_alphanumeric_like_query_is_working():
-                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"], json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -1608,7 +1435,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_alphanumeric_not_like_query_is_working():
-                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"], json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -1640,7 +1467,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_alphanumeric_not_query_is_working():
-                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"], json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -1672,7 +1499,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_iso8601duration_gt_query_is_working():
-                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"], json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -1704,7 +1531,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_iso8601duration_ls_query_is_working():
-                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"], json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -1737,7 +1564,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_iso8601duration_eq_query_is_working():
-                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"], json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -1768,7 +1595,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_measurement_value_query_is_working():
-                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"], json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -1804,7 +1631,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_measurement_value_query_does_not_find_results():
-                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"], json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -1840,7 +1667,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_custom_query_is_working():
-                resp = await client.post(conf.uri_subpath+"/"+biosample.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+biosample["biosample"]["endpoint_name"], json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -1871,7 +1698,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_range_query_with_variant_min_and_max_lengths_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=343675&referenceName=2&assemblyId=GRCh37&end=345681&variantMinLength=0&variantMaxLength=10&testMode=true")
+                resp = await client.get(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"?start=343675&referenceName=2&assemblyId=GRCh37&end=345681&variantMinLength=0&variantMaxLength=10&testMode=true")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -1884,7 +1711,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_filters_as_request_parameter_working():
-                resp = await client.get(conf.uri_subpath+"/"+individual.endpoint_name+"?filters=NCIT:C16576&testMode=true")
+                resp = await client.get(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"]+"?filters=NCIT:C16576&testMode=true")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -1897,7 +1724,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_datasets_list_query_is_working():
-                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"], json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -1928,7 +1755,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_range_query_with_variant_assemblyId_GRCh37_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=343675&referenceName=2&assemblyId=GRCh37&end=345681&testMode=True")
+                resp = await client.get(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"?start=343675&referenceName=2&assemblyId=GRCh37&end=345681&testMode=True")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -1941,7 +1768,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_range_query_with_variant_assemblyId_NCBI36_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=343675&referenceName=2&assemblyId=NCBI36&end=345681&testMode=True")
+                resp = await client.get(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"?start=343675&referenceName=2&assemblyId=NCBI36&end=345681&testMode=True")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -1954,7 +1781,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_NONE_count_query_is_working():
-                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"], json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -1988,7 +1815,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_heterozygosity():
-                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/f640486e9e025466848eadc64622f213e4cc9bec534b8a68554fe4d4d0682a28/"+individual.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"/f640486e9e025466848eadc64622f213e4cc9bec534b8a68554fe4d4d0682a28/"+individual["individual"]["endpoint_name"], json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -2017,7 +1844,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_homozygosity():
-                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/b215f7a084c83adfc2d4908ea69ce96ebbbff2ac0fbbb2bdd847858268b43610/"+individual.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"/b215f7a084c83adfc2d4908ea69ce96ebbbff2ac0fbbb2bdd847858268b43610/"+individual["individual"]["endpoint_name"], json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -2046,7 +1873,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_individuals_variants():
-                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/f640486e9e025466848eadc64622f213e4cc9bec534b8a68554fe4d4d0682a28/"+individual.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"/f640486e9e025466848eadc64622f213e4cc9bec534b8a68554fe4d4d0682a28/"+individual["individual"]["endpoint_name"], json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -2075,7 +1902,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_heterozygosity():
-                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/f640486e9e025466848eadc64622f213e4cc9bec534b8a68554fe4d4d0682a28/"+analysis.endpoint_name+"", json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"/f640486e9e025466848eadc64622f213e4cc9bec534b8a68554fe4d4d0682a28/"+analysis["analysis"]["endpoint_name"]+"", json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -2104,7 +1931,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_homozygosity():
-                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/b215f7a084c83adfc2d4908ea69ce96ebbbff2ac0fbbb2bdd847858268b43610/"+analysis.endpoint_name+"", json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"/b215f7a084c83adfc2d4908ea69ce96ebbbff2ac0fbbb2bdd847858268b43610/"+analysis["analysis"]["endpoint_name"]+"", json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -2133,7 +1960,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_analyses_variants():
-                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/f640486e9e025466848eadc64622f213e4cc9bec534b8a68554fe4d4d0682a28/"+analysis.endpoint_name+"", json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"/f640486e9e025466848eadc64622f213e4cc9bec534b8a68554fe4d4d0682a28/"+analysis["analysis"]["endpoint_name"]+"", json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -2162,7 +1989,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_heterozygosity():
-                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/f640486e9e025466848eadc64622f213e4cc9bec534b8a68554fe4d4d0682a28/"+biosample.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"/f640486e9e025466848eadc64622f213e4cc9bec534b8a68554fe4d4d0682a28/"+biosample["biosample"]["endpoint_name"], json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -2191,7 +2018,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_homozygosity():
-                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/b215f7a084c83adfc2d4908ea69ce96ebbbff2ac0fbbb2bdd847858268b43610/"+biosample.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"/b215f7a084c83adfc2d4908ea69ce96ebbbff2ac0fbbb2bdd847858268b43610/"+biosample["biosample"]["endpoint_name"], json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -2220,7 +2047,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_biosamples_variants():
-                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/c18249a2d7a303fb0551a4e86f43f5d830ba9182c88029e35697c87ebcb98546/"+biosample.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"/c18249a2d7a303fb0551a4e86f43f5d830ba9182c88029e35697c87ebcb98546/"+biosample["biosample"]["endpoint_name"], json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -2249,7 +2076,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_heterozygosity():
-                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/f640486e9e025466848eadc64622f213e4cc9bec534b8a68554fe4d4d0682a28/"+run.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"/f640486e9e025466848eadc64622f213e4cc9bec534b8a68554fe4d4d0682a28/"+run["run"]["endpoint_name"], json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -2278,7 +2105,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_homozygosity():
-                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/b215f7a084c83adfc2d4908ea69ce96ebbbff2ac0fbbb2bdd847858268b43610/"+run.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"/b215f7a084c83adfc2d4908ea69ce96ebbbff2ac0fbbb2bdd847858268b43610/"+run["run"]["endpoint_name"], json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -2307,7 +2134,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
-                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"/f640486e9e025466848eadc64622f213e4cc9bec534b8a68554fe4d4d0682a28/"+run.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"/f640486e9e025466848eadc64622f213e4cc9bec534b8a68554fe4d4d0682a28/"+run["run"]["endpoint_name"], json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -2336,7 +2163,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
-                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"], json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -2364,7 +2191,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
-                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"], json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -2393,7 +2220,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
-                resp = await client.post(conf.uri_subpath+"/"+analysis.endpoint_name+"", json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+analysis["analysis"]["endpoint_name"]+"", json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -2422,7 +2249,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
-                resp = await client.post(conf.uri_subpath+"/"+biosample.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+biosample["biosample"]["endpoint_name"], json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -2451,7 +2278,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
-                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"], json={
             "meta": {
                 "apiVersion": "2.0"
             },
@@ -2480,7 +2307,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
-                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"], json={
             "meta": {
                 "apiVersion": "2.0"
             },
@@ -2509,7 +2336,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
-                resp = await client.post(conf.uri_subpath+"/"+analysis.endpoint_name+"", json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+analysis["analysis"]["endpoint_name"]+"", json={
             "meta": {
                 "apiVersion": "2.0"
             },
@@ -2538,7 +2365,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
-                resp = await client.post(conf.uri_subpath+"/"+run.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+run["run"]["endpoint_name"], json={
             "meta": {
                 "apiVersion": "2.0"
             },
@@ -2567,7 +2394,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_geneId_individual_filter():
-                resp = await client.post(conf.uri_subpath+"/"+analysis.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+analysis["analysis"]["endpoint_name"], json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -2597,7 +2424,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_geneId_individual_filter():
-                resp = await client.post(conf.uri_subpath+"/"+run.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+run["run"]["endpoint_name"], json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -2627,7 +2454,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_geneId_individual_filter():
-                resp = await client.post(conf.uri_subpath+"/"+biosample.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+biosample["biosample"]["endpoint_name"], json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -2657,7 +2484,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_geneId_individual_filter():
-                resp = await client.post(conf.uri_subpath+"/"+biosample.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+biosample["biosample"]["endpoint_name"], json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -2687,7 +2514,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_geneId_individual_filter():
-                resp = await client.post(conf.uri_subpath+"/"+biosample.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+biosample["biosample"]["endpoint_name"], json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -2717,7 +2544,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
-                resp = await client.post(conf.uri_subpath+"/"+biosample.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+biosample["biosample"]["endpoint_name"], json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -2751,7 +2578,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
-                resp = await client.post(conf.uri_subpath+"/"+analysis.endpoint_name+"", json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+analysis["analysis"]["endpoint_name"]+"", json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -2785,7 +2612,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_variants():
-                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"], json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -2819,7 +2646,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=43045703&referenceName=17&referenceBases=G&alternateBases=A&testMode=True")
+                resp = await client.get(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"?start=43045703&referenceName=17&referenceBases=G&alternateBases=A&testMode=True")
                 assert resp.status == 400
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -2832,7 +2659,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=345675&referenceName=2&end=345681&testMode=True")
+                resp = await client.get(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"?start=345675&referenceName=2&end=345681&testMode=True")
                 assert resp.status == 400
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -2845,7 +2672,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=43045703,43045704&end=43045704,43045705&referenceName=17&testMode=True")
+                resp = await client.get(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"?start=43045703,43045704&end=43045704,43045705&referenceName=17&testMode=True")
                 assert resp.status == 400
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -2858,7 +2685,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=43045703,43045704&end=43045704,43045705&referenceName=17&assemblyId=GRCh37&testMode=3")
+                resp = await client.get(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"?start=43045703,43045704&end=43045704,43045705&referenceName=17&assemblyId=GRCh37&testMode=3")
                 assert resp.status == 400
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -2871,7 +2698,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
-                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"], json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -2900,7 +2727,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=31120923&referenceName=X&assemblyId=GRCh37&end=31121924&testMode=true")
+                resp = await client.get(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"?start=31120923&referenceName=X&assemblyId=GRCh37&end=31121924&testMode=true")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -2913,7 +2740,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?start=31120923&referenceName=Y&assemblyId=GRCh37&end=31121924&testMode=true")
+                resp = await client.get(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"?start=31120923&referenceName=Y&assemblyId=GRCh37&end=31121924&testMode=true")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -2926,7 +2753,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_limit_query_is_working():
-                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"], json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -2956,7 +2783,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_record_resultSet_query_is_working():
-                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"], json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -2986,7 +2813,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_count_resultSet_query_is_working():
-                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"], json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -3018,7 +2845,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_boolean_resultSet_query_is_working():
-                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"], json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -3050,7 +2877,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_boolean_query_is_working():
-                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"], json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -3082,7 +2909,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_counts_query_is_working():
-                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"], json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -3114,7 +2941,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_requestedSchemas():
-                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"], json={
                 "meta": {
                     "apiVersion": "2.0",
                     "requestedSchemas": [{"schema": "beacon-individual-v2.0.0"}]
@@ -3145,7 +2972,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_404_not_found_error():
-                resp = await client.post(conf.uri_subpath+"/impossibleendpoint")
+                resp = await client.post(conf_override.config.uri_subpath+"/impossibleendpoint")
                 assert resp.status == 404
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -3159,7 +2986,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_400_bad_request():
-                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name+'?testMod=true')
+                resp = await client.post(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"]+'?testMod=true')
                 assert resp.status == 400
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -3172,7 +2999,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_biosamples_endpoint_with_parameters_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+biosample.endpoint_name+"?start=43045703&referenceName=17&assemblyId=GRCh37&referenceBases=G&alternateBases=A&testMode=True")
+                resp = await client.get(conf_override.config.uri_subpath+"/"+biosample["biosample"]["endpoint_name"]+"?start=43045703&referenceName=17&assemblyId=GRCh37&referenceBases=G&alternateBases=A&testMode=True")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -3186,7 +3013,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_post_individuals_with_filter_is_working():
-                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name, json={"meta": {
+                resp = await client.post(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"], json={"meta": {
                     "apiVersion": "2.0"
                 },
                 "query": {
@@ -3214,7 +3041,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_cross_query_individuals_g_variants_with_filter_is_working():
-                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={"meta": {
+                resp = await client.post(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"], json={"meta": {
                     "apiVersion": "2.0"
                 },
                 "query": {
@@ -3242,7 +3069,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_cross_query_analyses_g_variants_with_filter_is_working():
-                resp = await client.post(conf.uri_subpath+"/"+analysis.endpoint_name, json={"meta": {
+                resp = await client.post(conf_override.config.uri_subpath+"/"+analysis["analysis"]["endpoint_name"], json={"meta": {
                     "apiVersion": "2.0"
                 },
                 "query": {
@@ -3270,7 +3097,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_cross_query_biosamples_g_variants_with_filter_is_working():
-                resp = await client.post(conf.uri_subpath+"/"+biosample.endpoint_name, json={"meta": {
+                resp = await client.post(conf_override.config.uri_subpath+"/"+biosample["biosample"]["endpoint_name"], json={"meta": {
                     "apiVersion": "2.0"
                 },
                 "query": {
@@ -3298,7 +3125,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_individuals_with_request_parameters_and_filters():
-                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"], json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -3335,7 +3162,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_check_no_dataset_found():
-                resp = await client.get(conf.uri_subpath+"/"+genomicVariant.endpoint_name+"?datasets=no_dataset")
+                resp = await client.get(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"?datasets=no_dataset")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -3348,7 +3175,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_get_double_filters():
-                resp = await client.get(conf.uri_subpath+"/"+individual.endpoint_name+"?filters=NCIT:C16576,NCIT:C16731")
+                resp = await client.get(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"]+"?filters=NCIT:C16576,NCIT:C16731")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -3371,7 +3198,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_individuals_with_request_parameters_empty_fails():
-                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"], json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -3402,7 +3229,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_measurement_value_query_is_not_working():
-                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name+'?filters=NCIT:C16576&limit=5&skip=0', json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"]+'?filters=NCIT:C16576&limit=5&skip=0', json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -3438,7 +3265,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_measurement_value_query_is_working():
-                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name+'?skip=0', json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"]+'?skip=0', json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -3470,7 +3297,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
-                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name+'?alternateBases=A', json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"]+'?alternateBases=A', json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -3504,7 +3331,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_runs_variants():
-                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name+'?end=43045704,43045705', json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"]+'?end=43045704,43045705', json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -3537,7 +3364,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_measurement_value_query_is_not_working():
-                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name+'?includeResultsetResponses=MISS', json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"]+'?includeResultsetResponses=MISS', json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -3573,7 +3400,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_similarity_high():
-                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"], json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -3602,7 +3429,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_similarity_medium():
-                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"], json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -3631,7 +3458,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_similarity_low():
-                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"], json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -3660,7 +3487,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_synonyms():
-                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"], json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -3689,7 +3516,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_analyses_with_with_requestedSchemas_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+analysis.endpoint_name+"?requestedSchemas=beacon-analysis-v2.0.0")
+                resp = await client.get(conf_override.config.uri_subpath+"/"+analysis["analysis"]["endpoint_name"]+"?requestedSchemas=beacon-analysis-v2.0.0&testMode=true")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -3703,7 +3530,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_post_cross_query_analyses_individuals_is_working():
-                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={"meta": {
+                resp = await client.post(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"], json={"meta": {
                     "apiVersion": "2.0"
                 },
                 "query": {
@@ -3731,7 +3558,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_post_cross_query_analyses_individuals_is_not_working():
-                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={"meta": {
+                resp = await client.post(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"], json={"meta": {
                     "apiVersion": "2.0"
                 },
                 "query": {
@@ -3758,7 +3585,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_post_cross_query_analyses_g_variants_is_working():
-                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name, json={"meta": {
+                resp = await client.post(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"], json={"meta": {
                     "apiVersion": "2.0"
                 },
                 "query": {
@@ -3786,7 +3613,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_post_cross_query_analyses_g_variants_is_not_working():
-                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name, json={"meta": {
+                resp = await client.post(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"], json={"meta": {
                     "apiVersion": "2.0"
                 },
                 "query": {
@@ -3813,7 +3640,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_post_cross_query_analyses_runs_is_working():
-                resp = await client.post(conf.uri_subpath+"/"+run.endpoint_name, json={"meta": {
+                resp = await client.post(conf_override.config.uri_subpath+"/"+run["run"]["endpoint_name"], json={"meta": {
                     "apiVersion": "2.0"
                 },
                 "query": {
@@ -3841,7 +3668,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_post_cross_query_analyses_runs_is_not_working():
-                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name, json={"meta": {
+                resp = await client.post(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"], json={"meta": {
                     "apiVersion": "2.0"
                 },
                 "query": {
@@ -3868,7 +3695,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_post_cross_query_analyses_biosamples_is_working():
-                resp = await client.post(conf.uri_subpath+"/"+biosample.endpoint_name, json={"meta": {
+                resp = await client.post(conf_override.config.uri_subpath+"/"+biosample["biosample"]["endpoint_name"], json={"meta": {
                     "apiVersion": "2.0"
                 },
                 "query": {
@@ -3896,7 +3723,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_post_cross_query_analyses_biosamples_is_not_working():
-                resp = await client.post(conf.uri_subpath+"/"+biosample.endpoint_name, json={"meta": {
+                resp = await client.post(conf_override.config.uri_subpath+"/"+biosample["biosample"]["endpoint_name"], json={"meta": {
                     "apiVersion": "2.0"
                 },
                 "query": {
@@ -3923,7 +3750,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_post_cross_query_individuals_g_variants_is_not_working():
-                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name, json={"meta": {
+                resp = await client.post(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"], json={"meta": {
                     "apiVersion": "2.0"
                 },
                 "query": {
@@ -3950,7 +3777,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_post_cross_query_individuals_runs_is_not_working():
-                resp = await client.post(conf.uri_subpath+"/"+run.endpoint_name, json={"meta": {
+                resp = await client.post(conf_override.config.uri_subpath+"/"+run["run"]["endpoint_name"], json={"meta": {
                     "apiVersion": "2.0"
                 },
                 "query": {
@@ -3977,7 +3804,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_post_cross_query_runs_individuals_is_not_working():
-                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={"meta": {
+                resp = await client.post(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"], json={"meta": {
                     "apiVersion": "2.0"
                 },
                 "query": {
@@ -4004,7 +3831,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_post_cross_query_runs_g_variants_is_not_working():
-                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name, json={"meta": {
+                resp = await client.post(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"], json={"meta": {
                     "apiVersion": "2.0"
                 },
                 "query": {
@@ -4031,7 +3858,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_post_cross_query_runs_biosamples_is_not_working():
-                resp = await client.post(conf.uri_subpath+"/"+biosample.endpoint_name, json={"meta": {
+                resp = await client.post(conf_override.config.uri_subpath+"/"+biosample["biosample"]["endpoint_name"], json={"meta": {
                     "apiVersion": "2.0"
                 },
                 "query": {
@@ -4058,7 +3885,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_post_cross_query_runs_analyses_is_not_working():
-                resp = await client.post(conf.uri_subpath+"/"+analysis.endpoint_name, json={"meta": {
+                resp = await client.post(conf_override.config.uri_subpath+"/"+analysis["analysis"]["endpoint_name"], json={"meta": {
                     "apiVersion": "2.0"
                 },
                 "query": {
@@ -4085,7 +3912,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_post_cross_query_biosamples_individuals_is_not_working():
-                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={"meta": {
+                resp = await client.post(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"], json={"meta": {
                     "apiVersion": "2.0"
                 },
                 "query": {
@@ -4112,7 +3939,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_post_cross_query_biosamples_g_variants_is_not_working():
-                resp = await client.post(conf.uri_subpath+"/"+genomicVariant.endpoint_name, json={"meta": {
+                resp = await client.post(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"], json={"meta": {
                     "apiVersion": "2.0"
                 },
                 "query": {
@@ -4139,7 +3966,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_post_cross_query_runs_biosamples_is_not_working():
-                resp = await client.post(conf.uri_subpath+"/"+run.endpoint_name, json={"meta": {
+                resp = await client.post(conf_override.config.uri_subpath+"/"+run["run"]["endpoint_name"], json={"meta": {
                     "apiVersion": "2.0"
                 },
                 "query": {
@@ -4166,7 +3993,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_post_cross_query_biosamples_analyses_is_not_working():
-                resp = await client.post(conf.uri_subpath+"/"+analysis.endpoint_name, json={"meta": {
+                resp = await client.post(conf_override.config.uri_subpath+"/"+analysis["analysis"]["endpoint_name"], json={"meta": {
                     "apiVersion": "2.0"
                 },
                 "query": {
@@ -4193,7 +4020,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_cohorts_datasets_cross_query_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+cohort.endpoint_name+"/EGA-testing/"+dataset.endpoint_name)
+                resp = await client.get(conf_override.config.uri_subpath+"/"+cohort["cohort"]["endpoint_name"]+"/EGA-testing/"+dataset["dataset"]["endpoint_name"])
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -4207,7 +4034,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_datasets_cohorts_cross_query_is_working():
-                resp = await client.get(conf.uri_subpath+"/"+dataset.endpoint_name+"/test/"+cohort.endpoint_name)
+                resp = await client.get(conf_override.config.uri_subpath+"/"+dataset["dataset"]["endpoint_name"]+"/test/"+cohort["cohort"]["endpoint_name"])
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -4221,7 +4048,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_measurement_value_query_is_working():
-                resp = await client.post(conf.uri_subpath+"/"+individual.endpoint_name, json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"], json={
                 "meta": {
                     "apiVersion": "2.0"
                 },
@@ -4256,12 +4083,182 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_individuals_endpoint_is_removing_dataset():
-                resp = await client.get(conf.uri_subpath+"/"+individual.endpoint_name)
+                resp = await client.get(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"]+'?testMode=true')
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
                 assert responsedict["responseSummary"]["numTotalResults"] == 20
             loop.run_until_complete(test_check_individuals_endpoint_is_removing_dataset())
+            loop.run_until_complete(client.close())
+    def test_main_check_patients_endpoint_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_patients_endpoint_is_working():
+                resp = await client.get(conf_override.config.uri_subpath+"/"+patients["patients"]["endpoint_name"] + '?testMode=true')
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+            loop.run_until_complete(test_check_patients_endpoint_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_patients_with_limit_endpoint_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_patients_with_limit_endpoint_is_working():
+                resp = await client.get(conf_override.config.uri_subpath+"/"+patients["patients"]["endpoint_name"]+"?limit=200")
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                self.assertIn("apiVersion",responsedict["meta"])
+                self.assertIn("beaconId",responsedict["meta"])
+                self.assertIn("returnedSchemas",responsedict["meta"])
+                self.assertIn("receivedRequestSummary",responsedict["meta"])
+                self.assertIn("returnedGranularity",responsedict["meta"])
+                self.assertIn("testMode",responsedict["meta"])
+                self.assertIn("resultSets",responsedict["response"])
+                self.assertIn("responseSummary",responsedict)
+                assert responsedict["responseSummary"]["exists"] == True
+            loop.run_until_complete(test_check_patients_with_limit_endpoint_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_patients_with_id_endpoint_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_patients_with_id_endpoint_is_working():
+                resp = await client.get(conf_override.config.uri_subpath+"/"+patients["patients"]["endpoint_name"]+"/subject003")
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
+            loop.run_until_complete(test_check_patients_with_id_endpoint_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_patients_collections_endpoint_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_patients_collections_endpoint_is_working():
+                resp = await client.get(conf_override.config.uri_subpath+"/"+patients["patients"]["endpoint_name"]+"/subject003/"+collections["collections"]["endpoint_name"])
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
+            loop.run_until_complete(test_check_patients_collections_endpoint_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_collections_with_filter_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_patients_with_filter_is_working():
+                resp = await client.post(conf_override.config.uri_subpath+"/"+collections["collections"]["endpoint_name"], json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"EUCAIM:IMG1000026", "scope":"patients" }, {"id":"EUCAIM:BP1000270", "scope":"patients" }, {"id":"EUCAIM:CLIN1000060", "scope":"patients" }, {"id":"EUCAIM:IMG1000047", "scope":"patients" }, {"id":"imageStudy.disease.tumorMetadata.PSA", "operator":"<", "value": 2, "scope":"patients"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
+            loop.run_until_complete(test_check_post_patients_with_filter_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_cross_query_cohort_individuals_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_cross_query_cohort_individuals_is_working():
+                resp = await client.post(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"], json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"OGMS:0000015", "scope":"cohort" }],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+            loop.run_until_complete(test_check_post_cross_query_cohort_individuals_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_cross_query_analysis_datasets_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_cross_query_analysis_datasets_is_working():
+                resp = await client.post(conf_override.config.uri_subpath+"/"+dataset["dataset"]["endpoint_name"], json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"variantCaller", "operator":"=", "value":"GATK4.0", "scope":"analysis"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+            loop.run_until_complete(test_check_post_cross_query_analysis_datasets_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_cross_query_analysis_cohorts_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_cross_query_analysis_cohorts_is_working():
+                resp = await client.post(conf_override.config.uri_subpath+"/"+cohort["cohort"]["endpoint_name"], json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"variantCaller", "operator":"=", "value":"GATK4.0", "scope":"analysis"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+            loop.run_until_complete(test_check_post_cross_query_analysis_cohorts_is_working())
             loop.run_until_complete(client.close())
     
 
