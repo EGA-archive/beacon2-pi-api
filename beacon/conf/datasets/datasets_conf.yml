@@ -6,3 +6,6 @@ test:
 test2:
   isSynthetic: true
   isTest: true
+DemoDatasetBreast:
+  isSynthetic: true
+  isTest: true

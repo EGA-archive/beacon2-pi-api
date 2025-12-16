@@ -66,8 +66,6 @@ After that, you will need to configure the IPs in the different conf files to ma
 
 #### Load the data
 
-**To avoid having duplicated records, make sure to have run the reindex script before loading data, this will make the import of the data run slower but will avoit the duplications. Also, if you want to import new data faster and you are sure data won't be duplicated, you can drop the indexes of the database to make imports faster.**
-
 To load the database (mongo) just copy your files in the data folder. Then, locate yourself in the mongo folder:
 
 ```bash
@@ -336,6 +334,127 @@ org_logo_url = 'https://legacy.ega-archive.org/images/logo.png'
 org_info = ''
 ``` 
 
+### Models configuration
+
+#### Enable/Disable model
+
+Now, beacon PI admits different models to be plugged in. By default, two models come with beacon PI, which are:
+- EUCAIM
+- ga4gh/beacon_v2_default_model
+
+In order to enable or disable a model, you need to edit the conf/models/models_conf.yml file and set their enabled values to True or False as preferred, like shown below:
+```yml
+ga4gh/beacon_v2_default_model:
+  model_enabled: True
+
+EUCAIM:
+  model_enabled: True
+```
+
+#### Add a new model
+
+On the other hand, to add a new model, you need to create a new folder with the name of your model and add three folders within the new model: conf, connections, validator, with these exact same names.
+In the folder conf you need to add the yml files of each entity of the model inside a folder called entry_types. The name of the files need to match the id of the entity (e.g. analysis.yml will show analysis as the main key). The info inside needs to have the same parameters shown here:
+```yml
+analysis:
+  entry_type_enabled: True
+  max_granularity: record
+  endpoint_name: analyses
+  open_api_definition: https://raw.githubusercontent.com/ga4gh-beacon/beacon-v2/main/models/json/beacon-v2-default-model/analyses/endpoints.json
+  allow_queries_without_filters: True
+  allow_id_query: True # endpoint_name/{id}
+  response_type: non_collection
+  connection:
+    name: mongo
+    database: beacon
+    table: analyses
+    functions:
+      function_name_assigned: get_phenotypic_endpoint
+      id_query_function_name_assigned: get_phenotypic_endpoint_with_id
+  info:
+    name: Bioinformatics analysis
+    ontology_id: edam:operation_2945
+    ontology_name: Analysis
+    description: Apply analytical methods to existing data of a specific type.
+  schema:
+    specification: Beacon v2
+    default_schema_id: beacon-analysis-v2.0.0
+    default_schema_name: Default schema for a bioinformatics analysis
+    reference_to_default_schema_definition: https://raw.githubusercontent.com/ga4gh-beacon/beacon-v2/main/models/json/beacon-v2-default-model/analyses/defaultSchema.json
+    default_schema_version: v2.0.0
+    supported_schemas:
+      - beacon-analysis-v2.0.0
+      - beacon-analysis-v2.0.1
+      - beacon-analysis-v2.1.0
+      - beacon-analysis-v2.1.1
+      - beacon-analysis-v2.1.2
+      - beacon-analysis-v2.2.0
+  lookups:
+    biosample:
+      endpoint_name: analyses/{id}/biosamples
+      response_type: non_collection
+      endpoint_enabled: True
+      connection:
+        name: mongo
+        database: beacon
+        table: biosamples
+        functions:
+          function_name_assigned: get_phenotypic_cross_query
+    cohort:
+      endpoint_name: analyses/{id}/cohorts
+      response_type: collection
+      endpoint_enabled: True
+      connection:
+        name: mongo
+        database: beacon
+        table: cohorts
+        functions:
+          function_name_assigned: get_cross_collections
+    dataset:
+      endpoint_name: analyses/{id}/datasets
+      response_type: collection
+      endpoint_enabled: True
+      connection:
+        name: mongo
+        database: beacon
+        table: datasets
+        functions:
+          function_name_assigned: get_cross_collections
+    genomicVariant:
+      endpoint_name: analyses/{id}/g_variants
+      response_type: non_collection
+      endpoint_enabled: True
+      connection:
+        name: mongo
+        database: beacon
+        table: genomicVariations
+        functions:
+          function_name_assigned: get_variants_of_phenotypic_endpoint
+    individual:
+      endpoint_name: analyses/{id}/individuals
+      response_type: non_collection
+      endpoint_enabled: True
+      connection:
+        name: mongo
+        database: beacon
+        table: individuals
+        functions:
+          function_name_assigned: get_phenotypic_cross_query
+    run:
+      endpoint_name: analyses/{id}/runs
+      response_type: non_collection
+      endpoint_enabled: True
+      connection:
+        name: mongo
+        database: beacon
+        table: runs
+        functions:
+          function_name_assigned: get_phenotypic_cross_query
+```
+Note: lookups entries can vary depending on the entities available for the model.
+Also, the connections folder needs to have a folder with the name of the connection for the model (only mongo available now) and then have the minimum files (collections.py and non_collections.py) with the functions that are shown in the yml conf file for each entity.
+Lastly, in validator, pydantic classes per entity and collection/non_collection type need to be added, with the name of the schema they belong to and with the different properties and values that each of the entity carries in them.
+
 ### Budget configuration
 
 If you wish to put a limit on how many queries can a user or a certain IP make to your beacon, that is now possible. In order to do that, edit the the variables under *Query budget* inside [conf.py](https://github.com/EGA-archive/beacon-production-prototype/tree/main/beacon/conf/conf.py). 
@@ -368,41 +487,107 @@ The variable **imprecise_count** will override all the others and will tell beac
 
 ### Entry types configuration
 
-Beacon v2 PI API lets you change the configuration of each of the entry types. For doing that, you have to edit the entry types configuration for each entry type (e.g. [analysis.py](https://github.com/EGA-archive/beacon-production-prototype/tree/main/beacon/conf/analysis.py)) and there you will find the next variables:
+The entry types configuration now works with yml files inside each model. You can edit the values of the parameters below (the values after the :). The keys have to remain the same as shown below.
 
-```bash
-endpoint_name="analyses"
-open_api_endpoints_definition='https://raw.githubusercontent.com/ga4gh-beacon/beacon-v2/main/models/json/beacon-v2-default-model/analyses/endpoints.json'
-database='mongo' # The name must match the folder's name in connection that belongs to the desired database.
-
-# Granularity accepted: boolean, count or record
-granularity='record'
-
-# Entry type configuration
-id='analysis'
-name='Bioinformatics analysis'
-ontology_id='edam:operation_2945'
-ontology_name='Analysis'
-specification='Beacon v2.0.0'
-description='Apply analytical methods to existing data of a specific type.'
-defaultSchema_id='beacon-analysis-v2.0.0'
-defaultSchema_name='Default schema for a bioinformatics analysis'
-defaultSchema_reference_to_schema_definition='https://raw.githubusercontent.com/ga4gh-beacon/beacon-v2/main/models/json/beacon-v2-default-model/analyses/defaultSchema.json'
-defaultSchema_schema_version='v2.0.0'
-aditionally_supported_schemas=[]
-allow_queries_without_filters=True
-
-# Map configuration
-singleEntryUrl=True # True if your beacon enables endpoint analyses/{id}
-biosample_lookup=True # True if your beacon enables endpoint analyses/{id}/biosamples
-cohort_lookup=True # True if your beacon enables endpoint analyses/{id}/cohorts
-dataset_lookup=True # True if your beacon enables endpoint analyses/{id}/datasets
-genomicVariant_lookup=True # True if your beacon enables endpoint analyses/{id}/g_variants
-individual_lookup=True # True if your beacon enables endpoint analyses/{id}/individuals
-run_lookup=True # True if your beacon enables endpoint analyses/{id}/runs
+```yml
+analysis:
+  entry_type_enabled: True
+  max_granularity: record
+  endpoint_name: analyses
+  open_api_definition: https://raw.githubusercontent.com/ga4gh-beacon/beacon-v2/main/models/json/beacon-v2-default-model/analyses/endpoints.json
+  allow_queries_without_filters: True
+  allow_id_query: True # endpoint_name/{id}
+  response_type: non_collection
+  connection:
+    name: mongo
+    database: beacon
+    table: analyses
+    functions:
+      function_name_assigned: get_phenotypic_endpoint
+      id_query_function_name_assigned: get_phenotypic_endpoint_with_id
+  info:
+    name: Bioinformatics analysis
+    ontology_id: edam:operation_2945
+    ontology_name: Analysis
+    description: Apply analytical methods to existing data of a specific type.
+  schema:
+    specification: Beacon v2
+    default_schema_id: beacon-analysis-v2.0.0
+    default_schema_name: Default schema for a bioinformatics analysis
+    reference_to_default_schema_definition: https://raw.githubusercontent.com/ga4gh-beacon/beacon-v2/main/models/json/beacon-v2-default-model/analyses/defaultSchema.json
+    default_schema_version: v2.0.0
+    supported_schemas:
+      - beacon-analysis-v2.0.0
+      - beacon-analysis-v2.0.1
+      - beacon-analysis-v2.1.0
+      - beacon-analysis-v2.1.1
+      - beacon-analysis-v2.1.2
+      - beacon-analysis-v2.2.0
+  lookups:
+    biosample:
+      endpoint_name: analyses/{id}/biosamples
+      response_type: non_collection
+      endpoint_enabled: True
+      connection:
+        name: mongo
+        database: beacon
+        table: biosamples
+        functions:
+          function_name_assigned: get_phenotypic_cross_query
+    cohort:
+      endpoint_name: analyses/{id}/cohorts
+      response_type: collection
+      endpoint_enabled: True
+      connection:
+        name: mongo
+        database: beacon
+        table: cohorts
+        functions:
+          function_name_assigned: get_cross_collections
+    dataset:
+      endpoint_name: analyses/{id}/datasets
+      response_type: collection
+      endpoint_enabled: True
+      connection:
+        name: mongo
+        database: beacon
+        table: datasets
+        functions:
+          function_name_assigned: get_cross_collections
+    genomicVariant:
+      endpoint_name: analyses/{id}/g_variants
+      response_type: non_collection
+      endpoint_enabled: True
+      connection:
+        name: mongo
+        database: beacon
+        table: genomicVariations
+        functions:
+          function_name_assigned: get_variants_of_phenotypic_endpoint
+    individual:
+      endpoint_name: analyses/{id}/individuals
+      response_type: non_collection
+      endpoint_enabled: True
+      connection:
+        name: mongo
+        database: beacon
+        table: individuals
+        functions:
+          function_name_assigned: get_phenotypic_cross_query
+    run:
+      endpoint_name: analyses/{id}/runs
+      response_type: non_collection
+      endpoint_enabled: True
+      connection:
+        name: mongo
+        database: beacon
+        table: runs
+        functions:
+          function_name_assigned: get_phenotypic_cross_query
 ```
+These files are located in their respective folder (beacon/models/conf/entry_types).
 
-The most importants are the variable **endpoint_name**, which will change the name of the endpoint that will show the response for analysis type of records, the **granularity**, which will change the maximum granularity allowed for this particular entry type, the **allow_queries_without_filters**, which will allow queries without filters if True to that particular endpoint. Also, **defaultSchema_id** says which is the version of the schema of the records that are stored in this entry type and when receiving a requestedSchema different than this id, the beacon will respond with a bad request, as other schemas are not supported. The variables that are below *Map configuration* which will activate or deactivate the different endpoints related to this entry type. See explanation next to each of the variables to know more.
+The most importants are the variable **endpoint_name**, which will change the name of the endpoint that will show the response for analysis type of records, the **max_granularity**, which will change the maximum granularity allowed for this particular entry type, the **allow_queries_without_filters**, which will allow queries without filters if True to that particular endpoint. Also, **defaultSchema_id** says which is the version of the schema of the records that are stored in this entry type and when receiving a requestedSchema different than this id, the beacon will respond with a bad request, as other schemas are not supported. The variables that are below *Map configuration* which will activate or deactivate the different endpoints related to this entry type. See explanation next to each of the variables to know more.
 
 ### Test Mode
 

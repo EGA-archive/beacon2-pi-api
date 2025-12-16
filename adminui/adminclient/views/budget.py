@@ -5,11 +5,11 @@ import logging
 from pymongo.mongo_client import MongoClient
 from django.urls import resolve
 from adminbackend.forms.budget import BudgetForm
-from beacon.conf.conf import query_budget_database
+from beacon.conf.conf_override import config
 from django.contrib.auth.decorators import login_required, permission_required
 import logging
 
-complete_module='beacon.connections.'+query_budget_database
+complete_module='beacon.connections.'+config.query_budget_database
 import importlib
 module = importlib.import_module(complete_module, package=None)
 
@@ -29,7 +29,7 @@ def default_view(request):
     if request.method == 'POST':
         form = BudgetForm(request.POST)
         if 'Test Budget Connection' in request.POST:
-            if 'mongo' in query_budget_database:
+            if 'mongo' in config.query_budget_database:
                 try:
                     client = module.client.server_info()
                     client = "Ok and running in a mongo " + client["version"] + "version"
@@ -60,8 +60,8 @@ def default_view(request):
                         new_lines+="query_budget_amount="+str(budgetAmount)+"\n"
                     elif 'query_budget_time_in_seconds' in str(line):
                         new_lines+="query_budget_time_in_seconds="+str(budgetTime)+"\n"
-                    elif 'query_budget_database' in str(line):
-                        new_lines+="query_budget_database="+'"'+budgetDB+'"'+"\n"
+                    elif 'config.query_budget_database' in str(line):
+                        new_lines+="config.query_budget_database="+'"'+budgetDB+'"'+"\n"
                     elif 'query_budget_db_name' in str(line):
                         new_lines+="query_budget_db_name="+'"'+budgetDBname+'"'+"\n"
                     elif 'query_budget_table' in str(line):

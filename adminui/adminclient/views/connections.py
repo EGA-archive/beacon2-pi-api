@@ -5,13 +5,13 @@ import logging
 from pymongo.mongo_client import MongoClient
 from django.urls import resolve
 from adminbackend.forms.connections import ConnectionsForm, ChooseConnection, LinkConnection
-from beacon.conf.conf import query_budget_database
+from beacon.conf.conf_override import config
 import subprocess
 from django.contrib.auth.decorators import login_required, permission_required
 
 import logging
 
-complete_module='beacon.connections.'+query_budget_database
+complete_module='beacon.connections.'+config.query_budget_database
 import importlib
 module = importlib.import_module(complete_module, package=None)
 

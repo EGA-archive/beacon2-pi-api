@@ -13,9 +13,9 @@ class TestBudget(unittest.TestCase):
         self.app = create_test_app()
 
     def test_insert_and_check_budget_by_user(self):
-        from beacon.conf.conf import query_budget_per_user, query_budget_per_ip
-        query_budget_per_user=True
-        query_budget_per_ip=True
+        from beacon.conf.conf_override import config
+        config.query_budget_per_user=True
+        config.query_budget_per_ip=True
         from beacon.budget.__main__ import check_budget, insert_budget
         with loop_context() as loop:
             client = TestClient(TestServer(self.app), loop=loop)
@@ -36,9 +36,9 @@ class TestBudget(unittest.TestCase):
             loop.run_until_complete(client.close())
 
     def test_insert_and_check_budget_by_unauthorized_user(self):
-        from beacon.conf.conf import query_budget_per_user, query_budget_per_ip
-        query_budget_per_user=True
-        query_budget_per_ip=True
+        from beacon.conf.conf_override import config
+        config.query_budget_per_user=True
+        config.query_budget_per_ip=True
         from beacon.budget.__main__ import check_budget, insert_budget
         with loop_context() as loop:
             client = TestClient(TestServer(self.app), loop=loop)
@@ -53,9 +53,9 @@ class TestBudget(unittest.TestCase):
             loop.run_until_complete(test_insert_and_check_budget_by_unauthorized_user())
             loop.run_until_complete(client.close())
     def test_insert_and_check_budget_by_ip(self):
-        from beacon.conf.conf import query_budget_per_user, query_budget_per_ip
-        query_budget_per_user=True
-        query_budget_per_ip=True
+        from beacon.conf.conf_override import config
+        config.query_budget_per_user=True
+        config.query_budget_per_ip=True
         from beacon.budget.__main__ import check_budget, insert_budget
         with loop_context() as loop:
             app = create_test_app()

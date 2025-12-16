@@ -6,9 +6,10 @@ from aiohttp import web
 from beacon.auth.__main__ import fetch_idp, validate_access_token, authentication, fetch_user_info
 from dotenv import load_dotenv
 import re
+from beacon.logs.logs import LOG
 
 # for keycloak, create aud in mappers, with custom, aud and beacon for audience
-mock_access_token = 'eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJreS1tUXNxZ0ZYeHdSUVRfRUhuQlJJUGpmbVhfRXZuUTVEbzZWUTJCazdZIn0.eyJleHAiOjE3NjI1Mjk2OTIsImlhdCI6MTc2MjUyOTM5MiwianRpIjoiMDMwMjdiMDYtZDI2Ny00ZThkLTljOTItOWM1ZGM3Nzk2N2MwIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL0JlYWNvbiIsImF1ZCI6ImJlYWNvbiIsInN1YiI6IjQ3ZWZmMWIxLTc2MjEtNDU3MC1hMGJiLTAxYTcxOWZiYTBhMiIsInR5cCI6IkJlYXJlciIsImF6cCI6ImJlYWNvbiIsInNlc3Npb25fc3RhdGUiOiJmZmMwYmU1MS1mM2RkLTQxZGMtYWRhNy05OTQ5YTAxOTVmY2IiLCJhY3IiOiIxIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBlbWFpbCBtaWNyb3Byb2ZpbGUtand0Iiwic2lkIjoiZmZjMGJlNTEtZjNkZC00MWRjLWFkYTctOTk0OWEwMTk1ZmNiIiwidXBuIjoiamFuZSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwibmFtZSI6IkphbmUgU21pdGgiLCJncm91cHMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXSwicHJlZmVycmVkX3VzZXJuYW1lIjoiamFuZSIsImdpdmVuX25hbWUiOiJKYW5lIiwiZmFtaWx5X25hbWUiOiJTbWl0aCIsImVtYWlsIjoiamFuZS5zbWl0aEBiZWFjb24uZ2E0Z2gifQ.Qz__rtxjrb0ySBhHfdD2cpr_4CQmt0SPhynjh66uePljNq3CLsfEYezVsHk_rb5_68RP2FRFZeHutUBqnEiw0QUmNliLqrJp-lPQ8RT_JnQY27tSiPcSB4MZoOL_xKxK_2cs1cTETsL4jdfx1DJSipLohMdoDZfdWswlfMyOpeTwQRbCt6W6lJhhkFIXrfK2aPE-NCpopu9xzYoUszj3Vikx-lz40gKhx0S23W9jIZKk8fJk2bMute4WmwmlnLFT0YCQIN272OuWMF5U2aWRs4V2OPx0G1gF-f_Mb5kAdc-zpNREH4mG9FvJaiGirYQiprcY5vY3cO042GI7NdOBiw'
+mock_access_token = 'eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJreS1tUXNxZ0ZYeHdSUVRfRUhuQlJJUGpmbVhfRXZuUTVEbzZWUTJCazdZIn0.eyJleHAiOjE3NjU5MDU0OTgsImlhdCI6MTc2NTkwNTE5OCwianRpIjoiMGRmYjhlNWYtMGQ4My00Njk3LTkzYTEtYWI4MTI3NzZhYjU4IiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL0JlYWNvbiIsImF1ZCI6ImJlYWNvbiIsInN1YiI6IjQ3ZWZmMWIxLTc2MjEtNDU3MC1hMGJiLTAxYTcxOWZiYTBhMiIsInR5cCI6IkJlYXJlciIsImF6cCI6ImJlYWNvbiIsInNlc3Npb25fc3RhdGUiOiI0YjUyMjI3Zi0wZjEyLTRmYjYtOWQ0YS0yY2E5OGU4MDg5NmYiLCJhY3IiOiIxIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBlbWFpbCBtaWNyb3Byb2ZpbGUtand0Iiwic2lkIjoiNGI1MjIyN2YtMGYxMi00ZmI2LTlkNGEtMmNhOThlODA4OTZmIiwidXBuIjoiamFuZSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwibmFtZSI6IkphbmUgU21pdGgiLCJncm91cHMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXSwicHJlZmVycmVkX3VzZXJuYW1lIjoiamFuZSIsImdpdmVuX25hbWUiOiJKYW5lIiwiZmFtaWx5X25hbWUiOiJTbWl0aCIsImVtYWlsIjoiamFuZS5zbWl0aEBiZWFjb24uZ2E0Z2gifQ.MfDxGD_a1IQoQZGJ2-1lDDmJGh2N6OM0b-UObdyF07tzfNZ3tFlCwO2_HJEEMb3E8BxT9jyhHkcGkZbEym8-mh8a7KAyS_Pxxaa_4TMCjbDnwJQdVCQb91Y15NxpZWSRDFZtj3tZO59btij1iiDoGVj8YhouYu3O8IHFgS9hlw4Cr5qiVOn_0_rBVg_k9YSRaTEM47PLmOMsJOd-xHW8kulrYR9CrDEhDL4Weu8GFdLJcsnleHLjggYoIq0hB4mJYf1fqn4P78oOH4sLL4l-ueIsg4AK3Hu_eJt810zdD27MUBM6IbCBSQCa4I6hCDg47Z_IrKKl5FSTeltxg8-lDA'
 mock_access_token_false = 'public'
 #dummy test anonymous
 #dummy test login
@@ -33,9 +34,6 @@ class TestAuthN(unittest.TestCase):
                 idp_issuer, user_info, idp_client_id, idp_client_secret, idp_introspection, idp_jwks_url, algorithm, aud = fetch_idp(self, mock_access_token)
                 load_dotenv("beacon/auth/idp_providers/keycloak.env", override=True)
                 IDP_ISSUER = os.getenv('ISSUER')
-                IDP_ISSUER = re.findall(r'[a-zA-Z0-9:/._-]', IDP_ISSUER)
-                IDP_ISSUER = "".join(r for r in IDP_ISSUER)
-                IDP_ISSUER = str(IDP_ISSUER)
                 IDP_CLIENT_ID = os.getenv('CLIENT_ID')
                 IDP_CLIENT_SECRET = os.getenv('CLIENT_SECRET')
                 IDP_USER_INFO = os.getenv('USER_INFO')
@@ -57,9 +55,6 @@ class TestAuthN(unittest.TestCase):
             async def test_validate_access_token():
                 load_dotenv("beacon/auth/idp_providers/keycloak.env", override=True)
                 IDP_ISSUER = os.getenv('ISSUER')
-                IDP_ISSUER = re.findall(r'[a-zA-Z0-9:/._-]', IDP_ISSUER)
-                IDP_ISSUER = "".join(r for r in IDP_ISSUER)
-                IDP_ISSUER = str(IDP_ISSUER)
                 IDP_CLIENT_ID = os.getenv('CLIENT_ID')
                 IDP_CLIENT_SECRET = os.getenv('CLIENT_SECRET')
                 IDP_USER_INFO = os.getenv('USER_INFO')
@@ -85,9 +80,6 @@ class TestAuthN(unittest.TestCase):
             async def test_fetch_user_info():
                 load_dotenv("beacon/auth/idp_providers/keycloak.env", override=True)
                 IDP_ISSUER = os.getenv('ISSUER')
-                IDP_ISSUER = re.findall(r'[a-zA-Z0-9:/-]', IDP_ISSUER)
-                IDP_ISSUER = "".join(r for r in IDP_ISSUER)
-                IDP_ISSUER = str(IDP_ISSUER)
                 IDP_CLIENT_ID = os.getenv('CLIENT_ID')
                 IDP_CLIENT_SECRET = os.getenv('CLIENT_SECRET')
                 IDP_USER_INFO = os.getenv('USER_INFO')

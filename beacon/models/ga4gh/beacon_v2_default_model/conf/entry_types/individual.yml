@@ -1,0 +1,94 @@
+individual:
+  entry_type_enabled: True
+  max_granularity: record
+  endpoint_name: individuals
+  open_api_definition: https://raw.githubusercontent.com/ga4gh-beacon/beacon-v2/main/models/json/beacon-v2-default-model/individuals/endpoints.json
+  allow_queries_without_filters: True
+  allow_id_query: True # endpoint_name/{id}
+  response_type: non_collection
+  connection:
+    name: mongo
+    database: beacon
+    table: individuals
+    functions:
+      function_name_assigned: get_phenotypic_endpoint
+      id_query_function_name_assigned: get_phenotypic_endpoint_with_id
+  info:
+    name: Individual
+    ontology_id: NCIT:C25190
+    ontology_name: Person
+    description: A human being. It could be a Patient, a Tissue Donor, a Participant, a Human Study Subject, etc.
+  schema:
+    specification: Beacon v2
+    default_schema_id: beacon-individual-v2.0.0
+    default_schema_name: Default schema for a bioinformatics individual
+    reference_to_default_schema_definition: https://raw.githubusercontent.com/ga4gh-beacon/beacon-v2/main/models/json/beacon-v2-default-model/individuals/defaultSchema.json
+    default_schema_version: v2.0.0
+    supported_schemas:
+      - beacon-individual-v2.0.0
+      - beacon-individual-v2.0.1
+      - beacon-individual-v2.1.0
+      - beacon-individual-v2.1.1
+      - beacon-individual-v2.1.2
+      - beacon-individual-v2.2.0
+  lookups:
+    analysis:
+      endpoint_name: individuals/{id}/analyses
+      response_type: non_collection
+      endpoint_enabled: True
+      connection:
+        name: mongo
+        database: beacon
+        table: individuals
+        functions:
+          function_name_assigned: get_phenotypic_cross_query
+    biosample:
+      endpoint_name: individuals/{id}/biosamples
+      response_type: non_collection
+      endpoint_enabled: True
+      connection:
+        name: mongo
+        database: beacon
+        table: biosamples
+        functions:
+          function_name_assigned: get_phenotypic_cross_query
+    cohort:
+      endpoint_name: individuals/{id}/cohorts
+      response_type: collection
+      endpoint_enabled: True
+      connection:
+        name: mongo
+        database: beacon
+        table: cohorts
+        functions:
+          function_name_assigned: get_cross_collections
+    dataset:
+      endpoint_name: individuals/{id}/datasets
+      response_type: collection
+      endpoint_enabled: True
+      connection:
+        name: mongo
+        database: beacon
+        table: datasets
+        functions:
+          function_name_assigned: get_cross_collections
+    genomicVariant:
+      endpoint_name: individuals/{id}/g_variants
+      response_type: non_collection
+      endpoint_enabled: True
+      connection:
+        name: mongo
+        database: beacon
+        table: genomicVariations
+        functions:
+          function_name_assigned: get_variants_of_phenotypic_endpoint
+    run:
+      endpoint_name: individuals/{id}/runs
+      response_type: non_collection
+      endpoint_enabled: True
+      connection:
+        name: mongo
+        database: beacon
+        table: runs
+        functions:
+          function_name_assigned: get_phenotypic_cross_query

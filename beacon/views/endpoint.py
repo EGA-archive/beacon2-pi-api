@@ -13,9 +13,11 @@ import json
 from beacon.logs.logs import LOG
 from pydantic import create_model, ValidationError
 from beacon.exceptions.exceptions import InvalidData
+from beacon.utils.modules import load_framework_module
 
 class EndpointView(web.View, CorsViewMixin):
     def __init__(self, request: Request):
+        # Initialize dhe endpoint with some of the attributes that will need to be collected later on
         self._request = request
         self._id = generate_txid(self)
         RequestAttributes.ip = None
@@ -31,23 +33,31 @@ class EndpointView(web.View, CorsViewMixin):
 
     async def get(self):
         try:
+            # Decompound/validate the request and store the attributes needed in the class RequestAttributes
             await deconstruct_request(self, self.request)
+            # Call the handler function for the view assigned to the queried endpoint
             return await self.handler()
         except AppError as e:
+            # In case a handled error occurs, return the error message and status for it
             response_obj = self.error_builder(e.status, e.message)
             return web.Response(text=json_util.dumps(response_obj), status=e.status, content_type='application/json')
         except Exception as e:
+            # In case an unhandled error occurs, return a 500 and the generic error message below
             response_obj = self.error_builder(500, "Unexpected internal error: {}".format(e))
             return web.Response(text=json_util.dumps(response_obj), status=500, content_type='application/json')
 
     async def post(self):
         try:
+            # Decompound/validate the request and store the attributes needed in the class RequestAttributes
             await deconstruct_request(self, self.request)
+            # Call the handler function for the view assigned to the queried endpoint
             return await self.handler()
         except AppError as e:
-            response_obj =self.error_builder(e.status, e.message)
+            # In case a handled error occurs, return the error message and status for it
+            response_obj = self.error_builder(e.status, e.message)
             return web.Response(text=json_util.dumps(response_obj), status=e.status, content_type='application/json')
         except Exception as e:
+            # In case an unhandled error occurs, return a 500 and the generic error message below
             response_obj = self.error_builder(500, "Unexpected internal error: {}".format(e))
             return web.Response(text=json_util.dumps(response_obj), status=500, content_type='application/json')
 
@@ -57,15 +67,17 @@ class EndpointView(web.View, CorsViewMixin):
         return classtoJSON
     
     def error_builder(self, status, message):
-        meta_module='beacon.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.framework.meta'
-        error_module = 'beacon.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.framework.error'
-        import importlib
-        module_meta = importlib.import_module(meta_module, package=None)
-        module_error = importlib.import_module(error_module, package=None)
+        # Load the modules that have the classes that will serve as the meta and error part of the response
+        module_meta = load_framework_module(self, "meta")
+        module_error = load_framework_module(self, "error")
         try:
+            # Instantiate the error class with the status and the message collected during the error handling
             error = module_error.BeaconError(errorCode=status,errorMessage=message)
+            # Instantiat the meta class with the attributes collected in the request
             meta = module_meta.Meta(receivedRequestSummary=RequestAttributes.qparams.summary(),returnedGranularity=RequestAttributes.returned_granularity,returnedSchemas=[{"schema": "error-v2.2.0"}],testMode=RequestAttributes.qparams.query.testMode)
+            # Create the response class that will allocate the Meta and error parts of the response
             self.classResponse = module_error.ErrorResponse(meta=meta.model_dump(exclude_none=True),error=error.model_dump(exclude_none=True))
+            # Convert the class to JSON to return it in the final stream response
             response_obj = self.create_response()
             return response_obj
         except ValidationError as v:

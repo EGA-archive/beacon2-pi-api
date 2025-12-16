@@ -1,6 +1,6 @@
 from pymongo.mongo_client import MongoClient
 from beacon.connections.mongo import conf
-from beacon.conf.conf import query_budget_database, query_budget_db_name, query_budget_table
+from beacon.conf.conf_override import config
 import aiohttp.web as web
 from beacon.exceptions.exceptions import DatabaseIsDown
 
@@ -35,6 +35,11 @@ datasets=client[dbname].datasets
 genomicVariations=client[dbname].genomicVariations
 individuals=client[dbname].individuals
 runs=client[dbname].runs
+
+collections=client[dbname].collections
+imagestudies=client[dbname].imagestudies
+patients=client[dbname].patients
+
 filtering_terms=client[dbname].filtering_terms
 caseLevelData=client[dbname].caseLevelData
 targets=client[dbname].targets
@@ -42,11 +47,11 @@ synonyms=client[dbname].synonyms
 similarities=client[dbname].similarities
 counts=client[dbname].counts
 
-if query_budget_database == 'mongo':
+if config.query_budget_database == 'mongo':
     try:
-        client[query_budget_db_name].validate_collection(query_budget_table)
+        client[config.query_budget_db_name].validate_collection(config.query_budget_table)
     except Exception:
         try:
-            db=client[query_budget_db_name].create_collection(name=query_budget_table)
+            db=client[config.query_budget_db_name].create_collection(name=config.query_budget_table)
         except Exception as e:
             pass
