@@ -23,7 +23,11 @@ def get_non_collections_cross_query_attributes(self, entry_type, pre_entry_type)
     # For cross queries, save the attributes for the translation (linkage) between endpoints (idq to idq2) and the name of the collection for the initial endpoint queried (secondary_collection)
     mapping = {
     collections_confile["collections"]["endpoint_name"]: {
-                    patients_confile["patients"]["endpoint_name"]: {"idq": "datasetId",
-                                                "idq2": "id",
-                                                "secondary_collection": patients}}}
+                    patients_confile["patients"]["endpoint_name"]: {"idq": "id",
+                                                "idq2": "datasetId",
+                                                "secondary_collection": patients}},
+    patients_confile["patients"]["endpoint_name"]: {
+                    collections_confile["collections"]["endpoint_name"]: {"idq": "datasetId",
+                                                "idq2": "datasetId",
+                                                "secondary_collection": collections}}}
     return mapping[entry_type][pre_entry_type]

@@ -30,6 +30,8 @@ dataset = import_dataset_confile()
 genomicVariant = import_genomicVariant_confile()
 run = import_run_confile()
 individual = import_individual_confile()
+patients = import_patients_confile()
+collections = import_collections_confile()
 
 def create_app():
     app = web.Application()
@@ -4087,6 +4089,176 @@ class TestMain(unittest.TestCase):
                 responsedict=json.loads(responsetext)
                 assert responsedict["responseSummary"]["numTotalResults"] == 20
             loop.run_until_complete(test_check_individuals_endpoint_is_removing_dataset())
+            loop.run_until_complete(client.close())
+    def test_main_check_patients_endpoint_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_patients_endpoint_is_working():
+                resp = await client.get(conf_override.config.uri_subpath+"/"+patients["patients"]["endpoint_name"] + '?testMode=true')
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+            loop.run_until_complete(test_check_patients_endpoint_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_patients_with_limit_endpoint_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_patients_with_limit_endpoint_is_working():
+                resp = await client.get(conf_override.config.uri_subpath+"/"+patients["patients"]["endpoint_name"]+"?limit=200")
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                self.assertIn("apiVersion",responsedict["meta"])
+                self.assertIn("beaconId",responsedict["meta"])
+                self.assertIn("returnedSchemas",responsedict["meta"])
+                self.assertIn("receivedRequestSummary",responsedict["meta"])
+                self.assertIn("returnedGranularity",responsedict["meta"])
+                self.assertIn("testMode",responsedict["meta"])
+                self.assertIn("resultSets",responsedict["response"])
+                self.assertIn("responseSummary",responsedict)
+                assert responsedict["responseSummary"]["exists"] == True
+            loop.run_until_complete(test_check_patients_with_limit_endpoint_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_patients_with_id_endpoint_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_patients_with_id_endpoint_is_working():
+                resp = await client.get(conf_override.config.uri_subpath+"/"+patients["patients"]["endpoint_name"]+"/subject003")
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
+            loop.run_until_complete(test_check_patients_with_id_endpoint_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_patients_collections_endpoint_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_patients_collections_endpoint_is_working():
+                resp = await client.get(conf_override.config.uri_subpath+"/"+patients["patients"]["endpoint_name"]+"/subject003/"+collections["collections"]["endpoint_name"])
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
+            loop.run_until_complete(test_check_patients_collections_endpoint_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_collections_with_filter_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_patients_with_filter_is_working():
+                resp = await client.post(conf_override.config.uri_subpath+"/"+collections["collections"]["endpoint_name"], json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"EUCAIM:IMG1000026", "scope":"patients" }, {"id":"EUCAIM:BP1000270", "scope":"patients" }, {"id":"EUCAIM:CLIN1000060", "scope":"patients" }, {"id":"EUCAIM:IMG1000047", "scope":"patients" }, {"id":"imageStudy.disease.tumorMetadata.PSA", "operator":"<", "value": 2, "scope":"patients"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
+            loop.run_until_complete(test_check_post_patients_with_filter_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_cross_query_cohort_individuals_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_cross_query_cohort_individuals_is_working():
+                resp = await client.post(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"], json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"OGMS:0000015", "scope":"cohort" }],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+            loop.run_until_complete(test_check_post_cross_query_cohort_individuals_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_cross_query_analysis_datasets_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_cross_query_analysis_datasets_is_working():
+                resp = await client.post(conf_override.config.uri_subpath+"/"+dataset["dataset"]["endpoint_name"], json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"variantCaller", "operator":"=", "value":"GATK4.0", "scope":"analysis"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+            loop.run_until_complete(test_check_post_cross_query_analysis_datasets_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_cross_query_analysis_cohorts_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_cross_query_analysis_cohorts_is_working():
+                resp = await client.post(conf_override.config.uri_subpath+"/"+cohort["cohort"]["endpoint_name"], json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"variantCaller", "operator":"=", "value":"GATK4.0", "scope":"analysis"}],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+            loop.run_until_complete(test_check_post_cross_query_analysis_cohorts_is_working())
             loop.run_until_complete(client.close())
     
 

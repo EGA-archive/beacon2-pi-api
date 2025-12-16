@@ -48,42 +48,35 @@ PATHS_TO_RESTART = [
 ]
 
 async def config_watcher(app):
-    initial_times = {}
+    def snapshot():
+        times = {}
+        for path in PATHS_TO_RESTART:
+            if os.path.isfile(path):
+                times[path] = os.path.getmtime(path)
+            elif os.path.isdir(path):
+                for root, _, files in os.walk(path):
+                    if "__pycache__" in root:
+                        continue
+                    for f in files:
+                        if not f.endswith(".py"):
+                            continue
+                        full = os.path.join(root, f)
+                        times[full] = os.path.getmtime(full)
+        return times
 
-    # Let's add all the snapshot times for the folders to restart when changed
-    for path in PATHS_TO_RESTART:
-        if os.path.isfile(path):
-            initial_times[path] = os.path.getmtime(path)
-        elif os.path.isdir(path):
-            for root, _, files in os.walk(path):
-                for f in files:
-                    full = os.path.join(root, f)
-                    initial_times[full] = os.path.getmtime(full)
-    # We give a time to the server to start
-    await asyncio.sleep(5) 
+    initial_times = snapshot()
+    await asyncio.sleep(5)
 
     while True:
         await asyncio.sleep(2)
+        new_times = snapshot()
 
-        new_initial_times = {}
-
-        # We check again for any change
-        for path in PATHS_TO_RESTART:
-            if os.path.isfile(path):
-                new_initial_times[path] = os.path.getmtime(path)
-            elif os.path.isdir(path):
-                for root, _, files in os.walk(path):
-                    for f in files:
-                        full = os.path.join(root, f)
-                        new_initial_times[full] = os.path.getmtime(full)
-
-        # If there is a change then, restart again the app
-        for file_path, new_m in new_initial_times.items():
+        for file_path, new_m in new_times.items():
             old_m = initial_times.get(file_path)
-            if old_m is None or new_m != old_m:
+            if old_m is None or new_m > old_m:
                 os._exit(0)
 
-        initial_times = new_initial_times
+        initial_times = new_times
 
 async def on_startup(app):
     app["config_watcher"] = asyncio.create_task(config_watcher(app))

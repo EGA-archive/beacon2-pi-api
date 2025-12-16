@@ -8,6 +8,7 @@ from beacon.models.EUCAIM.validator.collections.collections.EUCAIM_collections_v
 
 def make_Collections():
     CollectionType = load_types_of_results("collections")
+    
 
     @classmethod
     def create(cls, collections: List[Union[CollectionType]]):

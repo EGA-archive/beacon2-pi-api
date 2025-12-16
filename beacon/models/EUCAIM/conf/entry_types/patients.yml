@@ -29,11 +29,11 @@ patients:
   lookups:
     collections:
       endpoint_name: patients/{id}/collections
-      response_type: non_collection
+      response_type: collection
       endpoint_enabled: True
       connection:
         name: mongo
         database: beacon
         table: collections
         functions:
-          function_name_assigned: get_endpoint_cross_query
+          function_name_assigned: get_cross_endpoint_collections

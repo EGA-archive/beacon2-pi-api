@@ -13,8 +13,8 @@ def cross_query(self, query: dict, scope: str, request_parameters: dict, dataset
     def_list=[]
     if scope == 'patients' and RequestAttributes.entry_type != patients_confile["patients"]["endpoint_name"]:
         end = 'patients'
-        original_id = get_non_collections_cross_query_attributes(self,RequestAttributes.entry_type, end)["idq"]
-        final_id = get_non_collections_cross_query_attributes(self,RequestAttributes.entry_type, end)["idq2"]
+        original_id = get_non_collections_cross_query_attributes(self,RequestAttributes.entry_type, end)["idq2"]
+        final_id = get_non_collections_cross_query_attributes(self,RequestAttributes.entry_type, end)["idq"]
         mongo_collection = get_non_collections_cross_query_attributes(self, RequestAttributes.entry_type, end)["secondary_collection"]
 
         query=scope_is_not_entry_type(self, original_id, final_id, def_list, mongo_collection, query, dataset)

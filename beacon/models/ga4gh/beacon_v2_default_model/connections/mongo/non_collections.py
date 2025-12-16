@@ -72,10 +72,8 @@ def get_variants_of_phenotypic_endpoint(self, dataset: SingleDatasetResponse):
     analysis_confile=import_analysis_confile()
     run_confile=import_run_confile()
     # Check which is the queried initial entry type of the cross query and process and get the ids to convert to the final entry type response.
-    LOG.warning(RequestAttributes.pre_entry_type)
     if RequestAttributes.pre_entry_type == analysis_confile["analysis"]["endpoint_name"] or RequestAttributes.pre_entry_type == run_confile["run"]["endpoint_name"]:
         query = {"$and": [{"id": RequestAttributes.entry_id}]}
-        LOG.warning(query)
         query = apply_filters(self, query, RequestAttributes.qparams.query.filters, {}, dataset.dataset)
         if RequestAttributes.pre_entry_type == analysis_confile["analysis"]["endpoint_name"]:
             initial_ids = analyses \
@@ -83,8 +81,6 @@ def get_variants_of_phenotypic_endpoint(self, dataset: SingleDatasetResponse):
         else:
             initial_ids = runs \
                 .find_one(query, {"biosampleId": 1, "_id": 0})  
-        LOG.warning(dataset) 
-        LOG.warning(initial_ids)
         try:
             RequestAttributes.entry_id = initial_ids["biosampleId"]
         except Exception:

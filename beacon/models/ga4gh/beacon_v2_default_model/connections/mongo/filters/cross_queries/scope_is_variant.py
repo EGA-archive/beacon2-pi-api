@@ -4,9 +4,21 @@ from beacon.conf.conf_override import config
 
 @log_with_args(config.level)
 def cross_query_scope_is_genomicVariant_and_entry_type_is_not(self, original_id, query, dataset):
-    HGVSIds = genomicVariations \
-        .find(query, {"identifiers.genomicHGVSId": 1, "_id": 0})
-    HGVSIds=list(HGVSIds)
+    if original_id == 'datasetId' or original_id == 'cohortId':
+        HGVSIds = genomicVariations \
+            .find(query, {"datasetId": 1, "_id": 0})
+        HGVSIds=list(HGVSIds)
+        if len(HGVSIds) > 0:
+            if original_id == 'cohortId':
+                query = {"$and": [{"$or": [{"datasetId": HGVSIds[0]["datasetId"]}]}]}
+                return query
+            else:
+                query = {"$and": [{"$or": [{"id": HGVSIds[0]["datasetId"]}]}]}
+                return query
+    else:
+        HGVSIds = genomicVariations \
+            .find(query, {"identifiers.genomicHGVSId": 1, "_id": 0})
+        HGVSIds=list(HGVSIds)
     list_of_variants_found=[]
     for variant_found in HGVSIds:
         list_of_variants_found.append(variant_found["identifiers"]["genomicHGVSId"])

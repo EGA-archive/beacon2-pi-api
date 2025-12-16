@@ -1,13 +1,13 @@
 from beacon.logs.logs import log_with_args_mongo
 from beacon.conf.conf_override import config
-from beacon.connections.mongo.utils import get_count, get_documents, query_id, get_documents_for_cohorts
-from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.utils import get_phenotypic_cross_query_attributes
+from beacon.connections.mongo.utils import get_count, get_documents, query_id, get_documents_for_cohorts, query_patientId
 from beacon.connections.mongo.filters.filters import apply_filters
-from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.request_parameters.apply_request_parameters import apply_request_parameters
 from beacon.request.classes import RequestAttributes
 from beacon.connections.mongo.__init__ import collections
 from beacon.logs.logs import LOG
 from beacon.response.classes import CollectionsResponse
+from beacon.models.EUCAIM.connections.mongo.utils import get_non_collections_cross_query_attributes
+from beacon.models.EUCAIM.connections.mongo.utils import import_patients_confile
 
 @log_with_args_mongo(config.level)
 def get_collections(self):
@@ -53,12 +53,7 @@ def get_list_of_datasets(self):
 @log_with_args_mongo(config.level)
 def get_collections_with_id(self):
     limit = RequestAttributes.qparams.query.pagination.limit
-    # Handle the request parameters and create the first built of the query.
-    query_parameters, parameters_as_filters = apply_request_parameters(self, {}, RequestAttributes.entry_id)
-    if parameters_as_filters == True:
-        query, parameters_as_filters = apply_request_parameters(self, {}, RequestAttributes.entry_id)
-    else:
-        query={}
+    query={}
     # Include the id queried in the query.
     query = query_id(self, query, RequestAttributes.entry_id)
     # Count all the datasets to be returned in response.
@@ -73,4 +68,37 @@ def get_collections_with_id(self):
     response_converted = (
                 [r for r in docs] if docs else []
             )
+    return CollectionsResponse(docs=response_converted, count=count)
+
+@log_with_args_mongo(config.level)
+def get_cross_endpoint_collections(self):
+    limit = RequestAttributes.qparams.query.pagination.limit
+    # Process filters
+    query = apply_filters(self, {}, RequestAttributes.qparams.query.filters, {}, "a")
+    # Include the id queried in the query.
+    patients = import_patients_confile()
+    if RequestAttributes.pre_entry_type ==  patients["patients"]["endpoint_name"]:
+        query = query_patientId(self, query, RequestAttributes.entry_id)
+    else:
+        query = query_id(self, query, RequestAttributes.entry_id)
+    # Translate the ids that relate the two collection record types and get the records.
+    mapping = get_non_collections_cross_query_attributes(self, RequestAttributes.entry_type, RequestAttributes.pre_entry_type)
+    docs = get_documents_for_cohorts(self,
+        mapping["secondary_collection"],
+        query,
+        0,
+        0
+    )
+    final_query = {mapping["idq"]: {"$in": [doc[mapping["idq2"]] for doc in docs]}}
+    docs = get_documents(self,
+        RequestAttributes.mongo_collection,
+        final_query,
+        RequestAttributes.qparams.query.pagination.skip,
+        RequestAttributes.qparams.query.pagination.skip*limit
+    )
+    # Count all the records to be returned in response.
+    count = get_count(self, RequestAttributes.mongo_collection, final_query)
+    response_converted = (
+        [r for r in docs] if docs else []
+    )
     return CollectionsResponse(docs=response_converted, count=count)

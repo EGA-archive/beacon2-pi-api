@@ -10,6 +10,18 @@ CINECA_synthetic_cohort_EUROPE_UK1:
     default_entry_types_granularity: record
     entry_types_exceptions:
     - cohort: boolean
+DemoDatasetBreast:
+  controlled:
+    user-list:
+    - default_entry_types_granularity: count
+      entry_types_exceptions:
+      - individual: record
+      user_e-mail: jane.smith@beacon.ga4gh
+    - user_e-mail: john.doe@beacon.ga4gh
+  public:
+    default_entry_types_granularity: record
+    entry_types_exceptions:
+    - individual: record
 test:
   controlled:
     user-list:

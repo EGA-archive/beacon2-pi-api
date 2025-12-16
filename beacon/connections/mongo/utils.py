@@ -15,6 +15,11 @@ def query_id(self, query: dict, document_id) -> dict:
     return query
 
 @log_with_args_mongo(config.level)
+def query_patientId(self, query: dict, document_id) -> dict:
+    query["patientId"] = document_id
+    return query
+
+@log_with_args_mongo(config.level)
 def join_query(self, mongo_collection, query: dict, original_id, dataset: str):
     #LOG.debug(query)
     excluding_fields={"_id": 0, original_id: 1}
@@ -105,7 +110,6 @@ def get_docs_by_response_type(self, include: str, query: dict, dataset: SingleDa
         queryid={}
         queryid['datasetId']=dataset.dataset
         query_count["$or"].append(queryid)
-        LOG.warning(query_count)
         if query_count["$or"]!=[]:
             dataset_count = get_count(self, RequestAttributes.mongo_collection, query_count)
             if dataset_count == 0:

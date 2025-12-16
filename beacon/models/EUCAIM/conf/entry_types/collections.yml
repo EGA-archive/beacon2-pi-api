@@ -12,7 +12,7 @@ collections:
     table: collections
     functions:
       function_name_assigned: get_full_collections
-      id_query_function_name_assigned: get_datasets_with_id
+      id_query_function_name_assigned: get_collections_with_id
   info:
     name: collections
     ontology_id: NCIT:C47824
