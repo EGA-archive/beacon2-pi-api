@@ -15,7 +15,8 @@ Please, go to [B2RI/B2PI docs website](https://b2ri-documentation-demo.ega-archi
 * Validation on the fly per framework and model(s).
 * Configuration of the entities of each entry type now done by .yml files.
 * Restart of the app when conf files or generic conf is modified (no need to rebuild).
-* Other bug fixes
+* OR Filters (in test approach, as it is still not approved officially by GA4GH).
+* Other bug fixes.
 * Unit tests expanded, with a total of 313 now.
 
 ## Main changes from B2RI

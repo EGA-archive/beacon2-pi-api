@@ -71,6 +71,7 @@ def get_phenotypic_endpoint_with_id(self, dataset: SingleDatasetResponse):
 def get_variants_of_phenotypic_endpoint(self, dataset: SingleDatasetResponse):
     analysis_confile=import_analysis_confile()
     run_confile=import_run_confile()
+    new_entry_id = RequestAttributes.entry_id
     # Check which is the queried initial entry type of the cross query and process and get the ids to convert to the final entry type response.
     if RequestAttributes.pre_entry_type == analysis_confile["analysis"]["endpoint_name"] or RequestAttributes.pre_entry_type == run_confile["run"]["endpoint_name"]:
         query = {"$and": [{"id": RequestAttributes.entry_id}]}
@@ -82,8 +83,8 @@ def get_variants_of_phenotypic_endpoint(self, dataset: SingleDatasetResponse):
             initial_ids = runs \
                 .find_one(query, {"biosampleId": 1, "_id": 0})  
         try:
-            RequestAttributes.entry_id = initial_ids["biosampleId"]
-        except Exception:
+            new_entry_id = initial_ids["biosampleId"]
+        except Exception as e:
             return dataset
     try:
         # Retrieve the ids per dataset.
@@ -95,7 +96,7 @@ def get_variants_of_phenotypic_endpoint(self, dataset: SingleDatasetResponse):
         return dataset
     # Map the ids and check which is the position fo the id found in the array of ids.
     for bioid in bioids:
-        if bioid == RequestAttributes.entry_id:
+        if bioid == new_entry_id:
             break
         position+=1
     if position == len(bioids):

@@ -44,39 +44,67 @@ async def _graceful_shutdown_ctx(app):
 
 PATHS_TO_RESTART = [
     "/beacon/conf/conf.py",
-    "/beacon/models"
+    "/beacon/models",
+    "/beacon/conf/models"
 ]
+async def config_test_watcher(app):
+    pass
+
 
 async def config_watcher(app):
-    def snapshot():
-        times = {}
+    initial_times = {}
+
+    # Let's add all the snapshot times for the folders to restart when changed
+    for path in PATHS_TO_RESTART:
+        if os.path.isfile(path):
+            initial_times[path] = os.path.getmtime(path)
+        elif os.path.isdir(path):
+            for root, _, files in os.walk(path):
+                for f in files:
+                    full = os.path.join(root, f)
+                    initial_times[full] = os.path.getmtime(full)
+    # We give a time to the server to start
+    await asyncio.sleep(5) 
+
+    while True:
+        await asyncio.sleep(2)
+
+        new_initial_times = {}
+
+        # We check again for any change
         for path in PATHS_TO_RESTART:
             if os.path.isfile(path):
-                times[path] = os.path.getmtime(path)
+                new_initial_times[path] = os.path.getmtime(path)
             elif os.path.isdir(path):
                 for root, _, files in os.walk(path):
                     if "__pycache__" in root:
                         continue
+                    if not (f.endswith(".py") or f.endswith(".yml")):
+                        continue
                     for f in files:
-                        if not f.endswith(".py"):
-                            continue
+
+
                         full = os.path.join(root, f)
-                        times[full] = os.path.getmtime(full)
-        return times
+                        new_initial_times[full] = os.path.getmtime(full)
 
-    initial_times = snapshot()
-    await asyncio.sleep(5)
 
-    while True:
-        await asyncio.sleep(2)
-        new_times = snapshot()
 
-        for file_path, new_m in new_times.items():
+
+
+
+
+
+
+        # If there is a change then, restart again the app
+        for file_path, new_m in new_initial_times.items():
             old_m = initial_times.get(file_path)
-            if old_m is None or new_m > old_m:
+            if old_m is None or new_m != old_m:
                 os._exit(0)
 
-        initial_times = new_times
+        initial_times = new_initial_times
+
+async def on_startup(app):
+    app["config_watcher"] = asyncio.create_task(config_watcher(app))
 
 async def on_startup(app):
     app["config_watcher"] = asyncio.create_task(config_watcher(app))
