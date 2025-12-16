@@ -13,3 +13,4 @@ beacon/connections/mongo/data/db/*
 adminui/adminclient/migrations/*
 adminui/node_modules
 *.vcf.bgz
+beacon/conf/conf.py
