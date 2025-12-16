@@ -12,7 +12,6 @@ from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.utils import 
 @log_with_args_mongo(config.level)
 def query_id(self, query: dict, document_id) -> dict:
     query["id"] = document_id
-    LOG.warning(query)
     return query
 
 @log_with_args_mongo(config.level)
@@ -106,6 +105,7 @@ def get_docs_by_response_type(self, include: str, query: dict, dataset: SingleDa
         queryid={}
         queryid['datasetId']=dataset.dataset
         query_count["$or"].append(queryid)
+        LOG.warning(query_count)
         if query_count["$or"]!=[]:
             dataset_count = get_count(self, RequestAttributes.mongo_collection, query_count)
             if dataset_count == 0:
@@ -160,12 +160,12 @@ def choose_scope(self, scope, filter):
     except Exception:
         scopes=[]
     # If there is no scope requested, check if there are any scopes in the filtering term requested
+    genomicVariant_confile= import_genomicVariant_confile()
     if scope is None:
         if scopes == []:
             # If there aren't any, check if the filtering term is not a zygosity term
             if filter.id not in ["GENO:0000136", "GENO:0000458"]:
                 # If it's not a zygosity term, add the entry type as scop
-                genomicVariant_confile= import_genomicVariant_confile()
                 if RequestAttributes.entry_type == genomicVariant_confile["genomicVariant"]["endpoint_name"]:
                     scope = 'genomicVariation'
                 else:

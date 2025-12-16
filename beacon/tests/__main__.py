@@ -13,8 +13,8 @@ from beacon.__main__ import create_api
 import json
 import unittest
 import beacon.conf.conf_override as conf_override
-#from beacon.permissions.tests import TestAuthZ
-#from beacon.auth.tests import TestAuthN
+from beacon.permissions.tests import TestAuthZ
+from beacon.auth.tests import TestAuthN
 from beacon.logs.logs import LOG
 from aiohttp_middlewares import cors_middleware
 from beacon.validator.configuration import check_configuration
@@ -1587,7 +1587,6 @@ class TestMain(unittest.TestCase):
                 assert responsedict["responseSummary"]["exists"] == False
             loop.run_until_complete(test_check_iso8601duration_eq_query_is_working())
             loop.run_until_complete(client.close())
-    """
     def test_main_check_measurement_value_query_is_working(self):
         with loop_context() as loop:
             app = create_app()
@@ -4082,18 +4081,13 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_individuals_endpoint_is_removing_dataset():
-                hello = conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"?includeResultsetResponses=NONE&testMode=True"
-                LOG.warning('hola')
-                LOG.warning(hello)
                 resp = await client.get(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"]+'?testMode=true')
-                LOG.warning(resp)
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
                 assert responsedict["responseSummary"]["numTotalResults"] == 20
             loop.run_until_complete(test_check_individuals_endpoint_is_removing_dataset())
             loop.run_until_complete(client.close())
-    """
     
 
 class AsyncTest(unittest.IsolatedAsyncioTestCase):

@@ -44,7 +44,7 @@ def get_full_collections(self):
     return CollectionsResponse(docs=response_converted, count=count)
 
 @log_with_args_mongo(config.level)
-def get_list_of_collections(self):
+def get_list_of_datasets(self):
     # Get all the datasets to be returned in response and put them in a list.
     datasets = get_collections(self)
     beacon_datasets = [ r for r in datasets ]
@@ -73,5 +73,4 @@ def get_collections_with_id(self):
     response_converted = (
                 [r for r in docs] if docs else []
             )
-    LOG.warning(response_converted)
     return CollectionsResponse(docs=response_converted, count=count)

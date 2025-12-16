@@ -9,6 +9,14 @@ from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.utils import 
 
 @log_with_args(config.level)
 def cross_query(self, query: dict, scope: str, request_parameters: dict, dataset: str):
+    # Import all the entry types configuration files
+    biosample_confile=import_biosample_confile()
+    analysis_confile=import_analysis_confile()
+    run_confile=import_run_confile()
+    genomicVariant_confile=import_genomicVariant_confile()
+    individual_confile=import_individual_confile()
+    cohort_confile=import_cohort_confile()
+    dataset_confile=import_dataset_confile()
     # Check for the different scopes and entry types to apply a different query syntax built.
     if scope == 'genomicVariation' and RequestAttributes.entry_type == genomicVariant_confile["genomicVariant"]["endpoint_name"]:
         subquery={}
@@ -31,14 +39,6 @@ def cross_query(self, query: dict, scope: str, request_parameters: dict, dataset
             except Exception:
                 pass
     else:
-        # Import all the entry types configuration files
-        biosample_confile=import_biosample_confile()
-        analysis_confile=import_analysis_confile()
-        run_confile=import_run_confile()
-        genomicVariant_confile=import_genomicVariant_confile()
-        individual_confile=import_individual_confile()
-        cohort_confile=import_cohort_confile()
-        dataset_confile=import_dataset_confile()
         # Initiate a list to get the final ids for the performed fist stage queries of the cross query
         def_list=[]             
         # Set the id to point at when performing the first stage queries (original_id) and the id for the second stage queries (final_id)  

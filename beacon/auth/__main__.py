@@ -55,17 +55,11 @@ def fetch_idp(self, access_token):
     for env_filename in glob.glob("beacon/auth/idp_providers/*.env"):
         load_dotenv(env_filename, override=True)
         IDP_ISSUER = os.getenv('ISSUER')
-        IDP_ISSUER = re.findall(r'[a-zA-Z0-9:/-]', IDP_ISSUER)
-        IDP_ISSUER = "".join(r for r in IDP_ISSUER)
-        IDP_ISSUER = str(IDP_ISSUER)
         # In case the issuer matches, set the idp values to be used later for validating the token
         if issuer == IDP_ISSUER:
             IDP_CLIENT_ID = os.getenv('CLIENT_ID')
             IDP_CLIENT_SECRET = os.getenv('CLIENT_SECRET')
             IDP_USER_INFO = os.getenv('USER_INFO')
-            IDP_USER_INFO = re.findall(r'[a-zA-Z0-9:/-]', IDP_USER_INFO)
-            IDP_USER_INFO = "".join(r for r in IDP_USER_INFO)
-            IDP_USER_INFO = str(IDP_USER_INFO)
             IDP_INTROSPECTION = os.getenv('INTROSPECTION')
             IDP_JWKS_URL = os.getenv('JWKS_URL')
             idp_issuer = IDP_ISSUER

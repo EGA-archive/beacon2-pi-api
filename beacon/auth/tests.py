@@ -9,7 +9,7 @@ import re
 from beacon.logs.logs import LOG
 
 # for keycloak, create aud in mappers, with custom, aud and beacon for audience
-mock_access_token = 'eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJreS1tUXNxZ0ZYeHdSUVRfRUhuQlJJUGpmbVhfRXZuUTVEbzZWUTJCazdZIn0.eyJleHAiOjE3NjM5ODU4NTAsImlhdCI6MTc2Mzk4NTU1MCwianRpIjoiMTAzMzQ4M2UtMGI3ZS00OTg4LThlYzctY2UxN2E3OTQ5OGYyIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL0JlYWNvbiIsImF1ZCI6ImJlYWNvbiIsInN1YiI6IjQ3ZWZmMWIxLTc2MjEtNDU3MC1hMGJiLTAxYTcxOWZiYTBhMiIsInR5cCI6IkJlYXJlciIsImF6cCI6ImJlYWNvbiIsInNlc3Npb25fc3RhdGUiOiI4Y2Q1MzQ3Ny0zYTlkLTQ2NWItOTQyOC05ZWQ2YzUwMjllNDgiLCJhY3IiOiIxIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBlbWFpbCBtaWNyb3Byb2ZpbGUtand0Iiwic2lkIjoiOGNkNTM0NzctM2E5ZC00NjViLTk0MjgtOWVkNmM1MDI5ZTQ4IiwidXBuIjoiamFuZSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwibmFtZSI6IkphbmUgU21pdGgiLCJncm91cHMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXSwicHJlZmVycmVkX3VzZXJuYW1lIjoiamFuZSIsImdpdmVuX25hbWUiOiJKYW5lIiwiZmFtaWx5X25hbWUiOiJTbWl0aCIsImVtYWlsIjoiamFuZS5zbWl0aEBiZWFjb24uZ2E0Z2gifQ.lwaoPojie9rXQpmTYuRoCGbOA4GIl_dgL7lBXiNnpSA16APSVaLH_hJjym2lVMjlzO5acqpro-ScLuWLCI5koBDGMebuysInl4FXgIH2Uzlde1fb8Vkas4j8PitpOgqUlS4uWcobGL_bj26Lfd-D5gbAe5doiSUNqlix8JsFQkhypyMi2XKBt3R0WGMYFd3ClF0AyIKrxhGuqlbtbfn3unNiqn6fMlAUdn4-r9Wafcu03hZmqydD74gzT6-Gc-k9lT9wd6MBjfmn9VzhKW4N7tcMAR4ygMEAda-ZZngPBTlZp0n3KptTi1ozqZYQnaUQGklVyvRrYbm2kyvFROd3-Q'
+mock_access_token = 'eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJreS1tUXNxZ0ZYeHdSUVRfRUhuQlJJUGpmbVhfRXZuUTVEbzZWUTJCazdZIn0.eyJleHAiOjE3NjU4ODMyODYsImlhdCI6MTc2NTg4Mjk4NiwianRpIjoiM2E3MTJmYTgtNDhiMi00MjQyLTgwYmUtOGVmYjM2NDAxNjY0IiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL0JlYWNvbiIsImF1ZCI6ImJlYWNvbiIsInN1YiI6IjQ3ZWZmMWIxLTc2MjEtNDU3MC1hMGJiLTAxYTcxOWZiYTBhMiIsInR5cCI6IkJlYXJlciIsImF6cCI6ImJlYWNvbiIsInNlc3Npb25fc3RhdGUiOiJiYzY2M2E5ZS1kYzJiLTQ0ZDYtOTBmZS1kNGVlZjIzMTA0NGMiLCJhY3IiOiIxIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBlbWFpbCBtaWNyb3Byb2ZpbGUtand0Iiwic2lkIjoiYmM2NjNhOWUtZGMyYi00NGQ2LTkwZmUtZDRlZWYyMzEwNDRjIiwidXBuIjoiamFuZSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwibmFtZSI6IkphbmUgU21pdGgiLCJncm91cHMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXSwicHJlZmVycmVkX3VzZXJuYW1lIjoiamFuZSIsImdpdmVuX25hbWUiOiJKYW5lIiwiZmFtaWx5X25hbWUiOiJTbWl0aCIsImVtYWlsIjoiamFuZS5zbWl0aEBiZWFjb24uZ2E0Z2gifQ.Jm-sdXjLKqbcDJ9GNd_J3Ip3gY1MhOmcb5LeXRg4XKSGk5GXqOeCpSf7iANATcljbKy5h3YQK1EF7iAKuFGZwktR7sHUzM9uxuPofUEOQeaFnxz_EdzLO-mR7hGRacP_f8OWh8E2fTZNaU7W7j57fqMCVSarQ_IepAkro0YUOFCjIuzupQuix0kOhGuOQkhX9PdeanXxYoORr8qiLk6G-pdVzN3hwS3DuehJg78AhiBzOfrzyizJKH6u0ljrT4jT07Xo1ewVWrOSleh2-kBXg9IAOyWdxJp9UK6GrEBlGtGyhzyF7ufch3WGnsPIiovB3cws1Qj824TqiOlC3_ZukQ'
 mock_access_token_false = 'public'
 #dummy test anonymous
 #dummy test login
@@ -34,9 +34,6 @@ class TestAuthN(unittest.TestCase):
                 idp_issuer, user_info, idp_client_id, idp_client_secret, idp_introspection, idp_jwks_url, algorithm, aud = fetch_idp(self, mock_access_token)
                 load_dotenv("beacon/auth/idp_providers/keycloak.env", override=True)
                 IDP_ISSUER = os.getenv('ISSUER')
-                IDP_ISSUER = re.findall(r'[a-zA-Z0-9:/._-]', IDP_ISSUER)
-                IDP_ISSUER = "".join(r for r in IDP_ISSUER)
-                IDP_ISSUER = str(IDP_ISSUER)
                 IDP_CLIENT_ID = os.getenv('CLIENT_ID')
                 IDP_CLIENT_SECRET = os.getenv('CLIENT_SECRET')
                 IDP_USER_INFO = os.getenv('USER_INFO')
@@ -58,9 +55,6 @@ class TestAuthN(unittest.TestCase):
             async def test_validate_access_token():
                 load_dotenv("beacon/auth/idp_providers/keycloak.env", override=True)
                 IDP_ISSUER = os.getenv('ISSUER')
-                IDP_ISSUER = re.findall(r'[a-zA-Z0-9:/._-]', IDP_ISSUER)
-                IDP_ISSUER = "".join(r for r in IDP_ISSUER)
-                IDP_ISSUER = str(IDP_ISSUER)
                 IDP_CLIENT_ID = os.getenv('CLIENT_ID')
                 IDP_CLIENT_SECRET = os.getenv('CLIENT_SECRET')
                 IDP_USER_INFO = os.getenv('USER_INFO')
@@ -86,9 +80,6 @@ class TestAuthN(unittest.TestCase):
             async def test_fetch_user_info():
                 load_dotenv("beacon/auth/idp_providers/keycloak.env", override=True)
                 IDP_ISSUER = os.getenv('ISSUER')
-                IDP_ISSUER = re.findall(r'[a-zA-Z0-9:/-]', IDP_ISSUER)
-                IDP_ISSUER = "".join(r for r in IDP_ISSUER)
-                IDP_ISSUER = str(IDP_ISSUER)
                 IDP_CLIENT_ID = os.getenv('CLIENT_ID')
                 IDP_CLIENT_SECRET = os.getenv('CLIENT_SECRET')
                 IDP_USER_INFO = os.getenv('USER_INFO')

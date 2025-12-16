@@ -15,14 +15,7 @@ def contains_special_characters(string):
     return False
 
 @log_with_args_check_configuration(conf_override.config.level)
-def check_configuration():
-    analysis_confile=import_analysis_confile()
-    biosample_confile=import_biosample_confile()
-    cohort_confile=import_cohort_confile()
-    dataset_confile=import_dataset_confile()
-    genomicVariant_confile=import_genomicVariant_confile()
-    individual_confile=import_individual_confile()
-    run_confile=import_run_confile()
+def check_configuration(analysis_confile=import_analysis_confile(), biosample_confile=import_biosample_confile(), cohort_confile=import_cohort_confile(), dataset_confile=import_dataset_confile(), genomicVariant_confile=import_genomicVariant_confile(), individual_confile=import_individual_confile(), run_confile=import_run_confile()):
     if isinstance(analysis_confile["analysis"]["entry_type_enabled"], bool):
         pass
     else:

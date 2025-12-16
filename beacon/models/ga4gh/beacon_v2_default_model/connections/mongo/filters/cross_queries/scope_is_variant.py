@@ -16,8 +16,8 @@ def cross_query_scope_is_genomicVariant_and_entry_type_is_not(self, original_id,
     targets = targets_ \
         .find({"datasetId": dataset}, {"biosampleIds": 1, "_id": 0})
     targets=list(targets)
-    list_of_targets=targets[0]["biosampleIds"]
     try:
+        list_of_targets=targets[0]["biosampleIds"]
         list_of_positions_strings= string_of_ids
     except Exception:
         return query
