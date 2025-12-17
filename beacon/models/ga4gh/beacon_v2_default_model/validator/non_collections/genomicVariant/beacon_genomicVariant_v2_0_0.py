@@ -643,7 +643,7 @@ class Genomicvariant(BaseModel):
         super().__init__(**data)
     _id: Optional[str] = PrivateAttr()
     caseLevelData: Optional[list] = None
-    frequencyInPopulations: Optional[FrequencyInPopulation] = None
+    frequencyInPopulations: Optional[list[FrequencyInPopulation]] = None
     identifiers: Optional[Identifiers] = None
     molecularAttributes: Optional[MolecularAttributes] = None
     variantInternalId: str
