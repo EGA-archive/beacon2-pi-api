@@ -1,5 +1,5 @@
 ga4gh/beacon_v2_default_model:
-  model_enabled: True
+  model_enabled: False
 
 EUCAIM:
-  model_enabled: False
+  model_enabled: True

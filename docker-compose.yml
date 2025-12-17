@@ -5,13 +5,13 @@ networks:
   pub:
 
 services:
-  beaconprod:
+  beaconimages:
     restart: unless-stopped
     build:
       context: .
-    container_name: beaconprod
+    container_name: beaconimages
     ports:
-      - "5050:5050"
+      - "5059:5050"
     entrypoint: ['python','-m','beacon']
     volumes:
       - ./beacon/logs/logs.log:/beacon/logs/logs.log
@@ -82,14 +82,14 @@ services:
     networks:
       - idp-priv
 
-  db:
+  dbimages:
     image: mongo:5
     command: --wiredTigerCacheSizeGB 4
     #command: --wiredTigerCacheSizeGB 4 --sslMode requireSSL --tlsCertificateKeyFile test-server1.pem --tlsCAFile test-ca.pem
     hostname: mongo
-    container_name: mongoprod
+    container_name: mongoimages
     ports:
-      - 27017:27017
+      - 27037:27017
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example

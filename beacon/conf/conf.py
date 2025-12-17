@@ -11,14 +11,14 @@ except Exception as e:
 
 level=logging.NOTSET
 log_file=None
-beacon_id = 'org.ega-archive.beacon-ri-demo'  # ID of the Beacon
-beacon_name = 'Beacon Production Implementation demo'  # Name of the Beacon service
+beacon_id = 'org.ega-archive.eucaim-images-beacon'  # ID of the Beacon
+beacon_name = 'EUCAIM beacon for images'  # Name of the Beacon service
 api_version = 'v2.2.0' # Version of the Beacon implementation
-uri = 'http://localhost:50510'
+uri = 'http://localhost:5059'
 uri_subpath = '/api'
 complete_url = uri + uri_subpath
 environment = 'test'
-description = r"This Beacon is based on synthetic data hosted at the <a href='https://ega-archive.org/datasets/EGAD00001003338'>EGA</a>. The dataset contains 2504 samples including genetic data based on 1K Genomes data, and 76 individual attributes and phenotypic data derived from UKBiobank."
+description = r"This Beacon for images uses the EUCAIM model with a test dataset for breast cancer."
 version = api_version_yaml['api_version']
 welcome_url = 'https://beacon.ega-archive.org/'
 alternative_url = 'https://beacon.ega-archive.org/api'
