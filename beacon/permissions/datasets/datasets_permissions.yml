@@ -40,6 +40,8 @@ test2:
     - default_entry_types_granularity: count
       entry_types_exceptions:
       - individual: record
+      - biosample: count
+      - analysis: boolean
       user_e-mail: jane.smith@beacon.ga4gh
     - user_e-mail: john.doe@beacon.ga4gh
   public:

@@ -10,6 +10,7 @@ from beacon.permissions.__main__ import authorization
 from beacon.logs.logs import LOG
 from unittest.mock import MagicMock
 from beacon.request.classes import RequestAttributes
+from beacon.permissions.utils import return_found_granularity_in_permissions
 
 #dummy test anonymous
 #dummy test login
@@ -92,6 +93,24 @@ class TestAuthZ(unittest.TestCase):
                 username, list_visa_datasets = await authorization(self=MagicClass)
                 assert username == 'jane.smith@beacon.ga4gh'
             loop.run_until_complete(test_authorization())
+            loop.run_until_complete(client.close())
+    def check_granularity_returned_is_correct(self):
+        with loop_context() as loop:
+            app = create_test_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            MagicClass = MagicMock(_id='hohoho')
+            async def test_granularity_returned():
+                RequestAttributes.entry_type_id = 'individual'
+                returned_granularity = return_found_granularity_in_permissions(self=MagicClass,granularity_exceptions=[{"individual": "record"},{"biosample": "count"},{"analysis": "boolean"}], default_granularity=None)
+                assert returned_granularity == 'record'
+                RequestAttributes.entry_type_id = 'biosample'
+                returned_granularity = return_found_granularity_in_permissions(self=MagicClass,granularity_exceptions=[{"individual": "record"},{"biosample": "count"},{"analysis": "boolean"}], default_granularity=None)
+                assert returned_granularity == 'count'
+                RequestAttributes.entry_type_id = 'analysis'
+                returned_granularity = return_found_granularity_in_permissions(self=MagicClass,granularity_exceptions=[{"individual": "record"},{"biosample": "count"},{"analysis": "boolean"}], default_granularity=None)
+                assert returned_granularity == 'boolean'
+            loop.run_until_complete(test_granularity_returned())
             loop.run_until_complete(client.close())
 
 if __name__ == '__main__':
