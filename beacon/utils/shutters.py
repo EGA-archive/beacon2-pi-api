@@ -45,7 +45,8 @@ async def _graceful_shutdown_ctx(app):
 PATHS_TO_RESTART = [
     "/beacon/conf/conf.py",
     "/beacon/models",
-    "/beacon/conf/models"
+    "/beacon/conf/models",
+    "/beacon/connections/mongo/conf.py"
 ]
 async def config_test_watcher(app):
     pass

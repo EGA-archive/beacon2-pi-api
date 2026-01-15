@@ -1,8 +1,8 @@
-from beacon.request.classes import RequestAttributes
 import yaml
 from beacon.logs.logs import LOG
 from beacon.exceptions.exceptions import NoPermissionsAvailable
 from beacon.response.classes import SingleDatasetResponse
+from beacon.permissions.utils import return_found_granularity_in_exceptions, return_granularity_and_exceptions
 
 
 class Permissions():
@@ -57,25 +57,10 @@ class DummyPermissions(Permissions):
                 default_granularity = None
                 granularity_exceptions = None
                 # Get the default granularity and any granularity restriction to return for the dataset and user (in case there is authentication).
-                for security_level, dataset_properties in security_level_dict.items():
-                    if security_level == 'public':
-                        default_granularity = dataset_properties.get('default_entry_types_granularity')
-                        granularity_exceptions = dataset_properties.get('entry_types_exceptions')
-                    if username != 'public' and security_level == 'registered':
-                        default_granularity = dataset_properties.get('default_entry_types_granularity')
-                        granularity_exceptions = dataset_properties.get('entry_types_exceptions')
-                    if username != 'public' and security_level == 'controlled':
-                        user_exceptions = dataset_properties.get('user-list')
-                        if user_exceptions != None:
-                            for user_exception in user_exceptions:
-                                if user_exception['user_e-mail'] == username:
-                                    default_granularity = user_exception.get('default_entry_types_granularity')
-                                    granularity_exceptions = user_exception.get('entry_types_exceptions')
+                default_granularity, granularity_exceptions = return_granularity_and_exceptions(self, security_level_dict, username, default_granularity, granularity_exceptions)
                 # If there is any restriction apply it to the max granularity to return.
                 if granularity_exceptions != None:
-                    for entry_type_id, entry_type_granularity in granularity_exceptions[0].items():
-                        if entry_type_id == RequestAttributes.entry_type_id:
-                            default_granularity = entry_type_granularity
+                    default_granularity=return_found_granularity_in_exceptions(self, granularity_exceptions, default_granularity)
                 # If there is a default granularity, return it instantiating initially the datasets with their name and the default granularity.
                 if default_granularity != None:
                     datasetInstance = SingleDatasetResponse(dataset=dataset, granularity=default_granularity)
