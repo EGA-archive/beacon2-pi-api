@@ -10,7 +10,8 @@ from beacon.permissions.__main__ import authorization
 from beacon.logs.logs import LOG
 from unittest.mock import MagicMock
 from beacon.request.classes import RequestAttributes
-from beacon.permissions.utils import return_found_granularity_in_permissions
+from beacon.permissions.utils import return_found_granularity_in_exceptions, return_granularity_and_exceptions
+import yaml
 
 #dummy test anonymous
 #dummy test login
@@ -102,15 +103,40 @@ class TestAuthZ(unittest.TestCase):
             MagicClass = MagicMock(_id='hohoho')
             async def test_granularity_returned():
                 RequestAttributes.entry_type_id = 'individual'
-                returned_granularity = return_found_granularity_in_permissions(self=MagicClass,granularity_exceptions=[{"individual": "record"},{"biosample": "count"},{"analysis": "boolean"}], default_granularity=None)
+                returned_granularity = return_found_granularity_in_exceptions(self=MagicClass,granularity_exceptions=[{"individual": "record"},{"biosample": "count"},{"analysis": "boolean"}], default_granularity=None)
                 assert returned_granularity == 'record'
                 RequestAttributes.entry_type_id = 'biosample'
-                returned_granularity = return_found_granularity_in_permissions(self=MagicClass,granularity_exceptions=[{"individual": "record"},{"biosample": "count"},{"analysis": "boolean"}], default_granularity=None)
+                returned_granularity = return_found_granularity_in_exceptions(self=MagicClass,granularity_exceptions=[{"individual": "record"},{"biosample": "count"},{"analysis": "boolean"}], default_granularity=None)
                 assert returned_granularity == 'count'
                 RequestAttributes.entry_type_id = 'analysis'
-                returned_granularity = return_found_granularity_in_permissions(self=MagicClass,granularity_exceptions=[{"individual": "record"},{"biosample": "count"},{"analysis": "boolean"}], default_granularity=None)
+                returned_granularity = return_found_granularity_in_exceptions(self=MagicClass,granularity_exceptions=[{"individual": "record"},{"biosample": "count"},{"analysis": "boolean"}], default_granularity=None)
                 assert returned_granularity == 'boolean'
             loop.run_until_complete(test_granularity_returned())
+            loop.run_until_complete(client.close())
+    def check_controlled_granularity_returned_is_correct(self):
+        with loop_context() as loop:
+            app = create_test_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            MagicClass = MagicMock(_id='hohoho')
+            with open("/beacon/permissions/datasets/datasets_permissions.yml", 'r') as pfile:
+                datasets_permissions = yaml.safe_load(pfile)
+            async def test_controlled_granularity_returned():
+                for dataset, security_level_dict in datasets_permissions.items():
+                    if dataset == 'test2':
+                        RequestAttributes.entry_type_id = 'individual'
+                        returned_granularity, exceptions = return_granularity_and_exceptions(self=MagicClass,security_level_dict=security_level_dict,username='jane.smith@beacon.ga4gh',default_granularity=None, granularity_exceptions=None)
+                        returned_granularity = return_found_granularity_in_exceptions(self=MagicClass,granularity_exceptions=exceptions, default_granularity=returned_granularity)
+                        assert returned_granularity == 'record'
+                        RequestAttributes.entry_type_id = 'biosample'
+                        returned_granularity, exceptions = return_granularity_and_exceptions(self=MagicClass,security_level_dict=security_level_dict,username='jane.smith@beacon.ga4gh',default_granularity=None, granularity_exceptions=None)
+                        returned_granularity = return_found_granularity_in_exceptions(self=MagicClass,granularity_exceptions=exceptions, default_granularity=returned_granularity)
+                        assert returned_granularity == 'count'
+                        RequestAttributes.entry_type_id = 'analysis'
+                        returned_granularity, exceptions = return_granularity_and_exceptions(self=MagicClass,security_level_dict=security_level_dict,username='jane.smith@beacon.ga4gh',default_granularity=None, granularity_exceptions=None)
+                        returned_granularity = return_found_granularity_in_exceptions(self=MagicClass,granularity_exceptions=exceptions, default_granularity=returned_granularity)
+                        assert returned_granularity == 'boolean'
+            loop.run_until_complete(test_controlled_granularity_returned())
             loop.run_until_complete(client.close())
 
 if __name__ == '__main__':
