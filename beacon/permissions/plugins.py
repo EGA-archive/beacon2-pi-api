@@ -1,8 +1,8 @@
-from beacon.request.classes import RequestAttributes
 import yaml
 from beacon.logs.logs import LOG
 from beacon.exceptions.exceptions import NoPermissionsAvailable
 from beacon.response.classes import SingleDatasetResponse
+from beacon.permissions.utils import return_found_granularity_in_permissions
 
 
 class Permissions():
@@ -73,9 +73,8 @@ class DummyPermissions(Permissions):
                                     granularity_exceptions = user_exception.get('entry_types_exceptions')
                 # If there is any restriction apply it to the max granularity to return.
                 if granularity_exceptions != None:
-                    for entry_type_id, entry_type_granularity in granularity_exceptions[0].items():
-                        if entry_type_id == RequestAttributes.entry_type_id:
-                            default_granularity = entry_type_granularity
+                    default_granularity=return_found_granularity_in_permissions(self, granularity_exceptions, default_granularity)
+
                 # If there is a default granularity, return it instantiating initially the datasets with their name and the default granularity.
                 if default_granularity != None:
                     datasetInstance = SingleDatasetResponse(dataset=dataset, granularity=default_granularity)
