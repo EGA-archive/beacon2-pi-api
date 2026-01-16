@@ -69,11 +69,11 @@ def get_count(self, collection: Collection, query: dict) -> int:
 def get_docs_by_response_type(self, include: str, query: dict, dataset: SingleDatasetResponse, limit: int, skip: int):
     if include == 'ALL':
         query_count=query
-        query_count["$or"]=[]
+        query_count["$and"]=[]
         queryid={}
         queryid['datasetId']=dataset.dataset
-        query_count["$or"].append(queryid)
-        if query_count["$or"]!=[]:
+        query_count["$and"].append(queryid)
+        if query_count["$and"]!=[]:
             dataset_count = get_count(self, RequestAttributes.mongo_collection, query_count)
             docs = get_documents(
                 self,
@@ -85,11 +85,11 @@ def get_docs_by_response_type(self, include: str, query: dict, dataset: SingleDa
             docs=list(docs)
     elif include == 'MISS':
         query_count=query
-        query_count["$or"]=[]
+        query_count["$and"]=[]
         queryid={}
         queryid['datasetId']=dataset.dataset
-        query_count["$or"].append(queryid)
-        if query_count["$or"]!=[]:
+        query_count["$and"].append(queryid)
+        if query_count["$and"]!=[]:
             dataset_count = get_count(self, RequestAttributes.mongo_collection, query_count)
             docs = get_documents(
                 self,
@@ -106,11 +106,14 @@ def get_docs_by_response_type(self, include: str, query: dict, dataset: SingleDa
             return dataset
     else:
         query_count=query
-        query_count["$or"]=[]
         queryid={}
         queryid['datasetId']=dataset.dataset
-        query_count["$or"].append(queryid)
-        if query_count["$or"]!=[]:
+        try:
+            query_count["$and"].append(queryid)
+        except Exception:
+            query_count["$and"]=[]
+            query_count["$and"].append(queryid)
+        if query_count["$and"]!=[]:
             dataset_count = get_count(self, RequestAttributes.mongo_collection, query_count)
             if dataset_count == 0:
                 docs = []

@@ -2047,7 +2047,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_biosamples_variants():
-                resp = await client.post(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"/c18249a2d7a303fb0551a4e86f43f5d830ba9182c88029e35697c87ebcb98546/"+biosample["biosample"]["endpoint_name"], json={
+                resp = await client.post(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"/5e8df629d9ce607c1c56354eb012cbea32cf0f7744973db740724ad9578d667b/"+biosample["biosample"]["endpoint_name"], json={
                     "meta": {
                         "apiVersion": "2.0"
                     },
@@ -2067,7 +2067,7 @@ class TestMain(unittest.TestCase):
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
-                assert responsedict["responseSummary"]["numTotalResults"] == 7
+                assert responsedict["responseSummary"]["numTotalResults"] == 17
             loop.run_until_complete(test_check_biosamples_variants())
             loop.run_until_complete(client.close())
     def test_runs_variants_with_heterozygosity(self):
@@ -2407,7 +2407,7 @@ class TestMain(unittest.TestCase):
                             "skip": 0,
                             "limit": 10
                         },
-                        "testMode": False,
+                        "testMode": True,
                         "requestedGranularity": "record"
                     }
             }
@@ -2437,7 +2437,7 @@ class TestMain(unittest.TestCase):
                             "skip": 0,
                             "limit": 10
                         },
-                        "testMode": False,
+                        "testMode": True,
                         "requestedGranularity": "record"
                     }
             }
@@ -2467,7 +2467,7 @@ class TestMain(unittest.TestCase):
                             "skip": 0,
                             "limit": 10
                         },
-                        "testMode": False,
+                        "testMode": True,
                         "requestedGranularity": "record"
                     }
             }
@@ -2497,7 +2497,7 @@ class TestMain(unittest.TestCase):
                             "skip": 0,
                             "limit": 10
                         },
-                        "testMode": False,
+                        "testMode": True,
                         "requestedGranularity": "record"
                     }
             }
@@ -2527,7 +2527,7 @@ class TestMain(unittest.TestCase):
                             "skip": 0,
                             "limit": 10
                         },
-                        "testMode": False,
+                        "testMode": True,
                         "requestedGranularity": "record"
                     }
             }
@@ -3175,7 +3175,7 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_get_double_filters():
-                resp = await client.get(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"]+"?filters=NCIT:C16576,NCIT:C16731")
+                resp = await client.get(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"]+"?filters=NCIT:C16576,NCIT:C16731&testMode=true")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -4162,7 +4162,7 @@ class TestMain(unittest.TestCase):
                 },
                 "query": {
                     "filters": [
-            {"id":"EUCAIM:IMG1000026", "scope":"patients" }, {"id":"EUCAIM:BP1000270", "scope":"patients" }, {"id":"EUCAIM:CLIN1000060", "scope":"patients" }, {"id":"EUCAIM:IMG1000047", "scope":"patients" }, {"id":"imageStudy.disease.tumorMetadata.PSA", "operator":"<", "value": 2, "scope":"patients"}],
+            [{"id":"EUCAIM:IMG1000026", "scope":"patients" }, {"id":"EUCAIM:BP1000270", "scope":"patients" }, {"id":"EUCAIM:CLIN1000060", "scope":"patients" }, {"id":"EUCAIM:IMG1000047", "scope":"patients" }, {"id":"imageStudy.disease.tumorMetadata.PSA", "operator":"<", "value": 2, "scope":"patients"}]],
                     "includeResultsetResponses": "HIT",
                     "pagination": {
                         "skip": 0,

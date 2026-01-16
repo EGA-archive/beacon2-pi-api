@@ -17,13 +17,13 @@ def apply_filters(self, query: dict, filters: List, query_parameters: dict, data
     total_query={}
     # Check if there are filters and process them depending of ther nature: alphanumeric, ontology or custom and save the query syntax obtained for each filter in total query
     if len(filters) >= 1:
-        total_query["$and"] = []
+        total_query["$or"] = []
         if query != {} and request_parameters == {}:
-            total_query["$and"].append(query)
+            total_query["$or"].append(query)
         for filter in filters:
             if isinstance(filter, List):
                 nested_query={}
-                nested_query["$or"]=[]
+                nested_query["$and"]=[]
                 for nested_filter in filter:
                     partial_query = {}
                     if "value" in nested_filter:
@@ -39,8 +39,8 @@ def apply_filters(self, query: dict, filters: List, query_parameters: dict, data
                     else:
                         nested_filter = CustomFilter(**nested_filter)
                         partial_query = apply_custom_filter(self, partial_query, nested_filter, dataset)
-                    nested_query["$or"].append(partial_query)
-                total_query["$and"].append(nested_query)
+                    nested_query["$and"].append(partial_query)
+                total_query["$or"].append(nested_query)
             else:
                 partial_query = {}
                 if "value" in filter:
@@ -56,12 +56,19 @@ def apply_filters(self, query: dict, filters: List, query_parameters: dict, data
                 else:
                     filter = CustomFilter(**filter)
                     partial_query = apply_custom_filter(self, partial_query, filter, dataset)
-                total_query["$and"].append(partial_query)
-            if total_query["$and"] == [{'$or': []}] or total_query['$and'] == []:
+                total_query["$or"].append(partial_query)
+            if total_query["$or"] == [{'$or': []}] or total_query['$or'] == []:
                 total_query = {}
     # If there are request parameters, apply them and save the query syntax in the wrapper query dictionary total_query
     if request_parameters != {}:
-        total_query = request_parameters_from_modules(self, total_query, request_parameters, dataset)
+        if 'noprocess' in request_parameters:
+            try:
+                total_query['$and'].append(request_parameters['noprocess'])
+            except Exception:
+                total_query['$and']=[]
+                total_query['$and'].append(request_parameters['noprocess'])
+        else:
+            total_query = request_parameters_from_modules(self, total_query, request_parameters, dataset)
     if total_query == {} and query != {}:
         total_query=query
     return total_query

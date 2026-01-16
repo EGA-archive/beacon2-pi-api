@@ -246,8 +246,9 @@ def get_phenotypic_endpoint_of_variants(self, dataset: SingleDatasetResponse):
             finalquery["$or"].append(query)
         superfinalquery={}
         superfinalquery["$and"]=[finalquery]
+    noprocessdict={'noprocess': superfinalquery}
     # Process filters
-    query = apply_filters(self, superfinalquery, new_filters, {}, dataset.dataset)
+    query = apply_filters(self, {}, new_filters, noprocessdict, dataset.dataset)
     # Save the include, limit and skip parameters so they are used later.
     include = RequestAttributes.qparams.query.includeResultsetResponses
     limit = RequestAttributes.qparams.query.pagination.limit
@@ -262,12 +263,12 @@ def get_phenotypic_endpoint_of_variants(self, dataset: SingleDatasetResponse):
 def get_variants_of_dataset(self, dataset: SingleDatasetResponse):
     # Initialize the query syntax.
     query_count={}
-    query_count["$or"]=[]
+    query_count["$and"]=[]
     # If the entry_id belongs to any dataset, build the query, otherwise, dataset is not found.
     if dataset.dataset == RequestAttributes.entry_id:
         queryid={}
-        queryid["datasetId"]=dataset
-        query_count["$or"].append(queryid)
+        queryid["datasetId"]=dataset.dataset
+        query_count["$and"].append(queryid)
     else:
         dataset.dataset_count=0
         dataset.exists=False
