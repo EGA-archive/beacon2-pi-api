@@ -11,7 +11,7 @@ services:
       context: .
     container_name: beaconprod
     ports:
-      - "5050:5050"
+      - "5054:5050"
     entrypoint: ['python','-m','beacon']
     volumes:
       - ./beacon/logs/logs.log:/beacon/logs/logs.log
