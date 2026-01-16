@@ -22,7 +22,7 @@ description = r"This Beacon is based on synthetic data hosted at the <a href='ht
 version = api_version_yaml['api_version']
 welcome_url = 'https://beacon.ega-archive.org/'
 alternative_url = 'https://beacon.ega-archive.org/api'
-create_datetime = '2021-11-29T12:00:00.000000'
+create_datetime = '2021-11-29T12:00:00.000000Z'
 update_datetime = ''
 default_beacon_granularity = "record" # boolean, count or record
 security_levels = ['PUBLIC', 'REGISTERED', 'CONTROLLED']

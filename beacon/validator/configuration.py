@@ -6,6 +6,8 @@ import logging
 import yaml
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.utils import import_dataset_confile, import_analysis_confile, import_biosample_confile, import_cohort_confile, import_individual_confile, import_genomicVariant_confile, import_run_confile
 
+tiemstamp_regex = re.compile(r"^.+(\d{2}/\w{3}/\d{4}:\d{2}:\d{2}:\d{2})")
+
 def contains_special_characters(string):
     for char in string:
         if char == '_':
@@ -354,8 +356,16 @@ def check_configuration(analysis_confile=import_analysis_confile(), biosample_co
         raise Exception('The alternative_url config parameter must be a string')
     if not isinstance(conf_override.config.create_datetime, str):
         raise Exception('The create_datetime config parameter must be a string')
+    try:
+        tiemstamp_regex.match(conf_override.config.create_datetime)
+    except Exception:
+        raise Exception('The create_datetime_datetime config parameter must be timestamp')
     if not isinstance(conf_override.config.update_datetime, str):
         raise Exception('The update_datetime config parameter must be a string')
+    try:
+        tiemstamp_regex.match(conf_override.config.update_datetime)
+    except Exception:
+        raise Exception('The update_datetime config parameter must be timestamp')
     if not isinstance(conf_override.config.documentation_url, str):
         raise Exception('The documentation_url config parameter must be a string')
     if not conf_override.config.welcome_url.startswith('http://'):
