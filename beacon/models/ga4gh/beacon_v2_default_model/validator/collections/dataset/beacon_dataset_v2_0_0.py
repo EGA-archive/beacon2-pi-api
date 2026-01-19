@@ -10,6 +10,8 @@ from pydantic import (
 
 from typing import Optional, Union, List
 from beacon.framework.validator.v2_0_0.common import OntologyTerm
+
+timestamp_regex = re.compile(r"^.+(\d{2}/\w{3}/\d{4}:\d{2}:\d{2}:\d{2})")
             
 class DUODataUse(BaseModel):
     id: str
@@ -57,7 +59,7 @@ class Dataset(BaseModel, extra='forbid'):
     def check_createDateTime(cls, v: str) -> str:
         if isinstance(v, str):
             try:
-                parse(v)
+                timestamp_regex.match(v)
             except Exception as e:
                 raise ValueError('createDateTime, if string, must be Timestamp, getting this error: {}'.format(e))
             return v
@@ -66,7 +68,7 @@ class Dataset(BaseModel, extra='forbid'):
     def check_updateDateTime(cls, v: str) -> str:
         if isinstance(v, str):
             try:
-                parse(v)
+                timestamp_regex.match(v)
             except Exception as e:
                 raise ValueError('updateDateTime, if string, must be Timestamp, getting this error: {}'.format(e))
             return v

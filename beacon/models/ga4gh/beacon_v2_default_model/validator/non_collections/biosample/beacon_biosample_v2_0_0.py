@@ -12,6 +12,8 @@ from pydantic import (
 from typing import Optional, Union
 from beacon.framework.validator.v2_0_0.common import OntologyTerm
 
+timestamp_regex = re.compile(r"^.+(\d{2}/\w{3}/\d{4}:\d{2}:\d{2}:\d{2})")
+
 class Age(BaseModel):
     iso8601duration: Optional[str]=None
 
@@ -54,7 +56,7 @@ class InterventionsOrProcedures(BaseModel):
     def check_ageAtProcedure(cls, v: Union[str,dict]= Field(union_mode='left_to_right')) -> Union[str,dict]:
         if isinstance(v, str):
             try:
-                parse(v)
+                timestamp_regex.match(v)
             except Exception as e:
                 raise ValueError('ageAtProcedure, if string, must be Timestamp, getting this error: {}'.format(e))
             return v
@@ -105,7 +107,7 @@ class Measurement(BaseModel):
     def check_observationMoment(cls, v: Union[str,dict]= Field(union_mode='left_to_right')) -> Union[str,dict]:
         if isinstance(v, str):
             try:
-                parse(v)
+                timestamp_regex.match(v)
             except Exception as e:
                 raise ValueError('observationMoment, if string, must be Timestamp, getting this error: {}'.format(e))
             return v

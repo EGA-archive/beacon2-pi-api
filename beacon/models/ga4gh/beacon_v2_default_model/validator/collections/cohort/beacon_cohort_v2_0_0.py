@@ -12,6 +12,8 @@ from beacon.framework.validator.v2_0_0.common import OntologyTerm
 
 from typing import Optional, Union
 
+timestamp_regex = re.compile(r"^.+(\d{2}/\w{3}/\d{4}:\d{2}:\d{2}:\d{2})")
+
 class Age(BaseModel):
     iso8601duration: Optional[str]=None
 
@@ -45,7 +47,7 @@ class EventTimeline(BaseModel):
     def check_end(cls, v: str) -> str:
         if isinstance(v, str):
             try:
-                parse(v)
+                timestamp_regex.match(v)
             except Exception as e:
                 raise ValueError('end, if string, must be Timestamp, getting this error: {}'.format(e))
             return v
@@ -54,7 +56,7 @@ class EventTimeline(BaseModel):
     def check_start(cls, v: str) -> str:
         if isinstance(v, str):
             try:
-                parse(v)
+                timestamp_regex.match(v)
             except Exception as e:
                 raise ValueError('start, if string, must be Timestamp, getting this error: {}'.format(e))
             return v
@@ -72,7 +74,7 @@ class Diseases(BaseModel):
     def check_ageOfOnset(cls, v: Union[str,dict]= Field(union_mode='left_to_right')) -> Union[str,dict]:
         if isinstance(v, str):
             try:
-                parse(v)
+                timestamp_regex.match(v)
             except Exception as e:
                 raise ValueError('ageOfOnset, if string, must be Timestamp, getting this error: {}'.format(e))
             return v
@@ -169,7 +171,7 @@ class PhenotypicFeatures(BaseModel):
     def check_onset(cls, v: Union[str,dict]= Field(union_mode='left_to_right')) -> Union[str,dict]:
         if isinstance(v, str):
             try:
-                parse(v)
+                timestamp_regex.match(v)
             except Exception as e:
                 raise ValueError('onset, if string, must be Timestamp, getting this error: {}'.format(e))
             return v
@@ -212,7 +214,7 @@ class PhenotypicFeatures(BaseModel):
     def check_resolution(cls, v: Union[str,dict]= Field(union_mode='left_to_right')) -> Union[str,dict]:
         if isinstance(v, str):
             try:
-                parse(v)
+                timestamp_regex.match(v)
             except Exception as e:
                 raise ValueError('resolution, if string, must be Timestamp, getting this error: {}'.format(e))
             return v
@@ -313,7 +315,7 @@ class CollectionEvent(BaseModel):
     def check_eventDate(cls, v: str) -> str:
         if isinstance(v, str):
             try:
-                parse(v)
+                timestamp_regex.match(v)
             except Exception as e:
                 raise ValueError('eventDate, if string, must be Timestamp, getting this error: {}'.format(e))
             return v
