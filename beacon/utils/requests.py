@@ -62,10 +62,11 @@ def parse_query_string(self, request):
                     new_id=split_id[0]
                     v_dict["operator"]='!'
                     v_dict["value"]=split_id[1]
-                if '[' and ']' in new_id:
+                if '[' in new_id and ']' in new_id:
                     new_id = new_id.replace('[','')
                     new_id = new_id.replace(']','')
                     v_dict['id'] = new_id
+                    v_dict = [v_dict]
                     is_or=False
                 elif '[' in new_id:
                     v_dict['id'] = new_id.replace('[','')

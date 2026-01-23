@@ -14,6 +14,7 @@ CURIE_REGEX = r'^([a-zA-Z0-9]*):\/?[a-zA-Z0-9./]*$'
 def apply_filters(self, query: dict, filters: List, query_parameters: dict, dataset: str) -> dict:
     # Initiate the wrapper query dictionary and save the request parameters in a new variable to differentiate it from the variable arrived in the args
     request_parameters = query_parameters
+    is_DNF=False
     total_query={}
     # Check if there are filters and process them depending of ther nature: alphanumeric, ontology or custom and save the query syntax obtained for each filter in total query
     if len(filters) >= 1:
@@ -22,6 +23,7 @@ def apply_filters(self, query: dict, filters: List, query_parameters: dict, data
             total_query["$or"].append(query)
         for filter in filters:
             if isinstance(filter, List):
+                is_DNF=True
                 nested_query={}
                 nested_query["$and"]=[]
                 for nested_filter in filter:
@@ -40,6 +42,10 @@ def apply_filters(self, query: dict, filters: List, query_parameters: dict, data
                         nested_filter = CustomFilter(**nested_filter)
                         partial_query = apply_custom_filter(self, partial_query, nested_filter, dataset)
                     nested_query["$and"].append(partial_query)
+                if len(total_query)>0:
+                    if "$and" in total_query:
+                        total_query["$or"]=total_query["$and"]
+                        total_query.pop("$and")
                 total_query["$or"].append(nested_query)
             else:
                 partial_query = {}
@@ -56,9 +62,20 @@ def apply_filters(self, query: dict, filters: List, query_parameters: dict, data
                 else:
                     filter = CustomFilter(**filter)
                     partial_query = apply_custom_filter(self, partial_query, filter, dataset)
-                total_query["$or"].append(partial_query)
+                if is_DNF==False:
+                    try:
+                        total_query['$and'].append(partial_query)
+                    except Exception:
+                        total_query['$and']=[]
+                        total_query['$and'].append(partial_query)
+                else:
+                    total_query["$or"].append(partial_query)
+        if "$or" in total_query:
             if total_query["$or"] == [{'$or': []}] or total_query['$or'] == []:
-                total_query = {}
+                total_query.pop("$or")
+        if "$and" in total_query:
+            if total_query["$and"] == [{'$or': []}] or total_query['$and'] == []:
+                total_query.pop("$and")
     # If there are request parameters, apply them and save the query syntax in the wrapper query dictionary total_query
     if request_parameters != {}:
         if 'noprocess' in request_parameters:

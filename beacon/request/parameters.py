@@ -196,10 +196,9 @@ class RequestParams(CamelModel, extra='forbid'):
             "apiVersion": self.meta.apiVersion,
             "requestedSchemas": self.meta.requestedSchemas,
             "filters": [
-                    item["id"]
-                    for filtering_term in self.query.filters
-                    for item in (filtering_term if isinstance(filtering_term, list) else [filtering_term])
-                ],
+                    filtering_term["id"] if isinstance(filtering_term, dict) else ",".join(item["id"] for item in filtering_term)
+                    for filtering_term in self.query.filters 
+                ] if any(isinstance(filtering_term, list) for filtering_term in self.query.filters) else [",".join(filtering_term["id"] for filtering_term in self.query.filters)],
             "requestParameters": self.query.requestParameters,
             "includeResultsetResponses": self.query.includeResultsetResponses,
             "pagination": self.query.pagination.dict(),

@@ -4260,6 +4260,225 @@ class TestMain(unittest.TestCase):
                 assert responsedict["responseSummary"]["exists"] == True
             loop.run_until_complete(test_check_post_cross_query_analysis_cohorts_is_working())
             loop.run_until_complete(client.close())
+    def test_main_check_post_patients_with_single_filter_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_patients_with_single_filter_is_working():
+                resp = await client.post(conf_override.config.uri_subpath+"/"+patients["patients"]["endpoint_name"], json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"EUCAIM:BP1000067", "scope":"patients" }],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 52
+                for result_doc in responsedict["response"]["resultSets"][0]["results"]:
+                    assert "EUCAIM:BP1000067".lower() in result_doc["imageStudy"][0]["imageBodyPart"]["id"].lower()
+            loop.run_until_complete(test_check_post_patients_with_single_filter_is_working())
+            loop.run_until_complete(client.close())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_patients_with_and_double_filter_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_patients_with_and_double_filter_is_working():
+                resp = await client.post(conf_override.config.uri_subpath+"/"+patients["patients"]["endpoint_name"], json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"EUCAIM:BP1000067", "scope":"patients" }, {"id":"EUCAIM:CLIN1001712", "scope":"patients" }],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 27
+                for result_doc in responsedict["response"]["resultSets"][0]["results"]:
+                    assert "EUCAIM:BP1000067".lower() in result_doc["imageStudy"][0]["imageBodyPart"]["id"].lower()
+                    assert "EUCAIM:CLIN1001712".lower() in result_doc["imageStudy"][0]["disease"]["pathologyConfirmation"]["id"].lower()
+            loop.run_until_complete(test_check_post_patients_with_and_double_filter_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_patients_with_and_double_filter_with_brackets_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_patients_with_and_double_filter_with_brackets_is_working():
+                resp = await client.post(conf_override.config.uri_subpath+"/"+patients["patients"]["endpoint_name"], json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            [{"id":"EUCAIM:BP1000067", "scope":"patients" }, {"id":"EUCAIM:CLIN1001712", "scope":"patients" }]],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 27
+                for result_doc in responsedict["response"]["resultSets"][0]["results"]:
+                    assert "EUCAIM:BP1000067".lower() in result_doc["imageStudy"][0]["imageBodyPart"]["id"].lower()
+                    assert "EUCAIM:CLIN1001712".lower() in result_doc["imageStudy"][0]["disease"]["pathologyConfirmation"]["id"].lower()
+            loop.run_until_complete(test_check_post_patients_with_and_double_filter_with_brackets_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_patients_with_filter_and_double_filter_with_brackets_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_patients_with_filter_and_double_filter_with_brackets_is_working():
+                resp = await client.post(conf_override.config.uri_subpath+"/"+patients["patients"]["endpoint_name"], json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            {"id":"EUCAIM:BP1000067", "scope":"patients" }, [{"id":"EUCAIM:CLIN1001712", "scope":"patients" }, {"id":"EUCAIM:IMG1000076", "scope":"patients" }]],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 63
+                for result_doc in responsedict["response"]["resultSets"][0]["results"]:
+                    assert "EUCAIM:BP1000067".lower() in result_doc["imageStudy"][0]["imageBodyPart"]["id"].lower() or "EUCAIM:CLIN1001712".lower() in result_doc["imageStudy"][0]["disease"]["pathologyConfirmation"]["id"].lower() and "EUCAIM:IMG1000076".lower() in result_doc["imageStudy"][0]["disease"]["imagingProcedureProtocol"]["id"].lower()
+            loop.run_until_complete(test_check_post_patients_with_filter_and_double_filter_with_brackets_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_post_patients_with_filter_and_double_filter_with_brackets_is_working_2(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_post_patients_with_filter_and_double_filter_with_brackets_is_working_2():
+                resp = await client.post(conf_override.config.uri_subpath+"/"+patients["patients"]["endpoint_name"], json={"meta": {
+                    "apiVersion": "2.0"
+                },
+                "query": {
+                    "filters": [
+            [{"id":"EUCAIM:CLIN1001712", "scope":"patients" }, {"id":"EUCAIM:IMG1000076", "scope":"patients" }],{"id":"EUCAIM:BP1000067", "scope":"patients" }],
+                    "includeResultsetResponses": "HIT",
+                    "pagination": {
+                        "skip": 0,
+                        "limit": 10
+                    },
+                    "testMode": True,
+                    "requestedGranularity": "record"
+                }
+                })
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 63
+                for result_doc in responsedict["response"]["resultSets"][0]["results"]:
+                    assert "EUCAIM:BP1000067".lower() in result_doc["imageStudy"][0]["imageBodyPart"]["id"].lower() or "EUCAIM:CLIN1001712".lower() in result_doc["imageStudy"][0]["disease"]["pathologyConfirmation"]["id"].lower() and "EUCAIM:IMG1000076".lower() in result_doc["imageStudy"][0]["disease"]["imagingProcedureProtocol"]["id"].lower()
+            loop.run_until_complete(test_check_post_patients_with_filter_and_double_filter_with_brackets_is_working_2())
+            loop.run_until_complete(client.close())
+    def test_main_check_get_patients_with_single_filter_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_get_patients_with_single_filter_is_working():
+                resp = await client.get(conf_override.config.uri_subpath+"/"+patients["patients"]["endpoint_name"]+'?filters=EUCAIM:BP1000067&testMode=true')
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 52
+                for result_doc in responsedict["response"]["resultSets"][0]["results"]:
+                    assert "EUCAIM:BP1000067".lower() in result_doc["imageStudy"][0]["imageBodyPart"]["id"].lower()
+            loop.run_until_complete(test_check_get_patients_with_single_filter_is_working())
+            loop.run_until_complete(client.close())
+            loop.run_until_complete(client.close())
+    def test_main_check_get_patients_with_and_double_filter_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_get_patients_with_and_double_filter_is_working():
+                resp = await client.get(conf_override.config.uri_subpath+"/"+patients["patients"]["endpoint_name"]+'?filters=EUCAIM:BP1000067,EUCAIM:CLIN1001712&testMode=true')
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 27
+                for result_doc in responsedict["response"]["resultSets"][0]["results"]:
+                    assert "EUCAIM:BP1000067".lower() in result_doc["imageStudy"][0]["imageBodyPart"]["id"].lower()
+                    assert "EUCAIM:CLIN1001712".lower() in result_doc["imageStudy"][0]["disease"]["pathologyConfirmation"]["id"].lower()
+            loop.run_until_complete(test_check_get_patients_with_and_double_filter_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_get_patients_with_filter_and_double_filter_with_brackets_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_get_patients_with_filter_and_double_filter_with_brackets_is_working():
+                resp = await client.get(conf_override.config.uri_subpath+"/"+patients["patients"]["endpoint_name"]+'?filters=EUCAIM:BP1000067,[EUCAIM:IMG1000076,EUCAIM:CLIN1001712]&testMode=true')
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 63
+                for result_doc in responsedict["response"]["resultSets"][0]["results"]:
+                    assert "EUCAIM:BP1000067".lower() in result_doc["imageStudy"][0]["imageBodyPart"]["id"].lower() or "EUCAIM:CLIN1001712".lower() in result_doc["imageStudy"][0]["disease"]["pathologyConfirmation"]["id"].lower() and "EUCAIM:IMG1000076".lower() in result_doc["imageStudy"][0]["disease"]["imagingProcedureProtocol"]["id"].lower()
+            loop.run_until_complete(test_check_get_patients_with_filter_and_double_filter_with_brackets_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_get_patients_with_filter_and_double_filter_with_brackets_is_working_2(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_get_patients_with_filter_and_double_filter_with_brackets_is_working_2():
+                resp = await client.get(conf_override.config.uri_subpath+"/"+patients["patients"]["endpoint_name"]+'?filters=[EUCAIM:IMG1000076,EUCAIM:CLIN1001712],EUCAIM:BP1000067&testMode=true')
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 63
+                for result_doc in responsedict["response"]["resultSets"][0]["results"]:
+                    assert "EUCAIM:BP1000067".lower() in result_doc["imageStudy"][0]["imageBodyPart"]["id"].lower() or "EUCAIM:CLIN1001712".lower() in result_doc["imageStudy"][0]["disease"]["pathologyConfirmation"]["id"].lower() and "EUCAIM:IMG1000076".lower() in result_doc["imageStudy"][0]["disease"]["imagingProcedureProtocol"]["id"].lower()
+            loop.run_until_complete(test_check_get_patients_with_filter_and_double_filter_with_brackets_is_working_2())
+            loop.run_until_complete(client.close())
     
 
 class AsyncTest(unittest.IsolatedAsyncioTestCase):
