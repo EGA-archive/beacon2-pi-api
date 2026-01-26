@@ -9,7 +9,7 @@ from pydantic import (
     PrivateAttr
 )
 
-from typing import Optional, Union
+from typing import Optional, Union, List
 from beacon.framework.validator.v2_0_0.common import OntologyTerm
 
 timestamp_regex = re.compile(r"^.+(\d{2}/\w{3}/\d{4}:\d{2}:\d{2}:\d{2})")
@@ -53,47 +53,23 @@ class InterventionsOrProcedures(BaseModel):
     procedureCode: OntologyTerm
     @field_validator('ageAtProcedure')
     @classmethod
-    def check_ageAtProcedure(cls, v: Union[str,dict]= Field(union_mode='left_to_right')) -> Union[str,dict]:
+    def check_ageAtProcedure(cls, v: Optional[Union[str,dict]]) -> Optional[Union[str,dict]]:
+        if v is None:
+            return v
         if isinstance(v, str):
             try:
                 timestamp_regex.match(v)
+                return v
             except Exception as e:
                 raise ValueError('ageAtProcedure, if string, must be Timestamp, getting this error: {}'.format(e))
-            return v
         elif isinstance(v, dict):
-            fits_in_class=False
-            try:
-                Age(**v)
-                fits_in_class=True
-            except Exception:
-                fits_in_class=False
-            if fits_in_class == False:
+            for model in [Age, AgeRange, GestationalAge, TimeInterval, OntologyTerm]:
                 try:
-                    AgeRange(**v)
-                    fits_in_class=True
+                    model(**v)
+                    return v
                 except Exception:
-                    fits_in_class=False
-            if fits_in_class == False:
-                try:
-                    GestationalAge(**v)
-                    fits_in_class=True
-                except Exception:
-                    fits_in_class=False
-            if fits_in_class == False:
-                try:
-                    TimeInterval(**v)
-                    fits_in_class=True
-                except Exception:
-                    fits_in_class=False
-            if fits_in_class == False:
-                try:
-                    OntologyTerm(**v)
-                    fits_in_class=True
-                except Exception:
-                    fits_in_class=False
-            if fits_in_class == False:
-                raise ValueError('ageAtProcedure, if object, must be any format possible between age, ageRange, gestationalAge, timeInterval or OntologyTerm')
-            return v
+                    continue
+            raise ValueError('ageAtProcedure, if object, must be any format possible between age, ageRange, gestationalAge, timeInterval or OntologyTerm')
             
 class Measurement(BaseModel):
     assayCode: OntologyTerm
@@ -101,54 +77,26 @@ class Measurement(BaseModel):
     measurementValue: Union[Quantity, OntologyTerm, TypedQuantities]
     notes: Optional[str]=None
     observationMoment: Optional[Union[str,dict]]=None
-    procedure: Optional[dict] = None
+    procedure: Optional[InterventionsOrProcedures] = None
     @field_validator('observationMoment')
     @classmethod
-    def check_observationMoment(cls, v: Union[str,dict]= Field(union_mode='left_to_right')) -> Union[str,dict]:
+    def check_observationMoment(cls, v: Optional[Union[str,dict]]) -> Optional[Union[str,dict]]:
+        if v is None:
+            return v
         if isinstance(v, str):
             try:
                 timestamp_regex.match(v)
+                return v
             except Exception as e:
                 raise ValueError('observationMoment, if string, must be Timestamp, getting this error: {}'.format(e))
-            return v
         elif isinstance(v, dict):
-            fits_in_class=False
-            try:
-                Age(**v)
-                fits_in_class=True
-            except Exception:
-                fits_in_class=False
-            if fits_in_class == False:
+            for model in [Age, AgeRange, GestationalAge, TimeInterval, OntologyTerm]:
                 try:
-                    AgeRange(**v)
-                    fits_in_class=True
+                    model(**v)
+                    return v
                 except Exception:
-                    fits_in_class=False
-            if fits_in_class == False:
-                try:
-                    GestationalAge(**v)
-                    fits_in_class=True
-                except Exception:
-                    fits_in_class=False
-            if fits_in_class == False:
-                try:
-                    TimeInterval(**v)
-                    fits_in_class=True
-                except Exception:
-                    fits_in_class=False
-            if fits_in_class == False:
-                try:
-                    OntologyTerm(**v)
-                    fits_in_class=True
-                except Exception:
-                    fits_in_class=False
-            if fits_in_class == False:
-                raise ValueError('observationMoment, if object, must be any format possible between age, ageRange, gestationalAge, timeInterval or OntologyTerm')
-            return v
-    @field_validator('procedure')
-    @classmethod
-    def check_procedure(cls, v: dict) -> dict:
-        InterventionsOrProcedures(**v)
+                    continue
+            raise ValueError('observationMoment, if object, must be any format possible between age, ageRange, gestationalAge, timeInterval or OntologyTerm')
 
 class Biosample(BaseModel):
     def __init__(self, **data) -> None:
@@ -163,32 +111,20 @@ class Biosample(BaseModel):
     biosampleStatus: OntologyTerm
     collectionDate: Optional[str] = None
     collectionMoment: Optional[str] = None
-    diagnosticMarkers: Optional[list] = None
+    diagnosticMarkers: Optional[List[OntologyTerm]] = None
     histologicalDiagnosis: Optional[OntologyTerm] = None
     id: str
     individualId: Optional[str] = None
     info: Optional[dict] = None
-    measurements: Optional[list] = None
+    measurements: Optional[List[Measurement]] = None
     notes: Optional[str]=None
     obtentionProcedure: Optional[InterventionsOrProcedures] = None
     pathologicalStage: Optional[OntologyTerm] = None
-    pathologicalTnmFinding: Optional[list] = None
-    phenotypicFeatures: Optional[list] = None
+    pathologicalTnmFinding: Optional[List] = None
+    phenotypicFeatures: Optional[List] = None
     sampleOriginDetail: Optional[OntologyTerm] = None
     sampleOriginType: OntologyTerm
     sampleProcessing: Optional[OntologyTerm] = None
     sampleStorage: Optional[OntologyTerm] = None
     tumorGrade: Optional[OntologyTerm] = None
     tumorProgression: Optional[OntologyTerm] = None
-    @field_validator('diagnosticMarkers')
-    @classmethod
-    def check_diagnosticMarkers(cls, v: list) -> list:
-        for diagnosticMarker in v:
-            OntologyTerm(**diagnosticMarker)
-        return v
-    @field_validator('measurements')
-    @classmethod
-    def check_measurements(cls, v: list) -> list:
-        for measurement in v:
-            Measurement(**measurement)
-        return v

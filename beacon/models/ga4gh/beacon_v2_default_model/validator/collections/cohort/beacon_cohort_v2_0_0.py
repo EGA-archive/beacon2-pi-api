@@ -10,7 +10,7 @@ from pydantic import (
 )
 from beacon.framework.validator.v2_0_0.common import OntologyTerm
 
-from typing import Optional, Union
+from typing import Optional, Union, List
 
 timestamp_regex = re.compile(r"^.+(\d{2}/\w{3}/\d{4}:\d{2}:\d{2}:\d{2})")
 
@@ -71,7 +71,9 @@ class Diseases(BaseModel):
     stage: Optional[OntologyTerm]=None
     @field_validator('ageOfOnset')
     @classmethod
-    def check_ageOfOnset(cls, v: Union[str,dict]= Field(union_mode='left_to_right')) -> Union[str,dict]:
+    def check_ageOfOnset(cls, v: Optional[Union[str,dict]]) -> Optional[Union[str,dict]]:
+        if v is None:
+            return v
         if isinstance(v, str):
             try:
                 timestamp_regex.match(v)
@@ -79,39 +81,13 @@ class Diseases(BaseModel):
                 raise ValueError('ageOfOnset, if string, must be Timestamp, getting this error: {}'.format(e))
             return v
         elif isinstance(v, dict):
-            fits_in_class=False
-            try:
-                Age(**v)
-                fits_in_class=True
-            except Exception:
-                fits_in_class=False
-            if fits_in_class == False:
+            for model in [Age, AgeRange, GestationalAge, TimeInterval, OntologyTerm]:
                 try:
-                    AgeRange(**v)
-                    fits_in_class=True
+                    model(**v)
+                    return v
                 except Exception:
-                    fits_in_class=False
-            if fits_in_class == False:
-                try:
-                    GestationalAge(**v)
-                    fits_in_class=True
-                except Exception:
-                    fits_in_class=False
-            if fits_in_class == False:
-                try:
-                    TimeInterval(**v)
-                    fits_in_class=True
-                except Exception:
-                    fits_in_class=False
-            if fits_in_class == False:
-                try:
-                    OntologyTerm(**v)
-                    fits_in_class=True
-                except Exception:
-                    fits_in_class=False
-            if fits_in_class == False:
-                raise ValueError('ageOfOnset, if object, must be any format possible between age, ageRange, gestationalAge, timeInterval or OntologyTerm')
-            return v
+                    continue
+            raise ValueError('ageOfOnset, if object, must be any format possible between age, ageRange, gestationalAge, timeInterval or OntologyTerm')
             
 class Ethnicity(BaseModel):
     id: str
@@ -151,145 +127,56 @@ class PhenotypicFeatures(BaseModel):
     id: Optional[str] = None
     excluded: Optional[bool]=None
     featureType: OntologyTerm
-    modifiers: Optional[list]=None
+    modifiers: Optional[List[OntologyTerm]]=None
     notes: Optional[str]=None
     onset: Optional[Union[str,dict]]=None
     resolution: Optional[Union[str,dict]]=None
     severity: Optional[OntologyTerm]=None
-    @field_validator('evidence')
-    @classmethod
-    def check_evidence(cls, v: dict) -> dict:
-        Evidence(**v)
-    @field_validator('modifiers')
-    @classmethod
-    def check_modifiers(cls, v: list) -> list:
-        for modifier in v:
-            OntologyTerm(**modifier)
-        return v
     @field_validator('onset')
     @classmethod
-    def check_onset(cls, v: Union[str,dict]= Field(union_mode='left_to_right')) -> Union[str,dict]:
+    def check_onset(cls, v: Optional[Union[str,dict]]) -> Optional[Union[str,dict]]:
+        if v is None:
+            return v
         if isinstance(v, str):
             try:
                 timestamp_regex.match(v)
+                return v
             except Exception as e:
                 raise ValueError('onset, if string, must be Timestamp, getting this error: {}'.format(e))
-            return v
         elif isinstance(v, dict):
-            fits_in_class=False
-            try:
-                Age(**v)
-                fits_in_class=True
-            except Exception:
-                fits_in_class=False
-            if fits_in_class == False:
+            for model in [Age, AgeRange, GestationalAge, TimeInterval, OntologyTerm]:
                 try:
-                    AgeRange(**v)
-                    fits_in_class=True
+                    model(**v)
+                    return v
                 except Exception:
-                    fits_in_class=False
-            if fits_in_class == False:
-                try:
-                    GestationalAge(**v)
-                    fits_in_class=True
-                except Exception:
-                    fits_in_class=False
-            if fits_in_class == False:
-                try:
-                    TimeInterval(**v)
-                    fits_in_class=True
-                except Exception:
-                    fits_in_class=False
-            if fits_in_class == False:
-                try:
-                    OntologyTerm(**v)
-                    fits_in_class=True
-                except Exception:
-                    fits_in_class=False
-            if fits_in_class == False:
-                raise ValueError('onset, if object, must be any format possible between age, ageRange, gestationalAge, timeInterval or OntologyTerm')
-            return v
+                    continue
+            raise ValueError('onset, if object, must be any format possible between age, ageRange, gestationalAge, timeInterval or OntologyTerm')
     @field_validator('resolution')
     @classmethod
-    def check_resolution(cls, v: Union[str,dict]= Field(union_mode='left_to_right')) -> Union[str,dict]:
+    def check_resolution(cls, v: Optional[Union[str,dict]]) -> Optional[Union[str,dict]]:
+        if v is None:
+            return v
         if isinstance(v, str):
             try:
                 timestamp_regex.match(v)
+                return v
             except Exception as e:
                 raise ValueError('resolution, if string, must be Timestamp, getting this error: {}'.format(e))
-            return v
         elif isinstance(v, dict):
-            fits_in_class=False
-            try:
-                Age(**v)
-                fits_in_class=True
-            except Exception:
-                fits_in_class=False
-            if fits_in_class == False:
+            for model in [Age, AgeRange, GestationalAge, TimeInterval, OntologyTerm]:
                 try:
-                    AgeRange(**v)
-                    fits_in_class=True
+                    model(**v)
+                    return v
                 except Exception:
-                    fits_in_class=False
-            if fits_in_class == False:
-                try:
-                    GestationalAge(**v)
-                    fits_in_class=True
-                except Exception:
-                    fits_in_class=False
-            if fits_in_class == False:
-                try:
-                    TimeInterval(**v)
-                    fits_in_class=True
-                except Exception:
-                    fits_in_class=False
-            if fits_in_class == False:
-                try:
-                    OntologyTerm(**v)
-                    fits_in_class=True
-                except Exception:
-                    fits_in_class=False
-            if fits_in_class == False:
-                raise ValueError('resolution, if object, must be any format possible between age, ageRange, gestationalAge, timeInterval or OntologyTerm')
-            return v
+                    continue
+            raise ValueError('resolution, if object, must be any format possible between age, ageRange, gestationalAge, timeInterval or OntologyTerm')
 
 class CohortCriteria(BaseModel):
-    ageRange: Optional[AgeRange]=None
-    diseaseConditions: Optional[list]=None
-    ethnicities: Optional[list]=None
-    genders: Optional[list]=None
-    locations: Optional[list]=None
-    phenotypicConditions: Optional[list]=None
-    @field_validator('diseaseConditions')
-    @classmethod
-    def check_diseaseConditions(cls, v: list) -> list:
-        for disease in v:
-            Diseases(**disease)
-        return v
-    @field_validator('ethnicities')
-    @classmethod
-    def check_ethnicities(cls, v: list) -> list:
-        for ethnicity in v:
-            Ethnicity(**ethnicity)
-        return v
-    @field_validator('genders')
-    @classmethod
-    def check_genders(cls, v: list) -> list:
-        for gender in v:
-            Sex(**gender)
-        return v
-    @field_validator('locations')
-    @classmethod
-    def check_locations(cls, v: list) -> list:
-        for location in v:
-            OntologyTerm(**location)
-        return v
-    @field_validator('phenotypicConditions')
-    @classmethod
-    def check_phenotypicConditions(cls, v: list) -> list:
-        for phenotypicCondition in v:
-            PhenotypicFeatures(**phenotypicCondition)
-        return v
+    diseaseConditions: Optional[List[Diseases]]=None
+    ethnicities: Optional[List[OntologyTerm]]=None
+    genders: Optional[List[OntologyTerm]]=None
+    locations: Optional[List[OntologyTerm]]=None
+    phenotypicConditions: Optional[List[PhenotypicFeatures]]=None
 
 class DataAvailabilityAndDistribution(BaseModel):
     availability: bool
@@ -312,13 +199,14 @@ class CollectionEvent(BaseModel):
     eventTimeline: Optional[EventTimeline] = None
     @field_validator('eventDate')
     @classmethod
-    def check_eventDate(cls, v: str) -> str:
-        if isinstance(v, str):
-            try:
-                timestamp_regex.match(v)
-            except Exception as e:
-                raise ValueError('eventDate, if string, must be Timestamp, getting this error: {}'.format(e))
+    def check_eventDate(cls, v: Optional[str]) -> Optional[str]:
+        if v is None:
             return v
+        try:
+            timestamp_regex.match(v)
+        except Exception as e:
+            raise ValueError('eventDate, if string, must be Timestamp, getting this error: {}'.format(e))
+        return v
 
 class Cohort(BaseModel, extra='forbid'):
     def __init__(self, **data) -> None:
@@ -330,24 +218,12 @@ class Cohort(BaseModel, extra='forbid'):
 
         super().__init__(**data)
     _id: Optional[str] = PrivateAttr()
-    cohortDataTypes: Optional[list] = None
+    cohortDataTypes: Optional[List[OntologyTerm]] = None
     cohortDesign: Optional[OntologyTerm] = None
     cohortSize: Optional[int] = None
     cohortType: str
-    collectionEvents: Optional[list] = None
+    collectionEvents: Optional[List[CollectionEvent]] = None
     exclusionCriteria: Optional[CohortCriteria] = None
     id: str
     inclusionCriteria: Optional[CohortCriteria] = None
     name: str
-    @field_validator('cohortDataTypes')
-    @classmethod
-    def check_cohortDataTypes(cls, v: list) -> list:
-        for cohortDataType in v:
-            OntologyTerm(**cohortDataType)
-        return v
-    @field_validator('collectionEvents')
-    @classmethod
-    def check_collectionEvents(cls, v: list) -> list:
-        for collectionEvent in v:
-            CollectionEvent(**collectionEvent)
-        return v
