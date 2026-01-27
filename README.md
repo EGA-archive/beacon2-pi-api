@@ -70,9 +70,9 @@ See [Fredrik Mørstad](https://stackoverflow.com/users/11494958/fredrik-m%c3%b8r
 Alternatively. if you are updating the BeaconPI instance from a previous version, it is recommended to use the next commands:
 
 ```bash
-docker stop beaconprod
-docker compose build --no-cache beaconprod
-docker compose up -d --force-recreate beaconprodx
+docker stop beaconprod db
+docker compose build --no-cache beaconprod db
+docker compose up -d --force-recreate beaconprod db
 ```
 
 #### Up the containers (with services in independent servers)
