@@ -636,6 +636,27 @@ After editing any comfiguration variable, save the file and restart the API to a
 docker compose restart beaconprod
 ```
 
+## Fix for MongoDB exploit (CVE-2025-14847)
+
+Beacon PI repository has been updated so the exploit for MongoDB (CVE-2025-14847) is not an issue anymore. In order to do that, the following points have been implemented:
+* Removed exposing ports in docker-compose.yml file
+* Built done from a mongod.conf file
+* Mongo image for major version 5 adjusted to 5.0.32, not allowing prior versions with the vulnerability to be built.
+
+**Please, make sure you update your mongoDB instance and rebuild the mongoDB container after this update.**
+
+The steps to reproduce this exploit and check that your instance is not vulnerable anymore is to download this [repo](https://github.com/Security-Phoenix-demo/mongobleed-exploit-CVE-2025-14847) and insert it in beacon folder.
+
+Then build the beaconprod conainer and execute the next command:
+```bash
+docker exec -it beaconprod python beacon/mongobleed-exploit-CVE-2025-14847-main/exploit/mongobleed.py --host mongoprod
+```
+If the message is something like: 
+![MongoDB no vulnerabilities](https://github.com/EGA-archive/beacon-production-prototype/blob/main/ri-tools/files/mongobleed_ok.png)
+Then it means the instance is safe.
+Otherwise, you would get a message like:
+![MongoDB vulnerabilities](https://github.com/EGA-archive/beacon-production-prototype/blob/main/ri-tools/files/mongobleed_vuln.png)
+
 ## Tests report
 
 ![Beacon prod concurrency test](https://github.com/EGA-archive/beacon-production-prototype/blob/main/ri-tools/files/concurrencytest.png)

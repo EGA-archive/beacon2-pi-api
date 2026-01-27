@@ -84,13 +84,11 @@ services:
       - idp-priv
 
   db:
-    image: mongo:5
-    command: --wiredTigerCacheSizeGB 4
+    image: mongo:5.0.32
+    #command: --wiredTigerCacheSizeGB 4
     #command: --wiredTigerCacheSizeGB 4 --sslMode requireSSL --tlsCertificateKeyFile test-server1.pem --tlsCAFile test-ca.pem
     hostname: mongo
     container_name: mongoprod
-    ports:
-      - 27017:27017
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
@@ -101,12 +99,13 @@ services:
       - ./beacon/connections/mongo/data/db:/data/db
       - ./beacon/connections/mongo/data/configdb:/data/configdb
       - ./beacon/connections/mongo/data/caseLevelData:/data/caseLevelData
+      - ./beacon/connections/mongo/mongod.conf:/etc/mongod.conf:ro
       #- ./test-server1.pem:/test-server1.pem
       #- ./test-ca.pem:/test-ca.pem
       #- ./test-client.pem:/test-client.pem
     networks:
       - pub
-    #command: --verbose
+    command: ["--config", "/etc/mongod.conf"]
   
   mongo-express:
     image: mongo-express
