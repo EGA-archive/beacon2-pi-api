@@ -67,6 +67,14 @@ docker compose up -d --build
 Note: If you have an Apple Silicon Mac and use [Colima](https://github.com/abiosoft/colima) as your container runtime, you may have to change the default Colima settings for the Mongo docker container to start correctly.
 See [Fredrik Mørstad](https://stackoverflow.com/users/11494958/fredrik-m%c3%b8rstad)'s answer to [this stackoverflow post](https://stackoverflow.com/questions/67498836/docker-chown-changing-ownership-of-data-db-operation-not-permitted) for guidance on how to resolve this issue.
 
+Alternatively. if you are updating the BeaconPI instance from a previous version, it is recommended to use the next commands:
+
+```bash
+docker stop beaconprod
+docker compose build --no-cache beaconprod
+docker compose up -d --force-recreate beaconprodx
+```
+
 #### Up the containers (with services in independent servers)
 
 If you wish to have each service (or some of them) in different servers, you will need to use the remote version of the docker compose file, and deploy the remote services you need by selecting them individually in the build. Example:
@@ -324,7 +332,7 @@ AV_Dataset:
 
 ### Generic configuration
 
-The beacon needs some configuration in order to show the correct mappings or information. In order to do that, the next variables inside [conf.py](https://github.com/EGA-archive/beacon-production-prototype/tree/main/beacon/conf/conf.py) can be modified for that purpose, being **uri** a critical one for showing the correct domain in the mappings of your beacon. The **uri_subpath** will be added behind this **uri** variable, in case there is an extension of the domain for your beacon.
+The beacon needs some configuration in order to show the correct mappings or information. In order to do that, the next variables inside [conf.py](https://github.com/EGA-archive/beacon-production-prototype/tree/main/beacon/conf/conf.py) can be modified for that purpose, being **uri** a critical one for showing the correct domain in the mappings of your beacon. The **uri_subpath** will be added behind this **uri** variable, in case there is an extension of the domain for your beacon. See next paragraph: Tips for configuring a nginx proxy compatible with Beacon PI.
 
 ```bash
 beacon_id = 'org.ega-archive.beacon-ri-demo'  # ID of the Beacon
@@ -360,6 +368,28 @@ org_contact_url = 'mailto:beacon.ega@crg.eu'
 org_logo_url = 'https://legacy.ega-archive.org/images/logo.png'
 org_info = ''
 ``` 
+
+#### Tips for configuring a nginx proxy compatible with BeaconPI conf.py uri and uri_subpath vars
+
+If you are building a nginx proxy on top of beacon PI instance, the configuration of your nginx proxy can be a bit tricky if you don't have in mind what do uri and uri_subpath do. First of all, uri sets the root url of your beacon, and uri_subpath adds an extension to each of the endpoints' routes.
+This means, that if you want to add a nginx proxy with an extension between the root url and the /api (uri_subpath), you will need to set the extension to the root url of the localhost, like this:
+```nginx
+location /extension/api/ {
+    proxy_pass http://localhost:5050;
+
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+}
+```
+
+And your conf.py variables will need to look like:
+```bash
+uri = 'https://<yourdomain>'
+uri_subpath = '/extension/api'
+complete_url = uri + uri_subpath
+```
 
 ### Models configuration
 
