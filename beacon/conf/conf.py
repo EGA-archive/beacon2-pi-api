@@ -9,7 +9,7 @@ try:
 except Exception as e:
     raise FileNotFound('There are issues with the api_version.yml file. Check if it can be opened or if has any content')
 
-level=logging.NOTSET
+level=logging.DEBUG
 log_file=None
 beacon_id = 'org.ega-archive.beacon-ri-demo'  # ID of the Beacon
 beacon_name = 'Beacon Production Implementation demo'  # Name of the Beacon service

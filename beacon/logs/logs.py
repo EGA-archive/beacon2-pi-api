@@ -20,7 +20,7 @@ def initialize_logger(level):
     )
     formatter.converter = time.gmtime
     # Choose which type of logs you want (in a file or in stream)
-    if config.log_file:
+    if config.log_file is not None:
         handler = logging.FileHandler(config.log_file)
     else:
         handler = logging.StreamHandler()
