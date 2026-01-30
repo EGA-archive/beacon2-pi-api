@@ -369,7 +369,7 @@ org_logo_url = 'https://legacy.ega-archive.org/images/logo.png'
 org_info = ''
 ``` 
 
-#### Tips for configuring a nginx proxy compatible with BeaconPI conf.py uri and uri_subpath vars
+#### Tips for configuring a nginx proxy compatible with BeaconPI conf.py uri and uri_subpath vars
 
 If you are building a nginx proxy on top of beacon PI instance, the configuration of your nginx proxy can be a bit tricky if you don't have in mind what do uri and uri_subpath do. First of all, uri sets the root url of your beacon, and uri_subpath adds an extension to each of the endpoints' routes.
 This means, that if you want to add a nginx proxy with an extension between the root url and the /api (uri_subpath), you will need to set the extension to the root url of the localhost, like this:
