@@ -1,5 +1,4 @@
 {
-    "numberOfPopulations": 1,
     "source": "The Genome Aggregation Database (gnomAD)",
     "sourceReference": "gnomad.broadinstitute.org/",
     "populations": [

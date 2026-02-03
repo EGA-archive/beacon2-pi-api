@@ -34,7 +34,7 @@ async def _graceful_shutdown_ctx(app):
     loop.add_signal_handler(
         signal.SIGTERM, graceful_shutdown_sigterm_handler,
     )
-
+    #TODO: Haig de donar-te un temps d'espera + afegir un brute force shutdown (que també ha d'anar a tancar connexions)
     yield
     # Stop the process where the app is running
     loop.remove_signal_handler(signal.SIGTERM)

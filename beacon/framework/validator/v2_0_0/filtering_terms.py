@@ -1,8 +1,10 @@
-from beacon.filtering_terms.resources import resources
 from typing import Optional, List
 from pydantic import (
     BaseModel, field_validator)
 from beacon.utils.modules import load_class
+import json
+
+
 
 class FilteringTermInResponse(BaseModel):
     id: str
@@ -22,6 +24,15 @@ class Resource(BaseModel):
     nameSpacePrefix: Optional[str] = None
     url: Optional[str] = None
     version: Optional[str] = None
+
+with open("beacon/filtering_terms/resources.json") as resources_file:
+    try:
+        resources_loaded = json.load(resources_file)
+        resources=[]
+        for resource in resources_loaded:
+            resources.append(Resource(**resource))
+    except Exception:
+        resources = None
 
 class FilteringTermsResults(BaseModel):
     filteringTerms: Optional[List[FilteringTermInResponse]] = None
