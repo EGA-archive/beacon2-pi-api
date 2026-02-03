@@ -14,12 +14,13 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, dat
     # Format the vale and operator of the incoming alphanumeric filter
     formatted_value = format_value(self, filter.value)
     formatted_operator = format_operator(self, filter.operator)
-    iso8601regex=re.compile(r"^P(?=\d)(?:\d+Y)?(?:\d+M)?(?:\d+D)?$")
-    is_value_numeric=False
+    is_value_numeric=None
+    iso8601regex=re.compile(r"P(?=\d+[YMWD])(\d+Y)?(\d+M)?(\d+W)?(\d+D)?")
     try:
-        iso8601regex.match(formatted_value)
-        is_value_numeric=True
+        is_value_numeric=iso8601regex.match(formatted_value)
     except Exception:
+        is_value_numeric=None
+    if not is_value_numeric:
         try:
             int(formatted_value)
             is_value_numeric=True
@@ -31,7 +32,7 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, dat
         for module in list_modules:
             query = module.parse_request_parameters(self, query, filter)
     # Otherwise, apply them as regular alphanumeric filter
-    elif is_value_numeric==False:
+    elif is_value_numeric==None:
         # Check if the filter has a valid scope
         scope = filter.scope
         scope=choose_scope(self, scope, filter)
