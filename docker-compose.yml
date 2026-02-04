@@ -85,12 +85,9 @@ services:
 
   dbspreg:
     image: mongo:5
-    command: --port 27024 --wiredTigerCacheSizeGB 4
     #command: --wiredTigerCacheSizeGB 4 --sslMode requireSSL --tlsCertificateKeyFile test-server1.pem --tlsCAFile test-ca.pem
     hostname: mongo
     container_name: mongospreg
-    ports:
-      - 27024:27024
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
