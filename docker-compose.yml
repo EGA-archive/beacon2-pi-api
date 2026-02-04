@@ -143,3 +143,20 @@ services:
       - ./ri-tools/phenopackets-to-BFF/:/usr/src/app/examples
     networks:
       - pub
+
+  templateUI:
+    image: ghcr.io/ega-archive/beacon-template-ui:main
+    restart: always
+    hostname: template-ui
+    container_name: template-ui
+    command: node /opt/yarn-v1.22.22/bin/yarn.js start
+    ports:
+      - 3000:3000
+    volumes:
+      - ./template-ui/src/config/config.json:/client/src/config/config.json
+      - ./template-ui/.env:/client/.env
+    networks:
+      - pub
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
