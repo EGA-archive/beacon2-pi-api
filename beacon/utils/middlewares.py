@@ -1,6 +1,7 @@
 import aiohttp.web as web
 from bson import json_util
 from beacon.views.endpoint import EndpointView
+import asyncio
 
 @web.middleware
 async def error_middleware(request, handler):
@@ -19,3 +20,12 @@ async def error_middleware(request, handler):
         else:
             response_obj = EndpointView.error_builder(EndpointView(request), 404, "Not found")
             return web.Response(text=json_util.dumps(response_obj), status=404, content_type='application/json')
+        
+@web.middleware
+async def track_requests_middleware(request, handler):
+    task = asyncio.current_task()
+    request.app['pending_requests'].add(task)
+    try:
+        return await handler(request)
+    finally:
+        request.app['pending_requests'].discard(task)

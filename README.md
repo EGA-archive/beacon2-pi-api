@@ -6,6 +6,15 @@ Welcome to Beacon v2 Production Implementation (B2PI). This is an application th
 
 Please, go to [B2RI/B2PI docs website](https://b2ri-documentation-demo.ega-archive.org/) to know how to use Beacon v2 Production Implementation.
 
+## New release beacon (4/2/2026) features added
+
+* Integration with template UI. Deploy your UI for your beacon PI now: [deploy template UI](https://github.com/EGA-archive/beacon-production-prototype/tree/main/template-ui)
+* Beacon PI now waits for on going requests to finish before restarting after a change in conf file.
+* Latest Beacon RI Tools features integrated (only AF reads and populations slightly changed).
+* Timestamps in UTC are now used everywhere in beacon.
+* Query by iso8601 values for iso8601duration attributes in alphanumeric queries.
+* Added mongobleed exploit fix (CVE-2025-14847) and test checks.
+
 ## New release beacon v2.0-d4012a4 features added
 
 * Models plug in. Beacon PI now accepts different beacon flavours, based on different model specifications. Kicking off with two models: ga4gh beacon v2 default model and EUCAIM.
@@ -66,6 +75,14 @@ docker compose up -d --build
 
 Note: If you have an Apple Silicon Mac and use [Colima](https://github.com/abiosoft/colima) as your container runtime, you may have to change the default Colima settings for the Mongo docker container to start correctly.
 See [Fredrik Mørstad](https://stackoverflow.com/users/11494958/fredrik-m%c3%b8rstad)'s answer to [this stackoverflow post](https://stackoverflow.com/questions/67498836/docker-chown-changing-ownership-of-data-db-operation-not-permitted) for guidance on how to resolve this issue.
+
+Alternatively. if you are updating the BeaconPI instance from a previous version, it is recommended to use the next commands:
+
+```bash
+docker stop beaconprod db
+docker compose build --no-cache beaconprod db
+docker compose up -d --force-recreate beaconprod db
+```
 
 #### Up the containers (with services in independent servers)
 
@@ -324,7 +341,7 @@ AV_Dataset:
 
 ### Generic configuration
 
-The beacon needs some configuration in order to show the correct mappings or information. In order to do that, the next variables inside [conf.py](https://github.com/EGA-archive/beacon-production-prototype/tree/main/beacon/conf/conf.py) can be modified for that purpose, being **uri** a critical one for showing the correct domain in the mappings of your beacon. The **uri_subpath** will be added behind this **uri** variable, in case there is an extension of the domain for your beacon.
+The beacon needs some configuration in order to show the correct mappings or information. In order to do that, the next variables inside [conf.py](https://github.com/EGA-archive/beacon-production-prototype/tree/main/beacon/conf/conf.py) can be modified for that purpose, being **uri** a critical one for showing the correct domain in the mappings of your beacon. The **uri_subpath** will be added behind this **uri** variable, in case there is an extension of the domain for your beacon. See next paragraph: Tips for configuring a nginx proxy compatible with Beacon PI.
 
 ```bash
 beacon_id = 'org.ega-archive.beacon-ri-demo'  # ID of the Beacon
@@ -360,6 +377,28 @@ org_contact_url = 'mailto:beacon.ega@crg.eu'
 org_logo_url = 'https://legacy.ega-archive.org/images/logo.png'
 org_info = ''
 ``` 
+
+#### Tips for configuring a nginx proxy compatible with BeaconPI conf.py uri and uri_subpath vars
+
+If you are building a nginx proxy on top of beacon PI instance, the configuration of your nginx proxy can be a bit tricky if you don't have in mind what do uri and uri_subpath do. First of all, uri sets the root url of your beacon, and uri_subpath adds an extension to each of the endpoints' routes.
+This means, that if you want to add a nginx proxy with an extension between the root url and the /api (uri_subpath), you will need to set the extension to the root url of the localhost, like this:
+```nginx
+location /extension/api/ {
+    proxy_pass http://localhost:5050;
+
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+}
+```
+
+And your conf.py variables will need to look like:
+```bash
+uri = 'https://<yourdomain>'
+uri_subpath = '/extension/api'
+complete_url = uri + uri_subpath
+```
 
 ### Models configuration
 
@@ -635,6 +674,27 @@ After editing any comfiguration variable, save the file and restart the API to a
 ```bash
 docker compose restart beaconprod
 ```
+
+## Fix for MongoDB exploit (CVE-2025-14847)
+
+Beacon PI repository has been updated so the exploit for MongoDB (CVE-2025-14847) is not an issue anymore. In order to do that, the following points have been implemented:
+* Removed exposing ports in docker-compose.yml file
+* Built done from a mongod.conf file
+* Mongo image for major version 5 adjusted to 5.0.32, not allowing prior versions with the vulnerability to be built.
+
+**Please, make sure you update your mongoDB instance and rebuild the mongoDB container after this update.**
+
+The steps to reproduce this exploit and check that your instance is not vulnerable anymore is to download this [repo](https://github.com/Security-Phoenix-demo/mongobleed-exploit-CVE-2025-14847) and insert it in beacon folder.
+
+Then build the beaconprod conainer and execute the next command:
+```bash
+docker exec -it beaconprod python beacon/mongobleed-exploit-CVE-2025-14847-main/exploit/mongobleed.py --host mongoprod
+```
+If the message is something like: 
+![MongoDB no vulnerabilities](https://github.com/EGA-archive/beacon-production-prototype/blob/main/ri-tools/files/mongobleed_ok.png)
+Then it means the instance is safe.
+Otherwise, you would get a message like:
+![MongoDB vulnerabilities](https://github.com/EGA-archive/beacon-production-prototype/blob/main/ri-tools/files/mongobleed_vuln.png)
 
 ## Tests report
 

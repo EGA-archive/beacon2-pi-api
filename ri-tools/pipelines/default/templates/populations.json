@@ -1,15 +1,14 @@
 {
-    "numberOfPopulations": 1,
     "source": "The Genome Aggregation Database (gnomAD)",
     "sourceReference": "gnomad.broadinstitute.org/",
     "populations": [
         {
-            "population": "Totals",
+            "population": "Total",
             "alleleFrequency": "AF",
             "alleleCount": "AC",
-            "genotypeHomozygous": "AC_hom",
-            "genotypeHeterozygous": "AC_het",
-            "genotypeHemizygous": "AC_hemi",
+            "alleleCountHomozygous": "AC_Hom",
+            "alleleCountHeterozygous": "AC_Het",
+            "alleleCountHemizygous": "AC_Hemi",
             "alleleNumber": "AN"
         }
     ]

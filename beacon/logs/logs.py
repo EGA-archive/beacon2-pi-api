@@ -3,24 +3,35 @@ import time
 from beacon.conf.conf_override import config
 from typing import Optional
 
-LOG = logging.getLogger(__name__)
-fmt = '%(levelname)s - %(asctime)s - %(message)s'
-formatter = logging.Formatter(fmt)
+def initialize_logger(level):
+    # Start the logger
+    LOG = logging.getLogger(__name__)
+    # Remove pre-existing default handlers
+    for handler in LOG.handlers[:]:
+        LOG.removeHandler(handler)
+    # Avoid loggers to set as default
+    LOG.propagate = False
+    # Apply desired level of logs
+    LOG.setLevel(level)
+    # Conver the times to timestamp depending on your area
+    formatter = logging.Formatter(
+        '%(levelname)s - %(asctime)sZ - %(message)s',
+        datefmt='%Y-%m-%dT%H:%M:%S'
+    )
+    formatter.converter = time.gmtime
+    # Choose which type of logs you want (in a file or in stream)
+    if config.log_file is not None:
+        handler = logging.FileHandler(config.log_file)
+    else:
+        handler = logging.StreamHandler()
+    # Set the same lavel and format to the handlers
+    handler.setLevel(level)
+    handler.setFormatter(formatter)
+    # Add handler to the logger
+    LOG.addHandler(handler)
+    return LOG
 
-if config.log_file:
-    fh = logging.FileHandler(config.log_file)
-    fh.setLevel(config.level)
-    fh.setFormatter(formatter)
-    LOG.addHandler(fh)
-else:
-    sh = logging.StreamHandler()
-    sh.setLevel(config.level)
-    sh.setFormatter(formatter)
-    LOG.addHandler(sh)
-
-if len(LOG.handlers) > 0:
-    # Remove the first handler
-    LOG.removeHandler(LOG.handlers[0])
+LOG = initialize_logger(config.level)
 
 # LOGS per iniciar i parar el contenidor (INFO)
 # LOGS per he rebut una request i retorno una response (INFO)
@@ -38,7 +49,8 @@ def log_with_args_check_configuration(level):
             try:
                 # Store the initial time before the function is executed
                 start = time.time()
-                logging.basicConfig(format=fmt, level=level)
+                # Initialize the logger
+                LOG = initialize_logger(level)
                 # Execute the function and log when is initiated
                 result = func(*args, **kwargs)
                 LOG.debug(f"{result} - {func.__name__} - initial call")
@@ -66,7 +78,8 @@ def log_with_args_initial(level):
             try:
                 # Store the initial time before the function is executed
                 start = time.time()
-                logging.basicConfig(format=fmt, level=level)
+                # Initialize the logger
+                LOG = initialize_logger(level)
                 result = func(self, *args, **kwargs)
                 LOG.debug(f"{result} - {func.__name__} - initial call")
                 # Store the final time after the function is executed and log when ends
@@ -93,7 +106,8 @@ def log_with_args(level):
             try:
                 # Store the initial time before the function is executed
                 start = time.time()
-                logging.basicConfig(format=fmt, level=level)
+                # Initialize the logger
+                LOG = initialize_logger(level)
                 LOG.debug(f"{self._id} - {func.__name__} - initial call")
                 result = func(self, *args, **kwargs)
                 # Store the final time after the function is executed and log when ends
@@ -120,7 +134,8 @@ def log_with_args_mongo(level):
             try:
                 # Store the initial time before the function is executed
                 start = time.time()
-                logging.basicConfig(format=fmt, level=level)
+                # Initialize the logger
+                LOG = initialize_logger(level)
                 LOG.debug(f"{self._id} - {func.__name__} - initial call")
                 result = func(self, *args, **kwargs)
                 # Store the final time after the function is executed and log when ends

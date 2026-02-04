@@ -6,19 +6,33 @@ from beacon.logs.logs import log_with_args, LOG
 from beacon.conf.conf_override import config
 from beacon.connections.mongo.filters.format import format_value, format_operator
 from beacon.utils.modules import get_all_modules_mongo_connections_script
+from beacon.connections.mongo.filters.iso8601 import iso8601_to_number
+import re
 
 @log_with_args(config.level)
 def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, dataset: str, isRequestParameter: bool) -> dict:
     # Format the vale and operator of the incoming alphanumeric filter
     formatted_value = format_value(self, filter.value)
     formatted_operator = format_operator(self, filter.operator)
+    is_value_numeric=None
+    iso8601regex=re.compile(r"P(?=\d+[YMWD])(\d+Y)?(\d+M)?(\d+W)?(\d+D)?")
+    try:
+        is_value_numeric=iso8601regex.match(formatted_value)
+    except Exception:
+        is_value_numeric=None
+    if not is_value_numeric:
+        try:
+            int(formatted_value)
+            is_value_numeric=True
+        except Exception:
+            pass
     # If the filter is a request parameter, apply the request parameters function
     if isRequestParameter == True:
         list_modules = get_all_modules_mongo_connections_script("filters.request_parameters.alphanumeric")
         for module in list_modules:
             query = module.parse_request_parameters(self, query, filter)
     # Otherwise, apply them as regular alphanumeric filter
-    elif isinstance(formatted_value,str):
+    elif is_value_numeric==None:
         # Check if the filter has a valid scope
         scope = filter.scope
         scope=choose_scope(self, scope, filter)
@@ -102,26 +116,69 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, dat
         if "iso8601duration" in filter.id:
             # Harmonize the oeprators and the iso values
             if '>' in filter.operator:
-                age_in_number=""
-                for char in filter.value:
+                if 'P' in filter.value:
+                    age_in_number=iso8601_to_number(self, filter)
+                else:
                     try:
-                        int(char)
-                        age_in_number = age_in_number+char
+                        age_in_number=""
+                        for char in filter.value:
+                            int(char)
+                            age_in_number = age_in_number+char
                     except Exception:
-                        continue
+                        raise Exception
                 new_age_list=''
-                
                 if "=" in filter.operator:
                     z = int(age_in_number)
+                    while z < 150:
+                        newagechar="P"+str(z)+"Y"
+                        if new_age_list == '':
+                            new_age_list+=newagechar
+                        else:
+                            new_age_list+='|'+newagechar
+                        if isinstance(age_in_number, float):
+                            if z == age_in_number:
+                                decimal = age_in_number - round(age_in_number)
+                                days=decimal*365.25
+                                days=int(days)
+                                months=decimal*12
+                                months=int(months)
+                                m = 0
+                                d=0
+                                while m < months:
+                                    newagechar="P"+str(z)+"Y"+str(m)+"M"
+                                    new_age_list+='|'+newagechar
+                                    while d < days+1:
+                                        newagechar="P"+str(z)+"Y"+str(m)+"M"+str(d)+"D"
+                                        new_age_list+='|'+newagechar
+                                        d+=1
+                                    m+=1
+                        z+=1
                 else:
                     z = int(age_in_number)+1
-                while z < 150:
-                    newagechar="P"+str(z)+"Y"
-                    if new_age_list == '':
-                        new_age_list+=newagechar
-                    else:
-                        new_age_list+='|'+newagechar
-                    z+=1
+                    while z < 150:
+                        newagechar="P"+str(z)+"Y"
+                        if new_age_list == '':
+                            new_age_list+=newagechar
+                        else:
+                            new_age_list+='|'+newagechar
+                        if isinstance(age_in_number, float):
+                            if z == age_in_number:
+                                decimal = age_in_number - round(age_in_number)
+                                days=decimal*365.25
+                                days=int(days)
+                                months=decimal*12
+                                months=int(months)
+                                m = 0
+                                d=0
+                                while m < months:
+                                    newagechar="P"+str(z)+"Y"+str(m)+"M"
+                                    new_age_list+='|'+newagechar
+                                    while d < days:
+                                        newagechar="P"+str(z)+"Y"+str(m)+"M"+str(d)+"D"
+                                        new_age_list+='|'+newagechar
+                                        d+=1
+                                    m+=1
+                        z+=1
                 dict_in={}
                 dict_in["$regex"]=new_age_list
                 query[filter.id] = dict_in
@@ -129,25 +186,67 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, dat
                 for module in list_modules:
                     query = module.cross_query(self, query, scope, {}, dataset)
             elif '<' in filter.operator:
-                age_in_number=""
-                for char in filter.value:
+                if 'P' in filter.value:
+                    age_in_number=iso8601_to_number(self, filter)
+                else:
                     try:
-                        int(char)
-                        age_in_number = age_in_number+char
+                        age_in_number=""
+                        for char in filter.value:
+                            int(char)
+                            age_in_number = age_in_number+char
                     except Exception:
-                        continue
+                        raise Exception
                 new_age_list=''
                 if "=" in filter.operator:
                     z = int(age_in_number)
+                    while z >0:
+                        newagechar="P"+str(z)+"Y"
+                        if new_age_list == '':
+                            new_age_list+=newagechar
+                        else:
+                            new_age_list+='|'+newagechar
+                        if isinstance(age_in_number, float):
+                            if z == age_in_number:
+                                decimal = age_in_number - round(age_in_number)
+                                days=decimal*365.25
+                                days=int(days)
+                                months=decimal*12
+                                months=int(months)
+                                m = 0
+                                d=0
+                                while months>0:
+                                    newagechar="P"+str(z)+"Y"+str(months)+"M"
+                                    new_age_list+='|'+newagechar
+                                    while days>0:
+                                        newagechar="P"+str(z)+"Y"+str(months)+"M"+str(days)+"D"
+                                        new_age_list+='|'+newagechar
+                                        d+=1
+                                    months-=1
+                        z-=1
                 else:
                     z = int(age_in_number)-1
-                while z > 0:
-                    newagechar="P"+str(z)+"Y"
-                    if new_age_list == '':
-                        new_age_list+=newagechar
-                    else:
-                        new_age_list+='|'+newagechar
-                    z-=1
+                    while z >0:
+                        newagechar="P"+str(z)+"Y"
+                        if new_age_list == '':
+                            new_age_list+=newagechar
+                        else:
+                            new_age_list+='|'+newagechar
+                        if isinstance(age_in_number, float):
+                            if z == age_in_number:
+                                decimal = age_in_number - round(age_in_number)
+                                days=decimal*365.25
+                                days=int(days)-1
+                                months=decimal*12
+                                months=int(months)
+                                while months>0:
+                                    newagechar="P"+str(z)+"Y"+str(months)+"M"
+                                    new_age_list+='|'+newagechar
+                                    while days>0:
+                                        newagechar="P"+str(z)+"Y"+str(months)+"M"+str(days)+"D"
+                                        new_age_list+='|'+newagechar
+                                        days-=1
+                                    months-=1
+                        z-=1
                 dict_in={}
                 dict_in["$regex"]=new_age_list
                 query[filter.id] = dict_in
@@ -155,17 +254,29 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, dat
                 for module in list_modules:
                     query = module.cross_query(self, query, scope, {}, dataset)
             elif '=' in filter.operator:
-                age_in_number=""
-                for char in filter.value:
-                    try:
-                        int(char)
-                        age_in_number = age_in_number+char
-                    except Exception:
-                        continue
+                if 'P' in filter.value:
+                    age_in_number=iso8601_to_number(self, filter)
+                else:
+                    age_in_number=""
+                    for char in filter.value:
+                        try:
+                            int(char)
+                            age_in_number = age_in_number+char
+                        except Exception:
+                            continue
                 z = int(age_in_number)
-                newagechar="P"+str(z)+"Y"
+                if isinstance(age_in_number, float):
+                    decimal = age_in_number - round(age_in_number)
+                    days=decimal*365.25
+                    days=int(days)
+                    months=decimal*12
+                    months=int(months)
+                    newagechar="P"+str(z)+"Y"+str(months)+"M"+str(days)+"D"
+                    new_age_list="P"+str(z)+"Y"+str(months)+"M"+str(days)+"D"+"|"+"P"+str(z)+"Y"+str(months)+"M"+"|"+"P"+str(z)+"Y"
+                else:
+                    new_age_list="P"+str(z)+"Y"
                 dict_in={}
-                dict_in["$regex"]=newagechar
+                dict_in["$regex"]=new_age_list
                 query[filter.id] = dict_in
                 list_modules = get_all_modules_mongo_connections_script("filters.cross_queries.cross_query")
                 for module in list_modules:

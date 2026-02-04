@@ -1,9 +1,9 @@
-from beacon.filtering_terms.resources import resources
 from typing import Optional, List
 from pydantic import (
     BaseModel, field_validator)
 from beacon.utils.modules import load_class
 from beacon.framework.validator.v2_0_0.filtering_terms import Resource
+import json
 
 class FilteringTermInResponse(BaseModel):
     id: str
@@ -17,6 +17,15 @@ class FilteringTermInResponse(BaseModel):
         if v not in ['alphanumeric', 'ontology', 'custom']:
             raise ValueError('type must be one between alphanumeric, ontology, custom')
         return v
+
+with open("beacon/filtering_terms/resources.json") as resources_file:
+    try:
+        resources_loaded = json.load(resources_file)
+        resources=[]
+        for resource in resources_loaded:
+            resources.append(Resource(**resource))
+    except Exception:
+        resources = None
 
 class FilteringTermsResults(BaseModel):
     filteringTerms: Optional[List[FilteringTermInResponse]] = None
