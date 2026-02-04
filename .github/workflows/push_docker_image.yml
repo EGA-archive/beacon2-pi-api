@@ -34,11 +34,15 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
+            # Use the Git tag directly (v2.0-da27a1d)
+            type=ref,event=tag
+            # Optional extras (safe to keep)
             type=ref,event=branch
             type=ref,event=pr
+            # Only applies if the tag is valid semver (v2.0.1, v2.1.0, etc.)
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
-            # set latest tag for master branch
+            # latest only on main branch
             type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
