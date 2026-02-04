@@ -11,14 +11,14 @@ except Exception as e:
 
 level=logging.DEBUG
 log_file=None
-beacon_id = 'org.ega-archive.beacon-ri-demo'  # ID of the Beacon
-beacon_name = 'Beacon Production Implementation demo'  # Name of the Beacon service
-api_version = 'v2.2.0' # Version of the Beacon implementation
-uri = 'http://localhost:5050'
+beacon_id = 'org.ega-archive.gdi-spain-beacon'  # ID of the Beacon
+beacon_name = 'GDI Spain Beacon'  # Name of the Beacon service
+api_version = 'v2.0.0' # Version of the Beacon implementation
+uri = 'https://beacon-spain-demo.ega-archive.org'
 uri_subpath = '/api'
 complete_url = uri + uri_subpath
 environment = 'test'
-description = r"This Beacon is based on synthetic data hosted at the <a href='https://ega-archive.org/datasets/EGAD00001003338'>EGA</a>. The dataset contains 2504 samples including genetic data based on 1K Genomes data, and 76 individual attributes and phenotypic data derived from UKBiobank."
+description = r"This Beacon is based on synthetic data hosted at GDI Spain Node. It includes three datasets: the B1MG one million genomes, 2504 samples from CINECA UK1 synthetic dataset and the rare diseases dataset from rd-connect."
 version = api_version_yaml['api_version']
 welcome_url = 'https://beacon.ega-archive.org/'
 alternative_url = 'https://beacon.ega-archive.org/api'
