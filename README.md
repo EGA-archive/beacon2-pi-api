@@ -6,6 +6,15 @@ Welcome to Beacon v2 Production Implementation (B2PI). This is an application th
 
 Please, go to [B2RI/B2PI docs website](https://b2ri-documentation-demo.ega-archive.org/) to know how to use Beacon v2 Production Implementation.
 
+## New release beacon (4/2/2026) features added
+
+* Integration with template UI. Deploy your UI for your beacon PI now: [deploy template UI](https://github.com/EGA-archive/beacon-production-prototype/tree/main/template-ui)
+* Beacon PI now waits for on going requests to finish before restarting after a change in conf file.
+* Latest Beacon RI Tools features integrated (only AF reads and populations slightly changed).
+* Timestamps in UTC are now used everywhere in beacon.
+* Query by iso8601 values for iso8601duration attributes in alphanumeric queries.
+* Added mongobleed exploit fix (CVE-2025-14847) and test checks.
+
 ## New release beacon v2.0-d4012a4 features added
 
 * Models plug in. Beacon PI now accepts different beacon flavours, based on different model specifications. Kicking off with two models: ga4gh beacon v2 default model and EUCAIM.
