@@ -1,21 +1,21 @@
-from beacon.conf import conf
+from beacon.conf import conf_override
 
-#### PLEASE, ALL THE HANDOVERS YOU NEED FOR BEACON TO SHOW LIKE THE handover_1 EXAMPLE BELOW #####
+#### Please, all the handovers you need for beacon to show like the handover_1 example below #####
 
 handover_1={
     "note": "Description of the handover",
-    "url": conf.uri,
+    "url": conf_override.config.uri,
     "handoverType": {
                     'id': 'NCIT:C189151',
                     'label': 'Study Data Repository'
                 }
 }
 
-#### PLEASE, ADD THE HANDOVER VARIABLES FROM ABOVE YOU WANT TO ADD TO BEACON TO THE list_of_handovers VARIABLE BELOW #####
+#### Please, add the handover variables from above you want to add to beacon to the list_of_handovers variable below #####
 list_of_handovers=[handover_1]
 
 
-#### PLEASE, ALL THE HANDOVERS PER DATASET YOU NEED FOR BEACON TO SHOW LIKE THE dataset1_handover EXAMPLE BELOW #####
+#### Please, all the handovers per dataset you need for beacon to show like the dataset1_handover example below #####
 
 
 dataset1_id='test' # This has to match the id for the dataset
@@ -23,6 +23,6 @@ dataset1_id='test' # This has to match the id for the dataset
 dataset1_handover={"dataset": dataset1_id, "handover": handover_1}
 
 
-#### PLEASE, ADD THE HANDOVER PER DATASET VARIABLES FROM ABOVE YOU WANT TO ADD TO BEACON TO THE list_of_handovers_per_dataset VARIABLE BELOW #####
+#### Please, add the handover per dataset variables from above you want to add to beacon to the list_of_handovers_per_dataset variable below #####
 
 list_of_handovers_per_dataset=[dataset1_handover]

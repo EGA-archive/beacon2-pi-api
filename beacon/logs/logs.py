@@ -1,27 +1,37 @@
 import logging
 import time
-from beacon.conf.conf import level
-from beacon.conf.conf import log_file
+from beacon.conf.conf_override import config
 from typing import Optional
 
-LOG = logging.getLogger(__name__)
-fmt = '%(levelname)s - %(asctime)s - %(message)s'
-formatter = logging.Formatter(fmt)
+def initialize_logger(level):
+    # Start the logger
+    LOG = logging.getLogger(__name__)
+    # Remove pre-existing default handlers
+    for handler in LOG.handlers[:]:
+        LOG.removeHandler(handler)
+    # Avoid loggers to set as default
+    LOG.propagate = False
+    # Apply desired level of logs
+    LOG.setLevel(level)
+    # Conver the times to timestamp depending on your area
+    formatter = logging.Formatter(
+        '%(levelname)s - %(asctime)sZ - %(message)s',
+        datefmt='%Y-%m-%dT%H:%M:%S'
+    )
+    formatter.converter = time.gmtime
+    # Choose which type of logs you want (in a file or in stream)
+    if config.log_file is not None:
+        handler = logging.FileHandler(config.log_file)
+    else:
+        handler = logging.StreamHandler()
+    # Set the same lavel and format to the handlers
+    handler.setLevel(level)
+    handler.setFormatter(formatter)
+    # Add handler to the logger
+    LOG.addHandler(handler)
+    return LOG
 
-if log_file:
-    fh = logging.FileHandler(log_file)
-    fh.setLevel(level)
-    fh.setFormatter(formatter)
-    LOG.addHandler(fh)
-else:
-    sh = logging.StreamHandler()
-    sh.setLevel(level)
-    sh.setFormatter(formatter)
-    LOG.addHandler(sh)
-
-if len(LOG.handlers) > 0:
-    # Remove the first handler
-    LOG.removeHandler(LOG.handlers[0])
+LOG = initialize_logger(config.level)
 
 # LOGS per iniciar i parar el contenidor (INFO)
 # LOGS per he rebut una request i retorno una response (INFO)
@@ -37,18 +47,24 @@ def log_with_args_check_configuration(level):
     def add_logging(func):
         def wrapper(*args, **kwargs):
             try:
+                # Store the initial time before the function is executed
                 start = time.time()
-                logging.basicConfig(format=fmt, level=level)
+                # Initialize the logger
+                LOG = initialize_logger(level)
+                # Execute the function and log when is initiated
                 result = func(*args, **kwargs)
                 LOG.debug(f"{result} - {func.__name__} - initial call")
+                # Store the final time after the function is executed and log when ends
                 finish = time.time()
                 LOG.debug(f"{result} - {func.__name__}- {finish-start} - returned OK")
+                # Specific hard-coded logs for the initialize and shutting down of the app
                 if f"{func.__name__}" == 'initialize':
                     LOG.info(f"{result} - Initialization done")
                 elif f"{func.__name__}" == 'destroy':
                     LOG.info(f"{result} - Shutting down")
                 return result
             except:
+                # Catch and log the error of the exception in case there is one for the funcion adding the function's name
                 err = "There was an exception in  "
                 err += func.__name__
                 LOG.error(f"check_configuration - {err}")
@@ -60,18 +76,23 @@ def log_with_args_initial(level):
     def add_logging(func):
         def wrapper(self, *args, **kwargs):
             try:
+                # Store the initial time before the function is executed
                 start = time.time()
-                logging.basicConfig(format=fmt, level=level)
+                # Initialize the logger
+                LOG = initialize_logger(level)
                 result = func(self, *args, **kwargs)
                 LOG.debug(f"{result} - {func.__name__} - initial call")
+                # Store the final time after the function is executed and log when ends
                 finish = time.time()
                 LOG.debug(f"{result} - {func.__name__}- {finish-start} - returned OK")
+                # Specific hard-coded logs for the initialize and shutting down of the app
                 if f"{func.__name__}" == 'initialize':
                     LOG.info(f"{result} - Initialization done")
                 elif f"{func.__name__}" == 'destroy':
                     LOG.info(f"{result} - Shutting down")
                 return result
             except:
+                # Catch and log the error of the exception in case there is one for the funcion adding the function's name
                 err = "There was an exception in  "
                 err += func.__name__
                 LOG.error(f"{result} - {err}")
@@ -83,18 +104,23 @@ def log_with_args(level):
     def add_logging(func):
         def wrapper(self, *args, **kwargs):
             try:
+                # Store the initial time before the function is executed
                 start = time.time()
-                logging.basicConfig(format=fmt, level=level)
+                # Initialize the logger
+                LOG = initialize_logger(level)
                 LOG.debug(f"{self._id} - {func.__name__} - initial call")
                 result = func(self, *args, **kwargs)
+                # Store the final time after the function is executed and log when ends
                 finish = time.time()
                 LOG.debug(f"{self._id} - {func.__name__} - {finish-start} - returned OK")
+                # Specific hard-coded logs for the initialize and shutting down of the app
                 if f"{func.__name__}" == 'initialize':
                     LOG.info(f"{self._id} - Initialization done")
                 elif f"{func.__name__}" == 'destroy':
                     LOG.info(f"{self._id} - Shutting down")
                 return result
             except:
+                # Catch and log the error of the exception in case there is one for the funcion adding the function's name
                 err = "There was an exception in  "
                 err += func.__name__
                 LOG.error(f"{self._id} - {err}")
@@ -106,18 +132,23 @@ def log_with_args_mongo(level):
     def add_logging(func):
         def wrapper(self, *args, **kwargs):
             try:
+                # Store the initial time before the function is executed
                 start = time.time()
-                logging.basicConfig(format=fmt, level=level)
+                # Initialize the logger
+                LOG = initialize_logger(level)
                 LOG.debug(f"{self._id} - {func.__name__} - initial call")
                 result = func(self, *args, **kwargs)
+                # Store the final time after the function is executed and log when ends
                 finish = time.time()
                 LOG.debug(f"{self._id} - {func.__name__} - {finish-start} - returned OK")
+                # Specific hard-coded logs for the initialize and shutting down of the app
                 if f"{func.__name__}" == 'initialize':
                     LOG.info(f"{self._id} - Initialization done")
                 elif f"{func.__name__}" == 'destroy':
                     LOG.info(f"{self._id} - Shutting down")
                 return result
             except Exception:
+                # Catch and log the error of the exception in case there is one for the funcion adding the function's name
                 err = "There was an exception in  "
                 err += func.__name__
                 LOG.error(f"{self._id} - {err}")

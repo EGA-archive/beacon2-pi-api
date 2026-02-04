@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 import logging
 from beacon.connections.mongo.__init__ import query_budget_database
-from beacon.conf.conf import uri, uri_subpath
+from beacon.conf.conf_override import config
 import subprocess
 import os
 import logging
@@ -38,7 +38,7 @@ def default_view(request):
                 context = {"client": client}
             elif k == 'TestAPI':
                 try:
-                    client = subprocess.check_output("curl -s -o /dev/null -v {}".format(uri+uri_subpath), shell=True)
+                    client = subprocess.check_output("curl -s -o /dev/null -v {}".format(config.uri+config.uri_subpath), shell=True)
                     client = 'Connection successful'
                 except Exception:
                     client = 'Connection could not be established'
@@ -67,7 +67,7 @@ def default_view(request):
                         except Exception:
                             database = 'Connection could not be established'
                 try:
-                    api = subprocess.check_output("curl -s -o /dev/null -v {}".format(uri+uri_subpath), shell=True)
+                    api = subprocess.check_output("curl -s -o /dev/null -v {}".format(config.uri+config.uri_subpath), shell=True)
                     api = 'Connection successful'
                 except Exception:
                     api = 'Connection could not be established'

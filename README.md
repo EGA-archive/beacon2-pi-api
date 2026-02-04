@@ -6,6 +6,28 @@ Welcome to Beacon v2 Production Implementation (B2PI). This is an application th
 
 Please, go to [B2RI/B2PI docs website](https://b2ri-documentation-demo.ega-archive.org/) to know how to use Beacon v2 Production Implementation.
 
+## New release beacon (4/2/2026) features added
+
+* Integration with template UI. Deploy your UI for your beacon PI now: [deploy template UI](https://github.com/EGA-archive/beacon-production-prototype/tree/main/template-ui)
+* Beacon PI now waits for on going requests to finish before restarting after a change in conf file.
+* Latest Beacon RI Tools features integrated (only AF reads and populations slightly changed).
+* Timestamps in UTC are now used everywhere in beacon.
+* Query by iso8601 values for iso8601duration attributes in alphanumeric queries.
+* Added mongobleed exploit fix (CVE-2025-14847) and test checks.
+
+## New release beacon v2.0-d4012a4 features added
+
+* Models plug in. Beacon PI now accepts different beacon flavours, based on different model specifications. Kicking off with two models: ga4gh beacon v2 default model and EUCAIM.
+* Conf now is not affected by further releases. Use your conf and keep it forever.
+* Cross queries between collections and non collections now are ready to be performed at full power.
+* Schema request now working: feel free to request any schema you'd like for beacon to return.
+* Validation on the fly per framework and model(s).
+* Configuration of the entities of each entry type now done by .yml files.
+* Restart of the app when conf files or generic conf is modified (no need to rebuild).
+* OR Filters (in test approach, as it is still not approved officially by GA4GH).
+* Other bug fixes.
+* Unit tests expanded, with a total of 313 now.
+
 ## Main changes from B2RI
 
 * Handlers of the endpoints are classes, not functions
@@ -54,6 +76,14 @@ docker compose up -d --build
 Note: If you have an Apple Silicon Mac and use [Colima](https://github.com/abiosoft/colima) as your container runtime, you may have to change the default Colima settings for the Mongo docker container to start correctly.
 See [Fredrik Mørstad](https://stackoverflow.com/users/11494958/fredrik-m%c3%b8rstad)'s answer to [this stackoverflow post](https://stackoverflow.com/questions/67498836/docker-chown-changing-ownership-of-data-db-operation-not-permitted) for guidance on how to resolve this issue.
 
+Alternatively. if you are updating the BeaconPI instance from a previous version, it is recommended to use the next commands:
+
+```bash
+docker stop beaconprod db
+docker compose build --no-cache beaconprod db
+docker compose up -d --force-recreate beaconprod db
+```
+
 #### Up the containers (with services in independent servers)
 
 If you wish to have each service (or some of them) in different servers, you will need to use the remote version of the docker compose file, and deploy the remote services you need by selecting them individually in the build. Example:
@@ -65,8 +95,6 @@ docker-compose -f docker-compose.remote.yml up -d --build beaconprod
 After that, you will need to configure the IPs in the different conf files to make them connect. Remember to bind the IP in mongo to 0.0.0.0 in case you are making an independent deployment of the beacon and the mongodb.
 
 #### Load the data
-
-**To avoid having duplicated records, make sure to have run the reindex script before loading data, this will make the import of the data run slower but will avoit the duplications. Also, if you want to import new data faster and you are sure data won't be duplicated, you can drop the indexes of the database to make imports faster.**
 
 To load the database (mongo) just copy your files in the data folder. Then, locate yourself in the mongo folder:
 
@@ -86,6 +114,20 @@ And execute the next commands (only the ones you need):
 	docker exec mongoprod mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --file /data/runs.json --collection runs
 	docker exec mongoprod mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --file /data/targets.json --collection targets
 	docker exec mongoprod mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --file /data/caseLevelData.json --collection caseLevelData
+```
+
+Alternatively, now also you can have your json gzipped and insert them in a one step injection with the next commands:
+
+```
+gunzip --stdout genomicVariations.json.gz | docker exec -i mongoprod sh -c 'mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --collection genomicVariations'
+gunzip --stdout analyses.json.gz | docker exec -i mongoprod sh -c 'mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --collection analyses'
+gunzip --stdout biosamples.json.gz | docker exec -i mongoprod sh -c 'mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --collection biosamples'
+gunzip --stdout datasets.json.gz | docker exec -i mongoprod sh -c 'mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --collection datasets'
+gunzip --stdout cohorts.json.gz | docker exec -i mongoprod sh -c 'mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --collection cohorts'
+gunzip --stdout runs.json.gz | docker exec -i mongoprod sh -c 'mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --collection runs'
+gunzip --stdout individuals.json.gz | docker exec -i mongoprod sh -c 'mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --collection individuals'
+gunzip --stdout targets.json.gz | docker exec -i mongoprod sh -c 'mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --collection targets'
+gunzip --stdout caseLevelData.json.gz | docker exec -i mongoprod sh -c 'mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --collection caseLevelData'
 ```
 
 This loads the JSON files inside of the `data` folder into the MongoDB database container. Each time you import data you will have to create indexes for the queries to run smoothly. Please, check the next point about how to Create the indexes.
@@ -299,7 +341,7 @@ AV_Dataset:
 
 ### Generic configuration
 
-The beacon needs some configuration in order to show the correct mappings or information. In order to do that, the next variables inside [conf.py](https://github.com/EGA-archive/beacon-production-prototype/tree/main/beacon/conf/conf.py) can be modified for that purpose, being **uri** a critical one for showing the correct domain in the mappings of your beacon. The **uri_subpath** will be added behind this **uri** variable, in case there is an extension of the domain for your beacon.
+The beacon needs some configuration in order to show the correct mappings or information. In order to do that, the next variables inside [conf.py](https://github.com/EGA-archive/beacon-production-prototype/tree/main/beacon/conf/conf.py) can be modified for that purpose, being **uri** a critical one for showing the correct domain in the mappings of your beacon. The **uri_subpath** will be added behind this **uri** variable, in case there is an extension of the domain for your beacon. See next paragraph: Tips for configuring a nginx proxy compatible with Beacon PI.
 
 ```bash
 beacon_id = 'org.ega-archive.beacon-ri-demo'  # ID of the Beacon
@@ -336,6 +378,149 @@ org_logo_url = 'https://legacy.ega-archive.org/images/logo.png'
 org_info = ''
 ``` 
 
+#### Tips for configuring a nginx proxy compatible with BeaconPI conf.py uri and uri_subpath vars
+
+If you are building a nginx proxy on top of beacon PI instance, the configuration of your nginx proxy can be a bit tricky if you don't have in mind what do uri and uri_subpath do. First of all, uri sets the root url of your beacon, and uri_subpath adds an extension to each of the endpoints' routes.
+This means, that if you want to add a nginx proxy with an extension between the root url and the /api (uri_subpath), you will need to set the extension to the root url of the localhost, like this:
+```nginx
+location /extension/api/ {
+    proxy_pass http://localhost:5050;
+
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+}
+```
+
+And your conf.py variables will need to look like:
+```bash
+uri = 'https://<yourdomain>'
+uri_subpath = '/extension/api'
+complete_url = uri + uri_subpath
+```
+
+### Models configuration
+
+#### Enable/Disable model
+
+Now, beacon PI admits different models to be plugged in. By default, two models come with beacon PI, which are:
+- EUCAIM
+- ga4gh/beacon_v2_default_model
+
+In order to enable or disable a model, you need to edit the conf/models/models_conf.yml file and set their enabled values to True or False as preferred, like shown below:
+```yml
+ga4gh/beacon_v2_default_model:
+  model_enabled: True
+
+EUCAIM:
+  model_enabled: True
+```
+
+#### Add a new model
+
+On the other hand, to add a new model, you need to create a new folder with the name of your model and add three folders within the new model: conf, connections, validator, with these exact same names.
+In the folder conf you need to add the yml files of each entity of the model inside a folder called entry_types. The name of the files need to match the id of the entity (e.g. analysis.yml will show analysis as the main key). The info inside needs to have the same parameters shown here:
+```yml
+analysis:
+  entry_type_enabled: True
+  max_granularity: record
+  endpoint_name: analyses
+  open_api_definition: https://raw.githubusercontent.com/ga4gh-beacon/beacon-v2/main/models/json/beacon-v2-default-model/analyses/endpoints.json
+  allow_queries_without_filters: True
+  allow_id_query: True # endpoint_name/{id}
+  response_type: non_collection
+  connection:
+    name: mongo
+    database: beacon
+    table: analyses
+    functions:
+      function_name_assigned: get_phenotypic_endpoint
+      id_query_function_name_assigned: get_phenotypic_endpoint_with_id
+  info:
+    name: Bioinformatics analysis
+    ontology_id: edam:operation_2945
+    ontology_name: Analysis
+    description: Apply analytical methods to existing data of a specific type.
+  schema:
+    specification: Beacon v2
+    default_schema_id: beacon-analysis-v2.0.0
+    default_schema_name: Default schema for a bioinformatics analysis
+    reference_to_default_schema_definition: https://raw.githubusercontent.com/ga4gh-beacon/beacon-v2/main/models/json/beacon-v2-default-model/analyses/defaultSchema.json
+    default_schema_version: v2.0.0
+    supported_schemas:
+      - beacon-analysis-v2.0.0
+      - beacon-analysis-v2.0.1
+      - beacon-analysis-v2.1.0
+      - beacon-analysis-v2.1.1
+      - beacon-analysis-v2.1.2
+      - beacon-analysis-v2.2.0
+  lookups:
+    biosample:
+      endpoint_name: analyses/{id}/biosamples
+      response_type: non_collection
+      endpoint_enabled: True
+      connection:
+        name: mongo
+        database: beacon
+        table: biosamples
+        functions:
+          function_name_assigned: get_phenotypic_cross_query
+    cohort:
+      endpoint_name: analyses/{id}/cohorts
+      response_type: collection
+      endpoint_enabled: True
+      connection:
+        name: mongo
+        database: beacon
+        table: cohorts
+        functions:
+          function_name_assigned: get_cross_collections
+    dataset:
+      endpoint_name: analyses/{id}/datasets
+      response_type: collection
+      endpoint_enabled: True
+      connection:
+        name: mongo
+        database: beacon
+        table: datasets
+        functions:
+          function_name_assigned: get_cross_collections
+    genomicVariant:
+      endpoint_name: analyses/{id}/g_variants
+      response_type: non_collection
+      endpoint_enabled: True
+      connection:
+        name: mongo
+        database: beacon
+        table: genomicVariations
+        functions:
+          function_name_assigned: get_variants_of_phenotypic_endpoint
+    individual:
+      endpoint_name: analyses/{id}/individuals
+      response_type: non_collection
+      endpoint_enabled: True
+      connection:
+        name: mongo
+        database: beacon
+        table: individuals
+        functions:
+          function_name_assigned: get_phenotypic_cross_query
+    run:
+      endpoint_name: analyses/{id}/runs
+      response_type: non_collection
+      endpoint_enabled: True
+      connection:
+        name: mongo
+        database: beacon
+        table: runs
+        functions:
+          function_name_assigned: get_phenotypic_cross_query
+```
+Note: lookups entries can vary depending on the entities available for the model.
+Also, the connections folder needs to have a folder with the name of the connection for the model (only mongo available now) and then have the minimum files (collections.py and non_collections.py) with the functions that are shown in the yml conf file for each entity.
+Lastly, in validator, pydantic classes per entity and collection/non_collection type need to be added, with the name of the schema they belong to and with the different properties and values that each of the entity carries in them.
+
 ### Budget configuration
 
 If you wish to put a limit on how many queries can a user or a certain IP make to your beacon, that is now possible. In order to do that, edit the the variables under *Query budget* inside [conf.py](https://github.com/EGA-archive/beacon-production-prototype/tree/main/beacon/conf/conf.py). 
@@ -368,41 +553,107 @@ The variable **imprecise_count** will override all the others and will tell beac
 
 ### Entry types configuration
 
-Beacon v2 PI API lets you change the configuration of each of the entry types. For doing that, you have to edit the entry types configuration for each entry type (e.g. [analysis.py](https://github.com/EGA-archive/beacon-production-prototype/tree/main/beacon/conf/analysis.py)) and there you will find the next variables:
+The entry types configuration now works with yml files inside each model. You can edit the values of the parameters below (the values after the :). The keys have to remain the same as shown below.
 
-```bash
-endpoint_name="analyses"
-open_api_endpoints_definition='https://raw.githubusercontent.com/ga4gh-beacon/beacon-v2/main/models/json/beacon-v2-default-model/analyses/endpoints.json'
-database='mongo' # The name must match the folder's name in connection that belongs to the desired database.
-
-# Granularity accepted: boolean, count or record
-granularity='record'
-
-# Entry type configuration
-id='analysis'
-name='Bioinformatics analysis'
-ontology_id='edam:operation_2945'
-ontology_name='Analysis'
-specification='Beacon v2.0.0'
-description='Apply analytical methods to existing data of a specific type.'
-defaultSchema_id='beacon-analysis-v2.0.0'
-defaultSchema_name='Default schema for a bioinformatics analysis'
-defaultSchema_reference_to_schema_definition='https://raw.githubusercontent.com/ga4gh-beacon/beacon-v2/main/models/json/beacon-v2-default-model/analyses/defaultSchema.json'
-defaultSchema_schema_version='v2.0.0'
-aditionally_supported_schemas=[]
-allow_queries_without_filters=True
-
-# Map configuration
-singleEntryUrl=True # True if your beacon enables endpoint analyses/{id}
-biosample_lookup=True # True if your beacon enables endpoint analyses/{id}/biosamples
-cohort_lookup=True # True if your beacon enables endpoint analyses/{id}/cohorts
-dataset_lookup=True # True if your beacon enables endpoint analyses/{id}/datasets
-genomicVariant_lookup=True # True if your beacon enables endpoint analyses/{id}/g_variants
-individual_lookup=True # True if your beacon enables endpoint analyses/{id}/individuals
-run_lookup=True # True if your beacon enables endpoint analyses/{id}/runs
+```yml
+analysis:
+  entry_type_enabled: True
+  max_granularity: record
+  endpoint_name: analyses
+  open_api_definition: https://raw.githubusercontent.com/ga4gh-beacon/beacon-v2/main/models/json/beacon-v2-default-model/analyses/endpoints.json
+  allow_queries_without_filters: True
+  allow_id_query: True # endpoint_name/{id}
+  response_type: non_collection
+  connection:
+    name: mongo
+    database: beacon
+    table: analyses
+    functions:
+      function_name_assigned: get_phenotypic_endpoint
+      id_query_function_name_assigned: get_phenotypic_endpoint_with_id
+  info:
+    name: Bioinformatics analysis
+    ontology_id: edam:operation_2945
+    ontology_name: Analysis
+    description: Apply analytical methods to existing data of a specific type.
+  schema:
+    specification: Beacon v2
+    default_schema_id: beacon-analysis-v2.0.0
+    default_schema_name: Default schema for a bioinformatics analysis
+    reference_to_default_schema_definition: https://raw.githubusercontent.com/ga4gh-beacon/beacon-v2/main/models/json/beacon-v2-default-model/analyses/defaultSchema.json
+    default_schema_version: v2.0.0
+    supported_schemas:
+      - beacon-analysis-v2.0.0
+      - beacon-analysis-v2.0.1
+      - beacon-analysis-v2.1.0
+      - beacon-analysis-v2.1.1
+      - beacon-analysis-v2.1.2
+      - beacon-analysis-v2.2.0
+  lookups:
+    biosample:
+      endpoint_name: analyses/{id}/biosamples
+      response_type: non_collection
+      endpoint_enabled: True
+      connection:
+        name: mongo
+        database: beacon
+        table: biosamples
+        functions:
+          function_name_assigned: get_phenotypic_cross_query
+    cohort:
+      endpoint_name: analyses/{id}/cohorts
+      response_type: collection
+      endpoint_enabled: True
+      connection:
+        name: mongo
+        database: beacon
+        table: cohorts
+        functions:
+          function_name_assigned: get_cross_collections
+    dataset:
+      endpoint_name: analyses/{id}/datasets
+      response_type: collection
+      endpoint_enabled: True
+      connection:
+        name: mongo
+        database: beacon
+        table: datasets
+        functions:
+          function_name_assigned: get_cross_collections
+    genomicVariant:
+      endpoint_name: analyses/{id}/g_variants
+      response_type: non_collection
+      endpoint_enabled: True
+      connection:
+        name: mongo
+        database: beacon
+        table: genomicVariations
+        functions:
+          function_name_assigned: get_variants_of_phenotypic_endpoint
+    individual:
+      endpoint_name: analyses/{id}/individuals
+      response_type: non_collection
+      endpoint_enabled: True
+      connection:
+        name: mongo
+        database: beacon
+        table: individuals
+        functions:
+          function_name_assigned: get_phenotypic_cross_query
+    run:
+      endpoint_name: analyses/{id}/runs
+      response_type: non_collection
+      endpoint_enabled: True
+      connection:
+        name: mongo
+        database: beacon
+        table: runs
+        functions:
+          function_name_assigned: get_phenotypic_cross_query
 ```
+These files are located in their respective folder (beacon/models/conf/entry_types).
 
-The most importants are the variable **endpoint_name**, which will change the name of the endpoint that will show the response for analysis type of records, the **granularity**, which will change the maximum granularity allowed for this particular entry type, the **allow_queries_without_filters**, which will allow queries without filters if True to that particular endpoint. Also, **defaultSchema_id** says which is the version of the schema of the records that are stored in this entry type and when receiving a requestedSchema different than this id, the beacon will respond with a bad request, as other schemas are not supported. The variables that are below *Map configuration* which will activate or deactivate the different endpoints related to this entry type. See explanation next to each of the variables to know more.
+The most importants are the variable **endpoint_name**, which will change the name of the endpoint that will show the response for analysis type of records, the **max_granularity**, which will change the maximum granularity allowed for this particular entry type, the **allow_queries_without_filters**, which will allow queries without filters if True to that particular endpoint. Also, **defaultSchema_id** says which is the version of the schema of the records that are stored in this entry type and when receiving a requestedSchema different than this id, the beacon will respond with a bad request, as other schemas are not supported. The variables that are below *Map configuration* which will activate or deactivate the different endpoints related to this entry type. See explanation next to each of the variables to know more.
 
 ### Test Mode
 
@@ -423,6 +674,27 @@ After editing any comfiguration variable, save the file and restart the API to a
 ```bash
 docker compose restart beaconprod
 ```
+
+## Fix for MongoDB exploit (CVE-2025-14847)
+
+Beacon PI repository has been updated so the exploit for MongoDB (CVE-2025-14847) is not an issue anymore. In order to do that, the following points have been implemented:
+* Removed exposing ports in docker-compose.yml file
+* Built done from a mongod.conf file
+* Mongo image for major version 5 adjusted to 5.0.32, not allowing prior versions with the vulnerability to be built.
+
+**Please, make sure you update your mongoDB instance and rebuild the mongoDB container after this update.**
+
+The steps to reproduce this exploit and check that your instance is not vulnerable anymore is to download this [repo](https://github.com/Security-Phoenix-demo/mongobleed-exploit-CVE-2025-14847) and insert it in beacon folder.
+
+Then build the beaconprod conainer and execute the next command:
+```bash
+docker exec -it beaconprod python beacon/mongobleed-exploit-CVE-2025-14847-main/exploit/mongobleed.py --host mongoprod
+```
+If the message is something like: 
+![MongoDB no vulnerabilities](https://github.com/EGA-archive/beacon-production-prototype/blob/main/ri-tools/files/mongobleed_ok.png)
+Then it means the instance is safe.
+Otherwise, you would get a message like:
+![MongoDB vulnerabilities](https://github.com/EGA-archive/beacon-production-prototype/blob/main/ri-tools/files/mongobleed_vuln.png)
 
 ## Tests report
 

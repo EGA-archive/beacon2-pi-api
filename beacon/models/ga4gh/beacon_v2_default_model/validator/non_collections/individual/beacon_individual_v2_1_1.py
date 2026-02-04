@@ -1,0 +1,1 @@
+from beacon.models.ga4gh.beacon_v2_default_model.validator.non_collections.individual.beacon_individual_v2_1_0 import Individual

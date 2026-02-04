@@ -7,7 +7,7 @@ from pydantic import (
 )
 from strenum import StrEnum
 from typing import List, Optional, Union
-from beacon.conf.conf import default_beacon_granularity
+from beacon.conf.conf_override import config
 from aiohttp.web_request import Request
 from beacon.request.classes import Granularity, CamelModel, IncludeResultsetResponses
 from beacon.request.filters import AlphanumericFilter, OntologyFilter, CustomFilter
@@ -25,7 +25,7 @@ class Pagination(CamelModel, extra='forbid'):
 
 class RequestMeta(CamelModel, extra='forbid'):
     requestedSchemas: Optional[List[SchemasPerEntity]] = []
-    apiVersion: str = 'Not provided' # TODO: add supported schemas parsing, by default,
+    apiVersion: str = 'Not provided'
 
 class SequenceQuery(BaseModel, extra='forbid'):
     referenceName: Union[str,int]
@@ -148,12 +148,12 @@ class DatasetsRequested(BaseModel, extra='forbid'):
     datasets: list[str]
 
 class RequestQuery(CamelModel, extra='forbid'):
-    filters: List[Union[AlphanumericFilter,OntologyFilter,CustomFilter]] = []
+    filters: List[Union[AlphanumericFilter,OntologyFilter,CustomFilter,List[Union[AlphanumericFilter,OntologyFilter,CustomFilter]]]] = []
     includeResultsetResponses: IncludeResultsetResponses = IncludeResultsetResponses.HIT
     pagination: Pagination = Pagination()
     requestParameters: Union[SequenceQuery,RangeQuery,BracketQuery,AminoacidChangeQuery,GeneIdQuery,GenomicAlleleQuery,DatasetsRequested] = {}
     testMode: bool = False
-    requestedGranularity: Granularity = Granularity(default_beacon_granularity)
+    requestedGranularity: Granularity = Granularity(config.default_beacon_granularity)
     @field_validator('requestedGranularity')
     @classmethod
     def requestedGranularity_must_be_boolean_count_record(cls, v: str) -> str:
@@ -195,7 +195,11 @@ class RequestParams(CamelModel, extra='forbid'):
         return {
             "apiVersion": self.meta.apiVersion,
             "requestedSchemas": self.meta.requestedSchemas,
-            "filters": [filtering_term["id"] for filtering_term in self.query.filters],
+            "filters": [
+                    item["id"]
+                    for filtering_term in self.query.filters
+                    for item in (filtering_term if isinstance(filtering_term, list) else [filtering_term])
+                ],
             "requestParameters": self.query.requestParameters,
             "includeResultsetResponses": self.query.includeResultsetResponses,
             "pagination": self.query.pagination.dict(),

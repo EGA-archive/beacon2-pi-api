@@ -9,17 +9,15 @@ from beacon.exceptions.exceptions import AppError
 from pydantic import create_model, ConfigDict, Field
 from pydantic.alias_generators import to_camel
 from typing import Optional
-from beacon.conf.templates import path
 import json
 from beacon.logs.logs import LOG
-from beacon.validator.framework.meta import Meta
-from beacon.validator.framework.error import ErrorResponse, BeaconError
 from pydantic import create_model, ValidationError
 from beacon.exceptions.exceptions import InvalidData
-from beacon.conf.templates import errorTemplate
+from beacon.utils.modules import load_framework_module
 
 class EndpointView(web.View, CorsViewMixin):
     def __init__(self, request: Request):
+        # Initialize dhe endpoint with some of the attributes that will need to be collected later on
         self._request = request
         self._id = generate_txid(self)
         RequestAttributes.ip = None
@@ -28,57 +26,58 @@ class EndpointView(web.View, CorsViewMixin):
         RequestAttributes.entry_id=None
         RequestAttributes.pre_entry_type=None
         RequestAttributes.returned_schema=None
-        RequestAttributes.returned_apiVersion="v2.0.0"
+        RequestAttributes.returned_apiVersion="v2.2.0"
         RequestAttributes.qparams=RequestParams()
         RequestAttributes.returned_granularity="boolean"
         
 
     async def get(self):
         try:
+            # Decompound/validate the request and store the attributes needed in the class RequestAttributes
             await deconstruct_request(self, self.request)
+            # Call the handler function for the view assigned to the queried endpoint
             return await self.handler()
         except AppError as e:
+            # In case a handled error occurs, return the error message and status for it
             response_obj = self.error_builder(e.status, e.message)
             return web.Response(text=json_util.dumps(response_obj), status=e.status, content_type='application/json')
         except Exception as e:
+            # In case an unhandled error occurs, return a 500 and the generic error message below
             response_obj = self.error_builder(500, "Unexpected internal error: {}".format(e))
             return web.Response(text=json_util.dumps(response_obj), status=500, content_type='application/json')
 
     async def post(self):
         try:
+            # Decompound/validate the request and store the attributes needed in the class RequestAttributes
             await deconstruct_request(self, self.request)
+            # Call the handler function for the view assigned to the queried endpoint
             return await self.handler()
         except AppError as e:
-            response_obj =self.error_builder(e.status, e.message)
+            # In case a handled error occurs, return the error message and status for it
+            response_obj = self.error_builder(e.status, e.message)
             return web.Response(text=json_util.dumps(response_obj), status=e.status, content_type='application/json')
         except Exception as e:
+            # In case an unhandled error occurs, return a 500 and the generic error message below
             response_obj = self.error_builder(500, "Unexpected internal error: {}".format(e))
             return web.Response(text=json_util.dumps(response_obj), status=500, content_type='application/json')
 
-    def get_template_path(self, template_name):
-        self.root_path = path + '/' + RequestAttributes.returned_apiVersion + '/'
-        self.template_path = self.root_path + template_name
-
     def create_response(self):
-        # Save the template from path, e.g. response/templates/v2.0.0 as a JSON:
-        with open(self.template_path, 'r') as template:
-            templateJSON = json.load(template)
         # Convert the previously created class of the response to JSON:
         classtoJSON = self.classResponse.model_dump(exclude_none=True, by_alias=True)
-        # Create a class with the JSON of the template. The extra "ignore" will remove all extra properties when instatiating a new class from a JSON:
-        modelFromTemplate = create_model('modelFromTemplate', **{k: (Optional[type(v)] if type(v) is not dict else create_model(str(k),**{k1: (Optional[type(v1)], None) for k1, v1 in v.items()}), None) for k, v in templateJSON.items()}, model_config=ConfigDict(extra='ignore'))
-        # Instantiate a template class with the values from the JSON coming fro the initial response class:
-        responseClass = modelFromTemplate.model_validate(classtoJSON)
-        # Convert the template instance class created to JSON:
-        JSONresponse = responseClass.model_dump(exclude_none=True)
-        return JSONresponse
+        return classtoJSON
     
     def error_builder(self, status, message):
+        # Load the modules that have the classes that will serve as the meta and error part of the response
+        module_meta = load_framework_module(self, "meta")
+        module_error = load_framework_module(self, "error")
         try:
-            self.get_template_path(errorTemplate)
-            error = BeaconError(errorCode=status,errorMessage=message)
-            meta = Meta(receivedRequestSummary=RequestAttributes.qparams.summary(),returnedGranularity=RequestAttributes.returned_granularity,returnedSchemas=[{"schema": "error-v2.2.0"}],testMode=RequestAttributes.qparams.query.testMode)
-            self.classResponse = ErrorResponse(meta=meta,error=error)
+            # Instantiate the error class with the status and the message collected during the error handling
+            error = module_error.BeaconError(errorCode=status,errorMessage=message)
+            # Instantiat the meta class with the attributes collected in the request
+            meta = module_meta.Meta(receivedRequestSummary=RequestAttributes.qparams.summary(),returnedGranularity=RequestAttributes.returned_granularity,returnedSchemas=[{"schema": "error-v2.2.0"}],testMode=RequestAttributes.qparams.query.testMode)
+            # Create the response class that will allocate the Meta and error parts of the response
+            self.classResponse = module_error.ErrorResponse(meta=meta.model_dump(exclude_none=True),error=error.model_dump(exclude_none=True))
+            # Convert the class to JSON to return it in the final stream response
             response_obj = self.create_response()
             return response_obj
         except ValidationError as v:

@@ -1,0 +1,94 @@
+run:
+  entry_type_enabled: True
+  max_granularity: record
+  endpoint_name: runs
+  open_api_definition: https://raw.githubusercontent.com/ga4gh-beacon/beacon-v2/main/models/json/beacon-v2-default-model/runs/endpoints.json
+  allow_queries_without_filters: True
+  allow_id_query: True # endpoint_name/{id}
+  response_type: non_collection
+  connection:
+    name: mongo
+    database: beacon
+    table: runs
+    functions:
+      function_name_assigned: get_phenotypic_endpoint
+      id_query_function_name_assigned: get_phenotypic_endpoint_with_id
+  info:
+    name: run
+    ontology_id: NCIT:C148088
+    ontology_name: Sequencing run
+    description: The valid and completed operation of a high-throughput sequencing instrument for a single sequencing process. [ NCI ]
+  schema:
+    specification: Beacon v2
+    default_schema_id: beacon-run-v2.0.0
+    default_schema_name: Default schema for a sequencing run
+    reference_to_default_schema_definition: https://raw.githubusercontent.com/ga4gh-beacon/beacon-v2/main/models/json/beacon-v2-default-model/runs/defaultSchema.json
+    default_schema_version: v2.0.0
+    supported_schemas:
+      - beacon-run-v2.0.0
+      - beacon-run-v2.0.1
+      - beacon-run-v2.1.0
+      - beacon-run-v2.1.1
+      - beacon-run-v2.1.2
+      - beacon-run-v2.2.0
+  lookups:
+    analysis:
+      endpoint_name: runs/{id}/analyses
+      response_type: non_collection
+      endpoint_enabled: True
+      connection:
+        name: mongo
+        database: beacon
+        table: analyses
+        functions:
+          function_name_assigned: get_phenotypic_cross_query
+    biosample:
+      endpoint_name: runs/{id}/biosamples
+      response_type: non_collection
+      endpoint_enabled: True
+      connection:
+        name: mongo
+        database: beacon
+        table: biosamples
+        functions:
+          function_name_assigned: get_phenotypic_cross_query
+    cohort:
+      endpoint_name: runs/{id}/cohorts
+      response_type: collection
+      endpoint_enabled: True
+      connection:
+        name: mongo
+        database: beacon
+        table: cohorts
+        functions:
+          function_name_assigned: get_cross_collections
+    dataset:
+      endpoint_name: runs/{id}/datasets
+      response_type: collection
+      endpoint_enabled: True
+      connection:
+        name: mongo
+        database: beacon
+        table: datasets
+        functions:
+          function_name_assigned: get_cross_collections
+    genomicVariant:
+      endpoint_name: runs/{id}/g_variants
+      response_type: non_collection
+      endpoint_enabled: True
+      connection:
+        name: mongo
+        database: beacon
+        table: genomicVariations
+        functions:
+          function_name_assigned: get_variants_of_phenotypic_endpoint
+    individual:
+      endpoint_name: runs/{id}/individuals
+      response_type: non_collection
+      endpoint_enabled: True
+      connection:
+        name: mongo
+        database: beacon
+        table: individuals
+        functions:
+          function_name_assigned: get_phenotypic_cross_query

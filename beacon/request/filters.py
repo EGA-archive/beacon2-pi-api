@@ -21,7 +21,7 @@ class OntologyFilter(CamelModel, extra='forbid'):
 
 class AlphanumericFilter(CamelModel, extra='forbid'):
     id: str
-    value: Union[str, int, List[int]]
+    value: Union[str, int, List[int], float, List[float]]
     scope: Optional[str] =None
     operator: Operator = Operator.EQUAL
     @field_validator('id')
