@@ -5,7 +5,7 @@ mongo_conf = "beacon/connections/mongo/conf.env"
 load_dotenv(mongo_conf, override=True)
 
 database_host = os.getenv('database_host', 'mongo')
-database_port = os.getenv('database_port', str(27017))
+database_port = os.getenv('database_port', str(27024))
 database_user = os.getenv('database_user', 'root')
 database_password = os.getenv('database_password', 'example')
 database_name = os.getenv('database_name', 'beacon')
