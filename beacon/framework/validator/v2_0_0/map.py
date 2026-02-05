@@ -89,6 +89,8 @@ class MapSchema(BaseModel):
                         values_to_set = {}
                         try:
                             values_to_set["url"] = conf_override.config.complete_url+'/'+lookup_set_of_params["endpoint_name"] if lookup_set_of_params["endpoint_enabled"] == True else None
+                            if values_to_set["url"]==None:
+                                continue
                         except Exception:
                             continue
                         values_to_set["returnedEntryType"] = lookup_entry_type
