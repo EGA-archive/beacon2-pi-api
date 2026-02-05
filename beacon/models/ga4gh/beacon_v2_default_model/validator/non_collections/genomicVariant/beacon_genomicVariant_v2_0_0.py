@@ -253,24 +253,14 @@ class ComposedSequenceExpression(BaseModel):
     @classmethod
     def check_components(cls, v: list) -> list:
         for component in v:
-            fits_in_class=False
-            try:
-                DerivedSequenceExpression(**component)
-                fits_in_class=True
-            except Exception:
-                fits_in_class=False
-            if fits_in_class == False:
+            for model in (DerivedSequenceExpression, LiteralSequenceExpression, RepeatedSequenceExpression):
                 try:
-                    LiteralSequenceExpression(**component)
+                    model(**component)
+                    break  # this component is valid as that model
                 except Exception:
-                    fits_in_class=False
-            if fits_in_class == False:
-                try:
-                    RepeatedSequenceExpression(**component)
-                    fits_in_class=True
-                except Exception:
-                    fits_in_class=False
-            if fits_in_class == False:
+                    continue
+            else:
+                # no break => no model matched
                 raise ValueError('components must be an array containing any format possible between DerivedSequenceExpression, LiteralSequenceExpression or RepeatedSequenceExpression. It is mandatory to at least be one of DerivedSequenceExpression or RepeatedSequenceExpression')
         return v
 class Allele(BaseModel):
@@ -298,11 +288,9 @@ class Allele(BaseModel):
     @classmethod
     def location_must_be_CURIE(cls, v: str) -> str:
         if isinstance(v, str):
-            if re.match("[A-Za-z0-9]+:[A-Za-z0-9]", v):
-                pass
-            else:
+            if not re.match("[A-Za-z0-9]+:[A-Za-z0-9]", v):
                 raise ValueError('location, if string, must be CURIE, e.g. NCIT:C42331')
-            return v
+        return v
         
 class Haplotype(BaseModel):
     id: Optional[str]=Field(default=None, alias='_id')
@@ -329,20 +317,10 @@ class Haplotype(BaseModel):
     def check_members(cls, v: list) -> list:
         for member in v:
             if isinstance(member, str):
-                if re.match("[A-Za-z0-9]+:[A-Za-z0-9]", v):
+                if re.match("[A-Za-z0-9]+:[A-Za-z0-9]", member):
                     pass
                 else:
                     raise ValueError('_id must be CURIE, e.g. NCIT:C42331')
-            else:
-                fits_in_class=False
-                try:
-                    Allele(**member)
-                    fits_in_class=True
-                except Exception:
-                    fits_in_class=False
-                if fits_in_class == False:
-                    raise ValueError('members must be an array of items that fit CURIE or Allele')
-        return v
 
 class Gene(BaseModel):
     type: str
@@ -455,6 +433,7 @@ class Genotype(BaseModel):
     def check_exposures(cls, v: list) -> list:
         for member in v:
             GenotypeMember(**member)
+        return v
 
 class LegacyVariation(BaseModel):
     alternateBases: str

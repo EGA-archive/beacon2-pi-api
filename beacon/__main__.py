@@ -9,7 +9,7 @@ import ssl
 from beacon.validator.configuration import check_configuration
 import aiohttp_autoreload
 from beacon.utils.routes import append_routes
-from beacon.utils.middlewares import error_middleware
+from beacon.utils.middlewares import error_middleware, track_requests_middleware
 from beacon.utils.shutters import _graceful_shutdown_ctx, on_startup as on_start
 
 async def create_api(port):
@@ -20,9 +20,11 @@ async def create_api(port):
         # Create the web app with middlewares for allowing CORS for the specific urls and to handle Not Found and other non related app errors with error_middleware
         app = web.Application(
             middlewares=[
-                cors_middleware(origins=config.cors_urls), error_middleware
+                cors_middleware(origins=config.cors_urls), error_middleware, track_requests_middleware
             ]
         )
+        app['pending_requests'] = set()
+        #asdsa
 
         # Add initialization and graceful shutdown
         app.on_startup.append(on_start) # Added for file conf restart, not conflicting with asynchronous requests handling
@@ -38,7 +40,7 @@ async def create_api(port):
             ssl_context.load_cert_chain(certfile=config.beacon_server_crt, keyfile=config.beacon_server_key)
         
         # Add a reloader in case any file is modified, so the app is restarted automatically
-        aiohttp_autoreload.start()
+        #aiohttp_autoreload.start()
 
         # Starting app with AppRunner, that is able to handle requests in parallel
         LOG.debug("Starting app")

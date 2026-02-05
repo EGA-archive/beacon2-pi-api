@@ -10,11 +10,13 @@ from pydantic import (
 
 from typing import Optional, Union, List
 from beacon.framework.validator.v2_0_0.common import OntologyTerm
+
+timestamp_regex = re.compile(r"^.+(\d{2}/\w{3}/\d{4}:\d{2}:\d{2}:\d{2})")
             
 class DUODataUse(BaseModel):
     id: str
     label: Optional[str]=None
-    modifiers: Optional[list] = None
+    modifiers: Optional[List[OntologyTerm]] = None
     version: str
     @field_validator('id')
     @classmethod
@@ -24,11 +26,6 @@ class DUODataUse(BaseModel):
         else:
             raise ValueError('id must be CURIE, e.g. NCIT:C42331')
         return v
-    @field_validator('modifiers')
-    @classmethod
-    def check_modifiers(cls, v: list) -> list:
-        for modifier in v:
-            OntologyTerm(**modifier)
 
 class DataUseConditions(BaseModel):
     duoDataUse: Optional[List[DUODataUse]] = None
@@ -54,19 +51,21 @@ class Dataset(BaseModel, extra='forbid'):
     version: Optional[str] = None
     @field_validator('createDateTime')
     @classmethod
-    def check_createDateTime(cls, v: str) -> str:
-        if isinstance(v, str):
-            try:
-                parse(v)
-            except Exception as e:
-                raise ValueError('createDateTime, if string, must be Timestamp, getting this error: {}'.format(e))
+    def check_createDateTime(cls, v: Optional[str]) -> Optional[str]:
+        if v is None:
             return v
+        try:
+            timestamp_regex.match(v)
+        except Exception as e:
+            raise ValueError('createDateTime, if string, must be Timestamp, getting this error: {}'.format(e))
+        return v
     @field_validator('updateDateTime')
     @classmethod
-    def check_updateDateTime(cls, v: str) -> str:
-        if isinstance(v, str):
-            try:
-                parse(v)
-            except Exception as e:
-                raise ValueError('updateDateTime, if string, must be Timestamp, getting this error: {}'.format(e))
+    def check_updateDateTime(cls, v: Optional[str]) -> Optional[str]:
+        if v is None:
             return v
+        try:
+            timestamp_regex.match(v)
+        except Exception as e:
+            raise ValueError('updateDateTime, if string, must be Timestamp, getting this error: {}'.format(e))
+        return v

@@ -34,7 +34,7 @@ async def _graceful_shutdown_ctx(app):
     loop.add_signal_handler(
         signal.SIGTERM, graceful_shutdown_sigterm_handler,
     )
-
+    #TODO: Haig de donar-te un temps d'espera + afegir un brute force shutdown (que també ha d'anar a tancar connexions)
     yield
     # Stop the process where the app is running
     loop.remove_signal_handler(signal.SIGTERM)
@@ -48,8 +48,11 @@ PATHS_TO_RESTART = [
     "/beacon/conf/models",
     "/beacon/connections/mongo/conf.py"
 ]
-async def config_test_watcher(app):
-    pass
+
+async def monitor_pending(app):
+    LOG.warning("Waiting for requests to finish...")
+    while len(app['pending_requests']) >0:
+        await asyncio.sleep(1)
 
 
 async def config_watcher(app):
@@ -80,9 +83,10 @@ async def config_watcher(app):
                 for root, _, files in os.walk(path):
                     if "__pycache__" in root:
                         continue
-                    if not (f.endswith(".py") or f.endswith(".yml")):
-                        continue
+
                     for f in files:
+                        if not (f.endswith(".py") or f.endswith(".yml")):
+                            continue
 
 
                         full = os.path.join(root, f)
@@ -100,12 +104,11 @@ async def config_watcher(app):
         for file_path, new_m in new_initial_times.items():
             old_m = initial_times.get(file_path)
             if old_m is None or new_m != old_m:
+                await monitor_pending(app)
+                LOG.warning("Restarting app")
                 os._exit(0)
 
         initial_times = new_initial_times
-
-async def on_startup(app):
-    app["config_watcher"] = asyncio.create_task(config_watcher(app))
 
 async def on_startup(app):
     app["config_watcher"] = asyncio.create_task(config_watcher(app))

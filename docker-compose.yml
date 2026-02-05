@@ -84,13 +84,11 @@ services:
       - idp-priv
 
   db:
-    image: mongo:5
-    command: --wiredTigerCacheSizeGB 4
+    image: mongo:5.0.32
+    #command: --wiredTigerCacheSizeGB 4
     #command: --wiredTigerCacheSizeGB 4 --sslMode requireSSL --tlsCertificateKeyFile test-server1.pem --tlsCAFile test-ca.pem
     hostname: mongo
     container_name: mongoprod
-    ports:
-      - 27017:27017
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
@@ -101,12 +99,13 @@ services:
       - ./beacon/connections/mongo/data/db:/data/db
       - ./beacon/connections/mongo/data/configdb:/data/configdb
       - ./beacon/connections/mongo/data/caseLevelData:/data/caseLevelData
+      - ./beacon/connections/mongo/mongod.conf:/etc/mongod.conf:ro
       #- ./test-server1.pem:/test-server1.pem
       #- ./test-ca.pem:/test-ca.pem
       #- ./test-client.pem:/test-client.pem
     networks:
       - pub
-    #command: --verbose
+    command: ["--config", "/etc/mongod.conf"]
   
   mongo-express:
     image: mongo-express
@@ -132,8 +131,8 @@ services:
       - ./ri-tools/conf:/usr/src/app/conf
       - ./ri-tools/files/vcf/files_to_read:/usr/src/app/files/vcf/files_to_read
       - ./ri-tools/csv:/usr/src/app/csv
-      - ./ri-tools/pipelines:/usr/src/app/pipelines
       - ./ri-tools/files/updated_json:/usr/src/app/files/updated_json
+      - ./ri-tools/pipelines/default/templates:/usr/src/app/pipelines/default/templates
 
   phenopackets-to-BFF:
     image: ghcr.io/ega-archive/phenopackets-to-bff:latest
@@ -144,3 +143,20 @@ services:
       - ./ri-tools/phenopackets-to-BFF/:/usr/src/app/examples
     networks:
       - pub
+
+  templateUI:
+    image: ghcr.io/ega-archive/beacon-template-ui:main
+    restart: always
+    hostname: template-ui
+    container_name: template-ui
+    command: node /opt/yarn-v1.22.22/bin/yarn.js start
+    ports:
+      - 3000:3000
+    volumes:
+      - ./template-ui/src/config/config.json:/client/src/config/config.json
+      - ./template-ui/.env:/client/.env
+    networks:
+      - pub
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
