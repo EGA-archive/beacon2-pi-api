@@ -5,7 +5,7 @@ from typing import Optional
 
 def initialize_logger(level):
     # Start the logger
-    LOG = logging.getLogger(__name__)
+    LOG = logging.getLogger("aiohttp.access")
     # Remove pre-existing default handlers
     for handler in LOG.handlers[:]:
         LOG.removeHandler(handler)

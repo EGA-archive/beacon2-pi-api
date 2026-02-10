@@ -1,5 +1,8 @@
 from strenum import StrEnum
 from humps.main import camelize
+import warnings
+
+warnings.filterwarnings("ignore", category=UserWarning)
 from pydantic import BaseModel
 
 class CamelModel(BaseModel, extra='forbid'):

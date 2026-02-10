@@ -1,6 +1,5 @@
 import logging
 import yaml
-import aiohttp.web as web
 from beacon.exceptions.exceptions import FileNotFound
 
 try:
