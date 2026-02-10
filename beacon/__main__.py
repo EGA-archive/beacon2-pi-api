@@ -11,6 +11,9 @@ import aiohttp_autoreload
 from beacon.utils.routes import append_routes
 from beacon.utils.middlewares import error_middleware, track_requests_middleware
 from beacon.utils.shutters import _graceful_shutdown_ctx, on_startup as on_start
+import warnings
+
+warnings.filterwarnings("ignore", category=UserWarning)
 
 async def create_api(port):
     try:
