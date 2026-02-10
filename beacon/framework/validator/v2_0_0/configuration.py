@@ -20,10 +20,13 @@ class SecurityAttributes(BaseModel):
 class MaturityAttributes(BaseModel):
     productionStatus: str = config.environment.upper()
 
+maturity_attributes=MaturityAttributes().model_dump(exclude_none=True)
+security_attributes=SecurityAttributes().model_dump(exclude_none=True)
+
 class ConfigurationSchema(load_class("entry_types", "EntryTypesSchema")):
     schema: str = Field(alias="$schema", default="https://raw.githubusercontent.com/ga4gh-beacon/beacon-framework-v2/main/configuration/beaconConfigurationSchema.json")
-    maturityAttributes: MaturityAttributes = MaturityAttributes().model_dump(exclude_none=True)
-    securityAttributes: Optional[SecurityAttributes] = SecurityAttributes().model_dump(exclude_none=True)
+    maturityAttributes: MaturityAttributes = MaturityAttributes(**maturity_attributes)
+    securityAttributes: Optional[SecurityAttributes] = SecurityAttributes(**security_attributes)
 
 class ConfigurationResponse(BaseModel):
     meta: load_class("meta", "InformationalMeta")

@@ -4,7 +4,7 @@ on:
   push:
     branches: ['main']
     tags:
-      - 'v*.*-*'
+      - 'v*.*.*'
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
@@ -34,12 +34,12 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            # Use the Git tag directly (v2.0-da27a1d)
+            # Accept the Git tag
             type=ref,event=tag
-            # Optional extras (safe to keep)
+            # Extras that are optional
             type=ref,event=branch
             type=ref,event=pr
-            # Only applies if the tag is valid semver (v2.0.1, v2.1.0, etc.)
+            # Only applies if the tag is valid semver
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             # latest only on main branch
