@@ -15,6 +15,11 @@ def query_id(self, query: dict, document_id) -> dict:
     return query
 
 @log_with_args_mongo(config.level)
+def query_variantInternalId(self, query: dict, document_id) -> dict:
+    query["_id"] = document_id
+    return query
+
+@log_with_args_mongo(config.level)
 def query_patientId(self, query: dict, document_id) -> dict:
     query["patientId"] = document_id
     return query
