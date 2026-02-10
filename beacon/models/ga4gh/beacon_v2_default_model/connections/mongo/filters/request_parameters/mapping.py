@@ -13,5 +13,6 @@ VARIANTS_PROPERTY_MAP = {
     "genomicAlleleShortForm": "identifiers.genomicHGVSId",
     "aminoacidChange": "molecularAttributes.aminoacidChanges",
     "clinicalRelevance": "caseLevelData.clinicalInterpretations.clinicalRelevance",
-    "mateName": "identifiers.genomicHGVSId"
+    "mateName": "identifiers.genomicHGVSId",
+    "requestProfileId": "requestProfileId"
 }

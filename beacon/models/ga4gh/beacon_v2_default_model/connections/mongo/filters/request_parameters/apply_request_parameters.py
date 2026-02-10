@@ -33,114 +33,78 @@ def apply_request_parameters(self, query: Dict[str, List[dict]], dataset: str):
     length_query["$and"]=[]
     equal=False
     isBracket=False
-    # Check for the existance of end/start parameters to create some values that will help later to process each one of those parameters individually
-    for k, v in RequestAttributes.qparams.query.requestParameters.items():
-        if k == 'end':
-            equal=True
-            endvalue=v
-        if k == 'start':
+    if 'requestProfileId' in RequestAttributes.qparams.query.requestParameters:
+        if RequestAttributes.qparams.query.requestParameters['requestProfileId'] == 'BV2bracketRequest':
+            start_filters = generate_position_filter_start(self, 'start', RequestAttributes.qparams.query.requestParameters['start'])
+            for start_filter in start_filters:
+                startdictvalue=apply_alphanumeric_filter(self, {}, start_filter, dataset, True)
+                startquery["$and"].append(startdictvalue)
+            end_filters = generate_position_filter_end(self, 'end', RequestAttributes.qparams.query.requestParameters['end'])
+            for end_filter in end_filters:
+                enddictvalue=apply_alphanumeric_filter(self, {}, end_filter, dataset, True)
+                startquery["$and"].append(enddictvalue)
+        elif RequestAttributes.qparams.query.requestParameters['requestProfileId'] == 'BV2rangeRequest':
+            startvalue=RequestAttributes.qparams.query.requestParameters['start']
+            endvalue=RequestAttributes.qparams.query.requestParameters['end']
             startvalue=v
-    # Iterate through the different request parameters from the request
-    for k, v in RequestAttributes.qparams.query.requestParameters.items():
-        if k == "start":
-            # First, get how many parameters are being thrown and if there is more than one, assign the query to a bracket query.
-            if isinstance(v, str):
-                v = v.split(',')
-                if len(v)>1:
-                    isBracket=True
-            elif isinstance(v, list) and len(v) > 1:
-                isBracket=True
-            # If there is no end, process the parameter as a sequence query
-            if equal == False:
-                filters = generate_position_filter_start_sequence_query(self, k, v)
-                for filter in filters:
-                    query["$and"].append(apply_alphanumeric_filter(self, {}, filter, dataset, True))
-            # If there is end and query is bracket, process the parameter as a bracket query
-            elif isBracket == True:
-                filters = generate_position_filter_start(self, k, v)
-                for filter in filters:
-                    startdictvalue=apply_alphanumeric_filter(self, {}, filter, dataset, True)
-                    startquery["$and"].append(startdictvalue)
-            # Otherwise, process the query as a range query
+            # Generate a final start value, as if it came by filters (start,end) to then create a list and process it as the second part of the range for the start value
+            if isinstance(startvalue, list):
+                finalvalue=str(startvalue[0])+','+str(endvalue[0])
+            elif isinstance(endvalue, list):
+                finalvalue=str(startvalue)+','+str(endvalue[0])
             else:
-                startvalue=v
-                # Generate a final start value, as if it came by filters (0,start-1) to then create a list and process it as the first part of the range for the start value
-                if isinstance(startvalue, list):
-                    finalvalue=str(0)+','+str(startvalue[0]-1)
-                else:
-                    finalvalue=str(0)+','+str(startvalue-1)
-                finalvalue = finalvalue.split(',')
-                filters = generate_position_filter_start(self, k, finalvalue)
-                # Generate a final start value, as if it came by filters (start,end) to then create a list and process it as the second part of the range for the start value
-                if isinstance(endvalue, list) and isinstance(startvalue, list):
-                    finalvalue=str(startvalue[0])+','+str(endvalue[0])
-                if isinstance(startvalue, list):
-                    finalvalue=str(startvalue[0])+','+str(endvalue[0])
-                elif isinstance(endvalue, list):
-                    finalvalue=str(startvalue)+','+str(endvalue[0])
-                else:
-                    finalvalue=str(startvalue)+','+str(endvalue)
-                finalvalue = finalvalue.split(',')
-                filters = generate_position_filter_start(self, k, finalvalue)
-                # Build the query with those artificial filters and apply other request parameters as well, if any
-                for filter in filters:
-                    startdict=apply_alphanumeric_filter(self, {}, filter, dataset, True)
-                    startrangequery["$and"].append(startdict)  
-                subqueryor["$or"].append(startrangequery)            
-        elif k == "end":
-            # First, get how many parameters are being thrown and if there is more than one, assign the query to a bracket query.
-            if isinstance(v, str):
-                v = v.split(',')
-                if len(v)>1:
-                    isBracket=True
-            elif isinstance(v, list) and len(v) > 1:
-                isBracket=True
-            filters = generate_position_filter_end(self, k, v)
-            # If there is start and query is bracket, process the parameter as a bracket query
-            if isBracket==True:
-                for filter in filters:
-                    enddictvalue=apply_alphanumeric_filter(self, {}, filter, dataset, True)
-                    startquery["$and"].append(enddictvalue)
-                query["$and"].append(startquery)    
-            # Otherwise, process the parameter as a range query
-            elif isBracket==False:
-                # Generate a final start value, as if it came by filters (start,end) to then create a list and process it as the first part of the range for the end value
-                if isinstance(v, list) and isinstance(startvalue, list):
-                    startvalue=startvalue[0]
-                    v = str(v[0])
-                    stage2v = str(startvalue)+','+v
-                elif isinstance(v, list):
-                    v = str(v[0])
-                    stage2v = str(startvalue)+','+v
-                elif isinstance(startvalue, list):
-                    startvalue=startvalue[0]
-                    stage2v = str(startvalue)+','+str(v)
-                else:
-                    stage2v = str(startvalue)+','+str(v)
-                stage2v = stage2v.split(',')
-                filters = generate_position_filter_end(self, k, stage2v)
-                # Build the query with those artificial filters and apply other request parameters as well, if any
-                for filter in filters:
-                    enddictvalue=apply_alphanumeric_filter(self, {}, filter, dataset, True)
-                    endquery["$and"].append(enddictvalue)
-                subqueryor["$or"].append(endquery)
-                # Generate a final end value, (end+1,9999999999) to set the second part of the range for the end value and create the filters
-                stage2v = str(int(v)+1)+','+str(9999999999)
-                stage2v =stage2v.split(',')
-                filters = generate_position_filter_end(self, k, stage2v)  
-                # Get the variants that have the length greater than the range end-start
-                docs_length = lengthquery(self, genomicVariations, {'length': {'$gte': int(v)-int(startvalue)}, 'datasetId': dataset})
-                length_array=[]
-                for lengthdoc in docs_length:
-                    try:
-                        # Keep in an array only the records that have a start value less than the start requested and greater than the requested end
-                        if int(lengthdoc["variation"]["location"]["interval"]["start"]["value"]) < int(startvalue) and int(lengthdoc["variation"]["location"]["interval"]["end"]["value"]) > int(v):
-                            length_array.append(lengthdoc["_id"])
-                    except Exception as e:
-                        continue
-                # Build the length query syntax
-                length_query["$and"].append({'_id': {'$in': length_array}})
-        elif k == "datasets":
+                finalvalue=str(startvalue)+','+str(endvalue)
+            finalvalue = finalvalue.split(',')
+            start_range_filters = generate_position_filter_start(self, k, finalvalue)
+            # Build the query with those artificial filters and apply other request parameters as well, if any
+            for filter in start_range_filters:
+                startdict=apply_alphanumeric_filter(self, {}, filter, dataset, True)
+                startrangequery["$and"].append(startdict)  
+            subqueryor["$or"].append(startrangequery)   
+            # Generate a final start value, as if it came by filters (start,end) to then create a list and process it as the first part of the range for the end value
+            if isinstance(v, list) and isinstance(startvalue, list):
+                startvalue=startvalue[0]
+                v = str(v[0])
+                stage2v = str(startvalue)+','+v
+            elif isinstance(v, list):
+                v = str(v[0])
+                stage2v = str(startvalue)+','+v
+            elif isinstance(startvalue, list):
+                startvalue=startvalue[0]
+                stage2v = str(startvalue)+','+str(v)
+            else:
+                stage2v = str(startvalue)+','+str(v)
+            stage2v = stage2v.split(',')
+            end_range_filters = generate_position_filter_end(self, k, stage2v)
+            # Build the query with those artificial filters and apply other request parameters as well, if any
+            for filter in end_range_filters:
+                enddictvalue=apply_alphanumeric_filter(self, {}, filter, dataset, True)
+                endquery["$and"].append(enddictvalue)
+            subqueryor["$or"].append(endquery)
+            # Generate a final end value, (end+1,9999999999) to set the second part of the range for the end value and create the filters
+            stage2v = str(int(v)+1)+','+str(9999999999)
+            stage2v =stage2v.split(',')
+            # Get the variants that have the length greater than the range end-start
+            docs_length = lengthquery(self, genomicVariations, {'length': {'$gte': int(v)-int(startvalue)}, 'datasetId': dataset})
+            length_array=[]
+            for lengthdoc in docs_length:
+                try:
+                    # Keep in an array only the records that have a start value less than the start requested and greater than the requested end
+                    if int(lengthdoc["variation"]["location"]["interval"]["start"]["value"]) < int(startvalue) and int(lengthdoc["variation"]["location"]["interval"]["end"]["value"]) > int(v):
+                        length_array.append(lengthdoc["_id"])
+                except Exception as e:
+                    continue
+            # Build the length query syntax
+            length_query["$and"].append({'_id': {'$in': length_array}})
+        elif RequestAttributes.qparams.query.requestParameters['requestProfileId'] == 'BV2alleleRequest':
+            startvalue=RequestAttributes.qparams.query.requestParameters['start']
+            filters = generate_position_filter_start_sequence_query(self, 'start', startvalue)
+            LOG.warning(filters)
+            for filter in filters:
+                query["$and"].append(apply_alphanumeric_filter(self, {}, filter, dataset, True)) 
+    # Iterate through the different request parameters from the request
+    for k, v in RequestAttributes.qparams.query.requestParameters.items():   
+        if k == "datasets":
             pass
         elif k == "variantMinLength":
             query["$and"].append(apply_alphanumeric_filter(self, {}, AlphanumericFilter(
@@ -157,25 +121,26 @@ def apply_request_parameters(self, query: Dict[str, List[dict]], dataset: str):
                 id=VARIANTS_PROPERTY_MAP[k],
                 value=v
             ), dataset, True))
-        elif k != 'filters' and k != 'assemblyId':
+        elif k != 'filters' and k != 'assemblyId' and k != 'requestProfileId' and k != 'start':
             query["$and"].append(apply_alphanumeric_filter(self, {}, AlphanumericFilter(
                 id=VARIANTS_PROPERTY_MAP[k],
                 value=v
             ), dataset, True))
-    if length_query["$and"]!=[]:
+    if length_query["$and"]!=[] and length_query != {}:
         subqueryor["$or"].append(length_query) 
     try:
-        if subqueryor["$or"] != []:
+        if subqueryor["$or"] != [] and subqueryor !={}:
             subquery["$and"].append(subqueryor)
     except Exception:
         pass
     try:
-        if referencedict["$or"] != []:
+        if referencedict["$or"] != [] and referencedict != {}:
             query["$and"].append(referencedict)
     except Exception:
         pass
-    if subquery["$and"] != []:
+    if subquery["$and"] != [] and subquery != {}:
         query["$and"].append(subquery)
-    elif startquery["$and"] != []:
+    elif startquery["$and"] != [] and startquery != {}:
         query["$and"].append(startquery)
+    LOG.warning(query)
     return query, False

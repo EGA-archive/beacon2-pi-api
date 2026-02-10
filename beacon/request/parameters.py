@@ -27,15 +27,14 @@ class RequestMeta(CamelModel, extra='forbid'):
     requestedSchemas: Optional[List[SchemasPerEntity]] = []
     apiVersion: str = 'Not provided'
 
-class SequenceQuery(BaseModel, extra='forbid'):
+class BV2alleleRequest(BaseModel, extra='forbid'):
     referenceName: Union[str,int]
-    start: Union[int,list]
+    start: list[int]
     alternateBases:str
     referenceBases: str
-    clinicalRelevance: Optional[str] =None
-    mateName: Optional[str] =None
     assemblyId: Optional[str] =None
     datasets: Optional[list]=[]
+    requestProfileId: str
     @model_validator(mode='after')
     @classmethod
     def referenceName_must_have_assemblyId_if_not_HGVSId(cls, values):
@@ -44,26 +43,22 @@ class SequenceQuery(BaseModel, extra='forbid'):
                 raise ValueError('if referenceName is just the chromosome: assemblyId parameter is required')
         else:
             raise ValueError('referenceName must be a number between 1-24, or a string with X, Y, MT or all the previous mentioned values with chr at the beginning')
-    @field_validator('start')
-    @classmethod
-    def id_must_be_CURIE(cls, v: Union[int,list]) -> Union[int,list]:
-        if isinstance(v,list):
-            if len(v)>1:
-                raise ValueError('start can only have one item in the array')
+        start=values.start
+        if isinstance(start, list):
+            start = start[0]
+        if values.requestProfileId != 'BV2alleleRequest':
+            raise ValueError('requestProfileId has to be BV2alleleRequest with these combination of parameters')
 
-class RangeQuery(BaseModel, extra='forbid'):
-    referenceName: Union[str,int]
-    start: Union[int,list]
-    end: Union[int,list]
+class BV2rangeRequest(BaseModel, extra='forbid'):
+    referenceName: str
+    start: list[int]
+    end: list[int]
     variantType: Optional[str] =None
-    alternateBases: Optional[str] =None
-    aminoacidChange: Optional[str] =None
     variantMinLength: Optional[int] =None
     variantMaxLength: Optional[int] =None
-    clinicalRelevance: Optional[str] =None
-    mateName: Optional[str] =None
     assemblyId: Optional[str] =None
     datasets: Optional[list]=[]
+    requestProfileId: str
     @model_validator(mode='after')
     @classmethod
     def referenceName_must_have_assemblyId_if_not_HGVSId_2(cls, values):
@@ -80,6 +75,8 @@ class RangeQuery(BaseModel, extra='forbid'):
             end = end [0]
         if int(start) > int(end):
             raise ValueError("start's value can not be greater than end's value")
+        if values.requestProfileId != 'BV2rangeRequest':
+            raise ValueError('requestProfileId has to be BV2rangeRequest with these combination of parameters')
 
 class GeneIdQuery(BaseModel, extra='forbid'):
     geneId: str
@@ -90,42 +87,16 @@ class GeneIdQuery(BaseModel, extra='forbid'):
     variantMaxLength: Optional[int] =None
     datasets: Optional[list]=[]
 
-class BracketQuery(BaseModel, extra='forbid'):
-    referenceName: Union[str,int]
-    start: list
-    end: list
+class BV2bracketRequest(BaseModel, extra='forbid'):
+    referenceName: str
+    start: list[int]
+    end: list[int]
     variantType: Optional[str] =None
-    clinicalRelevance: Optional[str] =None
-    mateName: Optional[str] =None
     assemblyId: Optional[str] =None
+    variantMinLength: Optional[int] =None
+    variantMaxLength: Optional[int] =None
+    requestProfileId: str
     datasets: Optional[list]=[]
-    @field_validator('start')
-    @classmethod
-    def start_must_be_array_of_integers(cls, v: list) -> list:
-        new_list=[]
-        for num in v:
-            if isinstance(num, int):
-                new_list.append(num)
-            elif isinstance(num, str):
-                try:
-                    new_list.append(str(num))
-                except Exception:
-                    raise ValueError('start parameter must be an array of integers')
-        return new_list
-    @field_validator('end')
-    @classmethod
-    def end_must_be_array_of_integers(cls, v: list) -> list:
-        new_list=[]
-        for num in v:
-            if isinstance(num, int):
-                new_list.append(num)
-            elif isinstance(num, str):
-                try:
-                    new_list.append(str(num))
-                except Exception:
-                    raise ValueError('end parameter must be an array of integers')
-        return new_list
-
     @model_validator(mode='after')
     @classmethod
     def referenceName_must_have_assemblyId_if_not_HGVSId_3(cls, values):
@@ -134,6 +105,16 @@ class BracketQuery(BaseModel, extra='forbid'):
                 raise ValueError('if referenceName is just the chromosome: assemblyId parameter is required')
         else:
             raise ValueError('referenceName must be a number between 1-24, or a string with X, Y, MT or all the previous mentioned values with chr at the beginning')
+        start=values.start
+        end=values.end
+        if isinstance(start, list):
+            start = start[0]
+        if isinstance(end, list):
+            end = end [0]
+        if int(start) > int(end):
+            raise ValueError("start's value can not be greater than end's value")
+        if values.requestProfileId != 'BV2bracketRequest':
+            raise ValueError('requestProfileId has to be BV2bracketRequest with these combination of parameters')
 
 class GenomicAlleleQuery(BaseModel, extra='forbid'):
     genomicAlleleShortForm: str
@@ -151,7 +132,7 @@ class RequestQuery(CamelModel, extra='forbid'):
     filters: List[Union[AlphanumericFilter,OntologyFilter,CustomFilter,List[Union[AlphanumericFilter,OntologyFilter,CustomFilter]]]] = []
     includeResultsetResponses: IncludeResultsetResponses = IncludeResultsetResponses.HIT
     pagination: Pagination = Pagination()
-    requestParameters: Union[SequenceQuery,RangeQuery,BracketQuery,AminoacidChangeQuery,GeneIdQuery,GenomicAlleleQuery,DatasetsRequested] = {}
+    requestParameters: Union[BV2alleleRequest,BV2rangeRequest,BV2bracketRequest,AminoacidChangeQuery,GeneIdQuery,GenomicAlleleQuery,DatasetsRequested] = {}
     testMode: bool = False
     requestedGranularity: Granularity = Granularity(config.default_beacon_granularity)
     @field_validator('requestedGranularity')
