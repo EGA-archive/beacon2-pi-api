@@ -1,11 +1,11 @@
 from beacon.logs.logs import log_with_args_mongo
 from beacon.conf.conf_override import config
-from beacon.connections.mongo.utils import get_count, get_documents, query_id, get_documents_for_cohorts
+from beacon.connections.mongo.utils import get_count, get_documents, query_id, get_documents_for_cohorts, query_variantInternalId
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.utils import get_phenotypic_cross_query_attributes
 from beacon.connections.mongo.filters.filters import apply_filters
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.request_parameters.apply_request_parameters import apply_request_parameters
 from beacon.request.classes import RequestAttributes
-from beacon.connections.mongo.__init__ import datasets, cohorts
+from beacon.connections.mongo.__init__ import datasets, cohorts, genomicVariations
 from beacon.logs.logs import LOG
 from beacon.response.classes import CollectionsResponse
 
@@ -131,16 +131,22 @@ def get_cross_collections(self):
     limit = RequestAttributes.qparams.query.pagination.limit
     # Process filters
     query = apply_filters(self, {}, RequestAttributes.qparams.query.filters, {}, "a")
-    # Include the id queried in the query.
-    query = query_id(self, query, RequestAttributes.entry_id)
+
     # Translate the ids that relate the two collection record types and get the records.
     mapping = get_phenotypic_cross_query_attributes(self, RequestAttributes.entry_type, RequestAttributes.pre_entry_type)
+    if mapping["secondary_collection"] == genomicVariations:
+        query = query_variantInternalId(self, query, RequestAttributes.entry_id)
+    else:
+        # Include the id queried in the query.
+        query = query_id(self, query, RequestAttributes.entry_id)
+
     docs = get_documents_for_cohorts(self,
         mapping["secondary_collection"],
         query,
         0,
         0
     )
+
     final_query = {mapping["idq"]: {"$in": [doc[mapping["idq2"]] for doc in docs]}}
     docs = get_documents(self,
         RequestAttributes.mongo_collection,
