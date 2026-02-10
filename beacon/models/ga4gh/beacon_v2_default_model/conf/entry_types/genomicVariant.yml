@@ -54,8 +54,8 @@ genomicVariant:
           function_name_assigned: get_phenotypic_endpoint_of_variants
     cohort:
       endpoint_name: g_variants/{id}/cohorts
-      response_type: non_collection
-      endpoint_enabled: False
+      response_type: collection
+      endpoint_enabled: True
       connection:
         name: mongo
         database: beacon
@@ -64,7 +64,7 @@ genomicVariant:
           function_name_assigned: get_cross_collections
     dataset:
       endpoint_name: g_variants/{id}/datasets
-      response_type: non_collection
+      response_type: collection
       endpoint_enabled: True
       connection:
         name: mongo
