@@ -46,7 +46,6 @@ def apply_request_parameters(self, query: Dict[str, List[dict]], dataset: str):
         elif RequestAttributes.qparams.query.requestParameters['requestProfileId'] == 'BV2rangeRequest':
             startvalue=RequestAttributes.qparams.query.requestParameters['start']
             endvalue=RequestAttributes.qparams.query.requestParameters['end']
-            startvalue=v
             # Generate a final start value, as if it came by filters (start,end) to then create a list and process it as the second part of the range for the start value
             if isinstance(startvalue, list):
                 finalvalue=str(startvalue[0])+','+str(endvalue[0])
@@ -55,19 +54,19 @@ def apply_request_parameters(self, query: Dict[str, List[dict]], dataset: str):
             else:
                 finalvalue=str(startvalue)+','+str(endvalue)
             finalvalue = finalvalue.split(',')
-            start_range_filters = generate_position_filter_start(self, k, finalvalue)
+            start_range_filters = generate_position_filter_start(self, 'start', finalvalue)
             # Build the query with those artificial filters and apply other request parameters as well, if any
             for filter in start_range_filters:
                 startdict=apply_alphanumeric_filter(self, {}, filter, dataset, True)
                 startrangequery["$and"].append(startdict)  
             subqueryor["$or"].append(startrangequery)   
             # Generate a final start value, as if it came by filters (start,end) to then create a list and process it as the first part of the range for the end value
-            if isinstance(v, list) and isinstance(startvalue, list):
+            if isinstance(endvalue, list) and isinstance(startvalue, list):
                 startvalue=startvalue[0]
-                v = str(v[0])
+                v = str(endvalue[0])
                 stage2v = str(startvalue)+','+v
-            elif isinstance(v, list):
-                v = str(v[0])
+            elif isinstance(endvalue, list):
+                v = str(endvalue[0])
                 stage2v = str(startvalue)+','+v
             elif isinstance(startvalue, list):
                 startvalue=startvalue[0]
@@ -75,7 +74,7 @@ def apply_request_parameters(self, query: Dict[str, List[dict]], dataset: str):
             else:
                 stage2v = str(startvalue)+','+str(v)
             stage2v = stage2v.split(',')
-            end_range_filters = generate_position_filter_end(self, k, stage2v)
+            end_range_filters = generate_position_filter_end(self, 'end', stage2v)
             # Build the query with those artificial filters and apply other request parameters as well, if any
             for filter in end_range_filters:
                 enddictvalue=apply_alphanumeric_filter(self, {}, filter, dataset, True)
@@ -121,7 +120,7 @@ def apply_request_parameters(self, query: Dict[str, List[dict]], dataset: str):
                 id=VARIANTS_PROPERTY_MAP[k],
                 value=v
             ), dataset, True))
-        elif k != 'filters' and k != 'assemblyId' and k != 'requestProfileId' and k != 'start':
+        elif k != 'filters' and k != 'assemblyId' and k != 'requestProfileId' and k != 'start' and k != 'end':
             query["$and"].append(apply_alphanumeric_filter(self, {}, AlphanumericFilter(
                 id=VARIANTS_PROPERTY_MAP[k],
                 value=v
