@@ -1,5 +1,5 @@
 biosample:
-  entry_type_enabled: True
+  entry_type_enabled: False
   max_granularity: record
   endpoint_name: biosamples
   open_api_definition: https://raw.githubusercontent.com/ga4gh-beacon/beacon-v2/main/models/json/beacon-v2-default-model/biosamples/endpoints.json
