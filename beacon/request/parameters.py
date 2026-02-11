@@ -78,14 +78,17 @@ class BV2rangeRequest(BaseModel, extra='forbid'):
         if values.requestProfileId != 'BV2rangeRequest':
             raise ValueError('requestProfileId has to be BV2rangeRequest with these combination of parameters')
 
-class GeneIdQuery(BaseModel, extra='forbid'):
+class GeneIdRequest(BaseModel, extra='forbid'):
     geneId: str
-    variantType: Optional[str] =None
-    alternateBases: Optional[str] =None
-    aminoacidChange: Optional[str] =None
+    requestProfileId: str
     variantMinLength: Optional[int] =None
     variantMaxLength: Optional[int] =None
     datasets: Optional[list]=[]
+    @model_validator(mode='after')
+    @classmethod
+    def requestProfileIdcheck(cls, values):
+        if values.requestProfileId != 'GeneIdRequest':
+            raise ValueError('requestProfileId has to be GeneIdRequest with these combination of parameters')
 
 class BV2bracketRequest(BaseModel, extra='forbid'):
     referenceName: str
@@ -116,14 +119,63 @@ class BV2bracketRequest(BaseModel, extra='forbid'):
         if values.requestProfileId != 'BV2bracketRequest':
             raise ValueError('requestProfileId has to be BV2bracketRequest with these combination of parameters')
 
-class GenomicAlleleQuery(BaseModel, extra='forbid'):
+class GenomicAlleleShortFormRequest(BaseModel, extra='forbid'):
     genomicAlleleShortForm: str
+    requestProfileId: str
     datasets: Optional[list]=[]
+    @model_validator(mode='after')
+    @classmethod
+    def referenceName_must_have_assemblyId_if_not_HGVSId_3(cls, values): 
+        if values.requestProfileId != 'GenomicAlleleShortFormRequest':
+            raise ValueError('requestProfileId has to be GenomicAlleleShortFormRequest with these combination of parameters')
 
-class AminoacidChangeQuery(BaseModel, extra='forbid'):
+class AminoacidChangeRequest(BaseModel, extra='forbid'):
     aminoacidChange: str
     geneId: str
+    requestProfileId: str
     datasets: Optional[list]=[]
+    @model_validator(mode='after')
+    @classmethod
+    def requestProfileId_check(cls, values):
+        if values.requestProfileId != 'AminoacidChangeRequest':
+            raise ValueError('requestProfileId has to be AminoacidChangeRequest with these combination of parameters')
+        
+class VariantIdRequest(BaseModel, extra='forbid'):
+    variantId: str
+    requestProfileId: str
+    datasets: Optional[list]=[]
+    @model_validator(mode='after')
+    @classmethod
+    def requestProfileId_check(cls, values):
+        if values.requestProfileId != 'VariantIdRequest':
+            raise ValueError('requestProfileId has to be VariantIdRequest with these combination of parameters')
+        
+class Bv2GenericVariantRequest(BaseModel, extra='forbid'):
+    alternateBases: Optional[str]=None
+    aminoacidChange: Optional[str]=None
+    assemblyId: Optional[str] =None
+    end: Optional[list[int]]=None
+    geneId: Optional[str]=None
+    genomicAlleleShortForm: Optional[str]=None
+    referenceBases: Optional[str]= None
+    referenceName: Optional[Union[str,int]]= None
+    start: Optional[list[int]]= None
+    variantMinLength: Optional[int] =None
+    variantMaxLength: Optional[int] =None
+    variantType: Optional[str] =None
+    datasets: Optional[list]=[]
+    @model_validator(mode='after')
+    @classmethod
+    def requestProfileId_check(cls, values):
+        start=values.start
+        end=values.end
+        if isinstance(start, list):
+            start = start[0]
+        if isinstance(end, list):
+            end = end[0]
+        if isinstance(start, int) and isinstance(end, int): 
+            if int(start) > int(end):
+                raise ValueError("start's value can not be greater than end's value")
 
 class DatasetsRequested(BaseModel, extra='forbid'):
     datasets: list[str]
@@ -132,7 +184,7 @@ class RequestQuery(CamelModel, extra='forbid'):
     filters: List[Union[AlphanumericFilter,OntologyFilter,CustomFilter,List[Union[AlphanumericFilter,OntologyFilter,CustomFilter]]]] = []
     includeResultsetResponses: IncludeResultsetResponses = IncludeResultsetResponses.HIT
     pagination: Pagination = Pagination()
-    requestParameters: Union[BV2alleleRequest,BV2rangeRequest,BV2bracketRequest,AminoacidChangeQuery,GeneIdQuery,GenomicAlleleQuery,DatasetsRequested] = {}
+    requestParameters: Union[BV2alleleRequest,BV2rangeRequest,BV2bracketRequest,AminoacidChangeRequest,GeneIdRequest,GenomicAlleleShortFormRequest,VariantIdRequest,DatasetsRequested,Bv2GenericVariantRequest] = {}
     testMode: bool = False
     requestedGranularity: Granularity = Granularity(config.default_beacon_granularity)
     @field_validator('requestedGranularity')

@@ -14,5 +14,6 @@ VARIANTS_PROPERTY_MAP = {
     "aminoacidChange": "molecularAttributes.aminoacidChanges",
     "clinicalRelevance": "caseLevelData.clinicalInterpretations.clinicalRelevance",
     "mateName": "identifiers.genomicHGVSId",
-    "requestProfileId": "requestProfileId"
+    "requestProfileId": "requestProfileId",
+    "variantId": "identifiers.variantAlternateIds"
 }

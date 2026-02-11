@@ -98,9 +98,30 @@ def apply_request_parameters(self, query: Dict[str, List[dict]], dataset: str):
         elif RequestAttributes.qparams.query.requestParameters['requestProfileId'] == 'BV2alleleRequest':
             startvalue=RequestAttributes.qparams.query.requestParameters['start']
             filters = generate_position_filter_start_sequence_query(self, 'start', startvalue)
-            LOG.warning(filters)
             for filter in filters:
-                query["$and"].append(apply_alphanumeric_filter(self, {}, filter, dataset, True)) 
+                query["$and"].append(apply_alphanumeric_filter(self, {}, filter, dataset, True))
+    else:
+        for k, v in RequestAttributes.qparams.query.requestParameters.items():
+            if k == 'start' and isinstance(v, list):
+                start_filters = generate_position_filter_start(self, 'start', v)
+                for start_filter in start_filters:
+                    startdictvalue=apply_alphanumeric_filter(self, {}, start_filter, dataset, True)
+                    startquery["$and"].append(startdictvalue)
+            elif k == 'start' and isinstance(v, int):
+                startvalue=RequestAttributes.qparams.query.requestParameters['start']
+                filters = generate_position_filter_start_sequence_query(self, 'start', v)
+                for filter in filters:
+                    query["$and"].append(apply_alphanumeric_filter(self, {}, filter, dataset, True))
+            elif k == 'end' and isinstance(v, list):
+                end_filters = generate_position_filter_end(self, 'end', v)
+                for end_filter in end_filters:
+                    enddictvalue=apply_alphanumeric_filter(self, {}, end_filter, dataset, True)
+                    startquery["$and"].append(enddictvalue)
+            elif k == 'end' and isinstance(v, int):
+                end_filters = generate_position_filter_end(self, 'end', [v])
+                for end_filter in end_filters:
+                    enddictvalue=apply_alphanumeric_filter(self, {}, end_filter, dataset, True)
+                    startquery["$and"].append(enddictvalue)
     # Iterate through the different request parameters from the request
     for k, v in RequestAttributes.qparams.query.requestParameters.items():   
         if k == "datasets":
@@ -141,5 +162,4 @@ def apply_request_parameters(self, query: Dict[str, List[dict]], dataset: str):
         query["$and"].append(subquery)
     elif startquery["$and"] != [] and startquery != {}:
         query["$and"].append(startquery)
-    LOG.warning(query)
     return query, False

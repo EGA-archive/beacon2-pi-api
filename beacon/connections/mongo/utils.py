@@ -110,7 +110,6 @@ def get_docs_by_response_type(self, include: str, query: dict, dataset: SingleDa
         queryid={}
         queryid['datasetId']=dataset.dataset
         query_count["$or"].append(queryid)
-        LOG.warning(query_count)
         if query_count["$or"]!=[]:
             dataset_count = get_count(self, RequestAttributes.mongo_collection, query_count)
             if dataset_count == 0:
