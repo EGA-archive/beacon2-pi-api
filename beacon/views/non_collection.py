@@ -1,4 +1,4 @@
-from beacon.logs.logs import log_with_args, LOG
+from beacon.logs.logs import log_with_args
 from beacon.conf.conf_override import config
 import aiohttp.web as web
 from beacon.permissions.__main__ import query_permissions
@@ -10,6 +10,10 @@ from beacon.exceptions.exceptions import InvalidData
 from beacon.views.endpoint import EndpointView
 from beacon.response.includeResultsetResponses import include_resultSet_responses
 from beacon.utils.modules import load_framework_module, load_source_module
+from beacon.logs.logs import initialize_logger
+import logging
+
+LOG = initialize_logger(logging.DEBUG)
 
 class EntryTypeView(EndpointView):
     @query_permissions

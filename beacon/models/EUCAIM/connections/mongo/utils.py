@@ -1,5 +1,5 @@
 from beacon.connections.mongo.__init__ import collections, imagestudies, patients
-from beacon.logs.logs import log_with_args_mongo, LOG
+from beacon.logs.logs import log_with_args_mongo
 from beacon.conf.conf_override import config
 import yaml
 

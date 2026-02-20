@@ -1,7 +1,7 @@
 from pymongo.cursor import Cursor
 from beacon.connections.mongo.__init__ import client, counts as counts_, filtering_terms
 from pymongo.collection import Collection
-from beacon.logs.logs import log_with_args_mongo, LOG
+from beacon.logs.logs import log_with_args_mongo
 from beacon.conf.conf_override import config
 from beacon.exceptions.exceptions import InvalidRequest
 import aiohttp.web as web

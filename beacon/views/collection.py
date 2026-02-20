@@ -1,4 +1,4 @@
-from beacon.logs.logs import log_with_args, LOG
+from beacon.logs.logs import log_with_args
 from beacon.conf.conf_override import config
 import aiohttp.web as web
 from bson import json_util
@@ -7,6 +7,10 @@ from pydantic import ValidationError
 from beacon.exceptions.exceptions import InvalidData
 from beacon.views.endpoint import EndpointView
 from beacon.utils.modules import load_framework_module, load_source_module
+from beacon.logs.logs import initialize_logger
+import logging
+
+LOG = initialize_logger(logging.DEBUG)
 
 class CollectionEntryTypeView(EndpointView):
     @log_with_args(config.level)

@@ -1,6 +1,6 @@
 from beacon.request.parameters import AlphanumericFilter
 from typing import List, Dict
-from beacon.logs.logs import log_with_args, LOG
+from beacon.logs.logs import log_with_args
 from beacon.conf.conf_override import config
 from beacon.connections.mongo.filters.alphanumeric import apply_alphanumeric_filter
 from beacon.connections.mongo.__init__ import genomicVariations

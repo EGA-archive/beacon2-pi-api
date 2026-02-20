@@ -2,8 +2,10 @@ from pymongo.mongo_client import MongoClient
 from pymongo.errors import ConnectionFailure 
 import conf
 import os
-from beacon.logs.logs import LOG
+import logging
+from beacon.logs.logs import initialize_logger
 
+LOG = initialize_logger(logging.DEBUG)
 
 if conf.database_cluster:
     uri = "mongodb+srv://{}:{}@{}/?tls=true&authMechanism=SCRAM-SHA-256&retrywrites=false&maxIdleTimeMS=120000".format(

@@ -2,7 +2,8 @@
 from aiohttp.web_request import Request
 from aiohttp import web
 from beacon.request.parameters import RequestParams
-from beacon.logs.logs import log_with_args, LOG
+import logging
+from beacon.logs.logs import log_with_args
 from beacon.conf.conf_override import config
 from beacon.request.classes import RequestAttributes
 from beacon.exceptions.exceptions import IncoherenceInRequestError, InvalidRequest, WrongURIPath, NoFiltersAllowed
@@ -13,6 +14,9 @@ from beacon.request.parameters import RequestMeta, SchemasPerEntity
 from pydantic import ValidationError
 from beacon.utils.modules import get_one_module_conf
 import importlib
+from beacon.logs.logs import initialize_logger
+
+LOG = initialize_logger(logging.DEBUG)
 
 @log_with_args(config.level)
 def parse_query_string(self, request):

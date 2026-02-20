@@ -10,7 +10,6 @@ from pydantic import create_model, ConfigDict, Field
 from pydantic.alias_generators import to_camel
 from typing import Optional
 import json
-from beacon.logs.logs import LOG
 from pydantic import create_model, ValidationError
 from beacon.exceptions.exceptions import InvalidData
 from beacon.utils.modules import load_framework_module

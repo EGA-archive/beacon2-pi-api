@@ -2,7 +2,7 @@ from beacon.request.parameters import AlphanumericFilter
 from beacon.connections.mongo.utils import get_documents, choose_scope
 from beacon.connections.mongo.__init__ import filtering_terms
 from beacon.conf.filtering_terms import alphanumeric_terms
-from beacon.logs.logs import log_with_args, LOG
+from beacon.logs.logs import log_with_args
 from beacon.conf.conf_override import config
 from beacon.connections.mongo.filters.format import format_value, format_operator
 from beacon.utils.modules import get_all_modules_mongo_connections_script

@@ -1,4 +1,4 @@
-from beacon.logs.logs import LOG
+import logging
 import os
 import time
 import asyncio
@@ -6,6 +6,10 @@ from datetime import datetime
 from beacon import conf
 import signal
 from threading import Thread
+
+from beacon.logs.logs import initialize_logger
+
+LOG = initialize_logger(logging.DEBUG)
 
 async def initialize(app):
     # Set the time when standing up the app and log a message.

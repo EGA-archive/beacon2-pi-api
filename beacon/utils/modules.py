@@ -1,8 +1,7 @@
 from beacon.request.classes import RequestAttributes
 import os
-from typing import List, Optional, Union, Dict
+from typing import Union
 import re
-from beacon.logs.logs import LOG
 import yaml
 
 def load_framework_module(self, script_name):

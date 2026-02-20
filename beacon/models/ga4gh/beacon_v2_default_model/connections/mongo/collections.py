@@ -6,7 +6,6 @@ from beacon.connections.mongo.filters.filters import apply_filters
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.request_parameters.apply_request_parameters import apply_request_parameters
 from beacon.request.classes import RequestAttributes
 from beacon.connections.mongo.__init__ import datasets, cohorts, genomicVariations
-from beacon.logs.logs import LOG
 from beacon.response.classes import CollectionsResponse
 
 @log_with_args_mongo(config.level)

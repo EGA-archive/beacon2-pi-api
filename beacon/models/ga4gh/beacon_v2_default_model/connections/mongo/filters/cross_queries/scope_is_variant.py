@@ -1,5 +1,5 @@
 from beacon.connections.mongo.__init__ import genomicVariations, biosamples, targets as targets_, caseLevelData
-from beacon.logs.logs import log_with_args, LOG
+from beacon.logs.logs import log_with_args
 from beacon.conf.conf_override import config
 
 @log_with_args(config.level)

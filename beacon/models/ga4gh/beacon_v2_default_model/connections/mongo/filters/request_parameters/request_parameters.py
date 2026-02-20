@@ -1,6 +1,6 @@
 from beacon.connections.mongo.__init__ import biosamples
 from beacon.conf.conf_override import config
-from beacon.logs.logs import log_with_args, LOG
+from beacon.logs.logs import log_with_args
 from beacon.request.classes import RequestAttributes
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.cross_queries.get_biosampleIds import get_biosampleIds
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.cross_queries.get_total_query import get_total_query

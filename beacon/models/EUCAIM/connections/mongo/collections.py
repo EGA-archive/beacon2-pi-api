@@ -4,7 +4,6 @@ from beacon.connections.mongo.utils import get_count, get_documents, query_id, g
 from beacon.connections.mongo.filters.filters import apply_filters
 from beacon.request.classes import RequestAttributes
 from beacon.connections.mongo.__init__ import collections
-from beacon.logs.logs import LOG
 from beacon.response.classes import CollectionsResponse
 from beacon.models.EUCAIM.connections.mongo.utils import get_non_collections_cross_query_attributes
 from beacon.models.EUCAIM.connections.mongo.utils import import_patients_confile

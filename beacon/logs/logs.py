@@ -31,8 +31,6 @@ def initialize_logger(level):
     LOG.addHandler(handler)
     return LOG
 
-LOG = initialize_logger(config.level)
-
 # LOGS per iniciar i parar el contenidor (INFO)
 # LOGS per he rebut una request i retorno una response (INFO)
 # Tota la resta per DEBUG

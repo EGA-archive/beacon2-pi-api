@@ -1,4 +1,4 @@
-from beacon.logs.logs import log_with_args_initial, LOG
+from beacon.logs.logs import log_with_args_initial
 from beacon.views.collection import CollectionEntryTypeView
 from beacon.views.non_collection import EntryTypeView 
 from beacon.views.configuration import ConfigurationView

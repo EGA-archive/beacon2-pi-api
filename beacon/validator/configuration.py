@@ -1,11 +1,13 @@
 from beacon.conf import conf_override
-from beacon.logs.logs import LOG, log_with_args_check_configuration
+from beacon.logs.logs import log_with_args_check_configuration
 import os
 import re
 import logging
 import yaml
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.utils import import_dataset_confile, import_analysis_confile, import_biosample_confile, import_cohort_confile, import_individual_confile, import_genomicVariant_confile, import_run_confile
+from beacon.logs.logs import initialize_logger
 
+LOG = initialize_logger(logging.DEBUG)
 timestamp_regex = re.compile(r"^.+(\d{2}/\w{3}/\d{4}:\d{2}:\d{2}:\d{2})")
 
 def contains_special_characters(string):
