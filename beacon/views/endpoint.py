@@ -6,19 +6,19 @@ from beacon.request.classes import RequestAttributes
 from beacon.utils.requests import deconstruct_request, RequestParams
 from aiohttp_cors import CorsViewMixin
 from beacon.exceptions.exceptions import AppError
-from pydantic import create_model, ConfigDict, Field
+from beacon.conf.conf_override import config
 from pydantic.alias_generators import to_camel
 from typing import Optional
 import json
 from pydantic import create_model, ValidationError
 from beacon.exceptions.exceptions import InvalidData
 from beacon.utils.modules import load_framework_module
+from beacon.logs.logs import initialize_logger
 
-class EndpointView(web.View, CorsViewMixin):
+class EndpointView(web.View, CorsViewMixin):    
     def __init__(self, request: Request):
         # Initialize dhe endpoint with some of the attributes that will need to be collected later on
         self._request = request
-        self._id = generate_txid(self)
         RequestAttributes.ip = None
         RequestAttributes.headers=None
         RequestAttributes.entry_type=None
@@ -28,14 +28,17 @@ class EndpointView(web.View, CorsViewMixin):
         RequestAttributes.returned_apiVersion="v2.2.0"
         RequestAttributes.qparams=RequestParams()
         RequestAttributes.returned_granularity="boolean"
-        
+        self.LOG=self.request.app['logger']
+        self._id=None
+        self._id = generate_txid(self)
 
     async def get(self):
-        try:
-            # Decompound/validate the request and store the attributes needed in the class RequestAttributes
-            await deconstruct_request(self, self.request)
-            # Call the handler function for the view assigned to the queried endpoint
-            return await self.handler()
+        #try:
+        # Decompound/validate the request and store the attributes needed in the class RequestAttributes
+        await deconstruct_request(self, self.request)
+        # Call the handler function for the view assigned to the queried endpoint
+        return await self.handler()
+        """
         except AppError as e:
             # In case a handled error occurs, return the error message and status for it
             response_obj = self.error_builder(e.status, e.message)
@@ -44,6 +47,7 @@ class EndpointView(web.View, CorsViewMixin):
             # In case an unhandled error occurs, return a 500 and the generic error message below
             response_obj = self.error_builder(500, "Unexpected internal error: {}".format(e))
             return web.Response(text=json_util.dumps(response_obj), status=500, content_type='application/json')
+        """
 
     async def post(self):
         try:

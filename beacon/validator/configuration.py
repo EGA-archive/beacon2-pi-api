@@ -18,8 +18,15 @@ def contains_special_characters(string):
             return True
     return False
 
+def check_logs_configuration():
+    if conf_override.config.level not in [logging.NOTSET, logging.INFO, logging.DEBUG, logging.WARNING, logging.ERROR, logging.FATAL, logging.CRITICAL]:
+        raise Exception('The config parameter level must be one possible logging library level (NOTSET, DEBUG, INFO, etc...')
+    if not isinstance(conf_override.config.log_file, str):
+        if conf_override.config.log_file != None:
+            raise Exception('The config parameter log_file must be a string with the path to the dir where to store the logs or a variable None for not storing any log')
+
 @log_with_args_check_configuration(conf_override.config.level)
-def check_configuration(analysis_confile=import_analysis_confile(), biosample_confile=import_biosample_confile(), cohort_confile=import_cohort_confile(), dataset_confile=import_dataset_confile(), genomicVariant_confile=import_genomicVariant_confile(), individual_confile=import_individual_confile(), run_confile=import_run_confile()):
+def check_configuration(LOG=None, analysis_confile=import_analysis_confile(), biosample_confile=import_biosample_confile(), cohort_confile=import_cohort_confile(), dataset_confile=import_dataset_confile(), genomicVariant_confile=import_genomicVariant_confile(), individual_confile=import_individual_confile(), run_confile=import_run_confile()):
     if isinstance(analysis_confile["analysis"]["entry_type_enabled"], bool):
         pass
     else:
@@ -339,11 +346,6 @@ def check_configuration(analysis_confile=import_analysis_confile(), biosample_co
         raise Exception('The run_confile["analysis"]["allow_queries_without_filters"] must be of type bool.')
     if not isinstance(run_confile["run"]["allow_id_query"], bool):
         raise Exception('The run_confile["analysis"]["allow_id_query"] must be of type bool.')
-    if conf_override.config.level not in [logging.NOTSET, logging.INFO, logging.DEBUG, logging.WARNING, logging.ERROR, logging.FATAL, logging.CRITICAL]:
-        raise Exception('The config parameter level must be one possible logging library level (NOTSET, DEBUG, INFO, etc...')
-    if not isinstance(conf_override.config.log_file, str):
-        if conf_override.config.log_file != None:
-            raise Exception('The config parameter log_file must be a string with the path to the dir where to store the logs or a variable None for not storing any log')
     if not isinstance(conf_override.config.beacon_name, str):
         raise Exception('The beacon_name config parameter must be a string')
     if not isinstance(conf_override.config.beacon_id, str):

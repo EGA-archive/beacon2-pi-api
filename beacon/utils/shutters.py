@@ -109,7 +109,7 @@ async def config_watcher(app):
             old_m = initial_times.get(file_path)
             if old_m is None or new_m != old_m:
                 await monitor_pending(app)
-                LOG.warning("Restarting app")
+                LOG.info("Restarting app")
                 os._exit(0)
 
         initial_times = new_initial_times

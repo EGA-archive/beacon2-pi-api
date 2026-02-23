@@ -1,5 +1,4 @@
 from beacon.connections.mongo.filters.cross_queries.scope_is_not_entry_type import scope_is_not_entry_type
-from beacon.connections.mongo.__init__ import patients, imagestudies, collections
 from beacon.logs.logs import log_with_args
 from beacon.conf.conf_override import config
 from beacon.models.EUCAIM.connections.mongo.utils import import_patients_confile

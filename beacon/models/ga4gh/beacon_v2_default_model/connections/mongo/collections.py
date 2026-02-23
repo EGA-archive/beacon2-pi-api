@@ -5,11 +5,13 @@ from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.utils import 
 from beacon.connections.mongo.filters.filters import apply_filters
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.request_parameters.apply_request_parameters import apply_request_parameters
 from beacon.request.classes import RequestAttributes
-from beacon.connections.mongo.__init__ import datasets, cohorts, genomicVariations
+from beacon.connections.mongo.client import get_client
 from beacon.response.classes import CollectionsResponse
 
 @log_with_args_mongo(config.level)
 def get_datasets(self):
+    client=get_client()
+    datasets=client['beacon'].datasets
     # Find all the datasets in the mongo database.
     query = {}
     query = datasets.find(query)
@@ -17,6 +19,8 @@ def get_datasets(self):
 
 @log_with_args_mongo(config.level)
 def get_full_datasets(self):
+    client=get_client()
+    datasets=client['beacon'].datasets
     # Create the query syntax depending on it there is any entry id queried.
     if RequestAttributes.entry_id == None:
         query = {}
@@ -51,6 +55,8 @@ def get_list_of_datasets(self):
 
 @log_with_args_mongo(config.level)
 def get_dataset_with_id(self):
+    client=get_client()
+    datasets=client['beacon'].datasets
     limit = RequestAttributes.qparams.query.pagination.limit
     # Handle the request parameters and create the first built of the query.
     query_parameters, parameters_as_filters = apply_request_parameters(self, {}, RequestAttributes.entry_id)
@@ -77,6 +83,8 @@ def get_dataset_with_id(self):
 
 @log_with_args_mongo(config.level)
 def get_cohorts(self):
+    client=get_client()
+    cohorts=client['beacon'].cohorts
     limit = RequestAttributes.qparams.query.pagination.limit
     # Process filters
     query = apply_filters(self, {}, RequestAttributes.qparams.query.filters, {}, None)
@@ -106,6 +114,8 @@ def get_cohorts(self):
 
 @log_with_args_mongo(config.level)
 def get_cohort_with_id(self):
+    client=get_client()
+    cohorts=client['beacon'].cohorts
     limit = RequestAttributes.qparams.query.pagination.limit
     # Process filters
     query = apply_filters(self, {}, RequestAttributes.qparams.query.filters, {}, "a")
@@ -127,6 +137,8 @@ def get_cohort_with_id(self):
 
 @log_with_args_mongo(config.level)
 def get_cross_collections(self):
+    client=get_client()
+    genomicVariations=client['beacon'].genomicVariations
     limit = RequestAttributes.qparams.query.pagination.limit
     # Process filters
     query = apply_filters(self, {}, RequestAttributes.qparams.query.filters, {}, "a")
