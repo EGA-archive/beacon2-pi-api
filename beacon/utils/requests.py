@@ -17,8 +17,6 @@ import importlib
 from beacon.logs.logs import initialize_logger
 from beacon.connections.mongo.client import get_client
 
-LOG = initialize_logger(logging.DEBUG)
-
 @log_with_args(config.level)
 def parse_query_string(self, request):
     '''

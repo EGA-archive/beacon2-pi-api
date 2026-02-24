@@ -9,21 +9,22 @@ from threading import Thread
 
 from beacon.logs.logs import initialize_logger
 
-LOG = initialize_logger(logging.DEBUG)
-
 async def initialize(app):
+    LOG = app['logger']
+
     # Set the time when standing up the app and log a message.
     setattr(conf, 'update_datetime', datetime.now().isoformat())
 
     LOG.info("Initialization done.")
 
 def _on_shutdown(pid):
+
     time.sleep(6)
 
     #  Sending SIGINT to close server
     os.kill(pid, signal.SIGINT)
 
-    LOG.info('Shutting down beacon v2')
+    #LOG.info('Shutting down beacon v2')
 
 async def _graceful_shutdown_ctx(app):
     def graceful_shutdown_sigterm_handler():
@@ -54,12 +55,15 @@ PATHS_TO_RESTART = [
 ]
 
 async def monitor_pending(app):
+    LOG = app['logger']
     LOG.warning("Waiting for requests to finish...")
     while len(app['pending_requests']) >0:
         await asyncio.sleep(1)
 
 
 async def config_watcher(app):
+    LOG = app['logger']
+
     initial_times = {}
 
     # Let's add all the snapshot times for the folders to restart when changed

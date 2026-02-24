@@ -20,6 +20,7 @@ def load_source_module(self, script_name):
 
 @log_with_args_check_configuration(config.level)
 def check_database_connections(LOG=None):
+    # TODO: Comprovar els entry types conf de cada model
     dirs = os.listdir("/beacon/connections")
     for folder in dirs:
         complete_module='beacon.connections.'+folder+'.client'
@@ -192,6 +193,7 @@ def get_all_modules_datasets():
     return list_of_modules
                             
 def get_one_module_conf(entry_type):
+    # TODO: Fer cache per només executar aquesta funció 1 vegada
     dirs = os.listdir("/beacon/models")
     for folder in dirs:
         subdirs = os.listdir("/beacon/models/"+folder)

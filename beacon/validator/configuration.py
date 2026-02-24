@@ -6,8 +6,9 @@ import logging
 import yaml
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.utils import import_dataset_confile, import_analysis_confile, import_biosample_confile, import_cohort_confile, import_individual_confile, import_genomicVariant_confile, import_run_confile
 from beacon.logs.logs import initialize_logger
+import datetime
+import time
 
-LOG = initialize_logger(logging.DEBUG)
 timestamp_regex = re.compile(r"^.+(\d{2}/\w{3}/\d{4}:\d{2}:\d{2}:\d{2})")
 
 def contains_special_characters(string):
@@ -19,11 +20,15 @@ def contains_special_characters(string):
     return False
 
 def check_logs_configuration():
+    print('DEBUG - {}Z - {} - initial call'.format(datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3], check_logs_configuration.__name__), flush=True)
+    start = time.perf_counter()
     if conf_override.config.level not in [logging.NOTSET, logging.INFO, logging.DEBUG, logging.WARNING, logging.ERROR, logging.FATAL, logging.CRITICAL]:
         raise Exception('The config parameter level must be one possible logging library level (NOTSET, DEBUG, INFO, etc...')
     if not isinstance(conf_override.config.log_file, str):
         if conf_override.config.log_file != None:
             raise Exception('The config parameter log_file must be a string with the path to the dir where to store the logs or a variable None for not storing any log')
+    finish = time.perf_counter()
+    print('DEBUG - {}Z - {} - {}s - returned OK'.format(datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3], check_logs_configuration.__name__, round(finish-start,3)), flush=True)
 
 @log_with_args_check_configuration(conf_override.config.level)
 def check_configuration(LOG=None, analysis_confile=import_analysis_confile(), biosample_confile=import_biosample_confile(), cohort_confile=import_cohort_confile(), dataset_confile=import_dataset_confile(), genomicVariant_confile=import_genomicVariant_confile(), individual_confile=import_individual_confile(), run_confile=import_run_confile()):

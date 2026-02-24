@@ -10,12 +10,15 @@ from beacon.utils.middlewares import error_middleware, track_requests_middleware
 from beacon.utils.shutters import _graceful_shutdown_ctx, on_startup as on_start
 from beacon.logs.logs import initialize_logger
 from beacon.utils.modules import check_database_connections
+import datetime
 import warnings
 
 warnings.filterwarnings("ignore", category=UserWarning)
 
 async def create_api(port):
     try:
+        # TODO: Fer timestamp
+        print('INFO - {}Z - Preparing the logs'.format(datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3], flush=True))
         # We first check if the logging configuration is correct
         check_logs_configuration()
         # We initialize the logger
@@ -51,7 +54,7 @@ async def create_api(port):
         #aiohttp_autoreload.start()
 
         # Starting app with AppRunner, that is able to handle requests in parallel
-        LOG.info("Starting app")
+        LOG.info("API ready. Listening to requests")
         runner = web.AppRunner(app)
         await runner.setup()
         site = web.TCPSite(runner, '0.0.0.0', port,  ssl_context=ssl_context)

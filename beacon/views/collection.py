@@ -10,8 +10,6 @@ from beacon.utils.modules import load_framework_module, load_source_module
 from beacon.logs.logs import initialize_logger
 import logging
 
-LOG = initialize_logger(logging.DEBUG)
-
 class CollectionEntryTypeView(EndpointView):
     @log_with_args(config.level)
     async def handler(self):
@@ -36,6 +34,6 @@ class CollectionEntryTypeView(EndpointView):
             # Convert the class to JSON to return it in the final stream response
             response_obj = self.create_response()
         except ValidationError as v:
-            LOG.error(str(v))
+            self.LOG.error(str(v))
             raise InvalidData('{} templates or data are not correct'.format(RequestAttributes.entry_type))
         return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')

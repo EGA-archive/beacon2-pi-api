@@ -4,6 +4,7 @@ from beacon.conf.conf_override import config
 from typing import Optional
 
 def initialize_logger(level):
+    # TODO: fer un try per acabar amb graceful shutdown si hi ha excepció
     # Start the logger
     LOG = logging.getLogger("aiohttp.access")
     # Remove pre-existing default handlers
@@ -15,7 +16,7 @@ def initialize_logger(level):
     LOG.setLevel(level)
     # Conver the times to timestamp depending on your area
     formatter = logging.Formatter(
-        '%(levelname)s - %(asctime)sZ - %(message)s',
+        '%(levelname)s - %(asctime)s.%(msecs)dZ - %(message)s',
         datefmt='%Y-%m-%dT%H:%M:%S'
     )
     formatter.converter = time.gmtime
@@ -29,7 +30,7 @@ def initialize_logger(level):
     handler.setFormatter(formatter)
     # Add handler to the logger
     LOG.addHandler(handler)
-    LOG.info('Logger initialized')
+    LOG.info('Logger correctly initialized')
     return LOG
 
 # LOGS per iniciar i parar el contenidor (INFO)
@@ -47,14 +48,14 @@ def log_with_args_check_configuration(level):
         def wrapper(*args, **kwargs):
             try:
                 # Store the initial time before the function is executed
-                start = time.time()
+                start = time.perf_counter()
                 # Execute the function and log when is initiated
                 result = func(*args, **kwargs)
                 LOG=kwargs["LOG"]
                 LOG.debug(f"{func.__name__} - initial call")
                 # Store the final time after the function is executed and log when ends
-                finish = time.time()
-                LOG.debug(f"{func.__name__}- {finish-start} - returned OK")
+                finish = time.perf_counter()
+                LOG.debug(f"{func.__name__}- {round(finish-start,3)}s - returned OK")
                 # Specific hard-coded logs for the initialize and shutting down of the app
                 if f"{func.__name__}" == 'initialize':
                     LOG.info(f"{result} - Initialization done")
@@ -76,13 +77,13 @@ def log_with_args_initial(level):
         def wrapper(*args, **kwargs):
             try:
                 # Store the initial time before the function is executed
-                start = time.time()
+                start = time.perf_counter()
                 result = func(*args, **kwargs)
                 LOG=kwargs["app"]["logger"]
                 LOG.debug(f"{func.__name__} - initial call")
                 # Store the final time after the function is executed and log when ends
-                finish = time.time()
-                LOG.debug(f"{func.__name__}- {finish-start} - returned OK")
+                finish = time.perf_counter()
+                LOG.debug(f"{func.__name__} - {round(finish-start,3)}s - returned OK")
                 # Specific hard-coded logs for the initialize and shutting down of the app
                 if f"{func.__name__}" == 'initialize':
                     LOG.info(f"{result} - Initialization done")
@@ -103,12 +104,12 @@ def log_with_args(level):
         def wrapper(self, *args, **kwargs):
             try:
                 # Store the initial time before the function is executed
-                start = time.time()
+                start = time.perf_counter()
                 self.LOG.debug(f"{self._id} - {func.__name__} - initial call")
                 result = func(self, *args, **kwargs)
                 # Store the final time after the function is executed and log when ends
-                finish = time.time()
-                self.LOG.debug(f"{self._id} - {func.__name__} - {finish-start} - returned OK")
+                finish = time.perf_counter()
+                self.LOG.debug(f"{self._id} - {func.__name__} - {round(finish-start,3)}s - returned OK")
                 # Specific hard-coded logs for the initialize and shutting down of the app
                 if f"{func.__name__}" == 'initialize':
                     self.LOG.info(f"{self._id} - Initialization done")
@@ -129,12 +130,12 @@ def log_with_args_mongo(level):
         def wrapper(self, *args, **kwargs):
             try:
                 # Store the initial time before the function is executed
-                start = time.time()
+                start = time.perf_counter()
                 self.LOG.debug(f"{self._id} - {func.__name__} - initial call")
                 result = func(self, *args, **kwargs)
                 # Store the final time after the function is executed and log when ends
-                finish = time.time()
-                self.LOG.debug(f"{self._id} - {func.__name__} - {finish-start} - returned OK")
+                finish = time.perf_counter()
+                self.LOG.debug(f"{self._id} - {func.__name__} - {round(finish-start,3)}s - returned OK")
                 # Specific hard-coded logs for the initialize and shutting down of the app
                 if f"{func.__name__}" == 'initialize':
                     self.LOG.info(f"{self._id} - Initialization done")

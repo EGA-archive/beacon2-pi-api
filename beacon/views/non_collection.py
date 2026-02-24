@@ -13,8 +13,6 @@ from beacon.utils.modules import load_framework_module, load_source_module
 from beacon.logs.logs import initialize_logger
 import logging
 
-LOG = initialize_logger(logging.DEBUG)
-
 class EntryTypeView(EndpointView):
     @query_permissions
     @log_with_args(config.level)
@@ -46,7 +44,7 @@ class EntryTypeView(EndpointView):
                         list_of_resultSets.append(resultSet)
                         new_datasets.append(dataset)
                     except ValidationError as v:
-                        LOG.error('{} dataset is invalid: {}'.format(dataset.dataset, str(v)))
+                        self.LOG.error('{} dataset is invalid: {}'.format(dataset.dataset, str(v)))
                 # Instantiate the responseSummary and the resultSets with the datasets to be in the response
                 responseSummary = module_common.ResponseSummary.build_response_summary_by_dataset(module_common.ResponseSummary, new_datasets)
                 resultSets = Resultsets.return_resultSets(list_of_resultSets)
