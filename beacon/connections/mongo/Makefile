@@ -1,4 +1,4 @@
-DATA_PATH = /data/test
+DATA_PATH = /data/elixir
 
 build:
 	docker exec mongoprod mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --file $(DATA_PATH)/datasets.json --collection datasets
