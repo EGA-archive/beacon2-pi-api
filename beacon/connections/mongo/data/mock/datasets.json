@@ -1,1 +1,8 @@
-[{"description": "This is a synthetic dataset with 42312 samples only for chr21 as a subset of COVID GDI related Finnish population", "id": "COVID_FI_subpop_chr21_subset", "name": "GoE_ES_CRG_1", "_id": "e14ffa9f47499cc617bc9634a85400dd809cef17dc107beb4b60324b5151fb55"}]
+[
+    {
+        "description": "This is a subset of the GDI MS8 synthetic dataset (COVID pop13_1) containing aggregated allele frequency (AF) statistics for variants on chr21 across 42",
+        "id": "GoE-ES-CRG-1",
+        "name": "CRG_AFBeacon_GoE_synthetic_dataset",
+        "_id": "ec9a7a448ab6b13825aeccdc17625c53fdd249a832ff113bb5df6e8d1caeb5aa"
+    }
+]
