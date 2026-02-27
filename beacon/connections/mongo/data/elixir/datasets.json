@@ -1,1 +1,20 @@
-[{"createDateTime": "2021-12-29T20:33:40Z", "dataUseConditions": {"duoDataUse": [{"id": "DUO:0000019,DUO:00000020", "label": "publication required,publication required", "version": "7-1-19,7-1-19"}]}, "description": "Bear in mind that both genomic and metadata information is synthetic", "externalUrl": "http://synthetic_usecases_4beacon_testingV4.com", "id": "synthetic_usecases_4beacon_testingV4", "name": "2021-12-29T20:33:40Z", "updateDateTime": "v1.0", "_id": "52cdaa80a86c56367ff17c5c26e20e6e698654e197e55a24d1d4331941264646"}]
+[
+    {
+        "createDateTime": "2021-12-29T20:33:40Z",
+        "dataUseConditions": {
+            "duoDataUse": [
+                {
+                    "id": "DUO:0000019",
+                    "label": "publication required",
+                    "version": "7-1-19"
+                }
+            ]
+        },
+        "description": "Bear in mind that both genomic and metadata information is synthetic",
+        "externalUrl": "http://synthetic_usecases_4beacon_testingV4.com",
+        "id": "synthetic_usecases_4beacon_testingV4",
+        "name": "2021-12-29T20:33:40Z",
+        "updateDateTime": "v1.0",
+        "_id": "52cdaa80a86c56367ff17c5c26e20e6e698654e197e55a24d1d4331941264646"
+    }
+]
