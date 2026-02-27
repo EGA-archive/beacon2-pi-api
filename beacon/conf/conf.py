@@ -8,12 +8,12 @@ try:
 except Exception as e:
     raise FileNotFound('There are issues with the api_version.yml file. Check if it can be opened or if has any content')
 
-level='hola'
+level=logging.DEBUG
 log_file=None
 beacon_id = 'org.ega-archive.beacon-ri-demo'  # ID of the Beacon
 beacon_name = 'Beacon Production Implementation demo'  # Name of the Beacon service
 api_version = 'v2.2.0' # Version of the Beacon implementation
-uri = 'http://localhost:5050'
+uri = 'http://beaconprod:5050'
 uri_subpath = '/api'
 complete_url = uri + uri_subpath
 environment = 'test'

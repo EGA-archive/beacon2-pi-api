@@ -238,7 +238,7 @@ def set_entry_type(self, request):
     if 'https' not in abs_url and 'https' in def_uri:
         abs_url = abs_url.replace('http', 'https')
     if abs_url[:starting_endpoint] != def_uri :
-        LOG.warning('configuration variable uri: {} not the same as where the beacon is hosted'.format(config.uri))
+        self.LOG.warning('configuration variable uri: {} not the same as where the beacon is hosted'.format(config.uri))
     if abs_url_with_query_string.endswith('/api'):
         RequestAttributes.entry_type='info'
         set_entry_type_configuration(self)
