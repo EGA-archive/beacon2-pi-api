@@ -17,7 +17,6 @@ warnings.filterwarnings("ignore", category=UserWarning)
 
 async def create_api(port):
     try:
-        # TODO: Fer timestamp
         print('INFO - {}Z - Preparing the logs'.format(datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3], flush=True))
         # We first check if the logging configuration is correct
         check_logs_configuration()

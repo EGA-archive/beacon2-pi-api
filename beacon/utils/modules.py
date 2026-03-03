@@ -20,9 +20,59 @@ def load_source_module(self, script_name):
 
 @log_with_args_check_configuration(config.level)
 def check_database_connections(LOG=None):
-    # TODO: Comprovar els entry types conf de cada model
-    dirs = os.listdir("/beacon/connections")
+    with open("/beacon/conf/models/models_conf.yml", 'r') as pfile:
+        models_confile= yaml.safe_load(pfile)
+    pfile.close()
+    dirs = os.listdir("/beacon/models")
+    database_connections_to_check=[]
     for folder in dirs:
+        subdirs = os.listdir("/beacon/models/"+folder)
+        if folder in models_confile:
+            if models_confile[folder]["model_enabled"] == False:
+                continue
+        if "conf" in subdirs:
+            confiles = os.listdir("/beacon/models/"+folder+"/conf/entry_types/")
+            for confile in confiles:
+                if confile != '__pycache__':
+                    with open("/beacon/models/"+folder+"/conf/entry_types/" + confile, 'r') as pfile:
+                        entry_type_confile = yaml.safe_load(pfile)
+                    pfile.close()
+                    for entry_type_id, conf_entry_type_param in entry_type_confile.items():
+                        if conf_entry_type_param['entry_type_enabled'] == True:
+                            if conf_entry_type_param['connection']['name'] not in database_connections_to_check:
+                                database_connections_to_check.append(conf_entry_type_param['connection']['name'])
+                            for conf_param, value_param in conf_entry_type_param.items():
+                                if conf_param == 'lookups':
+                                    for lookup_id, lookup_value in value_param.items():
+                                        if isinstance(lookup_value, dict):
+                                            if lookup_value['connection']['name'] not in database_connections_to_check:
+                                                database_connections_to_check.append(lookup_value['connection']['name'])
+        else:
+            for subfolder in subdirs:
+                underdirs = os.listdir("/beacon/models/"+folder+"/"+subfolder)
+                if folder+'/'+subfolder in models_confile:
+                    if models_confile[folder+'/'+subfolder ]["model_enabled"] == False:
+                        continue
+                if "conf" in underdirs:
+                    confiles = os.listdir("/beacon/models/"+folder+"/"+subfolder+"/conf/entry_types/")
+                    for confile in confiles:
+                        if confile != '__pycache__':
+                            with open("/beacon/models/"+folder+"/"+subfolder+"/conf/entry_types/" + confile, 'r') as pfile:
+                                entry_type_confile = yaml.safe_load(pfile)
+                            pfile.close()
+                            for entry_type_id, conf_entry_type_param in entry_type_confile.items():
+                                if conf_entry_type_param['entry_type_enabled'] == True:
+                                    if conf_entry_type_param['connection']['name'] not in database_connections_to_check:
+                                        database_connections_to_check.append(conf_entry_type_param['connection']['name'])
+                                    for conf_param, value_param in conf_entry_type_param.items():
+                                        if conf_param == 'lookups':
+                                            for lookup_id, lookup_value in value_param.items():
+                                                if isinstance(lookup_value, dict):
+                                                    if lookup_value['connection']['name'] not in database_connections_to_check:
+                                                        database_connections_to_check.append(lookup_value['connection']['name'])
+    print(database_connections_to_check, flush=True)
+    # TODO: Comprovar els entry types conf de cada model
+    for folder in database_connections_to_check:
         complete_module='beacon.connections.'+folder+'.client'
         import importlib
         module = importlib.import_module(complete_module, package=None)
@@ -88,6 +138,7 @@ def load_types_of_results(response_type):
     return union_type
 
 def load_routes():
+    #TODO: add only the enabled lookups
     with open("/beacon/conf/models/models_conf.yml", 'r') as pfile:
         models_confile= yaml.safe_load(pfile)
     pfile.close()
