@@ -5,13 +5,13 @@ networks:
   pub:
 
 services:
-  beaconprodspain:
+  beaconafprodspain:
     restart: unless-stopped
     build:
       context: .
-    container_name: beaconprodspain
+    container_name: beaconafprodspain
     ports:
-      - "5090:5050"
+      - "5095:5050"
     entrypoint: ['python','-m','beacon']
     volumes:
       - ./beacon/logs/logs.log:/beacon/logs/logs.log
@@ -83,12 +83,12 @@ services:
     networks:
       - idp-priv
 
-  dbspain:
+  dbafspain:
     image: mongo:5.0.32
     #command: --wiredTigerCacheSizeGB 4
     #command: --wiredTigerCacheSizeGB 4 --sslMode requireSSL --tlsCertificateKeyFile test-server1.pem --tlsCAFile test-ca.pem
     hostname: mongo
-    container_name: mongoprodspain
+    container_name: mongoafprodspain
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
