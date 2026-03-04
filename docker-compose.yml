@@ -2,7 +2,7 @@ version: '3.1'
 
 networks:
   idp-priv:
-  pub:
+  pub-prod:
 
 services:
   beaconafprodspain:
@@ -21,7 +21,7 @@ services:
       - ./beacon/models:/beacon/models
       - ./beacon/conf/models:/beacon/conf/models
     networks:
-      - pub
+      - pub-prod
 
   admin-ui:
     restart: always
@@ -104,7 +104,7 @@ services:
       #- ./test-ca.pem:/test-ca.pem
       #- ./test-client.pem:/test-client.pem
     networks:
-      - pub
+      - pub-prod
     command: ["--config", "/etc/mongod.conf"]
   
   mongo-express:
