@@ -35,7 +35,7 @@ services:
       - ./beacon:/home/app/web/beacon
       - ./adminui:/home/app/web
     networks:
-      - pub
+      - pub-prod
   
   idp:
     #image: quay.io/keycloak/keycloak:12.0.0
@@ -68,7 +68,7 @@ services:
       - "9991:8443"
     networks:
       - idp-priv 
-      - pub
+      - pub-prod
     depends_on:
       - idp-db
 
@@ -117,14 +117,14 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
       ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
     networks:
-      - pub
+      - pub-prod
 
   beacon-ri-tools:
     image: ghcr.io/ega-archive/beacon2-ri-tools-v2:latest
     hostname: beacon-ri-tools
     container_name: ri-tools
     networks:
-      - pub
+      - pub-prod
     tty: true
     volumes:
       - ./ri-tools/output_docs:/usr/src/app/output_docs
@@ -142,7 +142,7 @@ services:
     volumes:
       - ./ri-tools/phenopackets-to-BFF/:/usr/src/app/examples
     networks:
-      - pub
+      - pub-prod
 
   templateUI:
     image: ghcr.io/ega-archive/beacon-template-ui:main
@@ -156,7 +156,7 @@ services:
       - ./template-ui/src/config/config.json:/client/src/config/config.json
       - ./template-ui/.env:/client/.env
     networks:
-      - pub
+      - pub-prod
     environment:
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true
