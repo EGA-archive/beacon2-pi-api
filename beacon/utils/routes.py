@@ -27,6 +27,7 @@ def append_routes(app):
     app.add_routes([web.get(config.uri_subpath+'/configuration', ConfigurationView)])
     app.add_routes([web.get(config.uri_subpath+'/map', MapView)])
     app.add_routes([web.get(config.uri_subpath+'/filtering_terms', FilteringTermsView)])
+    app.add_routes([web.get(config.uri_subpath+'/health', )])
     routes_to_add = load_routes()
     for url, response_type in routes_to_add.items():
         if response_type == ['non_collection']:
