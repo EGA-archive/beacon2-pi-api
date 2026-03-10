@@ -144,6 +144,10 @@ def parse_request_parameters(self, query, filter):
             dict_expr['$expr']=dict_gt
             andquery["$and"].append(dict_expr)
             query=andquery
+        else:
+            formatted_value = format_value(self, filter.value)
+            formatted_operator = format_operator(self, filter.operator)
+            query[filter.id] = { formatted_operator: formatted_value }
 
     elif filter.id == 'assemblyId':
         pass
