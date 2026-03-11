@@ -4,17 +4,16 @@ import aiohttp.web as web
 from bson import json_util
 from beacon.request.classes import RequestAttributes
 from beacon.exceptions.exceptions import InvalidData
+from exceptions.exceptions import DatabaseIsDown
+from beacon.utils.modules import check_database_connections
 from beacon.views.endpoint import EndpointView
-from pydantic import ValidationError
-from beacon.utils.modules import load_framework_module
 
 class HealthView(EndpointView):        
     @log_with_args(config.level)
     async def handler(self):
         try:
-
-            self.classResponse = module_info.InfoResponse(meta=meta.model_dump(exclude_none=True),response=info.model_dump(exclude_none=True))
-            response_obj = self.create_response()
-        except ValidationError as v:
-            raise InvalidData('{} templates or data are not correct'.format(RequestAttributes.entry_type))
+            check_database_connections()
+            response_obj = {"status": "ok"}
+        except DatabaseIsDown as e:
+            response_obj = {"status": "shutting down", "error": e}
         return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
