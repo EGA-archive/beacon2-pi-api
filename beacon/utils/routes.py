@@ -7,6 +7,7 @@ from beacon.views.filtering_terms import FilteringTermsView
 from beacon.views.info import InfoView
 from beacon.views.map import MapView
 from beacon.views.service_info import ServiceInfoView
+from beacon.views.health import HealthView
 from beacon.conf.conf_override import config
 import aiohttp.web as web
 from beacon.utils.modules import load_routes
@@ -27,7 +28,7 @@ def append_routes(app):
     app.add_routes([web.get(config.uri_subpath+'/configuration', ConfigurationView)])
     app.add_routes([web.get(config.uri_subpath+'/map', MapView)])
     app.add_routes([web.get(config.uri_subpath+'/filtering_terms', FilteringTermsView)])
-    app.add_routes([web.get(config.uri_subpath+'/health', )])
+    app.add_routes([web.get(config.uri_subpath+'/health', HealthView)])
     routes_to_add = load_routes()
     for url, response_type in routes_to_add.items():
         if response_type == ['non_collection']:

@@ -4,15 +4,32 @@ import aiohttp.web as web
 from bson import json_util
 from beacon.request.classes import RequestAttributes
 from beacon.exceptions.exceptions import InvalidData
-from exceptions.exceptions import DatabaseIsDown
+from beacon.exceptions.exceptions import DatabaseIsDown
 from beacon.utils.modules import check_database_connections
-from beacon.views.endpoint import EndpointView
+from aiohttp_cors import CorsViewMixin
+from aiohttp.web_request import Request
+from beacon.utils.txid import generate_txid
 
-class HealthView(EndpointView):        
+class HealthView(web.View, CorsViewMixin):
+    def __init__(self, request: Request):
+        # Initialize dhe endpoint with some of the attributes that will need to be collected later on
+        self._request = request
+        RequestAttributes.ip = None
+        RequestAttributes.headers=None
+        self.LOG=self.request.app['logger']
+        self._id=None
+        self._id = generate_txid(self)
+
+    async def get(self):
+        #try:
+        # Decompound/validate the request and store the attributes needed in the class RequestAttributes
+        # Call the handler function for the view assigned to the queried endpoint
+        return await self.handler()
+    
     @log_with_args(config.level)
     async def handler(self):
         try:
-            check_database_connections()
+            check_database_connections(LOG=self.LOG)
             response_obj = {"status": "ok"}
         except DatabaseIsDown as e:
             response_obj = {"status": "shutting down", "error": e}

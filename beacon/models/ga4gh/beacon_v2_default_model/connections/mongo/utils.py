@@ -1,9 +1,7 @@
-from pymongo.cursor import Cursor
-from beacon.connections.mongo.client import get_client
 from pymongo.collection import Collection
 from beacon.logs.logs import log_with_args_mongo
 from beacon.conf.conf_override import config
-from beacon.exceptions.exceptions import InvalidRequest
+from beacon.connections.mongo.client import get_client
 import aiohttp.web as web
 import yaml
 
