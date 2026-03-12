@@ -8,7 +8,7 @@ def create_ssh(host, username, password):
     ssh.connect(host, username=username, password=password)
     return ssh
 
-def get_client():
+async def get_client():
     try:
         client = create_ssh(host=conf.host, username=conf.username, password=conf.password)
         return client

@@ -5,6 +5,7 @@ import re
 import yaml
 from beacon.logs.logs import log_with_args_check_configuration
 from beacon.conf.conf_override import config
+from beacon.exceptions.exceptions import DatabaseIsDown
 
 def load_framework_module(self, script_name):
     module='beacon.framework.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.'+script_name
@@ -19,7 +20,7 @@ def load_source_module(self, script_name):
     return module
 
 @log_with_args_check_configuration(config.level)
-def check_database_connections(LOG=None):
+async def check_database_connections(LOG=None):
     with open("/beacon/conf/models/models_conf.yml", 'r') as pfile:
         models_confile= yaml.safe_load(pfile)
     pfile.close()
@@ -70,14 +71,17 @@ def check_database_connections(LOG=None):
                                                 if isinstance(lookup_value, dict):
                                                     if lookup_value['connection']['name'] not in database_connections_to_check:
                                                         database_connections_to_check.append(lookup_value['connection']['name'])
-    print(database_connections_to_check, flush=True)
     # TODO: Comprovar els entry types conf de cada model
     for folder in database_connections_to_check:
         complete_module='beacon.connections.'+folder+'.client'
         import importlib
         module = importlib.import_module(complete_module, package=None)
         client_from_module = getattr(module, 'get_client')
-        client_from_module()
+        LOG.warning('heyyy')
+        try:
+            await client_from_module()
+        except Exception:
+            raise DatabaseIsDown(folder)
 
 def load_class(script_name, className):
     module='beacon.framework.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.'+script_name

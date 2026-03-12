@@ -24,7 +24,7 @@ async def create_api(port):
         LOG = initialize_logger(config.level)
         # Before standing up the app, check that the configuration makes sense
         check_configuration(LOG=LOG)
-        check_database_connections(LOG=LOG)
+        await check_database_connections(LOG=LOG)
 
         # Create the web app with middlewares for allowing CORS for the specific urls and to handle Not Found and other non related app errors with error_middleware
         app = web.Application(

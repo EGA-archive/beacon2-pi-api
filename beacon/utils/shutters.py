@@ -26,6 +26,10 @@ def _on_shutdown(pid):
 
     #LOG.info('Shutting down beacon v2')
 
+async def shutdown_process():
+    await asyncio.sleep(0.1)  # allow response to flush
+    os.kill(os.getpid(), signal.SIGTERM)
+
 async def _graceful_shutdown_ctx(app):
     def graceful_shutdown_sigterm_handler():
         # Get the process where the app is running in the system.

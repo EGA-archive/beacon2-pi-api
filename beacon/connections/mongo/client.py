@@ -1,31 +1,30 @@
 from pymongo.mongo_client import MongoClient
 from beacon.connections.mongo import conf
+from beacon.connections.mongo.ping import ping_database
 from beacon.conf.conf_override import config
 import aiohttp.web as web
 from beacon.exceptions.exceptions import DatabaseIsDown
-from beacon.logs.logs import log_with_args_check_configuration
+import asyncio
 
-def get_client():
-    try:
-        if conf.database_cluster:
-            uri = "mongodb+srv://{}/?tls=true&authMechanism=SCRAM-SHA-256&retrywrites=false&maxIdleTimeMS=120000".format(
-                conf.database_host
-            )
-        else:
-            uri = "mongodb://{}:{}/{}?authSource={}".format(
-                conf.database_host,
-                conf.database_port,
-                conf.database_name,
-                conf.database_auth_source
-            )
+async def get_client():
+    if conf.database_cluster:
+        uri = "mongodb+srv://{}/?tls=true&authMechanism=SCRAM-SHA-256&retrywrites=false&maxIdleTimeMS=120000".format(
+            conf.database_host
+        )
+    else:
+        uri = "mongodb://{}:{}/{}?authSource={}".format(
+            conf.database_host,
+            conf.database_port,
+            conf.database_name,
+            conf.database_auth_source
+        )
 
-        if conf.database_certificate != '' and conf.database_cafile != '':
-            uri += '&tls=true&tlsCertificateKeyFile={}&tlsCAFile={}'.format(conf.database_certificate, conf.database_cafile)
+    if conf.database_certificate != '' and conf.database_cafile != '':
+        uri += '&tls=true&tlsCertificateKeyFile={}&tlsCAFile={}'.format(conf.database_certificate, conf.database_cafile)
 
-        client = MongoClient(uri, username=conf.database_user, password=conf.database_password)
-        return client
-    except Exception as e:
-        raise DatabaseIsDown(str(e))
+    client = MongoClient(uri, username=conf.database_user, password=conf.database_password)
+    await asyncio.wait_for(ping_database(client), timeout=1.0)
+    return client
 
 def create_budget():
     client=get_client()
