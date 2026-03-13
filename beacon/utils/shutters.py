@@ -116,6 +116,7 @@ async def config_watcher(app):
         for file_path, new_m in new_initial_times.items():
             old_m = initial_times.get(file_path)
             if old_m is None or new_m != old_m:
+                app['state'] = 'paused'
                 await monitor_pending(app)
                 LOG.info("Restarting app")
                 os._exit(0)

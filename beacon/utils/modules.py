@@ -6,6 +6,9 @@ import yaml
 from beacon.logs.logs import log_with_args_check_configuration
 from beacon.conf.conf_override import config
 from beacon.exceptions.exceptions import DatabaseIsDown
+import asyncio
+
+#TODO: get_client() passant una variable amb el nom de la base de dades
 
 def load_framework_module(self, script_name):
     module='beacon.framework.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.'+script_name
@@ -20,7 +23,13 @@ def load_source_module(self, script_name):
     return module
 
 @log_with_args_check_configuration(config.level)
-async def check_database_connections(LOG=None):
+async def check_database_connections(LOG=None, entry_type=None, pre_entry_type=None):
+    try:
+        entry_type=RequestAttributes.entry_type
+        pre_entry_type=RequestAttributes.pre_entry_type
+    except Exception:
+        entry_type=None
+        pre_entry_type=None
     with open("/beacon/conf/models/models_conf.yml", 'r') as pfile:
         models_confile= yaml.safe_load(pfile)
     pfile.close()
@@ -39,15 +48,20 @@ async def check_database_connections(LOG=None):
                         entry_type_confile = yaml.safe_load(pfile)
                     pfile.close()
                     for entry_type_id, conf_entry_type_param in entry_type_confile.items():
-                        if conf_entry_type_param['entry_type_enabled'] == True:
-                            if conf_entry_type_param['connection']['name'] not in database_connections_to_check:
-                                database_connections_to_check.append(conf_entry_type_param['connection']['name'])
-                            for conf_param, value_param in conf_entry_type_param.items():
-                                if conf_param == 'lookups':
-                                    for lookup_id, lookup_value in value_param.items():
-                                        if isinstance(lookup_value, dict):
-                                            if lookup_value['connection']['name'] not in database_connections_to_check:
-                                                database_connections_to_check.append(lookup_value['connection']['name'])
+                        if entry_type == None or conf_entry_type_param['endpoint_name'] == entry_type and pre_entry_type == None or conf_entry_type_param['endpoint_name'] == pre_entry_type:
+                            if conf_entry_type_param['entry_type_enabled'] == True:
+                                if conf_entry_type_param['connection']['name'] not in database_connections_to_check:
+                                    database_connections_to_check.append(conf_entry_type_param['connection']['name'])
+                                for conf_param, value_param in conf_entry_type_param.items():
+                                    if conf_param == 'lookups':
+                                        for lookup_id, lookup_value in value_param.items():
+                                            if isinstance(lookup_value, dict):
+                                                if pre_entry_type != None and entry_type != None:
+                                                    if lookup_value['endpoint_name'] == pre_entry_type+'/{id}/'+entry_type:
+                                                        if lookup_value['connection']['name'] not in database_connections_to_check:
+                                                            database_connections_to_check.append(lookup_value['connection']['name'])
+                                                else:
+                                                    database_connections_to_check.append(lookup_value['connection']['name'])
         else:
             for subfolder in subdirs:
                 underdirs = os.listdir("/beacon/models/"+folder+"/"+subfolder)
@@ -62,24 +76,31 @@ async def check_database_connections(LOG=None):
                                 entry_type_confile = yaml.safe_load(pfile)
                             pfile.close()
                             for entry_type_id, conf_entry_type_param in entry_type_confile.items():
-                                if conf_entry_type_param['entry_type_enabled'] == True:
-                                    if conf_entry_type_param['connection']['name'] not in database_connections_to_check:
-                                        database_connections_to_check.append(conf_entry_type_param['connection']['name'])
-                                    for conf_param, value_param in conf_entry_type_param.items():
-                                        if conf_param == 'lookups':
-                                            for lookup_id, lookup_value in value_param.items():
-                                                if isinstance(lookup_value, dict):
-                                                    if lookup_value['connection']['name'] not in database_connections_to_check:
-                                                        database_connections_to_check.append(lookup_value['connection']['name'])
-    # TODO: Comprovar els entry types conf de cada model
+                                if entry_type == None or conf_entry_type_param['endpoint_name'] == entry_type and pre_entry_type == None or conf_entry_type_param['endpoint_name'] == pre_entry_type:
+                                    if conf_entry_type_param['entry_type_enabled'] == True:
+                                        if conf_entry_type_param['connection']['name'] not in database_connections_to_check:
+                                            database_connections_to_check.append(conf_entry_type_param['connection']['name'])
+                                        for conf_param, value_param in conf_entry_type_param.items():
+                                            if conf_param == 'lookups':
+                                                for lookup_id, lookup_value in value_param.items():
+                                                    if isinstance(lookup_value, dict):
+                                                        if pre_entry_type != None and entry_type != None:
+                                                            if lookup_value['endpoint_name'] == pre_entry_type+'/{id}/'+entry_type:
+                                                                if lookup_value['connection']['name'] not in database_connections_to_check:
+                                                                    database_connections_to_check.append(lookup_value['connection']['name'])
+                                                        else:
+                                                            database_connections_to_check.append(lookup_value['connection']['name'])
     for folder in database_connections_to_check:
-        complete_module='beacon.connections.'+folder+'.client'
+        complete_module='beacon.connections.'+folder+'.ping'
         import importlib
         module = importlib.import_module(complete_module, package=None)
+        ping_from_module = getattr(module, 'ping_database')
+        complete_client_module='beacon.connections.'+folder+'.client'
+        import importlib
+        module = importlib.import_module(complete_client_module, package=None)
         client_from_module = getattr(module, 'get_client')
-        LOG.warning('heyyy')
         try:
-            await client_from_module()
+            await asyncio.wait_for(ping_from_module(client_from_module()), timeout=1.0)
         except Exception:
             raise DatabaseIsDown(folder)
 

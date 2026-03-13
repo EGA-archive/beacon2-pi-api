@@ -7,10 +7,10 @@ from pydantic import ValidationError
 from beacon.exceptions.exceptions import InvalidData
 from beacon.views.endpoint import EndpointView
 from beacon.utils.modules import load_framework_module, load_source_module
-from beacon.logs.logs import initialize_logger
-import logging
+from beacon.utils.checks import state_check
 
 class CollectionEntryTypeView(EndpointView):
+    @state_check
     @log_with_args(config.level)
     async def handler(self):
         # Load the executor from the module that owns the source of the entry type

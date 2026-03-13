@@ -6,7 +6,7 @@ import aiohttp.web as web
 from beacon.exceptions.exceptions import DatabaseIsDown
 import asyncio
 
-async def get_client():
+def get_client():
     if conf.database_cluster:
         uri = "mongodb+srv://{}/?tls=true&authMechanism=SCRAM-SHA-256&retrywrites=false&maxIdleTimeMS=120000".format(
             conf.database_host
@@ -23,7 +23,7 @@ async def get_client():
         uri += '&tls=true&tlsCertificateKeyFile={}&tlsCAFile={}'.format(conf.database_certificate, conf.database_cafile)
 
     client = MongoClient(uri, username=conf.database_user, password=conf.database_password)
-    await asyncio.wait_for(ping_database(client), timeout=1.0)
+    
     return client
 
 def create_budget():

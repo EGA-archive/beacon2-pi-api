@@ -13,8 +13,6 @@ import os
 from beacon.request.parameters import RequestMeta, SchemasPerEntity
 from pydantic import ValidationError
 from beacon.utils.modules import get_one_module_conf
-import importlib
-from beacon.logs.logs import initialize_logger
 from beacon.connections.mongo.client import get_client
 
 @log_with_args(config.level)
@@ -311,7 +309,6 @@ def set_ip(self, request):
 def set_headers(self, request):
     RequestAttributes.headers=request.headers
 
-    
 @log_with_args(config.level)
 async def deconstruct_request(self, request):
     '''

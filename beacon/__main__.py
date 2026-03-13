@@ -34,7 +34,7 @@ async def create_api(port):
         )
         app['logger'] = LOG
         app['pending_requests'] = set()
-        #asdsa
+        app['state'] = 'initializing'
 
         # Add initialization and graceful shutdown
         app.on_startup.append(on_start) # Added for file conf restart, not conflicting with asynchronous requests handling
@@ -53,6 +53,7 @@ async def create_api(port):
         #aiohttp_autoreload.start()
 
         # Starting app with AppRunner, that is able to handle requests in parallel
+        app['state'] = 'ok'
         LOG.info("API ready. Listening to requests")
         runner = web.AppRunner(app)
         await runner.setup()
