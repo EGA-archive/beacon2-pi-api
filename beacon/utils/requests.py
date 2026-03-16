@@ -12,8 +12,7 @@ from beacon.conf import filtering_terms
 import os
 from beacon.request.parameters import RequestMeta, SchemasPerEntity
 from pydantic import ValidationError
-from beacon.utils.modules import get_one_module_conf
-from beacon.connections.mongo.client import get_client
+from beacon.utils.modules import get_one_module_conf, load_source_module
 
 @log_with_args(config.level)
 def parse_query_string(self, request):
@@ -161,7 +160,6 @@ def set_entry_type_configuration(self):
     On the action of checking if there is a match between the endpoint queried an entry type in configuration, we then grab the database (source), max_granularity (allowed_granularity)
     and id name of the records of the entry type to keep them in the RequestAttributes object for later.
     '''
-    client=get_client()
     if RequestAttributes.entry_type == 'filtering_terms':
         RequestAttributes.source = filtering_terms.database
         RequestAttributes.allowed_granularity = 'record'
@@ -185,9 +183,12 @@ def set_entry_type_configuration(self):
                 elif param_key == 'connection':
                     RequestAttributes.source = param_value["name"]
                     if RequestAttributes.entry_type not in ['filtering_terms', 'map', 'configuration', 'info', 'service-info', 'entry_types']:
-                        if param_value["name"] == 'mongo':                            
-                            connection = client['beacon'][param_value["table"]]
-                            RequestAttributes.mongo_collection = connection
+                        client_module=load_source_module(self, 'client')
+                        client_function_from_module = getattr(client_module, 'get_client')
+                        client = client_function_from_module()
+                        RequestAttributes.client = client
+                        connection = client['beacon'][param_value["table"]]
+                        RequestAttributes.mongo_collection = connection
                     if RequestAttributes.entry_id != None:
                         if RequestAttributes.pre_entry_type == None:
                             RequestAttributes.function = param_value["functions"]["id_query_function_name_assigned"]

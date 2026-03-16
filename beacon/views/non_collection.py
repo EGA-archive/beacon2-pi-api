@@ -4,7 +4,7 @@ import aiohttp.web as web
 from beacon.permissions.__main__ import query_permissions
 from bson import json_util
 from beacon.request.classes import RequestAttributes
-from beacon.budget.__main__ import insert_budget
+from beacon.budget.__main__ import load_module_to_insert_budget
 from pydantic import ValidationError
 from beacon.exceptions.exceptions import InvalidData
 from beacon.views.endpoint import EndpointView
@@ -74,5 +74,5 @@ class EntryTypeView(EndpointView):
             raise InvalidData('{} templates or data are not correct'.format(RequestAttributes.entry_type))
         # If a time could be obtained for the moment of the query, register it for the budget count
         if time_now is not None:
-            insert_budget(self, username, time_now)
+            load_module_to_insert_budget(self, username, time_now)
         return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')

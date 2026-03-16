@@ -3,7 +3,7 @@ import os
 from typing import Union
 import re
 import yaml
-from beacon.logs.logs import log_with_args_check_configuration
+from beacon.logs.logs import log_with_args_check_configuration, log_with_args
 from beacon.conf.conf_override import config
 from beacon.exceptions.exceptions import DatabaseIsDown
 import asyncio
@@ -16,6 +16,7 @@ def load_framework_module(self, script_name):
     loaded_module = importlib.import_module(module, package=None)
     return loaded_module
 
+@log_with_args(config.level)
 def load_source_module(self, script_name):
     complete_module='beacon.connections.'+RequestAttributes.source+'.' + script_name
     import importlib
@@ -104,6 +105,12 @@ async def check_database_connections(LOG=None, entry_type=None, pre_entry_type=N
         except Exception:
             LOG.error('{} database is down'.format(folder))
             raise DatabaseIsDown(folder)
+        
+def load_client():
+    complete_client_module='beacon.connections.'+folder+'.client'
+    import importlib
+    module = importlib.import_module(complete_client_module, package=None)
+    client_from_module = getattr(module, 'get_client')
 
 def load_class(script_name, className):
     module='beacon.framework.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.'+script_name
