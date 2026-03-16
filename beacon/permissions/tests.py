@@ -7,7 +7,6 @@ from .plugins import DummyPermissions as PermissionsProxy
 from aiohttp.test_utils import make_mocked_request
 from beacon.auth.tests import mock_access_token
 from beacon.permissions.__main__ import authorization
-from beacon.logs.logs import LOG
 from unittest.mock import MagicMock
 from beacon.request.classes import RequestAttributes
 from beacon.permissions.utils import return_found_granularity_in_exceptions, return_granularity_and_exceptions

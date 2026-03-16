@@ -7,7 +7,6 @@ from pydantic import (
 import re
 from typing import List, Optional
 from beacon.utils.modules import load_class, get_modules_confiles
-from beacon.logs.logs import LOG
 
 class OntologyTerm(BaseModel):
     id: str

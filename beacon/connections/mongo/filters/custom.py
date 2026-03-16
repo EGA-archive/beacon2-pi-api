@@ -1,7 +1,7 @@
 from beacon.request.parameters import CustomFilter
 from beacon.connections.mongo.utils import choose_scope
 from beacon.conf.filtering_terms import alphanumeric_terms
-from beacon.logs.logs import log_with_args, LOG
+from beacon.logs.logs import log_with_args
 from beacon.conf.conf_override import config
 from beacon.utils.modules import get_all_modules_mongo_connections_script
 

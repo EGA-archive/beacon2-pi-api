@@ -1,4 +1,4 @@
-from beacon.logs.logs import log_with_args, LOG
+from beacon.logs.logs import log_with_args
 from beacon.conf.conf_override import config
 import aiohttp.web as web
 from bson import json_util
@@ -7,8 +7,10 @@ from pydantic import ValidationError
 from beacon.exceptions.exceptions import InvalidData
 from beacon.views.endpoint import EndpointView
 from beacon.utils.modules import load_framework_module, load_source_module
+from beacon.utils.checks import state_check
 
 class CollectionEntryTypeView(EndpointView):
+    @state_check
     @log_with_args(config.level)
     async def handler(self):
         # Load the executor from the module that owns the source of the entry type
@@ -32,6 +34,6 @@ class CollectionEntryTypeView(EndpointView):
             # Convert the class to JSON to return it in the final stream response
             response_obj = self.create_response()
         except ValidationError as v:
-            LOG.error(str(v))
+            self.LOG.error(str(v))
             raise InvalidData('{} templates or data are not correct'.format(RequestAttributes.entry_type))
         return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')

@@ -3,7 +3,6 @@ from beacon.tests.__main__ import create_app
 import json
 import unittest
 import beacon.conf.conf_override as conf_override
-from beacon.logs.logs import LOG
 from beacon.validator.configuration import check_configuration
 import yaml
 

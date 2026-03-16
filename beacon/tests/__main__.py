@@ -15,7 +15,6 @@ import unittest
 import beacon.conf.conf_override as conf_override
 from beacon.permissions.tests import TestAuthZ
 from beacon.auth.tests import TestAuthN
-from beacon.logs.logs import LOG
 from aiohttp_middlewares import cors_middleware
 from beacon.validator.configuration import check_configuration
 import asyncio

@@ -1,4 +1,4 @@
-from beacon.logs.logs import log_with_args_mongo, LOG
+from beacon.logs.logs import log_with_args_mongo
 from beacon.conf.conf_override import config
 from datetime import datetime, timedelta
 from beacon.request.classes import RequestAttributes
@@ -34,7 +34,7 @@ def check_budget(self, username):
     return time_now # Return the time to store in the database
 
 @log_with_args_mongo(config.level)
-def insert_budget(self, username, time_now):
+def load_module_to_insert_budget(self, username, time_now):
     # Load the connection where the budget is stored
     complete_module='beacon.connections.'+config.query_budget_database+'.budget'
     import importlib

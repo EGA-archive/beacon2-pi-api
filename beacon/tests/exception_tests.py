@@ -1,10 +1,6 @@
-from aiohttp.test_utils import TestClient, TestServer, loop_context
-from aiohttp import web
-from beacon.tests.__main__ import create_app
+from aiohttp.test_utils import loop_context
 import unittest
 import beacon.conf.conf_override as conf_override
-from beacon.logs.logs import LOG
-from aiohttp_middlewares import cors_middleware
 from beacon.validator.configuration import contains_special_characters, check_configuration
 import logging
 import yaml

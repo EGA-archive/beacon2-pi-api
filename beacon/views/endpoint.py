@@ -6,20 +6,19 @@ from beacon.request.classes import RequestAttributes
 from beacon.utils.requests import deconstruct_request, RequestParams
 from aiohttp_cors import CorsViewMixin
 from beacon.exceptions.exceptions import AppError
-from pydantic import create_model, ConfigDict, Field
+from beacon.conf.conf_override import config
 from pydantic.alias_generators import to_camel
 from typing import Optional
 import json
-from beacon.logs.logs import LOG
 from pydantic import create_model, ValidationError
 from beacon.exceptions.exceptions import InvalidData
 from beacon.utils.modules import load_framework_module
+from beacon.logs.logs import initialize_logger
 
-class EndpointView(web.View, CorsViewMixin):
+class EndpointView(web.View, CorsViewMixin):    
     def __init__(self, request: Request):
         # Initialize dhe endpoint with some of the attributes that will need to be collected later on
         self._request = request
-        self._id = generate_txid(self)
         RequestAttributes.ip = None
         RequestAttributes.headers=None
         RequestAttributes.entry_type=None
@@ -29,7 +28,9 @@ class EndpointView(web.View, CorsViewMixin):
         RequestAttributes.returned_apiVersion="v2.2.0"
         RequestAttributes.qparams=RequestParams()
         RequestAttributes.returned_granularity="boolean"
-        
+        self.LOG=self.request.app['logger']
+        self._id=None
+        self._id = generate_txid(self)
 
     async def get(self):
         try:
