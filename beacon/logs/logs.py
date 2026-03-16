@@ -1,37 +1,40 @@
 import logging
 import time
 from beacon.conf.conf_override import config
-from typing import Optional
+import datetime
 
 def initialize_logger(level):
-    # TODO: fer un try per acabar amb graceful shutdown si hi ha excepció
-    # Start the logger
-    LOG = logging.getLogger("aiohttp.access")
-    # Remove pre-existing default handlers
-    for handler in LOG.handlers[:]:
-        LOG.removeHandler(handler)
-    # Avoid loggers to set as default
-    LOG.propagate = False
-    # Apply desired level of logs
-    LOG.setLevel(level)
-    # Conver the times to timestamp depending on your area
-    formatter = logging.Formatter(
-        '%(levelname)s - %(asctime)s.%(msecs)dZ - %(message)s',
-        datefmt='%Y-%m-%dT%H:%M:%S'
-    )
-    formatter.converter = time.gmtime
-    # Choose which type of logs you want (in a file or in stream)
-    if config.log_file is not None:
-        handler = logging.FileHandler(config.log_file)
-    else:
-        handler = logging.StreamHandler()
-    # Set the same lavel and format to the handlers
-    handler.setLevel(level)
-    handler.setFormatter(formatter)
-    # Add handler to the logger
-    LOG.addHandler(handler)
-    LOG.info('Logger correctly initialized')
-    return LOG
+    try:
+        # Start the logger
+        LOG = logging.getLogger("aiohttp.access")
+        # Remove pre-existing default handlers
+        for handler in LOG.handlers[:]:
+            LOG.removeHandler(handler)
+        # Avoid loggers to set as default
+        LOG.propagate = False
+        # Apply desired level of logs
+        LOG.setLevel(level)
+        # Conver the times to timestamp depending on your area
+        formatter = logging.Formatter(
+            '%(levelname)s - %(asctime)s.%(msecs)dZ - %(message)s',
+            datefmt='%Y-%m-%dT%H:%M:%S'
+        )
+        formatter.converter = time.gmtime
+        # Choose which type of logs you want (in a file or in stream)
+        if config.log_file is not None:
+            handler = logging.FileHandler(config.log_file)
+        else:
+            handler = logging.StreamHandler()
+        # Set the same lavel and format to the handlers
+        handler.setLevel(level)
+        handler.setFormatter(formatter)
+        # Add handler to the logger
+        LOG.addHandler(handler)
+        LOG.info('Logger correctly initialized')
+        return LOG
+    except Exception:
+        print('ERROR - {}Z - {}'.format(datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3],'Logger could not initialize', flush=True))
+
 
 # LOGS per iniciar i parar el contenidor (INFO)
 # LOGS per he rebut una request i retorno una response (INFO)
