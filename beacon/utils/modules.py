@@ -102,6 +102,7 @@ async def check_database_connections(LOG=None, entry_type=None, pre_entry_type=N
         try:
             await asyncio.wait_for(ping_from_module(client_from_module()), timeout=1.0)
         except Exception:
+            LOG.error('{} database is down'.format(folder))
             raise DatabaseIsDown(folder)
 
 def load_class(script_name, className):

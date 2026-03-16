@@ -17,14 +17,15 @@ async def initialize(app):
 
     LOG.info("Initialization done.")
 
-def _on_shutdown(pid):
+def _on_shutdown(pid, app):
 
     time.sleep(6)
 
     #  Sending SIGINT to close server
     os.kill(pid, signal.SIGINT)
 
-    #LOG.info('Shutting down beacon v2')
+    LOG = app['logger']
+    LOG.info('Shutting down beacon v2')
 
 async def shutdown_process():
     await asyncio.sleep(0.1)  # allow response to flush
@@ -34,8 +35,9 @@ async def _graceful_shutdown_ctx(app):
     def graceful_shutdown_sigterm_handler():
         # Get the process where the app is running in the system.
         nonlocal thread
-        thread = Thread(target=_on_shutdown, args=(os.getpid(),))
+        thread = Thread(target=_on_shutdown, args=(os.getpid(), app))
         thread.start()
+
 
     thread = None
     # Catch the process where the app is running.
@@ -47,6 +49,7 @@ async def _graceful_shutdown_ctx(app):
     yield
     # Stop the process where the app is running
     loop.remove_signal_handler(signal.SIGTERM)
+
 
     if thread is not None:
         thread.join()

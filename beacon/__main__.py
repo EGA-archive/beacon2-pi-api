@@ -10,6 +10,7 @@ from beacon.utils.middlewares import error_middleware, track_requests_middleware
 from beacon.utils.shutters import _graceful_shutdown_ctx, on_startup as on_start
 from beacon.logs.logs import initialize_logger
 from beacon.utils.modules import check_database_connections
+from beacon.exceptions.exceptions import DatabaseIsDown
 import datetime
 import warnings
 
@@ -17,6 +18,7 @@ warnings.filterwarnings("ignore", category=UserWarning)
 
 async def create_api(port):
     try:
+        print('INFO - {}Z - Initializing Beacon Production Implementation'.format(datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3], flush=True))
         print('INFO - {}Z - Preparing the logs'.format(datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3], flush=True))
         # We first check if the logging configuration is correct
         check_logs_configuration()
@@ -62,12 +64,15 @@ async def create_api(port):
 
         while True:
             await asyncio.sleep(3600)
-            
+    except DatabaseIsDown as e:
+        print('INFO - {}Z - {}'.format(datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3],'Restarting', flush=True))
     except Exception:
         raise
 
 if __name__ == '__main__':
     try:
         asyncio.run(create_api(5050))
+    except KeyboardInterrupt:
+        print('INFO - {}Z - {}'.format(datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3],'Restarting', flush=True))
     except Exception:
         raise # TODO: Les excepcions més greus han d'estar codificades aquí.
