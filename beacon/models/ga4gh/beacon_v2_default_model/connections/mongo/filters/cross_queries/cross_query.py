@@ -1,14 +1,22 @@
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.cross_queries.entry_type_is_variant import cross_query_entry_type_is_genomicVariant_and_scope_is_not
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.cross_queries.scope_is_variant import cross_query_scope_is_genomicVariant_and_entry_type_is_not
 from beacon.connections.mongo.filters.cross_queries.scope_is_not_entry_type import scope_is_not_entry_type
-from beacon.connections.mongo.__init__ import genomicVariations, individuals, analyses, biosamples, runs, datasets, cohorts
-from beacon.logs.logs import log_with_args, LOG
+from beacon.connections.mongo.client import get_client
+from beacon.logs.logs import log_with_args
 from beacon.conf.conf_override import config
 from beacon.request.classes import RequestAttributes
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.utils import import_dataset_confile, import_analysis_confile, import_biosample_confile, import_cohort_confile, import_individual_confile, import_genomicVariant_confile, import_run_confile
 
 @log_with_args(config.level)
 def cross_query(self, query: dict, scope: str, request_parameters: dict, dataset: str):
+    client=get_client()
+    analyses=client['beacon'].analyses
+    biosamples=client['beacon'].biosamples
+    cohorts=client['beacon'].cohorts
+    datasets=client['beacon'].datasets
+    genomicVariations=client['beacon'].genomicVariations
+    individuals=client['beacon'].individuals
+    runs=client['beacon'].runs
     # Import all the entry types configuration files
     biosample_confile=import_biosample_confile()
     analysis_confile=import_analysis_confile()

@@ -15,7 +15,6 @@ import unittest
 import beacon.conf.conf_override as conf_override
 from beacon.permissions.tests import TestAuthZ
 from beacon.auth.tests import TestAuthN
-from beacon.logs.logs import LOG
 from aiohttp_middlewares import cors_middleware
 from beacon.validator.configuration import check_configuration
 import asyncio
@@ -490,6 +489,34 @@ class TestMain(unittest.TestCase):
                 assert responsedict["responseSummary"]["numTotalResults"] == 1
             loop.run_until_complete(test_check_analyses_individuals_endpoint_is_working())
             loop.run_until_complete(client.close())
+    def test_main_check_analyses_datasets_endpoint_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_analyses_individuals_endpoint_is_working():
+                resp = await client.get(conf_override.config.uri_subpath+"/"+analysis["analysis"]["endpoint_name"]+"/EGA-testing/"+dataset["dataset"]["endpoint_name"])
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
+            loop.run_until_complete(test_check_analyses_individuals_endpoint_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_analyses_cohorts_endpoint_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_analyses_individuals_endpoint_is_working():
+                resp = await client.get(conf_override.config.uri_subpath+"/"+analysis["analysis"]["endpoint_name"]+"/EGA-testing/"+cohort["cohort"]["endpoint_name"])
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
+            loop.run_until_complete(test_check_analyses_individuals_endpoint_is_working())
+            loop.run_until_complete(client.close())
     def test_main_check_analyses_biosamples_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
@@ -588,6 +615,34 @@ class TestMain(unittest.TestCase):
                 assert responsedict["responseSummary"]["numTotalResults"] == 1
             loop.run_until_complete(test_check_biosamples_runs_endpoint_is_working())
             loop.run_until_complete(client.close())
+    def test_main_check_biosamples_datasets_endpoint_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_biosamples_runs_endpoint_is_working():
+                resp = await client.get(conf_override.config.uri_subpath+"/"+biosample["biosample"]["endpoint_name"]+"/SAMPLE1/"+dataset["dataset"]["endpoint_name"])
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
+            loop.run_until_complete(test_check_biosamples_runs_endpoint_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_biosamples_cohorts_endpoint_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_biosamples_runs_endpoint_is_working():
+                resp = await client.get(conf_override.config.uri_subpath+"/"+biosample["biosample"]["endpoint_name"]+"/SAMPLE1/"+cohort["cohort"]["endpoint_name"])
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
+            loop.run_until_complete(test_check_biosamples_runs_endpoint_is_working())
+            loop.run_until_complete(client.close())
     def test_main_check_biosamples_analyses_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
@@ -679,6 +734,34 @@ class TestMain(unittest.TestCase):
                 assert responsedict["responseSummary"]["numTotalResults"] == 1
             loop.run_until_complete(test_check_individuals_biosamples_endpoint_is_working())
             loop.run_until_complete(client.close())
+    def test_main_check_individuals_datasets_endpoint_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_individuals_biosamples_endpoint_is_working():
+                resp = await client.get(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"]+"/SAMPLE2/"+dataset["dataset"]["endpoint_name"])
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
+            loop.run_until_complete(test_check_individuals_biosamples_endpoint_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_individuals_cohorts_endpoint_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_individuals_biosamples_endpoint_is_working():
+                resp = await client.get(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"]+"/SAMPLE2/"+cohort["cohort"]["endpoint_name"])
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
+            loop.run_until_complete(test_check_individuals_biosamples_endpoint_is_working())
+            loop.run_until_complete(client.close())
     def test_main_check_runs_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
@@ -756,6 +839,34 @@ class TestMain(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_runs_analyses_endpoint_is_working():
                 resp = await client.get(conf_override.config.uri_subpath+"/"+run["run"]["endpoint_name"]+"/EGA-testing/"+analysis["analysis"]["endpoint_name"])
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
+            loop.run_until_complete(test_check_runs_analyses_endpoint_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_runs_datasets_endpoint_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_runs_analyses_endpoint_is_working():
+                resp = await client.get(conf_override.config.uri_subpath+"/"+run["run"]["endpoint_name"]+"/EGA-testing/"+dataset["dataset"]["endpoint_name"])
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
+            loop.run_until_complete(test_check_runs_analyses_endpoint_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_runs_cohorts_endpoint_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_runs_analyses_endpoint_is_working():
+                resp = await client.get(conf_override.config.uri_subpath+"/"+run["run"]["endpoint_name"]+"/EGA-testing/"+cohort["cohort"]["endpoint_name"])
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
@@ -1084,7 +1195,6 @@ class TestMain(unittest.TestCase):
                 assert resp.status == 200
             loop.run_until_complete(test_check_g_variants_analyses_endpoint_is_working())
             loop.run_until_complete(client.close())
-
     def test_main_check_g_variants_individuals_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
@@ -1095,6 +1205,32 @@ class TestMain(unittest.TestCase):
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
                 assert responsedict["responseSummary"]["numTotalResults"] == 15
+                assert resp.status == 200
+            loop.run_until_complete(test_check_g_variants_inividuals_endpoint_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_g_variants_datasets_endpoint_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_g_variants_inividuals_endpoint_is_working():
+                resp = await client.get(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"/c4143367c9ecad58cbf87b08c11288149e801a70f71a5e114a8476607fe163a1/"+dataset["dataset"]["endpoint_name"])
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
+                assert resp.status == 200
+            loop.run_until_complete(test_check_g_variants_inividuals_endpoint_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_g_variants_cohorts_endpoint_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_g_variants_inividuals_endpoint_is_working():
+                resp = await client.get(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"/c4143367c9ecad58cbf87b08c11288149e801a70f71a5e114a8476607fe163a1/"+cohort["cohort"]["endpoint_name"])
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
                 assert resp.status == 200
             loop.run_until_complete(test_check_g_variants_inividuals_endpoint_is_working())
             loop.run_until_complete(client.close())

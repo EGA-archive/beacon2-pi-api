@@ -1,8 +1,7 @@
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
-from beacon.logs.logs import log_with_args, LOG
+from beacon.logs.logs import log_with_args
 from beacon.conf.conf_override import config
-from beacon.connections.mongo.__init__ import client
 from beacon.exceptions.exceptions import NoPermissionsAvailable, DatabaseIsDown
 from pymongo.errors import ConnectionFailure
 from beacon.response.classes import MultipleDatasetsResponse

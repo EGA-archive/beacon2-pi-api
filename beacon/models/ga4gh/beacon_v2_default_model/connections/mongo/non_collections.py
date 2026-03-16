@@ -1,10 +1,10 @@
-from beacon.logs.logs import log_with_args, LOG
+from beacon.logs.logs import log_with_args
 from beacon.conf.conf_override import config
 from beacon.request.classes import RequestAttributes
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.request_parameters.apply_request_parameters import apply_request_parameters
 from beacon.connections.mongo.filters.filters import apply_filters
 from beacon.connections.mongo.utils import get_docs_by_response_type, query_id
-from beacon.connections.mongo.__init__ import genomicVariations, targets as targets_, caseLevelData, biosamples, runs, cohorts, analyses, datasets, individuals
+from beacon.connections.mongo.client import get_client
 from beacon.connections.mongo.utils import get_count, get_documents_for_cohorts
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.utils import get_phenotypic_cross_query_attributes
 from beacon.response.classes import SingleDatasetResponse
@@ -69,6 +69,11 @@ def get_phenotypic_endpoint_with_id(self, dataset: SingleDatasetResponse):
 
 @log_with_args(config.level)
 def get_variants_of_phenotypic_endpoint(self, dataset: SingleDatasetResponse):
+    client=get_client()
+    analyses=client['beacon'].analyses
+    runs=client['beacon'].runs
+    targets_=client['beacon'].targets
+    caseLevelData=client['beacon'].caseLevelData
     analysis_confile=import_analysis_confile()
     run_confile=import_run_confile()
     new_entry_id = RequestAttributes.entry_id
@@ -132,6 +137,11 @@ def get_variants_of_phenotypic_endpoint(self, dataset: SingleDatasetResponse):
 
 @log_with_args(config.level)
 def get_phenotypic_endpoint_of_variants(self, dataset: SingleDatasetResponse):
+    client=get_client()
+    genomicVariations=client['beacon'].genomicVariations
+    targets_=client['beacon'].targets
+    caseLevelData=client['beacon'].caseLevelData
+    biosamples=client['beacon'].biosamples
     # Add the variantInternalId of the variant to the query constructor.
     query = {"$and": [{"_id": RequestAttributes.entry_id}]}
     # Handle the request parameters and create the first built of the query.
@@ -312,6 +322,8 @@ def get_phenotypic_endpoint_of_dataset(self, dataset: SingleDatasetResponse):
 
 @log_with_args(config.level)
 def get_phenotypic_endpoint_of_cohort(self, dataset: SingleDatasetResponse):
+    client=get_client()
+    cohorts=client['beacon'].cohorts
     # Make an initial query to translate the datasetId into cohort id.
     dataset_found = cohorts \
         .find({"id": RequestAttributes.entry_id}, {"datasetId": 1, "_id": 0})
@@ -339,6 +351,8 @@ def get_phenotypic_endpoint_of_cohort(self, dataset: SingleDatasetResponse):
 
 @log_with_args(config.level)
 def get_variants_of_cohort(self, dataset: SingleDatasetResponse):
+    client=get_client()
+    cohorts=client['beacon'].cohorts
     # Save the include, limit and skip parameters so they are used later.
     limit = RequestAttributes.qparams.query.pagination.limit
     include = RequestAttributes.qparams.query.includeResultsetResponses

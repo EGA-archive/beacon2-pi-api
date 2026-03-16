@@ -1,4 +1,4 @@
-from beacon.logs.logs import LOG
+import logging
 import os
 import time
 import asyncio
@@ -7,26 +7,37 @@ from beacon import conf
 import signal
 from threading import Thread
 
+from beacon.logs.logs import initialize_logger
+
 async def initialize(app):
+    LOG = app['logger']
+
     # Set the time when standing up the app and log a message.
     setattr(conf, 'update_datetime', datetime.now().isoformat())
 
     LOG.info("Initialization done.")
 
-def _on_shutdown(pid):
+def _on_shutdown(pid, app):
+
     time.sleep(6)
 
     #  Sending SIGINT to close server
     os.kill(pid, signal.SIGINT)
 
+    LOG = app['logger']
     LOG.info('Shutting down beacon v2')
+
+async def shutdown_process():
+    await asyncio.sleep(0.1)  # allow response to flush
+    os.kill(os.getpid(), signal.SIGTERM)
 
 async def _graceful_shutdown_ctx(app):
     def graceful_shutdown_sigterm_handler():
         # Get the process where the app is running in the system.
         nonlocal thread
-        thread = Thread(target=_on_shutdown, args=(os.getpid(),))
+        thread = Thread(target=_on_shutdown, args=(os.getpid(), app))
         thread.start()
+
 
     thread = None
     # Catch the process where the app is running.
@@ -39,6 +50,7 @@ async def _graceful_shutdown_ctx(app):
     # Stop the process where the app is running
     loop.remove_signal_handler(signal.SIGTERM)
 
+
     if thread is not None:
         thread.join()
 
@@ -50,12 +62,15 @@ PATHS_TO_RESTART = [
 ]
 
 async def monitor_pending(app):
+    LOG = app['logger']
     LOG.warning("Waiting for requests to finish...")
     while len(app['pending_requests']) >0:
         await asyncio.sleep(1)
 
 
 async def config_watcher(app):
+    LOG = app['logger']
+
     initial_times = {}
 
     # Let's add all the snapshot times for the folders to restart when changed
@@ -104,8 +119,9 @@ async def config_watcher(app):
         for file_path, new_m in new_initial_times.items():
             old_m = initial_times.get(file_path)
             if old_m is None or new_m != old_m:
+                app['state'] = 'paused'
                 await monitor_pending(app)
-                LOG.warning("Restarting app")
+                LOG.info("Restarting app")
                 os._exit(0)
 
         initial_times = new_initial_times
