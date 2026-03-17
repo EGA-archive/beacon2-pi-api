@@ -36,6 +36,28 @@ db.adminCommand({ setFeatureCompatibilityVersion: "6.0" })
 
 After that, stop the container, comment version 6 and uncomment image for version 7 and rebuild the container and your mongoDB will be upgraded to version 7.
 
+### Downgrading MongoDB to version 5 from an exising mongodb container with a greater version
+
+First, you will have to build the mongodb container using version 6. When up and running, execute the next commands:
+
+```bash
+docker exec -it mongoprod mongosh
+```
+
+And go to admin database:
+
+```bash
+use admin
+```
+
+Once authenticated, you will need to make your mongodb instance upgrades compatible with version 6 by executing the following command:
+
+```bash
+db.adminCommand({ setFeatureCompatibilityVersion: "5.0" })
+```
+
+After that, stop the container, comment version 6 and uncomment image for version 5 and rebuild the container and your mongoDB will be downgraded to version 5.
+
 ### TLS configuration
 
 To enable TLS for the Becaon API set `beacon_server_crt` and `beacon_server_key` to the full paht of the server certificate and server key in `beacon/conf/conf.py` file.
