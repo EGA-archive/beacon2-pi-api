@@ -101,6 +101,7 @@ async def check_database_connections(LOG=None, entry_type=None, pre_entry_type=N
         module = importlib.import_module(complete_client_module, package=None)
         client_from_module = getattr(module, 'get_client')
         try:
+            #TODO: timeout -> fitxer de configuració
             await asyncio.wait_for(ping_from_module(client_from_module()), timeout=1.0)
         except Exception:
             LOG.error('{} database is down'.format(folder))

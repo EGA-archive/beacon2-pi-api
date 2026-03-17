@@ -55,7 +55,7 @@ async def create_api(port):
         #aiohttp_autoreload.start()
 
         # Starting app with AppRunner, that is able to handle requests in parallel
-        app['state'] = 'ok'
+        app['state'] = 'running'
         LOG.info("API ready. Listening to requests")
         runner = web.AppRunner(app)
         await runner.setup()
@@ -73,6 +73,6 @@ if __name__ == '__main__':
     try:
         asyncio.run(create_api(5050))
     except KeyboardInterrupt:
-        print('INFO - {}Z - {}'.format(datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3],'Restarting', flush=True))
+        print('INFO - {}Z - {}'.format(datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3],'Shutting down because Keyboard Interrupt', flush=True))
     except Exception:
         raise # TODO: Les excepcions més greus han d'estar codificades aquí.
