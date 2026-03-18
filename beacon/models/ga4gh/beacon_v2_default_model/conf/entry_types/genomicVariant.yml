@@ -35,7 +35,7 @@ genomicVariant:
     analysis:
       endpoint_name: g_variants/{id}/analyses
       response_type: non_collection
-      endpoint_enabled: True
+      endpoint_enabled: Fale
       connection:
         name: mongo
         database: beacon
@@ -45,7 +45,7 @@ genomicVariant:
     biosample:
       endpoint_name: g_variants/{id}/biosamples
       response_type: non_collection
-      endpoint_enabled: True
+      endpoint_enabled: False
       connection:
         name: mongo
         database: beacon
@@ -75,7 +75,7 @@ genomicVariant:
     individual:
       endpoint_name: g_variants/{id}/individuals
       response_type: non_collection
-      endpoint_enabled: True
+      endpoint_enabled: False
       connection:
         name: mongo
         database: beacon
@@ -85,7 +85,7 @@ genomicVariant:
     run:
       endpoint_name: g_variants/{id}/runs
       response_type: non_collection
-      endpoint_enabled: True
+      endpoint_enabled: False
       connection:
         name: mongo
         database: beacon

@@ -1,0 +1,8 @@
+[
+    {
+        "description": "This is a subset of the GDI MS8 synthetic dataset (COVID pop13_1) containing aggregated allele frequency (AF) statistics for variants on chr21 across 42",
+        "id": "GoE-ES-CRG-1",
+        "name": "CRG_AFBeacon_GoE_synthetic_dataset",
+        "_id": "ec9a7a448ab6b13825aeccdc17625c53fdd249a832ff113bb5df6e8d1caeb5aa"
+    }
+]
