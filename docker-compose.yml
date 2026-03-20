@@ -93,13 +93,13 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
       MONGO_INITDB_DATABASE: beacon
-    #volumes:
-      #- ./beacon/connections/mongo/mongo-init/:/docker-entrypoint-initdb.d/:ro
+    volumes:
+      - ./beacon/connections/mongo/mongo-init/:/docker-entrypoint-initdb.d/:ro
       #- ./beacon/connections/mongo/data/:/data
       #- ./beacon/connections/mongo/data/db:/data/db
       #- ./beacon/connections/mongo/data/configdb:/data/configdb
       #- ./beacon/connections/mongo/data/caseLevelData:/data/caseLevelData
-      #- ./beacon/connections/mongo/mongod.conf:/etc/mongod.conf:ro
+      - ./beacon/connections/mongo/mongod.conf:/etc/mongod.conf:ro
       #- ./test-server1.pem:/test-server1.pem
       #- ./test-ca.pem:/test-ca.pem
       #- ./test-client.pem:/test-client.pem
