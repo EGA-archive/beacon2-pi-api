@@ -1,4 +1,4 @@
-{
+[{
 "_id": {
 "$oid": "6878e826382de474ef040d2c"
 },
@@ -13,4 +13,4 @@
 "name": "gnomad_exome_v2.1.1",
 "updateDateTime": "2024-12-13T11:39:00Z",
 "version": "v1.0"
-}
+}]

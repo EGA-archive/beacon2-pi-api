@@ -1,4 +1,4 @@
-{
+[{
 "_id": {
 "$oid": "6878e826096219fc058fb234"
 },
@@ -13,4 +13,4 @@
 "name": "gnomad_joint_v4.1",
 "updateDateTime": "2024-12-13T11:39:00Z",
 "version": "v1.0"
-}
+}]

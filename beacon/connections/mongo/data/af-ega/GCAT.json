@@ -1,4 +1,4 @@
-{
+[{
 "_id": {
 "$oid": "6878e826552585e2fe66beb7"
 },
@@ -6,4 +6,4 @@
 "externalUrl": "https://ega-archive.org/datasets/EGAD00001007774",
 "id": "EGAD00001007774",
 "name": "GCAT WGS VCF QC Genotype V1"
-}
+}]
