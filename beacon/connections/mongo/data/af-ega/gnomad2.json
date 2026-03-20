@@ -1,16 +1,15 @@
-[{
-"_id": {
-"$oid": "6878e826382de474ef040d2c"
-},
-"createDateTime": "2024-12-13T11:39:00Z",
-"description": "The Genome Aggregation Database (gnomAD) is a resource developed by an international coalition of investigators, with the goal of aggregating and harmonizing both exome and genome sequencing data from a wide variety of large-scale sequencing projects, and making summary data available for the wider scientific community.",
-"externalUrl": "http://www.gnomad-sg.org/downloads",
-"id": "gnomad_exome_v2.1.1",
-"info": {
-"version": "Thev2.1.1dataset(GRCh37/hg19)providedonthiswebsitespans125,748exomesequencesand15,708whole-genomesequencesfromunrelatedindividualssequencedaspartofvariousdisease-specificandpopulationgeneticstudies.",
-"files": "Thefilesusedtoconstructthisbeaconbelongedtoexomedata"
-},
-"name": "gnomad_exome_v2.1.1",
-"updateDateTime": "2024-12-13T11:39:00Z",
-"version": "v1.0"
-}]
+[
+    {
+        "createDateTime": "2024-12-13T11:39:00Z",
+        "description": "The Genome Aggregation Database (gnomAD) is a resource developed by an international coalition of investigators, with the goal of aggregating and harmonizing both exome and genome sequencing data from a wide variety of large-scale sequencing projects, and making summary data available for the wider scientific community.",
+        "externalUrl": "http://www.gnomad-sg.org/downloads",
+        "id": "gnomad_exome_v2.1.1",
+        "info": {
+        "version": "Thev2.1.1dataset(GRCh37/hg19)providedonthiswebsitespans125,748exomesequencesand15,708whole-genomesequencesfromunrelatedindividualssequencedaspartofvariousdisease-specificandpopulationgeneticstudies.",
+        "files": "Thefilesusedtoconstructthisbeaconbelongedtoexomedata"
+        },
+        "name": "gnomad_exome_v2.1.1",
+        "updateDateTime": "2024-12-13T11:39:00Z",
+        "version": "v1.0"
+    }
+]
