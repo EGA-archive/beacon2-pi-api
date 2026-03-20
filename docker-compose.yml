@@ -2,16 +2,16 @@ version: '3.1'
 
 networks:
   idp-priv:
-  pub:
+  pubafega:
 
 services:
-  beaconprod:
+  beaconprodega:
     restart: unless-stopped
     build:
       context: .
-    container_name: beaconprod
+    container_name: beaconprodega
     ports:
-      - "5050:5050"
+      - "5054:5050"
     entrypoint: ['python','-m','beacon']
     volumes:
       - ./beacon/logs/logs.log:/beacon/logs/logs.log
@@ -21,7 +21,7 @@ services:
       - ./beacon/models:/beacon/models
       - ./beacon/conf/models:/beacon/conf/models
     networks:
-      - pub
+      - pubafega
 
   admin-ui:
     restart: always
@@ -35,7 +35,7 @@ services:
       - ./beacon:/home/app/web/beacon
       - ./adminui:/home/app/web
     networks:
-      - pub
+      - pubafega
   
   idp:
     #image: quay.io/keycloak/keycloak:12.0.0
@@ -54,7 +54,7 @@ services:
       - DB_ADDR=idp-db
       - DB_PORT=5432
       - DB_DATABASE=keycloak
-      #- DB_SCHEMA=public
+      #- DB_SCHEMA=pubafegalic
       - KEYCLOAK_IMPORT=/tmp/beacon-realm.json -Dkeycloak.profile.feature.upload_scripts=enabled -Dkeycloak.profile.feature.token_exchange=enabled -Dkeycloak.profile.feature.admin_fine_grained_authz=enabled
       - KEYCLOAK_HOSTNAME=localhost
       #- KC_HOSTNAME_URL=https://beacon-network-test2.ega-archive.org
@@ -68,7 +68,7 @@ services:
       - "9991:8443"
     networks:
       - idp-priv 
-      - pub
+      - pubafega
     depends_on:
       - idp-db
 
@@ -83,12 +83,12 @@ services:
     networks:
       - idp-priv
 
-  db:
+  dbega:
     image: mongo:5.0.32
     #command: --wiredTigerCacheSizeGB 4
     #command: --wiredTigerCacheSizeGB 4 --sslMode requireSSL --tlsCertificateKeyFile test-server1.pem --tlsCAFile test-ca.pem
     hostname: mongo
-    container_name: mongoprod
+    container_name: mongoprodega
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
@@ -104,7 +104,7 @@ services:
       #- ./test-ca.pem:/test-ca.pem
       #- ./test-client.pem:/test-client.pem
     networks:
-      - pub
+      - pubafega
     command: ["--config", "/etc/mongod.conf"]
   
   mongo-express:
@@ -117,14 +117,14 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
       ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
     networks:
-      - pub
+      - pubafega
 
   beacon-ri-tools:
     image: ghcr.io/ega-archive/beacon2-ri-tools-v2:2.0.6
     hostname: beacon-ri-tools
     container_name: ri-tools
     networks:
-      - pub
+      - pubafega
     tty: true
     volumes:
       - ./ri-tools/output_docs:/usr/src/app/output_docs
@@ -142,7 +142,7 @@ services:
     volumes:
       - ./ri-tools/phenopackets-to-BFF/:/usr/src/app/examples
     networks:
-      - pub
+      - pubafega
 
   templateUI:
     image: ghcr.io/ega-archive/beacon-template-ui:main
@@ -156,7 +156,7 @@ services:
       - ./template-ui/src/config/config.json:/client/src/config/config.json
       - ./template-ui/.env:/client/.env
     networks:
-      - pub
+      - pubafega
     environment:
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true
