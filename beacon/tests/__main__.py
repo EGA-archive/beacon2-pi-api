@@ -1310,6 +1310,19 @@ class TestMain(unittest.TestCase):
                 assert responsedict["responseSummary"]["numTotalResults"] == 1
             loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
             loop.run_until_complete(client.close())
+    def test_main_check_g_variants_sequence_query_gives_0_results(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_g_variants_endpoint_with_parameters_is_working():
+                resp = await client.get(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"?start=43045703&referenceName=17&assemblyId=GRCh37&referenceBases=G&alternateBases=C&testMode=True")
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == False
+            loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
+            loop.run_until_complete(client.close())
     def test_main_check_g_variants_range_query(self):
         with loop_context() as loop:
             app = create_app()
