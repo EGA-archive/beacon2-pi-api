@@ -32,10 +32,9 @@ class HealthView(web.View, CorsViewMixin):
     async def handler(self):
         try:
             await check_database_connections(LOG=self.LOG)
-            response_obj = {"state": self.request.app['state']}
+            response_obj = {"state": 'Running - healthy'}
             return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
         except DatabaseIsDown as e:
-            self.request.app['state']='shutting down'
-            response_obj = {"state": "shutting down", "error": "{} database is down".format(e)}
-            asyncio.create_task(shutdown_process())
+            self.request.app['state']='Running - degraded'
+            response_obj = {"state": self.request.app['state'], "error": "{} database is down".format(e)}
             return web.Response(text=json_util.dumps(response_obj), status=e.status, content_type='application/json')

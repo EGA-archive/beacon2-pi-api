@@ -7,12 +7,13 @@ import ssl
 from beacon.validator.configuration import check_configuration, check_logs_configuration
 from beacon.utils.routes import append_routes
 from beacon.utils.middlewares import error_middleware, track_requests_middleware
-from beacon.utils.shutters import _graceful_shutdown_ctx, on_startup as on_start
+from beacon.utils.shutters import _graceful_shutdown_ctx, on_startup as on_start, monitor_pending
 from beacon.logs.logs import initialize_logger
 from beacon.utils.modules import check_database_connections
 from beacon.exceptions.exceptions import DatabaseIsDown
 import datetime
 import warnings
+import signal
 
 warnings.filterwarnings("ignore", category=UserWarning)
 
@@ -26,7 +27,8 @@ async def create_api(port):
         LOG = initialize_logger(config.level)
         # Before standing up the app, check that the configuration makes sense
         check_configuration(LOG=LOG)
-        await check_database_connections(LOG=LOG)
+
+            
 
         # Create the web app with middlewares for allowing CORS for the specific urls and to handle Not Found and other non related app errors with error_middleware
         app = web.Application(
@@ -34,36 +36,66 @@ async def create_api(port):
                 cors_middleware(origins=config.cors_urls), error_middleware, track_requests_middleware
             ]
         )
+        try:
+            await check_database_connections(LOG=LOG)
+            app['state'] = 'Running - healthy'
+        except DatabaseIsDown as e:
+            app['state'] = 'Running - degraded'
+
+
+
+        app = web.Application(
+            middlewares=[
+                cors_middleware(origins=config.cors_urls),
+                error_middleware,
+                track_requests_middleware
+            ]
+        )
         app['logger'] = LOG
         app['pending_requests'] = set()
-        app['state'] = 'initializing'
+        app['shutting_down'] = False
 
-        # Add initialization and graceful shutdown
-        app.on_startup.append(on_start) # Added for file conf restart, not conflicting with asynchronous requests handling
-        app.cleanup_ctx.append(_graceful_shutdown_ctx)
-
-        # Add routes
         app = append_routes(app=app)
 
-        # Optional: add ssl certificates to encrypt communication from the app
-        ssl_context = None
-        if (os.path.isfile(config.beacon_server_key)) and (os.path.isfile(config.beacon_server_crt)):
-            ssl_context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
-            ssl_context.load_cert_chain(certfile=config.beacon_server_crt, keyfile=config.beacon_server_key)
-        
-        # Add a reloader in case any file is modified, so the app is restarted automatically
-        #aiohttp_autoreload.start()
-
-        # Starting app with AppRunner, that is able to handle requests in parallel
-        app['state'] = 'running'
-        LOG.info("API ready. Listening to requests")
         runner = web.AppRunner(app)
         await runner.setup()
-        site = web.TCPSite(runner, '0.0.0.0', port,  ssl_context=ssl_context)
+        site = web.TCPSite(runner, '0.0.0.0', port)
         await site.start()
 
-        while True:
-            await asyncio.sleep(3600)
+        LOG.warning("API running...")
+
+        stop_event = asyncio.Event()
+        loop = asyncio.get_running_loop()
+
+        loop.add_signal_handler(signal.SIGINT, stop_event.set)
+        loop.add_signal_handler(signal.SIGTERM, stop_event.set)
+
+        # Wait until signal
+        await stop_event.wait()
+
+        LOG.warning("Shutdown signal received")
+
+        app['shutting_down'] = True
+
+        pending = list(app['pending_requests'])
+
+        if pending:
+            LOG.warning("Waiting for {} requests to finish...".format(len(pending)))
+
+            try:
+                await asyncio.wait_for(
+                    asyncio.gather(*pending, return_exceptions=True),
+                    timeout=config.pending_requests_timeout_in_seconds
+                )
+            except asyncio.TimeoutError:
+                LOG.warning("Timeout reached, forcing shutdown")
+
+        else:
+            LOG.warning("No pending requests")
+
+        await runner.cleanup()
+
+        LOG.warning("Shutdown complete")
     except DatabaseIsDown as e:
         print('INFO - {}Z - {}'.format(datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3],'Restarting', flush=True))
     except Exception:
@@ -73,6 +105,6 @@ if __name__ == '__main__':
     try:
         asyncio.run(create_api(5050))
     except KeyboardInterrupt:
-        print('INFO - {}Z - {}'.format(datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3],'Shutting down because Keyboard Interrupt', flush=True))
+        print('INFO - {}Z - {}'.format(datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3],'No pending requests - Shutting down now', flush=True))
     except Exception:
         raise # TODO: Les excepcions més greus han d'estar codificades aquí.

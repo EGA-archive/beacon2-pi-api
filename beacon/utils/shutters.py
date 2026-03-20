@@ -3,7 +3,7 @@ import os
 import time
 import asyncio
 from datetime import datetime
-from beacon import conf
+from beacon.conf.conf_override import config
 import signal
 from threading import Thread
 
@@ -13,7 +13,7 @@ async def initialize(app):
     LOG = app['logger']
 
     # Set the time when standing up the app and log a message.
-    setattr(conf, 'update_datetime', datetime.now().isoformat())
+    setattr(config, 'update_datetime', datetime.now().isoformat())
 
     LOG.info("Initialization done.")
 
@@ -27,6 +27,7 @@ def _on_shutdown(pid, app):
     LOG = app['logger']
     LOG.info('Shutting down beacon v2')
 
+
 async def shutdown_process():
     await asyncio.sleep(0.1)  # allow response to flush
     os.kill(os.getpid(), signal.SIGTERM)
@@ -38,7 +39,6 @@ async def _graceful_shutdown_ctx(app):
         thread = Thread(target=_on_shutdown, args=(os.getpid(), app))
         thread.start()
 
-
     thread = None
     # Catch the process where the app is running.
     loop = asyncio.get_event_loop()
@@ -47,6 +47,7 @@ async def _graceful_shutdown_ctx(app):
     )
     #TODO: Haig de donar-te un temps d'espera + afegir un brute force shutdown (que també ha d'anar a tancar connexions)
     yield
+
     # Stop the process where the app is running
     loop.remove_signal_handler(signal.SIGTERM)
 
@@ -119,7 +120,7 @@ async def config_watcher(app):
         for file_path, new_m in new_initial_times.items():
             old_m = initial_times.get(file_path)
             if old_m is None or new_m != old_m:
-                app['state'] = 'paused'
+                app['state'] = 'Draining'
                 await monitor_pending(app)
                 LOG.info("Restarting app")
                 os._exit(0)
