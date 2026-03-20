@@ -7,7 +7,7 @@ from pydantic import (
 )
 from strenum import StrEnum
 from typing import List, Optional, Union
-from beacon.conf.conf_override import config
+from beacon.conf.conf import default_beacon_granularity
 from aiohttp.web_request import Request
 from beacon.request.classes import Granularity, CamelModel, IncludeResultsetResponses
 from beacon.request.filters import AlphanumericFilter, OntologyFilter, CustomFilter
@@ -25,7 +25,7 @@ class Pagination(CamelModel, extra='forbid'):
 
 class RequestMeta(CamelModel, extra='forbid'):
     requestedSchemas: Optional[List[SchemasPerEntity]] = []
-    apiVersion: str = 'Not provided'
+    apiVersion: str = 'Not provided' # TODO: add supported schemas parsing, by default,
 
 class SequenceQuery(BaseModel, extra='forbid'):
     referenceName: Union[str,int]
@@ -39,7 +39,7 @@ class SequenceQuery(BaseModel, extra='forbid'):
     @model_validator(mode='after')
     @classmethod
     def referenceName_must_have_assemblyId_if_not_HGVSId(cls, values):
-        if values.referenceName in ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','X','Y','MT','chr1','chr2','chr3','chr4','chr5','chr6','chr7','chr8','chr9','chr10','chr11','chr12','chr13','chr14','chr15','chr16','chr17','chr18','chr19','chr20','chr21','chr22','chr23','chrX','chrY','chrMT',1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]:
+        if values.referenceName in ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','X','Y','MT','chr1','chr2','chr3','chr4','chr5','chr6','chr7','chr8','chr9','chr10','chr11','chr12','chr13','chr14','chr15','chr16','chr17','chr18','chr19','chr20','chr21','chr22','chr23','chr24','chrX','chrY','chrMT',1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24]:
             if values.assemblyId == None:
                 raise ValueError('if referenceName is just the chromosome: assemblyId parameter is required')
         else:
@@ -67,7 +67,7 @@ class RangeQuery(BaseModel, extra='forbid'):
     @model_validator(mode='after')
     @classmethod
     def referenceName_must_have_assemblyId_if_not_HGVSId_2(cls, values):
-        if values.referenceName in ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','X','Y','MT','chr1','chr2','chr3','chr4','chr5','chr6','chr7','chr8','chr9','chr10','chr11','chr12','chr13','chr14','chr15','chr16','chr17','chr18','chr19','chr20','chr21','chr22','chr23','chrX','chrY','chrMT',1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]:
+        if values.referenceName in ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','X','Y','MT','chr1','chr2','chr3','chr4','chr5','chr6','chr7','chr8','chr9','chr10','chr11','chr12','chr13','chr14','chr15','chr16','chr17','chr18','chr19','chr20','chr21','chr22','chr23','chr24','chrX','chrY','chrMT',1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24]:
             if values.assemblyId == None:
                 raise ValueError('if referenceName is just the chromosome: assemblyId parameter is required')
         else:
@@ -129,7 +129,7 @@ class BracketQuery(BaseModel, extra='forbid'):
     @model_validator(mode='after')
     @classmethod
     def referenceName_must_have_assemblyId_if_not_HGVSId_3(cls, values):
-        if values.referenceName in ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','X','Y','MT','chr1','chr2','chr3','chr4','chr5','chr6','chr7','chr8','chr9','chr10','chr11','chr12','chr13','chr14','chr15','chr16','chr17','chr18','chr19','chr20','chr21','chr22','chr23','chrX','chrY','chrMT',1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]:
+        if values.referenceName in ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','X','Y','MT','chr1','chr2','chr3','chr4','chr5','chr6','chr7','chr8','chr9','chr10','chr11','chr12','chr13','chr14','chr15','chr16','chr17','chr18','chr19','chr20','chr21','chr22','chr23','chr24','chrX','chrY','chrMT',1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24]:
             if values.assemblyId == None:
                 raise ValueError('if referenceName is just the chromosome: assemblyId parameter is required')
         else:
@@ -148,12 +148,12 @@ class DatasetsRequested(BaseModel, extra='forbid'):
     datasets: list[str]
 
 class RequestQuery(CamelModel, extra='forbid'):
-    filters: List[Union[AlphanumericFilter,OntologyFilter,CustomFilter,List[Union[AlphanumericFilter,OntologyFilter,CustomFilter]]]] = []
+    filters: List[Union[AlphanumericFilter,OntologyFilter,CustomFilter]] = []
     includeResultsetResponses: IncludeResultsetResponses = IncludeResultsetResponses.HIT
     pagination: Pagination = Pagination()
     requestParameters: Union[SequenceQuery,RangeQuery,BracketQuery,AminoacidChangeQuery,GeneIdQuery,GenomicAlleleQuery,DatasetsRequested] = {}
     testMode: bool = False
-    requestedGranularity: Granularity = Granularity(config.default_beacon_granularity)
+    requestedGranularity: Granularity = Granularity(default_beacon_granularity)
     @field_validator('requestedGranularity')
     @classmethod
     def requestedGranularity_must_be_boolean_count_record(cls, v: str) -> str:
@@ -195,11 +195,7 @@ class RequestParams(CamelModel, extra='forbid'):
         return {
             "apiVersion": self.meta.apiVersion,
             "requestedSchemas": self.meta.requestedSchemas,
-            "filters": [
-                    item["id"]
-                    for filtering_term in self.query.filters
-                    for item in (filtering_term if isinstance(filtering_term, list) else [filtering_term])
-                ],
+            "filters": [filtering_term["id"] for filtering_term in self.query.filters],
             "requestParameters": self.query.requestParameters,
             "includeResultsetResponses": self.query.includeResultsetResponses,
             "pagination": self.query.pagination.dict(),
