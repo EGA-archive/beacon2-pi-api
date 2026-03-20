@@ -2,7 +2,7 @@
     {
         "description": "This dataset contains genotypes  (35.4M of SNVs, Indels and SVs), from 785 samples, after QC filtering, from the 808 WGS GCAT cohort.",
         "externalUrl": "https://ega-archive.org/datasets/EGAD00001007774",
-        "id": "EGAD00001007774",
+        "id": "GCAT | Genomes for Life (EGAD00001007774)",
         "name": "GCAT WGS VCF QC Genotype V1"
     }
 ]

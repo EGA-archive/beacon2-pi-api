@@ -3,7 +3,7 @@
         "createDateTime": "2024-12-13T11:39:00Z",
         "description": "The Genome Aggregation Database (gnomAD) is a resource developed by an international coalition of investigators, with the goal of aggregating and harmonizing both exome and genome sequencing data from a wide variety of large-scale sequencing projects, and making summary data available for the wider scientific community.",
         "externalUrl": "http://www.gnomad-sg.org/downloads",
-        "id": "gnomad_joint_v4.1",
+        "id": "gnomADv4.1",
         "info": {
         "version": "Thev4.1dataset(GRCh38)providedonthiswebsite.",
         "files": "Thefilesusedtoconstructthisbeaconbelongedtoexomedata"
