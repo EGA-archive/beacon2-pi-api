@@ -1026,7 +1026,7 @@ class TestMain(unittest.TestCase):
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
                 assert responsedict["responseSummary"]["exists"] == True
-                assert responsedict["responseSummary"]["numTotalResults"] == 40
+                assert responsedict["responseSummary"]["numTotalResults"] == 41
             loop.run_until_complete(test_check_cohorts_g_variants_endpoint_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_datasets_with_limit_endpoint_is_working(self):
@@ -1089,7 +1089,7 @@ class TestMain(unittest.TestCase):
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
                 assert responsedict["responseSummary"]["exists"] == True
-                assert responsedict["responseSummary"]["numTotalResults"] == 40
+                assert responsedict["responseSummary"]["numTotalResults"] == 41
             loop.run_until_complete(test_check_datasets_g_variants_endpoint_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_datasets_biosamples_endpoint_is_working(self):
@@ -1511,7 +1511,7 @@ class TestMain(unittest.TestCase):
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
-                assert responsedict["responseSummary"]["numTotalResults"] == 40
+                assert responsedict["responseSummary"]["numTotalResults"] == 41
             loop.run_until_complete(test_check_datasets_g_variants_endpoint_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_alphanumeric_equal_query_is_working(self):
@@ -2881,20 +2881,36 @@ class TestMain(unittest.TestCase):
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
-                assert responsedict["responseSummary"]["exists"] == False
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
             loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
             loop.run_until_complete(client.close())
-    def test_main_check_g_variants_range_query_chrY(self):
+    def test_main_check_g_variants_sequence_query_chrX(self):
         with loop_context() as loop:
             app = create_app()
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_g_variants_endpoint_with_parameters_is_working():
-                resp = await client.get(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"?start=31120923&referenceName=Y&assemblyId=GRCh37&end=31121924&testMode=true")
+                resp = await client.get(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"?start=31121923&referenceName=X&assemblyId=GRCh37&referenceBases=T&alternateBases=C&testMode=true")
                 assert resp.status == 200
                 responsetext=await resp.text()
                 responsedict=json.loads(responsetext)
-                assert responsedict["responseSummary"]["exists"] == False
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
+            loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_g_variants_range_sequence_chrY(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_g_variants_endpoint_with_parameters_is_working():
+                resp = await client.get(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"]+"?start=14191773&referenceBases=A&alternateBases=G&assemblyId=GRCh37&referenceName=Y")
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
             loop.run_until_complete(test_check_g_variants_endpoint_with_parameters_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_limit_query_is_working(self):
