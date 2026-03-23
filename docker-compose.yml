@@ -85,7 +85,7 @@ services:
 
   dbega:
     image: mongo:5.0.32
-    #command: --wiredTigerCacheSizeGB 4
+    command: --wiredTigerCacheSizeGB 4
     #command: --wiredTigerCacheSizeGB 4 --sslMode requireSSL --tlsCertificateKeyFile test-server1.pem --tlsCAFile test-ca.pem
     hostname: mongo
     container_name: mongoprodega
