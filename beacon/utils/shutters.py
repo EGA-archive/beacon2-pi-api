@@ -28,32 +28,42 @@ def _on_shutdown(pid, app):
     LOG.info('Shutting down beacon v2')
 
 
-async def shutdown_process():
-    await asyncio.sleep(0.1)  # allow response to flush
-    os.kill(os.getpid(), signal.SIGTERM)
+async def _graceful_shutdown(app, LOG, runner):
+    LOG.info("API ready. Listening to requests")
 
-async def _graceful_shutdown_ctx(app):
-    def graceful_shutdown_sigterm_handler():
-        # Get the process where the app is running in the system.
-        nonlocal thread
-        thread = Thread(target=_on_shutdown, args=(os.getpid(), app))
-        thread.start()
+    stop_event = asyncio.Event()
+    loop = asyncio.get_running_loop()
 
-    thread = None
-    # Catch the process where the app is running.
-    loop = asyncio.get_event_loop()
-    loop.add_signal_handler(
-        signal.SIGTERM, graceful_shutdown_sigterm_handler,
-    )
-    #TODO: Haig de donar-te un temps d'espera + afegir un brute force shutdown (que també ha d'anar a tancar connexions)
-    yield
+    loop.add_signal_handler(signal.SIGINT, stop_event.set)
+    loop.add_signal_handler(signal.SIGTERM, stop_event.set)
 
-    # Stop the process where the app is running
-    loop.remove_signal_handler(signal.SIGTERM)
+    # Wait until signal
+    await stop_event.wait()
 
+    LOG.warning("Shutting down...")
 
-    if thread is not None:
-        thread.join()
+    app['shutting_down'] = True
+    app['state']='Shutting down'
+
+    pending = list(app['pending_requests'])
+
+    if pending:
+        LOG.warning("Waiting for {} requests to finish...".format(len(pending)))
+
+        try:
+            await asyncio.wait_for(
+                asyncio.gather(*pending, return_exceptions=True),
+                timeout=config.pending_requests_timeout_in_seconds
+            )
+        except asyncio.TimeoutError:
+            LOG.warning("Timeout reached, forcing shutdown")
+
+    else:
+        LOG.warning("No pending requests")
+
+    await runner.cleanup()
+
+    LOG.warning("Shutdown complete")
 
 PATHS_TO_RESTART = [
     "/beacon/conf/conf.py",
@@ -123,7 +133,7 @@ async def config_watcher(app):
                 app['state'] = 'Draining'
                 await monitor_pending(app)
                 LOG.info("Restarting app")
-                os._exit(0)
+                os._exit(1)
 
         initial_times = new_initial_times
 
