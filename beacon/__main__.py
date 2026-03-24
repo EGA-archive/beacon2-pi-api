@@ -46,6 +46,7 @@ async def create_api(port):
         app['logger'] = LOG
         app['pending_requests'] = set()
         app['shutting_down'] = False
+        app['state'] = 'Running - healthy'
 
         app = append_routes(app=app)
 
@@ -57,8 +58,8 @@ async def create_api(port):
         await site.start()
         await _graceful_shutdown(app, LOG, runner)
 
-    except Exception:
-        print('INFO - {}Z - {}'.format(datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3],'Shutting down...', flush=True))
+    except Exception as e:
+        print('INFO - {}Z - {}'.format(datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3],'Shutdown because of {} error'.format(e), flush=True))
         sys.exit(0)
 
 if __name__ == '__main__':

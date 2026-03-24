@@ -74,7 +74,7 @@ PATHS_TO_RESTART = [
 
 async def monitor_pending(app):
     LOG = app['logger']
-    LOG.warning("Waiting for requests to finish...")
+    LOG.warning("Waiting for {} requests to finish...".format(len(app['pending_requests'])))
     while len(app['pending_requests']) >0:
         await asyncio.sleep(1)
 
@@ -130,6 +130,7 @@ async def config_watcher(app):
         for file_path, new_m in new_initial_times.items():
             old_m = initial_times.get(file_path)
             if old_m is None or new_m != old_m:
+                LOG.warning(id(app))
                 app['state'] = 'Draining'
                 await monitor_pending(app)
                 LOG.info("Restarting app")

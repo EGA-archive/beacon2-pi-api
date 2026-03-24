@@ -5,6 +5,12 @@ import jwt
 from aiohttp import web
 from beacon.auth.__main__ import fetch_idp, validate_access_token, authentication, fetch_user_info
 from dotenv import load_dotenv
+from beacon.logs.logs import initialize_logger
+from beacon.conf.conf_override import config
+from beacon.utils.middlewares import error_middleware
+from beacon.utils.routes import append_routes
+from aiohttp_middlewares import cors_middleware
+import beacon.conf.conf_override as conf_override
 
 # for keycloak, create aud in mappers, with custom, aud and beacon for audience
 mock_access_token = 'eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJreS1tUXNxZ0ZYeHdSUVRfRUhuQlJJUGpmbVhfRXZuUTVEbzZWUTJCazdZIn0.eyJleHAiOjE3NzAxMTEwNjcsImlhdCI6MTc3MDExMDc2NywianRpIjoiNWFjNWJkZTktZjBmMi00NDc3LWI3NzMtNjk1YzdkMjU4YTYyIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL0JlYWNvbiIsImF1ZCI6ImJlYWNvbiIsInN1YiI6IjQ3ZWZmMWIxLTc2MjEtNDU3MC1hMGJiLTAxYTcxOWZiYTBhMiIsInR5cCI6IkJlYXJlciIsImF6cCI6ImJlYWNvbiIsInNlc3Npb25fc3RhdGUiOiI0MzY2OTljYy0xMjAzLTQ2ODMtYjVmNC02N2UxOThkNmExNjUiLCJhY3IiOiIxIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBlbWFpbCBtaWNyb3Byb2ZpbGUtand0Iiwic2lkIjoiNDM2Njk5Y2MtMTIwMy00NjgzLWI1ZjQtNjdlMTk4ZDZhMTY1IiwidXBuIjoiamFuZSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwibmFtZSI6IkphbmUgU21pdGgiLCJncm91cHMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXSwicHJlZmVycmVkX3VzZXJuYW1lIjoiamFuZSIsImdpdmVuX25hbWUiOiJKYW5lIiwiZmFtaWx5X25hbWUiOiJTbWl0aCIsImVtYWlsIjoiamFuZS5zbWl0aEBiZWFjb24uZ2E0Z2gifQ.Sk9XwP3aPC8WLV_a_-ekJbsNmdN9IIvIPyKaHdb_VwbHO1FtqDmjpSZ80S8jnuZEPkLgiBGMUupJdVAKHlMw77SEWt1ka8KInHJbIY3bMBqxHu13_qzsQnw1_Y-nQbAp5C0Q-Hwr1tFnzjoQho0jVhIvi0b3GdTczzWbVZFgIHX_ESoD8bgKfQQGZChFvPkPycKYFqwmC2-YuMPTgK_iKSWtUqe4WwoL7P1NNgo0yho0HxVymzm2vKDf2bww0-Qa_40IsNJUcFJ5IYBtZ3YUNUE2TeX7S97A7HLN0S-iIg6KY9niOY0mElj_-bcbvNDI3r1Xs0_4VfJ9it72YuJd2A'
@@ -15,14 +21,25 @@ mock_access_token_false = 'public'
 #audit --> agafar informació molt específica que ens interessa guardar per sempre (de quins individuals ha obtingut resultats positius)
 
 def create_test_app():
-    app = web.Application()
-    #app.on_startup.append(initialize)
+    LOG = initialize_logger(config.level)
+    app = web.Application(
+        middlewares=[
+            cors_middleware(origins=conf_override.config.cors_urls), error_middleware
+        ]
+    )
+    app['logger'] = LOG
+    app['pending_requests'] = set()
+    app['shutting_down'] = False
+    app['state'] = 'Running - healthy'
+    app = append_routes(app=app)
     return app
 
 class TestAuthN(unittest.TestCase):
     def __init__(self, methodName: str = "runTest") -> None:
         super().__init__(methodName)
+        LOG = initialize_logger(config.level)
         self._id = 'test'
+        self.LOG=LOG
     def test_auth_fetch_idp(self):
         with loop_context() as loop:
             app = create_test_app()

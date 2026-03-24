@@ -14,7 +14,6 @@ class CollectionEntryTypeView(EndpointView):
     @state_check
     @log_with_args(config.level)
     async def handler(self):
-        await asyncio.sleep(10)
         # Load the executor from the module that owns the source of the entry type
         module = load_source_module(self, 'executor')
         # Execute the function "execute_collection_function" from the executor previously loaded. This will return a class with the docs for the collections retrieved from the source.

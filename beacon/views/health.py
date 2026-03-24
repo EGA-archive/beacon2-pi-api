@@ -30,11 +30,15 @@ class HealthView(web.View, CorsViewMixin):
     @log_with_args(config.level)
     async def handler(self):
         try:
-            if self.request.app['state'] != 'Shutting down' or self.request.app['state'] != 'Draining':
+            state=self._request.app['state']
+            if state not in ['Shutting down', 'Draining']:
+                self._request.app['state'] = 'Running - healthy'
                 await check_database_connections(LOG=self.LOG)
-            response_obj = {"state": self.request.app['state']}
+                response_obj = {"state": self._request.app['state']}
+            else:
+                response_obj = {"state": self._request.app['state'], "number_of_requests_pending": len(self._request.app['pending_requests'])}
             return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
         except DatabaseIsDown as e:
-            self.request.app['state']='Running - degraded'
-            response_obj = {"state": self.request.app['state'], "error": "{} database is down".format(e)}
+            self._request.app['state']='Running - degraded'
+            response_obj = {"state": self._request.app['state'], "error": "{} database is down".format(e)}
             return web.Response(text=json_util.dumps(response_obj), status=e.status, content_type='application/json')
