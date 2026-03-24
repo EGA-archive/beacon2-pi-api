@@ -8,7 +8,7 @@ def parse_request_parameters(self, query, filter):
     # Processing the request parameters as filters, checking which is the id of the property mapped by the request parameter (where the requestParameter points at, several can apply to one property)
     if filter.id == "identifiers.genomicHGVSId":
         # Initialize a dictionary to use for the chromosome query and create the list of chromosome values accepted that come from requestParameters
-        list_chromosomes = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','X','Y','chr1','chr2','chr3','chr4','chr5','chr6','chr7','chr8','chr9','chr10','chr11','chr12','chr13','chr14','chr15','chr16','chr17','chr18','chr19','chr20','chr21','chr22','chr23','chr24','chrX','chrY']
+        list_chromosomes = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','X','Y','MT','chr1','chr2','chr3','chr4','chr5','chr6','chr7','chr8','chr9','chr10','chr11','chr12','chr13','chr14','chr15','chr16','chr17','chr18','chr19','chr20','chr21','chr22','chr23','chr24','chrX','chrY']
         dict_regex={}
         # Check if the value of the chromosome is accepted
         if filter.value in list_chromosomes:
@@ -25,18 +25,18 @@ def parse_request_parameters(self, query, filter):
                     prehgvs='^NC_00000'
                 if filter.value == 'X':
                     if RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'NCBI36':
-                        dict_regex['$regex']='^NC_000023'+filter.value+'.'+'9:g'
+                        dict_regex['$regex']='^NC_000023'+'.'+'9:g'
                     elif RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'GRCh37':
-                        dict_regex['$regex']='^NC_000023'+filter.value+'.'+'10:g'
+                        dict_regex['$regex']='^NC_000023'+'.'+'10:g'
                     elif RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'GRCh38':
-                        dict_regex['$regex']='^NC_000023'+filter.value+'.'+'11:g'
+                        dict_regex['$regex']='^NC_000023'+'.'+'11:g'
                 elif filter.value == 'Y':
                     if RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'NCBI36':
-                        dict_regex['$regex']='^NC_000024'+filter.value+'.'+'8:g'
+                        dict_regex['$regex']='^NC_000024'+'.'+'8:g'
                     elif RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'GRCh37':
-                        dict_regex['$regex']='^NC_000024'+filter.value+'.'+'9:g'
+                        dict_regex['$regex']='^NC_000024'+'.'+'9:g'
                     elif RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'GRCh38':
-                        dict_regex['$regex']='^NC_000024'+filter.value+'.'+'10:g'
+                        dict_regex['$regex']='^NC_000024'+'.'+'10:g'
                 elif filter.value in ['14', '21']:
                     if RequestAttributes.qparams.query.requestParameters["assemblyId"] == 'NCBI36':
                         dict_regex['$regex']=prehgvs+filter.value+'.'+'7:g'
@@ -144,6 +144,10 @@ def parse_request_parameters(self, query, filter):
             dict_expr['$expr']=dict_gt
             andquery["$and"].append(dict_expr)
             query=andquery
+        else:
+            formatted_value = format_value(self, filter.value)
+            formatted_operator = format_operator(self, filter.operator)
+            query[filter.id] = { formatted_operator: formatted_value }
 
     elif filter.id == 'assemblyId':
         pass
