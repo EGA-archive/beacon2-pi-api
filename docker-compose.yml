@@ -84,7 +84,9 @@ services:
       - idp-priv
 
   db:
-    image: mongo:5.0.32
+    #image: mongo:5.0.32
+    #image: mongo:6.0.27
+    image: mongo:7.0.28
     #command: --wiredTigerCacheSizeGB 4
     #command: --wiredTigerCacheSizeGB 4 --sslMode requireSSL --tlsCertificateKeyFile test-server1.pem --tlsCAFile test-ca.pem
     hostname: mongo
