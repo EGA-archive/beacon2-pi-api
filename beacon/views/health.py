@@ -10,7 +10,6 @@ from aiohttp_cors import CorsViewMixin
 from aiohttp.web_request import Request
 from beacon.utils.txid import generate_txid
 import asyncio
-from beacon.utils.shutters import shutdown_process
 
 class HealthView(web.View, CorsViewMixin):
     def __init__(self, request: Request):
@@ -31,11 +30,15 @@ class HealthView(web.View, CorsViewMixin):
     @log_with_args(config.level)
     async def handler(self):
         try:
-            await check_database_connections(LOG=self.LOG)
-            response_obj = {"state": self.request.app['state']}
+            state=self._request.app['state']
+            if state not in ['Shutting down', 'Draining']:
+                self._request.app['state'] = 'Running - healthy'
+                await check_database_connections(LOG=self.LOG)
+                response_obj = {"state": self._request.app['state']}
+            else:
+                response_obj = {"state": self._request.app['state'], "number_of_requests_pending": len(self._request.app['pending_requests'])}
             return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
         except DatabaseIsDown as e:
-            self.request.app['state']='shutting down'
-            response_obj = {"state": "shutting down", "error": "{} database is down".format(e)}
-            asyncio.create_task(shutdown_process())
-            return web.Response(text=json_util.dumps(response_obj), status=e.status, content_type='application/json')
+            self._request.app['state']='Running - degraded'
+            response_obj = {"state": self._request.app['state'], "error": "{} database is down".format(e)}
+            return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')

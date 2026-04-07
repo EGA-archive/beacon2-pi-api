@@ -23,9 +23,14 @@ async def error_middleware(request, handler):
         
 @web.middleware
 async def track_requests_middleware(request, handler):
+    app = request.app
     task = asyncio.current_task()
-    request.app['pending_requests'].add(task)
+
+    app['pending_requests'].add(task)
+
     try:
         return await handler(request)
+
     finally:
-        request.app['pending_requests'].discard(task)
+        if not app.get('shutting_down'):
+            app['pending_requests'].discard(task)

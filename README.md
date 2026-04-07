@@ -4,59 +4,7 @@ Welcome to Beacon v2 Production Implementation (B2PI). This is an application th
 
 ## Documentation
 
-Please, go to [B2RI/B2PI docs website](https://b2ri-documentation-demo.ega-archive.org/) to know how to use Beacon v2 Production Implementation.
-
-## Upgrading mongoDB (New release v2.2)
-
-As mongoDB version 5 is [end of life](https://github.com/EGA-archive/beacon2-pi-api/issues/161), two new images for versions 6 and 7 of mongoDB are now available. Just comment and uncomment the image you prefer.
-
-### Upgrading MongoDB to version 6 from a container with an existing data for version 5
-
-This version is compatible with previous version 5. Just build the container with the version 6 uncommented and you will be ready to use it without further actions on your side.
-
-### Upgrading MongoDB to version 7 from a container with an existing data for version 5
-
-If your container you want to upgrade is version 5 and you want version 7, first you will have to rebuild the container with the version 6. After that you will need to go to the mongoshell of the container:
-
-```bash
-docker exec -it mongoprod mongosh
-```
-
-And go to admin database:
-
-```bash
-use admin
-```
-
-Once authenticated, you will need to make your mongodb instance upgrades compatible with version 6 by executing the following command:
-
-```bash
-db.adminCommand({ setFeatureCompatibilityVersion: "6.0" })
-```
-
-After that, stop the container, comment version 6 and uncomment image for version 7 and rebuild the container and your mongoDB will be upgraded to version 7.
-
-### Downgrading MongoDB to version 5 from an exising mongodb container with a greater version
-
-First, you will have to build the mongodb container using version 6. When up and running, execute the next commands:
-
-```bash
-docker exec -it mongoprod mongosh
-```
-
-And go to admin database:
-
-```bash
-use admin
-```
-
-Once authenticated, you will need to make your mongodb instance upgrades compatible with version 6 by executing the following command:
-
-```bash
-db.adminCommand({ setFeatureCompatibilityVersion: "5.0" })
-```
-
-After that, stop the container, comment version 6 and uncomment image for version 5 and rebuild the container and your mongoDB will be downgraded to version 5.
+Please, go to [CRG Beacon docs website](https://b2ri-documentation-demo.ega-archive.org/) to know how to use Beacon v2 Production Implementation.
 
 ### TLS configuration
 
@@ -689,6 +637,12 @@ After editing any comfiguration variable, save the file and restart the API to a
 ```bash
 docker compose restart beaconprod
 ```
+
+### State checks
+
+Now state checks are available through `/health` endpoint. The implemented checks and their flow are the ones that are shown in the diagram below:
+
+![MongoDB vulnerabilities](https://github.com/EGA-archive/beacon-production-prototype/blob/main/ri-tools/files/Machine_State_v3.jpg)
 
 ## Fix for MongoDB exploit (CVE-2025-14847)
 

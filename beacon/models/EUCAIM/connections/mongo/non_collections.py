@@ -21,7 +21,7 @@ def get_endpoint(self, dataset: SingleDatasetResponse):
     limit = RequestAttributes.qparams.query.pagination.limit
     skip = RequestAttributes.qparams.query.pagination.skip
     if limit > 100 or limit == 0:
-        limit = 100
+        limit = config.max_limit_of_records_per_dataset_in_a_page
     # Get the docs with the query syntax built.
     responseClass = get_docs_by_response_type(self, include, query, dataset, limit, skip)
     return responseClass
@@ -40,7 +40,7 @@ def get_endpoint_with_id(self, dataset: SingleDatasetResponse):
     limit = RequestAttributes.qparams.query.pagination.limit
     skip = RequestAttributes.qparams.query.pagination.skip
     if limit > 100 or limit == 0:
-        limit = 100
+        limit = config.max_limit_of_records_per_dataset_in_a_page
     # Get the docs with the query syntax built.
     responseClass = get_docs_by_response_type(self, include, query, dataset, limit, skip)
     return responseClass
@@ -64,7 +64,7 @@ def get_endpoint_cross_query(self, dataset: SingleDatasetResponse):
     limit = RequestAttributes.qparams.query.pagination.limit
     skip = RequestAttributes.qparams.query.pagination.skip
     if limit > 100 or limit == 0:
-        limit = 100
+        limit = config.max_limit_of_records_per_dataset_in_a_page
     # Get the docs with the query syntax built.
     responseClass = get_docs_by_response_type(self, include, query, dataset, limit, skip)
     return responseClass
