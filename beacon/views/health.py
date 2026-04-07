@@ -41,4 +41,4 @@ class HealthView(web.View, CorsViewMixin):
         except DatabaseIsDown as e:
             self._request.app['state']='Running - degraded'
             response_obj = {"state": self._request.app['state'], "error": "{} database is down".format(e)}
-            return web.Response(text=json_util.dumps(response_obj), status=e.status, content_type='application/json')
+            return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')

@@ -3,17 +3,14 @@ import aiohttp.web as web
 import sys
 from aiohttp_middlewares import cors_middleware
 from beacon.conf.conf_override import config
-import ssl
 from beacon.validator.configuration import check_configuration, check_logs_configuration
 from beacon.utils.routes import append_routes
 from beacon.utils.middlewares import error_middleware, track_requests_middleware
 from beacon.utils.shutters import _graceful_shutdown, on_startup as on_start
 from beacon.logs.logs import initialize_logger
 from beacon.utils.modules import check_database_connections
-from beacon.exceptions.exceptions import DatabaseIsDown
 import datetime
 import warnings
-import signal
 
 warnings.filterwarnings("ignore", category=UserWarning)
 

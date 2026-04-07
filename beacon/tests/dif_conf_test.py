@@ -5,6 +5,8 @@ import unittest
 import beacon.conf.conf_override as conf_override
 from beacon.validator.configuration import check_configuration
 import yaml
+from beacon.logs.logs import initialize_logger
+from beacon.conf.conf_override import config
 
 def import_genomicVariant_confile():
     with open("/beacon/tests/mock_conf_files/conf/entry_types/ga4gh/beacon_v2_default_model/genomicVariant.yml", 'r') as pfile:
@@ -218,7 +220,7 @@ class TestNoFilters(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_configuration_enable_analysis():
                 try:
-                    check_configuration(analysis, biosample, cohort, dataset, genomicVariant, individual, run)
+                    check_configuration(LOG=initialize_logger(config.level),analysis_confile=analysis, biosample_confile=biosample, cohort_confile=cohort, dataset_confile=dataset, genomicVariant_confile=genomicVariant, individual_confile=individual, run_confile=run)
                 except Exception:
                     pass
             loop.run_until_complete(test_check_configuration_enable_analysis())
@@ -236,7 +238,7 @@ class TestNoFilters(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_configuration_enable_biosample():
                 try:
-                    check_configuration(analysis, biosample, cohort, dataset, genomicVariant, individual, run)
+                    check_configuration(LOG=initialize_logger(config.level),analysis_confile=analysis, biosample_confile=biosample, cohort_confile=cohort, dataset_confile=dataset, genomicVariant_confile=genomicVariant, individual_confile=individual, run_confile=run)
                 except Exception:
                     pass
             loop.run_until_complete(test_check_configuration_enable_biosample())
@@ -254,7 +256,7 @@ class TestNoFilters(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_configuration_enable_cohort():
                 try:
-                    check_configuration(analysis, biosample, cohort, dataset, genomicVariant, individual, run)
+                    check_configuration(LOG=initialize_logger(config.level),analysis_confile=analysis, biosample_confile=biosample, cohort_confile=cohort, dataset_confile=dataset, genomicVariant_confile=genomicVariant, individual_confile=individual, run_confile=run)
                 except Exception:
                     pass
             loop.run_until_complete(test_check_configuration_enable_cohort())
@@ -272,7 +274,7 @@ class TestNoFilters(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_configuration_enable_dataset():
                 try:
-                    check_configuration(analysis, biosample, cohort, dataset, genomicVariant, individual, run)
+                    check_configuration(LOG=initialize_logger(config.level),analysis_confile=analysis, biosample_confile=biosample, cohort_confile=cohort, dataset_confile=dataset, genomicVariant_confile=genomicVariant, individual_confile=individual, run_confile=run)
                 except Exception:
                     pass
             loop.run_until_complete(test_check_configuration_enable_dataset())
@@ -290,7 +292,7 @@ class TestNoFilters(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_configuration_enable_individual():
                 try:
-                    check_configuration(analysis, biosample, cohort, dataset, genomicVariant, individual, run)
+                    check_configuration(LOG=initialize_logger(config.level),analysis_confile=analysis, biosample_confile=biosample, cohort_confile=cohort, dataset_confile=dataset, genomicVariant_confile=genomicVariant, individual_confile=individual, run_confile=run)
                 except Exception:
                     pass
             loop.run_until_complete(test_check_configuration_enable_individual())
@@ -308,7 +310,7 @@ class TestNoFilters(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_configuration_enable_genomicVariant():
                 try:
-                    check_configuration(analysis, biosample, cohort, dataset, genomicVariant, individual, run)
+                    check_configuration(LOG=initialize_logger(config.level),analysis_confile=analysis, biosample_confile=biosample, cohort_confile=cohort, dataset_confile=dataset, genomicVariant_confile=genomicVariant, individual_confile=individual, run_confile=run)
                 except Exception:
                     pass
             loop.run_until_complete(test_check_configuration_enable_genomicVariant())
@@ -326,7 +328,7 @@ class TestNoFilters(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_configuration_enable_run():
                 try:
-                    check_configuration(analysis, biosample, cohort, dataset, genomicVariant, individual, run)
+                    check_configuration(LOG=initialize_logger(config.level),analysis_confile=analysis, biosample_confile=biosample, cohort_confile=cohort, dataset_confile=dataset, genomicVariant_confile=genomicVariant, individual_confile=individual, run_confile=run)
                 except Exception:
                     pass
             loop.run_until_complete(test_check_configuration_enable_run())
@@ -344,7 +346,7 @@ class TestNoFilters(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_configuration_enable_analysis():
                 try:
-                    check_configuration(analysis, biosample, cohort, dataset, genomicVariant, individual, run)
+                    check_configuration(LOG=initialize_logger(config.level),analysis_confile=analysis, biosample_confile=biosample, cohort_confile=cohort, dataset_confile=dataset, genomicVariant_confile=genomicVariant, individual_confile=individual, run_confile=run)
                 except Exception:
                     pass
             loop.run_until_complete(test_check_configuration_enable_analysis())
@@ -362,7 +364,7 @@ class TestNoFilters(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_configuration_enable_biosample():
                 try:
-                    check_configuration(analysis, biosample, cohort, dataset, genomicVariant, individual, run)
+                    check_configuration(LOG=initialize_logger(config.level),analysis_confile=analysis, biosample_confile=biosample, cohort_confile=cohort, dataset_confile=dataset, genomicVariant_confile=genomicVariant, individual_confile=individual, run_confile=run)
                 except Exception:
                     pass
             loop.run_until_complete(test_check_configuration_enable_biosample())
@@ -380,7 +382,7 @@ class TestNoFilters(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_configuration_enable_cohort():
                 try:
-                    check_configuration(analysis, biosample, cohort, dataset, genomicVariant, individual, run)
+                    check_configuration(LOG=initialize_logger(config.level),analysis_confile=analysis, biosample_confile=biosample, cohort_confile=cohort, dataset_confile=dataset, genomicVariant_confile=genomicVariant, individual_confile=individual, run_confile=run)
                 except Exception:
                     pass
             loop.run_until_complete(test_check_configuration_enable_cohort())
@@ -398,7 +400,7 @@ class TestNoFilters(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_configuration_enable_dataset():
                 try:
-                    check_configuration(analysis, biosample, cohort, dataset, genomicVariant, individual, run)
+                    check_configuration(LOG=initialize_logger(config.level),analysis_confile=analysis, biosample_confile=biosample, cohort_confile=cohort, dataset_confile=dataset, genomicVariant_confile=genomicVariant, individual_confile=individual, run_confile=run)
                 except Exception:
                     pass
             loop.run_until_complete(test_check_configuration_enable_dataset())
@@ -416,7 +418,7 @@ class TestNoFilters(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_configuration_enable_individual():
                 try:
-                    check_configuration(analysis, biosample, cohort, dataset, genomicVariant, individual, run)
+                    check_configuration(LOG=initialize_logger(config.level),analysis_confile=analysis, biosample_confile=biosample, cohort_confile=cohort, dataset_confile=dataset, genomicVariant_confile=genomicVariant, individual_confile=individual, run_confile=run)
                 except Exception:
                     pass
             loop.run_until_complete(test_check_configuration_enable_individual())
@@ -434,7 +436,7 @@ class TestNoFilters(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_configuration_enable_genomicVariant():
                 try:
-                    check_configuration(analysis, biosample, cohort, dataset, genomicVariant, individual, run)
+                    check_configuration(LOG=initialize_logger(config.level),analysis_confile=analysis, biosample_confile=biosample, cohort_confile=cohort, dataset_confile=dataset, genomicVariant_confile=genomicVariant, individual_confile=individual, run_confile=run)
                 except Exception:
                     pass
             loop.run_until_complete(test_check_configuration_enable_genomicVariant())
@@ -452,7 +454,7 @@ class TestNoFilters(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_configuration_granularity_run():
                 try:
-                    check_configuration(analysis, biosample, cohort, dataset, genomicVariant, individual, run)
+                    check_configuration(LOG=initialize_logger(config.level),analysis_confile=analysis, biosample_confile=biosample, cohort_confile=cohort, dataset_confile=dataset, genomicVariant_confile=genomicVariant, individual_confile=individual, run_confile=run)
                 except Exception:
                     pass
             loop.run_until_complete(test_check_configuration_granularity_run())
@@ -468,7 +470,7 @@ class TestNoFilters(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_configuration_http():
-                check_configuration(analysis, biosample, cohort, dataset, genomicVariant, individual, run)
+                check_configuration(LOG=initialize_logger(config.level),analysis_confile=analysis, biosample_confile=biosample, cohort_confile=cohort, dataset_confile=dataset, genomicVariant_confile=genomicVariant, individual_confile=individual, run_confile=run)
             loop.run_until_complete(test_check_configuration_http())
             loop.run_until_complete(client.close())
             conf_override.config.uri="http://localhost:50101"
@@ -478,7 +480,7 @@ class TestNoFilters(unittest.TestCase):
             conf_override.config.uri="afafsafas"
             async def test_check_configuration_wrong_uri():
                 try:
-                    check_configuration(analysis, biosample, cohort, dataset, genomicVariant, individual, run)
+                    check_configuration(LOG=initialize_logger(config.level),analysis_confile=analysis, biosample_confile=biosample, cohort_confile=cohort, dataset_confile=dataset, genomicVariant_confile=genomicVariant, individual_confile=individual, run_confile=run)
                 except Exception:
                     pass
             loop.run_until_complete(test_check_configuration_wrong_uri())
@@ -490,7 +492,7 @@ class TestNoFilters(unittest.TestCase):
 
             async def test_check_configuration_wrong_uri_trailing_slash():
                 try:
-                    check_configuration(analysis, biosample, cohort, dataset, genomicVariant, individual, run)
+                    check_configuration(LOG=initialize_logger(config.level),analysis_confile=analysis, biosample_confile=biosample, cohort_confile=cohort, dataset_confile=dataset, genomicVariant_confile=genomicVariant, individual_confile=individual, run_confile=run)
                 except Exception:
                     pass
             loop.run_until_complete(test_check_configuration_wrong_uri_trailing_slash())
@@ -501,7 +503,7 @@ class TestNoFilters(unittest.TestCase):
             conf_override.config.uri_subpath="/api/"
             async def test_check_configuration_wrong_uri_subpath_trailing_slash():
                 try:
-                    check_configuration(analysis, biosample, cohort, dataset, genomicVariant, individual, run)
+                    check_configuration(LOG=initialize_logger(config.level),analysis_confile=analysis, biosample_confile=biosample, cohort_confile=cohort, dataset_confile=dataset, genomicVariant_confile=genomicVariant, individual_confile=individual, run_confile=run)
                 except Exception:
                     pass
             loop.run_until_complete(test_check_configuration_wrong_uri_subpath_trailing_slash())
@@ -512,7 +514,7 @@ class TestNoFilters(unittest.TestCase):
             conf_override.config.uri_subpath="api"
             async def test_check_configuration_wrong_uri_subpath_starting_slash():
                 try:
-                    check_configuration(analysis, biosample, cohort, dataset, genomicVariant, individual, run)
+                    check_configuration(LOG=initialize_logger(config.level),analysis_confile=analysis, biosample_confile=biosample, cohort_confile=cohort, dataset_confile=dataset, genomicVariant_confile=genomicVariant, individual_confile=individual, run_confile=run)
                 except Exception:
                     pass
             loop.run_until_complete(test_check_configuration_wrong_uri_subpath_starting_slash())
@@ -526,7 +528,7 @@ class TestNoFilters(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_configuration_wrong_query_budget_amount():
                 try:
-                    check_configuration(analysis, biosample, cohort, dataset, genomicVariant, individual, run)
+                    check_configuration(LOG=initialize_logger(config.level),analysis_confile=analysis, biosample_confile=biosample, cohort_confile=cohort, dataset_confile=dataset, genomicVariant_confile=genomicVariant, individual_confile=individual, run_confile=run)
                 except Exception:
                     pass
             loop.run_until_complete(test_check_configuration_wrong_query_budget_amount())
@@ -538,7 +540,7 @@ class TestNoFilters(unittest.TestCase):
             conf_override.config.query_budget_time_in_seconds="api"
             async def test_check_configuration_wrong_query_budget_time():
                 try:
-                    check_configuration(analysis, biosample, cohort, dataset, genomicVariant, individual, run)
+                    check_configuration(LOG=initialize_logger(config.level),analysis_confile=analysis, biosample_confile=biosample, cohort_confile=cohort, dataset_confile=dataset, genomicVariant_confile=genomicVariant, individual_confile=individual, run_confile=run)
                 except Exception:
                     pass
             loop.run_until_complete(test_check_configuration_wrong_query_budget_time())
@@ -549,7 +551,7 @@ class TestNoFilters(unittest.TestCase):
             conf_override.config.query_budget_per_user="api"
             async def test_check_configuration_wrong_query_budget_user():
                 try:
-                    check_configuration(analysis, biosample, cohort, dataset, genomicVariant, individual, run)
+                    check_configuration(LOG=initialize_logger(config.level),analysis_confile=analysis, biosample_confile=biosample, cohort_confile=cohort, dataset_confile=dataset, genomicVariant_confile=genomicVariant, individual_confile=individual, run_confile=run)
                 except Exception:
                     pass
             loop.run_until_complete(test_check_configuration_wrong_query_budget_user())
@@ -560,7 +562,7 @@ class TestNoFilters(unittest.TestCase):
             conf_override.config.query_budget_per_ip="api"
             async def test_check_configuration_wrong_query_budget_ip():
                 try:
-                    check_configuration(analysis, biosample, cohort, dataset, genomicVariant, individual, run)
+                    check_configuration(LOG=initialize_logger(config.level),analysis_confile=analysis, biosample_confile=biosample, cohort_confile=cohort, dataset_confile=dataset, genomicVariant_confile=genomicVariant, individual_confile=individual, run_confile=run)
                 except Exception:
                     pass
             loop.run_until_complete(test_check_configuration_wrong_query_budget_ip())
@@ -571,7 +573,7 @@ class TestNoFilters(unittest.TestCase):
             conf_override.config.query_budget_database="api"
             async def test_check_configuration_wrong_query_budget_database():
                 try:
-                    check_configuration(analysis, biosample, cohort, dataset, genomicVariant, individual, run)
+                    check_configuration(LOG=initialize_logger(config.level),analysis_confile=analysis, biosample_confile=biosample, cohort_confile=cohort, dataset_confile=dataset, genomicVariant_confile=genomicVariant, individual_confile=individual, run_confile=run)
                 except Exception:
                     pass
             loop.run_until_complete(test_check_configuration_wrong_query_budget_database())
@@ -584,7 +586,7 @@ class TestNoFilters(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_configuration_enable_analysis():
                 try:
-                    check_configuration(analysis, biosample, cohort, dataset, genomicVariant, individual, run)
+                    check_configuration(LOG=initialize_logger(config.level),analysis_confile=analysis, biosample_confile=biosample, cohort_confile=cohort, dataset_confile=dataset, genomicVariant_confile=genomicVariant, individual_confile=individual, run_confile=run)
                 except Exception:
                     pass
             loop.run_until_complete(test_check_configuration_enable_analysis())
@@ -602,7 +604,7 @@ class TestNoFilters(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_configuration_enable_biosample():
                 try:
-                    check_configuration(analysis, biosample, cohort, dataset, genomicVariant, individual, run)
+                    check_configuration(LOG=initialize_logger(config.level),analysis_confile=analysis, biosample_confile=biosample, cohort_confile=cohort, dataset_confile=dataset, genomicVariant_confile=genomicVariant, individual_confile=individual, run_confile=run)
                 except Exception:
                     pass
             loop.run_until_complete(test_check_configuration_enable_biosample())
@@ -620,7 +622,7 @@ class TestNoFilters(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_configuration_enable_cohort():
                 try:
-                    check_configuration(analysis, biosample, cohort, dataset, genomicVariant, individual, run)
+                    check_configuration(LOG=initialize_logger(config.level),analysis_confile=analysis, biosample_confile=biosample, cohort_confile=cohort, dataset_confile=dataset, genomicVariant_confile=genomicVariant, individual_confile=individual, run_confile=run)
                 except Exception:
                     pass
             loop.run_until_complete(test_check_configuration_enable_cohort())
@@ -638,7 +640,7 @@ class TestNoFilters(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_configuration_enable_dataset():
                 try:
-                    check_configuration(analysis, biosample, cohort, dataset, genomicVariant, individual, run)
+                    check_configuration(LOG=initialize_logger(config.level),analysis_confile=analysis, biosample_confile=biosample, cohort_confile=cohort, dataset_confile=dataset, genomicVariant_confile=genomicVariant, individual_confile=individual, run_confile=run)
                 except Exception:
                     pass
             loop.run_until_complete(test_check_configuration_enable_dataset())
@@ -656,7 +658,7 @@ class TestNoFilters(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_configuration_enable_individual():
                 try:
-                    check_configuration(analysis, biosample, cohort, dataset, genomicVariant, individual, run)
+                    check_configuration(LOG=initialize_logger(config.level),analysis_confile=analysis, biosample_confile=biosample, cohort_confile=cohort, dataset_confile=dataset, genomicVariant_confile=genomicVariant, individual_confile=individual, run_confile=run)
                 except Exception:
                     pass
             loop.run_until_complete(test_check_configuration_enable_individual())
@@ -674,7 +676,7 @@ class TestNoFilters(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_configuration_enable_genomicVariant():
                 try:
-                    check_configuration(analysis, biosample, cohort, dataset, genomicVariant, individual, run)
+                    check_configuration(LOG=initialize_logger(config.level),analysis_confile=analysis, biosample_confile=biosample, cohort_confile=cohort, dataset_confile=dataset, genomicVariant_confile=genomicVariant, individual_confile=individual, run_confile=run)
                 except Exception:
                     pass
             loop.run_until_complete(test_check_configuration_enable_genomicVariant())
@@ -692,7 +694,7 @@ class TestNoFilters(unittest.TestCase):
             loop.run_until_complete(client.start_server())
             async def test_check_configuration_database_run():
                 try:
-                    check_configuration(analysis, biosample, cohort, dataset, genomicVariant, individual, run)
+                    check_configuration(LOG=initialize_logger(config.level),analysis_confile=analysis, biosample_confile=biosample, cohort_confile=cohort, dataset_confile=dataset, genomicVariant_confile=genomicVariant, individual_confile=individual, run_confile=run)
                 except Exception:
                     pass
             loop.run_until_complete(test_check_configuration_database_run())
@@ -706,7 +708,7 @@ class TestNoFilters(unittest.TestCase):
             conf_override.config.environment="api"
             async def test_check_configuration_wrong_environment():
                 try:
-                    check_configuration(analysis, biosample, cohort, dataset, genomicVariant, individual, run)
+                    check_configuration(LOG=initialize_logger(config.level),analysis_confile=analysis, biosample_confile=biosample, cohort_confile=cohort, dataset_confile=dataset, genomicVariant_confile=genomicVariant, individual_confile=individual, run_confile=run)
                 except Exception:
                     pass
             loop.run_until_complete(test_check_configuration_wrong_environment())
@@ -717,7 +719,7 @@ class TestNoFilters(unittest.TestCase):
             conf_override.config.default_beacon_granularity="api"
             async def test_check_configuration_wrong_granularity():
                 try:
-                    check_configuration(analysis, biosample, cohort, dataset, genomicVariant, individual, run)
+                    check_configuration(LOG=initialize_logger(config.level),analysis_confile=analysis, biosample_confile=biosample, cohort_confile=cohort, dataset_confile=dataset, genomicVariant_confile=genomicVariant, individual_confile=individual, run_confile=run)
                 except Exception:
                     pass
             loop.run_until_complete(test_check_configuration_wrong_granularity())
@@ -729,7 +731,7 @@ class TestNoFilters(unittest.TestCase):
                 yaml.dump(analysis, outfile, default_flow_style=False)
             async def test_check_endpoint_endpoint_name_is_string():
                 try:
-                    check_configuration(analysis, biosample, cohort, dataset, genomicVariant, individual, run)
+                    check_configuration(LOG=initialize_logger(config.level),analysis_confile=analysis, biosample_confile=biosample, cohort_confile=cohort, dataset_confile=dataset, genomicVariant_confile=genomicVariant, individual_confile=individual, run_confile=run)
                 except Exception:
                     pass
             loop.run_until_complete(test_check_endpoint_endpoint_name_is_string())
@@ -743,7 +745,7 @@ class TestNoFilters(unittest.TestCase):
                 yaml.dump(biosample, outfile, default_flow_style=False)
             async def test_check_endpoint_endpoint_name_is_string():
                 try:
-                    check_configuration(analysis, biosample, cohort, dataset, genomicVariant, individual, run)
+                    check_configuration(LOG=initialize_logger(config.level),analysis_confile=analysis, biosample_confile=biosample, cohort_confile=cohort, dataset_confile=dataset, genomicVariant_confile=genomicVariant, individual_confile=individual, run_confile=run)
                 except Exception:
                     pass
             loop.run_until_complete(test_check_endpoint_endpoint_name_is_string())
@@ -757,7 +759,7 @@ class TestNoFilters(unittest.TestCase):
                 yaml.dump(cohort, outfile, default_flow_style=False)
             async def test_check_endpoint_endpoint_name_is_string():
                 try:
-                    check_configuration(analysis, biosample, cohort, dataset, genomicVariant, individual, run)
+                    check_configuration(LOG=initialize_logger(config.level),analysis_confile=analysis, biosample_confile=biosample, cohort_confile=cohort, dataset_confile=dataset, genomicVariant_confile=genomicVariant, individual_confile=individual, run_confile=run)
                 except Exception:
                     pass
             loop.run_until_complete(test_check_endpoint_endpoint_name_is_string())
@@ -771,7 +773,7 @@ class TestNoFilters(unittest.TestCase):
                 yaml.dump(dataset, outfile, default_flow_style=False)
             async def test_check_endpoint_endpoint_name_is_string():
                 try:
-                    check_configuration(analysis, biosample, cohort, dataset, genomicVariant, individual, run)
+                    check_configuration(LOG=initialize_logger(config.level),analysis_confile=analysis, biosample_confile=biosample, cohort_confile=cohort, dataset_confile=dataset, genomicVariant_confile=genomicVariant, individual_confile=individual, run_confile=run)
                 except Exception:
                     pass
             loop.run_until_complete(test_check_endpoint_endpoint_name_is_string())
@@ -785,7 +787,7 @@ class TestNoFilters(unittest.TestCase):
                 yaml.dump(genomicVariant, outfile, default_flow_style=False)
             async def test_check_endpoint_endpoint_name_is_string():
                 try:
-                    check_configuration(analysis, biosample, cohort, dataset, genomicVariant, individual, run)
+                    check_configuration(LOG=initialize_logger(config.level),analysis_confile=analysis, biosample_confile=biosample, cohort_confile=cohort, dataset_confile=dataset, genomicVariant_confile=genomicVariant, individual_confile=individual, run_confile=run)
                 except Exception:
                     pass
             loop.run_until_complete(test_check_endpoint_endpoint_name_is_string())
@@ -799,7 +801,7 @@ class TestNoFilters(unittest.TestCase):
                 yaml.dump(run, outfile, default_flow_style=False)
             async def test_check_endpoint_endpoint_name_is_string():
                 try:
-                    check_configuration(analysis, biosample, cohort, dataset, genomicVariant, individual, run)
+                    check_configuration(LOG=initialize_logger(config.level),analysis_confile=analysis, biosample_confile=biosample, cohort_confile=cohort, dataset_confile=dataset, genomicVariant_confile=genomicVariant, individual_confile=individual, run_confile=run)
                 except Exception:
                     pass
             loop.run_until_complete(test_check_endpoint_endpoint_name_is_string())
@@ -813,7 +815,7 @@ class TestNoFilters(unittest.TestCase):
                 yaml.dump(individual, outfile, default_flow_style=False)
             async def test_check_endpoint_endpoint_name_is_string():
                 try:
-                    check_configuration(analysis, biosample, cohort, dataset, genomicVariant, individual, run)
+                    check_configuration(LOG=initialize_logger(config.level),analysis_confile=analysis, biosample_confile=biosample, cohort_confile=cohort, dataset_confile=dataset, genomicVariant_confile=genomicVariant, individual_confile=individual, run_confile=run)
                 except Exception:
                     pass
             loop.run_until_complete(test_check_endpoint_endpoint_name_is_string())

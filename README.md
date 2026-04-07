@@ -4,44 +4,7 @@ Welcome to Beacon v2 Production Implementation (B2PI). This is an application th
 
 ## Documentation
 
-Please, go to [B2RI/B2PI docs website](https://b2ri-documentation-demo.ega-archive.org/) to know how to use Beacon v2 Production Implementation.
-
-## New release beacon (4/2/2026) features added
-
-* Integration with template UI. Deploy your UI for your beacon PI now: [deploy template UI](https://github.com/EGA-archive/beacon-production-prototype/tree/main/template-ui)
-* Beacon PI now waits for on going requests to finish before restarting after a change in conf file.
-* Latest Beacon RI Tools features integrated (only AF reads and populations slightly changed).
-* Timestamps in UTC are now used everywhere in beacon.
-* Query by iso8601 values for iso8601duration attributes in alphanumeric queries.
-* Added mongobleed exploit fix (CVE-2025-14847) and test checks.
-
-## New release beacon v2.0-d4012a4 features added
-
-* Models plug in. Beacon PI now accepts different beacon flavours, based on different model specifications. Kicking off with two models: ga4gh beacon v2 default model and EUCAIM.
-* Conf now is not affected by further releases. Use your conf and keep it forever.
-* Cross queries between collections and non collections now are ready to be performed at full power.
-* Schema request now working: feel free to request any schema you'd like for beacon to return.
-* Validation on the fly per framework and model(s).
-* Configuration of the entities of each entry type now done by .yml files.
-* Restart of the app when conf files or generic conf is modified (no need to rebuild).
-* OR Filters (in test approach, as it is still not approved officially by GA4GH).
-* Other bug fixes.
-* Unit tests expanded, with a total of 313 now.
-
-## Main changes from B2RI
-
-* Handlers of the endpoints are classes, not functions
-* Unit testing has been developed for the application, starting with 108 unit tests that cover 4000 lines of code approximately (100%)
-* Concurrency testing has been applied for this new beacon instance, showing results of responses for more than 3 million genomic variants splitted in different datasets in less than 100 millisecs, for a total of 1000 requests made by 10 users per second at the same time.
-* Linking ids to a dataset in a yaml file is not needed anymore
-* A couple more indexes for mongoDB have been applied, that, in addition to the restructuration of the code, have improved the quickness of the responses
-* Authentication/Authorization is now applied as a decorator, not as a different container
-* LOGS now show more relevant information about the different processes (from request to response) including transaction id, the time of execution of each function and the initial call and the return call
-* Exceptions now are raised from the lower layer to the top layer, with information and status for the origin of the exception
-* Architecture of the code is not dependent on a particular database, meaning that different types of databases (and more than one) can be potentially applied to this instance (although now only MongoDB is the one developed)
-* Parameters are sanitized
-* Users can manage what entry types want their beacon to show by editing a manage conf file inside source
-* Admin-ui to manage all the configuration settings from a UI is in development.
+Please, go to [CRG Beacon docs website](https://b2ri-documentation-demo.ega-archive.org/) to know how to use Beacon v2 Production Implementation.
 
 ### TLS configuration
 
@@ -674,6 +637,12 @@ After editing any comfiguration variable, save the file and restart the API to a
 ```bash
 docker compose restart beaconprod
 ```
+
+### State checks
+
+Now state checks are available through `/health` endpoint. The implemented checks and their flow are the ones that are shown in the diagram below:
+
+![MongoDB vulnerabilities](https://github.com/EGA-archive/beacon-production-prototype/blob/main/ri-tools/files/Machine_State_v3.jpg)
 
 ## Fix for MongoDB exploit (CVE-2025-14847)
 

@@ -1,13 +1,5 @@
 from aiohttp.test_utils import TestClient, TestServer, loop_context
 from aiohttp import web
-from beacon.views.collection import CollectionEntryTypeView
-from beacon.views.non_collection import EntryTypeView
-from beacon.views.info import InfoView
-from beacon.views.service_info import ServiceInfoView
-from beacon.views.map import MapView
-from beacon.views.configuration import ConfigurationView
-from beacon.views.filtering_terms import FilteringTermsView
-from beacon.views.entry_types import EntryTypesEndpointView
 from beacon.utils.middlewares import error_middleware
 from beacon.__main__ import create_api
 import json
@@ -21,6 +13,17 @@ import asyncio
 from beacon.utils.routes import append_routes
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.utils import import_analysis_confile, import_biosample_confile, import_genomicVariant_confile, import_individual_confile, import_run_confile, import_cohort_confile, import_dataset_confile
 from beacon.models.EUCAIM.connections.mongo.utils import import_collections_confile, import_patients_confile
+from unittest.mock import AsyncMock, patch
+import asyncio
+from beacon.utils.shutters import _graceful_shutdown, config_watcher, on_startup as on_start
+from beacon.logs.logs import initialize_logger
+from beacon.conf.conf_override import config
+from unittest.mock import Mock
+import tempfile
+import os
+from beacon.exceptions.exceptions import DatabaseIsDown
+from beacon.views.health import HealthView
+from beacon.utils.modules import check_database_connections
 
 analysis = import_analysis_confile()
 biosample = import_biosample_confile()
@@ -33,14 +36,19 @@ patients = import_patients_confile()
 collections = import_collections_confile()
 
 def create_app():
-    app = web.Application()
+    
+    LOG = initialize_logger(config.level)
     app = web.Application(
         middlewares=[
             cors_middleware(origins=conf_override.config.cors_urls), error_middleware
         ]
     )
-    #app.on_startup.append(initialize)
-    app = append_routes(app)
+    app['logger'] = LOG
+    app['pending_requests'] = set()
+    app['shutting_down'] = False
+    app['state'] = 'Running - healthy'
+    app['exit_fn'] = Mock()
+    app = append_routes(app=app)
     return app
 
 class TestMain(unittest.TestCase):
@@ -3354,7 +3362,8 @@ class TestMain(unittest.TestCase):
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
             async def test_check_configuration():
-                check_configuration()
+                LOG = initialize_logger(config.level)
+                check_configuration(LOG=LOG)
             loop.run_until_complete(test_check_configuration())
             loop.run_until_complete(client.close())
     def test_individuals_with_request_parameters_empty_fails(self):
@@ -4422,18 +4431,211 @@ class TestMain(unittest.TestCase):
                 assert responsedict["responseSummary"]["exists"] == True
             loop.run_until_complete(test_check_post_cross_query_analysis_cohorts_is_working())
             loop.run_until_complete(client.close())
+    def test_main_check_health_endpoint(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_health_endpoint():
+                resp = await client.get(conf_override.config.uri_subpath+"/health")
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                assert responsedict["state"]=='Running - healthy'
+            loop.run_until_complete(test_check_health_endpoint())
+            loop.run_until_complete(client.close())
     
+    def test_main_check_health_endpoint_draining(self):
+        with loop_context() as loop:
+            app = create_app()
+            app.on_startup.append(on_start)
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            pause_event = asyncio.Event()
+            async def test_draining_state(self):
+                app = {'logger': initialize_logger(config.level), 'state': 'Running - healthy', 'pending_requests': []}
+                new_initial_times = {}
 
+                with tempfile.NamedTemporaryFile(suffix=".py", delete=False) as tmp:
+                    path = tmp.name
+
+                paths_to_restart = [path]
+                exit_called = {'called': False}
+                def fake_exit(code):
+                    exit_called['called'] = True
+
+                task = asyncio.create_task(
+                    config_watcher(app, new_initial_times, paths_to_restart, exit_fn=fake_exit, sleep_interval=0.1)
+                )
+
+                await asyncio.sleep(0.2)
+
+                with open(path, "a") as f:
+                    f.write("# test change\n")
+                os.utime(path, None)
+
+                await task
+
+                assert app['state'] == 'Draining'
+                assert exit_called['called'] is True
+
+                os.remove(path)
+            loop.run_until_complete(test_draining_state(self))
+            loop.run_until_complete(client.close())
 class AsyncTest(unittest.IsolatedAsyncioTestCase):
     async def test_main_create_api(self):
         async def server_running_in_background():
             server = await asyncio.run(await create_api(5051))
             await server.serve_forever()
         server_task = asyncio.create_task(server_running_in_background())
-        
         await asyncio.sleep(2)
-        
-        
+class TestShutdown(unittest.IsolatedAsyncioTestCase):
+    def make_app(self):
+        app = {}
+        app['pending_requests'] = set()
+        app['shutting_down'] = False
+        app['state'] = 'Running - healthy'
+        return app
+
+    async def trigger_shutdown(self, coro, stop_event):
+        task = asyncio.create_task(coro)
+        await asyncio.sleep(0)
+        stop_event.set()
+        await task
+        return task
+
+    async def test_shutdown_no_pending(self):
+        app = self.make_app()
+        runner = AsyncMock()
+        logger = AsyncMock()
+        stop_event = asyncio.Event()
+
+        await self.trigger_shutdown(
+            _graceful_shutdown(app, logger, runner, stop_event),
+            stop_event
+        )
+
+        self.assertTrue(app['shutting_down'])
+        self.assertEqual(app['state'], 'Shutting down')
+        runner.cleanup.assert_awaited_once()
+
+    async def test_shutdown_with_pending_success(self):
+        app = self.make_app()
+
+        async def short_task():
+            await asyncio.sleep(0.01)
+
+        t = asyncio.create_task(short_task())
+        app['pending_requests'].add(t)
+
+        runner = AsyncMock()
+        logger = AsyncMock()
+        stop_event = asyncio.Event()
+
+        await self.trigger_shutdown(
+            _graceful_shutdown(app, logger, runner, stop_event),
+            stop_event
+        )
+
+        self.assertTrue(t.done())
+        runner.cleanup.assert_awaited_once()
+
+    async def test_shutdown_timeout(self):
+        app = self.make_app()
+
+        async def long_task():
+            await asyncio.sleep(10)
+
+        t = asyncio.create_task(long_task())
+        app['pending_requests'].add(t)
+
+        runner = AsyncMock()
+        logger = AsyncMock()
+        stop_event = asyncio.Event()
+
+        original_timeout = config.pending_requests_timeout_in_seconds
+        config.pending_requests_timeout_in_seconds = 0.01
+
+        try:
+            await self.trigger_shutdown(
+                _graceful_shutdown(app, logger, runner, stop_event),
+                stop_event
+            )
+        finally:
+            config.pending_requests_timeout_in_seconds = original_timeout
+
+        logger.warning.assert_any_call("Timeout reached, forcing shutdown")
+        runner.cleanup.assert_awaited_once()
+
+    async def test_shutdown_pending_exception(self):
+        app = self.make_app()
+
+        async def failing_task():
+            raise RuntimeError("boom")
+
+        t = asyncio.create_task(failing_task())
+        app['pending_requests'].add(t)
+
+        runner = AsyncMock()
+        logger = AsyncMock()
+        stop_event = asyncio.Event()
+
+        await self.trigger_shutdown(
+            _graceful_shutdown(app, logger, runner, stop_event),
+            stop_event
+        )
+
+        self.assertTrue(t.done())
+        runner.cleanup.assert_awaited_once()
+
+    async def test_shutdown_multiple_pending(self):
+        app = self.make_app()
+
+        async def task1():
+            await asyncio.sleep(0.01)
+
+        async def task2():
+            await asyncio.sleep(0.02)
+
+        tasks = [asyncio.create_task(task1()), asyncio.create_task(task2())]
+        app['pending_requests'].update(tasks)
+
+        runner = AsyncMock()
+        logger = AsyncMock()
+        stop_event = asyncio.Event()
+
+        await self.trigger_shutdown(
+            _graceful_shutdown(app, logger, runner, stop_event),
+            stop_event
+        )
+
+        self.assertTrue(all(t.done() for t in tasks))
+        runner.cleanup.assert_awaited_once()
+class TestHealthHandler(unittest.IsolatedAsyncioTestCase):
+    async def test_database_down(self):
+        app = {
+            'state': 'Running - healthy',
+            'pending_requests': set(),
+            'logger': initialize_logger(config.level)
+        }
+
+        request = AsyncMock()
+        request.app = app
+
+        handler = HealthView(request)
+
+        @patch("beacon.views.health.HealthView.handler")
+        def test_risky_function_raises(self, mock_risky):
+            mock_risky.side_effect = DatabaseIsDown('mongo')
+
+            response = handler.handler()
+            self.assertEqual(response.status, 200)
+
+            body = response.text
+            self.assertIn("Running - degraded", body)
+            self.assertIn("database is down", body)
+
+            self.assertEqual(app['state'], 'Running - degraded')
 
 
 
