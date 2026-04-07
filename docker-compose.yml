@@ -6,7 +6,7 @@ networks:
 
 services:
   beaconprod:
-    restart: unless-stopped
+    restart: on-failure
     build:
       context: .
     container_name: beaconprod

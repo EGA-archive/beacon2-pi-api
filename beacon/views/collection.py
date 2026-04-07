@@ -8,6 +8,7 @@ from beacon.exceptions.exceptions import InvalidData
 from beacon.views.endpoint import EndpointView
 from beacon.utils.modules import load_framework_module, load_source_module
 from beacon.utils.checks import state_check
+import asyncio
 
 class CollectionEntryTypeView(EndpointView):
     @state_check

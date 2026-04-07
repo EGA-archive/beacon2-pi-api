@@ -33,7 +33,7 @@ def get_phenotypic_endpoint(self, dataset: SingleDatasetResponse):
     limit = RequestAttributes.qparams.query.pagination.limit
     skip = RequestAttributes.qparams.query.pagination.skip
     if limit > 100 or limit == 0:
-        limit = 100
+        limit = config.max_limit_of_records_per_dataset_in_a_page
     # Get the docs with the query syntax built.
     responseClass = get_docs_by_response_type(self, include, query, dataset, limit, skip)
     return responseClass
@@ -62,7 +62,7 @@ def get_phenotypic_endpoint_with_id(self, dataset: SingleDatasetResponse):
     limit = RequestAttributes.qparams.query.pagination.limit
     skip = RequestAttributes.qparams.query.pagination.skip
     if limit > 100 or limit == 0:
-        limit = 100
+        limit = config.max_limit_of_records_per_dataset_in_a_page
     # Get the docs with the query syntax built.
     responseClass = get_docs_by_response_type(self, include, query, dataset, limit, skip)
     return responseClass
@@ -130,7 +130,7 @@ def get_variants_of_phenotypic_endpoint(self, dataset: SingleDatasetResponse):
     limit = RequestAttributes.qparams.query.pagination.limit
     skip = RequestAttributes.qparams.query.pagination.skip
     if limit > 100 or limit == 0:
-        limit = 100
+        limit = config.max_limit_of_records_per_dataset_in_a_page
     # Get the docs with the query syntax built.
     responseClass = get_docs_by_response_type(self, include, query, dataset, limit, skip)
     return responseClass
@@ -263,7 +263,7 @@ def get_phenotypic_endpoint_of_variants(self, dataset: SingleDatasetResponse):
     limit = RequestAttributes.qparams.query.pagination.limit
     skip = RequestAttributes.qparams.query.pagination.skip
     if limit > 100 or limit == 0:
-        limit = 100
+        limit = config.max_limit_of_records_per_dataset_in_a_page
     # Get the docs with the query syntax built.
     responseClass = get_docs_by_response_type(self, include, query, dataset, limit, skip)
     return responseClass
@@ -289,7 +289,7 @@ def get_variants_of_dataset(self, dataset: SingleDatasetResponse):
     limit = RequestAttributes.qparams.query.pagination.limit
     skip = RequestAttributes.qparams.query.pagination.skip
     if limit > 100 or limit == 0:
-        limit = 100
+        limit = config.max_limit_of_records_per_dataset_in_a_page
     # Get the docs with the query syntax built.
     responseClass = get_docs_by_response_type(self, include, query, dataset, limit, skip)
     return responseClass
@@ -315,7 +315,7 @@ def get_phenotypic_endpoint_of_dataset(self, dataset: SingleDatasetResponse):
     limit = RequestAttributes.qparams.query.pagination.limit
     skip = RequestAttributes.qparams.query.pagination.skip
     if limit > 100 or limit == 0:
-        limit = 100
+        limit = config.max_limit_of_records_per_dataset_in_a_page
     # Get the docs with the query syntax built.
     responseClass = get_docs_by_response_type(self, include, query, dataset, limit, skip)
     return responseClass
@@ -344,7 +344,7 @@ def get_phenotypic_endpoint_of_cohort(self, dataset: SingleDatasetResponse):
     include = RequestAttributes.qparams.query.includeResultsetResponses
     skip = RequestAttributes.qparams.query.pagination.skip
     if limit > 100 or limit == 0:
-        limit = 100
+        limit = config.max_limit_of_records_per_dataset_in_a_page
     # Get the docs with the query syntax built.
     responseClass = get_docs_by_response_type(self, include, query, dataset, limit, skip)
     return responseClass
@@ -395,7 +395,7 @@ def get_variants_of_cohort(self, dataset: SingleDatasetResponse):
     # Process filters.
     query = apply_filters(self, query_count, RequestAttributes.qparams.query.filters, {}, dataset.dataset)
     if limit > 100 or limit == 0:
-        limit = 100
+        limit = config.max_limit_of_records_per_dataset_in_a_page
     # Get the docs with the query syntax built.
     responseClass = get_docs_by_response_type(self, include, query, dataset, limit, skip)
     return responseClass
@@ -419,7 +419,7 @@ def get_phenotypic_cross_query(self, dataset: SingleDatasetResponse):
     limit = RequestAttributes.qparams.query.pagination.limit
     skip = RequestAttributes.qparams.query.pagination.skip
     if limit > 100 or limit == 0:
-        limit = 100
+        limit = config.max_limit_of_records_per_dataset_in_a_page
     # Get the docs with the query syntax built.
     responseClass = get_docs_by_response_type(self, include, query, dataset, limit, skip)
     return responseClass
