@@ -4,7 +4,7 @@ aiohttp-middlewares==2.4.0
 aiohttp-jinja2==1.5
 aiohttp-session==2.9.0
 asyncpg==0.24.0
-cryptography==45.0.7
+cryptography==46.0.6
 PyJWT==2.12.0
 python-dotenv==1.0.1
 jsonschema==4.21.1
@@ -24,6 +24,5 @@ six==1.16.0
 progressbar==2.5
 tqdm==4.66.3
 obonet==0.3.1
-aiohttp-autoreload==0.0.1
 python-dateutil==2.9.0
 rfc3339_validator==0.1.4
