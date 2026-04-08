@@ -3,7 +3,7 @@ aiohttp-cors==0.7.0
 aiohttp-middlewares==2.4.0
 aiohttp-jinja2==1.5
 aiohttp-session==2.9.0
-cryptography==41.0.5
+cryptography==46.0.6
 PyJWT==2.7.0
 python-dotenv==1.0.1
 jsonschema==4.21.1
