@@ -25,6 +25,6 @@ obonet==0.3.1
 aiohttp-autoreload==0.0.1
 django-allauth[idp-oidc]==65.11.0
 django-browser-reload==1.16.0
-Django==4.2.16
+Django==4.2.29
 python-dotenv==1.0.1
 requests==2.25.1
