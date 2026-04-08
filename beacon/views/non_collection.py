@@ -1,17 +1,19 @@
-from beacon.logs.logs import log_with_args, LOG
+from beacon.logs.logs import log_with_args
 from beacon.conf.conf_override import config
 import aiohttp.web as web
 from beacon.permissions.__main__ import query_permissions
 from bson import json_util
 from beacon.request.classes import RequestAttributes
-from beacon.budget.__main__ import insert_budget
+from beacon.budget.__main__ import load_module_to_insert_budget
 from pydantic import ValidationError
 from beacon.exceptions.exceptions import InvalidData
 from beacon.views.endpoint import EndpointView
 from beacon.response.includeResultsetResponses import include_resultSet_responses
 from beacon.utils.modules import load_framework_module, load_source_module
+from beacon.utils.checks import state_check
 
 class EntryTypeView(EndpointView):
+    @state_check
     @query_permissions
     @log_with_args(config.level)
     async def handler(self, datasets, username, time_now):
@@ -42,7 +44,7 @@ class EntryTypeView(EndpointView):
                         list_of_resultSets.append(resultSet)
                         new_datasets.append(dataset)
                     except ValidationError as v:
-                        LOG.error('{} dataset is invalid: {}'.format(dataset.dataset, str(v)))
+                        self.LOG.error('{} dataset is invalid: {}'.format(dataset.dataset, str(v)))
                 # Instantiate the responseSummary and the resultSets with the datasets to be in the response
                 responseSummary = module_common.ResponseSummary.build_response_summary_by_dataset(module_common.ResponseSummary, new_datasets)
                 resultSets = Resultsets.return_resultSets(list_of_resultSets)
@@ -72,5 +74,5 @@ class EntryTypeView(EndpointView):
             raise InvalidData('{} templates or data are not correct'.format(RequestAttributes.entry_type))
         # If a time could be obtained for the moment of the query, register it for the budget count
         if time_now is not None:
-            insert_budget(self, username, time_now)
+            load_module_to_insert_budget(self, username, time_now)
         return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')

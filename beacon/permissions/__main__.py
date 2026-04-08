@@ -2,7 +2,6 @@
 from typing import Optional
 from aiohttp import web
 from .plugins import DummyPermissions as PermissionsProxy
-from beacon.logs.logs import LOG
 from beacon.auth.__main__ import authentication
 from beacon.logs.logs import log_with_args
 from beacon.conf.conf_override import config

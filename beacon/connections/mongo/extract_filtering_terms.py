@@ -7,10 +7,9 @@ from tqdm import tqdm
 from bson.json_util import dumps
 import json
 import os
-from beacon.connections.mongo.__init__ import dbname, filtering_terms as filtering_terms_, client
+from beacon.connections.mongo.client import get_client
 from beacon.conf.filtering_terms import alphanumeric_terms_individuals, alphanumeric_terms_g_variants, alphanumeric_terms_analyses, alphanumeric_terms_biosamples, alphanumeric_terms_cohorts, alphanumeric_terms_datasets, alphanumeric_terms_runs, alphanumeric_terms_patients
 from beacon.utils.modules import get_modules_confiles
-from beacon.connections.mongo.__init__ import biosamples, cohorts, datasets, genomicVariations, imagestudies, individuals, patients, runs
 
 ONTOLOGY_REGEX = re.compile(r"([_A-Za-z0-9]+):([_A-Za-z0-9^\-]+)")
 ICD_REGEX = re.compile(r"(ICD[_A-Za-z0-9]+):([_A-Za-z0-9^\./-]+)")
@@ -32,7 +31,7 @@ class MyProgressBar:
 
 
 def get_ontology_field_name(ontology_id:str, term_id:str, collection:str, fields):
-
+    client=get_client()
     # Save the properties in a common array variable
     # Generate the query syntax for the ontology search for all the requested fields/properties
     query={}
@@ -42,7 +41,7 @@ def get_ontology_field_name(ontology_id:str, term_id:str, collection:str, fields
         fieldquery[field]=ontology_id + ":" + term_id
         query['$or'].append(fieldquery)
     # Execute the query
-    results = client[dbname].get_collection(collection).find(query).limit(1)
+    results = client['beacon'].get_collection(collection).find(query).limit(1)
     # Get the results in a dictionary and extract the labels of the ontologies
     try:
         results = list(results)
@@ -175,12 +174,26 @@ def insert_found_terms(collection, fields_names):
         terms_ids = find_ontology_terms_used(collection)
         terms = get_filtering_object(terms_ids, collection, fields_names)
         if len(terms) > 0:
-            filtering_terms_.insert_many(terms)
+            client=get_client()
+            filtering_terms=client['beacon'].filtering_terms
+            filtering_terms.insert_many(terms)
 
 
 def insert_all_ontology_terms_used():
+    client=get_client()
+    
+    biosamples=client['beacon'].biosamples
+    cohorts=client['beacon'].cohorts
+    datasets=client['beacon'].datasets
+    genomicVariations=client['beacon'].genomicVariations
+    individuals=client['beacon'].individuals
+    runs=client['beacon'].runs
+
+    imagestudies=client['beacon'].imagestudies
+    patients=client['beacon'].patients
+
     #Get all the yml conf files for each entity
-    list_of_modules=get_modules_confiles()
+    list_of_modules=get_modules_confiles()()
     #Map the files and if they are enabled, give the relationship of fields that host ontologies
     alphanumterms=[]
     for module in list_of_modules:
@@ -261,7 +274,9 @@ def insert_all_ontology_terms_used():
                     imagestudies_fields=['disease.diagnosis.id' ,'disease.imagingProcedureProtocol.id', 'disease.pathology.id', 'disease.pathologyConfirmation.id', 'disease.treatment.id', 'disease.tumorMetadata.ER.id', 'disease.tumorMetadata.PR.id', 'disease.tumorMetadata.HER2.id', 'disease.tumorMetadata.cancerStageCMCategory.id', 'disease.tumorMetadata.cancerStagePMCategory.id', 'disease.tumorMetadata.histologicGraceGleasonScore.id', 'disease.tumorMetadata.histologicGradeISUP.id', 'disease.tumorMetadata.tumorBIRADSAssesment.id', 'disease.tumorMetadata.tumorPIRADSAssesment.id', 'imageModality.id', 'imageBodyPart.id', 'imageManufacturer.id']
                     insert_found_terms(imagestudies, imagestudies_fields)
     if alphanumterms != []:
-        filtering_terms_.insert_many(alphanumterms)
+        client=get_client()
+        filtering_terms=client['beacon'].filtering_terms
+        filtering_terms.insert_many(alphanumterms)
 
 def find_ontology_terms_used(collection) -> List[Dict]:
     print(collection.name)
@@ -386,7 +401,8 @@ def get_filtering_object(terms_ids: list, collection, fields):
 
 
 def get_alphanumeric_term_count(collection_name: str, key: str) -> int:
-    return len(client[dbname]\
+    client=get_client()
+    return len(client['beacon']\
         .get_collection(collection_name)\
         .distinct(key))
 
@@ -423,7 +439,9 @@ def merge_ontology_terms():
     """
     Scan all the filtering terms of type ontology found and remove the duplicated ones.
     """
-    filtering_terms = filtering_terms_.find({"type": "ontology"})
+    client=get_client()
+    filtering_terms=client['beacon'].filtering_terms
+    filtering_terms = filtering_terms.find({"type": "ontology"})
     array_of_ids=[]
     repeated_ids=[]
     new_terms=[]
@@ -435,7 +453,7 @@ def merge_ontology_terms():
             repeated_ids.append(new_id)
     #print("repeated_ids are {}".format(repeated_ids))
     for repeated_id in repeated_ids:
-        repeated_terms = filtering_terms_.find({"id": repeated_id, "type": "ontology"})
+        repeated_terms = filtering_terms.find({"id": repeated_id, "type": "ontology"})
         array_of_scopes=[]
         for repeated_term in repeated_terms:
             #print(repeated_term)
@@ -453,15 +471,17 @@ def merge_ontology_terms():
                 #'count': get_ontology_term_count(collection_name, onto),
                 'scopes': array_of_scopes        
                         })
-        filtering_terms_.delete_many({"id": repeated_id})
+        filtering_terms.delete_many({"id": repeated_id})
     if new_terms != []:
-        filtering_terms_.insert_many(new_terms)
+        filtering_terms.insert_many(new_terms)
         
     
 def merge_alphanumeric_terms():
     """
     Scan all the filtering terms of type alphanumeric found and remove the duplicated ones.
     """
+    client=get_client()
+    filtering_terms_=client['beacon'].filtering_terms
     filtering_terms = filtering_terms_.find({"type": "alphanumeric"})
     array_of_ids=[]
     repeated_ids=[]
@@ -498,6 +518,8 @@ def merge_custom_terms():
     """
     Scan all the filtering terms of type custom found and remove the duplicated ones.
     """
+    client=get_client()
+    filtering_terms_=client['beacon'].filtering_terms
     filtering_terms = filtering_terms_.find({"type": "custom"})
     array_of_ids=[]
     repeated_ids=[]
@@ -542,6 +564,8 @@ def insert_zygosity_terms():
     zygosity_terms=[]
     zygosity_terms.append(heterozygous)
     zygosity_terms.append(homozygous)
+    client=get_client()
+    filtering_terms_=client['beacon'].filtering_terms
     filtering_terms_.insert_many(zygosity_terms)
     
 

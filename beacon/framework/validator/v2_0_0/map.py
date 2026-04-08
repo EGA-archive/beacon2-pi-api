@@ -7,7 +7,6 @@ from pydantic import (
 )
 from beacon.conf import conf_override
 from beacon.utils.modules import load_class, get_modules_confiles
-from beacon.logs.logs import LOG
 
 class RelatedEndpoint(BaseModel):
     returnedEntryType: str

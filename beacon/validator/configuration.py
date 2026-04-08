@@ -1,10 +1,13 @@
 from beacon.conf import conf_override
-from beacon.logs.logs import LOG, log_with_args_check_configuration
+from beacon.logs.logs import log_with_args_check_configuration
 import os
 import re
 import logging
 import yaml
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.utils import import_dataset_confile, import_analysis_confile, import_biosample_confile, import_cohort_confile, import_individual_confile, import_genomicVariant_confile, import_run_confile
+from beacon.logs.logs import initialize_logger
+import datetime
+import time
 
 timestamp_regex = re.compile(r"^.+(\d{2}/\w{3}/\d{4}:\d{2}:\d{2}:\d{2})")
 
@@ -16,8 +19,19 @@ def contains_special_characters(string):
             return True
     return False
 
+def check_logs_configuration():
+    print('DEBUG - {}Z - {} - initial call'.format(datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3], check_logs_configuration.__name__), flush=True)
+    start = time.perf_counter()
+    if conf_override.config.level not in [logging.NOTSET, logging.INFO, logging.DEBUG, logging.WARNING, logging.ERROR, logging.FATAL, logging.CRITICAL]:
+        raise Exception('The config parameter level must be one possible logging library level (NOTSET, DEBUG, INFO, etc...')
+    if not isinstance(conf_override.config.log_file, str):
+        if conf_override.config.log_file != None:
+            raise Exception('The config parameter log_file must be a string with the path to the dir where to store the logs or a variable None for not storing any log')
+    finish = time.perf_counter()
+    print('DEBUG - {}Z - {} - {}s - returned OK'.format(datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3], check_logs_configuration.__name__, round(finish-start,3)), flush=True)
+
 @log_with_args_check_configuration(conf_override.config.level)
-def check_configuration(analysis_confile=import_analysis_confile(), biosample_confile=import_biosample_confile(), cohort_confile=import_cohort_confile(), dataset_confile=import_dataset_confile(), genomicVariant_confile=import_genomicVariant_confile(), individual_confile=import_individual_confile(), run_confile=import_run_confile()):
+def check_configuration(LOG=None, analysis_confile=import_analysis_confile(), biosample_confile=import_biosample_confile(), cohort_confile=import_cohort_confile(), dataset_confile=import_dataset_confile(), genomicVariant_confile=import_genomicVariant_confile(), individual_confile=import_individual_confile(), run_confile=import_run_confile()):
     if isinstance(analysis_confile["analysis"]["entry_type_enabled"], bool):
         pass
     else:
@@ -337,11 +351,6 @@ def check_configuration(analysis_confile=import_analysis_confile(), biosample_co
         raise Exception('The run_confile["analysis"]["allow_queries_without_filters"] must be of type bool.')
     if not isinstance(run_confile["run"]["allow_id_query"], bool):
         raise Exception('The run_confile["analysis"]["allow_id_query"] must be of type bool.')
-    if conf_override.config.level not in [logging.NOTSET, logging.INFO, logging.DEBUG, logging.WARNING, logging.ERROR, logging.FATAL, logging.CRITICAL]:
-        raise Exception('The config parameter level must be one possible logging library level (NOTSET, DEBUG, INFO, etc...')
-    if not isinstance(conf_override.config.log_file, str):
-        if conf_override.config.log_file != None:
-            raise Exception('The config parameter log_file must be a string with the path to the dir where to store the logs or a variable None for not storing any log')
     if not isinstance(conf_override.config.beacon_name, str):
         raise Exception('The beacon_name config parameter must be a string')
     if not isinstance(conf_override.config.beacon_id, str):
