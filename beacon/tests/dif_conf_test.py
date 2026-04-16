@@ -822,6 +822,12 @@ class TestNoFilters(unittest.TestCase):
             individual["individual"]["endpoint_name"]="individuals"
             with open("/beacon/tests/mock_conf_files/conf/entry_types/ga4gh/beacon_v2_default_model/individual.yml", 'w') as outfile:
                 yaml.dump(individual, outfile, default_flow_style=False)
+    def test_conf_override_takes_user_param(self):
+        with loop_context() as loop:
+            from beacon.conf import conf
+            from beacon.conf import conf_default
+            assert conf_override.config.uri == conf_default.uri
+            assert conf_override.config.uri != conf.uri
     
 
     
