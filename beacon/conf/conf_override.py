@@ -1,4 +1,4 @@
-import beacon.conf.conf_override as _defaults
+import beacon.conf.conf as _defaults
 
 class Config:
     pass
@@ -12,7 +12,7 @@ for key in dir(_defaults):
 
 # Override with user config if present
 try:
-    import beacon.conf.conf as _userconf
+    import beacon.conf.conf_default as _userconf
     for key in dir(_userconf):
         if not key.startswith("_"):
             setattr(config, key, getattr(_userconf, key))
