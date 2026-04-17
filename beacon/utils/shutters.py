@@ -48,6 +48,7 @@ async def _graceful_shutdown(app, LOG, runner, stop_event=None):
 
 PATHS_TO_RESTART = [
     "/beacon/conf/conf.py",
+    "/beacon/conf/conf_default.py",
     "/beacon/models",
     "/beacon/conf/models",
     "/beacon/connections/mongo/conf.py"
@@ -101,7 +102,6 @@ async def config_watcher(app, new_initial_times, paths_to_restart=PATHS_TO_RESTA
                             continue
                         full = os.path.join(root, f)
                         current_times[full] = os.path.getmtime(full)
-
         # Compare with snapshot
         for file_path, new_m in current_times.items():
             old_m = initial_times.get(file_path)
