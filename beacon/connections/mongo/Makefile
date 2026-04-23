@@ -1,4 +1,4 @@
-DATA_PATH = /data/af-ega
+DATA_PATH := data/af-ega
 
 build:
 	gunzip --stdout $(DATA_PATH)/GCAT.json.gz | docker exec -i mongoprod sh -c 'mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --collection datasets'
