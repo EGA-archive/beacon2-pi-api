@@ -1,4 +1,4 @@
-DATA_PATH = /data/mock
+DATA_PATH = data/mock
 
 build:
 	docker exec mongoprodspain /bin/bash -c 'mongo beacon -u root -p example --port 27023 --authenticationDatabase admin --eval "db.datasets.deleteMany({})"'
