@@ -193,7 +193,7 @@ def insert_all_ontology_terms_used():
     patients=client['beacon'].patients
 
     #Get all the yml conf files for each entity
-    list_of_modules=get_modules_confiles()()
+    list_of_modules=get_modules_confiles()
     #Map the files and if they are enabled, give the relationship of fields that host ontologies
     alphanumterms=[]
     for module in list_of_modules:
@@ -441,11 +441,11 @@ def merge_ontology_terms():
     """
     client=get_client()
     filtering_terms=client['beacon'].filtering_terms
-    filtering_terms = filtering_terms.find({"type": "ontology"})
+    filtering_terms_array = filtering_terms.find({"type": "ontology"})
     array_of_ids=[]
     repeated_ids=[]
     new_terms=[]
-    for filtering_term in filtering_terms:
+    for filtering_term in filtering_terms_array:
         new_id=filtering_term["id"]
         if new_id not in array_of_ids:
             array_of_ids.append(new_id)
