@@ -5,7 +5,7 @@ networks:
   pub-prod:
 
 services:
-  beaconprod:
+  beaconafprodspain:
     restart: on-failure
     build:
       context: .

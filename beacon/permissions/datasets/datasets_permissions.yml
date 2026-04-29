@@ -1,3 +1,7 @@
-GoE-ES-CRG-1:
+GOE-ES-CRG-1:
+  public:
+    default_entry_types_granularity: record
+
+The Iberian Roma Genetic Variant Server (EGAD00001009722):
   public:
     default_entry_types_granularity: record

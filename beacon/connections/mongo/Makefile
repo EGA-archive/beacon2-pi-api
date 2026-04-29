@@ -5,4 +5,6 @@ build:
 	docker exec mongoafprodspain /bin/bash -c 'mongo beacon -u root -p example --authenticationDatabase admin --eval "db.genomicVariations.deleteMany({})"'
 	docker exec mongoafprodspain mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --file $(DATA_PATH)/datasets.json --collection datasets
 	docker exec mongoafprodspain mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --file $(DATA_PATH)/genomicVariations.json --collection genomicVariations
+	docker exec mongoafprodspain mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --file $(DATA_PATH)/roma.json --collection datasets
+	docker exec mongoafprodspain mongoimport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --file $(DATA_PATH)/genomicVariations_iberian-roman.json --collection genomicVariations
 	docker exec beaconafprodspain python -m beacon.connections.mongo.reindex

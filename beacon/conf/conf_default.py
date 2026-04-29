@@ -10,14 +10,14 @@ except Exception as e:
 
 level=logging.DEBUG
 log_file=None
-beacon_id = 'org.ega-archive.beacon-ri-demo'  # ID of the Beacon
-beacon_name = 'Beacon Production Implementation demo'  # Name of the Beacon service
+beacon_id = 'org.ega-archive.beacon-af-gdi-spain-prod'  # ID of the Beacon
+beacon_name = 'Allele Frequency Beacon GDI Spain'  # Name of the Beacon service
 api_version = 'v2.2.0' # Version of the Beacon implementation
-uri = 'http://localhost:5050'
+uri = 'https://beacon-af-spain.ega-archive.org'
 uri_subpath = '/api'
 complete_url = uri + uri_subpath
-environment = 'test'
-description = r"This Beacon is based on synthetic data hosted at the <a href='https://ega-archive.org/datasets/EGAD00001003338'>EGA</a>. The dataset contains 2504 samples including genetic data based on 1K Genomes data, and 76 individual attributes and phenotypic data derived from UKBiobank."
+environment = 'prod'
+description = r"Allele Frequency Beacon for GDI Spain."
 version = api_version_yaml['api_version']
 welcome_url = 'https://beacon.ega-archive.org/'
 alternative_url = 'https://beacon.ega-archive.org/api'
@@ -27,6 +27,8 @@ default_beacon_granularity = "record" # boolean, count or record
 security_levels = ['PUBLIC', 'REGISTERED', 'CONTROLLED']
 documentation_url = 'https://b2ri-documentation-demo.ega-archive.org/'
 cors_urls = ["http://localhost:3003", "http://localhost:3000"]
+max_limit_of_records_per_dataset_in_a_page=100
+pending_requests_timeout_in_seconds=10 # Timeout waiting pending requests
 
 # Service Info
 ga4gh_service_type_group = 'org.ga4gh'
