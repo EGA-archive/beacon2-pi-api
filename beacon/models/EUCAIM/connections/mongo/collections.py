@@ -3,14 +3,17 @@ from beacon.conf.conf_override import config
 from beacon.connections.mongo.utils import get_count, get_documents, query_id, get_documents_for_cohorts, query_patientId
 from beacon.connections.mongo.filters.filters import apply_filters
 from beacon.request.classes import RequestAttributes
-from beacon.connections.mongo.__init__ import collections
-from beacon.logs.logs import LOG
+from beacon.connections.mongo.client import get_client
 from beacon.response.classes import CollectionsResponse
 from beacon.models.EUCAIM.connections.mongo.utils import get_non_collections_cross_query_attributes
 from beacon.models.EUCAIM.connections.mongo.utils import import_patients_confile
 
 @log_with_args_mongo(config.level)
 def get_collections(self):
+    client=get_client()
+
+    collections=client['beacon'].collections
+
     # Find all the datasets in the mongo database.
     query = {}
     query = collections.find(query)
@@ -18,6 +21,10 @@ def get_collections(self):
 
 @log_with_args_mongo(config.level)
 def get_full_collections(self):
+    client=get_client()
+
+    collections=client['beacon'].collections
+
     # Create the query syntax depending on it there is any entry id queried.
     if RequestAttributes.entry_id == None:
         query = {}
@@ -52,6 +59,8 @@ def get_list_of_datasets(self):
 
 @log_with_args_mongo(config.level)
 def get_collections_with_id(self):
+    client=get_client()
+    collections=client['beacon'].collections
     limit = RequestAttributes.qparams.query.pagination.limit
     query={}
     # Include the id queried in the query.

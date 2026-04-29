@@ -1,4 +1,4 @@
-from beacon.logs.logs import log_with_args, LOG
+from beacon.logs.logs import log_with_args
 from beacon.conf.conf_override import config
 from beacon.request.classes import RequestAttributes
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.request_parameters.apply_request_parameters import apply_request_parameters
@@ -21,7 +21,7 @@ def get_endpoint(self, dataset: SingleDatasetResponse):
     limit = RequestAttributes.qparams.query.pagination.limit
     skip = RequestAttributes.qparams.query.pagination.skip
     if limit > 100 or limit == 0:
-        limit = 100
+        limit = config.max_limit_of_records_per_dataset_in_a_page
     # Get the docs with the query syntax built.
     responseClass = get_docs_by_response_type(self, include, query, dataset, limit, skip)
     return responseClass
@@ -40,7 +40,7 @@ def get_endpoint_with_id(self, dataset: SingleDatasetResponse):
     limit = RequestAttributes.qparams.query.pagination.limit
     skip = RequestAttributes.qparams.query.pagination.skip
     if limit > 100 or limit == 0:
-        limit = 100
+        limit = config.max_limit_of_records_per_dataset_in_a_page
     # Get the docs with the query syntax built.
     responseClass = get_docs_by_response_type(self, include, query, dataset, limit, skip)
     return responseClass
@@ -64,7 +64,7 @@ def get_endpoint_cross_query(self, dataset: SingleDatasetResponse):
     limit = RequestAttributes.qparams.query.pagination.limit
     skip = RequestAttributes.qparams.query.pagination.skip
     if limit > 100 or limit == 0:
-        limit = 100
+        limit = config.max_limit_of_records_per_dataset_in_a_page
     # Get the docs with the query syntax built.
     responseClass = get_docs_by_response_type(self, include, query, dataset, limit, skip)
     return responseClass

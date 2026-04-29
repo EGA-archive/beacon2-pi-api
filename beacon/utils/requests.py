@@ -2,7 +2,8 @@
 from aiohttp.web_request import Request
 from aiohttp import web
 from beacon.request.parameters import RequestParams
-from beacon.logs.logs import log_with_args, LOG
+import logging
+from beacon.logs.logs import log_with_args
 from beacon.conf.conf_override import config
 from beacon.request.classes import RequestAttributes
 from beacon.exceptions.exceptions import IncoherenceInRequestError, InvalidRequest, WrongURIPath, NoFiltersAllowed
@@ -11,8 +12,7 @@ from beacon.conf import filtering_terms
 import os
 from beacon.request.parameters import RequestMeta, SchemasPerEntity
 from pydantic import ValidationError
-from beacon.utils.modules import get_one_module_conf
-import importlib
+from beacon.utils.modules import get_one_module_conf, load_source_module
 
 @log_with_args(config.level)
 def parse_query_string(self, request):
@@ -183,10 +183,12 @@ def set_entry_type_configuration(self):
                 elif param_key == 'connection':
                     RequestAttributes.source = param_value["name"]
                     if RequestAttributes.entry_type not in ['filtering_terms', 'map', 'configuration', 'info', 'service-info', 'entry_types']:
-                        if param_value["name"] == 'mongo':
-                            mod = importlib.import_module("beacon.connections.mongo.__init__")
-                            connection = getattr(mod, param_value["table"])
-                            RequestAttributes.mongo_collection = connection
+                        client_module=load_source_module(self, 'client')
+                        client_function_from_module = getattr(client_module, 'get_client')
+                        client = client_function_from_module()
+                        RequestAttributes.client = client
+                        connection = client['beacon'][param_value["table"]]
+                        RequestAttributes.mongo_collection = connection
                     if RequestAttributes.entry_id != None:
                         if RequestAttributes.pre_entry_type == None:
                             RequestAttributes.function = param_value["functions"]["id_query_function_name_assigned"]
@@ -235,7 +237,7 @@ def set_entry_type(self, request):
     if 'https' not in abs_url and 'https' in def_uri:
         abs_url = abs_url.replace('http', 'https')
     if abs_url[:starting_endpoint] != def_uri :
-        LOG.warning('configuration variable uri: {} not the same as where the beacon is hosted'.format(config.uri))
+        self.LOG.warning('configuration variable uri: {} not the same as where the beacon is hosted'.format(config.uri))
     if abs_url_with_query_string.endswith('/api'):
         RequestAttributes.entry_type='info'
         set_entry_type_configuration(self)
@@ -308,7 +310,6 @@ def set_ip(self, request):
 def set_headers(self, request):
     RequestAttributes.headers=request.headers
 
-    
 @log_with_args(config.level)
 async def deconstruct_request(self, request):
     '''

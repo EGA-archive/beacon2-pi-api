@@ -1,4 +1,4 @@
-from beacon.logs.logs import log_with_args, LOG
+from beacon.logs.logs import log_with_args
 from beacon.conf.conf_override import config
 import aiohttp.web as web
 from bson import json_util

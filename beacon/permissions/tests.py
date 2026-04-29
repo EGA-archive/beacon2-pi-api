@@ -7,11 +7,16 @@ from .plugins import DummyPermissions as PermissionsProxy
 from aiohttp.test_utils import make_mocked_request
 from beacon.auth.tests import mock_access_token
 from beacon.permissions.__main__ import authorization
-from beacon.logs.logs import LOG
 from unittest.mock import MagicMock
 from beacon.request.classes import RequestAttributes
 from beacon.permissions.utils import return_found_granularity_in_exceptions, return_granularity_and_exceptions
 import yaml
+from beacon.logs.logs import initialize_logger
+from beacon.conf.conf_override import config
+from beacon.utils.middlewares import error_middleware
+from beacon.utils.routes import append_routes
+from aiohttp_middlewares import cors_middleware
+import beacon.conf.conf_override as conf_override
 
 #dummy test anonymous
 #dummy test login
@@ -19,8 +24,17 @@ import yaml
 #audit --> agafar informació molt específica que ens interessa guardar per sempre (de quins individuals ha obtingut resultats positius)
 
 def create_test_app():
-    app = web.Application()
-    #app.on_startup.append(initialize)
+    LOG = initialize_logger(config.level)
+    app = web.Application(
+        middlewares=[
+            cors_middleware(origins=conf_override.config.cors_urls), error_middleware
+        ]
+    )
+    app['logger'] = LOG
+    app['pending_requests'] = set()
+    app['shutting_down'] = False
+    app['state'] = 'Running - healthy'
+    app = append_routes(app=app)
     return app
 
 class TestAuthZ(unittest.TestCase):

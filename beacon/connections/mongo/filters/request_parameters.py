@@ -1,4 +1,4 @@
-from beacon.logs.logs import log_with_args, LOG
+from beacon.logs.logs import log_with_args
 from beacon.conf.conf_override import config
 from beacon.utils.modules import get_all_modules_mongo_connections_script
 
