@@ -5,8 +5,8 @@ networks:
   pub-prod:
 
 services:
-  beaconafprodspain:
-    restart: unless-stopped
+  beaconprod:
+    restart: on-failure
     build:
       context: .
     container_name: beaconafprodspain
@@ -16,6 +16,7 @@ services:
     volumes:
       - ./beacon/logs/logs.log:/beacon/logs/logs.log
       - ./beacon/conf/conf.py:/beacon/conf/conf.py
+      - ./beacon/conf/conf_default.py:/beacon/conf/conf_default.py
       - ./beacon/connections/mongo/conf.py:/beacon/connections/mongo/conf.py
       - ./beacon/permissions:/beacon/permissions
       - ./beacon/models:/beacon/models

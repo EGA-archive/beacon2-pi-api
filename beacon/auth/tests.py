@@ -5,11 +5,15 @@ import jwt
 from aiohttp import web
 from beacon.auth.__main__ import fetch_idp, validate_access_token, authentication, fetch_user_info
 from dotenv import load_dotenv
-import re
-from beacon.logs.logs import LOG
+from beacon.logs.logs import initialize_logger
+from beacon.conf.conf_override import config
+from beacon.utils.middlewares import error_middleware
+from beacon.utils.routes import append_routes
+from aiohttp_middlewares import cors_middleware
+import beacon.conf.conf_override as conf_override
 
 # for keycloak, create aud in mappers, with custom, aud and beacon for audience
-mock_access_token = 'eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJreS1tUXNxZ0ZYeHdSUVRfRUhuQlJJUGpmbVhfRXZuUTVEbzZWUTJCazdZIn0.eyJleHAiOjE3NzMxNjE5NzQsImlhdCI6MTc3MzE2MTY3NCwianRpIjoiMWRmMjhhNGYtNjc3NC00YmQ1LThlOTEtNjMxNmNiMjdiNjMzIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL0JlYWNvbiIsImF1ZCI6ImJlYWNvbiIsInN1YiI6IjQ3ZWZmMWIxLTc2MjEtNDU3MC1hMGJiLTAxYTcxOWZiYTBhMiIsInR5cCI6IkJlYXJlciIsImF6cCI6ImJlYWNvbiIsInNlc3Npb25fc3RhdGUiOiJlYjIwZWRiNy02OTg0LTRlMjUtYmI2Mi05YmJkMzM4NmMwZjIiLCJhY3IiOiIxIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBlbWFpbCBtaWNyb3Byb2ZpbGUtand0Iiwic2lkIjoiZWIyMGVkYjctNjk4NC00ZTI1LWJiNjItOWJiZDMzODZjMGYyIiwidXBuIjoiamFuZSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwibmFtZSI6IkphbmUgU21pdGgiLCJncm91cHMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXSwicHJlZmVycmVkX3VzZXJuYW1lIjoiamFuZSIsImdpdmVuX25hbWUiOiJKYW5lIiwiZmFtaWx5X25hbWUiOiJTbWl0aCIsImVtYWlsIjoiamFuZS5zbWl0aEBiZWFjb24uZ2E0Z2gifQ.kFp3W53979Ib3Z17miTlWCqP-hoDJYo3aYLGfZOgRJI0HM08ngPi87fItWPBurx9Fb1fiHTZqeTMZ-XBuIK1bIRszq9E9Dg9Hem2nxgr_b8OMlmns1S6aE3p8kxWm3-Csmpmelt01HJlNxlYysTMK5mH6QOU2sANL1iCa0z9n-FX8H9IPQ9dKFdRGCvGU0vwUw4LwHW2SVk5DDGYBIy-z5hSjkdqLZ72OTRQWb_ZZEJlsT7gv-xPkjEW3AJW2vgRyZILqiUtAkrfapIPA42Iva2PsFzp1PnJeis_UksBOh1yH_BR6C9ycxfi__251JoaPrIqb4G3YidarYOcMCQSzA'
+mock_access_token = 'eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJreS1tUXNxZ0ZYeHdSUVRfRUhuQlJJUGpmbVhfRXZuUTVEbzZWUTJCazdZIn0.eyJleHAiOjE3NzU1NjI3MjAsImlhdCI6MTc3NTU2MjQyMCwianRpIjoiZDM4ZTk3Y2YtYzI2YS00NDJkLThhOGQtNzc3MTU5ZGNjMzc5IiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL0JlYWNvbiIsImF1ZCI6ImJlYWNvbiIsInN1YiI6IjQ3ZWZmMWIxLTc2MjEtNDU3MC1hMGJiLTAxYTcxOWZiYTBhMiIsInR5cCI6IkJlYXJlciIsImF6cCI6ImJlYWNvbiIsInNlc3Npb25fc3RhdGUiOiJkYzBlMGIwYS1lN2NhLTRhYTktODM0OC1mNzA5OGQ3ODFiMGIiLCJhY3IiOiIxIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBlbWFpbCBtaWNyb3Byb2ZpbGUtand0Iiwic2lkIjoiZGMwZTBiMGEtZTdjYS00YWE5LTgzNDgtZjcwOThkNzgxYjBiIiwidXBuIjoiamFuZSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwibmFtZSI6IkphbmUgU21pdGgiLCJncm91cHMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXSwicHJlZmVycmVkX3VzZXJuYW1lIjoiamFuZSIsImdpdmVuX25hbWUiOiJKYW5lIiwiZmFtaWx5X25hbWUiOiJTbWl0aCIsImVtYWlsIjoiamFuZS5zbWl0aEBiZWFjb24uZ2E0Z2gifQ.eMED4auHV4rg06N-fi7veLev9sZV-29Pafyu54wqFFlf8HJIWX2y6Wth_RgmDaiL8jbOR5qJEysdqcgwJJ3KbDo0Q8Fp3XOKpxc4GDHfkR88LGEVqIItDfbxw3ZyXti9WH0n2egg0OEXuZWmQPN62y62KE7k3u9XPH4km7oeHDBmPPA97Q8_TMwsZwe90UiJ29CIoLGowEu-hYXYFXQMz6-UWTtYf3gzJhO_6w01UqCFNUOn8ZPsghNTAFW4n89RumZu5lIfcjidmgjwV2hEFhN9kUqkLXKAYu1DDEL0TvJMXdBrC6YOv4jHVesHZB9c27b0juO2-VK_BvfR6BJ1Wg'
 mock_access_token_false = 'public'
 #dummy test anonymous
 #dummy test login
@@ -17,14 +21,25 @@ mock_access_token_false = 'public'
 #audit --> agafar informació molt específica que ens interessa guardar per sempre (de quins individuals ha obtingut resultats positius)
 
 def create_test_app():
-    app = web.Application()
-    #app.on_startup.append(initialize)
+    LOG = initialize_logger(config.level)
+    app = web.Application(
+        middlewares=[
+            cors_middleware(origins=conf_override.config.cors_urls), error_middleware
+        ]
+    )
+    app['logger'] = LOG
+    app['pending_requests'] = set()
+    app['shutting_down'] = False
+    app['state'] = 'Running - healthy'
+    app = append_routes(app=app)
     return app
 
 class TestAuthN(unittest.TestCase):
     def __init__(self, methodName: str = "runTest") -> None:
         super().__init__(methodName)
+        LOG = initialize_logger(config.level)
         self._id = 'test'
+        self.LOG=LOG
     def test_auth_fetch_idp(self):
         with loop_context() as loop:
             app = create_test_app()

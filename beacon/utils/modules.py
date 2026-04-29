@@ -1,9 +1,14 @@
 from beacon.request.classes import RequestAttributes
 import os
-from typing import List, Optional, Union, Dict
+from typing import Union
 import re
-from beacon.logs.logs import LOG
 import yaml
+from beacon.logs.logs import log_with_args_check_configuration, log_with_args
+from beacon.conf.conf_override import config
+from beacon.exceptions.exceptions import DatabaseIsDown
+import asyncio
+
+#TODO: get_client() passant una variable amb el nom de la base de dades
 
 def load_framework_module(self, script_name):
     module='beacon.framework.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.'+script_name
@@ -11,11 +16,102 @@ def load_framework_module(self, script_name):
     loaded_module = importlib.import_module(module, package=None)
     return loaded_module
 
+@log_with_args(config.level)
 def load_source_module(self, script_name):
     complete_module='beacon.connections.'+RequestAttributes.source+'.' + script_name
     import importlib
     module = importlib.import_module(complete_module, package=None)
     return module
+
+@log_with_args_check_configuration(config.level)
+async def check_database_connections(LOG=None, entry_type=None, pre_entry_type=None):
+    try:
+        entry_type=RequestAttributes.entry_type
+        pre_entry_type=RequestAttributes.pre_entry_type
+    except Exception:
+        entry_type=None
+        pre_entry_type=None
+    with open("/beacon/conf/models/models_conf.yml", 'r') as pfile:
+        models_confile= yaml.safe_load(pfile)
+    pfile.close()
+    dirs = os.listdir("/beacon/models")
+    database_connections_to_check=[]
+    for folder in dirs:
+        subdirs = os.listdir("/beacon/models/"+folder)
+        if folder in models_confile:
+            if models_confile[folder]["model_enabled"] == False:
+                continue
+        if "conf" in subdirs:
+            confiles = os.listdir("/beacon/models/"+folder+"/conf/entry_types/")
+            for confile in confiles:
+                if confile != '__pycache__':
+                    with open("/beacon/models/"+folder+"/conf/entry_types/" + confile, 'r') as pfile:
+                        entry_type_confile = yaml.safe_load(pfile)
+                    pfile.close()
+                    for entry_type_id, conf_entry_type_param in entry_type_confile.items():
+                        if entry_type == None or conf_entry_type_param['endpoint_name'] == entry_type and pre_entry_type == None or conf_entry_type_param['endpoint_name'] == pre_entry_type:
+                            if conf_entry_type_param['entry_type_enabled'] == True:
+                                if conf_entry_type_param['connection']['name'] not in database_connections_to_check:
+                                    database_connections_to_check.append(conf_entry_type_param['connection']['name'])
+                                for conf_param, value_param in conf_entry_type_param.items():
+                                    if conf_param == 'lookups':
+                                        for lookup_id, lookup_value in value_param.items():
+                                            if isinstance(lookup_value, dict):
+                                                if pre_entry_type != None and entry_type != None:
+                                                    if lookup_value['endpoint_name'] == pre_entry_type+'/{id}/'+entry_type:
+                                                        if lookup_value['connection']['name'] not in database_connections_to_check:
+                                                            database_connections_to_check.append(lookup_value['connection']['name'])
+                                                else:
+                                                    database_connections_to_check.append(lookup_value['connection']['name'])
+        else:
+            for subfolder in subdirs:
+                underdirs = os.listdir("/beacon/models/"+folder+"/"+subfolder)
+                if folder+'/'+subfolder in models_confile:
+                    if models_confile[folder+'/'+subfolder ]["model_enabled"] == False:
+                        continue
+                if "conf" in underdirs:
+                    confiles = os.listdir("/beacon/models/"+folder+"/"+subfolder+"/conf/entry_types/")
+                    for confile in confiles:
+                        if confile != '__pycache__':
+                            with open("/beacon/models/"+folder+"/"+subfolder+"/conf/entry_types/" + confile, 'r') as pfile:
+                                entry_type_confile = yaml.safe_load(pfile)
+                            pfile.close()
+                            for entry_type_id, conf_entry_type_param in entry_type_confile.items():
+                                if entry_type == None or conf_entry_type_param['endpoint_name'] == entry_type and pre_entry_type == None or conf_entry_type_param['endpoint_name'] == pre_entry_type:
+                                    if conf_entry_type_param['entry_type_enabled'] == True:
+                                        if conf_entry_type_param['connection']['name'] not in database_connections_to_check:
+                                            database_connections_to_check.append(conf_entry_type_param['connection']['name'])
+                                        for conf_param, value_param in conf_entry_type_param.items():
+                                            if conf_param == 'lookups':
+                                                for lookup_id, lookup_value in value_param.items():
+                                                    if isinstance(lookup_value, dict):
+                                                        if pre_entry_type != None and entry_type != None:
+                                                            if lookup_value['endpoint_name'] == pre_entry_type+'/{id}/'+entry_type:
+                                                                if lookup_value['connection']['name'] not in database_connections_to_check:
+                                                                    database_connections_to_check.append(lookup_value['connection']['name'])
+                                                        else:
+                                                            database_connections_to_check.append(lookup_value['connection']['name'])
+    for folder in database_connections_to_check:
+        complete_module='beacon.connections.'+folder+'.ping'
+        import importlib
+        module = importlib.import_module(complete_module, package=None)
+        ping_from_module = getattr(module, 'ping_database')
+        complete_client_module='beacon.connections.'+folder+'.client'
+        import importlib
+        module = importlib.import_module(complete_client_module, package=None)
+        client_from_module = getattr(module, 'get_client')
+        try:
+            #TODO: timeout -> fitxer de configuració
+            await asyncio.wait_for(ping_from_module(client_from_module()), timeout=config.pending_requests_timeout_in_seconds)
+        except Exception:
+            LOG.error('{} database is down'.format(folder))
+            raise DatabaseIsDown(folder)
+        
+def load_client(folder):
+    complete_client_module='beacon.connections.'+folder+'.client'
+    import importlib
+    module = importlib.import_module(complete_client_module, package=None)
+    client_from_module = getattr(module, 'get_client')
 
 def load_class(script_name, className):
     module='beacon.framework.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.'+script_name
@@ -76,6 +172,7 @@ def load_types_of_results(response_type):
     return union_type
 
 def load_routes():
+    #TODO: add only the enabled lookups
     with open("/beacon/conf/models/models_conf.yml", 'r') as pfile:
         models_confile= yaml.safe_load(pfile)
     pfile.close()
@@ -181,6 +278,7 @@ def get_all_modules_datasets():
     return list_of_modules
                             
 def get_one_module_conf(entry_type):
+    # TODO: Fer cache per només executar aquesta funció 1 vegada
     dirs = os.listdir("/beacon/models")
     for folder in dirs:
         subdirs = os.listdir("/beacon/models/"+folder)

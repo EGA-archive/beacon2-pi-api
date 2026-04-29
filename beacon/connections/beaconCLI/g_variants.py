@@ -1,7 +1,7 @@
 from typing import Optional
 from beacon.connections.beaconCLI.__init__ import client
 import subprocess
-from beacon.logs.logs import log_with_args, LOG
+from beacon.logs.logs import log_with_args
 from beacon.conf.conf_override import config
 from beacon.exceptions.exceptions import DatabaseIsDown
 

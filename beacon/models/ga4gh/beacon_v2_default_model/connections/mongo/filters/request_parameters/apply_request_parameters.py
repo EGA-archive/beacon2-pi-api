@@ -1,9 +1,9 @@
 from beacon.request.parameters import AlphanumericFilter
 from typing import List, Dict
-from beacon.logs.logs import log_with_args, LOG
+from beacon.logs.logs import log_with_args
 from beacon.conf.conf_override import config
 from beacon.connections.mongo.filters.alphanumeric import apply_alphanumeric_filter
-from beacon.connections.mongo.__init__ import genomicVariations
+from beacon.connections.mongo.client import get_client
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.utils import lengthquery
 from beacon.request.classes import RequestAttributes
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.request_parameters.start import generate_position_filter_start
@@ -104,6 +104,8 @@ def apply_request_parameters(self, query: Dict[str, List[dict]], dataset: str):
                 query["$and"].append(startquery)    
             # Otherwise, process the parameter as a range query
             elif isBracket==False:
+                client=get_client()
+                genomicVariations=client['beacon'].genomicVariations
                 # Generate a final start value, as if it came by filters (start,end) to then create a list and process it as the first part of the range for the end value
                 if isinstance(v, list) and isinstance(startvalue, list):
                     startvalue=startvalue[0]
