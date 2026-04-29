@@ -9,9 +9,9 @@ services:
     restart: on-failure
     build:
       context: .
-    container_name: beaconprod
+    container_name: beaconprodspain
     ports:
-      - "5050:5050"
+      - "5090:5050"
     entrypoint: ['python','-m','beacon']
     volumes:
       - ./beacon/logs/logs.log:/beacon/logs/logs.log
@@ -84,14 +84,12 @@ services:
     networks:
       - idp-priv
 
-  db:
-    #image: mongo:5.0.32
-    #image: mongo:6.0.27
-    image: mongo:7.0.31
+  dbspain:
+    image: mongo:5.0.32
     #command: --wiredTigerCacheSizeGB 4
     #command: --wiredTigerCacheSizeGB 4 --sslMode requireSSL --tlsCertificateKeyFile test-server1.pem --tlsCAFile test-ca.pem
     hostname: mongo
-    container_name: mongoprod
+    container_name: mongoprodspain
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
