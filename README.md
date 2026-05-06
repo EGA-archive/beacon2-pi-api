@@ -36,6 +36,56 @@ db.adminCommand({ setFeatureCompatibilityVersion: "6.0" })
 
 After that, stop the container, comment version 6 and uncomment image for version 7 and rebuild the container and your mongoDB will be upgraded to version 7.
 
+### Upgrading MongoDB to version 8 from a container with an existing data for version 7
+
+If your container you want to upgrade is version 5 and you want version 7, first you will have to rebuild the container with the version 6. After that you will need to go to the mongoshell of the container:
+
+```bash
+docker exec mongoprod mongodump \                  
+  -u root \
+  -p example \
+  --authenticationDatabase admin \
+  --out /data/db/dump
+```
+
+```bash
+cp -r ./beacon/connections/mongo/data/db/dump ./dump
+```
+
+```bash
+docker stop mongoprod
+docker rm mongoprod
+```
+
+```bash
+rm -r beacon/connections/mongo/data/db
+```
+
+```bash
+docker compose up -d --build db  
+```
+
+```bash
+cp -r ./dump ./beacon/connections/mongo/data/db 
+```
+
+```bash
+docker exec mongoprod mongorestore \            
+  -u root \
+  -p example \
+  --authenticationDatabase admin \
+  --drop \
+  /data/db/dump
+```
+
+```bash
+rm -r dump 
+```
+
+```bash
+docker exec beaconprod python -m beacon.connections.mongo.reindex
+```
+
 ### Downgrading MongoDB to version 5 from an exising mongodb container with a greater version
 
 First, you will have to build the mongodb container using version 6. When up and running, execute the next commands:
