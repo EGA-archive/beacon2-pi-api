@@ -378,6 +378,50 @@ class TestMain(unittest.TestCase):
                 assert responsedict["responseSummary"]["exists"] == True
             loop.run_until_complete(test_check_post_datasets_endpoint_is_working())
             loop.run_until_complete(client.close())
+    def test_main_check_datasets_endpoint_with_count_granularity_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_datasets_endpoint_count_is_working():
+                resp = await client.get(conf_override.config.uri_subpath+"/"+dataset["dataset"]["endpoint_name"]+'?testMode=true&requestedGranularity=count')
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                self.assertIn("apiVersion",responsedict["meta"])
+                self.assertIn("beaconId",responsedict["meta"])
+                self.assertIn("returnedSchemas",responsedict["meta"])
+                self.assertIn("receivedRequestSummary",responsedict["meta"])
+                self.assertIn("returnedGranularity",responsedict["meta"])
+                self.assertIn("testMode",responsedict["meta"])
+                self.assertNotIn("collections",responsedict["response"])
+                self.assertIn("responseSummary",responsedict)
+                self.assertIn("numTotalResults",responsedict["responseSummary"])
+                assert responsedict["responseSummary"]["exists"] == True
+            loop.run_until_complete(test_check_datasets_endpoint_count_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_datasets_endpoint_with_boolean_granularity_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_datasets_endpoint_boolean_is_working():
+                resp = await client.get(conf_override.config.uri_subpath+"/"+dataset["dataset"]["endpoint_name"]+'?testMode=true&requestedGranularity=boolean')
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                self.assertIn("apiVersion",responsedict["meta"])
+                self.assertIn("beaconId",responsedict["meta"])
+                self.assertIn("returnedSchemas",responsedict["meta"])
+                self.assertIn("receivedRequestSummary",responsedict["meta"])
+                self.assertIn("returnedGranularity",responsedict["meta"])
+                self.assertIn("testMode",responsedict["meta"])
+                self.assertNotIn("collections",responsedict["response"])
+                self.assertIn("responseSummary",responsedict)
+                self.assertNotIn("numTotalResults",responsedict["responseSummary"])
+                assert responsedict["responseSummary"]["exists"] == True
+            loop.run_until_complete(test_check_datasets_endpoint_boolean_is_working())
+            loop.run_until_complete(client.close())
     def test_main_check_g_variants_endpoint_is_working(self):
         with loop_context() as loop:
             app = create_app()
@@ -930,6 +974,50 @@ class TestMain(unittest.TestCase):
                 self.assertIn("responseSummary",responsedict)
                 assert responsedict["responseSummary"]["exists"] == True
             loop.run_until_complete(test_check_cohorts_endpoint_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_cohorts_endpoint_with_count_granularity_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_cohorts_endpoint_count_is_working():
+                resp = await client.get(conf_override.config.uri_subpath+"/"+dataset["dataset"]["endpoint_name"]+'?testMode=true&requestedGranularity=count')
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                self.assertIn("apiVersion",responsedict["meta"])
+                self.assertIn("beaconId",responsedict["meta"])
+                self.assertIn("returnedSchemas",responsedict["meta"])
+                self.assertIn("receivedRequestSummary",responsedict["meta"])
+                self.assertIn("returnedGranularity",responsedict["meta"])
+                self.assertIn("testMode",responsedict["meta"])
+                self.assertNotIn("collections",responsedict["response"])
+                self.assertIn("responseSummary",responsedict)
+                self.assertIn("numTotalResults",responsedict["responseSummary"])
+                assert responsedict["responseSummary"]["exists"] == True
+            loop.run_until_complete(test_check_cohorts_endpoint_count_is_working())
+            loop.run_until_complete(client.close())
+    def test_main_check_cohorts_endpoint_with_boolean_granularity_is_working(self):
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_cohorts_endpoint_boolean_is_working():
+                resp = await client.get(conf_override.config.uri_subpath+"/"+dataset["dataset"]["endpoint_name"]+'?testMode=true&requestedGranularity=boolean')
+                assert resp.status == 200
+                responsetext=await resp.text()
+                responsedict=json.loads(responsetext)
+                self.assertIn("apiVersion",responsedict["meta"])
+                self.assertIn("beaconId",responsedict["meta"])
+                self.assertIn("returnedSchemas",responsedict["meta"])
+                self.assertIn("receivedRequestSummary",responsedict["meta"])
+                self.assertIn("returnedGranularity",responsedict["meta"])
+                self.assertIn("testMode",responsedict["meta"])
+                self.assertNotIn("collections",responsedict["response"])
+                self.assertIn("responseSummary",responsedict)
+                self.assertNotIn("numTotalResults",responsedict["responseSummary"])
+                assert responsedict["responseSummary"]["exists"] == True
+            loop.run_until_complete(test_check_cohorts_endpoint_boolean_is_working())
             loop.run_until_complete(client.close())
     def test_main_check_cohorts_with_limit_endpoint_is_working(self):
         with loop_context() as loop:
