@@ -36,6 +36,66 @@ db.adminCommand({ setFeatureCompatibilityVersion: "6.0" })
 
 After that, stop the container, comment version 6 and uncomment image for version 7 and rebuild the container and your mongoDB will be upgraded to version 7.
 
+### Upgrading MongoDB to version 8 from a container with an existing data for version 7
+
+If your container you want to upgrade is version 7 and you want version 8, the procedure is a bit more complex than for other mongo version updates.
+
+First of all, you will need to dump your database executing the following command:
+
+```bash
+docker exec mongoprod mongodump \                  
+  -u root \
+  -p example \
+  --authenticationDatabase admin \
+  --out /data/db/dump
+```
+
+After that, you will need to copy out the dumped files from the volume to your root local filesystem:
+```bash
+cp -r ./beacon/connections/mongo/data/db/dump ./dump
+```
+
+After that, delete completely the mongo instance with version 7:
+```bash
+docker stop mongoprod
+docker rm mongoprod
+```
+
+And the persistent data remaining:
+```bash
+rm -r beacon/connections/mongo/data/db
+```
+
+If all steps before have completed successfully, comment version 7 and uncomment version 8 for db service (mongo) at `docker-compose.yml` file. Then, build the mongo instance with version 8:
+```bash
+docker compose up -d --build db  
+```
+
+Copy the dumped files to the persistent folder in your new mongo version 8 instance:
+```bash
+cp -r ./dump ./beacon/connections/mongo/data/db 
+```
+
+And restore the dumped files to be compatible with version 8 of mongo instance:
+```bash
+docker exec mongoprod mongorestore \            
+  -u root \
+  -p example \
+  --authenticationDatabase admin \
+  --drop \
+  /data/db/dump
+```
+
+Then remove the dumped files that have already been inserted to your new mongo instance with version 8:
+```bash
+rm -r dump 
+```
+
+And reindex the data:
+```bash
+docker exec beaconprod python -m beacon.connections.mongo.reindex
+```
+
 ### Downgrading MongoDB to version 5 from an exising mongodb container with a greater version
 
 First, you will have to build the mongodb container using version 6. When up and running, execute the next commands:

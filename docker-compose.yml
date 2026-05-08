@@ -87,7 +87,8 @@ services:
   db:
     #image: mongo:5.0.32
     #image: mongo:6.0.27
-    image: mongo:7.0.31
+    #image: mongo:7.0.31
+    image: mongo:8.2.3
     #command: --wiredTigerCacheSizeGB 4
     #command: --wiredTigerCacheSizeGB 4 --sslMode requireSSL --tlsCertificateKeyFile test-server1.pem --tlsCAFile test-ca.pem
     hostname: mongo
@@ -108,7 +109,7 @@ services:
       #- ./test-client.pem:/test-client.pem
     networks:
       - pub
-    command: ["--config", "/etc/mongod.conf"]
+    command: ["mongod", "--config", "/etc/mongod.conf"]
   
   mongo-express:
     image: mongo-express
