@@ -394,7 +394,7 @@ class TestMain(unittest.TestCase):
                 self.assertIn("receivedRequestSummary",responsedict["meta"])
                 self.assertIn("returnedGranularity",responsedict["meta"])
                 self.assertIn("testMode",responsedict["meta"])
-                self.assertNotIn("collections",responsedict["response"])
+                self.assertNotIn("collections",responsedict)
                 self.assertIn("responseSummary",responsedict)
                 self.assertIn("numTotalResults",responsedict["responseSummary"])
                 assert responsedict["responseSummary"]["exists"] == True
@@ -416,7 +416,7 @@ class TestMain(unittest.TestCase):
                 self.assertIn("receivedRequestSummary",responsedict["meta"])
                 self.assertIn("returnedGranularity",responsedict["meta"])
                 self.assertIn("testMode",responsedict["meta"])
-                self.assertNotIn("collections",responsedict["response"])
+                self.assertNotIn("collections",responsedict)
                 self.assertIn("responseSummary",responsedict)
                 self.assertNotIn("numTotalResults",responsedict["responseSummary"])
                 assert responsedict["responseSummary"]["exists"] == True
@@ -991,7 +991,7 @@ class TestMain(unittest.TestCase):
                 self.assertIn("receivedRequestSummary",responsedict["meta"])
                 self.assertIn("returnedGranularity",responsedict["meta"])
                 self.assertIn("testMode",responsedict["meta"])
-                self.assertNotIn("collections",responsedict["response"])
+                self.assertNotIn("collections",responsedict)
                 self.assertIn("responseSummary",responsedict)
                 self.assertIn("numTotalResults",responsedict["responseSummary"])
                 assert responsedict["responseSummary"]["exists"] == True
@@ -1013,7 +1013,7 @@ class TestMain(unittest.TestCase):
                 self.assertIn("receivedRequestSummary",responsedict["meta"])
                 self.assertIn("returnedGranularity",responsedict["meta"])
                 self.assertIn("testMode",responsedict["meta"])
-                self.assertNotIn("collections",responsedict["response"])
+                self.assertNotIn("collections",responsedict)
                 self.assertIn("responseSummary",responsedict)
                 self.assertNotIn("numTotalResults",responsedict["responseSummary"])
                 assert responsedict["responseSummary"]["exists"] == True

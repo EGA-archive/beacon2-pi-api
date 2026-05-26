@@ -1,4 +1,5 @@
 import beacon.conf.conf_default as _defaults
+import datetime
 
 
 class Config:
@@ -20,5 +21,5 @@ try:
         if not key.startswith("_"):
             setattr(config, key, getattr(_userconf, key))
 except ImportError as e:
-    print(f"failed to load: {e}")
+    print('ERROR - {}Z - Failed to load: {}'.format(datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3], e), flush=True)
     pass

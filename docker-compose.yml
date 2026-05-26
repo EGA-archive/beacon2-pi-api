@@ -124,7 +124,7 @@ services:
       - pub
 
   beacon-ri-tools:
-    image: ghcr.io/ega-archive/beacon2-ri-tools-v2:2.0.6
+    image: ghcr.io/ega-archive/beacon2-ri-tools-v2:2.1.1
     hostname: beacon-ri-tools
     container_name: ri-tools
     networks:

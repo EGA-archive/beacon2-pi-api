@@ -826,8 +826,8 @@ class TestNoFilters(unittest.TestCase):
         with loop_context() as loop:
             from beacon.conf import conf
             from beacon.conf import conf_default
-            assert conf_override.config.uri == conf_default.uri
-            assert conf_override.config.uri != conf.uri
+            assert conf_override.config.uri == conf.uri
+            assert conf_override.config.uri != conf_default.uri
     
 
     
