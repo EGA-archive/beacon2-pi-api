@@ -1,4 +1,4 @@
-gnomADv2.1.1:
+gnomAD GRCh37 (v2.1.1 exomes):
   public:
     default_entry_types_granularity: record
     entry_types_exceptions:
