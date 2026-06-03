@@ -10,7 +10,7 @@ except Exception as e:
 
 level=logging.DEBUG
 log_file=None
-beacon_id = 'org.ega-archive.beacon-af-gdi-spain-prod'  # ID of the Beacon
+beacon_id = 'es.crg.af-beacon.production.fega-spain'  # ID of the Beacon
 beacon_name = 'Allele Frequency Beacon GDI Spain'  # Name of the Beacon service
 api_version = 'v2.2.0' # Version of the Beacon implementation
 uri = 'https://beacon-af-spain.ega-archive.org'
