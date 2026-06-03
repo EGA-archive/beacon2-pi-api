@@ -10,7 +10,7 @@ except Exception as e:
 
 level=logging.DEBUG
 log_file=None
-beacon_id = 'org.ega-archive.gdi-spain-beacon'  # ID of the Beacon
+beacon_id = 'es.crg.sl-beacon.staging.fega-spain'  # ID of the Beacon
 beacon_name = 'GDI Spain Beacon'  # Name of the Beacon service
 api_version = 'v2.2.0' # Version of the Beacon implementation
 uri = 'https://beacon-spain-demo.ega-archive.org'
