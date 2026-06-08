@@ -9,6 +9,7 @@ from beacon.request.classes import RequestAttributes
 from beacon.exceptions.exceptions import IncoherenceInRequestError, InvalidRequest, WrongURIPath, NoFiltersAllowed
 import html
 from beacon.conf import filtering_terms
+from beacon.connections.mongo import conf as mongo_conf
 import os
 from beacon.request.parameters import RequestMeta, SchemasPerEntity
 from pydantic import ValidationError
@@ -187,7 +188,7 @@ def set_entry_type_configuration(self):
                         client_function_from_module = getattr(client_module, 'get_client')
                         client = client_function_from_module()
                         RequestAttributes.client = client
-                        connection = client['beacon'][param_value["table"]]
+                        connection = client[mongo_conf.database_name][param_value["table"]]
                         RequestAttributes.mongo_collection = connection
                     if RequestAttributes.entry_id != None:
                         if RequestAttributes.pre_entry_type == None:

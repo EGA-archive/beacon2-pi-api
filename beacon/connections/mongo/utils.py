@@ -55,7 +55,13 @@ def get_count(self, collection: Collection, query: dict) -> int:
         try:
             counts=list(counts)
             if counts == []:
-                total_counts=collection.count_documents(query)
+                try:
+                    total_counts=collection.count_documents(query, maxTimeMS=5000)
+                except Exception:
+                    try:
+                        total_counts=1 if collection.find_one(query, {"_id": 1}) is not None else 0
+                    except Exception:
+                        total_counts=0
                 insert_dict={}
                 insert_dict['id']=str(query)
                 insert_dict['num_results']=total_counts
@@ -63,6 +69,16 @@ def get_count(self, collection: Collection, query: dict) -> int:
                 insert_total=counts_.insert_one(insert_dict)
             else:
                 total_counts=counts[0]["num_results"]
+                if total_counts == 0:
+                    try:
+                        if collection.find_one(query, {"_id": 1}) is not None:
+                            total_counts = 1
+                            counts_.update_one(
+                                {"id": str(query), "collection": str(collection)},
+                                {"$set": {"num_results": total_counts}},
+                            )
+                    except Exception:
+                        pass
         except Exception as e:
             insert_dict={}
             insert_dict['id']=str(query)

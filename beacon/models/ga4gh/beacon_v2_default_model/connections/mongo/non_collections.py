@@ -276,7 +276,7 @@ def get_variants_of_dataset(self, dataset: SingleDatasetResponse):
     # If the entry_id belongs to any dataset, build the query, otherwise, dataset is not found.
     if dataset.dataset == RequestAttributes.entry_id:
         queryid={}
-        queryid["datasetId"]=dataset
+        queryid["datasetId"]=dataset.dataset
         query_count["$or"].append(queryid)
     else:
         dataset.dataset_count=0
