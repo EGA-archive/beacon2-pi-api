@@ -223,25 +223,38 @@ def load_routes():
                                                     routes_to_add[lookup_value['endpoint_name']]=[lookup_value['response_type']]
     return routes_to_add
 
+def _model_is_enabled(models_confile, folder, subfolder=None):
+    if folder in models_confile and models_confile[folder]["model_enabled"] == False:
+        return False
+    if subfolder is not None:
+        model_key = folder + '/' + subfolder
+        if model_key in models_confile and models_confile[model_key]["model_enabled"] == False:
+            return False
+    return True
+
 def get_all_modules_mongo_connections_script(script):
     list_of_modules=[]
+    with open("/beacon/conf/models/models_conf.yml", 'r') as pfile:
+        models_confile= yaml.safe_load(pfile)
+    pfile.close()
     dirs = os.listdir("/beacon/models")
     for folder in dirs:
         subdirs = os.listdir("/beacon/models/"+folder)
+        if not _model_is_enabled(models_confile, folder):
+            continue
         if "connections" in subdirs:
             connections = os.listdir("/beacon/models/"+folder+"/connections")
             for dir in connections:
                 if dir == 'mongo':
                     complete_module='beacon.models.'+folder+'.connections.mongo.'+script
                     import importlib
-                    try:
-                        module = importlib.import_module(complete_module, package=None)
-                        list_of_modules.append(module)
-                    except Exception:
-                        continue
+                    module = importlib.import_module(complete_module, package=None)
+                    list_of_modules.append(module)
         else:
             for subfolder in subdirs:
                 underdirs = os.listdir("/beacon/models/"+folder+"/"+subfolder)
+                if not _model_is_enabled(models_confile, folder, subfolder):
+                    continue
                 if "connections" in underdirs:
                     connections = os.listdir("/beacon/models/"+folder+"/"+subfolder+"/connections")
                     for dir in connections:
@@ -254,9 +267,14 @@ def get_all_modules_mongo_connections_script(script):
 
 def get_all_modules_datasets():
     list_of_modules=[]
+    with open("/beacon/conf/models/models_conf.yml", 'r') as pfile:
+        models_confile= yaml.safe_load(pfile)
+    pfile.close()
     dirs = os.listdir("/beacon/models")
     for folder in dirs:
         subdirs = os.listdir("/beacon/models/"+folder)
+        if not _model_is_enabled(models_confile, folder):
+            continue
         if "connections" in subdirs:
             try:
                 complete_module='beacon.models.'+folder+'.connections.mongo.collections'
@@ -267,6 +285,8 @@ def get_all_modules_datasets():
                 pass
         for subfolder in subdirs:
             underdirs = os.listdir("/beacon/models/"+folder+"/"+subfolder)
+            if not _model_is_enabled(models_confile, folder, subfolder):
+                continue
             if "connections" in underdirs:
                 try:
                     complete_module='beacon.models.'+folder+'.'+subfolder+'.connections.mongo.collections'
