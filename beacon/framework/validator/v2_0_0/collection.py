@@ -4,7 +4,6 @@ from pydantic import (
 )
 from typing import List, Optional, Union, Dict
 from beacon.utils.modules import load_class, load_types_of_results
-from beacon.models.EUCAIM.validator.collections.collections.EUCAIM_collections_v0_0_1 import Collections as Collections_
 
 def make_Collections():
     CollectionType = load_types_of_results("collections")
