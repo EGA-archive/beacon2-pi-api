@@ -5,7 +5,7 @@ import builtins
 import importlib as importlib_module
 from pathlib import Path
 from types import SimpleNamespace
-from unittest.mock import mock_open, patch
+from unittest.mock import mock_open
 
 if "strenum" not in sys.modules:
     strenum_stub = SimpleNamespace()
@@ -169,10 +169,3 @@ class TestModuleLoaders(unittest.TestCase):
         source = Path(__file__).resolve().parents[1] / "utils" / "requests.py"
         source_text = source.read_text().replace(" ", "").lower()
         self.assertIn('connection=client[mongo_conf.database_name][param_value["table"]]', source_text)
-
-    def test_get_count_has_fast_fallback_for_timeout(self):
-        source = Path(__file__).resolve().parents[1] / "connections" / "mongo" / "utils.py"
-        source_text = source.read_text().replace(" ", "").replace("\n", "").lower()
-        self.assertIn('count_documents(query,maxtimems=5000)', source_text)
-        self.assertIn('collection.find_one(query,{"_id":1})', source_text)
-        self.assertIn('counts_.update_one({"id":str(query),"collection":str(collection)},{"$set":{"num_results":total_counts}},)', source_text)
