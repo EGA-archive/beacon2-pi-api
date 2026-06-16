@@ -18,7 +18,7 @@ for py_file in target_dir.rglob("*.py"):
 
                 try:
                     if detect(text) != "en":
-                        violations.append("file: {py_file} at line {token.start[0]} has next detected part of non-English: {text}")
+                        violations.append("file: {} at line {} has next detected part of non-English: {}".format(py_file, token.start[0], text))
                 except Exception:
                     pass
 
