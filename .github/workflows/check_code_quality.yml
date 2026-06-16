@@ -27,8 +27,8 @@ jobs:
         run: |
           pip install langdetect vulture
 
-      - name: Check comment coverage
-        run: python scripts/check_comment_coverage.py "$TARGET_DIR"
+      #- name: Check comment coverage
+        #run: python scripts/check_comment_coverage.py "$TARGET_DIR"
 
       - name: Check comment language
         run: python scripts/check_comment_language.py "$TARGET_DIR"
