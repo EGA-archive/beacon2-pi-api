@@ -8,7 +8,7 @@ comment_lines = 0
 code_lines = 0
 
 for py_file in target_dir.rglob("*.py"):
-    with open(py_file, "scripts") as f:
+    with open(py_file, "rb") as f:
         for tok in tokenize.tokenize(f.readline):
             if tok.type == tokenize.COMMENT:
                 comment_lines += 1

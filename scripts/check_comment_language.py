@@ -8,7 +8,7 @@ target_dir = Path(sys.argv[1])
 violations = []
 
 for py_file in target_dir.rglob("*.py"):
-    with open(py_file, "scripts") as f:
+    with open(py_file, "rb") as f:
         for token in tokenize.tokenize(f.readline):
             if token.type == tokenize.COMMENT:
                 text = token.string.lstrip("#").strip()
