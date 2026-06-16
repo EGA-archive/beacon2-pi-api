@@ -1,0 +1,37 @@
+name: Code Quality Gate
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+  push:
+    branches:
+      - develop_commenting-code
+
+jobs:
+  quality-gate:
+    runs-on: ubuntu-latest
+
+    env:
+      TARGET_DIR: beacon
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install langdetect vulture
+
+      - name: Check comment coverage
+        run: python scripts/check_comment_coverage.py "$TARGET_DIR"
+
+      - name: Check comment language
+        run: python scripts/check_comment_language.py "$TARGET_DIR"
+
+      - name: Check dead code
+        run: vulture "$TARGET_DIR" --min-confidence 80
