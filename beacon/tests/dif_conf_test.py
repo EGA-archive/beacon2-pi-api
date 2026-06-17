@@ -838,7 +838,6 @@ def suite():
     """
     test_suite = unittest.TestSuite()
     test_suite.addTest(unittest.makeSuite(TestNoFilters))
-    #test_suite.addTest(unittest.makeSuite(TestBudget2))
     return test_suite
 
 

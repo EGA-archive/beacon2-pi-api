@@ -1,4 +1,4 @@
-name: Code Quality Gate
+name: Dead code checks
 
 on:
   pull_request:
@@ -28,4 +28,4 @@ jobs:
           pip install vulture
 
       - name: Check dead code
-        run: vulture "$TARGET_DIR" --min-confidence 80
+        run: python scripts/check_dead_code.py "$TARGET_DIR"

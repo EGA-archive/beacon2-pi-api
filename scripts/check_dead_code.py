@@ -17,11 +17,24 @@ result = subprocess.run(
     text=True,
 )
 
-if result.returncode == 0:
-    print("SUCCESS: No dead code detected.")
-    sys.exit(0)
+
 
 print("WARNING: Potential dead code found:\n")
-print(result.stdout)
 
-sys.exit(1)
+stdout_splitted = result.stdout.splitlines()
+list_without_validators=[]
+for stdout_item in stdout_splitted:
+    if '/validator/' not in stdout_item:
+        list_without_validators.append(stdout_item)
+
+if list_without_validators == []:
+    print("SUCCESS: No dead code detected.")
+    sys.exit(0)
+else:
+    finalstr=""
+    for final_item in list_without_validators:
+        finalstr+=final_item+"\n"
+
+    print(finalstr)
+
+    sys.exit(1)

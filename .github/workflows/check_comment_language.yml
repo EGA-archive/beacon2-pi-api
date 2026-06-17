@@ -1,4 +1,4 @@
-name: Code Quality Gate
+name: Language for comments needs to be English
 
 on:
   pull_request:

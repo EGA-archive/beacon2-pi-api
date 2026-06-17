@@ -8,7 +8,7 @@ from beacon.conf.conf_override import config
 from beacon.exceptions.exceptions import DatabaseIsDown
 import asyncio
 
-#TODO: get_client() passant una variable amb el nom de la base de dades
+#TODO: get_client() passing one variable with the database name.
 
 def load_framework_module(self, script_name):
     module='beacon.framework.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.'+script_name

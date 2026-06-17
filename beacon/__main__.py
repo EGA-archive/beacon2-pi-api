@@ -65,4 +65,4 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         print('INFO - {}Z - {}'.format(datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3],'No pending requests - Shutting down now', flush=True))
     except Exception:
-        raise # TODO: Les excepcions més greus han d'estar codificades aquí.
+        raise # TODO: The crucial system exceptions must be codified here.
