@@ -10,7 +10,7 @@ on:
       - develop_commenting-code
 
 jobs:
-  quality-gate:
+  comment-coverage:
     runs-on: ubuntu-latest
 
     env:

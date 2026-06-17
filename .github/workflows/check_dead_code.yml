@@ -10,7 +10,7 @@ on:
       - develop_commenting-code
 
 jobs:
-  quality-gate:
+  dead-code-detection:
     runs-on: ubuntu-latest
 
     env:

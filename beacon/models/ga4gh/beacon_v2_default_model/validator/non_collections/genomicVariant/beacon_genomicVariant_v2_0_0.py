@@ -260,7 +260,7 @@ class ComposedSequenceExpression(BaseModel):
                 except Exception:
                     continue
             else:
-                # no break => no model matched
+                # no break => no model was matched
                 raise ValueError('components must be an array containing any format possible between DerivedSequenceExpression, LiteralSequenceExpression or RepeatedSequenceExpression. It is mandatory to at least be one of DerivedSequenceExpression or RepeatedSequenceExpression')
         return v
 class Allele(BaseModel):

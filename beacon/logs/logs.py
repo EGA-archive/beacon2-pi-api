@@ -7,10 +7,10 @@ def initialize_logger(level):
     try:
         # Start the logger
         LOG = logging.getLogger("aiohttp.access")
-        # Remove pre-existing default handlers
+        # Remove pre-existing default handlers for the logger tool
         for handler in LOG.handlers[:]:
             LOG.removeHandler(handler)
-        # Avoid loggers to set as default
+        # Avoid pre-existing loggers to set as default
         LOG.propagate = False
         # Apply desired level of logs
         LOG.setLevel(level)
@@ -35,16 +35,7 @@ def initialize_logger(level):
     except Exception:
         print('ERROR - {}Z - {}'.format(datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3],'Logger could not initialize', flush=True))
 
-
-# LOGS per iniciar i parar el contenidor (INFO)
-# LOGS per he rebut una request i retorno una response (INFO)
-# Tota la resta per DEBUG
-
-# Acabar de fer els unit tests
-# Formular l'exception bubbling --> mirar qui controla el tall de connexions per netejar que no quedi cap connexió ni procés obert
-# Crear graceful shutdown amb missatge de LOG body + status dins de l'exception bubbling a cada capa
-# Auditing -> registre de accions que s'han fet i que es guardin
-# DTO entre classe i classe quan es retorna un objecte 
+# DTO between class and class when an object is returned
 
 def log_with_args_check_configuration(level):
     def add_logging(func):
@@ -59,7 +50,7 @@ def log_with_args_check_configuration(level):
                 # Store the final time after the function is executed and log when ends
                 finish = time.perf_counter()
                 LOG.debug(f"{func.__name__}- {round(finish-start,3)}s - returned OK")
-                # Specific hard-coded logs for the initialize and shutting down of the app
+                # Specific hard-coded logs for the initialization and shutting down of the app
                 if f"{func.__name__}" == 'initialize':
                     LOG.info(f"{result} - Initialization done")
                 elif f"{func.__name__}" == 'destroy':

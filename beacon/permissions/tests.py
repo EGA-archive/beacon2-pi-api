@@ -18,11 +18,6 @@ from beacon.utils.routes import append_routes
 from aiohttp_middlewares import cors_middleware
 import beacon.conf.conf_override as conf_override
 
-#dummy test anonymous
-#dummy test login
-#add test coverage
-#audit --> agafar informació molt específica que ens interessa guardar per sempre (de quins individuals ha obtingut resultats positius)
-
 def create_test_app():
     LOG = initialize_logger(config.level)
     app = web.Application(

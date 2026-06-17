@@ -10,7 +10,7 @@ on:
       - develop_commenting-code
 
 jobs:
-  quality-gate:
+  check-comments-language:
     runs-on: ubuntu-latest
 
     env:
