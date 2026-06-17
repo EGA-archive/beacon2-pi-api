@@ -29,3 +29,5 @@ if language_exceptions:
     print("WARNING! Non-English comments found:")
     print("\n".join(language_exceptions))
     raise SystemExit(1)
+else:
+    print("SUCCESS! All the comments are in English.")

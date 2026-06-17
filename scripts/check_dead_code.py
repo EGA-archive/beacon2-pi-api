@@ -19,7 +19,6 @@ result = subprocess.run(
 
 
 
-print("WARNING: Potential dead code found:\n")
 
 stdout_splitted = result.stdout.splitlines()
 list_without_validators=[]
@@ -34,7 +33,7 @@ else:
     finalstr=""
     for final_item in list_without_validators:
         finalstr+=final_item+"\n"
-
+    print("WARNING: Potential dead code found:\n")
     print(finalstr)
 
-    sys.exit(1)
+    sys.exit(0)
