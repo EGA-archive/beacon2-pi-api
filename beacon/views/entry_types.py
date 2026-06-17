@@ -23,6 +23,9 @@ class EntryTypesEndpointView(EndpointView):
             self.classResponse = module_entry_types.EntryTypesResponse(meta=meta.model_dump(exclude_none=True),response=entry_types.model_dump(exclude_none=True))
             # Convert the class to JSON to return it in the final stream response
             response_obj = self.create_response()
+        # Catch the cases where the Entry Types response is not valid against the reference schema
         except ValidationError as v:
+            # Stdout the information about what entry type failed about it not being according to the spec
             raise InvalidData('{} templates or data are not correct'.format(RequestAttributes.entry_type))
+        # Give a HTTP response with json data application and a 200 status, and the Entry Types object class collected
         return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')

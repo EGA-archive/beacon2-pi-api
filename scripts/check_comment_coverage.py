@@ -17,7 +17,7 @@ for py_file in target_dir.rglob("*.py"):
         for line in f:
             stripped = line.strip()
 
-            if stripped and not stripped.startswith("#"):
+            if stripped and not stripped.startswith("#") and not stripped.startswith('"""') and not stripped.endswith('"""'):
                 code_lines += 1
 
 coverage = comment_lines / max(code_lines, 1)

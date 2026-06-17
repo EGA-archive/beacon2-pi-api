@@ -23,6 +23,9 @@ class MapView(EndpointView):
             self.classResponse = module_map.MapResponse(meta=meta.model_dump(exclude_none=True),response=map.model_dump(exclude_none=True))
             # Convert the class to JSON to return it in the final stream response
             response_obj = self.create_response()
+        # Catch the cases where the Map response is not valid against the reference schema
         except ValidationError as v:
+            # Stdout the information about what entry type failed about it not being according to the spec
             raise InvalidData('{} templates or data are not correct'.format(RequestAttributes.entry_type))
+        # Give a HTTP response with json data application and a 200 status, and the Map object class collected
         return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')

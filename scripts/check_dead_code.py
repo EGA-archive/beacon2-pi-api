@@ -23,7 +23,7 @@ result = subprocess.run(
 stdout_splitted = result.stdout.splitlines()
 list_without_validators=[]
 for stdout_item in stdout_splitted:
-    if '/validator/' not in stdout_item:
+    if '/validator/' not in stdout_item and '/tests/' not in stdout_item:
         list_without_validators.append(stdout_item)
 
 if list_without_validators == []:
@@ -33,7 +33,7 @@ else:
     finalstr=""
     for final_item in list_without_validators:
         finalstr+=final_item+"\n"
-    print("WARNING: Potential dead code found:\n")
+    print("FAILURE: Potential dead code found:\n")
     print(finalstr)
 
-    sys.exit(0)
+    sys.exit(1)

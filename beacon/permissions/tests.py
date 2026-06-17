@@ -1,8 +1,6 @@
 from aiohttp.test_utils import TestClient, TestServer, loop_context
 import unittest
 from aiohttp import web
-from aiohttp.web import FileField
-from aiohttp.web_request import Request
 from .plugins import DummyPermissions as PermissionsProxy
 from aiohttp.test_utils import make_mocked_request
 from beacon.auth.tests import mock_access_token
