@@ -8,7 +8,6 @@ from beacon.exceptions.exceptions import InvalidData
 from beacon.views.endpoint import EndpointView
 from beacon.utils.modules import load_framework_module, load_source_module
 from beacon.utils.checks import state_check
-import asyncio
 
 class CollectionEntryTypeView(EndpointView):
     @state_check
@@ -53,7 +52,10 @@ class CollectionEntryTypeView(EndpointView):
                 self.classResponse = module_boolean.BooleanResponse(meta=meta, responseSummary=responseSummary)
                 # Convert the class to JSON to return it in the final stream response
                 response_obj = self.create_response()
+        # Catch the cases where the Collection response is not valid against the reference schema
         except ValidationError as v:
             self.LOG.error(str(v))
+            # Stdout the information about what entry type failed about it not being according to the spec
             raise InvalidData('{} templates or data are not correct'.format(RequestAttributes.entry_type))
+        # Give a HTTP response with json data application and a 200 status, and the Collection object class collected
         return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')

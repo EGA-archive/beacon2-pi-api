@@ -33,25 +33,22 @@ def load_ontology(ontology_id: str):
                 print(full_path)
                 urllib.request.urlretrieve(url, path, MyProgressBar())
         except HTTPError:
-            # TODO: Handle error
-            #print("ERROR", HTTPError)
+            # TODO: Handle error in case the HTTP address could not be reached.
             pass
         except ValueError:
-            #print("ERROR", ValueError)
+            # TODO: Handle error in case there was a wrong ontology trying to be mapped.
             pass
         except Exception:
             pass
         try:
-            #print (os.stat(path).st_size)
             if os.stat(path).st_size == 0:
                 try:
                     urllib.request.urlretrieve(url_alt, path, MyProgressBar())
                 except HTTPError:
-                    # TODO: Handle error
-                    #print("ERROR", HTTPError)
+                    # TODO: Handle error in case the HTTP address could not be reached.
                     pass
                 except ValueError:
-                    #print("ERROR", ValueError)
+                    # TODO: Handle error in case there was a wrong ontology trying to be mapped.
                     pass
         except Exception:
                 pass

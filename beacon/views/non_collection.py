@@ -40,10 +40,15 @@ class EntryTypeView(EndpointView):
                 # Instantiate the different datasets found using the ResultSetInstance class created and store them in the arrays
                 for dataset in multipleDatasetsResponseClass.datasets_responses:
                     try:
+                        # Create each of the ResultInstance object fed by the incoming dataset and its granularity depending on permissions and restrictions for the entry type
                         resultSet = ResultsetInstance.build_response_by_dataset(dataset, RequestAttributes.allowed_granularity,RequestAttributes.qparams.query.requestedGranularity)
+                        # Accumulate the datasets instance of results in a list
                         list_of_resultSets.append(resultSet)
+                        # Accumulate the dataset object class in a list
                         new_datasets.append(dataset)
+                    # Catch the exception where the dataset is not valid
                     except ValidationError as v:
+                        # Format the output dataset with the name of the dataset and the exception caught and log it out
                         self.LOG.error('{} dataset is invalid: {}'.format(dataset.dataset, str(v)))
                 # Instantiate the responseSummary and the resultSets with the datasets to be in the response
                 responseSummary = module_common.ResponseSummary.build_response_summary_by_dataset(module_common.ResponseSummary, new_datasets)
@@ -70,9 +75,11 @@ class EntryTypeView(EndpointView):
                 self.classResponse = module_boolean.BooleanResponse(meta=meta, responseSummary=responseSummary)
                 # Convert the class to JSON to return it in the final stream response
                 response_obj = self.create_response()
+        # Catch the cases where the NonCollection response is not valid against the reference schema
         except ValidationError as v:
             raise InvalidData('{} templates or data are not correct'.format(RequestAttributes.entry_type))
         # If a time could be obtained for the moment of the query, register it for the budget count
         if time_now is not None:
             load_module_to_insert_budget(self, username, time_now)
+        # Give a HTTP response with json data application and a 200 status, and the NonCollection object class collected
         return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')

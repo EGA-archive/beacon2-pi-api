@@ -1,0 +1,28 @@
+name: Language for comments needs to be English
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  check-comments-language:
+    runs-on: ubuntu-latest
+
+    env:
+      TARGET_DIR: beacon
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install pyspellchecker
+
+      - name: Check comment language
+        run: python scripts/check_comment_language.py "$TARGET_DIR"

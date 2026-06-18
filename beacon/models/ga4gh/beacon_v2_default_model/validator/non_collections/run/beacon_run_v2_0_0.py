@@ -11,6 +11,7 @@ from pydantic import (
 from typing import Optional, Union
 from beacon.framework.validator.v2_0_0.common import OntologyTerm
 
+# This is the generic class to validate a record for a run
 class Run(BaseModel, extra='forbid'):
     def __init__(self, **data) -> None:
         for private_key in self.__class__.__private_attributes__.keys():

@@ -25,12 +25,8 @@ def get_variants(self, entry_id: Optional[str], dataset: str):
         item = item.replace("'", '')
         item = item.replace('"', '')
         item_list = item.split(',')
-        #boolean = item_list[0]
         count = int(item_list[1])
         dataset_count=count
-        #end = len(item_list)
-        #datasets_list = item_list[2:end]
-
         break
     docs={}
 
