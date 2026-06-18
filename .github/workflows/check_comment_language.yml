@@ -25,7 +25,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install langdetect
+          pip install pyspellchecker
 
       - name: Check comment language
         run: python scripts/check_comment_language.py "$TARGET_DIR"
