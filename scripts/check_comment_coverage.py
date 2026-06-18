@@ -14,11 +14,18 @@ for py_file in target_dir.rglob("*.py"):
                 comment_lines += 1
 
     with open(py_file, encoding="utf-8") as f:
+        not_closed=False
         for line in f:
             stripped = line.strip()
 
-            if stripped and not stripped.startswith("#") and not stripped.startswith('"""') and not stripped.endswith('"""') and "#" not in line:
+            if stripped and not stripped.startswith("#") and not stripped.startswith('"""') and not stripped.endswith('"""') and "#" not in line and not_closed == False:
                 code_lines += 1
+            if stripped and stripped.startswith('"""') and not_closed==True:
+                not_closed=False
+            elif stripped and stripped.startswith('"""') and not_closed==False:
+                not_closed=True
+            elif stripped and stripped.endswith('"""') and not_closed==True:
+                not_closed=False
 
 coverage = comment_lines / max(code_lines, 1)
 
