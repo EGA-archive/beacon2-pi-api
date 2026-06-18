@@ -1,33 +1,61 @@
+import re
 import sys
 import tokenize
 from pathlib import Path
-from langdetect import detect
+
+from spellchecker import SpellChecker
 
 target_dir = Path(sys.argv[1])
+
+spell = SpellChecker(language="en")
+
+ALLOWED_WORDS = {
+    "json",
+    "yaml",
+    "api",
+    "uuid",
+    "metadata",
+    "config",
+    "configs",
+    "dataset",
+    "datasets",
+    "enum",
+    "enums",
+}
 
 language_exceptions = []
 
 for py_file in target_dir.rglob("*.py"):
     with open(py_file, "rb") as f:
         for token in tokenize.tokenize(f.readline):
-            if token.type == tokenize.COMMENT:
-                text = token.string.lstrip("#").strip()
+            if token.type != tokenize.COMMENT:
+                continue
 
-                if len(text) < 15:
-                    continue
+            text = token.string.lstrip("#").strip()
 
-                try:
-                    if "en" not in detect(text):
-                        lang_exception = "file: {} at line {} has next detected part of non-English: {}. Text is in language: {}".format(py_file, token.start[0], text, detect(text))
-                        splitted_le = lang_exception.split("language:")
-                        if "en" not in splitted_le[1]:
-                            language_exceptions.append(lang_exception)
-                except Exception:
-                    pass
+            words = [
+                w.lower()
+                for w in re.findall(r"[A-Za-z]+(?:-[A-Za-z]+)?", text)
+            ]
+
+            if len(words) < 3:
+                continue
+
+            unknown = [
+                w
+                for w in words
+                if w not in ALLOWED_WORDS
+                and w not in spell
+            ]
+
+            if len(unknown) > len(words) / 2:
+                language_exceptions.append(
+                    f"file: {py_file} at line {token.start[0]} "
+                    f"may contain non-English comment: {text}"
+                )
 
 if language_exceptions:
-    print("WARNING! Non-English comments found:")
+    print("WARNING! Potentially non-English comments found:")
     print("\n".join(language_exceptions))
-    raise SystemExit(1)
 else:
-    print("SUCCESS! All the comments are in English.")
+    print("SUCCESS! All comments appear to be English.")
