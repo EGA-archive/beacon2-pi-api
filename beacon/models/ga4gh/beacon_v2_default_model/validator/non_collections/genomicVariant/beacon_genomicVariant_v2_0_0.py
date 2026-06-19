@@ -253,10 +253,10 @@ class SequenceLocation(BaseModel):
             raise ValueError("type can only contain the word SequenceLocation")
         return v
 
-    @field_validator("sequence_id")
-    @classmethod
-    def validate_sequence_id(cls, v: str) -> str:
-        return validate_curie(v, "sequence_id")
+    #@field_validator("sequence_id")
+    #@classmethod
+    #def validate_sequence_id(cls, v: str) -> str:
+        #return validate_curie(v, "sequence_id")
 
 
 # ============================================================
