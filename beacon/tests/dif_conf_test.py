@@ -126,7 +126,55 @@ class TestNoFilters(unittest.TestCase):
             biosample["biosample"]["allow_queries_without_filters"] = True
             with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/biosample.yml", 'w') as outfile:
                 yaml.dump(biosample, outfile, default_flow_style=False)
-
+    def test_no_filters_genomicVariation_query_without_filters_allowed(self):
+        with loop_context() as loop:
+            genomicVariant["genomicVariant"]["allow_queries_without_filters"]=False
+            with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/genomicVariant.yml", 'w') as outfile:
+                yaml.dump(genomicVariant, outfile, default_flow_style=False)
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_genomicVariant_query_without_filters_allowed():
+                resp = await client.get(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"])
+                assert resp.status == 400
+            loop.run_until_complete(test_genomicVariant_query_without_filters_allowed())
+            loop.run_until_complete(client.close())
+            genomicVariant["genomicVariant"]["allow_queries_without_filters"]=True
+            with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/genomicVariant.yml", 'w') as outfile:
+                yaml.dump(genomicVariant, outfile, default_flow_style=False)
+    def test_no_filters_individual_query_without_filters_allowed(self):
+        with loop_context() as loop:
+            individual["individual"]["allow_queries_without_filters"]=False
+            with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/individual.yml", 'w') as outfile:
+                yaml.dump(individual, outfile, default_flow_style=False)
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_individual_query_without_filters_allowed():
+                resp = await client.get(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"])
+                assert resp.status == 400
+            loop.run_until_complete(test_individual_query_without_filters_allowed())
+            loop.run_until_complete(client.close())
+            individual["individual"]["allow_queries_without_filters"]=True
+            with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/individual.yml", 'w') as outfile:
+                yaml.dump(individual, outfile, default_flow_style=False)
+    
+    def test_no_filters_run_query_without_filters_allowed(self):
+        with loop_context() as loop:
+            run["run"]["allow_queries_without_filters"]=False
+            with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/run.yml", 'w') as outfile:
+                yaml.dump(run, outfile, default_flow_style=False)
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_run_query_without_filters_allowed():
+                resp = await client.get(conf_override.config.uri_subpath+"/"+run["run"]["endpoint_name"])
+                assert resp.status == 400
+            loop.run_until_complete(test_run_query_without_filters_allowed())
+            loop.run_until_complete(client.close())
+            run["run"]["allow_queries_without_filters"]=True
+            with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/run.yml", 'w') as outfile:
+                yaml.dump(run, outfile, default_flow_style=False)
 
     def test_no_filters_cohort_query_without_filters_allowed(self):
         with loop_context() as loop:
@@ -219,7 +267,60 @@ class TestNoFilters(unittest.TestCase):
             analysis["analysis"]["entry_type_enabled"] = True
             with open("/beacon/tests/mock_conf_files/conf/entry_types/ga4gh/beacon_v2_default_model/analysis.yml", 'w') as outfile:
                 yaml.dump(analysis, outfile, default_flow_style=False)
-
+    def test_main_check_configuration_with_wrong_individual_enable_endpoint(self):
+        with loop_context() as loop:
+            individual["individual"]["entry_type_enabled"]="no Boolean"
+            with open("/beacon/tests/mock_conf_files/conf/entry_types/ga4gh/beacon_v2_default_model/individual.yml", 'w') as outfile:
+                yaml.dump(individual, outfile, default_flow_style=False)
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_configuration_enable_individual():
+                try:
+                    check_configuration(LOG=initialize_logger(config.level),analysis_confile=analysis, biosample_confile=biosample, cohort_confile=cohort, dataset_confile=dataset, genomicVariant_confile=genomicVariant, individual_confile=individual, run_confile=run)
+                except Exception:
+                    pass
+            loop.run_until_complete(test_check_configuration_enable_individual())
+            loop.run_until_complete(client.close())
+            individual["individual"]["entry_type_enabled"]=True
+            with open("/beacon/tests/mock_conf_files/conf/entry_types/ga4gh/beacon_v2_default_model/individual.yml", 'w') as outfile:
+                yaml.dump(individual, outfile, default_flow_style=False)
+    def test_main_check_configuration_with_wrong_genomicVariant_enable_endpoint(self):
+        with loop_context() as loop:
+            genomicVariant["genomicVariant"]["entry_type_enabled"]="no Boolean"
+            with open("/beacon/tests/mock_conf_files/conf/entry_types/ga4gh/beacon_v2_default_model/genomicVariant.yml", 'w') as outfile:
+                yaml.dump(genomicVariant, outfile, default_flow_style=False)
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_configuration_enable_genomicVariant():
+                try:
+                    check_configuration(LOG=initialize_logger(config.level),analysis_confile=analysis, biosample_confile=biosample, cohort_confile=cohort, dataset_confile=dataset, genomicVariant_confile=genomicVariant, individual_confile=individual, run_confile=run)
+                except Exception:
+                    pass
+            loop.run_until_complete(test_check_configuration_enable_genomicVariant())
+            loop.run_until_complete(client.close())
+            genomicVariant["genomicVariant"]["entry_type_enabled"]=True
+            with open("/beacon/tests/mock_conf_files/conf/entry_types/ga4gh/beacon_v2_default_model/genomicVariant.yml", 'w') as outfile:
+                yaml.dump(genomicVariant, outfile, default_flow_style=False)
+    def test_main_check_configuration_with_wrong_run_enable_endpoint(self):
+        with loop_context() as loop:
+            run["run"]["entry_type_enabled"]="no Boolean"
+            with open("/beacon/tests/mock_conf_files/conf/entry_types/ga4gh/beacon_v2_default_model/run.yml", 'w') as outfile:
+                yaml.dump(run, outfile, default_flow_style=False)
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_check_configuration_enable_run():
+                try:
+                    check_configuration(LOG=initialize_logger(config.level),analysis_confile=analysis, biosample_confile=biosample, cohort_confile=cohort, dataset_confile=dataset, genomicVariant_confile=genomicVariant, individual_confile=individual, run_confile=run)
+                except Exception:
+                    pass
+            loop.run_until_complete(test_check_configuration_enable_run())
+            loop.run_until_complete(client.close())
+            run["run"]["entry_type_enabled"]=True
+            with open("/beacon/tests/mock_conf_files/conf/entry_types/ga4gh/beacon_v2_default_model/run.yml", 'w') as outfile:
+                yaml.dump(run, outfile, default_flow_style=False)
 
     def test_configuration_endpoint_response_with_disabled_endpoint(self):
         with loop_context() as loop:

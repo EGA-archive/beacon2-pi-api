@@ -6695,8 +6695,27 @@ class TestMain(unittest.TestCase):
 
             loop.run_until_complete(test_check_patients_with_limit_endpoint_is_working())
             loop.run_until_complete(client.close())
-
-
+    def test_main_check_datasets_with_limit_endpoint_is_working(self):
+            with loop_context() as loop:
+                app = create_app()
+                client = TestClient(TestServer(app), loop=loop)
+                loop.run_until_complete(client.start_server())
+                async def test_check_datasets_with_limit_endpoint_is_working():
+                    resp = await client.get(conf_override.config.uri_subpath+"/"+dataset["dataset"]["endpoint_name"]+"?limit=200")
+                    assert resp.status == 200
+                    responsetext=await resp.text()
+                    responsedict=json.loads(responsetext)
+                    self.assertIn("apiVersion",responsedict["meta"])
+                    self.assertIn("beaconId",responsedict["meta"])
+                    self.assertIn("returnedSchemas",responsedict["meta"])
+                    self.assertIn("receivedRequestSummary",responsedict["meta"])
+                    self.assertIn("returnedGranularity",responsedict["meta"])
+                    self.assertIn("testMode",responsedict["meta"])
+                    self.assertIn("collections",responsedict["response"])
+                    self.assertIn("responseSummary",responsedict)
+                    assert responsedict["responseSummary"]["exists"] == True
+                loop.run_until_complete(test_check_datasets_with_limit_endpoint_is_working())
+                loop.run_until_complete(client.close())
     def test_main_check_patients_with_id_endpoint_is_working(self):
         # Validate retrieval of a specific patient by ID
         with loop_context() as loop:
