@@ -35,7 +35,7 @@ async def execute_function(self, datasets: list):
     try:
         return MultipleDatasetsResponse(datasets_responses=list_of_responses)
     except ConnectionFailure as e:
-        #client.close() # No és el mateix que no trobi la base de dades que estigui malament la connexió.
+        #client.close() # It's not the same that it doesn't found the database than the connection is wrong
         raise DatabaseIsDown(str(e))
     except Exception:
         raise NoPermissionsAvailable("No datasets found. Check out the permissions or the datasets requested if a response was expected.")

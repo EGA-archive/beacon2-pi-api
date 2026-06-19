@@ -329,7 +329,7 @@ def get_filtering_object(terms_ids: list, collection, fields):
     """
     terms = []
     list_of_ontologies=[]
-    #ontologies = dict()
+    # the variable ontologies = dict()
     for onto in terms_ids:
         ontology = onto.split(':')
         ontology_id = ontology[0]

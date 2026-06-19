@@ -6,14 +6,9 @@ from beacon.request.classes import RequestAttributes
 from beacon.utils.requests import deconstruct_request, RequestParams
 from aiohttp_cors import CorsViewMixin
 from beacon.exceptions.exceptions import AppError
-from beacon.conf.conf_override import config
-from pydantic.alias_generators import to_camel
-from typing import Optional
-import json
-from pydantic import create_model, ValidationError
+from pydantic import ValidationError
 from beacon.exceptions.exceptions import InvalidData
 from beacon.utils.modules import load_framework_module
-from beacon.logs.logs import initialize_logger
 
 class EndpointView(web.View, CorsViewMixin):    
     def __init__(self, request: Request):
@@ -81,5 +76,7 @@ class EndpointView(web.View, CorsViewMixin):
             # Convert the class to JSON to return it in the final stream response
             response_obj = self.create_response()
             return response_obj
+        # Catch the cases where the Endpoint response is not valid against the reference schema
         except ValidationError as v:
-            raise InvalidData('error templates or data are not correct')
+            # Stdout the information about ErrorResponse failed about it not being according to the spec
+            raise InvalidData('ErrorResponse templates or data are not correct')

@@ -26,7 +26,6 @@ def query_patientId(self, query: dict, document_id) -> dict:
 
 @log_with_args_mongo(config.level)
 def join_query(self, mongo_collection, query: dict, original_id, dataset: str):
-    #LOG.debug(query)
     excluding_fields={"_id": 0, original_id: 1}
     if dataset != None:
         try:
@@ -143,7 +142,6 @@ def get_docs_by_response_type(self, include: str, query: dict, dataset: SingleDa
 
 @log_with_args_mongo(config.level)
 def get_filtering_documents(self, collection: Collection, query: dict, remove_id: dict,skip: int, limit: int) -> Cursor:
-    ##LOG.debug("FINAL QUERY: {}".format(query))
     # Get the docs by removing the unwanted id
     return collection.find(query,remove_id).skip(skip).limit(limit).max_time_ms(100 * 1000)
 
