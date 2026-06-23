@@ -55,7 +55,7 @@ def generate_endpoints(choices, first_endpoint_name,second_endpoint_name,second_
 def initialize_lookup_endpoints(entry_type,initial_choices):
     with open("/home/app/web/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/"+entry_type+".yml") as f:
         lines = yaml.safe_load(f)
-    for k, v in lines[entry_type]['lookups']:
+    for k, v in lines[entry_type]['lookups'].items():
         if v['endpoint_enabled']==True:
             initial_choices.append(v['endpoint_name'])
     return initial_choices
@@ -160,27 +160,27 @@ class EntryTypesForm(forms.Form):
         self.initial['dataset_engine'] = placeholder
         with open("/home/app/web/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/genomicVariant.yml") as f:
             lines = yaml.safe_load(f)
-        genomicVariation_initial_choices=[]
-        genomicVariation_endpoint_name = lines['genomicVariation']['endpoint_name']
-        self.initial['genomicVariationEndpointName'] = genomicVariation_endpoint_name
-        if genomicVariation_endpoint_name != '':
+        genomicVariant_initial_choices=[]
+        genomicVariant_endpoint_name = lines['genomicVariant']['endpoint_name']
+        self.initial['genomicVariationEndpointName'] = genomicVariant_endpoint_name
+        if genomicVariant_endpoint_name != '':
             entry_types.append('genomicVariation')
-            endpoint_names.append(genomicVariation_endpoint_name)
+            endpoint_names.append(genomicVariant_endpoint_name)
             self.initial['genomicVariation'] = True
         else:
             self.initial['genomicVariation'] = None
-        placeholder = lines['genomicVariation']['allow_queries_without_filters']
+        placeholder = lines['genomicVariant']['allow_queries_without_filters']
         if placeholder == False:
             self.initial['genomicVariationNonFiltered'] = None
         else:
             self.initial['genomicVariationNonFiltered'] = True
-        placeholder = lines['genomicVariation']['allow_id_query']
+        placeholder = lines['genomicVariant']['allow_id_query']
         if placeholder == True:
-            genomicVariation_initial_choices.append(self.initial['genomicVariationEndpointName']+"/{id}")
-        placeholder = lines['genomicVariation']['max_granularity']
-        self.initial['genomicVariation_granularity'] = placeholder
-        placeholder = lines['genomicVariation']['connection']['name']
-        self.initial['genomicVariation_engine'] = placeholder
+            genomicVariant_initial_choices.append(self.initial['genomicVariationEndpointName']+"/{id}")
+        placeholder = lines['genomicVariant']['max_granularity']
+        self.initial['genomicVariant_granularity'] = placeholder
+        placeholder = lines['genomicVariant']['connection']['name']
+        self.initial['genomicVariant_engine'] = placeholder
         with open("/home/app/web/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/individual.yml") as f:
             lines = yaml.safe_load(f)
         individual_initial_choices=[]
@@ -228,28 +228,20 @@ class EntryTypesForm(forms.Form):
         placeholder = lines['run']['connection']['name']
         self.initial['run_engine'] = placeholder
         
-        for endpoint in endpoint_names:
-            if endpoint == analysis_endpoint_name:
-                analysis_initial_choices=initialize_lookup_endpoints('analysis', analysis_initial_choices)
-                self.initial['AnalysisEndpoints'] = analysis_initial_choices
-            elif endpoint == biosample_endpoint_name:
-                biosample_initial_choices=initialize_lookup_endpoints('biosample', biosample_initial_choices)
-                self.initial['BiosampleEndpoints'] = biosample_initial_choices
-            elif endpoint == cohort_endpoint_name:
-                cohort_initial_choices=initialize_lookup_endpoints('cohort', cohort_initial_choices)
-                self.initial['CohortEndpoints'] = cohort_initial_choices
-            elif endpoint == dataset_endpoint_name:
-                dataset_initial_choices=initialize_lookup_endpoints('dataset', dataset_initial_choices)
-                self.initial['DatasetEndpoints'] = dataset_initial_choices
-            elif endpoint == genomicVariation_endpoint_name:
-                genomicVariant_initial_choices=initialize_lookup_endpoints('genomicVariant', genomicVariant_initial_choices)
-                self.initial['GenomicVariantEndpoints'] = genomicVariant_initial_choices
-            elif endpoint == individual_endpoint_name:
-                individual_initial_choices=initialize_lookup_endpoints('individual', individual_initial_choices)
-                self.initial['IndividualEndpoints'] = individual_initial_choices
-            elif endpoint == run_endpoint_name:
-                run_initial_choices=initialize_lookup_endpoints('run', run_initial_choices)
-                self.initial['RunEndpoints'] = run_initial_choices
+        analysis_initial_choices=initialize_lookup_endpoints('analysis', analysis_initial_choices)
+        self.initial['AnalysisEndpoints'] = analysis_initial_choices
+        biosample_initial_choices=initialize_lookup_endpoints('biosample', biosample_initial_choices)
+        self.initial['BiosampleEndpoints'] = biosample_initial_choices
+        cohort_initial_choices=initialize_lookup_endpoints('cohort', cohort_initial_choices)
+        self.initial['CohortEndpoints'] = cohort_initial_choices
+        dataset_initial_choices=initialize_lookup_endpoints('dataset', dataset_initial_choices)
+        self.initial['DatasetEndpoints'] = dataset_initial_choices
+        genomicVariant_initial_choices=initialize_lookup_endpoints('genomicVariant', genomicVariant_initial_choices)
+        self.initial['GenomicVariantEndpoints'] = genomicVariant_initial_choices
+        individual_initial_choices=initialize_lookup_endpoints('individual', individual_initial_choices)
+        self.initial['IndividualEndpoints'] = individual_initial_choices
+        run_initial_choices=initialize_lookup_endpoints('run', run_initial_choices)
+        self.initial['RunEndpoints'] = run_initial_choices
 
     def clean(self):
         cleaned_data = super(EntryTypesForm, self).clean()
@@ -391,11 +383,11 @@ class EntryTypesForm(forms.Form):
         choices=genomicVariant_choices, 
         widget=forms.CheckboxSelectMultiple
     )
-    genomicVariation_granularity= forms.ChoiceField(
+    genomicVariant_granularity= forms.ChoiceField(
         widget=forms.RadioSelect,
         choices=granularity_choices, 
     )
-    genomicVariation_engine= forms.ChoiceField(choices=database_choices, help_text="Database Engine")
+    genomicVariant_engine= forms.ChoiceField(choices=database_choices, help_text="Database Engine")
     individual = forms.BooleanField(required=False, help_text='/'+individual_endpoint_name)
     individualEndpointName = forms.CharField(required=False,help_text='Endpoint Name')
     individualNonFiltered = forms.BooleanField(required=False, help_text='Individual Non-Filtered Queries')

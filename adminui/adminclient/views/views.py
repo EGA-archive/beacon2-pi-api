@@ -76,8 +76,8 @@ def default_view(request):
     template = "home.html"
     return render(request, template, context)
 
-@login_required
-@permission_required('adminclient.can_see_view', raise_exception=True)
+#@login_required
+#@permission_required('adminclient.can_see_view', raise_exception=True)
 def entry_types(request):
     form =EntryTypesForm()
     context = {'form': form}

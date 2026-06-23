@@ -1,54 +1,75 @@
-FROM python:3.13-slim-bookworm as builder
+FROM python:3.13-slim-bookworm AS builder
 
 RUN apt-get update \
-  && apt-get -y install g++ ca-certificates curl gnupg \
-  && apt-get clean
+    && apt-get install -y --no-install-recommends \
+        g++ \
+        ca-certificates \
+        curl \
+        gnupg \
+    && rm -rf /var/lib/apt/lists/*
 
 ENV NODE_MAJOR=20
-RUN mkdir -p /etc/apt/keyrings && \
-    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
-    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list && \
-    apt-get update && apt-get install nodejs -y
+
+RUN mkdir -p /etc/apt/keyrings \
+    && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key \
+        | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
+    && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_${NODE_MAJOR}.x nodistro main" \
+        > /etc/apt/sources.list.d/nodesource.list \
+    && apt-get update \
+    && apt-get install -y nodejs \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /usr/src/app
 
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
-COPY . .
-RUN pip install --upgrade pip && pip wheel --no-cache-dir --wheel-dir /usr/src/app/wheels -r requirements.txt
+COPY requirements.txt .
+
+RUN pip install --upgrade pip \
+    && pip wheel --wheel-dir /wheels -r requirements.txt
+
+RUN pip install --no-cache-dir /wheels/*
 
 COPY package.json package-lock.json ./
-RUN npm install
 
-RUN pip install -r requirements.txt && npm run tailwind:build && python manage.py collectstatic --noinput
+RUN npm ci
+
+COPY . .
+
+RUN npm run tailwind:build
+
+RUN python manage.py collectstatic --noinput
 
 FROM python:3.13-slim-bookworm
 
-RUN apt-get update && apt-get upgrade -y && apt-get clean
+RUN apt-get update \
+    && apt-get upgrade -y \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /home/app
-
-RUN addgroup --system app && adduser --system --group app
+RUN addgroup --system app \
+    && adduser --system --group app
 
 ENV HOME=/home/app
 ENV APP_HOME=/home/app/web
-RUN mkdir $APP_HOME
+
+RUN mkdir -p $APP_HOME
+
 WORKDIR $APP_HOME
 
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-ENV ENVIRONMENT prod
-ENV TESTING 0
-ENV PYTHONPATH $APP_HOME
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV ENVIRONMENT=prod
+ENV TESTING=0
+ENV PYTHONPATH=$APP_HOME
 
-COPY --from=builder /usr/src/app/wheels /wheels
+COPY --from=builder /wheels /wheels
 COPY --from=builder /usr/src/app/requirements.txt .
-COPY --from=builder /usr/src/app/media $APP_HOME/media
-RUN pip install --upgrade pip
-RUN pip install --no-cache /wheels/*
 
-COPY . $APP_HOME
+RUN pip install --upgrade pip \
+    && pip install --no-cache-dir /wheels/*
+
+COPY --from=builder /usr/src/app $APP_HOME
 
 RUN chown -R app:app $HOME
 
