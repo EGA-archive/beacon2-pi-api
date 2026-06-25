@@ -20,9 +20,9 @@ LOG.addHandler(sh)
 #my_group = Group.objects.get(name='my_group_name') 
 #my_group.user_set.add(your_user)
 
-@user_passes_test(lambda u: u.is_superuser)
-@login_required
-@permission_required('adminclient.can_see_view', raise_exception=True)
+#@user_passes_test(lambda u: u.is_superuser)
+#@login_required
+#@permission_required('adminclient.can_see_view', raise_exception=True)
 def default_view(request):
     User = get_user_model()
     users = User.objects.all()

@@ -21,8 +21,8 @@ sh.setLevel('NOTSET')
 sh.setFormatter(formatter)
 LOG.addHandler(sh)
 
-@login_required
-@permission_required('adminclient.can_see_view', raise_exception=True)
+#@login_required
+#@permission_required('adminclient.can_see_view', raise_exception=True)
 def default_view(request):
     form2 = AddFilteringTerm(request.POST)
     headers = ['id', 'label', 'type', 'synonyms', 'similarities', 'scopes']
