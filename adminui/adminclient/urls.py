@@ -1,10 +1,11 @@
 from django.urls import path
 #from .views import HomePageView
-from .views import views, datasets, filtering_terms, synonyms, descendants, permits, budget, rounding_counts, connections, service_status, identity_provider, verifier, admin_settings
+from .views import views, datasets, filtering_terms, synonyms, descendants, permits, budget, rounding_counts, connections, service_status, identity_provider, verifier, admin_settings, models
 app_name = 'adminclients'
 
 urlpatterns = [
     path('', views.default_view, name='index'),
+    path('models', models.models_enabled, name='models'),
     path('entry_types', views.entry_types, name='entry_types'),
     path('datasets', datasets.default_view, name='datasets'),
     path('filtering_terms', filtering_terms.default_view, name='filtering_terms'),
