@@ -28,6 +28,7 @@ def default_view(request):
         if form.is_valid():
             beaconName = form.cleaned_data['BeaconName']
             beaconId = form.cleaned_data['BeaconId']
+            beaconDescription = form.cleaned_data['BeaconDescription']
             environment = form.cleaned_data['Environment']
             org_id = form.cleaned_data['OrgId']
             org_name = form.cleaned_data['OrgName']
@@ -38,6 +39,8 @@ def default_view(request):
             org_logo_url = form.cleaned_data['OrgLogoUrl']
             granularity = form.cleaned_data['granularity']
             security_level = form.cleaned_data['SecurityLevel']
+            max_limit_of_records_per_dataset_in_a_page = form.cleaned_data['MaxLimitRecords']
+            pending_requests_timeout_in_seconds = form.cleaned_data['PendingRequestsTimeout']
             with open("/home/app/web/beacon/conf/conf.py") as f:
                 lines = f.readlines()
             with open("/home/app/web/beacon/conf/conf.py", "w") as f:
@@ -47,6 +50,8 @@ def default_view(request):
                         new_lines+="beacon_name="+'"'+beaconName+'"'+"\n"
                     elif 'beacon_id' in str(line):
                         new_lines+="beacon_id="+'"'+beaconId+'"'+"\n"
+                    elif 'description' in str(line) and '_' not in str(line)[0:12]:
+                        new_lines+="beacon_id="+'"'+beaconDescription+'"'+"\n"
                     elif 'environment' in str(line):
                         new_lines+="environment="+'"'+environment+'"'+"\n"
                     elif 'org_id' in str(line):
@@ -67,6 +72,10 @@ def default_view(request):
                         new_lines+="security_levels="+str(security_level)+"\n"
                     elif 'default_beacon_granularity' in str(line):
                         new_lines+="default_beacon_granularity="+'"'+granularity+'"'+"\n"
+                    elif 'max_limit_of_records_per_dataset_in_a_page' in str(line):
+                        new_lines+="max_limit_of_records_per_dataset_in_a_page="+str(max_limit_of_records_per_dataset_in_a_page)+"\n"
+                    elif 'pending_requests_timeout_in_seconds' in str(line):
+                        new_lines+="pending_requests_timeout_in_seconds="+str(pending_requests_timeout_in_seconds)+"\n"
                     else:
                         new_lines+=line
                     

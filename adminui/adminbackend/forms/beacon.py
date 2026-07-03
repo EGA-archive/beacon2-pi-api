@@ -43,6 +43,9 @@ class BamForm(forms.Form):
                 elif 'beacon_id' in str(line):
                     placeholder = formatting_field(self, line)
                     self.initial['BeaconId'] = placeholder
+                elif 'description' in str(line) and '_' not in str(line)[0:12]:
+                    placeholder = formatting_field(self, line)
+                    self.initial['BeaconDescription'] = placeholder
                 elif 'environment' in str(line):
                     placeholder = formatting_field(self, line)
                     self.initial['Environment'] = placeholder
@@ -86,9 +89,16 @@ class BamForm(forms.Form):
                     with open("/home/app/web/beacon/conf/api_version.yml") as api_version_file:
                         api_version_yaml = yaml.safe_load(api_version_file)
                     self.initial['BeaconVersion'] = api_version_yaml['api_version']
+                elif 'max_limit_of_records_per_dataset_in_a_page' in str(line):
+                    placeholder = formatting_field(self, line)
+                    self.initial['MaxLimitRecords'] = placeholder
+                elif 'pending_requests_timeout_in_seconds' in str(line):
+                    placeholder = formatting_field(self, line)
+                    self.initial['PendingRequestsTimeout'] = placeholder
          
     BeaconName = forms.CharField(help_text='Beacon Name')
     BeaconId = forms.CharField(help_text='Beacon Id')
+    BeaconDescription = forms.CharField(help_text='Beacon Description')
     environment_choices = [("TEST", "TEST"), ("DEV", "DEV"), ("PROD", "PROD")]
     Environment = forms.ChoiceField(choices=environment_choices, help_text="Environment")
     APIVersion = forms.CharField(help_text='API Version')
@@ -118,4 +128,5 @@ class BamForm(forms.Form):
         choices=security_level_choices, 
         widget=forms.CheckboxSelectMultiple
     )
-    
+    MaxLimitRecords=forms.IntegerField(help_text="Max limit of records per dataset in a page")
+    PendingRequestsTimeout=forms.IntegerField(help_text="Pending requests timeout")
