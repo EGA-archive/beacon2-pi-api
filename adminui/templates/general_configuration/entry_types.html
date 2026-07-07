@@ -15,21 +15,59 @@
 <body>
   <body class="bg-custom-powder-light" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'> <!-- NEW - hx-headers added -->
 
-      <form method="post" onsubmit="openLoader()">
-        {% csrf_token %}
-          <div>
-            
-            {% for f in form %}
-            {% if f.errors %}
-              <p>{{f.help_text|safe}} {{f}} {{f.errors|escape}}</p>
-            {% else %}
-            <p>{{f.help_text|safe}} {{f}}</p>
-            {% endif %}
+<form method="post" onsubmit="openLoader()">
+    {% csrf_token %}
+
+    <div class="tabs">
+        {% for model, forms in models.items %}
+            <button
+                type="button"
+                class="tab-button {% if forloop.first %}active{% endif %}"
+                data-tab="tab-{{ forloop.counter }}"
+            >
+                {{ model }}
+            </button>
+        {% endfor %}
+    </div>
+
+    {% for model, forms in models.items %}
+        <div
+            id="tab-{{ forloop.counter }}"
+            class="tab-content {% if forloop.first %}active{% endif %}"
+        >
+            <h2>{{ model }}</h2>
+
+            {% for form in forms %}
+                <fieldset>
+                    <h3>{{ form.entry_type }}</h3>
+                    {{ form.as_p }}
+                </fieldset>
             {% endfor %}
-            <span id="actives-label"></span>
-          </div>
-          <div>
-            <button type="submit" class="btn btn-danger mb-3">Save</button>
-          </div>
-      </form>
+        </div>
+    {% endfor %}
+
+    <button type="submit">Save</button>
+</form>
 </body>
+  <script>
+document.addEventListener("DOMContentLoaded", () => {
+    const buttons = document.querySelectorAll(".tab-button");
+    const contents = document.querySelectorAll(".tab-content");
+
+    buttons.forEach(btn => {
+        btn.addEventListener("click", () => {
+
+            contents.forEach(c => c.style.display = "none");
+            buttons.forEach(b => b.classList.remove("active"));
+
+            document.getElementById(btn.dataset.tab).style.display = "block";
+            btn.classList.add("active");
+        });
+    });
+
+    // Show first tab initially
+    contents.forEach(c => c.style.display = "none");
+    if (contents.length)
+        contents[0].style.display = "block";
+});
+</script>

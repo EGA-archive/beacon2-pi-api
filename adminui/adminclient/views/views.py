@@ -89,6 +89,86 @@ def default_view(request):
 
 #@login_required
 #@permission_required('adminclient.can_see_view', raise_exception=True)
+
+
+def entry_types(request):
+
+    models = {}
+    context = {'models': models}
+
+    with open(
+        "/home/app/web/beacon/conf/models/models_conf.yml"
+    ) as f:
+        models_conf = yaml.safe_load(f)
+
+
+    for model, config in models_conf.items():
+
+        if config['model_enabled']:
+
+            entry_types = []
+
+            path = (
+                "/home/app/web/beacon/models/"
+                f"{model}/conf/entry_types"
+            )
+
+            for filename in os.listdir(path):
+
+                if filename.endswith(".yml"):
+                    entry_type = filename[:-4]
+
+                    entry_types.append(
+                        EntryTypeForm(
+                            request.POST or None,
+                            prefix=f"{model}_{entry_type}",
+                            model=model,
+                            entry_type=entry_type
+                        )
+                    )
+
+            models[model] = entry_types
+
+
+    if request.method == "POST":
+
+        valid = True
+
+        for model, forms in models.items():
+
+            for form in forms:
+
+                if not form.is_valid():
+                    valid = False
+
+
+        if valid:
+            for model, forms in models.items():
+
+                for form in forms:
+                    print(
+                        model,
+                        form.entry_type,
+                        form.cleaned_data
+                    )
+
+            # save here
+            return redirect("adminclient:entry_types")
+        else:
+            context = {'models': models}
+            
+    template = "general_configuration/entry_types.html"
+    return render(request, template, context)
+
+    return render(
+        request,
+        "entry_types.html",
+        {
+            "models": models
+        }
+    )
+
+"""
 def entry_types(request):
     models_form = ModelsForm()
     form = EntryTypeForm()
@@ -996,3 +1076,4 @@ def entry_types(request):
             
     template = "general_configuration/entry_types.html"
     return render(request, template, context)
+"""
