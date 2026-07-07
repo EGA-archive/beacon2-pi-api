@@ -6,8 +6,10 @@ from pymongo.mongo_client import MongoClient
 from django.urls import resolve
 from adminbackend.forms.beacon import BamForm
 from adminbackend.forms.entry_types import EntryTypesForm
+from adminbackend.forms.entry_types_dyn import EntryTypeForm, ModelsForm
 from django.contrib.auth.decorators import login_required, permission_required
-
+import yaml
+import os
 import logging
 
 LOG = logging.getLogger(__name__)
@@ -88,39 +90,42 @@ def default_view(request):
 #@login_required
 #@permission_required('adminclient.can_see_view', raise_exception=True)
 def entry_types(request):
-    form =EntryTypesForm()
-    context = {'form': form}
+    models_form = ModelsForm()
+    form = EntryTypeForm()
+
+    context = {'models_form': models_form}
     if request.method == 'POST':
-        form = EntryTypesForm(request.POST)
+        if "models" in request.POST:
+            model_name=models_form.cleaned_data['models_tabs']
+            with open("/home/app/web/beacon/conf/models/models_conf.yml") as f:
+                models_conf = yaml.safe_load(f)
+            for k, v in models_conf.items():
+                if k == model_name:
+                    dirs = os.listdir("/home/app/web/beacon/models"+k+"/conf/entry_types")
+            for entrytype in dirs:
+                with open("/home/app/web/beacon/models/"+model_name+"/conf/entry_types/"+entrytype+".yml") as entrytypeyaml:
+                    yamlfile = yaml.safe_load(entrytypeyaml)
+        form = EntryTypeForm(request.POST)
         if form.is_valid():
             analysis=form.cleaned_data['Analysis']
             analysis_endpoint_name = form.cleaned_data['AnalysisEndpointName']
             analysis_granularity = form.cleaned_data['analysis_granularity']
             analysis_engine = form.cleaned_data['analysis_engine']
-            biosample=form.cleaned_data['Biosample']
-            biosample_endpoint_name = form.cleaned_data['BiosampleEndpointName']
-            biosample_granularity = form.cleaned_data['biosample_granularity']
-            biosample_engine = form.cleaned_data['analysis_engine']
-            cohort=form.cleaned_data['Cohort']
-            cohort_endpoint_name = form.cleaned_data['CohortEndpointName']
-            cohort_granularity = form.cleaned_data['cohort_granularity']
-            cohort_engine = form.cleaned_data['analysis_engine']
-            dataset=form.cleaned_data['Dataset']
-            dataset_endpoint_name = form.cleaned_data['DatasetEndpointName']
-            dataset_granularity = form.cleaned_data['dataset_granularity']
-            dataset_engine = form.cleaned_data['analysis_engine']
-            genomicVariant=form.cleaned_data['GenomicVariant']
-            genomicVariant_endpoint_name = form.cleaned_data['GenomicVariantEndpointName']
-            genomicVariation_granularity = form.cleaned_data['genomicVariation_granularity']
-            genomicVariation_engine = form.cleaned_data['analysis_engine']
-            individual=form.cleaned_data['Individual']
-            individual_endpoint_name = form.cleaned_data['IndividualEndpointName']
-            individual_granularity = form.cleaned_data['individual_granularity']
-            individual_engine = form.cleaned_data['analysis_engine']
-            run=form.cleaned_data['Run']
-            run_endpoint_name = form.cleaned_data['RunEndpointName']
-            run_granularity = form.cleaned_data['run_granularity']
-            run_engine = form.cleaned_data['analysis_engine']
+            analysis_dbname= form.cleaned_data['analysis_dbname']
+            analysis_tablename= form.cleaned_data['analysis_tablename']
+            analysis_function= form.cleaned_data['analysis_function']
+            analysis_id_function= form.cleaned_data['analysis_id_function']
+            analysis_info_name= form.cleaned_data['analysis_info_name']
+            analysis_info_ontology_id= form.cleaned_data['analysis_info_ontology_id']
+            analysis_info_ontology_name= form.cleaned_data['analysis_info_ontology_name']
+            analysis_info_description= form.cleaned_data['analysis_info_description']
+            analysis_schema_specification= form.cleaned_data['analysis_schema_specification']
+            analysis_schema_id= form.cleaned_data['analysis_schema_id']
+            analysis_schema_name= form.cleaned_data['analysis_schema_name']
+            analysis_schema_version= form.cleaned_data['analysis_schema_version']
+            analysis_supported_schemas= form.cleaned_data['analysis_supported_schemas']
+            analysis_schema_reference= form.cleaned_data['analysis_schema_reference']
+
             if analysis != None:
                 analysis_endpoints=form.cleaned_data['AnalysisEndpoints']
                 analysis_non_filtered = form.cleaned_data['AnalysisNonFiltered']

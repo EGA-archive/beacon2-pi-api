@@ -89,6 +89,34 @@ class EntryTypesForm(forms.Form):
         self.initial['analysis_granularity'] = placeholder
         placeholder = lines['analysis']['connection']['name']
         self.initial['analysis_engine'] = placeholder
+        placeholder = lines['analysis']['connection']['database']
+        self.initial['analysis_dbname'] = placeholder
+        placeholder = lines['analysis']['connection']['table']
+        self.initial['analysis_tablename'] = placeholder
+        placeholder = lines['analysis']['connection']['functions']['function_name_assigned']
+        self.initial['analysis_function'] = placeholder
+        placeholder = lines['analysis']['connection']['functions']['id_query_function_name_assigned']
+        self.initial['analysis_id_function'] = placeholder
+        placeholder = lines['analysis']['info']['name']
+        self.initial['analysis_info_name'] = placeholder
+        placeholder = lines['analysis']['info']['ontology_id']
+        self.initial['analysis_info_ontology_id'] = placeholder
+        placeholder = lines['analysis']['info']['ontology_name']
+        self.initial['analysis_info_ontology_name'] = placeholder
+        placeholder = lines['analysis']['info']['description']
+        self.initial['analysis_info_description'] = placeholder
+        placeholder = lines['analysis']['schema']['specification']
+        self.initial['analysis_schema_specification'] = placeholder
+        placeholder = lines['analysis']['schema']['default_schema_id']
+        self.initial['analysis_schema_id'] = placeholder
+        placeholder = lines['analysis']['schema']['default_schema_name']
+        self.initial['analysis_schema_name'] = placeholder
+        placeholder = lines['analysis']['schema']['default_schema_version']
+        self.initial['analysis_schema_version'] = placeholder
+        placeholder = lines['analysis']['schema']['supported_schemas']
+        self.initial['analysis_supported_schemas'] = placeholder
+        placeholder = lines['analysis']['schema']['reference_to_default_schema_definition']
+        self.initial['analysis_schema_reference'] = placeholder
         with open("/home/app/web/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/biosample.yml") as f:
             lines = yaml.safe_load(f)
         biosample_initial_choices=[]
@@ -112,6 +140,42 @@ class EntryTypesForm(forms.Form):
         self.initial['biosample_granularity'] = placeholder
         placeholder = lines['biosample']['connection']['name']
         self.initial['biosample_engine'] = placeholder
+        placeholder = lines['biosample']['connection']['database']
+        self.initial['biosample_dbname'] = placeholder
+        placeholder = lines['biosample']['connection']['table']
+        self.initial['biosample_tablename'] = placeholder
+        placeholder = lines['biosample']['connection']['functions']['function_name_assigned']
+        self.initial['biosample_function'] = placeholder
+        placeholder = lines['biosample']['connection']['functions']['id_query_function_name_assigned']
+        self.initial['biosample_id_function'] = placeholder
+        placeholder = lines['biosample']['connection']['database']
+        self.initial['biosample_dbname'] = placeholder
+        placeholder = lines['biosample']['connection']['table']
+        self.initial['biosample_tablename'] = placeholder
+        placeholder = lines['biosample']['connection']['functions']['function_name_assigned']
+        self.initial['biosample_function'] = placeholder
+        placeholder = lines['biosample']['connection']['functions']['id_query_function_name_assigned']
+        self.initial['biosample_id_function'] = placeholder
+        placeholder = lines['biosample']['info']['name']
+        self.initial['biosample_info_name'] = placeholder
+        placeholder = lines['biosample']['info']['ontology_id']
+        self.initial['biosample_info_ontology_id'] = placeholder
+        placeholder = lines['biosample']['info']['ontology_name']
+        self.initial['biosample_info_ontology_name'] = placeholder
+        placeholder = lines['biosample']['info']['description']
+        self.initial['biosample_info_description'] = placeholder
+        placeholder = lines['biosample']['schema']['specification']
+        self.initial['biosample_schema_specification'] = placeholder
+        placeholder = lines['biosample']['schema']['default_schema_id']
+        self.initial['biosample_schema_id'] = placeholder
+        placeholder = lines['biosample']['schema']['default_schema_name']
+        self.initial['biosample_schema_name'] = placeholder
+        placeholder = lines['biosample']['schema']['default_schema_version']
+        self.initial['biosample_schema_version'] = placeholder
+        placeholder = lines['biosample']['schema']['supported_schemas']
+        self.initial['biosample_supported_schemas'] = placeholder
+        placeholder = lines['biosample']['schema']['reference_to_default_schema_definition']
+        self.initial['biosample_schema_reference'] = placeholder
         with open("/home/app/web/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/cohort.yml") as f:
             lines = yaml.safe_load(f)
         cohort_initial_choices=[]
@@ -135,6 +199,42 @@ class EntryTypesForm(forms.Form):
         self.initial['cohort_granularity'] = placeholder
         placeholder = lines['cohort']['connection']['name']
         self.initial['cohort_engine'] = placeholder
+        placeholder = lines['cohort']['connection']['database']
+        self.initial['cohort_dbname'] = placeholder
+        placeholder = lines['cohort']['connection']['table']
+        self.initial['cohort_tablename'] = placeholder
+        placeholder = lines['cohort']['connection']['functions']['function_name_assigned']
+        self.initial['cohort_function'] = placeholder
+        placeholder = lines['cohort']['connection']['functions']['id_query_function_name_assigned']
+        self.initial['cohort_id_function'] = placeholder
+        placeholder = lines['cohort']['connection']['database']
+        self.initial['cohort_dbname'] = placeholder
+        placeholder = lines['cohort']['connection']['table']
+        self.initial['cohort_tablename'] = placeholder
+        placeholder = lines['cohort']['connection']['functions']['function_name_assigned']
+        self.initial['cohort_function'] = placeholder
+        placeholder = lines['cohort']['connection']['functions']['id_query_function_name_assigned']
+        self.initial['cohort_id_function'] = placeholder
+        placeholder = lines['cohort']['info']['name']
+        self.initial['cohort_info_name'] = placeholder
+        placeholder = lines['cohort']['info']['ontology_id']
+        self.initial['cohort_info_ontology_id'] = placeholder
+        placeholder = lines['cohort']['info']['ontology_name']
+        self.initial['cohort_info_ontology_name'] = placeholder
+        placeholder = lines['cohort']['info']['description']
+        self.initial['cohort_info_description'] = placeholder
+        placeholder = lines['cohort']['schema']['specification']
+        self.initial['cohort_schema_specification'] = placeholder
+        placeholder = lines['cohort']['schema']['default_schema_id']
+        self.initial['cohort_schema_id'] = placeholder
+        placeholder = lines['cohort']['schema']['default_schema_name']
+        self.initial['cohort_schema_name'] = placeholder
+        placeholder = lines['cohort']['schema']['default_schema_version']
+        self.initial['cohort_schema_version'] = placeholder
+        placeholder = lines['cohort']['schema']['supported_schemas']
+        self.initial['cohort_supported_schemas'] = placeholder
+        placeholder = lines['cohort']['schema']['reference_to_default_schema_definition']
+        self.initial['cohort_schema_reference'] = placeholder
         with open("/home/app/web/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/dataset.yml") as f:
             lines = yaml.safe_load(f)
         dataset_initial_choices=[]
@@ -158,6 +258,42 @@ class EntryTypesForm(forms.Form):
         self.initial['dataset_granularity'] = placeholder
         placeholder = lines['dataset']['connection']['name']
         self.initial['dataset_engine'] = placeholder
+        placeholder = lines['dataset']['connection']['database']
+        self.initial['dataset_dbname'] = placeholder
+        placeholder = lines['dataset']['connection']['table']
+        self.initial['dataset_tablename'] = placeholder
+        placeholder = lines['dataset']['connection']['functions']['function_name_assigned']
+        self.initial['dataset_function'] = placeholder
+        placeholder = lines['dataset']['connection']['functions']['id_query_function_name_assigned']
+        self.initial['dataset_id_function'] = placeholder
+        placeholder = lines['dataset']['connection']['database']
+        self.initial['dataset_dbname'] = placeholder
+        placeholder = lines['dataset']['connection']['table']
+        self.initial['dataset_tablename'] = placeholder
+        placeholder = lines['dataset']['connection']['functions']['function_name_assigned']
+        self.initial['dataset_function'] = placeholder
+        placeholder = lines['dataset']['connection']['functions']['id_query_function_name_assigned']
+        self.initial['dataset_id_function'] = placeholder
+        placeholder = lines['dataset']['info']['name']
+        self.initial['dataset_info_name'] = placeholder
+        placeholder = lines['dataset']['info']['ontology_id']
+        self.initial['dataset_info_ontology_id'] = placeholder
+        placeholder = lines['dataset']['info']['ontology_name']
+        self.initial['dataset_info_ontology_name'] = placeholder
+        placeholder = lines['dataset']['info']['description']
+        self.initial['dataset_info_description'] = placeholder
+        placeholder = lines['dataset']['schema']['specification']
+        self.initial['dataset_schema_specification'] = placeholder
+        placeholder = lines['dataset']['schema']['default_schema_id']
+        self.initial['dataset_schema_id'] = placeholder
+        placeholder = lines['dataset']['schema']['default_schema_name']
+        self.initial['dataset_schema_name'] = placeholder
+        placeholder = lines['dataset']['schema']['default_schema_version']
+        self.initial['dataset_schema_version'] = placeholder
+        placeholder = lines['dataset']['schema']['supported_schemas']
+        self.initial['dataset_supported_schemas'] = placeholder
+        placeholder = lines['dataset']['schema']['reference_to_default_schema_definition']
+        self.initial['dataset_schema_reference'] = placeholder
         with open("/home/app/web/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/genomicVariant.yml") as f:
             lines = yaml.safe_load(f)
         genomicVariant_initial_choices=[]
@@ -181,6 +317,42 @@ class EntryTypesForm(forms.Form):
         self.initial['genomicVariant_granularity'] = placeholder
         placeholder = lines['genomicVariant']['connection']['name']
         self.initial['genomicVariant_engine'] = placeholder
+        placeholder = lines['genomicVariant']['connection']['database']
+        self.initial['genomicVariant_dbname'] = placeholder
+        placeholder = lines['genomicVariant']['connection']['table']
+        self.initial['genomicVariant_tablename'] = placeholder
+        placeholder = lines['genomicVariant']['connection']['functions']['function_name_assigned']
+        self.initial['genomicVariant_function'] = placeholder
+        placeholder = lines['genomicVariant']['connection']['functions']['id_query_function_name_assigned']
+        self.initial['genomicVariant_id_function'] = placeholder
+        placeholder = lines['genomicVariant']['connection']['database']
+        self.initial['genomicVariant_dbname'] = placeholder
+        placeholder = lines['genomicVariant']['connection']['table']
+        self.initial['genomicVariant_tablename'] = placeholder
+        placeholder = lines['genomicVariant']['connection']['functions']['function_name_assigned']
+        self.initial['genomicVariant_function'] = placeholder
+        placeholder = lines['genomicVariant']['connection']['functions']['id_query_function_name_assigned']
+        self.initial['genomicVariant_id_function'] = placeholder
+        placeholder = lines['genomicVariant']['info']['name']
+        self.initial['genomicVariant_info_name'] = placeholder
+        placeholder = lines['genomicVariant']['info']['ontology_id']
+        self.initial['genomicVariant_info_ontology_id'] = placeholder
+        placeholder = lines['genomicVariant']['info']['ontology_name']
+        self.initial['genomicVariant_info_ontology_name'] = placeholder
+        placeholder = lines['genomicVariant']['info']['description']
+        self.initial['genomicVariant_info_description'] = placeholder
+        placeholder = lines['genomicVariant']['schema']['specification']
+        self.initial['genomicVariant_schema_specification'] = placeholder
+        placeholder = lines['genomicVariant']['schema']['default_schema_id']
+        self.initial['genomicVariant_schema_id'] = placeholder
+        placeholder = lines['genomicVariant']['schema']['default_schema_name']
+        self.initial['genomicVariant_schema_name'] = placeholder
+        placeholder = lines['genomicVariant']['schema']['default_schema_version']
+        self.initial['genomicVariant_schema_version'] = placeholder
+        placeholder = lines['genomicVariant']['schema']['supported_schemas']
+        self.initial['genomicVariant_supported_schemas'] = placeholder
+        placeholder = lines['genomicVariant']['schema']['reference_to_default_schema_definition']
+        self.initial['genomicVariant_schema_reference'] = placeholder
         with open("/home/app/web/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/individual.yml") as f:
             lines = yaml.safe_load(f)
         individual_initial_choices=[]
@@ -204,6 +376,42 @@ class EntryTypesForm(forms.Form):
         self.initial['individual_granularity'] = placeholder
         placeholder = lines['individual']['connection']['name']
         self.initial['individual_engine'] = placeholder
+        placeholder = lines['individual']['connection']['database']
+        self.initial['individual_dbname'] = placeholder
+        placeholder = lines['individual']['connection']['table']
+        self.initial['individual_tablename'] = placeholder
+        placeholder = lines['individual']['connection']['functions']['function_name_assigned']
+        self.initial['individual_function'] = placeholder
+        placeholder = lines['individual']['connection']['functions']['id_query_function_name_assigned']
+        self.initial['individual_id_function'] = placeholder
+        placeholder = lines['individual']['connection']['database']
+        self.initial['individual_dbname'] = placeholder
+        placeholder = lines['individual']['connection']['table']
+        self.initial['individual_tablename'] = placeholder
+        placeholder = lines['individual']['connection']['functions']['function_name_assigned']
+        self.initial['individual_function'] = placeholder
+        placeholder = lines['individual']['connection']['functions']['id_query_function_name_assigned']
+        self.initial['individual_id_function'] = placeholder
+        placeholder = lines['individual']['info']['name']
+        self.initial['individual_info_name'] = placeholder
+        placeholder = lines['individual']['info']['ontology_id']
+        self.initial['individual_info_ontology_id'] = placeholder
+        placeholder = lines['individual']['info']['ontology_name']
+        self.initial['individual_info_ontology_name'] = placeholder
+        placeholder = lines['individual']['info']['description']
+        self.initial['individual_info_description'] = placeholder
+        placeholder = lines['individual']['schema']['specification']
+        self.initial['individual_schema_specification'] = placeholder
+        placeholder = lines['individual']['schema']['default_schema_id']
+        self.initial['individual_schema_id'] = placeholder
+        placeholder = lines['individual']['schema']['default_schema_name']
+        self.initial['individual_schema_name'] = placeholder
+        placeholder = lines['individual']['schema']['default_schema_version']
+        self.initial['individual_schema_version'] = placeholder
+        placeholder = lines['individual']['schema']['supported_schemas']
+        self.initial['individual_supported_schemas'] = placeholder
+        placeholder = lines['individual']['schema']['reference_to_default_schema_definition']
+        self.initial['individual_schema_reference'] = placeholder
         with open("/home/app/web/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/run.yml") as f:
             lines = yaml.safe_load(f)
         run_initial_choices=[]
@@ -227,7 +435,42 @@ class EntryTypesForm(forms.Form):
         self.initial['run_granularity'] = placeholder
         placeholder = lines['run']['connection']['name']
         self.initial['run_engine'] = placeholder
-        
+        placeholder = lines['run']['connection']['database']
+        self.initial['run_dbname'] = placeholder
+        placeholder = lines['run']['connection']['table']
+        self.initial['run_tablename'] = placeholder
+        placeholder = lines['run']['connection']['functions']['function_name_assigned']
+        self.initial['run_function'] = placeholder
+        placeholder = lines['run']['connection']['functions']['id_query_function_name_assigned']
+        self.initial['run_id_function'] = placeholder
+        placeholder = lines['run']['connection']['database']
+        self.initial['run_dbname'] = placeholder
+        placeholder = lines['run']['connection']['table']
+        self.initial['run_tablename'] = placeholder
+        placeholder = lines['run']['connection']['functions']['function_name_assigned']
+        self.initial['run_function'] = placeholder
+        placeholder = lines['run']['connection']['functions']['id_query_function_name_assigned']
+        self.initial['run_id_function'] = placeholder
+        placeholder = lines['run']['info']['name']
+        self.initial['run_info_name'] = placeholder
+        placeholder = lines['run']['info']['ontology_id']
+        self.initial['run_info_ontology_id'] = placeholder
+        placeholder = lines['run']['info']['ontology_name']
+        self.initial['run_info_ontology_name'] = placeholder
+        placeholder = lines['run']['info']['description']
+        self.initial['run_info_description'] = placeholder
+        placeholder = lines['run']['schema']['specification']
+        self.initial['run_schema_specification'] = placeholder
+        placeholder = lines['run']['schema']['default_schema_id']
+        self.initial['run_schema_id'] = placeholder
+        placeholder = lines['run']['schema']['default_schema_name']
+        self.initial['run_schema_name'] = placeholder
+        placeholder = lines['run']['schema']['default_schema_version']
+        self.initial['run_schema_version'] = placeholder
+        placeholder = lines['run']['schema']['supported_schemas']
+        self.initial['run_supported_schemas'] = placeholder
+        placeholder = lines['run']['schema']['reference_to_default_schema_definition']
+        self.initial['run_schema_reference'] = placeholder
         analysis_initial_choices=initialize_lookup_endpoints('analysis', analysis_initial_choices)
         self.initial['AnalysisEndpoints'] = analysis_initial_choices
         biosample_initial_choices=initialize_lookup_endpoints('biosample', biosample_initial_choices)
@@ -308,6 +551,20 @@ class EntryTypesForm(forms.Form):
         choices=granularity_choices, 
     )
     analysis_engine= forms.ChoiceField(choices=database_choices, help_text="Database Engine")
+    analysis_dbname= forms.CharField(required=False, help_text='Database Name')
+    analysis_tablename= forms.CharField(required=False, help_text='Table/Collection Name')
+    analysis_function= forms.CharField(required=False, help_text='Function Name Assigned')
+    analysis_id_function= forms.CharField(required=False, help_text='Id Function Name Assigned')
+    analysis_info_name= forms.CharField(required=False, help_text='Info Name')
+    analysis_info_ontology_id= forms.CharField(required=False, help_text='Info Ontology ID')
+    analysis_info_ontology_name= forms.CharField(required=False, help_text='Info Ontology Name')
+    analysis_info_description= forms.CharField(required=False, help_text='Info Description')
+    analysis_schema_specification= forms.CharField(required=False, help_text='Schema specification')
+    analysis_schema_id= forms.CharField(required=False, help_text='Default Schema ID')
+    analysis_schema_name= forms.CharField(required=False, help_text='Default Schema Name')
+    analysis_schema_version= forms.CharField(required=False, help_text='Schema Version')
+    analysis_supported_schemas= forms.CharField(required=False, help_text='Supported Schemas')
+    analysis_schema_reference= forms.CharField(required=False, help_text='Schema reference')
     biosample = forms.BooleanField(required=False, help_text='/'+biosample_endpoint_name)
     biosampleEndpointName = forms.CharField(required=False,help_text='Endpoint Name')
     biosampleNonFiltered = forms.BooleanField(required=False, help_text='Biosample Non-Filtered Queries')
@@ -328,6 +585,20 @@ class EntryTypesForm(forms.Form):
         choices=granularity_choices, 
     )
     biosample_engine= forms.ChoiceField(choices=database_choices, help_text="Database Engine")
+    biosample_dbname= forms.CharField(required=False, help_text='Database Name')
+    biosample_tablename= forms.CharField(required=False, help_text='Table/Collection Name')
+    biosample_function= forms.CharField(required=False, help_text='Function Name Assigned')
+    biosample_id_function= forms.CharField(required=False, help_text='Id Function Name Assigned')
+    biosample_info_name= forms.CharField(required=False, help_text='Info Name')
+    biosample_info_ontology_id= forms.CharField(required=False, help_text='Info Ontology ID')
+    biosample_info_ontology_name= forms.CharField(required=False, help_text='Info Ontology Name')
+    biosample_info_description= forms.CharField(required=False, help_text='Info Description')
+    biosample_schema_specification= forms.CharField(required=False, help_text='Schema specification')
+    biosample_schema_id= forms.CharField(required=False, help_text='Default Schema ID')
+    biosample_schema_name= forms.CharField(required=False, help_text='Default Schema Name')
+    biosample_schema_version= forms.CharField(required=False, help_text='Schema Version')
+    biosample_supported_schemas= forms.CharField(required=False, help_text='Supported Schemas')
+    biosample_schema_reference= forms.CharField(required=False, help_text='Schema reference')
     cohort = forms.BooleanField(required=False, help_text='/'+cohort_endpoint_name)
     cohortEndpointName = forms.CharField(required=False,help_text='Endpoint Name')
     cohortNonFiltered = forms.BooleanField(required=False, help_text='Cohort Non-Filtered Queries')
@@ -348,6 +619,20 @@ class EntryTypesForm(forms.Form):
         choices=granularity_choices, 
     )
     cohort_engine= forms.ChoiceField(choices=database_choices, help_text="Database Engine")
+    cohort_dbname= forms.CharField(required=False, help_text='Database Name')
+    cohort_tablename= forms.CharField(required=False, help_text='Table/Collection Name')
+    cohort_function= forms.CharField(required=False, help_text='Function Name Assigned')
+    cohort_id_function= forms.CharField(required=False, help_text='Id Function Name Assigned')
+    cohort_info_name= forms.CharField(required=False, help_text='Info Name')
+    cohort_info_ontology_id= forms.CharField(required=False, help_text='Info Ontology ID')
+    cohort_info_ontology_name= forms.CharField(required=False, help_text='Info Ontology Name')
+    cohort_info_description= forms.CharField(required=False, help_text='Info Description')
+    cohort_schema_specification= forms.CharField(required=False, help_text='Schema specification')
+    cohort_schema_id= forms.CharField(required=False, help_text='Default Schema ID')
+    cohort_schema_name= forms.CharField(required=False, help_text='Default Schema Name')
+    cohort_schema_version= forms.CharField(required=False, help_text='Schema Version')
+    cohort_supported_schemas= forms.CharField(required=False, help_text='Supported Schemas')
+    cohort_schema_reference= forms.CharField(required=False, help_text='Schema reference')
     dataset = forms.BooleanField(required=False, help_text='/'+dataset_endpoint_name)
     datasetEndpointName = forms.CharField(required=False,help_text='Endpoint Name')
     datasetNonFiltered = forms.BooleanField(required=False, help_text='Dataset Non-Filtered Queries')
@@ -368,6 +653,20 @@ class EntryTypesForm(forms.Form):
         choices=granularity_choices, 
     )
     dataset_engine= forms.ChoiceField(choices=database_choices, help_text="Database Engine")
+    dataset_dbname= forms.CharField(required=False, help_text='Database Name')
+    dataset_tablename= forms.CharField(required=False, help_text='Table/Collection Name')
+    dataset_function= forms.CharField(required=False, help_text='Function Name Assigned')
+    dataset_id_function= forms.CharField(required=False, help_text='Id Function Name Assigned')
+    dataset_info_name= forms.CharField(required=False, help_text='Info Name')
+    dataset_info_ontology_id= forms.CharField(required=False, help_text='Info Ontology ID')
+    dataset_info_ontology_name= forms.CharField(required=False, help_text='Info Ontology Name')
+    dataset_info_description= forms.CharField(required=False, help_text='Info Description')
+    dataset_schema_specification= forms.CharField(required=False, help_text='Schema specification')
+    dataset_schema_id= forms.CharField(required=False, help_text='Default Schema ID')
+    dataset_schema_name= forms.CharField(required=False, help_text='Default Schema Name')
+    dataset_schema_version= forms.CharField(required=False, help_text='Schema Version')
+    dataset_supported_schemas= forms.CharField(required=False, help_text='Supported Schemas')
+    dataset_schema_reference= forms.CharField(required=False, help_text='Schema reference')
     genomicVariant = forms.BooleanField(required=False, help_text='/'+genomicVariant_endpoint_name)
     genomicVariantEndpointName = forms.CharField(required=False,help_text='Endpoint Name')
     genomicVariantNonFiltered = forms.BooleanField(required=False, help_text='Genomic Variant Non-Filtered Queries')
@@ -388,6 +687,20 @@ class EntryTypesForm(forms.Form):
         choices=granularity_choices, 
     )
     genomicVariant_engine= forms.ChoiceField(choices=database_choices, help_text="Database Engine")
+    genomicVariant_dbname= forms.CharField(required=False, help_text='Database Name')
+    genomicVariant_tablename= forms.CharField(required=False, help_text='Table/Collection Name')
+    genomicVariant_function= forms.CharField(required=False, help_text='Function Name Assigned')
+    genomicVariant_id_function= forms.CharField(required=False, help_text='Id Function Name Assigned')
+    genomicVariant_info_name= forms.CharField(required=False, help_text='Info Name')
+    genomicVariant_info_ontology_id= forms.CharField(required=False, help_text='Info Ontology ID')
+    genomicVariant_info_ontology_name= forms.CharField(required=False, help_text='Info Ontology Name')
+    genomicVariant_info_description= forms.CharField(required=False, help_text='Info Description')
+    genomicVariant_schema_specification= forms.CharField(required=False, help_text='Schema specification')
+    genomicVariant_schema_id= forms.CharField(required=False, help_text='Default Schema ID')
+    genomicVariant_schema_name= forms.CharField(required=False, help_text='Default Schema Name')
+    genomicVariant_schema_version= forms.CharField(required=False, help_text='Schema Version')
+    genomicVariant_supported_schemas= forms.CharField(required=False, help_text='Supported Schemas')
+    genomicVariant_schema_reference= forms.CharField(required=False, help_text='Schema reference')
     individual = forms.BooleanField(required=False, help_text='/'+individual_endpoint_name)
     individualEndpointName = forms.CharField(required=False,help_text='Endpoint Name')
     individualNonFiltered = forms.BooleanField(required=False, help_text='Individual Non-Filtered Queries')
@@ -408,6 +721,20 @@ class EntryTypesForm(forms.Form):
         choices=granularity_choices, 
     )
     individual_engine= forms.ChoiceField(choices=database_choices, help_text="Database Engine")
+    individual_dbname= forms.CharField(required=False, help_text='Database Name')
+    individual_tablename= forms.CharField(required=False, help_text='Table/Collection Name')
+    individual_function= forms.CharField(required=False, help_text='Function Name Assigned')
+    individual_id_function= forms.CharField(required=False, help_text='Id Function Name Assigned')
+    individual_info_name= forms.CharField(required=False, help_text='Info Name')
+    individual_info_ontology_id= forms.CharField(required=False, help_text='Info Ontology ID')
+    individual_info_ontology_name= forms.CharField(required=False, help_text='Info Ontology Name')
+    individual_info_description= forms.CharField(required=False, help_text='Info Description')
+    individual_schema_specification= forms.CharField(required=False, help_text='Schema specification')
+    individual_schema_id= forms.CharField(required=False, help_text='Default Schema ID')
+    individual_schema_name= forms.CharField(required=False, help_text='Default Schema Name')
+    individual_schema_version= forms.CharField(required=False, help_text='Schema Version')
+    individual_supported_schemas= forms.CharField(required=False, help_text='Supported Schemas')
+    individual_schema_reference= forms.CharField(required=False, help_text='Schema reference')
     run = forms.BooleanField(required=False, help_text='/'+run_endpoint_name)
     runEndpointName = forms.CharField(required=False,help_text='Endpoint Name')
     runNonFiltered = forms.BooleanField(required=False, help_text='Run Non-Filtered Queries')
@@ -428,3 +755,17 @@ class EntryTypesForm(forms.Form):
         choices=granularity_choices, 
     )
     run_engine= forms.ChoiceField(choices=database_choices, help_text="Database Engine")
+    run_dbname= forms.CharField(required=False, help_text='Database Name')
+    run_tablename= forms.CharField(required=False, help_text='Table/Collection Name')
+    run_function= forms.CharField(required=False, help_text='Function Name Assigned')
+    run_id_function= forms.CharField(required=False, help_text='Id Function Name Assigned')
+    run_info_name= forms.CharField(required=False, help_text='Info Name')
+    run_info_ontology_id= forms.CharField(required=False, help_text='Info Ontology ID')
+    run_info_ontology_name= forms.CharField(required=False, help_text='Info Ontology Name')
+    run_info_description= forms.CharField(required=False, help_text='Info Description')
+    run_schema_specification= forms.CharField(required=False, help_text='Schema specification')
+    run_schema_id= forms.CharField(required=False, help_text='Default Schema ID')
+    run_schema_name= forms.CharField(required=False, help_text='Default Schema Name')
+    run_schema_version= forms.CharField(required=False, help_text='Schema Version')
+    run_supported_schemas= forms.CharField(required=False, help_text='Supported Schemas')
+    run_schema_reference= forms.CharField(required=False, help_text='Schema reference')
