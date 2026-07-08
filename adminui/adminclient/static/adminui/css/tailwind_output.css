@@ -1772,3 +1772,29 @@ label[for=id_usergranularity_2]{
 .tab-content.active {
     display: block;
 }
+
+.formtabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.formtab-button {
+    padding: 10px 16px;
+    border: 1px solid #ccc;
+    background: #f5f5f5;
+    cursor: pointer;
+}
+
+.formtab-button.active {
+    background: #007bff;
+    color: white;
+}
+
+.formtab-content {
+    display: none;
+}
+
+.formtab-content.active {
+    display: block;
+}

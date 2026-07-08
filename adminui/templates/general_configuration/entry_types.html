@@ -36,17 +36,36 @@
             class="tab-content {% if forloop.first %}active{% endif %}"
         >
             <h2>{{ model }}</h2>
-
+            <div class="formtabs"></div>
             {% for form in forms %}
+            <button
+                type="button"
+                class="formtab-button {% if forloop.first %}active{% endif %}"
+                data-tab="formtab-{{model}}{{ forloop.counter }}"
+            >
+            {{ form.entry_type_name.value|default_if_none:"" }}
+            </button>
+            {% endfor %}
+            {% for form in forms %}
+                    <div
+            id="formtab-{{model}}{{ forloop.counter }}"
+            class="formtab-content {% if forloop.first %}active{% endif %}"
+        >
                 <fieldset>
-                    <h3>{{ form.entry_type }}</h3>
+                    <h3>{{ form.entry_type_name }}</h3>
                     {{ form.as_p }}
                 </fieldset>
+                <button type="submit" value='{{model}}' id="formbuttontab">Save</button>
+                    </div>
+
+            
             {% endfor %}
+            </div>
         </div>
+        
     {% endfor %}
 
-    <button type="submit">Save</button>
+    
 </form>
 </body>
   <script>
@@ -65,7 +84,27 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Show first tab initially
+    contents.forEach(c => c.style.display = "none");
+    if (contents.length)
+        contents[0].style.display = "block";
+});
+</script>
+  <script>
+document.addEventListener("DOMContentLoaded", () => {
+    const buttons = document.querySelectorAll(".formtab-button");
+    const contents = document.querySelectorAll(".formtab-content");
+
+    buttons.forEach(btn => {
+        btn.addEventListener("click", () => {
+
+            contents.forEach(c => c.style.display = "none");
+            buttons.forEach(b => b.classList.remove("active"));
+
+            document.getElementById(btn.dataset.tab).style.display = "block";
+            btn.classList.add("active");
+        });
+    });
+
     contents.forEach(c => c.style.display = "none");
     if (contents.length)
         contents[0].style.display = "block";

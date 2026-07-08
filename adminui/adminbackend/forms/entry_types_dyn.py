@@ -25,6 +25,7 @@ class EntryTypeForm(forms.Form):
         config = entry_type_yaml[entry_type]
         initial_choices=[]
         self.initial['entry_type_name']=entry_type
+        self.fields['entry_type_name'].widget.attrs['readonly'] = True
         self.initial['entry_typeEndpointName']=config['endpoint_name']
         self.initial['entry_typeNonFiltered']=config['allow_queries_without_filters']
         self.initial['entry_type_id'] = config['allow_id_query']
@@ -60,6 +61,8 @@ class EntryTypeForm(forms.Form):
         self.initial['entry_type_supported_schemas'] = placeholder
         placeholder = config['schema']['reference_to_default_schema_definition']
         self.initial['entry_type_schema_reference'] = placeholder
+        placeholder = config['response_type']
+        self.initial['entry_type_response_type'] = placeholder
     def clean(self):
         cleaned_data = super(EntryTypeForm, self).clean()
         cleaned_entry_type = cleaned_data.get(self.entry_type)
@@ -81,6 +84,7 @@ class EntryTypeForm(forms.Form):
         widget=forms.RadioSelect,
         choices=granularity_choices, 
     )
+    entry_type_response_type=forms.CharField(required=False,help_text='Response type')
     entry_type_engine= forms.ChoiceField(choices=database_choices, help_text="Database Engine")
     entry_type_dbname= forms.CharField(required=False, help_text='Database Name')
     entry_type_tablename= forms.CharField(required=False, help_text='Table/Collection Name')
@@ -96,6 +100,7 @@ class EntryTypeForm(forms.Form):
     entry_type_schema_version= forms.CharField(required=False, help_text='Schema Version')
     entry_type_supported_schemas= forms.CharField(required=False, help_text='Supported Schemas')
     entry_type_schema_reference= forms.CharField(required=False, help_text='Schema reference')
+    entry_type_open_api_definition=forms.CharField(required=False,help_text='Open API definition')
 
 
 class ModelsForm(forms.Form):
