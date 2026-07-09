@@ -134,80 +134,82 @@ def entry_types(request):
 
     LOG.warning('finished')
     if request.method == "POST":
-        LOG.warning('I am a post')
-        LOG.warning(request.POST)
         valid = True
 
         for model, forms in models.items():
-            LOG.warning(model)
             path = (
             "/home/app/web/beacon/models/"
-            f"{model}/conf/entry_types"
+            f"{model}/conf/entry_types/"
             )
             final_path=""
 
             for form in forms:
                 if form.is_valid():
-                    LOG.warning('valiiiiiid')
                     entry_type_name=form.cleaned_data["entry_type_name"]
-                    for filename in os.listdir(path):
-                        if entry_type_name in filename:
-                            final_path=str(path)+filename
+                    LOG.warning(entry_type_name)
+                    LOG.warning('hola')
+                    LOG.warning(request.POST.get('entry_type_name'))
+                    if entry_type_name == request.POST.get('entry_type_name'):
+                        for filename in os.listdir(path):
+                            if entry_type_name in filename:
+                                final_path=str(path)+filename
 
-                    if final_path != "":
-                        with open(final_path) as f:
-                            entry_type_conf = yaml.safe_load(f)
-                        entry_type_enabled=form.cleaned_data['entry_type']
-                        entry_type_open_api_definition=form.cleaned_data['entry_type_open_api_definition']
-                        entry_type_allow_queries_without_filters=form.cleaned_data['entry_typeNonFiltered']
-                        entry_type_id= form.cleaned_data['entry_type_id']
-                        entry_type_response_type=form.cleaned_data['entry_type_response_type']
-                        entry_type_endpoint_name = form.cleaned_data['entry_typeEndpointName']
-                        entry_type_granularity = form.cleaned_data['entry_type_granularity']
-                        entry_type_engine = form.cleaned_data['entry_type_engine']
-                        entry_type_dbname= form.cleaned_data['entry_type_dbname']
-                        entry_type_tablename= form.cleaned_data['entry_type_tablename']
-                        entry_type_function= form.cleaned_data['entry_type_function']
-                        entry_type_id_function= form.cleaned_data['entry_type_id_function']
-                        entry_type_info_name= form.cleaned_data['entry_type_info_name']
-                        entry_type_info_ontology_id= form.cleaned_data['entry_type_info_ontology_id']
-                        entry_type_info_ontology_name= form.cleaned_data['entry_type_info_ontology_name']
-                        entry_type_info_description= form.cleaned_data['entry_type_info_description']
-                        entry_type_schema_specification= form.cleaned_data['entry_type_schema_specification']
-                        entry_type_schema_id= form.cleaned_data['entry_type_schema_id']
-                        entry_type_schema_name= form.cleaned_data['entry_type_schema_name']
-                        entry_type_schema_version= form.cleaned_data['entry_type_schema_version']
-                        entry_type_supported_schemas= form.cleaned_data['entry_type_supported_schemas']
-                        entry_type_schema_reference= form.cleaned_data['entry_type_schema_reference']
-                        entry_type_conf[entry_type_name]['entry_type_enabled']=entry_type_enabled
-                        entry_type_conf[entry_type_name]['max_granularity']=entry_type_granularity
-                        entry_type_conf[entry_type_name]['endpoint_name']=entry_type_endpoint_name
-                        entry_type_conf[entry_type_name]['open_api_definition']=entry_type_open_api_definition
-                        entry_type_conf[entry_type_name]['allow_queries_without_filters']=entry_type_allow_queries_without_filters
-                        entry_type_conf[entry_type_name]['allow_id_query']=entry_type_id
-                        entry_type_conf[entry_type_name]['response_type']=entry_type_response_type
-                        entry_type_conf[entry_type_name]['connection']['name']=entry_type_engine
-                        entry_type_conf[entry_type_name]['connection']['database']=entry_type_dbname
-                        entry_type_conf[entry_type_name]['connection']['table']=entry_type_tablename
-                        entry_type_conf[entry_type_name]['connection']['functions']['function_name_assigned']=entry_type_function
-                        entry_type_conf[entry_type_name]['connection']['functions']['id_query_function_name_assigned']=entry_type_id_function
-                        entry_type_conf[entry_type_name]['info']['name']=entry_type_info_name
-                        entry_type_conf[entry_type_name]['info']['ontology_id']=entry_type_info_ontology_id
-                        entry_type_conf[entry_type_name]['info']['ontology_name']=entry_type_info_ontology_name
-                        entry_type_conf[entry_type_name]['info']['description']=entry_type_info_description
-                        entry_type_conf[entry_type_name]['schema']['specification']=entry_type_schema_specification
-                        entry_type_conf[entry_type_name]['schema']['default_schema_id']=entry_type_schema_id
-                        entry_type_conf[entry_type_name]['schema']['default_schema_name']=entry_type_schema_name
-                        entry_type_conf[entry_type_name]['schema']['reference_to_default_schema_definition']=entry_type_schema_reference
-                        entry_type_conf[entry_type_name]['schema']['default_schema_version']=entry_type_schema_version
-                        entry_type_conf[entry_type_name]['schema']['supported_schemas']=entry_type_supported_schemas
-                        with open(final_path, 'w') as outfile:
-                            yaml.dump(entry_type_conf, outfile)
+                        if final_path != "":
+                            entry_type_conf={}
+                            entry_type_conf[entry_type_name]={}
+                            entry_type_conf[entry_type_name]['connection']={}
+                            entry_type_conf[entry_type_name]['info']={}
+                            entry_type_conf[entry_type_name]['schema']={}
+                            entry_type_enabled=form.cleaned_data['entry_type']
+                            entry_type_open_api_definition=form.cleaned_data['entry_type_open_api_definition']
+                            entry_type_allow_queries_without_filters=form.cleaned_data['entry_typeNonFiltered']
+                            entry_type_id= form.cleaned_data['entry_type_id']
+                            entry_type_response_type=form.cleaned_data['entry_type_response_type']
+                            entry_type_endpoint_name = form.cleaned_data['entry_typeEndpointName']
+                            entry_type_granularity = form.cleaned_data['entry_type_granularity']
+                            entry_type_engine = form.cleaned_data['entry_type_engine']
+                            entry_type_dbname= form.cleaned_data['entry_type_dbname']
+                            entry_type_tablename= form.cleaned_data['entry_type_tablename']
+                            entry_type_function= form.cleaned_data['entry_type_function']
+                            entry_type_id_function= form.cleaned_data['entry_type_id_function']
+                            entry_type_info_name= form.cleaned_data['entry_type_info_name']
+                            entry_type_info_ontology_id= form.cleaned_data['entry_type_info_ontology_id']
+                            entry_type_info_ontology_name= form.cleaned_data['entry_type_info_ontology_name']
+                            entry_type_info_description= form.cleaned_data['entry_type_info_description']
+                            entry_type_schema_specification= form.cleaned_data['entry_type_schema_specification']
+                            entry_type_schema_id= form.cleaned_data['entry_type_schema_id']
+                            entry_type_schema_name= form.cleaned_data['entry_type_schema_name']
+                            entry_type_schema_version= form.cleaned_data['entry_type_schema_version']
+                            entry_type_supported_schemas= form.cleaned_data['entry_type_supported_schemas']
+                            entry_type_schema_reference= form.cleaned_data['entry_type_schema_reference']
+                            entry_type_conf[entry_type_name]['entry_type_enabled']=entry_type_enabled
+                            entry_type_conf[entry_type_name]['max_granularity']=entry_type_granularity
+                            entry_type_conf[entry_type_name]['endpoint_name']=entry_type_endpoint_name
+                            entry_type_conf[entry_type_name]['open_api_definition']=entry_type_open_api_definition
+                            entry_type_conf[entry_type_name]['allow_queries_without_filters']=entry_type_allow_queries_without_filters
+                            entry_type_conf[entry_type_name]['allow_id_query']=entry_type_id
+                            entry_type_conf[entry_type_name]['response_type']=entry_type_response_type
+                            entry_type_conf[entry_type_name]['connection']['name']=entry_type_engine
+                            entry_type_conf[entry_type_name]['connection']['database']=entry_type_dbname
+                            entry_type_conf[entry_type_name]['connection']['table']=entry_type_tablename
+                            entry_type_conf[entry_type_name]['connection']['functions']['function_name_assigned']=entry_type_function
+                            entry_type_conf[entry_type_name]['connection']['functions']['id_query_function_name_assigned']=entry_type_id_function
+                            entry_type_conf[entry_type_name]['info']['name']=entry_type_info_name
+                            entry_type_conf[entry_type_name]['info']['ontology_id']=entry_type_info_ontology_id
+                            entry_type_conf[entry_type_name]['info']['ontology_name']=entry_type_info_ontology_name
+                            entry_type_conf[entry_type_name]['info']['description']=entry_type_info_description
+                            entry_type_conf[entry_type_name]['schema']['specification']=entry_type_schema_specification
+                            entry_type_conf[entry_type_name]['schema']['default_schema_id']=entry_type_schema_id
+                            entry_type_conf[entry_type_name]['schema']['default_schema_name']=entry_type_schema_name
+                            entry_type_conf[entry_type_name]['schema']['reference_to_default_schema_definition']=entry_type_schema_reference
+                            entry_type_conf[entry_type_name]['schema']['default_schema_version']=entry_type_schema_version
+                            entry_type_conf[entry_type_name]['schema']['supported_schemas']=entry_type_supported_schemas
+                            with open(final_path, 'w') as outfile:
+                                yaml.dump(entry_type_conf, outfile)
 
-                    return redirect("adminclient:entry_types")
-                else:
-                    LOG.warning('erroooors')
-                    context = {'models': models}
+                        return redirect("adminclient:entry_types")
+                    else:
+                        context = {'models': models}
             
     template = "general_configuration/entry_types.html"
     return render(request, template, context)

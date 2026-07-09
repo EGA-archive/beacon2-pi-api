@@ -63,6 +63,8 @@ class EntryTypeForm(forms.Form):
         self.initial['entry_type_schema_reference'] = placeholder
         placeholder = config['response_type']
         self.initial['entry_type_response_type'] = placeholder
+        placeholder = config['open_api_definition']
+        self.initial['entry_type_open_api_definition'] = placeholder
     def clean(self):
         cleaned_data = super(EntryTypeForm, self).clean()
         cleaned_entry_type = cleaned_data.get(self.entry_type)
