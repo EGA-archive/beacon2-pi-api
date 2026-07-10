@@ -122,7 +122,6 @@ class LookupsForm(forms.Form):
         self.model = model
         self.entry_type = entry_type
         self.lookup = lookup
-        LOG.warning(self.lookup)
         filename = (
             f"/home/app/web/beacon/models/"
             f"{model}/conf/entry_types/{entry_type}.yml"
@@ -131,7 +130,6 @@ class LookupsForm(forms.Form):
             entry_type_yaml = yaml.safe_load(f)
         for k, v in entry_type_yaml[entry_type]['lookups'].items():
             if k == self.lookup:
-                LOG.warning('yessss')
                 self.initial['lookup_name']=k
                 self.initial['lookup_response_type']=v['response_type']
                 self.initial['lookup_endpoint_name']=v['endpoint_name']

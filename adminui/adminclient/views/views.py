@@ -164,9 +164,13 @@ def entry_types(request):
 
             for entry_type, type_of_forms in entry_types.items():
                 if type_of_forms['basic'].is_valid():
+                    LOG.warning('is valiiiid')
                     entry_type_name=type_of_forms['basic'].cleaned_data["entry_type_name"]
-
+                    LOG.warning(entry_type_name)
+                    LOG.warning(request.POST)
+                    LOG.warning(request.POST.get('entry_type_name'))
                     if entry_type_name == request.POST.get('entry_type_name'):
+                        LOG.warning('yesss')
                         for filename in os.listdir(path):
                             if entry_type_name in filename:
                                 final_path=str(path)+filename
@@ -206,6 +210,7 @@ def entry_types(request):
                             entry_type_conf[entry_type_name]['allow_queries_without_filters']=entry_type_allow_queries_without_filters
                             entry_type_conf[entry_type_name]['allow_id_query']=entry_type_id
                             entry_type_conf[entry_type_name]['response_type']=entry_type_response_type
+                            entry_type_conf[entry_type_name]['connection']['functions']={}
                             entry_type_conf[entry_type_name]['connection']['name']=entry_type_engine
                             entry_type_conf[entry_type_name]['connection']['database']=entry_type_dbname
                             entry_type_conf[entry_type_name]['connection']['table']=entry_type_tablename
@@ -221,17 +226,20 @@ def entry_types(request):
                             entry_type_conf[entry_type_name]['schema']['reference_to_default_schema_definition']=entry_type_schema_reference
                             entry_type_conf[entry_type_name]['schema']['default_schema_version']=entry_type_schema_version
                             entry_type_conf[entry_type_name]['schema']['supported_schemas']=entry_type_supported_schemas
-                            entry_type_conf[entry_type_name]['lookups']['supported_schemas']=entry_type_supported_schemas
+                            entry_type_conf['lookups']={}
                             for form in type_of_forms['lookups']:
                                 if form.is_valid():
                                     lookup_name=form.cleaned_data['lookup_name']
-                                    entry_type_conf[lookup_name]['endpoint_name']=form.cleaned_data['lookup_endpoint_name']
-                                    entry_type_conf[lookup_name]['response_type']=form.cleaned_data['lookup_response_type']
-                                    entry_type_conf[lookup_name]['endpoint_enabled']=form.cleaned_data['lookup_endpoint_enabled']
-                                    entry_type_conf[lookup_name]['connection']['name']=form.cleaned_data['lookup_engine']
-                                    entry_type_conf[lookup_name]['connection']['database']=form.cleaned_data['lookup_dbname']
-                                    entry_type_conf[lookup_name]['connection']['table']=form.cleaned_data['lookup_tablename']
-                                    entry_type_conf[lookup_name]['connection']['function']['function_name_assigned']=form.cleaned_data['lookup_function']
+                                    entry_type_conf['lookups'][lookup_name]={}
+                                    entry_type_conf['lookups'][lookup_name]['connection']={}
+                                    entry_type_conf['lookups'][lookup_name]['connection']['function']={}
+                                    entry_type_conf['lookups'][lookup_name]['endpoint_name']=form.cleaned_data['lookup_endpoint_name']
+                                    entry_type_conf['lookups'][lookup_name]['response_type']=form.cleaned_data['lookup_response_type']
+                                    entry_type_conf['lookups'][lookup_name]['endpoint_enabled']=form.cleaned_data['lookup']
+                                    entry_type_conf['lookups'][lookup_name]['connection']['name']=form.cleaned_data['lookup_engine']
+                                    entry_type_conf['lookups'][lookup_name]['connection']['database']=form.cleaned_data['lookup_dbname']
+                                    entry_type_conf['lookups'][lookup_name]['connection']['table']=form.cleaned_data['lookup_tablename']
+                                    entry_type_conf['lookups'][lookup_name]['connection']['functions']['function_name_assigned']=form.cleaned_data['lookup_function']
 
                             with open(final_path, 'w') as outfile:
                                 yaml.dump(entry_type_conf, outfile)

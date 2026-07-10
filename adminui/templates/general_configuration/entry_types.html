@@ -45,6 +45,8 @@
             >
             {{ entry_type }}
             </button>
+            {% endfor %}
+            {% for entry_type, forms in entry_types.items %}
 
                     <div
             id="formtab-{{model}}{{ forloop.counter }}"
@@ -60,7 +62,7 @@
                     {{ form.as_p }}
                 </fieldset>
                 {% endfor %}
-                <button type="submit" name='entry_type_name' value='{{form.entry_type_name.value}}' id="formbuttontab">Save</button>
+                <button type="submit" name='entry_type_name' value='{{forms.basic.entry_type_name.value}}' id="formbuttontab">Save</button>
                     </div>
 
             
