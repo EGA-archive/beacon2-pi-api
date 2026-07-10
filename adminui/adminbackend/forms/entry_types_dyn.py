@@ -104,7 +104,6 @@ class EntryTypeForm(forms.Form):
     entry_type_schema_reference= forms.CharField(required=False, help_text='Schema reference')
     entry_type_open_api_definition=forms.CharField(required=False,help_text='Open API definition')
 
-
 class ModelsForm(forms.Form):
     with open("/home/app/web/beacon/conf/models/models_conf.yml") as f:
         models_conf = yaml.safe_load(f)
@@ -116,3 +115,43 @@ class ModelsForm(forms.Form):
         choices=models_choices, 
         widget=forms.RadioSelect
     )
+
+class LookupsForm(forms.Form):
+    def __init__(self, *args, model=None, entry_type=None, lookup=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.model = model
+        self.entry_type = entry_type
+        self.lookup = lookup
+        LOG.warning(self.lookup)
+        filename = (
+            f"/home/app/web/beacon/models/"
+            f"{model}/conf/entry_types/{entry_type}.yml"
+        )
+        with open(filename) as f:
+            entry_type_yaml = yaml.safe_load(f)
+        for k, v in entry_type_yaml[entry_type]['lookups'].items():
+            if k == self.lookup:
+                LOG.warning('yessss')
+                self.initial['lookup_name']=k
+                self.initial['lookup_response_type']=v['response_type']
+                self.initial['lookup_endpoint_name']=v['endpoint_name']
+                self.initial['lookup']=v['endpoint_enabled']
+                self.initial['lookup_engine']=v['connection']['name']
+                self.initial['lookup_dbname']=v['connection']['database']
+                self.initial['lookup_tablename']=v['connection']['table']
+                self.initial['lookup_function']=v['connection']['functions']['function_name_assigned']
+    def clean(self):
+        cleaned_data = super(LookupsForm, self).clean()
+        cleaned_lookup = cleaned_data.get(self.lookup)
+        cleaned_lookup_endpoint_name = cleaned_data.get("entry_typeEndpointName")
+        if cleaned_lookup_endpoint_name == '' and cleaned_lookup != None:
+            self.add_error('lookup_endpoint_name', 'If {} is checked, {} endpoint name can not be empty'.format(self.lookup, self.lookup))
+    database_choices=[(name, name) for name in os.listdir("/home/app/web/beacon/connections")]
+    lookup_name = forms.CharField(required=False,help_text='Name of the lookup')
+    lookup_endpoint_name = forms.CharField(required=False,help_text='Endpoint Name of the lookup')
+    lookup_response_type = forms.CharField(required=False,help_text='Lookup Response type')
+    lookup = forms.BooleanField(required=False, help_text='/entry_type')
+    lookup_engine = forms.ChoiceField(choices=database_choices, help_text="Lookup Database Engine")
+    lookup_dbname= forms.CharField(required=False, help_text='Lookup Database Name')
+    lookup_tablename= forms.CharField(required=False, help_text='Lookup Table/Collection Name')
+    lookup_function= forms.CharField(required=False, help_text='Lookup Function Name Assigned')

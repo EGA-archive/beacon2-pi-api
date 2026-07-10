@@ -5,8 +5,7 @@ import logging
 from pymongo.mongo_client import MongoClient
 from django.urls import resolve
 from adminbackend.forms.beacon import BamForm
-from adminbackend.forms.entry_types import EntryTypesForm
-from adminbackend.forms.entry_types_dyn import EntryTypeForm, ModelsForm
+from adminbackend.forms.entry_types_dyn import EntryTypeForm, LookupsForm
 from django.contrib.auth.decorators import login_required, permission_required
 import yaml
 import os
@@ -87,6 +86,7 @@ def default_view(request):
     template = "home.html"
     return render(request, template, context)
 
+
 #@login_required
 #@permission_required('adminclient.can_see_view', raise_exception=True)
 
@@ -107,7 +107,7 @@ def entry_types(request):
 
         if config['model_enabled']:
 
-            entry_types = []
+            
 
             path = (
                 "/home/app/web/beacon/models/"
@@ -115,40 +115,57 @@ def entry_types(request):
             )
 
             for filename in os.listdir(path):
+                entry_types = {}
 
                 if filename.endswith(".yml"):
-                    LOG.warning(filename)
                     entry_type = filename[:-4]
 
-                    entry_types.append(
-                        EntryTypeForm(
+                    entry_types['basic']=EntryTypeForm(
                             request.POST or None,
                             prefix=f"{model}_{entry_type}",
                             model=model,
                             entry_type=entry_type
                         )
-                    )
+                    with open(path+'/'+filename) as f:
+                        entry_type_yaml = yaml.safe_load(f)
 
-            models[model] = entry_types
-            LOG.warning(models)
+                    for k, v in entry_type_yaml[entry_type].items():
+                        if k == 'lookups':
+                            entry_types['lookups']=[]
+                            for k2, v2 in v.items():
+                                entry_types['lookups'].append(
+                                    LookupsForm(
+                                        request.POST or None,
+                                        prefix=f"{model}_{entry_type}_{k2}",
+                                        model=model,
+                                        entry_type=entry_type,
+                                        lookup = k2
+                                    )
+                                )
+
+                    try:
+                        models[model][entry_type] = entry_types
+                    except Exception:
+                        models[model]={}
+                        models[model][entry_type] = entry_types
+
+
 
     LOG.warning('finished')
     if request.method == "POST":
         valid = True
 
-        for model, forms in models.items():
+        for model, entry_types in models.items():
             path = (
             "/home/app/web/beacon/models/"
             f"{model}/conf/entry_types/"
             )
             final_path=""
 
-            for form in forms:
-                if form.is_valid():
-                    entry_type_name=form.cleaned_data["entry_type_name"]
-                    LOG.warning(entry_type_name)
-                    LOG.warning('hola')
-                    LOG.warning(request.POST.get('entry_type_name'))
+            for entry_type, type_of_forms in entry_types.items():
+                if type_of_forms['basic'].is_valid():
+                    entry_type_name=type_of_forms['basic'].cleaned_data["entry_type_name"]
+
                     if entry_type_name == request.POST.get('entry_type_name'):
                         for filename in os.listdir(path):
                             if entry_type_name in filename:
@@ -160,28 +177,28 @@ def entry_types(request):
                             entry_type_conf[entry_type_name]['connection']={}
                             entry_type_conf[entry_type_name]['info']={}
                             entry_type_conf[entry_type_name]['schema']={}
-                            entry_type_enabled=form.cleaned_data['entry_type']
-                            entry_type_open_api_definition=form.cleaned_data['entry_type_open_api_definition']
-                            entry_type_allow_queries_without_filters=form.cleaned_data['entry_typeNonFiltered']
-                            entry_type_id= form.cleaned_data['entry_type_id']
-                            entry_type_response_type=form.cleaned_data['entry_type_response_type']
-                            entry_type_endpoint_name = form.cleaned_data['entry_typeEndpointName']
-                            entry_type_granularity = form.cleaned_data['entry_type_granularity']
-                            entry_type_engine = form.cleaned_data['entry_type_engine']
-                            entry_type_dbname= form.cleaned_data['entry_type_dbname']
-                            entry_type_tablename= form.cleaned_data['entry_type_tablename']
-                            entry_type_function= form.cleaned_data['entry_type_function']
-                            entry_type_id_function= form.cleaned_data['entry_type_id_function']
-                            entry_type_info_name= form.cleaned_data['entry_type_info_name']
-                            entry_type_info_ontology_id= form.cleaned_data['entry_type_info_ontology_id']
-                            entry_type_info_ontology_name= form.cleaned_data['entry_type_info_ontology_name']
-                            entry_type_info_description= form.cleaned_data['entry_type_info_description']
-                            entry_type_schema_specification= form.cleaned_data['entry_type_schema_specification']
-                            entry_type_schema_id= form.cleaned_data['entry_type_schema_id']
-                            entry_type_schema_name= form.cleaned_data['entry_type_schema_name']
-                            entry_type_schema_version= form.cleaned_data['entry_type_schema_version']
-                            entry_type_supported_schemas= form.cleaned_data['entry_type_supported_schemas']
-                            entry_type_schema_reference= form.cleaned_data['entry_type_schema_reference']
+                            entry_type_enabled=type_of_forms['basic'].cleaned_data['entry_type']
+                            entry_type_open_api_definition=type_of_forms['basic'].cleaned_data['entry_type_open_api_definition']
+                            entry_type_allow_queries_without_filters=type_of_forms['basic'].cleaned_data['entry_typeNonFiltered']
+                            entry_type_id= type_of_forms['basic'].cleaned_data['entry_type_id']
+                            entry_type_response_type=type_of_forms['basic'].cleaned_data['entry_type_response_type']
+                            entry_type_endpoint_name = type_of_forms['basic'].cleaned_data['entry_typeEndpointName']
+                            entry_type_granularity = type_of_forms['basic'].cleaned_data['entry_type_granularity']
+                            entry_type_engine = type_of_forms['basic'].cleaned_data['entry_type_engine']
+                            entry_type_dbname= type_of_forms['basic'].cleaned_data['entry_type_dbname']
+                            entry_type_tablename= type_of_forms['basic'].cleaned_data['entry_type_tablename']
+                            entry_type_function= type_of_forms['basic'].cleaned_data['entry_type_function']
+                            entry_type_id_function= type_of_forms['basic'].cleaned_data['entry_type_id_function']
+                            entry_type_info_name= type_of_forms['basic'].cleaned_data['entry_type_info_name']
+                            entry_type_info_ontology_id= type_of_forms['basic'].cleaned_data['entry_type_info_ontology_id']
+                            entry_type_info_ontology_name= type_of_forms['basic'].cleaned_data['entry_type_info_ontology_name']
+                            entry_type_info_description= type_of_forms['basic'].cleaned_data['entry_type_info_description']
+                            entry_type_schema_specification= type_of_forms['basic'].cleaned_data['entry_type_schema_specification']
+                            entry_type_schema_id= type_of_forms['basic'].cleaned_data['entry_type_schema_id']
+                            entry_type_schema_name= type_of_forms['basic'].cleaned_data['entry_type_schema_name']
+                            entry_type_schema_version= type_of_forms['basic'].cleaned_data['entry_type_schema_version']
+                            entry_type_supported_schemas= type_of_forms['basic'].cleaned_data['entry_type_supported_schemas']
+                            entry_type_schema_reference= type_of_forms['basic'].cleaned_data['entry_type_schema_reference']
                             entry_type_conf[entry_type_name]['entry_type_enabled']=entry_type_enabled
                             entry_type_conf[entry_type_name]['max_granularity']=entry_type_granularity
                             entry_type_conf[entry_type_name]['endpoint_name']=entry_type_endpoint_name
@@ -204,6 +221,18 @@ def entry_types(request):
                             entry_type_conf[entry_type_name]['schema']['reference_to_default_schema_definition']=entry_type_schema_reference
                             entry_type_conf[entry_type_name]['schema']['default_schema_version']=entry_type_schema_version
                             entry_type_conf[entry_type_name]['schema']['supported_schemas']=entry_type_supported_schemas
+                            entry_type_conf[entry_type_name]['lookups']['supported_schemas']=entry_type_supported_schemas
+                            for form in type_of_forms['lookups']:
+                                if form.is_valid():
+                                    lookup_name=form.cleaned_data['lookup_name']
+                                    entry_type_conf[lookup_name]['endpoint_name']=form.cleaned_data['lookup_endpoint_name']
+                                    entry_type_conf[lookup_name]['response_type']=form.cleaned_data['lookup_response_type']
+                                    entry_type_conf[lookup_name]['endpoint_enabled']=form.cleaned_data['lookup_endpoint_enabled']
+                                    entry_type_conf[lookup_name]['connection']['name']=form.cleaned_data['lookup_engine']
+                                    entry_type_conf[lookup_name]['connection']['database']=form.cleaned_data['lookup_dbname']
+                                    entry_type_conf[lookup_name]['connection']['table']=form.cleaned_data['lookup_tablename']
+                                    entry_type_conf[lookup_name]['connection']['function']['function_name_assigned']=form.cleaned_data['lookup_function']
+
                             with open(final_path, 'w') as outfile:
                                 yaml.dump(entry_type_conf, outfile)
 
