@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 import yaml
 import os
 import logging
+import ast
 
 LOG = logging.getLogger(__name__)
 fmt = '%(levelname)s - %(asctime)s - %(message)s'
@@ -202,6 +203,7 @@ def entry_types(request):
                             entry_type_schema_name= type_of_forms['basic'].cleaned_data['entry_type_schema_name']
                             entry_type_schema_version= type_of_forms['basic'].cleaned_data['entry_type_schema_version']
                             entry_type_supported_schemas= type_of_forms['basic'].cleaned_data['entry_type_supported_schemas']
+                            entry_type_supported_schemas= ast.literal_eval(entry_type_supported_schemas)
                             entry_type_schema_reference= type_of_forms['basic'].cleaned_data['entry_type_schema_reference']
                             entry_type_conf[entry_type_name]['entry_type_enabled']=entry_type_enabled
                             entry_type_conf[entry_type_name]['max_granularity']=entry_type_granularity
@@ -232,7 +234,7 @@ def entry_types(request):
                                     lookup_name=form.cleaned_data['lookup_name']
                                     entry_type_conf['lookups'][lookup_name]={}
                                     entry_type_conf['lookups'][lookup_name]['connection']={}
-                                    entry_type_conf['lookups'][lookup_name]['connection']['function']={}
+                                    entry_type_conf['lookups'][lookup_name]['connection']['functions']={}
                                     entry_type_conf['lookups'][lookup_name]['endpoint_name']=form.cleaned_data['lookup_endpoint_name']
                                     entry_type_conf['lookups'][lookup_name]['response_type']=form.cleaned_data['lookup_response_type']
                                     entry_type_conf['lookups'][lookup_name]['endpoint_enabled']=form.cleaned_data['lookup']

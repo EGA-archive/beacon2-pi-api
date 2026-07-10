@@ -53,13 +53,37 @@
             class="formtab-content {% if forloop.first %}active{% endif %}"
         >
                 <fieldset>
-                    <h3>{{ forms.basic.entry_type_name }}</h3>
-                    {{ forms.basic.as_p }}
+                    <h3>{{ forms.basic.entry_type_name.value }}</h3>
+    {% for field in forms.basic %}
+        <p>
+            {% if field.help_text %}
+                <small>{{ field.help_text }}</small>
+            {% endif %}
+            {{ field }}
+
+
+            {% for error in field.errors %}
+                <span class="error">{{ error }}</span>
+            {% endfor %}
+        </p>
+    {% endfor %}
                 </fieldset>
                         {% for form in forms.lookups %}
                 <fieldset>
-                    <h3>{{ form.lookup_name }}</h3>
-                    {{ form.as_p }}
+                    <h3>{{ form.lookup_name.value }}</h3>
+    {% for field in form %}
+        <p>
+            {% if field.help_text %}
+                <small>{{ field.help_text }}</small>
+            {% endif %}
+            {{ field }}
+
+
+            {% for error in field.errors %}
+                <span class="error">{{ error }}</span>
+            {% endfor %}
+        </p>
+    {% endfor %}
                 </fieldset>
                 {% endfor %}
                 <button type="submit" name='entry_type_name' value='{{forms.basic.entry_type_name.value}}' id="formbuttontab">Save</button>

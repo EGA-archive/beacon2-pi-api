@@ -27,6 +27,8 @@ class EntryTypeForm(forms.Form):
         self.initial['entry_type_name']=entry_type
         self.fields['entry_type_name'].widget.attrs['readonly'] = True
         self.initial['entry_typeEndpointName']=config['endpoint_name']
+        self.fields["entry_type"].help_text = "/" + config['endpoint_name']
+        self.fields["entry_type_id"].help_text = "/" + config['endpoint_name'] + "/{id}"
         self.initial['entry_typeNonFiltered']=config['allow_queries_without_filters']
         self.initial['entry_type_id'] = config['allow_id_query']
         placeholder = config['max_granularity']
@@ -77,26 +79,28 @@ class EntryTypeForm(forms.Form):
     ('count', 'Count'),
     ('record', 'Record'),
     ]
-    entry_type_name=forms.CharField(required=False,help_text='Name of the entry type')
+    
+    entry_type_name=forms.CharField(required=False,widget=forms.HiddenInput())
     entry_typeEndpointName = forms.CharField(required=False,help_text='Endpoint Name')
-    entry_type = forms.BooleanField(required=False, help_text='/entry_type')
-    entry_type_id = forms.BooleanField(required=False, help_text='/'+'entry_type')
-    entry_typeNonFiltered = forms.BooleanField(required=False, help_text='entry_type Non-Filtered Queries')
+    entry_type = forms.BooleanField(required=False)
+    entry_type_id = forms.BooleanField(required=False)
+    entry_typeNonFiltered = forms.BooleanField(required=False, help_text='Non-Filtered Queries')
     entry_type_granularity= forms.ChoiceField(
         widget=forms.RadioSelect,
         choices=granularity_choices, 
+        help_text='Max Entry Type Granularity'
     )
     entry_type_response_type=forms.CharField(required=False,help_text='Response type')
     entry_type_engine= forms.ChoiceField(choices=database_choices, help_text="Database Engine")
     entry_type_dbname= forms.CharField(required=False, help_text='Database Name')
     entry_type_tablename= forms.CharField(required=False, help_text='Table/Collection Name')
     entry_type_function= forms.CharField(required=False, help_text='Function Name Assigned')
-    entry_type_id_function= forms.CharField(required=False, help_text='Id Function Name Assigned')
-    entry_type_info_name= forms.CharField(required=False, help_text='Info Name')
-    entry_type_info_ontology_id= forms.CharField(required=False, help_text='Info Ontology ID')
-    entry_type_info_ontology_name= forms.CharField(required=False, help_text='Info Ontology Name')
-    entry_type_info_description= forms.CharField(required=False, help_text='Info Description')
-    entry_type_schema_specification= forms.CharField(required=False, help_text='Schema specification')
+    entry_type_id_function= forms.CharField(required=False, help_text='Function Name Assigned')
+    entry_type_info_name= forms.CharField(required=False, help_text='Name')
+    entry_type_info_ontology_id= forms.CharField(required=False, help_text='Ontology ID')
+    entry_type_info_ontology_name= forms.CharField(required=False, help_text='Ontology Name')
+    entry_type_info_description= forms.CharField(required=False, help_text='Description')
+    entry_type_schema_specification= forms.CharField(required=False, help_text='Specification')
     entry_type_schema_id= forms.CharField(required=False, help_text='Default Schema ID')
     entry_type_schema_name= forms.CharField(required=False, help_text='Default Schema Name')
     entry_type_schema_version= forms.CharField(required=False, help_text='Schema Version')
@@ -131,6 +135,7 @@ class LookupsForm(forms.Form):
         for k, v in entry_type_yaml[entry_type]['lookups'].items():
             if k == self.lookup:
                 self.initial['lookup_name']=k
+                self.fields["lookup"].help_text = v['endpoint_name']
                 self.initial['lookup_response_type']=v['response_type']
                 self.initial['lookup_endpoint_name']=v['endpoint_name']
                 self.initial['lookup']=v['endpoint_enabled']
@@ -145,11 +150,11 @@ class LookupsForm(forms.Form):
         if cleaned_lookup_endpoint_name == '' and cleaned_lookup != None:
             self.add_error('lookup_endpoint_name', 'If {} is checked, {} endpoint name can not be empty'.format(self.lookup, self.lookup))
     database_choices=[(name, name) for name in os.listdir("/home/app/web/beacon/connections")]
-    lookup_name = forms.CharField(required=False,help_text='Name of the lookup')
-    lookup_endpoint_name = forms.CharField(required=False,help_text='Endpoint Name of the lookup')
-    lookup_response_type = forms.CharField(required=False,help_text='Lookup Response type')
-    lookup = forms.BooleanField(required=False, help_text='/entry_type')
-    lookup_engine = forms.ChoiceField(choices=database_choices, help_text="Lookup Database Engine")
-    lookup_dbname= forms.CharField(required=False, help_text='Lookup Database Name')
-    lookup_tablename= forms.CharField(required=False, help_text='Lookup Table/Collection Name')
-    lookup_function= forms.CharField(required=False, help_text='Lookup Function Name Assigned')
+    lookup_name = forms.CharField(required=False,widget=forms.HiddenInput())
+    lookup_endpoint_name = forms.CharField(required=False,help_text='Endpoint Name')
+    lookup_response_type = forms.CharField(required=False,help_text='Response type')
+    lookup = forms.BooleanField(required=False)
+    lookup_engine = forms.ChoiceField(choices=database_choices, help_text="Database Engine")
+    lookup_dbname= forms.CharField(required=False, help_text='Database Name')
+    lookup_tablename= forms.CharField(required=False, help_text='Table/Collection Name')
+    lookup_function= forms.CharField(required=False, help_text='Function Name Assigned')

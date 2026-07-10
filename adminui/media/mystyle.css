@@ -14,11 +14,7 @@ input {
     width: 300px;
 }
 
-input[type="radio"]{
-  cursor: pointer;
-  height: 10px;
-  display: none;
-}
+
 
 #id_SecurityLevel_0{
   cursor: pointer;
@@ -891,4 +887,10 @@ label[for=id_usergranularity_2]{
 
 .appear{
   display:contents;
+}
+
+input[type="radio"]:not([id^="id_ga4gh/beacon_v2_default_model"]) {
+  cursor: pointer;
+  height: 10px;
+  display: none;
 }
