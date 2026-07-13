@@ -211,10 +211,10 @@ def set_entry_type_configuration(self):
                 elif param_key == 'schema':
                     if RequestAttributes.qparams.meta.requestedSchemas != []:
                         for schema in RequestAttributes.qparams.meta.requestedSchemas:
-                            if schema == param_value["default_schema_id"]:
-                                RequestAttributes.returned_schema = [SchemasPerEntity(entityType=entry_typeid,schema=schema).model_dump()]
-                            elif schema in param_value["supported_schemas"]:
-                                RequestAttributes.returned_schema = [SchemasPerEntity(entityType=entry_typeid,schema=schema).model_dump()]
+                            if schema["schema"] == param_value["default_schema_id"]:
+                                RequestAttributes.returned_schema = [SchemasPerEntity(entityType=entry_typeid,schema=schema["schema"]).model_dump()]
+                            elif schema["schema"] in param_value["supported_schemas"]:
+                                RequestAttributes.returned_schema = [SchemasPerEntity(entityType=entry_typeid,schema=schema["schema"]).model_dump()]
                             else:
                                 RequestAttributes.returned_schema = [SchemasPerEntity(entityType=entry_typeid,schema=param_value["default_schema_id"]).model_dump()]
                     elif RequestAttributes.entry_type not in ['filtering_terms', 'map', 'configuration', 'info', 'service-info', 'entry_types']:
