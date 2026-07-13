@@ -23,7 +23,6 @@ class EntryTypeForm(forms.Form):
         with open(filename) as f:
             entry_type_yaml = yaml.safe_load(f)
         config = entry_type_yaml[entry_type]
-        initial_choices=[]
         self.initial['entry_type_name']=entry_type
         self.fields['entry_type_name'].widget.attrs['readonly'] = True
         self.initial['entry_typeEndpointName']=config['endpoint_name']
@@ -59,8 +58,11 @@ class EntryTypeForm(forms.Form):
         self.initial['entry_type_schema_name'] = placeholder
         placeholder = config['schema']['default_schema_version']
         self.initial['entry_type_schema_version'] = placeholder
-        placeholder = config['schema']['supported_schemas']
-        self.initial['entry_type_supported_schemas'] = placeholder
+        supported_schema_choices = []
+        initial_choices = config['schema']['supported_schemas']
+        for initial_choice in initial_choices:
+            supported_schema_choices.append((initial_choice, initial_choice))
+        self.fields['entry_type_supported_schemas'].choices = supported_schema_choices
         placeholder = config['schema']['reference_to_default_schema_definition']
         self.initial['entry_type_schema_reference'] = placeholder
         placeholder = config['response_type']
@@ -104,7 +106,11 @@ class EntryTypeForm(forms.Form):
     entry_type_schema_id= forms.CharField(required=False, help_text='Default Schema ID')
     entry_type_schema_name= forms.CharField(required=False, help_text='Default Schema Name')
     entry_type_schema_version= forms.CharField(required=False, help_text='Schema Version')
-    entry_type_supported_schemas= forms.CharField(required=False, help_text='Supported Schemas')
+    entry_type_supported_schemas=forms.MultipleChoiceField(
+        choices=[], 
+        widget=forms.CheckboxSelectMultiple,
+        help_text='Supported Schemas'
+    )
     entry_type_schema_reference= forms.CharField(required=False, help_text='Schema reference')
     entry_type_open_api_definition=forms.CharField(required=False,help_text='Open API definition')
 

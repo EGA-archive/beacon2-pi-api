@@ -13,7 +13,7 @@
 </head>
 
 <body>
-  <body class="bg-custom-powder-light" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'> <!-- NEW - hx-headers added -->
+  <body class="bg-custom-powder-light" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
 
 <form method="post" onsubmit="openLoader()">
     {% csrf_token %}
@@ -76,7 +76,11 @@
             {% if field.help_text %}
                 <small>{{ field.help_text }}</small>
             {% endif %}
+            {% if field.help_text == 'Supported Schemas' %}
+            {{field}} <div>yababdababdbaba</div>
+            {% else %}
             {{ field }}
+            {% endif %}
 
 
             {% for error in field.errors %}

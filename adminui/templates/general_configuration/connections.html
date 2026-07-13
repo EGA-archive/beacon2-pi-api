@@ -13,7 +13,7 @@
 </head>
 
 <body>
-  <body class="bg-custom-powder-light" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'> <!-- NEW - hx-headers added -->
+  <body class="bg-custom-powder-light" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
       <form method="post" onsubmit="openLoader()">
         {% csrf_token %}
           <div>
