@@ -159,7 +159,7 @@ class TestModuleLoaders(unittest.TestCase):
             builtins.open = fake_open
             importlib_module.import_module = fake_import_module
 
-            modules = module_utils.get_all_modules_datasets()
+            modules = module_utils.get_all_modules_datasets('mongo')
 
             # Expect only one enabled dataset module.
             self.assertEqual(len(modules), 1)

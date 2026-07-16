@@ -188,8 +188,10 @@ def set_entry_type_configuration(self):
                         client_function_from_module = getattr(client_module, 'get_client')
                         client = client_function_from_module()
                         RequestAttributes.client = client
-                        connection = client[mongo_conf.database_name][param_value["table"]]
-                        RequestAttributes.mongo_collection = connection
+                        RequestAttributes.table = param_value["table"]
+                        if RequestAttributes.source == 'mongo':
+                            connection = client[mongo_conf.database_name][RequestAttributes.table]
+                            RequestAttributes.mongo_collection = connection
                     if RequestAttributes.entry_id != None:
                         if RequestAttributes.pre_entry_type == None:
                             RequestAttributes.function = param_value["functions"]["id_query_function_name_assigned"]
