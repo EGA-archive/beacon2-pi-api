@@ -103,7 +103,7 @@ class TestModuleLoaders(unittest.TestCase):
             builtins.open = fake_open
             importlib_module.import_module = fake_import_module
 
-            modules = module_utils.get_all_modules_mongo_connections_script(script_name)
+            modules = module_utils.get_all_modules_connections_script(script_name, "mongo")
 
             # Only enabled models should be imported.
             self.assertEqual(len(modules), 1)

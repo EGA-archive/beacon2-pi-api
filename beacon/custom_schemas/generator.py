@@ -13,7 +13,7 @@ from datamodel_code_generator import (
 
 INPUT_BASE_DIR = Path("/beacon/custom_schemas/json")
 OUTPUT_BASE_DIR = Path(
-    "/beacon/models/EUCAIM/validator/collections/collections"
+    "/beacon/custom_schemas/output_schemas"
 )
 
 
@@ -58,6 +58,12 @@ def main():
         help="Generated Python filename",
     )
 
+    parser.add_argument(
+        "-e",
+        "--entry_type",
+        help="Name of the entry type used for naming the generated class",
+    )
+
     args = parser.parse_args()
 
     input_path = INPUT_BASE_DIR / args.input
@@ -74,6 +80,7 @@ def main():
     config = GenerateConfig(
         input_file_type=InputFileType.JsonSchema,
         output=output_path,
+        class_name=args.entry_type
     )
 
     generate(

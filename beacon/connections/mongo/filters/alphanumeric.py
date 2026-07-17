@@ -5,7 +5,7 @@ from beacon.conf.filtering_terms import alphanumeric_terms
 from beacon.logs.logs import log_with_args
 from beacon.conf.conf_override import config
 from beacon.connections.mongo.filters.format import format_value, format_operator
-from beacon.utils.modules import get_all_modules_mongo_connections_script
+from beacon.utils.modules import get_all_modules_connections_script
 from beacon.connections.mongo.filters.iso8601 import iso8601_to_number
 import re
 
@@ -28,7 +28,7 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, dat
             pass
     # If the filter is a request parameter, apply the request parameters function
     if isRequestParameter == True:
-        list_modules = get_all_modules_mongo_connections_script("filters.request_parameters.alphanumeric")
+        list_modules = get_all_modules_connections_script("filters.request_parameters.alphanumeric", "mongo")
         for module in list_modules:
             query = module.parse_request_parameters(self, query, filter)
     # Otherwise, apply them as regular alphanumeric filter
@@ -58,7 +58,7 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, dat
                 query_id={}
                 query_id[query_term]=regex_dict
                 query['$or'].append(query_id)
-                list_modules = get_all_modules_mongo_connections_script("filters.cross_queries.cross_query")
+                list_modules = get_all_modules_connections_script("filters.cross_queries.cross_query", "mongo")
                 for module in list_modules:
                     query = module.cross_query(self, query, scope, {}, dataset)
             # Otherwise, build it as a whole text match
@@ -73,7 +73,7 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, dat
                 query_id={}
                 query_id[query_term]=filter.value
                 query['$or'].append(query_id) 
-                list_modules = get_all_modules_mongo_connections_script("filters.cross_queries.cross_query")
+                list_modules = get_all_modules_connections_script("filters.cross_queries.cross_query", "mongo")
                 for module in list_modules:
                     query = module.cross_query(self, query, scope, {}, dataset)
                 
@@ -182,7 +182,7 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, dat
                 dict_in={}
                 dict_in["$regex"]=new_age_list
                 query[filter.id] = dict_in
-                list_modules = get_all_modules_mongo_connections_script("filters.cross_queries.cross_query")
+                list_modules = get_all_modules_connections_script("filters.cross_queries.cross_query", "mongo")
                 for module in list_modules:
                     query = module.cross_query(self, query, scope, {}, dataset)
             elif '<' in filter.operator:
@@ -250,7 +250,7 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, dat
                 dict_in={}
                 dict_in["$regex"]=new_age_list
                 query[filter.id] = dict_in
-                list_modules = get_all_modules_mongo_connections_script("filters.cross_queries.cross_query")
+                list_modules = get_all_modules_connections_script("filters.cross_queries.cross_query", "mongo")
                 for module in list_modules:
                     query = module.cross_query(self, query, scope, {}, dataset)
             elif '=' in filter.operator:
@@ -278,7 +278,7 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, dat
                 dict_in={}
                 dict_in["$regex"]=new_age_list
                 query[filter.id] = dict_in
-                list_modules = get_all_modules_mongo_connections_script("filters.cross_queries.cross_query")
+                list_modules = get_all_modules_connections_script("filters.cross_queries.cross_query", "mongo")
                 for module in list_modules:
                     query = module.cross_query(self, query, scope, {}, dataset)
         elif '.' in filter.id:
@@ -289,7 +289,7 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, dat
                 keyfilterid: { formatted_operator: formatted_value }
                 }
             query[splitfilterid[0]]=dict_in
-            list_modules = get_all_modules_mongo_connections_script("filters.cross_queries.cross_query")
+            list_modules = get_all_modules_connections_script("filters.cross_queries.cross_query", "mongo")
             for module in list_modules:
                 query = module.cross_query(self, query, scope, {}, dataset)
         # If it's not an age filter, is a measurement filter
@@ -336,7 +336,7 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, dat
             dict_measures={}
             dict_measures[measuresfield]=dict_elemmatch
             query = dict_measures
-            list_modules = get_all_modules_mongo_connections_script("filters.cross_queries.cross_query")
+            list_modules = get_all_modules_connections_script("filters.cross_queries.cross_query", "mongo")
             for module in list_modules:
                 query = module.cross_query(self, query, scope, {}, dataset)
     return query

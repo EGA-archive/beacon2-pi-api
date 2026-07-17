@@ -1,10 +1,10 @@
 from beacon.logs.logs import log_with_args
 from beacon.conf.conf_override import config
-from beacon.utils.modules import get_all_modules_mongo_connections_script
+from beacon.utils.modules import get_all_modules_connections_script
 
 @log_with_args(config.level)
 def request_parameters_from_modules(self, total_query, request_parameters, dataset): 
-    list_modules = get_all_modules_mongo_connections_script("filters.request_parameters.request_parameters")
+    list_modules = get_all_modules_connections_script("filters.request_parameters.request_parameters", "mongo")
     for module in list_modules:
         total_query = module.request_parameters(self, total_query, request_parameters, dataset)
     return total_query
