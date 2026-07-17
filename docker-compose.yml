@@ -21,6 +21,7 @@ services:
       - ./beacon/permissions:/beacon/permissions
       - ./beacon/models:/beacon/models
       - ./beacon/conf/models:/beacon/conf/models
+      - ./beacon/custom_schemas:/beacon/custom_schemas
     networks:
       - pub
 
@@ -164,3 +165,29 @@ services:
     environment:
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true
+
+# Make sure not to expose port in prod
+  postgres:
+    image: postgres:16
+    container_name: postgres-db
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: your_secure_password
+      POSTGRES_DB: beacon
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - ./beacon/connections/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d beacon"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+    networks:
+      - pub

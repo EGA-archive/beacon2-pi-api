@@ -44,7 +44,7 @@ async def execute_function(self, datasets: list):
 async def execute_collection_function(self):
     try:
         # Get the function that will be the one to use for the query performed
-        list_of_collection_modules = get_all_modules_connections_script("collections")
+        list_of_collection_modules = get_all_modules_connections_script("collections", "mongo")
         for collection_module in list_of_collection_modules:
             try:
                 function = getattr(collection_module, RequestAttributes.function)
