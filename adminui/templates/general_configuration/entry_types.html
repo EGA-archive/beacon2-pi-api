@@ -57,9 +57,20 @@
     {% for field in forms.basic %}
         <p>
             {% if field.help_text %}
+            
                 <small>{{ field.help_text }}</small>
             {% endif %}
+                        {% if field.help_text == 'Supported Schemas' %}
+                        {{ field }}
+            <span>Add new supported schema: <div id="new_schema"></div></span>
+<span>New supported schema: <input type="text"></span>
+  <button hx-get="/entry_types" hx-include="[name='New_Schema']">
+    +
+  </button>
+  
+  {% else %}
             {{ field }}
+            {% endif %}
 
 
             {% for error in field.errors %}
@@ -76,11 +87,8 @@
             {% if field.help_text %}
                 <small>{{ field.help_text }}</small>
             {% endif %}
-            {% if field.help_text == 'Supported Schemas' %}
-            {{field}} <div>yababdababdbaba</div>
-            {% else %}
+
             {{ field }}
-            {% endif %}
 
 
             {% for error in field.errors %}

@@ -203,7 +203,6 @@ def entry_types(request):
                             entry_type_schema_name= type_of_forms['basic'].cleaned_data['entry_type_schema_name']
                             entry_type_schema_version= type_of_forms['basic'].cleaned_data['entry_type_schema_version']
                             entry_type_supported_schemas= type_of_forms['basic'].cleaned_data['entry_type_supported_schemas']
-                            entry_type_supported_schemas= ast.literal_eval(entry_type_supported_schemas)
                             entry_type_schema_reference= type_of_forms['basic'].cleaned_data['entry_type_schema_reference']
                             entry_type_conf[entry_type_name]['entry_type_enabled']=entry_type_enabled
                             entry_type_conf[entry_type_name]['max_granularity']=entry_type_granularity
@@ -249,6 +248,13 @@ def entry_types(request):
                         return redirect("adminclient:entry_types")
                     else:
                         context = {'models': models}
-            
+    if request.method == "GET":
+        params =request.GET.urlencode()
+        params_splitted = params.split("&")
+        for param in params_splitted:
+            if 'New_Schema' in param:
+                final_params=param.replace("%3A", ":")
+                new_schema=final_params.split("=")
+                new_schema_found=new_schema[1]
     template = "general_configuration/entry_types.html"
     return render(request, template, context)

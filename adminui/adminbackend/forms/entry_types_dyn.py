@@ -63,6 +63,9 @@ class EntryTypeForm(forms.Form):
         for initial_choice in initial_choices:
             supported_schema_choices.append((initial_choice, initial_choice))
         self.fields['entry_type_supported_schemas'].choices = supported_schema_choices
+        self.fields["entry_type_supported_schemas"].initial = [
+            value for value, label in supported_schema_choices
+        ]
         placeholder = config['schema']['reference_to_default_schema_definition']
         self.initial['entry_type_schema_reference'] = placeholder
         placeholder = config['response_type']
@@ -109,7 +112,8 @@ class EntryTypeForm(forms.Form):
     entry_type_supported_schemas=forms.MultipleChoiceField(
         choices=[], 
         widget=forms.CheckboxSelectMultiple,
-        help_text='Supported Schemas'
+        help_text='Supported Schemas',
+        required=True
     )
     entry_type_schema_reference= forms.CharField(required=False, help_text='Schema reference')
     entry_type_open_api_definition=forms.CharField(required=False,help_text='Open API definition')
