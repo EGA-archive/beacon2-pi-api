@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
-from django.http import HttpResponseRedirect, HttpResponseBadRequest
+from django.http import HttpResponse
 import logging
 from pymongo.mongo_client import MongoClient
-from django.urls import resolve
+from django.urls import reverse
 from adminbackend.forms.beacon import BamForm
 from adminbackend.forms.entry_types_dyn import EntryTypeForm, LookupsForm
 from django.contrib.auth.decorators import login_required, permission_required
@@ -249,12 +249,28 @@ def entry_types(request):
                     else:
                         context = {'models': models}
     if request.method == "GET":
-        params =request.GET.urlencode()
-        params_splitted = params.split("&")
-        for param in params_splitted:
-            if 'New_Schema' in param:
-                final_params=param.replace("%3A", ":")
-                new_schema=final_params.split("=")
-                new_schema_found=new_schema[1]
+        LOG.warning(request.GET)
+        if "add_new_schema" in request.GET:
+            entry_type_collected = request.GET.get("entry_type")
+            model_collected = request.GET.get("model")
+            new_schema_found = request.GET.get("New_Schema")
+            new_path = (
+                    "/home/app/web/beacon/models/"
+                    f"{model_collected}/conf/entry_types/"
+                    f"{entry_type_collected}.yml"
+                )
+            with open(new_path) as f:
+                entry_type_yaml_loaded = yaml.safe_load(f)
+            new_array_of_supported_schemas = entry_type_yaml_loaded[entry_type_collected]['schema']['supported_schemas']
+            new_array_of_supported_schemas.append(new_schema_found)
+            entry_type_yaml_loaded[entry_type_collected]['schema']['supported_schemas']=new_array_of_supported_schemas
+            with open(new_path, 'w') as outfile:
+                yaml.dump(entry_type_yaml_loaded, outfile)
+            if request.headers.get("HX-Request") == "true":
+                response = HttpResponse()
+                response["HX-Redirect"] = reverse("adminclient:entry_types")
+                return response
+            return redirect("adminclient:entry_types")
+        
     template = "general_configuration/entry_types.html"
     return render(request, template, context)

@@ -63,10 +63,20 @@
                         {% if field.help_text == 'Supported Schemas' %}
                         {{ field }}
             <span>Add new supported schema: <div id="new_schema"></div></span>
-<span>New supported schema: <input type="text"></span>
-  <button hx-get="/entry_types" hx-include="[name='New_Schema']">
-    +
-  </button>
+<span>New supported schema:
+<div class="entry-type-row">
+    <input type="hidden" name="entry_type" value="{{ entry_type }}">
+    <input type="hidden" name="model" value="{{ model }}">
+    <input type="text" name="New_Schema">
+
+    <button
+        hx-get="/entry_types"
+        hx-include="closest .entry-type-row"
+        name="add_new_schema"
+        value="add_new_schema">
+        +
+    </button>
+</div>
   
   {% else %}
             {{ field }}
