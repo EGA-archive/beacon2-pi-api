@@ -14,4 +14,4 @@ adminui/adminclient/migrations/*
 adminui/node_modules
 *.vcf.bgz
 beacon/conf/conf.py
-models
+beacon/models/prova

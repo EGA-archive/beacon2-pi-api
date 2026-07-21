@@ -2,4 +2,7 @@ ga4gh/beacon_v2_default_model:
   model_enabled: True
 
 EUCAIM:
-  model_enabled: False
+  model_enabled: True
+
+prova:
+  model_enabled: True

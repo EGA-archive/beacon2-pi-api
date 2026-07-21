@@ -14,7 +14,7 @@ async def execute_function(self, datasets: list):
     # Initiate the list where the different dataset classes are returned populated from the queries
     list_of_responses=[]
     # Get the function that will be the one to use for the query performed
-    list_of_non_collection_modules = get_all_modules_connections_script("non_collections", "postgres")
+    list_of_non_collection_modules = get_all_modules_connections_script("non_collections", "sqlalchemy_postgresql")
     self.LOG.warning(list_of_non_collection_modules)
     for non_collection_module in list_of_non_collection_modules:
         try:

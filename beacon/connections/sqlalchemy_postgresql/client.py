@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.engine import Engine
-from beacon.connections.postgres import conf
+from beacon.connections.sqlalchemy_postgresql import conf
 
 def get_client() -> Engine:
     connection_string = (

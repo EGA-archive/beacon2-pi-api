@@ -6,6 +6,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from beacon.exceptions.exceptions import DatabaseIsDown
 
 
+# Merge the function in the client script
 async def ping_database(client):
     try:
         def _ping():
