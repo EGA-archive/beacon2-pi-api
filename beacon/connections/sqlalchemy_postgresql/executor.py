@@ -10,21 +10,17 @@ from beacon.utils.modules import get_all_modules_connections_script
 
 @log_with_args(config.level)
 async def execute_function(self, datasets: list):
-    self.LOG.warning('at the executor')
     # Initiate the list where the different dataset classes are returned populated from the queries
     list_of_responses=[]
     # Get the function that will be the one to use for the query performed
     list_of_non_collection_modules = get_all_modules_connections_script("non_collections", "sqlalchemy_postgresql")
-    self.LOG.warning(list_of_non_collection_modules)
     for non_collection_module in list_of_non_collection_modules:
         try:
             function = getattr(non_collection_module, RequestAttributes.function)
-            self.LOG.warning(function)
         except Exception:
             continue
     # Get the current process where the app is being run
     loop = asyncio.get_running_loop()
-    self.LOG.warning(datasets)
     if datasets != []:
         # If there is more than one datasets to query, start a thread for each of the datasets and execute the previously chosen function in parallel and asynchronously
         with ThreadPoolExecutor() as pool:
