@@ -434,10 +434,10 @@ def check_configuration(
             for property, value in configuration.items():
 
                 # Only two dataset-level properties are supported
-                if property not in ['isTest', 'isSynthetic']:
+                if property not in ['isTest', 'isSynthetic', 'isDeprecated']:
                     raise Exception(
                         "keys for datasets properties in datasets_conf.yml "
-                        "have to be isTest or isSynthetic"
+                        "have to be isTest, isDeprecated or isSynthetic"
                     )
 
                 # Dataset properties must be booleans
