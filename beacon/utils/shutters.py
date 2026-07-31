@@ -63,6 +63,7 @@ PATHS_TO_RESTART = [
     "/beacon/conf/conf_default.py",
     "/beacon/models",
     "/beacon/conf/models",
+    "/beacon/conf/connections",
     "/beacon/connections/mongo/conf.py"
 ]
 

@@ -43,6 +43,14 @@ def check_logs_configuration():
 def check_configuration(
     LOG=None
 ):
+    # Load conf file for connection to check which are enabled
+    with open('/beacon/conf/connections/connections_conf.yml') as infile:
+        connections_conf=yaml.safe_load(infile)
+    # Get array of enabled connections
+    connections_enabled=[]
+    for k, v in connections_conf.items():
+        if v['connection_enabled']==True:
+            connections_enabled.append(k)
     all_conf_files=get_modules_confiles()
     # -------------------------------------------------------------------------
     # Entry type enablement validation
@@ -73,6 +81,12 @@ def check_configuration(
                     "{}granularity must be one string between boolean, count or record".format(k)
                 )
 
+            if v["connection"]["name"] not in connections_enabled:
+                raise Exception(
+                    'The connection {} for {} records needs to be enabled in case you want to use it'.format(
+                        v["connection"]["name"], k
+                    )
+                )
 
             # Validate the configured backend for run records.
             if v["connection"]["name"] not in [
@@ -424,12 +438,12 @@ def check_configuration(
     # Validate datasets configuration file
     try:
         with open("/beacon/conf/datasets/datasets_conf.yml", 'r') as pfile:
-            datasets = yaml.safe_load(pfile)
+            datasets_conf = yaml.safe_load(pfile)
 
         pfile.close()
 
         # Validate each dataset configuration block
-        for dataset_name, configuration in datasets.items():
+        for dataset_name, configuration in datasets_conf.items():
 
             for property, value in configuration.items():
 

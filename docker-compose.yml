@@ -125,7 +125,7 @@ services:
       - pub
 
   beacon-ri-tools:
-    image: ghcr.io/ega-archive/beacon2-ri-tools-v2:2.2.0
+    image: ghcr.io/ega-archive/beacon2-ri-tools-v2:2.3.0
     hostname: beacon-ri-tools
     container_name: ri-tools
     networks:
@@ -166,7 +166,7 @@ services:
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true
 
-# Make sure not to expose port in prod
+
   postgres:
     image: postgres:16
     container_name: postgres-db
@@ -176,9 +176,6 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: your_secure_password
       POSTGRES_DB: beacon
-
-    ports:
-      - "5432:5432"
 
     volumes:
       - ./beacon/connections/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
