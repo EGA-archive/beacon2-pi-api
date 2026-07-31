@@ -758,6 +758,27 @@ Now state checks are available through `/health` endpoint. The implemented check
 
 ![MongoDB vulnerabilities](https://github.com/EGA-archive/beacon-production-prototype/blob/main/ri-tools/files/Machine_State_v3.jpg)
 
+## Alternative Schemas
+
+Now you can also have your own "alternative" schemas included in a plugged model. For that purpose, you will need to have the JSON schema reference and have pydantic's datamodel-code-generator framework installed. To generate the schema, you will need to execute the following command:
+
+```bash
+datamodel-codegen --url <url_to_schema> --input-file-type jsonschema --output <entry_type_name.py> --class-name <Entry_type_name_with_capital_letter> --allow-remote-refs
+```
+Example: for analysis, you need to name the class-name as Analysis.
+
+The name of the python script needs to be separated by underscores. If you include versions, at them at the end, like analysis_schema_v1_0_0.py
+
+After that include it in the models.<model_name>.validators.<entry_type> folder, and then make sure you add it in the supported schemas of models.<model_name>.conf.entry_types.
+
+Note: In case there are fields that are named different as in the original schemas but are the same, you will need to add an alias for the property modifying the generated schemas by datamodel-codegen, in order to be able to map it to the original property name and is compatible with the original spec's schema.
+
+Example:
+
+```bash
+sampleTypeAtTheOrigin: str = Field(alias='sampleOriginType') # output: sampleOriginType
+```
+
 ## Fix for MongoDB exploit (CVE-2025-14847)
 
 Beacon PI repository has been updated so the exploit for MongoDB (CVE-2025-14847) is not an issue anymore. In order to do that, the following points have been implemented:

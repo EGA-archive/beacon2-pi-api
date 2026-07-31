@@ -19,6 +19,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
       - name: Extract version from PR body
         id: version
         env:
@@ -32,6 +33,9 @@ jobs:
           fi
 
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Install PyYAML
+        run: pip install pyyaml==6.0.1
 
       - name: Checkout PR branch
         uses: actions/checkout@v4
