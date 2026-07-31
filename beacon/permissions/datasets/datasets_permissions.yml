@@ -52,8 +52,3 @@ test2:
     default_entry_types_granularity: count
     entry_types_exceptions:
     - cohort: boolean
-campings:
-  public:
-    default_entry_types_granularity: record
-    entry_types_exceptions:
-    - individual: record

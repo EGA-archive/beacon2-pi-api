@@ -2,6 +2,8 @@
 
 Welcome to Beacon v2 Production Implementation (B2PI). This is an application that makes an instance of Beacon v2 be production ready.
 
+Note: admin-ui container is a new extra service that will create a UI to manage conf but is still in development, deploy the rest of the services for now, please.
+
 ## Documentation
 
 Please, go to [CRG Beacon docs website](https://b2ri-documentation-demo.ega-archive.org/) to know how to use Beacon v2 Production Implementation.

@@ -7031,6 +7031,41 @@ class TestMain(unittest.TestCase):
 
             loop.run_until_complete(test_draining_state(self))
             loop.run_until_complete(client.close())
+
+    def test_main_check_post_alternative_schema(self):
+        # Cross-query: analysis filter applied to cohort endpoint
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+
+            async def test_check_post_alternative_schema_works():
+                # Analysis-level metadata used to filter cohort results
+                resp = await client.post(
+                    conf_override.config.uri_subpath + "/" +
+                    individual["individual"]["endpoint_name"],
+                    json={
+                        "meta": {"apiVersion": "2.0", "requestedSchemas": [{"schema": "beacon-individual-v2.1.0"}]},
+                        "query": {
+                            "includeResultsetResponses": "HIT",
+                            "pagination": {"skip": 0, "limit": 10},
+                            "testMode": True,
+                            "requestedGranularity": "record"
+                        }
+                    }
+                )
+
+                assert resp.status == 200
+
+                responsetext = await resp.text()
+                responsedict = json.loads(responsetext)
+
+                # At least one cohort expected to match
+                assert responsedict["meta"]["returnedSchemas"][0]["schema"] == 'beacon-individual-v2.1.0'
+
+            loop.run_until_complete(test_check_post_alternative_schema_works())
+            loop.run_until_complete(client.close())
+
 class AsyncTest(unittest.IsolatedAsyncioTestCase):
 
     # Starts a background API server using asyncio and waits briefly for it to initialize.
