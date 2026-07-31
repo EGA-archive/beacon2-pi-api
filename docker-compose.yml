@@ -21,6 +21,7 @@ services:
       - ./beacon/permissions:/beacon/permissions
       - ./beacon/models:/beacon/models
       - ./beacon/conf/models:/beacon/conf/models
+      - ./beacon/custom_schemas:/beacon/custom_schemas
     networks:
       - pub
 
@@ -124,7 +125,7 @@ services:
       - pub
 
   beacon-ri-tools:
-    image: ghcr.io/ega-archive/beacon2-ri-tools-v2:2.1.1
+    image: ghcr.io/ega-archive/beacon2-ri-tools-v2:2.3.0
     hostname: beacon-ri-tools
     container_name: ri-tools
     networks:
@@ -164,3 +165,26 @@ services:
     environment:
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true
+
+
+  postgres:
+    image: postgres:16
+    container_name: postgres-db
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: your_secure_password
+      POSTGRES_DB: beacon
+
+    volumes:
+      - ./beacon/connections/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d beacon"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+    networks:
+      - pub

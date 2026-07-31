@@ -3,7 +3,7 @@ from beacon.connections.mongo.utils import choose_scope
 from beacon.conf.filtering_terms import alphanumeric_terms
 from beacon.logs.logs import log_with_args
 from beacon.conf.conf_override import config
-from beacon.utils.modules import get_all_modules_mongo_connections_script
+from beacon.utils.modules import get_all_modules_connections_script
 
 @log_with_args(config.level)
 def apply_custom_filter(self, query: dict, filter: CustomFilter, dataset: str) -> dict:
@@ -16,7 +16,7 @@ def apply_custom_filter(self, query: dict, filter: CustomFilter, dataset: str) -
     else:
         query_term = value_splitted[0] + '.label'
     query[query_term]=value_splitted[1]
-    list_modules = get_all_modules_mongo_connections_script("filters.cross_queries.cross_query")
+    list_modules = get_all_modules_connections_script("filters.cross_queries.cross_query", "mongo")
     for module in list_modules:
         query = module.cross_query(self, query, scope, {}, dataset)
 

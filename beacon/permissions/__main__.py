@@ -44,12 +44,12 @@ async def get_datasets_list(self, authorized_datasets):
     except Exception as e:
         specific_datasets = []
     # Get the datasets from all the databases.
-    list_of_datasets_confs = get_all_modules_datasets()
+    list_of_datasets_confs = get_all_modules_datasets(RequestAttributes.source)
     beacon_datasets=[]
     for dataset_conf in list_of_datasets_confs:
         try:
             datasets = dataset_conf.get_list_of_datasets(self)
-        except Exception:
+        except Exception as e:
             continue
         for dataset in datasets:
             beacon_datasets.append(dataset)

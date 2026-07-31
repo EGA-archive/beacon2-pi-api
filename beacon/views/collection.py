@@ -8,6 +8,17 @@ from beacon.exceptions.exceptions import InvalidData
 from beacon.views.endpoint import EndpointView
 from beacon.utils.modules import load_framework_module, load_source_module
 from beacon.utils.checks import state_check
+from datetime import date as DateType
+from datetime import datetime as DateTimeType
+import json
+from enum import Enum
+
+def json_default(obj):
+    if isinstance(obj, (DateType, DateTimeType)):
+        return obj.isoformat()
+    if isinstance(obj, Enum):
+        return obj.value
+    raise TypeError(f"Object of type {type(obj).__name__} is not JSON serializable")
 
 class CollectionEntryTypeView(EndpointView):
     @state_check
@@ -58,4 +69,8 @@ class CollectionEntryTypeView(EndpointView):
             # Stdout the information about what entry type failed about it not being according to the spec
             raise InvalidData('{} templates or data are not correct'.format(RequestAttributes.entry_type))
         # Give a HTTP response with json data application and a 200 status, and the Collection object class collected
-        return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
+        return web.Response(
+            text=json.dumps(response_obj, default=json_default),
+            status=200,
+            content_type="application/json",
+        )

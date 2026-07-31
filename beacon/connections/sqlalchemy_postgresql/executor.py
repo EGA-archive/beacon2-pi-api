@@ -13,7 +13,7 @@ async def execute_function(self, datasets: list):
     # Initiate the list where the different dataset classes are returned populated from the queries
     list_of_responses=[]
     # Get the function that will be the one to use for the query performed
-    list_of_non_collection_modules = get_all_modules_connections_script("non_collections", "mongo")
+    list_of_non_collection_modules = get_all_modules_connections_script("non_collections", "sqlalchemy_postgresql")
     for non_collection_module in list_of_non_collection_modules:
         try:
             function = getattr(non_collection_module, RequestAttributes.function)
@@ -39,20 +39,4 @@ async def execute_function(self, datasets: list):
         raise DatabaseIsDown(str(e))
     except Exception:
         raise NoPermissionsAvailable("No datasets found. Check out the permissions or the datasets requested if a response was expected.")
-    
-@log_with_args(config.level)
-async def execute_collection_function(self):
-    try:
-        # Get the function that will be the one to use for the query performed
-        list_of_collection_modules = get_all_modules_connections_script("collections", "mongo")
-        for collection_module in list_of_collection_modules:
-            try:
-                function = getattr(collection_module, RequestAttributes.function)
-            except Exception:
-                continue
-        # Perform the query and return the class to return for the chosen collection
-        collectionsResponseClass = function(self)
-        return collectionsResponseClass
-    except ConnectionFailure as e:
-        #client.close()
-        raise DatabaseIsDown(str(e))
+
