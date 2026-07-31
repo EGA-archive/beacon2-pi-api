@@ -5,7 +5,7 @@
             "label": "abnormal sample"
         },
         "collectionDate": "2020-09-11",
-        "collectionMoment": "P32Y6M1D",
+        "collectionMoment": "P53Y4M",
         "diagnosticMarkers": [
             {
                 "id": "RO:0000085",
@@ -13,14 +13,12 @@
             }
         ],
         "histologicalDiagnosis": {
-            "id": "NCIT:C3778",
-            "label": "Serous Cystadenocarcinoma"
+            "id": "NCIT:C4194",
+            "label": "Invasive Breast Carcinoma of No Special Type"
         },
         "id": "SAMPLE1",
         "individualId": "SAMPLE1",
-        "info": {
-            "info": "Bothmetadataandgenomicvariationsinformationaresynthetic."
-        },
+        "info": {},
         "measurements": [
             {
                 "assayCode": {
@@ -29,17 +27,36 @@
                 },
                 "date": "2019-04-23",
                 "measurementValue": {
-                    "id": "LOINC:26515-7",
-                    "label": "Platelets [#/volume] in Blood"
+                    "referenceRange": {
+                        "high": 12,
+                        "low": 10,
+                        "unit": {
+                            "id": "NCIT:C28253",
+                            "label": "Milligram"
+                        }
+                    },
+                    "unit": {
+                        "id": "LOINC:26515-7",
+                        "label": "Platelets [#/volume] in Blood"
+                    },
+                    "value": 5
                 },
                 "notes": "Bear in mind that all this information is synthetic",
                 "observationMoment": {
                     "iso8601duration": "P53Y8M"
                 },
                 "procedure": {
+                    "ageAtProcedure": {
+                        "iso8601duration": "P53Y8M"
+                    },
+                    "bodySite": {
+                        "id": "BTO:0000089",
+                        "label": "blood"
+                    },
+                    "dateOfProcedure": "2020-08-19",
                     "procedureCode": {
-                        "id": "OBI:0002657",
-                        "label": "surgical biopsy"
+                        "id": "OBI:0002651",
+                        "label": "venipuncture"
                     }
                 }
             }
@@ -52,32 +69,39 @@
         "pathologicalTnmFinding": [
             {
                 "id": "NCIT:C48725",
-                "label": "T2a Stage Finding"
+                "label": "T3a Stage Finding"
             }
         ],
         "phenotypicFeatures": [
             {
                 "evidence": {
+                    "evidenceCode": {
+                        "id": "ECO:0006017",
+                        "label": "author statement from published clinical study used in manual assertion"
+                    },
                     "reference": {
                         "id": "ECO:0006017",
                         "notes": "author statement from published clinical study used in manual assertion"
                     }
                 },
-                "excluded": "TRUE",
+                "excluded": true,
                 "featureType": {
                     "id": "HP:0000002",
                     "label": "Abnormality of body height"
                 },
-                "modifiers": {
-                    "id": "HP:0032500",
-                    "label": "Exacerbated by tobacco use"
-                },
+                "modifiers": [
+                    {
+                        "id": "HP:0032500",
+                        "label": "Exacerbated by tobacco use"
+                    }
+                ],
                 "notes": "Please note that all this information is synthetic",
                 "onset": {
-                    "days": 5
+                    "days": 6,
+                    "weeks": 1
                 },
                 "resolution": {
-                    "days": 8,
+                    "days": 5,
                     "weeks": 8
                 },
                 "severity": {
@@ -87,12 +111,12 @@
             }
         ],
         "sampleOriginDetail": {
-            "id": "UBERON:0000474",
-            "label": "female reproductive system"
+            "id": "BTO:0004718",
+            "label": "breast cancer cell"
         },
         "sampleOriginType": {
-            "id": "UBERON:0000992",
-            "label": "ovary"
+            "id": "BTO:0004718",
+            "label": "breast lobe"
         },
         "sampleProcessing": {
             "id": "EFO:0009129",
@@ -110,7 +134,8 @@
             "id": "NCIT:C84509",
             "label": "Primary Malignant Neoplasm"
         },
-        "datasetId": "test"
+        "datasetId": "test",
+        "_id": "ff488bccc94cd20e15ce2b9c56e6e0588b88acdf4ce205f10ead3323e77e42ec"
     },
     {
         "biosampleStatus": {
@@ -118,7 +143,7 @@
             "label": "abnormal sample"
         },
         "collectionDate": "2020-09-11",
-        "collectionMoment": "P32Y6M1D",
+        "collectionMoment": "P53Y4M",
         "diagnosticMarkers": [
             {
                 "id": "RO:0000085",
@@ -126,14 +151,12 @@
             }
         ],
         "histologicalDiagnosis": {
-            "id": "NCIT:C3778",
-            "label": "Serous Cystadenocarcinoma"
+            "id": "NCIT:C4194",
+            "label": "Invasive Breast Carcinoma of No Special Type"
         },
         "id": "SAMPLE2",
         "individualId": "SAMPLE2",
-        "info": {
-            "info": "Bothmetadataandgenomicvariationsinformationaresynthetic."
-        },
+        "info": {},
         "measurements": [
             {
                 "assayCode": {
@@ -142,17 +165,36 @@
                 },
                 "date": "2019-04-23",
                 "measurementValue": {
-                    "id": "LOINC:26515-7",
-                    "label": "Platelets [#/volume] in Blood"
+                    "referenceRange": {
+                        "high": 12,
+                        "low": 10,
+                        "unit": {
+                            "id": "NCIT:C28253",
+                            "label": "Milligram"
+                        }
+                    },
+                    "unit": {
+                        "id": "LOINC:26515-7",
+                        "label": "Platelets [#/volume] in Blood"
+                    },
+                    "value": 6
                 },
                 "notes": "Bear in mind that all this information is synthetic",
                 "observationMoment": {
                     "iso8601duration": "P53Y8M"
                 },
                 "procedure": {
+                    "ageAtProcedure": {
+                        "iso8601duration": "P53Y8M"
+                    },
+                    "bodySite": {
+                        "id": "BTO:0000089",
+                        "label": "blood"
+                    },
+                    "dateOfProcedure": "2020-08-19",
                     "procedureCode": {
-                        "id": "OBI:0002657",
-                        "label": "surgical biopsy"
+                        "id": "OBI:0002651",
+                        "label": "venipuncture"
                     }
                 }
             }
@@ -165,32 +207,39 @@
         "pathologicalTnmFinding": [
             {
                 "id": "NCIT:C48725",
-                "label": "T2a Stage Finding"
+                "label": "T3a Stage Finding"
             }
         ],
         "phenotypicFeatures": [
             {
                 "evidence": {
+                    "evidenceCode": {
+                        "id": "ECO:0006017",
+                        "label": "author statement from published clinical study used in manual assertion"
+                    },
                     "reference": {
                         "id": "ECO:0006017",
                         "notes": "author statement from published clinical study used in manual assertion"
                     }
                 },
-                "excluded": "TRUE",
+                "excluded": true,
                 "featureType": {
                     "id": "HP:0000002",
                     "label": "Abnormality of body height"
                 },
-                "modifiers": {
-                    "id": "HP:0032500",
-                    "label": "Exacerbated by tobacco use"
-                },
+                "modifiers": [
+                    {
+                        "id": "HP:0032500",
+                        "label": "Exacerbated by tobacco use"
+                    }
+                ],
                 "notes": "Please note that all this information is synthetic",
                 "onset": {
-                    "days": 5
+                    "days": 6,
+                    "weeks": 1
                 },
                 "resolution": {
-                    "days": 8,
+                    "days": 5,
                     "weeks": 8
                 },
                 "severity": {
@@ -200,12 +249,12 @@
             }
         ],
         "sampleOriginDetail": {
-            "id": "UBERON:0000474",
-            "label": "female reproductive system"
+            "id": "BTO:0004718",
+            "label": "breast cancer cell"
         },
         "sampleOriginType": {
-            "id": "UBERON:0000992",
-            "label": "ovary"
+            "id": "BTO:0004718",
+            "label": "breast lobe"
         },
         "sampleProcessing": {
             "id": "EFO:0009129",
@@ -216,14 +265,15 @@
             "label": "freezing storage"
         },
         "tumorGrade": {
-            "id": "NCIT:C28080",
-            "label": "Grade 3a"
+            "id": "NCIT:C28078",
+            "label": "Grade 2"
         },
         "tumorProgression": {
             "id": "NCIT:C84509",
             "label": "Primary Malignant Neoplasm"
         },
-        "datasetId": "test"
+        "datasetId": "test",
+        "_id": "d94ae1b61b45922e9475031b62812039bbccde2c423ef13ec75b127ee2e5551e"
     },
     {
         "biosampleStatus": {
@@ -231,7 +281,7 @@
             "label": "abnormal sample"
         },
         "collectionDate": "2020-09-11",
-        "collectionMoment": "P32Y6M1D",
+        "collectionMoment": "P53Y4M",
         "diagnosticMarkers": [
             {
                 "id": "RO:0000085",
@@ -239,14 +289,12 @@
             }
         ],
         "histologicalDiagnosis": {
-            "id": "NCIT:C3778",
-            "label": "Serous Cystadenocarcinoma"
+            "id": "NCIT:C4194",
+            "label": "Invasive Breast Carcinoma of No Special Type"
         },
         "id": "SAMPLE3",
         "individualId": "SAMPLE3",
-        "info": {
-            "info": "Bothmetadataandgenomicvariationsinformationaresynthetic."
-        },
+        "info": {},
         "measurements": [
             {
                 "assayCode": {
@@ -255,17 +303,36 @@
                 },
                 "date": "2019-04-23",
                 "measurementValue": {
-                    "id": "LOINC:26515-7",
-                    "label": "Platelets [#/volume] in Blood"
+                    "referenceRange": {
+                        "high": 12,
+                        "low": 10,
+                        "unit": {
+                            "id": "NCIT:C28253",
+                            "label": "Milligram"
+                        }
+                    },
+                    "unit": {
+                        "id": "LOINC:26515-7",
+                        "label": "Platelets [#/volume] in Blood"
+                    },
+                    "value": 7
                 },
                 "notes": "Bear in mind that all this information is synthetic",
                 "observationMoment": {
                     "iso8601duration": "P53Y8M"
                 },
                 "procedure": {
+                    "ageAtProcedure": {
+                        "iso8601duration": "P53Y8M"
+                    },
+                    "bodySite": {
+                        "id": "BTO:0000089",
+                        "label": "blood"
+                    },
+                    "dateOfProcedure": "2020-08-19",
                     "procedureCode": {
-                        "id": "OBI:0002657",
-                        "label": "surgical biopsy"
+                        "id": "OBI:0002651",
+                        "label": "venipuncture"
                     }
                 }
             }
@@ -278,32 +345,39 @@
         "pathologicalTnmFinding": [
             {
                 "id": "NCIT:C48725",
-                "label": "T2a Stage Finding"
+                "label": "T3a Stage Finding"
             }
         ],
         "phenotypicFeatures": [
             {
                 "evidence": {
+                    "evidenceCode": {
+                        "id": "ECO:0006017",
+                        "label": "author statement from published clinical study used in manual assertion"
+                    },
                     "reference": {
                         "id": "ECO:0006017",
                         "notes": "author statement from published clinical study used in manual assertion"
                     }
                 },
-                "excluded": "TRUE",
+                "excluded": true,
                 "featureType": {
                     "id": "HP:0000002",
                     "label": "Abnormality of body height"
                 },
-                "modifiers": {
-                    "id": "HP:0032500",
-                    "label": "Exacerbated by tobacco use"
-                },
+                "modifiers": [
+                    {
+                        "id": "HP:0032500",
+                        "label": "Exacerbated by tobacco use"
+                    }
+                ],
                 "notes": "Please note that all this information is synthetic",
                 "onset": {
-                    "days": 5
+                    "days": 6,
+                    "weeks": 1
                 },
                 "resolution": {
-                    "days": 8,
+                    "days": 5,
                     "weeks": 8
                 },
                 "severity": {
@@ -313,12 +387,12 @@
             }
         ],
         "sampleOriginDetail": {
-            "id": "UBERON:0000474",
-            "label": "female reproductive system"
+            "id": "BTO:0004718",
+            "label": "breast cancer cell"
         },
         "sampleOriginType": {
-            "id": "UBERON:0000992",
-            "label": "ovary"
+            "id": "BTO:0004718",
+            "label": "breast lobe"
         },
         "sampleProcessing": {
             "id": "EFO:0009129",
@@ -336,7 +410,8 @@
             "id": "NCIT:C84509",
             "label": "Primary Malignant Neoplasm"
         },
-        "datasetId": "test"
+        "datasetId": "test",
+        "_id": "067a3d071b0e7b68d89e1797a26d5d0959f6038447bb540bdbf2587463a167d9"
     },
     {
         "biosampleStatus": {
@@ -344,7 +419,7 @@
             "label": "abnormal sample"
         },
         "collectionDate": "2020-09-11",
-        "collectionMoment": "P32Y6M1D",
+        "collectionMoment": "P53Y4M",
         "diagnosticMarkers": [
             {
                 "id": "RO:0000085",
@@ -352,14 +427,12 @@
             }
         ],
         "histologicalDiagnosis": {
-            "id": "NCIT:C3778",
-            "label": "Serous Cystadenocarcinoma"
+            "id": "NCIT:C4194",
+            "label": "Invasive Breast Carcinoma of No Special Type"
         },
         "id": "SAMPLE4",
         "individualId": "SAMPLE4",
-        "info": {
-            "info": "Bothmetadataandgenomicvariationsinformationaresynthetic."
-        },
+        "info": {},
         "measurements": [
             {
                 "assayCode": {
@@ -368,17 +441,36 @@
                 },
                 "date": "2019-04-23",
                 "measurementValue": {
-                    "id": "LOINC:26515-7",
-                    "label": "Platelets [#/volume] in Blood"
+                    "referenceRange": {
+                        "high": 12,
+                        "low": 10,
+                        "unit": {
+                            "id": "NCIT:C28253",
+                            "label": "Milligram"
+                        }
+                    },
+                    "unit": {
+                        "id": "LOINC:26515-7",
+                        "label": "Platelets [#/volume] in Blood"
+                    },
+                    "value": 8
                 },
                 "notes": "Bear in mind that all this information is synthetic",
                 "observationMoment": {
                     "iso8601duration": "P53Y8M"
                 },
                 "procedure": {
+                    "ageAtProcedure": {
+                        "iso8601duration": "P53Y8M"
+                    },
+                    "bodySite": {
+                        "id": "BTO:0000089",
+                        "label": "blood"
+                    },
+                    "dateOfProcedure": "2020-08-19",
                     "procedureCode": {
-                        "id": "OBI:0002657",
-                        "label": "surgical biopsy"
+                        "id": "OBI:0002651",
+                        "label": "venipuncture"
                     }
                 }
             }
@@ -391,32 +483,39 @@
         "pathologicalTnmFinding": [
             {
                 "id": "NCIT:C48725",
-                "label": "T2a Stage Finding"
+                "label": "T3a Stage Finding"
             }
         ],
         "phenotypicFeatures": [
             {
                 "evidence": {
+                    "evidenceCode": {
+                        "id": "ECO:0006017",
+                        "label": "author statement from published clinical study used in manual assertion"
+                    },
                     "reference": {
                         "id": "ECO:0006017",
                         "notes": "author statement from published clinical study used in manual assertion"
                     }
                 },
-                "excluded": "TRUE",
+                "excluded": true,
                 "featureType": {
                     "id": "HP:0000002",
                     "label": "Abnormality of body height"
                 },
-                "modifiers": {
-                    "id": "HP:0032500",
-                    "label": "Exacerbated by tobacco use"
-                },
+                "modifiers": [
+                    {
+                        "id": "HP:0032500",
+                        "label": "Exacerbated by tobacco use"
+                    }
+                ],
                 "notes": "Please note that all this information is synthetic",
                 "onset": {
-                    "days": 5
+                    "days": 6,
+                    "weeks": 1
                 },
                 "resolution": {
-                    "days": 8,
+                    "days": 5,
                     "weeks": 8
                 },
                 "severity": {
@@ -426,12 +525,12 @@
             }
         ],
         "sampleOriginDetail": {
-            "id": "UBERON:0000474",
-            "label": "female reproductive system"
+            "id": "BTO:0004718",
+            "label": "breast cancer cell"
         },
         "sampleOriginType": {
-            "id": "UBERON:0000992",
-            "label": "ovary"
+            "id": "BTO:0004718",
+            "label": "breast lobe"
         },
         "sampleProcessing": {
             "id": "EFO:0009129",
@@ -449,7 +548,8 @@
             "id": "NCIT:C84509",
             "label": "Primary Malignant Neoplasm"
         },
-        "datasetId": "test"
+        "datasetId": "test",
+        "_id": "77779f47088ed250b081ddb1933705fda527c10b0a47fab5852f78ecc3b7c56f"
     },
     {
         "biosampleStatus": {
@@ -457,7 +557,7 @@
             "label": "abnormal sample"
         },
         "collectionDate": "2020-09-11",
-        "collectionMoment": "P32Y6M1D",
+        "collectionMoment": "P53Y4M",
         "diagnosticMarkers": [
             {
                 "id": "RO:0000085",
@@ -465,14 +565,12 @@
             }
         ],
         "histologicalDiagnosis": {
-            "id": "NCIT:C3778",
-            "label": "Serous Cystadenocarcinoma"
+            "id": "NCIT:C4194",
+            "label": "Invasive Breast Carcinoma of No Special Type"
         },
         "id": "SAMPLE5",
         "individualId": "SAMPLE5",
-        "info": {
-            "info": "Bothmetadataandgenomicvariationsinformationaresynthetic."
-        },
+        "info": {},
         "measurements": [
             {
                 "assayCode": {
@@ -481,17 +579,36 @@
                 },
                 "date": "2019-04-23",
                 "measurementValue": {
-                    "id": "LOINC:26515-7",
-                    "label": "Platelets [#/volume] in Blood"
+                    "referenceRange": {
+                        "high": 12,
+                        "low": 10,
+                        "unit": {
+                            "id": "NCIT:C28253",
+                            "label": "Milligram"
+                        }
+                    },
+                    "unit": {
+                        "id": "LOINC:26515-7",
+                        "label": "Platelets [#/volume] in Blood"
+                    },
+                    "value": 9
                 },
                 "notes": "Bear in mind that all this information is synthetic",
                 "observationMoment": {
                     "iso8601duration": "P53Y8M"
                 },
                 "procedure": {
+                    "ageAtProcedure": {
+                        "iso8601duration": "P53Y8M"
+                    },
+                    "bodySite": {
+                        "id": "BTO:0000089",
+                        "label": "blood"
+                    },
+                    "dateOfProcedure": "2020-08-19",
                     "procedureCode": {
-                        "id": "OBI:0002657",
-                        "label": "surgical biopsy"
+                        "id": "OBI:0002651",
+                        "label": "venipuncture"
                     }
                 }
             }
@@ -504,32 +621,39 @@
         "pathologicalTnmFinding": [
             {
                 "id": "NCIT:C48725",
-                "label": "T2a Stage Finding"
+                "label": "T3a Stage Finding"
             }
         ],
         "phenotypicFeatures": [
             {
                 "evidence": {
+                    "evidenceCode": {
+                        "id": "ECO:0006017",
+                        "label": "author statement from published clinical study used in manual assertion"
+                    },
                     "reference": {
                         "id": "ECO:0006017",
                         "notes": "author statement from published clinical study used in manual assertion"
                     }
                 },
-                "excluded": "TRUE",
+                "excluded": true,
                 "featureType": {
                     "id": "HP:0000002",
                     "label": "Abnormality of body height"
                 },
-                "modifiers": {
-                    "id": "HP:0032500",
-                    "label": "Exacerbated by tobacco use"
-                },
+                "modifiers": [
+                    {
+                        "id": "HP:0032500",
+                        "label": "Exacerbated by tobacco use"
+                    }
+                ],
                 "notes": "Please note that all this information is synthetic",
                 "onset": {
-                    "days": 5
+                    "days": 6,
+                    "weeks": 1
                 },
                 "resolution": {
-                    "days": 8,
+                    "days": 5,
                     "weeks": 8
                 },
                 "severity": {
@@ -539,12 +663,12 @@
             }
         ],
         "sampleOriginDetail": {
-            "id": "UBERON:0000474",
-            "label": "female reproductive system"
+            "id": "BTO:0004718",
+            "label": "breast cancer cell"
         },
         "sampleOriginType": {
-            "id": "UBERON:0000992",
-            "label": "ovary"
+            "id": "BTO:0004718",
+            "label": "breast lobe"
         },
         "sampleProcessing": {
             "id": "EFO:0009129",
@@ -555,14 +679,15 @@
             "label": "freezing storage"
         },
         "tumorGrade": {
-            "id": "NCIT:C28080",
-            "label": "Grade 3a"
+            "id": "NCIT:C28078",
+            "label": "Grade 2"
         },
         "tumorProgression": {
             "id": "NCIT:C84509",
             "label": "Primary Malignant Neoplasm"
         },
-        "datasetId": "test"
+        "datasetId": "test",
+        "_id": "d7f8eebbb7d83672cd26d355e1804f6d1258306f5a8f19c5576755c7c4625497"
     },
     {
         "biosampleStatus": {
@@ -570,7 +695,7 @@
             "label": "abnormal sample"
         },
         "collectionDate": "2020-09-11",
-        "collectionMoment": "P32Y6M1D",
+        "collectionMoment": "P53Y4M",
         "diagnosticMarkers": [
             {
                 "id": "RO:0000085",
@@ -578,14 +703,12 @@
             }
         ],
         "histologicalDiagnosis": {
-            "id": "NCIT:C3778",
-            "label": "Serous Cystadenocarcinoma"
+            "id": "NCIT:C4194",
+            "label": "Invasive Breast Carcinoma of No Special Type"
         },
         "id": "SAMPLE6",
         "individualId": "SAMPLE6",
-        "info": {
-            "info": "Bothmetadataandgenomicvariationsinformationaresynthetic."
-        },
+        "info": {},
         "measurements": [
             {
                 "assayCode": {
@@ -594,17 +717,36 @@
                 },
                 "date": "2019-04-23",
                 "measurementValue": {
-                    "id": "LOINC:26515-7",
-                    "label": "Platelets [#/volume] in Blood"
+                    "referenceRange": {
+                        "high": 12,
+                        "low": 10,
+                        "unit": {
+                            "id": "NCIT:C28253",
+                            "label": "Milligram"
+                        }
+                    },
+                    "unit": {
+                        "id": "LOINC:26515-7",
+                        "label": "Platelets [#/volume] in Blood"
+                    },
+                    "value": 10
                 },
                 "notes": "Bear in mind that all this information is synthetic",
                 "observationMoment": {
                     "iso8601duration": "P53Y8M"
                 },
                 "procedure": {
+                    "ageAtProcedure": {
+                        "iso8601duration": "P53Y8M"
+                    },
+                    "bodySite": {
+                        "id": "BTO:0000089",
+                        "label": "blood"
+                    },
+                    "dateOfProcedure": "2020-08-19",
                     "procedureCode": {
-                        "id": "OBI:0002657",
-                        "label": "surgical biopsy"
+                        "id": "OBI:0002651",
+                        "label": "venipuncture"
                     }
                 }
             }
@@ -617,32 +759,39 @@
         "pathologicalTnmFinding": [
             {
                 "id": "NCIT:C48725",
-                "label": "T2a Stage Finding"
+                "label": "T3a Stage Finding"
             }
         ],
         "phenotypicFeatures": [
             {
                 "evidence": {
+                    "evidenceCode": {
+                        "id": "ECO:0006017",
+                        "label": "author statement from published clinical study used in manual assertion"
+                    },
                     "reference": {
                         "id": "ECO:0006017",
                         "notes": "author statement from published clinical study used in manual assertion"
                     }
                 },
-                "excluded": "TRUE",
+                "excluded": true,
                 "featureType": {
                     "id": "HP:0000002",
                     "label": "Abnormality of body height"
                 },
-                "modifiers": {
-                    "id": "HP:0032500",
-                    "label": "Exacerbated by tobacco use"
-                },
+                "modifiers": [
+                    {
+                        "id": "HP:0032500",
+                        "label": "Exacerbated by tobacco use"
+                    }
+                ],
                 "notes": "Please note that all this information is synthetic",
                 "onset": {
-                    "days": 5
+                    "days": 6,
+                    "weeks": 1
                 },
                 "resolution": {
-                    "days": 8,
+                    "days": 5,
                     "weeks": 8
                 },
                 "severity": {
@@ -652,12 +801,12 @@
             }
         ],
         "sampleOriginDetail": {
-            "id": "UBERON:0000474",
-            "label": "female reproductive system"
+            "id": "BTO:0004718",
+            "label": "breast cancer cell"
         },
         "sampleOriginType": {
-            "id": "UBERON:0000992",
-            "label": "ovary"
+            "id": "BTO:0004718",
+            "label": "breast lobe"
         },
         "sampleProcessing": {
             "id": "EFO:0009129",
@@ -675,7 +824,8 @@
             "id": "NCIT:C84509",
             "label": "Primary Malignant Neoplasm"
         },
-        "datasetId": "test"
+        "datasetId": "test",
+        "_id": "e2054e5807803241be4a84c28fb45cf4a483f420bb66b137d925f1219277fa0f"
     },
     {
         "biosampleStatus": {
@@ -683,7 +833,7 @@
             "label": "abnormal sample"
         },
         "collectionDate": "2020-09-11",
-        "collectionMoment": "P32Y6M1D",
+        "collectionMoment": "P53Y4M",
         "diagnosticMarkers": [
             {
                 "id": "RO:0000085",
@@ -691,14 +841,12 @@
             }
         ],
         "histologicalDiagnosis": {
-            "id": "NCIT:C3778",
-            "label": "Serous Cystadenocarcinoma"
+            "id": "NCIT:C4194",
+            "label": "Invasive Breast Carcinoma of No Special Type"
         },
         "id": "SAMPLE7",
         "individualId": "SAMPLE7",
-        "info": {
-            "info": "Bothmetadataandgenomicvariationsinformationaresynthetic."
-        },
+        "info": {},
         "measurements": [
             {
                 "assayCode": {
@@ -707,17 +855,36 @@
                 },
                 "date": "2019-04-23",
                 "measurementValue": {
-                    "id": "LOINC:26515-7",
-                    "label": "Platelets [#/volume] in Blood"
+                    "referenceRange": {
+                        "high": 12,
+                        "low": 10,
+                        "unit": {
+                            "id": "NCIT:C28253",
+                            "label": "Milligram"
+                        }
+                    },
+                    "unit": {
+                        "id": "LOINC:26515-7",
+                        "label": "Platelets [#/volume] in Blood"
+                    },
+                    "value": 11
                 },
                 "notes": "Bear in mind that all this information is synthetic",
                 "observationMoment": {
                     "iso8601duration": "P53Y8M"
                 },
                 "procedure": {
+                    "ageAtProcedure": {
+                        "iso8601duration": "P53Y8M"
+                    },
+                    "bodySite": {
+                        "id": "BTO:0000089",
+                        "label": "blood"
+                    },
+                    "dateOfProcedure": "2020-08-19",
                     "procedureCode": {
-                        "id": "OBI:0002657",
-                        "label": "surgical biopsy"
+                        "id": "OBI:0002651",
+                        "label": "venipuncture"
                     }
                 }
             }
@@ -730,32 +897,39 @@
         "pathologicalTnmFinding": [
             {
                 "id": "NCIT:C48725",
-                "label": "T2a Stage Finding"
+                "label": "T3a Stage Finding"
             }
         ],
         "phenotypicFeatures": [
             {
                 "evidence": {
+                    "evidenceCode": {
+                        "id": "ECO:0006017",
+                        "label": "author statement from published clinical study used in manual assertion"
+                    },
                     "reference": {
                         "id": "ECO:0006017",
                         "notes": "author statement from published clinical study used in manual assertion"
                     }
                 },
-                "excluded": "TRUE",
+                "excluded": true,
                 "featureType": {
                     "id": "HP:0000002",
                     "label": "Abnormality of body height"
                 },
-                "modifiers": {
-                    "id": "HP:0032500",
-                    "label": "Exacerbated by tobacco use"
-                },
+                "modifiers": [
+                    {
+                        "id": "HP:0032500",
+                        "label": "Exacerbated by tobacco use"
+                    }
+                ],
                 "notes": "Please note that all this information is synthetic",
                 "onset": {
-                    "days": 5
+                    "days": 6,
+                    "weeks": 1
                 },
                 "resolution": {
-                    "days": 8,
+                    "days": 5,
                     "weeks": 8
                 },
                 "severity": {
@@ -765,12 +939,12 @@
             }
         ],
         "sampleOriginDetail": {
-            "id": "UBERON:0000474",
-            "label": "female reproductive system"
+            "id": "BTO:0004718",
+            "label": "breast cancer cell"
         },
         "sampleOriginType": {
-            "id": "UBERON:0000992",
-            "label": "ovary"
+            "id": "BTO:0000912",
+            "label": "nasal mucosa"
         },
         "sampleProcessing": {
             "id": "EFO:0009129",
@@ -788,7 +962,8 @@
             "id": "NCIT:C84509",
             "label": "Primary Malignant Neoplasm"
         },
-        "datasetId": "test"
+        "datasetId": "test",
+        "_id": "66a1a8359b6bb0d081d029de2aee209cc743bdf7dee91913797e0bf6a457b0f3"
     },
     {
         "biosampleStatus": {
@@ -796,7 +971,7 @@
             "label": "abnormal sample"
         },
         "collectionDate": "2020-09-11",
-        "collectionMoment": "P32Y6M1D",
+        "collectionMoment": "P53Y4M",
         "diagnosticMarkers": [
             {
                 "id": "RO:0000085",
@@ -804,14 +979,12 @@
             }
         ],
         "histologicalDiagnosis": {
-            "id": "NCIT:C3778",
-            "label": "Serous Cystadenocarcinoma"
+            "id": "NCIT:C4194",
+            "label": "Invasive Breast Carcinoma of No Special Type"
         },
         "id": "SAMPLE8",
         "individualId": "SAMPLE8",
-        "info": {
-            "info": "Bothmetadataandgenomicvariationsinformationaresynthetic."
-        },
+        "info": {},
         "measurements": [
             {
                 "assayCode": {
@@ -820,17 +993,36 @@
                 },
                 "date": "2019-04-23",
                 "measurementValue": {
-                    "id": "LOINC:26515-7",
-                    "label": "Platelets [#/volume] in Blood"
+                    "referenceRange": {
+                        "high": 12,
+                        "low": 10,
+                        "unit": {
+                            "id": "NCIT:C28253",
+                            "label": "Milligram"
+                        }
+                    },
+                    "unit": {
+                        "id": "LOINC:26515-7",
+                        "label": "Platelets [#/volume] in Blood"
+                    },
+                    "value": 12
                 },
                 "notes": "Bear in mind that all this information is synthetic",
                 "observationMoment": {
                     "iso8601duration": "P53Y8M"
                 },
                 "procedure": {
+                    "ageAtProcedure": {
+                        "iso8601duration": "P53Y8M"
+                    },
+                    "bodySite": {
+                        "id": "BTO:0000089",
+                        "label": "blood"
+                    },
+                    "dateOfProcedure": "2020-08-19",
                     "procedureCode": {
-                        "id": "OBI:0002657",
-                        "label": "surgical biopsy"
+                        "id": "OBI:0002651",
+                        "label": "venipuncture"
                     }
                 }
             }
@@ -843,32 +1035,39 @@
         "pathologicalTnmFinding": [
             {
                 "id": "NCIT:C48725",
-                "label": "T2a Stage Finding"
+                "label": "T3a Stage Finding"
             }
         ],
         "phenotypicFeatures": [
             {
                 "evidence": {
+                    "evidenceCode": {
+                        "id": "ECO:0006017",
+                        "label": "author statement from published clinical study used in manual assertion"
+                    },
                     "reference": {
                         "id": "ECO:0006017",
                         "notes": "author statement from published clinical study used in manual assertion"
                     }
                 },
-                "excluded": "TRUE",
+                "excluded": true,
                 "featureType": {
                     "id": "HP:0000002",
                     "label": "Abnormality of body height"
                 },
-                "modifiers": {
-                    "id": "HP:0032500",
-                    "label": "Exacerbated by tobacco use"
-                },
+                "modifiers": [
+                    {
+                        "id": "HP:0032500",
+                        "label": "Exacerbated by tobacco use"
+                    }
+                ],
                 "notes": "Please note that all this information is synthetic",
                 "onset": {
-                    "days": 5
+                    "days": 6,
+                    "weeks": 1
                 },
                 "resolution": {
-                    "days": 8,
+                    "days": 5,
                     "weeks": 8
                 },
                 "severity": {
@@ -878,12 +1077,12 @@
             }
         ],
         "sampleOriginDetail": {
-            "id": "UBERON:0000474",
-            "label": "female reproductive system"
+            "id": "BTO:0004718",
+            "label": "breast cancer cell"
         },
         "sampleOriginType": {
-            "id": "UBERON:0000992",
-            "label": "ovary"
+            "id": "BTO:0000912",
+            "label": "nasal mucosa"
         },
         "sampleProcessing": {
             "id": "EFO:0009129",
@@ -901,7 +1100,8 @@
             "id": "NCIT:C84509",
             "label": "Primary Malignant Neoplasm"
         },
-        "datasetId": "test"
+        "datasetId": "test",
+        "_id": "33e92a14b9f93f99c3defc33d5f74ff324025bf13754f0fd4121511202da95d9"
     },
     {
         "biosampleStatus": {
@@ -909,7 +1109,7 @@
             "label": "abnormal sample"
         },
         "collectionDate": "2020-09-11",
-        "collectionMoment": "P32Y6M1D",
+        "collectionMoment": "P53Y4M",
         "diagnosticMarkers": [
             {
                 "id": "RO:0000085",
@@ -917,14 +1117,12 @@
             }
         ],
         "histologicalDiagnosis": {
-            "id": "NCIT:C3778",
-            "label": "Serous Cystadenocarcinoma"
+            "id": "NCIT:C4194",
+            "label": "Invasive Breast Carcinoma of No Special Type"
         },
         "id": "SAMPLE9",
         "individualId": "SAMPLE9",
-        "info": {
-            "info": "Bothmetadataandgenomicvariationsinformationaresynthetic."
-        },
+        "info": {},
         "measurements": [
             {
                 "assayCode": {
@@ -933,17 +1131,36 @@
                 },
                 "date": "2019-04-23",
                 "measurementValue": {
-                    "id": "LOINC:26515-7",
-                    "label": "Platelets [#/volume] in Blood"
+                    "referenceRange": {
+                        "high": 12,
+                        "low": 10,
+                        "unit": {
+                            "id": "NCIT:C28253",
+                            "label": "Milligram"
+                        }
+                    },
+                    "unit": {
+                        "id": "LOINC:26515-7",
+                        "label": "Platelets [#/volume] in Blood"
+                    },
+                    "value": 13
                 },
                 "notes": "Bear in mind that all this information is synthetic",
                 "observationMoment": {
                     "iso8601duration": "P53Y8M"
                 },
                 "procedure": {
+                    "ageAtProcedure": {
+                        "iso8601duration": "P53Y8M"
+                    },
+                    "bodySite": {
+                        "id": "BTO:0000089",
+                        "label": "blood"
+                    },
+                    "dateOfProcedure": "2020-08-19",
                     "procedureCode": {
-                        "id": "OBI:0002657",
-                        "label": "surgical biopsy"
+                        "id": "OBI:0002651",
+                        "label": "venipuncture"
                     }
                 }
             }
@@ -956,32 +1173,39 @@
         "pathologicalTnmFinding": [
             {
                 "id": "NCIT:C48725",
-                "label": "T2a Stage Finding"
+                "label": "T3a Stage Finding"
             }
         ],
         "phenotypicFeatures": [
             {
                 "evidence": {
+                    "evidenceCode": {
+                        "id": "ECO:0006017",
+                        "label": "author statement from published clinical study used in manual assertion"
+                    },
                     "reference": {
                         "id": "ECO:0006017",
                         "notes": "author statement from published clinical study used in manual assertion"
                     }
                 },
-                "excluded": "TRUE",
+                "excluded": true,
                 "featureType": {
                     "id": "HP:0000002",
                     "label": "Abnormality of body height"
                 },
-                "modifiers": {
-                    "id": "HP:0032500",
-                    "label": "Exacerbated by tobacco use"
-                },
+                "modifiers": [
+                    {
+                        "id": "HP:0032500",
+                        "label": "Exacerbated by tobacco use"
+                    }
+                ],
                 "notes": "Please note that all this information is synthetic",
                 "onset": {
-                    "days": 5
+                    "days": 6,
+                    "weeks": 1
                 },
                 "resolution": {
-                    "days": 8,
+                    "days": 5,
                     "weeks": 8
                 },
                 "severity": {
@@ -991,12 +1215,12 @@
             }
         ],
         "sampleOriginDetail": {
-            "id": "UBERON:0000474",
-            "label": "female reproductive system"
+            "id": "BTO:0004718",
+            "label": "breast cancer cell"
         },
         "sampleOriginType": {
-            "id": "UBERON:0000992",
-            "label": "ovary"
+            "id": "BTO:0000912",
+            "label": "nasal mucosa"
         },
         "sampleProcessing": {
             "id": "EFO:0009129",
@@ -1007,14 +1231,15 @@
             "label": "freezing storage"
         },
         "tumorGrade": {
-            "id": "NCIT:C28080",
-            "label": "Grade 3a"
+            "id": "NCIT:C28078",
+            "label": "Grade 2"
         },
         "tumorProgression": {
             "id": "NCIT:C84509",
             "label": "Primary Malignant Neoplasm"
         },
-        "datasetId": "test"
+        "datasetId": "test",
+        "_id": "8454abd81a22b9e81267d0a53a808caec69e854d230dde1ba376d4baa3196258"
     },
     {
         "biosampleStatus": {
@@ -1022,7 +1247,7 @@
             "label": "abnormal sample"
         },
         "collectionDate": "2020-09-11",
-        "collectionMoment": "P32Y6M1D",
+        "collectionMoment": "P53Y4M",
         "diagnosticMarkers": [
             {
                 "id": "RO:0000085",
@@ -1030,14 +1255,12 @@
             }
         ],
         "histologicalDiagnosis": {
-            "id": "NCIT:C3778",
-            "label": "Serous Cystadenocarcinoma"
+            "id": "NCIT:C4126",
+            "label": "Intestinal-Type Adenocarcinoma"
         },
         "id": "SAMPLE10",
         "individualId": "SAMPLE10",
-        "info": {
-            "info": "Bothmetadataandgenomicvariationsinformationaresynthetic."
-        },
+        "info": {},
         "measurements": [
             {
                 "assayCode": {
@@ -1046,17 +1269,36 @@
                 },
                 "date": "2019-04-23",
                 "measurementValue": {
-                    "id": "LOINC:26515-7",
-                    "label": "Platelets [#/volume] in Blood"
+                    "referenceRange": {
+                        "high": 12,
+                        "low": 10,
+                        "unit": {
+                            "id": "NCIT:C28253",
+                            "label": "Milligram"
+                        }
+                    },
+                    "unit": {
+                        "id": "LOINC:26515-7",
+                        "label": "Platelets [#/volume] in Blood"
+                    },
+                    "value": 14
                 },
                 "notes": "Bear in mind that all this information is synthetic",
                 "observationMoment": {
                     "iso8601duration": "P53Y8M"
                 },
                 "procedure": {
+                    "ageAtProcedure": {
+                        "iso8601duration": "P53Y8M"
+                    },
+                    "bodySite": {
+                        "id": "BTO:0000089",
+                        "label": "blood"
+                    },
+                    "dateOfProcedure": "2020-08-19",
                     "procedureCode": {
-                        "id": "OBI:0002657",
-                        "label": "surgical biopsy"
+                        "id": "OBI:0002651",
+                        "label": "venipuncture"
                     }
                 }
             }
@@ -1069,32 +1311,39 @@
         "pathologicalTnmFinding": [
             {
                 "id": "NCIT:C48725",
-                "label": "T2a Stage Finding"
+                "label": "T3a Stage Finding"
             }
         ],
         "phenotypicFeatures": [
             {
                 "evidence": {
+                    "evidenceCode": {
+                        "id": "ECO:0006017",
+                        "label": "author statement from published clinical study used in manual assertion"
+                    },
                     "reference": {
                         "id": "ECO:0006017",
                         "notes": "author statement from published clinical study used in manual assertion"
                     }
                 },
-                "excluded": "TRUE",
+                "excluded": true,
                 "featureType": {
                     "id": "HP:0000002",
                     "label": "Abnormality of body height"
                 },
-                "modifiers": {
-                    "id": "HP:0032500",
-                    "label": "Exacerbated by tobacco use"
-                },
+                "modifiers": [
+                    {
+                        "id": "HP:0032500",
+                        "label": "Exacerbated by tobacco use"
+                    }
+                ],
                 "notes": "Please note that all this information is synthetic",
                 "onset": {
-                    "days": 5
+                    "days": 6,
+                    "weeks": 1
                 },
                 "resolution": {
-                    "days": 8,
+                    "days": 5,
                     "weeks": 8
                 },
                 "severity": {
@@ -1104,12 +1353,12 @@
             }
         ],
         "sampleOriginDetail": {
-            "id": "UBERON:0000474",
-            "label": "female reproductive system"
+            "id": "BTO:0004718",
+            "label": "breast cancer cell"
         },
         "sampleOriginType": {
-            "id": "UBERON:0000992",
-            "label": "ovary"
+            "id": "BTO:0000671",
+            "label": "kidney"
         },
         "sampleProcessing": {
             "id": "EFO:0009129",
@@ -1127,7 +1376,8 @@
             "id": "NCIT:C84509",
             "label": "Primary Malignant Neoplasm"
         },
-        "datasetId": "test"
+        "datasetId": "test",
+        "_id": "0dbf4256bb973edd83c6c16efcdfaaa9abba2f077dc1592a46553100dbcc256a"
     },
     {
         "biosampleStatus": {
@@ -1135,7 +1385,7 @@
             "label": "abnormal sample"
         },
         "collectionDate": "2020-09-11",
-        "collectionMoment": "P32Y6M1D",
+        "collectionMoment": "P53Y4M",
         "diagnosticMarkers": [
             {
                 "id": "RO:0000085",
@@ -1143,14 +1393,12 @@
             }
         ],
         "histologicalDiagnosis": {
-            "id": "NCIT:C3778",
-            "label": "Serous Cystadenocarcinoma"
+            "id": "NCIT:C4126",
+            "label": "Intestinal-Type Adenocarcinoma"
         },
         "id": "SAMPLE11",
         "individualId": "SAMPLE11",
-        "info": {
-            "info": "Bothmetadataandgenomicvariationsinformationaresynthetic."
-        },
+        "info": {},
         "measurements": [
             {
                 "assayCode": {
@@ -1159,17 +1407,36 @@
                 },
                 "date": "2019-04-23",
                 "measurementValue": {
-                    "id": "LOINC:26515-7",
-                    "label": "Platelets [#/volume] in Blood"
+                    "referenceRange": {
+                        "high": 12,
+                        "low": 10,
+                        "unit": {
+                            "id": "NCIT:C28253",
+                            "label": "Milligram"
+                        }
+                    },
+                    "unit": {
+                        "id": "LOINC:26515-7",
+                        "label": "Platelets [#/volume] in Blood"
+                    },
+                    "value": 15
                 },
                 "notes": "Bear in mind that all this information is synthetic",
                 "observationMoment": {
                     "iso8601duration": "P53Y8M"
                 },
                 "procedure": {
+                    "ageAtProcedure": {
+                        "iso8601duration": "P53Y8M"
+                    },
+                    "bodySite": {
+                        "id": "BTO:0000089",
+                        "label": "blood"
+                    },
+                    "dateOfProcedure": "2020-08-19",
                     "procedureCode": {
-                        "id": "OBI:0002657",
-                        "label": "surgical biopsy"
+                        "id": "OBI:0002651",
+                        "label": "venipuncture"
                     }
                 }
             }
@@ -1182,32 +1449,39 @@
         "pathologicalTnmFinding": [
             {
                 "id": "NCIT:C48725",
-                "label": "T2a Stage Finding"
+                "label": "T3a Stage Finding"
             }
         ],
         "phenotypicFeatures": [
             {
                 "evidence": {
+                    "evidenceCode": {
+                        "id": "ECO:0006017",
+                        "label": "author statement from published clinical study used in manual assertion"
+                    },
                     "reference": {
                         "id": "ECO:0006017",
                         "notes": "author statement from published clinical study used in manual assertion"
                     }
                 },
-                "excluded": "TRUE",
+                "excluded": true,
                 "featureType": {
                     "id": "HP:0000002",
                     "label": "Abnormality of body height"
                 },
-                "modifiers": {
-                    "id": "HP:0032500",
-                    "label": "Exacerbated by tobacco use"
-                },
+                "modifiers": [
+                    {
+                        "id": "HP:0032500",
+                        "label": "Exacerbated by tobacco use"
+                    }
+                ],
                 "notes": "Please note that all this information is synthetic",
                 "onset": {
-                    "days": 5
+                    "days": 6,
+                    "weeks": 1
                 },
                 "resolution": {
-                    "days": 8,
+                    "days": 5,
                     "weeks": 8
                 },
                 "severity": {
@@ -1217,12 +1491,12 @@
             }
         ],
         "sampleOriginDetail": {
-            "id": "UBERON:0000474",
-            "label": "female reproductive system"
+            "id": "BTO:0004718",
+            "label": "breast cancer cell"
         },
         "sampleOriginType": {
-            "id": "UBERON:0000992",
-            "label": "ovary"
+            "id": "BTO:0000671",
+            "label": "kidney"
         },
         "sampleProcessing": {
             "id": "EFO:0009129",
@@ -1240,7 +1514,8 @@
             "id": "NCIT:C84509",
             "label": "Primary Malignant Neoplasm"
         },
-        "datasetId": "test"
+        "datasetId": "test",
+        "_id": "a9974d5f223c9167e1f4854f3dde13ee4a06d26c433c3f6b8659c58c1f6b817a"
     },
     {
         "biosampleStatus": {
@@ -1248,7 +1523,7 @@
             "label": "abnormal sample"
         },
         "collectionDate": "2020-09-11",
-        "collectionMoment": "P32Y6M1D",
+        "collectionMoment": "P53Y4M",
         "diagnosticMarkers": [
             {
                 "id": "RO:0000085",
@@ -1256,14 +1531,12 @@
             }
         ],
         "histologicalDiagnosis": {
-            "id": "NCIT:C3778",
-            "label": "Serous Cystadenocarcinoma"
+            "id": "NCIT:C4126",
+            "label": "Intestinal-Type Adenocarcinoma"
         },
         "id": "SAMPLE12",
         "individualId": "SAMPLE12",
-        "info": {
-            "info": "Bothmetadataandgenomicvariationsinformationaresynthetic."
-        },
+        "info": {},
         "measurements": [
             {
                 "assayCode": {
@@ -1272,17 +1545,36 @@
                 },
                 "date": "2019-04-23",
                 "measurementValue": {
-                    "id": "LOINC:26515-7",
-                    "label": "Platelets [#/volume] in Blood"
+                    "referenceRange": {
+                        "high": 12,
+                        "low": 10,
+                        "unit": {
+                            "id": "NCIT:C28253",
+                            "label": "Milligram"
+                        }
+                    },
+                    "unit": {
+                        "id": "LOINC:26515-7",
+                        "label": "Platelets [#/volume] in Blood"
+                    },
+                    "value": 16
                 },
                 "notes": "Bear in mind that all this information is synthetic",
                 "observationMoment": {
                     "iso8601duration": "P53Y8M"
                 },
                 "procedure": {
+                    "ageAtProcedure": {
+                        "iso8601duration": "P53Y8M"
+                    },
+                    "bodySite": {
+                        "id": "BTO:0000089",
+                        "label": "blood"
+                    },
+                    "dateOfProcedure": "2020-08-19",
                     "procedureCode": {
-                        "id": "OBI:0002657",
-                        "label": "surgical biopsy"
+                        "id": "OBI:0002651",
+                        "label": "venipuncture"
                     }
                 }
             }
@@ -1295,32 +1587,39 @@
         "pathologicalTnmFinding": [
             {
                 "id": "NCIT:C48725",
-                "label": "T2a Stage Finding"
+                "label": "T3a Stage Finding"
             }
         ],
         "phenotypicFeatures": [
             {
                 "evidence": {
+                    "evidenceCode": {
+                        "id": "ECO:0006017",
+                        "label": "author statement from published clinical study used in manual assertion"
+                    },
                     "reference": {
                         "id": "ECO:0006017",
                         "notes": "author statement from published clinical study used in manual assertion"
                     }
                 },
-                "excluded": "TRUE",
+                "excluded": true,
                 "featureType": {
                     "id": "HP:0000002",
                     "label": "Abnormality of body height"
                 },
-                "modifiers": {
-                    "id": "HP:0032500",
-                    "label": "Exacerbated by tobacco use"
-                },
+                "modifiers": [
+                    {
+                        "id": "HP:0032500",
+                        "label": "Exacerbated by tobacco use"
+                    }
+                ],
                 "notes": "Please note that all this information is synthetic",
                 "onset": {
-                    "days": 5
+                    "days": 6,
+                    "weeks": 1
                 },
                 "resolution": {
-                    "days": 8,
+                    "days": 5,
                     "weeks": 8
                 },
                 "severity": {
@@ -1330,12 +1629,12 @@
             }
         ],
         "sampleOriginDetail": {
-            "id": "UBERON:0000474",
-            "label": "female reproductive system"
+            "id": "BTO:0004718",
+            "label": "breast cancer cell"
         },
         "sampleOriginType": {
-            "id": "UBERON:0000992",
-            "label": "ovary"
+            "id": "BTO:0000671",
+            "label": "kidney"
         },
         "sampleProcessing": {
             "id": "EFO:0009129",
@@ -1353,7 +1652,8 @@
             "id": "NCIT:C84509",
             "label": "Primary Malignant Neoplasm"
         },
-        "datasetId": "test"
+        "datasetId": "test",
+        "_id": "0a704be036c7e62ef2fefc1f16759556b399f9914cbe3e87c3a46d7238408cac"
     },
     {
         "biosampleStatus": {
@@ -1361,7 +1661,7 @@
             "label": "abnormal sample"
         },
         "collectionDate": "2020-09-11",
-        "collectionMoment": "P32Y6M1D",
+        "collectionMoment": "P53Y4M",
         "diagnosticMarkers": [
             {
                 "id": "RO:0000085",
@@ -1369,14 +1669,12 @@
             }
         ],
         "histologicalDiagnosis": {
-            "id": "NCIT:C3778",
-            "label": "Serous Cystadenocarcinoma"
+            "id": "NCIT:C4126",
+            "label": "Intestinal-Type Adenocarcinoma"
         },
         "id": "SAMPLE13",
         "individualId": "SAMPLE13",
-        "info": {
-            "info": "Bothmetadataandgenomicvariationsinformationaresynthetic."
-        },
+        "info": {},
         "measurements": [
             {
                 "assayCode": {
@@ -1385,17 +1683,36 @@
                 },
                 "date": "2019-04-23",
                 "measurementValue": {
-                    "id": "LOINC:26515-7",
-                    "label": "Platelets [#/volume] in Blood"
+                    "referenceRange": {
+                        "high": 12,
+                        "low": 10,
+                        "unit": {
+                            "id": "NCIT:C28253",
+                            "label": "Milligram"
+                        }
+                    },
+                    "unit": {
+                        "id": "LOINC:26515-7",
+                        "label": "Platelets [#/volume] in Blood"
+                    },
+                    "value": 17
                 },
                 "notes": "Bear in mind that all this information is synthetic",
                 "observationMoment": {
                     "iso8601duration": "P53Y8M"
                 },
                 "procedure": {
+                    "ageAtProcedure": {
+                        "iso8601duration": "P53Y8M"
+                    },
+                    "bodySite": {
+                        "id": "BTO:0000089",
+                        "label": "blood"
+                    },
+                    "dateOfProcedure": "2020-08-19",
                     "procedureCode": {
-                        "id": "OBI:0002657",
-                        "label": "surgical biopsy"
+                        "id": "OBI:0002651",
+                        "label": "venipuncture"
                     }
                 }
             }
@@ -1408,32 +1725,39 @@
         "pathologicalTnmFinding": [
             {
                 "id": "NCIT:C48725",
-                "label": "T2a Stage Finding"
+                "label": "T3a Stage Finding"
             }
         ],
         "phenotypicFeatures": [
             {
                 "evidence": {
+                    "evidenceCode": {
+                        "id": "ECO:0006017",
+                        "label": "author statement from published clinical study used in manual assertion"
+                    },
                     "reference": {
                         "id": "ECO:0006017",
                         "notes": "author statement from published clinical study used in manual assertion"
                     }
                 },
-                "excluded": "TRUE",
+                "excluded": true,
                 "featureType": {
                     "id": "HP:0000002",
                     "label": "Abnormality of body height"
                 },
-                "modifiers": {
-                    "id": "HP:0032500",
-                    "label": "Exacerbated by tobacco use"
-                },
+                "modifiers": [
+                    {
+                        "id": "HP:0032500",
+                        "label": "Exacerbated by tobacco use"
+                    }
+                ],
                 "notes": "Please note that all this information is synthetic",
                 "onset": {
-                    "days": 5
+                    "days": 6,
+                    "weeks": 1
                 },
                 "resolution": {
-                    "days": 8,
+                    "days": 5,
                     "weeks": 8
                 },
                 "severity": {
@@ -1443,12 +1767,12 @@
             }
         ],
         "sampleOriginDetail": {
-            "id": "UBERON:0000474",
-            "label": "female reproductive system"
+            "id": "BTO:0004718",
+            "label": "breast cancer cell"
         },
         "sampleOriginType": {
-            "id": "UBERON:0000992",
-            "label": "ovary"
+            "id": "BTO:0000671",
+            "label": "kidney"
         },
         "sampleProcessing": {
             "id": "EFO:0009129",
@@ -1459,14 +1783,15 @@
             "label": "freezing storage"
         },
         "tumorGrade": {
-            "id": "NCIT:C28080",
-            "label": "Grade 3a"
+            "id": "NCIT:C28078",
+            "label": "Grade 2"
         },
         "tumorProgression": {
             "id": "NCIT:C84509",
             "label": "Primary Malignant Neoplasm"
         },
-        "datasetId": "test"
+        "datasetId": "test",
+        "_id": "f49c68c03c7110235abcdadbac301d62c69e340f7f9805d9c035a1ac07f7e555"
     },
     {
         "biosampleStatus": {
@@ -1474,7 +1799,7 @@
             "label": "abnormal sample"
         },
         "collectionDate": "2020-09-11",
-        "collectionMoment": "P32Y6M1D",
+        "collectionMoment": "P53Y4M",
         "diagnosticMarkers": [
             {
                 "id": "RO:0000085",
@@ -1482,14 +1807,12 @@
             }
         ],
         "histologicalDiagnosis": {
-            "id": "NCIT:C3778",
-            "label": "Serous Cystadenocarcinoma"
+            "id": "NCIT:C4126",
+            "label": "Intestinal-Type Adenocarcinoma"
         },
         "id": "SAMPLE14",
         "individualId": "SAMPLE14",
-        "info": {
-            "info": "Bothmetadataandgenomicvariationsinformationaresynthetic."
-        },
+        "info": {},
         "measurements": [
             {
                 "assayCode": {
@@ -1498,17 +1821,36 @@
                 },
                 "date": "2019-04-23",
                 "measurementValue": {
-                    "id": "LOINC:26515-7",
-                    "label": "Platelets [#/volume] in Blood"
+                    "referenceRange": {
+                        "high": 12,
+                        "low": 10,
+                        "unit": {
+                            "id": "NCIT:C28253",
+                            "label": "Milligram"
+                        }
+                    },
+                    "unit": {
+                        "id": "LOINC:26515-7",
+                        "label": "Platelets [#/volume] in Blood"
+                    },
+                    "value": 18
                 },
                 "notes": "Bear in mind that all this information is synthetic",
                 "observationMoment": {
                     "iso8601duration": "P53Y8M"
                 },
                 "procedure": {
+                    "ageAtProcedure": {
+                        "iso8601duration": "P53Y8M"
+                    },
+                    "bodySite": {
+                        "id": "BTO:0000089",
+                        "label": "blood"
+                    },
+                    "dateOfProcedure": "2020-08-19",
                     "procedureCode": {
-                        "id": "OBI:0002657",
-                        "label": "surgical biopsy"
+                        "id": "OBI:0002651",
+                        "label": "venipuncture"
                     }
                 }
             }
@@ -1521,32 +1863,39 @@
         "pathologicalTnmFinding": [
             {
                 "id": "NCIT:C48725",
-                "label": "T2a Stage Finding"
+                "label": "T3a Stage Finding"
             }
         ],
         "phenotypicFeatures": [
             {
                 "evidence": {
+                    "evidenceCode": {
+                        "id": "ECO:0006017",
+                        "label": "author statement from published clinical study used in manual assertion"
+                    },
                     "reference": {
                         "id": "ECO:0006017",
                         "notes": "author statement from published clinical study used in manual assertion"
                     }
                 },
-                "excluded": "TRUE",
+                "excluded": true,
                 "featureType": {
                     "id": "HP:0000002",
                     "label": "Abnormality of body height"
                 },
-                "modifiers": {
-                    "id": "HP:0032500",
-                    "label": "Exacerbated by tobacco use"
-                },
+                "modifiers": [
+                    {
+                        "id": "HP:0032500",
+                        "label": "Exacerbated by tobacco use"
+                    }
+                ],
                 "notes": "Please note that all this information is synthetic",
                 "onset": {
-                    "days": 5
+                    "days": 6,
+                    "weeks": 1
                 },
                 "resolution": {
-                    "days": 8,
+                    "days": 5,
                     "weeks": 8
                 },
                 "severity": {
@@ -1556,12 +1905,12 @@
             }
         ],
         "sampleOriginDetail": {
-            "id": "UBERON:0000474",
-            "label": "female reproductive system"
+            "id": "BTO:0004718",
+            "label": "breast cancer cell"
         },
         "sampleOriginType": {
-            "id": "UBERON:0000992",
-            "label": "ovary"
+            "id": "BTO:0000199",
+            "label": "cardiac muscle"
         },
         "sampleProcessing": {
             "id": "EFO:0009129",
@@ -1579,7 +1928,8 @@
             "id": "NCIT:C84509",
             "label": "Primary Malignant Neoplasm"
         },
-        "datasetId": "test"
+        "datasetId": "test",
+        "_id": "e0082f82219b17d5fbceb9c812b2b6c8215055c4d94af76f69c231078138af9b"
     },
     {
         "biosampleStatus": {
@@ -1587,7 +1937,7 @@
             "label": "abnormal sample"
         },
         "collectionDate": "2020-09-11",
-        "collectionMoment": "P32Y6M1D",
+        "collectionMoment": "P53Y4M",
         "diagnosticMarkers": [
             {
                 "id": "RO:0000085",
@@ -1595,14 +1945,12 @@
             }
         ],
         "histologicalDiagnosis": {
-            "id": "NCIT:C3778",
-            "label": "Serous Cystadenocarcinoma"
+            "id": "NCIT:C4126",
+            "label": "Intestinal-Type Adenocarcinoma"
         },
         "id": "SAMPLE15",
         "individualId": "SAMPLE15",
-        "info": {
-            "info": "Bothmetadataandgenomicvariationsinformationaresynthetic."
-        },
+        "info": {},
         "measurements": [
             {
                 "assayCode": {
@@ -1611,17 +1959,36 @@
                 },
                 "date": "2019-04-23",
                 "measurementValue": {
-                    "id": "LOINC:26515-7",
-                    "label": "Platelets [#/volume] in Blood"
+                    "referenceRange": {
+                        "high": 12,
+                        "low": 10,
+                        "unit": {
+                            "id": "NCIT:C28253",
+                            "label": "Milligram"
+                        }
+                    },
+                    "unit": {
+                        "id": "LOINC:26515-7",
+                        "label": "Platelets [#/volume] in Blood"
+                    },
+                    "value": 19
                 },
                 "notes": "Bear in mind that all this information is synthetic",
                 "observationMoment": {
                     "iso8601duration": "P53Y8M"
                 },
                 "procedure": {
+                    "ageAtProcedure": {
+                        "iso8601duration": "P53Y8M"
+                    },
+                    "bodySite": {
+                        "id": "BTO:0000089",
+                        "label": "blood"
+                    },
+                    "dateOfProcedure": "2020-08-19",
                     "procedureCode": {
-                        "id": "OBI:0002657",
-                        "label": "surgical biopsy"
+                        "id": "OBI:0002651",
+                        "label": "venipuncture"
                     }
                 }
             }
@@ -1634,32 +2001,39 @@
         "pathologicalTnmFinding": [
             {
                 "id": "NCIT:C48725",
-                "label": "T2a Stage Finding"
+                "label": "T3a Stage Finding"
             }
         ],
         "phenotypicFeatures": [
             {
                 "evidence": {
+                    "evidenceCode": {
+                        "id": "ECO:0006017",
+                        "label": "author statement from published clinical study used in manual assertion"
+                    },
                     "reference": {
                         "id": "ECO:0006017",
                         "notes": "author statement from published clinical study used in manual assertion"
                     }
                 },
-                "excluded": "TRUE",
+                "excluded": true,
                 "featureType": {
                     "id": "HP:0000002",
                     "label": "Abnormality of body height"
                 },
-                "modifiers": {
-                    "id": "HP:0032500",
-                    "label": "Exacerbated by tobacco use"
-                },
+                "modifiers": [
+                    {
+                        "id": "HP:0032500",
+                        "label": "Exacerbated by tobacco use"
+                    }
+                ],
                 "notes": "Please note that all this information is synthetic",
                 "onset": {
-                    "days": 5
+                    "days": 6,
+                    "weeks": 1
                 },
                 "resolution": {
-                    "days": 8,
+                    "days": 5,
                     "weeks": 8
                 },
                 "severity": {
@@ -1669,12 +2043,12 @@
             }
         ],
         "sampleOriginDetail": {
-            "id": "UBERON:0000474",
-            "label": "female reproductive system"
+            "id": "BTO:0004718",
+            "label": "breast cancer cell"
         },
         "sampleOriginType": {
-            "id": "UBERON:0000992",
-            "label": "ovary"
+            "id": "BTO:0000199",
+            "label": "cardiac muscle"
         },
         "sampleProcessing": {
             "id": "EFO:0009129",
@@ -1692,7 +2066,8 @@
             "id": "NCIT:C84509",
             "label": "Primary Malignant Neoplasm"
         },
-        "datasetId": "test"
+        "datasetId": "test",
+        "_id": "37617dfe57f7e71a514cd5385e6c3d14f869bfa92c2d978257ebe9e15fc62eb3"
     },
     {
         "biosampleStatus": {
@@ -1700,7 +2075,7 @@
             "label": "abnormal sample"
         },
         "collectionDate": "2020-09-11",
-        "collectionMoment": "P32Y6M1D",
+        "collectionMoment": "P53Y4M",
         "diagnosticMarkers": [
             {
                 "id": "RO:0000085",
@@ -1708,14 +2083,12 @@
             }
         ],
         "histologicalDiagnosis": {
-            "id": "NCIT:C3778",
-            "label": "Serous Cystadenocarcinoma"
+            "id": "NCIT:C4126",
+            "label": "Intestinal-Type Adenocarcinoma"
         },
         "id": "SAMPLE16",
         "individualId": "SAMPLE16",
-        "info": {
-            "info": "Bothmetadataandgenomicvariationsinformationaresynthetic."
-        },
+        "info": {},
         "measurements": [
             {
                 "assayCode": {
@@ -1724,17 +2097,36 @@
                 },
                 "date": "2019-04-23",
                 "measurementValue": {
-                    "id": "LOINC:26515-7",
-                    "label": "Platelets [#/volume] in Blood"
+                    "referenceRange": {
+                        "high": 12,
+                        "low": 10,
+                        "unit": {
+                            "id": "NCIT:C28253",
+                            "label": "Milligram"
+                        }
+                    },
+                    "unit": {
+                        "id": "LOINC:26515-7",
+                        "label": "Platelets [#/volume] in Blood"
+                    },
+                    "value": 20
                 },
                 "notes": "Bear in mind that all this information is synthetic",
                 "observationMoment": {
                     "iso8601duration": "P53Y8M"
                 },
                 "procedure": {
+                    "ageAtProcedure": {
+                        "iso8601duration": "P53Y8M"
+                    },
+                    "bodySite": {
+                        "id": "BTO:0000089",
+                        "label": "blood"
+                    },
+                    "dateOfProcedure": "2020-08-19",
                     "procedureCode": {
-                        "id": "OBI:0002657",
-                        "label": "surgical biopsy"
+                        "id": "OBI:0002651",
+                        "label": "venipuncture"
                     }
                 }
             }
@@ -1747,32 +2139,39 @@
         "pathologicalTnmFinding": [
             {
                 "id": "NCIT:C48725",
-                "label": "T2a Stage Finding"
+                "label": "T3a Stage Finding"
             }
         ],
         "phenotypicFeatures": [
             {
                 "evidence": {
+                    "evidenceCode": {
+                        "id": "ECO:0006017",
+                        "label": "author statement from published clinical study used in manual assertion"
+                    },
                     "reference": {
                         "id": "ECO:0006017",
                         "notes": "author statement from published clinical study used in manual assertion"
                     }
                 },
-                "excluded": "TRUE",
+                "excluded": true,
                 "featureType": {
                     "id": "HP:0000002",
                     "label": "Abnormality of body height"
                 },
-                "modifiers": {
-                    "id": "HP:0032500",
-                    "label": "Exacerbated by tobacco use"
-                },
+                "modifiers": [
+                    {
+                        "id": "HP:0032500",
+                        "label": "Exacerbated by tobacco use"
+                    }
+                ],
                 "notes": "Please note that all this information is synthetic",
                 "onset": {
-                    "days": 5
+                    "days": 6,
+                    "weeks": 1
                 },
                 "resolution": {
-                    "days": 8,
+                    "days": 5,
                     "weeks": 8
                 },
                 "severity": {
@@ -1782,12 +2181,12 @@
             }
         ],
         "sampleOriginDetail": {
-            "id": "UBERON:0000474",
-            "label": "female reproductive system"
+            "id": "BTO:0004718",
+            "label": "breast cancer cell"
         },
         "sampleOriginType": {
-            "id": "UBERON:0000992",
-            "label": "ovary"
+            "id": "BTO:0000199",
+            "label": "cardiac muscle"
         },
         "sampleProcessing": {
             "id": "EFO:0009129",
@@ -1798,14 +2197,15 @@
             "label": "freezing storage"
         },
         "tumorGrade": {
-            "id": "NCIT:C28080",
-            "label": "Grade 3a"
+            "id": "NCIT:C28078",
+            "label": "Grade 2"
         },
         "tumorProgression": {
             "id": "NCIT:C84509",
             "label": "Primary Malignant Neoplasm"
         },
-        "datasetId": "test"
+        "datasetId": "test",
+        "_id": "d36d5d068928083a9f2de6dbafaf7a70b03ae207fc9e53001ddcdcf88ad234cf"
     },
     {
         "biosampleStatus": {
@@ -1813,7 +2213,7 @@
             "label": "abnormal sample"
         },
         "collectionDate": "2020-09-11",
-        "collectionMoment": "P32Y6M1D",
+        "collectionMoment": "P53Y4M",
         "diagnosticMarkers": [
             {
                 "id": "RO:0000085",
@@ -1821,14 +2221,12 @@
             }
         ],
         "histologicalDiagnosis": {
-            "id": "NCIT:C3778",
-            "label": "Serous Cystadenocarcinoma"
+            "id": "NCIT:C4126",
+            "label": "Intestinal-Type Adenocarcinoma"
         },
         "id": "SAMPLE17",
         "individualId": "SAMPLE17",
-        "info": {
-            "info": "Bothmetadataandgenomicvariationsinformationaresynthetic."
-        },
+        "info": {},
         "measurements": [
             {
                 "assayCode": {
@@ -1837,17 +2235,36 @@
                 },
                 "date": "2019-04-23",
                 "measurementValue": {
-                    "id": "LOINC:26515-7",
-                    "label": "Platelets [#/volume] in Blood"
+                    "referenceRange": {
+                        "high": 12,
+                        "low": 10,
+                        "unit": {
+                            "id": "NCIT:C28253",
+                            "label": "Milligram"
+                        }
+                    },
+                    "unit": {
+                        "id": "LOINC:26515-7",
+                        "label": "Platelets [#/volume] in Blood"
+                    },
+                    "value": 21
                 },
                 "notes": "Bear in mind that all this information is synthetic",
                 "observationMoment": {
                     "iso8601duration": "P53Y8M"
                 },
                 "procedure": {
+                    "ageAtProcedure": {
+                        "iso8601duration": "P53Y8M"
+                    },
+                    "bodySite": {
+                        "id": "BTO:0000089",
+                        "label": "blood"
+                    },
+                    "dateOfProcedure": "2020-08-19",
                     "procedureCode": {
-                        "id": "OBI:0002657",
-                        "label": "surgical biopsy"
+                        "id": "OBI:0002651",
+                        "label": "venipuncture"
                     }
                 }
             }
@@ -1860,32 +2277,39 @@
         "pathologicalTnmFinding": [
             {
                 "id": "NCIT:C48725",
-                "label": "T2a Stage Finding"
+                "label": "T3a Stage Finding"
             }
         ],
         "phenotypicFeatures": [
             {
                 "evidence": {
+                    "evidenceCode": {
+                        "id": "ECO:0006017",
+                        "label": "author statement from published clinical study used in manual assertion"
+                    },
                     "reference": {
                         "id": "ECO:0006017",
                         "notes": "author statement from published clinical study used in manual assertion"
                     }
                 },
-                "excluded": "TRUE",
+                "excluded": true,
                 "featureType": {
                     "id": "HP:0000002",
                     "label": "Abnormality of body height"
                 },
-                "modifiers": {
-                    "id": "HP:0032500",
-                    "label": "Exacerbated by tobacco use"
-                },
+                "modifiers": [
+                    {
+                        "id": "HP:0032500",
+                        "label": "Exacerbated by tobacco use"
+                    }
+                ],
                 "notes": "Please note that all this information is synthetic",
                 "onset": {
-                    "days": 5
+                    "days": 6,
+                    "weeks": 1
                 },
                 "resolution": {
-                    "days": 8,
+                    "days": 5,
                     "weeks": 8
                 },
                 "severity": {
@@ -1895,12 +2319,12 @@
             }
         ],
         "sampleOriginDetail": {
-            "id": "UBERON:0000474",
-            "label": "female reproductive system"
+            "id": "BTO:0004718",
+            "label": "breast cancer cell"
         },
         "sampleOriginType": {
-            "id": "UBERON:0000992",
-            "label": "ovary"
+            "id": "BTO:0000199",
+            "label": "cardiac muscle"
         },
         "sampleProcessing": {
             "id": "EFO:0009129",
@@ -1918,7 +2342,8 @@
             "id": "NCIT:C84509",
             "label": "Primary Malignant Neoplasm"
         },
-        "datasetId": "test"
+        "datasetId": "test",
+        "_id": "75db19f198d181b18800e46245771ff1f50374d2b3bcff4e82a5415b2e204471"
     },
     {
         "biosampleStatus": {
@@ -1926,7 +2351,7 @@
             "label": "abnormal sample"
         },
         "collectionDate": "2020-09-11",
-        "collectionMoment": "P32Y6M1D",
+        "collectionMoment": "P53Y4M",
         "diagnosticMarkers": [
             {
                 "id": "RO:0000085",
@@ -1934,14 +2359,12 @@
             }
         ],
         "histologicalDiagnosis": {
-            "id": "NCIT:C3778",
-            "label": "Serous Cystadenocarcinoma"
+            "id": "NCIT:C4126",
+            "label": "Intestinal-Type Adenocarcinoma"
         },
         "id": "SAMPLE18",
         "individualId": "SAMPLE18",
-        "info": {
-            "info": "Bothmetadataandgenomicvariationsinformationaresynthetic."
-        },
+        "info": {},
         "measurements": [
             {
                 "assayCode": {
@@ -1950,17 +2373,36 @@
                 },
                 "date": "2019-04-23",
                 "measurementValue": {
-                    "id": "LOINC:26515-7",
-                    "label": "Platelets [#/volume] in Blood"
+                    "referenceRange": {
+                        "high": 12,
+                        "low": 10,
+                        "unit": {
+                            "id": "NCIT:C28253",
+                            "label": "Milligram"
+                        }
+                    },
+                    "unit": {
+                        "id": "LOINC:26515-7",
+                        "label": "Platelets [#/volume] in Blood"
+                    },
+                    "value": 22
                 },
                 "notes": "Bear in mind that all this information is synthetic",
                 "observationMoment": {
                     "iso8601duration": "P53Y8M"
                 },
                 "procedure": {
+                    "ageAtProcedure": {
+                        "iso8601duration": "P53Y8M"
+                    },
+                    "bodySite": {
+                        "id": "BTO:0000089",
+                        "label": "blood"
+                    },
+                    "dateOfProcedure": "2020-08-19",
                     "procedureCode": {
-                        "id": "OBI:0002657",
-                        "label": "surgical biopsy"
+                        "id": "OBI:0002651",
+                        "label": "venipuncture"
                     }
                 }
             }
@@ -1973,32 +2415,39 @@
         "pathologicalTnmFinding": [
             {
                 "id": "NCIT:C48725",
-                "label": "T2a Stage Finding"
+                "label": "T3a Stage Finding"
             }
         ],
         "phenotypicFeatures": [
             {
                 "evidence": {
+                    "evidenceCode": {
+                        "id": "ECO:0006017",
+                        "label": "author statement from published clinical study used in manual assertion"
+                    },
                     "reference": {
                         "id": "ECO:0006017",
                         "notes": "author statement from published clinical study used in manual assertion"
                     }
                 },
-                "excluded": "TRUE",
+                "excluded": true,
                 "featureType": {
                     "id": "HP:0000002",
                     "label": "Abnormality of body height"
                 },
-                "modifiers": {
-                    "id": "HP:0032500",
-                    "label": "Exacerbated by tobacco use"
-                },
+                "modifiers": [
+                    {
+                        "id": "HP:0032500",
+                        "label": "Exacerbated by tobacco use"
+                    }
+                ],
                 "notes": "Please note that all this information is synthetic",
                 "onset": {
-                    "days": 5
+                    "days": 6,
+                    "weeks": 1
                 },
                 "resolution": {
-                    "days": 8,
+                    "days": 5,
                     "weeks": 8
                 },
                 "severity": {
@@ -2008,12 +2457,12 @@
             }
         ],
         "sampleOriginDetail": {
-            "id": "UBERON:0000474",
-            "label": "female reproductive system"
+            "id": "BTO:0004718",
+            "label": "breast cancer cell"
         },
         "sampleOriginType": {
-            "id": "UBERON:0000992",
-            "label": "ovary"
+            "id": "BTO:0001806",
+            "label": "visceral mass"
         },
         "sampleProcessing": {
             "id": "EFO:0009129",
@@ -2031,7 +2480,8 @@
             "id": "NCIT:C84509",
             "label": "Primary Malignant Neoplasm"
         },
-        "datasetId": "test"
+        "datasetId": "test",
+        "_id": "6d2e99faea7331042160c1f92a2c6146c724f4793edb47aa337df0df77df15e2"
     },
     {
         "biosampleStatus": {
@@ -2039,7 +2489,7 @@
             "label": "abnormal sample"
         },
         "collectionDate": "2020-09-11",
-        "collectionMoment": "P32Y6M1D",
+        "collectionMoment": "P53Y4M",
         "diagnosticMarkers": [
             {
                 "id": "RO:0000085",
@@ -2047,14 +2497,12 @@
             }
         ],
         "histologicalDiagnosis": {
-            "id": "NCIT:C3778",
-            "label": "Serous Cystadenocarcinoma"
+            "id": "NCIT:C4126",
+            "label": "Intestinal-Type Adenocarcinoma"
         },
         "id": "SAMPLE19",
         "individualId": "SAMPLE19",
-        "info": {
-            "info": "Bothmetadataandgenomicvariationsinformationaresynthetic."
-        },
+        "info": {},
         "measurements": [
             {
                 "assayCode": {
@@ -2063,17 +2511,36 @@
                 },
                 "date": "2019-04-23",
                 "measurementValue": {
-                    "id": "LOINC:26515-7",
-                    "label": "Platelets [#/volume] in Blood"
+                    "referenceRange": {
+                        "high": 12,
+                        "low": 10,
+                        "unit": {
+                            "id": "NCIT:C28253",
+                            "label": "Milligram"
+                        }
+                    },
+                    "unit": {
+                        "id": "LOINC:26515-7",
+                        "label": "Platelets [#/volume] in Blood"
+                    },
+                    "value": 23
                 },
                 "notes": "Bear in mind that all this information is synthetic",
                 "observationMoment": {
                     "iso8601duration": "P53Y8M"
                 },
                 "procedure": {
+                    "ageAtProcedure": {
+                        "iso8601duration": "P53Y8M"
+                    },
+                    "bodySite": {
+                        "id": "BTO:0000089",
+                        "label": "blood"
+                    },
+                    "dateOfProcedure": "2020-08-19",
                     "procedureCode": {
-                        "id": "OBI:0002657",
-                        "label": "surgical biopsy"
+                        "id": "OBI:0002651",
+                        "label": "venipuncture"
                     }
                 }
             }
@@ -2086,32 +2553,39 @@
         "pathologicalTnmFinding": [
             {
                 "id": "NCIT:C48725",
-                "label": "T2a Stage Finding"
+                "label": "T3a Stage Finding"
             }
         ],
         "phenotypicFeatures": [
             {
                 "evidence": {
+                    "evidenceCode": {
+                        "id": "ECO:0006017",
+                        "label": "author statement from published clinical study used in manual assertion"
+                    },
                     "reference": {
                         "id": "ECO:0006017",
                         "notes": "author statement from published clinical study used in manual assertion"
                     }
                 },
-                "excluded": "TRUE",
+                "excluded": true,
                 "featureType": {
                     "id": "HP:0000002",
                     "label": "Abnormality of body height"
                 },
-                "modifiers": {
-                    "id": "HP:0032500",
-                    "label": "Exacerbated by tobacco use"
-                },
+                "modifiers": [
+                    {
+                        "id": "HP:0032500",
+                        "label": "Exacerbated by tobacco use"
+                    }
+                ],
                 "notes": "Please note that all this information is synthetic",
                 "onset": {
-                    "days": 5
+                    "days": 6,
+                    "weeks": 1
                 },
                 "resolution": {
-                    "days": 8,
+                    "days": 5,
                     "weeks": 8
                 },
                 "severity": {
@@ -2121,12 +2595,12 @@
             }
         ],
         "sampleOriginDetail": {
-            "id": "UBERON:0000474",
-            "label": "female reproductive system"
+            "id": "BTO:0004718",
+            "label": "breast cancer cell"
         },
         "sampleOriginType": {
-            "id": "UBERON:0000992",
-            "label": "ovary"
+            "id": "BTO:0001806",
+            "label": "visceral mass"
         },
         "sampleProcessing": {
             "id": "EFO:0009129",
@@ -2137,14 +2611,15 @@
             "label": "freezing storage"
         },
         "tumorGrade": {
-            "id": "NCIT:C28080",
-            "label": "Grade 3a"
+            "id": "NCIT:C28078",
+            "label": "Grade 2"
         },
         "tumorProgression": {
             "id": "NCIT:C84509",
             "label": "Primary Malignant Neoplasm"
         },
-        "datasetId": "test"
+        "datasetId": "test",
+        "_id": "ef282200e43bc73142769f87e2e2bafa0fb4e60ba88f2c433d3abaf9bbe7b11c"
     },
     {
         "biosampleStatus": {
@@ -2152,7 +2627,7 @@
             "label": "abnormal sample"
         },
         "collectionDate": "2020-09-11",
-        "collectionMoment": "P32Y6M1D",
+        "collectionMoment": "P53Y4M",
         "diagnosticMarkers": [
             {
                 "id": "RO:0000085",
@@ -2160,14 +2635,12 @@
             }
         ],
         "histologicalDiagnosis": {
-            "id": "NCIT:C3778",
-            "label": "Serous Cystadenocarcinoma"
+            "id": "NCIT:C4126",
+            "label": "Intestinal-Type Adenocarcinoma"
         },
         "id": "SAMPLE20",
         "individualId": "SAMPLE20",
-        "info": {
-            "info": "Bothmetadataandgenomicvariationsinformationaresynthetic."
-        },
+        "info": {},
         "measurements": [
             {
                 "assayCode": {
@@ -2176,17 +2649,36 @@
                 },
                 "date": "2019-04-23",
                 "measurementValue": {
-                    "id": "LOINC:26515-7",
-                    "label": "Platelets [#/volume] in Blood"
+                    "referenceRange": {
+                        "high": 12,
+                        "low": 10,
+                        "unit": {
+                            "id": "NCIT:C28253",
+                            "label": "Milligram"
+                        }
+                    },
+                    "unit": {
+                        "id": "LOINC:26515-7",
+                        "label": "Platelets [#/volume] in Blood"
+                    },
+                    "value": 24
                 },
                 "notes": "Bear in mind that all this information is synthetic",
                 "observationMoment": {
                     "iso8601duration": "P53Y8M"
                 },
                 "procedure": {
+                    "ageAtProcedure": {
+                        "iso8601duration": "P53Y8M"
+                    },
+                    "bodySite": {
+                        "id": "BTO:0000089",
+                        "label": "blood"
+                    },
+                    "dateOfProcedure": "2020-08-19",
                     "procedureCode": {
-                        "id": "OBI:0002657",
-                        "label": "surgical biopsy"
+                        "id": "OBI:0002651",
+                        "label": "venipuncture"
                     }
                 }
             }
@@ -2199,32 +2691,39 @@
         "pathologicalTnmFinding": [
             {
                 "id": "NCIT:C48725",
-                "label": "T2a Stage Finding"
+                "label": "T3a Stage Finding"
             }
         ],
         "phenotypicFeatures": [
             {
                 "evidence": {
+                    "evidenceCode": {
+                        "id": "ECO:0006017",
+                        "label": "author statement from published clinical study used in manual assertion"
+                    },
                     "reference": {
                         "id": "ECO:0006017",
                         "notes": "author statement from published clinical study used in manual assertion"
                     }
                 },
-                "excluded": "TRUE",
+                "excluded": true,
                 "featureType": {
                     "id": "HP:0000002",
                     "label": "Abnormality of body height"
                 },
-                "modifiers": {
-                    "id": "HP:0032500",
-                    "label": "Exacerbated by tobacco use"
-                },
+                "modifiers": [
+                    {
+                        "id": "HP:0032500",
+                        "label": "Exacerbated by tobacco use"
+                    }
+                ],
                 "notes": "Please note that all this information is synthetic",
                 "onset": {
-                    "days": 5
+                    "days": 6,
+                    "weeks": 1
                 },
                 "resolution": {
-                    "days": 8,
+                    "days": 5,
                     "weeks": 8
                 },
                 "severity": {
@@ -2234,12 +2733,12 @@
             }
         ],
         "sampleOriginDetail": {
-            "id": "UBERON:0000474",
-            "label": "female reproductive system"
+            "id": "BTO:0004718",
+            "label": "breast cancer cell"
         },
         "sampleOriginType": {
-            "id": "UBERON:0000992",
-            "label": "ovary"
+            "id": "BTO:0001806",
+            "label": "visceral mass"
         },
         "sampleProcessing": {
             "id": "EFO:0009129",
@@ -2257,6 +2756,7 @@
             "id": "NCIT:C84509",
             "label": "Primary Malignant Neoplasm"
         },
-        "datasetId": "test"
+        "datasetId": "test",
+        "_id": "333046d59782bc08b005aef4e125d53373d7e16678daf8965eea09fa74590325"
     }
 ]
