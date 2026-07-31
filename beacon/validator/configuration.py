@@ -63,7 +63,7 @@ def check_configuration(
                 pass
             else:
                 raise Exception(
-                    "{}.entry_type_enabled variable from {}.py must be boolean".format(
+                    "{}.entry_type_enabled variable from {}.yml must be boolean".format(
                         k, k
                     )
                 )
@@ -88,7 +88,7 @@ def check_configuration(
                     )
                 )
 
-            # Validate the configured backend for run records.
+            # Validate the configured backend for records.
             if v["connection"]["name"] not in [
                 name
                 for name in os.listdir("/beacon/connections")
@@ -97,6 +97,15 @@ def check_configuration(
                 raise Exception(
                     'The database {} for {}records needs to match a directory name in the beacon/connections folder'.format(
                         v["connection"]["name"], k
+                    )
+                )
+
+            if v["response_type"] in ["collection", "non_collection"]:
+                pass
+            else:
+                raise Exception(
+                    "{}.response_type variable from {}.yml must be one between collection or non_collection".format(
+                        k, k
                     )
                 )
             
@@ -161,6 +170,31 @@ def check_configuration(
 
             if not isinstance(v["allow_id_query"], bool):
                 raise Exception('The {} allow id query must be of type bool.'.format(k))
+
+            # Check settings for lookups are correct
+            for klook, vlook in v["lookups"].items():
+                if vlook["connection"]["name"] not in connections_enabled:
+                    raise Exception(
+                        'The connection {} for lookup {} of {} records needs to be enabled in case you want to use it'.format(
+                            vlook["connection"]["name"], klook, k
+                        )
+                    )
+                if isinstance(vlook["endpoint_enabled"], bool):
+                    pass
+                else:
+                    raise Exception(
+                        "lookup {}.endpoint_enabled variable from {}.yml must be boolean".format(
+                            klook, k
+                        )
+                    )
+                if vlook["response_type"] in ["collection", "non_collection"]:
+                    pass
+                else:
+                    raise Exception(
+                        "lookup {}.response_type variable from {}.yml must be one between collection or non_collection".format(
+                            klook, k
+                        )
+                    )
     
     # -------------------------------------------------------------------------
     # Beacon URI validation
