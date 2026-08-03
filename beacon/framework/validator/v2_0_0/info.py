@@ -9,7 +9,7 @@ class BeaconOrganization(BaseModel):
     contactUrl: Optional[str]=conf_override.config.org_contact_url if conf_override.config.org_contact_url != "" else None
     description: Optional[str]=conf_override.config.org_description if conf_override.config.org_description != "" else None
     id: str=conf_override.config.org_id
-    info: Optional[str]=conf_override.config.org_info if conf_override.config.org_info != "" else None
+    info: Optional[Dict]={"organizationInfo": conf_override.config.org_info} if conf_override.config.org_info != "" else None
     logoUrl: Optional[str]=conf_override.config.org_logo_url if conf_override.config.org_logo_url != "" else None
     name: str=conf_override.config.org_name
     welcomeUrl: Optional[str]=conf_override.config.org_welcome_url if conf_override.config.welcome_url != "" else None
