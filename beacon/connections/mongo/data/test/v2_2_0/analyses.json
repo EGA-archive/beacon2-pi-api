@@ -1,1 +1,16 @@
-[{"aligner": "bwa-0.7.8", "analysisDate": "2021-10-17", "biosampleId": "EGA-testing", "id": "EGA-testing", "individualId": "EGA", "info": {}, "pipelineName": "Pipeline-panel-0001-v1", "pipelineRef": "https://doi.org/10.48511/workflowhub.workflow.111.1", "runId": "EGAR5000XXX", "variantCaller": "GATK4.0", "datasetId": "test", "_id": "2e8d3e8dcf5a492448e1703c2c99ed5ee4370a1152f1983b3cf11e3e9cab2033"}]
+[
+    {
+        "aligner": "bwa-0.7.8",
+        "analysisDate": "2021-10-17",
+        "biosampleId": "SAMPLE1",
+        "id": "EGA-testing",
+        "individualId": "SAMPLE1",
+        "info": {},
+        "pipelineName": "Pipeline-panel-0001-v1",
+        "pipelineRef": "https://doi.org/10.48511/workflowhub.workflow.111.1",
+        "runId": "EGAR5000XXX",
+        "variantCaller": "GATK4.0",
+        "datasetId": "test",
+        "_id": "2e8d3e8dcf5a492448e1703c2c99ed5ee4370a1152f1983b3cf11e3e9cab2033"
+    }
+]
