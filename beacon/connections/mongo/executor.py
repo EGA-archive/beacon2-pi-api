@@ -6,14 +6,14 @@ from beacon.exceptions.exceptions import NoPermissionsAvailable, DatabaseIsDown
 from pymongo.errors import ConnectionFailure
 from beacon.response.classes import MultipleDatasetsResponse
 from beacon.request.classes import RequestAttributes
-from beacon.utils.modules import get_all_modules_mongo_connections_script
+from beacon.utils.modules import get_all_modules_connections_script
 
 @log_with_args(config.level)
 async def execute_function(self, datasets: list):
     # Initiate the list where the different dataset classes are returned populated from the queries
     list_of_responses=[]
     # Get the function that will be the one to use for the query performed
-    list_of_non_collection_modules = get_all_modules_mongo_connections_script("non_collections")
+    list_of_non_collection_modules = get_all_modules_connections_script("non_collections", "mongo")
     for non_collection_module in list_of_non_collection_modules:
         try:
             function = getattr(non_collection_module, RequestAttributes.function)
@@ -44,7 +44,7 @@ async def execute_function(self, datasets: list):
 async def execute_collection_function(self):
     try:
         # Get the function that will be the one to use for the query performed
-        list_of_collection_modules = get_all_modules_mongo_connections_script("collections")
+        list_of_collection_modules = get_all_modules_connections_script("collections", "mongo")
         for collection_module in list_of_collection_modules:
             try:
                 function = getattr(collection_module, RequestAttributes.function)

@@ -2,7 +2,7 @@ from beacon.logs.logs import log_with_args
 from beacon.conf.conf_override import config
 import aiohttp.web as web
 from beacon.permissions.__main__ import query_permissions
-from bson import json_util
+import json
 from beacon.request.classes import RequestAttributes
 from beacon.budget.__main__ import load_module_to_insert_budget
 from pydantic import ValidationError
@@ -11,6 +11,17 @@ from beacon.views.endpoint import EndpointView
 from beacon.response.includeResultsetResponses import include_resultSet_responses
 from beacon.utils.modules import load_framework_module, load_source_module
 from beacon.utils.checks import state_check
+from datetime import date as DateType
+from datetime import datetime as DateTimeType
+import json
+from enum import Enum
+
+def json_default(obj):
+    if isinstance(obj, (DateType, DateTimeType)):
+        return obj.isoformat()
+    if isinstance(obj, Enum):
+        return obj.value
+    raise TypeError(f"Object of type {type(obj).__name__} is not JSON serializable")
 
 class EntryTypeView(EndpointView):
     @state_check
@@ -82,4 +93,9 @@ class EntryTypeView(EndpointView):
         if time_now is not None:
             load_module_to_insert_budget(self, username, time_now)
         # Give a HTTP response with json data application and a 200 status, and the NonCollection object class collected
-        return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
+
+        return web.Response(
+            text=json.dumps(response_obj, default=json_default),
+            status=200,
+            content_type="application/json",
+        )

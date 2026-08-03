@@ -17,7 +17,7 @@ patients:
     name: Patient for the set of images
     ontology_id: ICO:0000422
     ontology_name: Patient
-    description: 
+    description: patients
   schema:
     specification: EUCAIM v0
     default_schema_id: EUCAIM-patient_v0.0.1

@@ -43,6 +43,14 @@ async def check_database_connections(LOG=None, entry_type=None, pre_entry_type=N
     pfile.close()
     # Check all the model folders that are found in the beacon/models path
     dirs = os.listdir("/beacon/models")
+    # Load conf file for connection to check which are enabled
+    with open('/beacon/conf/connections/connections_conf.yml') as infile:
+        connections_conf=yaml.safe_load(infile)
+    # Get array of enabled connections
+    connections_enabled=[]
+    for k, v in connections_conf.items():
+        if v['connection_enabled']==True:
+            connections_enabled.append(k)
     # Initialize an array to keep what database connections are performed (and needed to have checks)
     database_connections_to_check=[]
     # Loop over the folders found in the mentioned path and save the ones that are active (enabled)
@@ -65,7 +73,8 @@ async def check_database_connections(LOG=None, entry_type=None, pre_entry_type=N
                         if entry_type == None or conf_entry_type_param['endpoint_name'] == entry_type and pre_entry_type == None or conf_entry_type_param['endpoint_name'] == pre_entry_type:
                             if conf_entry_type_param['entry_type_enabled'] == True:
                                 if conf_entry_type_param['connection']['name'] not in database_connections_to_check:
-                                    database_connections_to_check.append(conf_entry_type_param['connection']['name'])
+                                    if conf_entry_type_param['connection']['name'] in connections_enabled:
+                                        database_connections_to_check.append(conf_entry_type_param['connection']['name'])
                                 # Do the same for the lookups inside the entry types
                                 for conf_param, value_param in conf_entry_type_param.items():
                                     if conf_param == 'lookups':
@@ -74,9 +83,11 @@ async def check_database_connections(LOG=None, entry_type=None, pre_entry_type=N
                                                 if pre_entry_type != None and entry_type != None:
                                                     if lookup_value['endpoint_name'] == pre_entry_type+'/{id}/'+entry_type:
                                                         if lookup_value['connection']['name'] not in database_connections_to_check:
-                                                            database_connections_to_check.append(lookup_value['connection']['name'])
+                                                            if lookup_value['connection']['name'] in connections_enabled:
+                                                                database_connections_to_check.append(lookup_value['connection']['name'])
                                                 else:
-                                                    database_connections_to_check.append(lookup_value['connection']['name'])
+                                                    if lookup_value['connection']['name'] in connections_enabled:
+                                                        database_connections_to_check.append(lookup_value['connection']['name'])
         # Loop over the subfolders found in the targeted path and save the ones that are active (enabled)
         else:
             for subfolder in subdirs:
@@ -98,7 +109,8 @@ async def check_database_connections(LOG=None, entry_type=None, pre_entry_type=N
                                 if entry_type == None or conf_entry_type_param['endpoint_name'] == entry_type and pre_entry_type == None or conf_entry_type_param['endpoint_name'] == pre_entry_type:
                                     if conf_entry_type_param['entry_type_enabled'] == True:
                                         if conf_entry_type_param['connection']['name'] not in database_connections_to_check:
-                                            database_connections_to_check.append(conf_entry_type_param['connection']['name'])
+                                            if conf_entry_type_param['connection']['name'] in connections_enabled:
+                                                database_connections_to_check.append(conf_entry_type_param['connection']['name'])
                                         # Do the same for the lookups inside the entry types
                                         for conf_param, value_param in conf_entry_type_param.items():
                                             if conf_param == 'lookups':
@@ -107,9 +119,11 @@ async def check_database_connections(LOG=None, entry_type=None, pre_entry_type=N
                                                         if pre_entry_type != None and entry_type != None:
                                                             if lookup_value['endpoint_name'] == pre_entry_type+'/{id}/'+entry_type:
                                                                 if lookup_value['connection']['name'] not in database_connections_to_check:
-                                                                    database_connections_to_check.append(lookup_value['connection']['name'])
+                                                                    if lookup_value['connection']['name'] in connections_enabled:
+                                                                        database_connections_to_check.append(lookup_value['connection']['name'])
                                                         else:
-                                                            database_connections_to_check.append(lookup_value['connection']['name'])
+                                                            if lookup_value['connection']['name'] in connections_enabled:
+                                                                database_connections_to_check.append(lookup_value['connection']['name'])
     # Loop over the database connections collected
     for folder in database_connections_to_check:
         # Dynamically load all the modules to ping each of the databases
@@ -288,8 +302,8 @@ def _model_is_enabled(models_confile, folder, subfolder=None):
             return False
     return True
 
-def get_all_modules_mongo_connections_script(script):
-    """Method to get all the submodules of mongo connections per model loaded dynamically"""
+def get_all_modules_connections_script(script, connection):
+    """Method to get all the submodules of connections per model loaded dynamically"""
     list_of_modules=[]
     # Load the configuration file for the models that are enabled
     with open("/beacon/conf/models/models_conf.yml", 'r') as pfile:
@@ -302,18 +316,19 @@ def get_all_modules_mongo_connections_script(script):
         # Get the models that are specifically enabled
         if not _model_is_enabled(models_confile, folder):
             continue
+
         # Go over the connections for the entry types of the models enabled
         if "connections" in subdirs:
             connections = os.listdir("/beacon/models/"+folder+"/connections")
             for dir in connections:
-                if dir == 'mongo':
+                if dir == connection:
                     # Get the modules names in an array
-                    complete_module='beacon.models.'+folder+'.connections.mongo.'+script
+                    complete_module='beacon.models.'+folder+'.connections.'+connection+'.'+script
                     import importlib
                     try:
                         module = importlib.import_module(complete_module, package=None)
                         list_of_modules.append(module)
-                    except Exception:
+                    except Exception as e:
                         continue
         else:
             # Loop over the subfolders found in the mentioned path and save the ones that are active (enabled)
@@ -326,15 +341,15 @@ def get_all_modules_mongo_connections_script(script):
                 if "connections" in underdirs:
                     connections = os.listdir("/beacon/models/"+folder+"/"+subfolder+"/connections")
                     for dir in connections:
-                        if dir == 'mongo':
+                        if dir == connection:
                             # Get the modules names in an array
-                            complete_module='beacon.models.'+folder+'.'+subfolder+'.connections.mongo.'+script
+                            complete_module='beacon.models.'+folder+'.'+subfolder+'.connections.'+connection+'.'+script
                             import importlib
                             module = importlib.import_module(complete_module, package=None)
                             list_of_modules.append(module)
     return list_of_modules
 
-def get_all_modules_datasets():
+def get_all_modules_datasets(connection):
     """Method to get the datasets collections for each of the models to be returned"""
     list_of_modules=[]
     # Load the configuration file for the models that are enabled
@@ -352,7 +367,7 @@ def get_all_modules_datasets():
         if "connections" in subdirs:
             try:
                 # Get the names of the collections validators to be validated and accepted
-                complete_module='beacon.models.'+folder+'.connections.mongo.collections'
+                complete_module='beacon.models.'+folder+'.connections.'+connection+'.collections'
                 import importlib
                 module = importlib.import_module(complete_module, package=None)
                 list_of_modules.append(module)
@@ -368,7 +383,7 @@ def get_all_modules_datasets():
             if "connections" in underdirs:
                 try:
                     # Get the names of the collections validators to be validated and accepted
-                    complete_module='beacon.models.'+folder+'.'+subfolder+'.connections.mongo.collections'
+                    complete_module='beacon.models.'+folder+'.'+subfolder+'.connections.'+connection+'.collections'
                     import importlib
                     module = importlib.import_module(complete_module, package=None)
                     list_of_modules.append(module)

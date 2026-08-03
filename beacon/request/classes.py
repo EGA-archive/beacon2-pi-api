@@ -74,3 +74,5 @@ class RequestAttributes():
         self.function=None
         # Initialize the variable for the client string needed to perform the database connection
         self.client=None
+        # Initialize the variable for database's table name
+        self.table=None
