@@ -188,8 +188,10 @@ def set_entry_type_configuration(self):
                         client_function_from_module = getattr(client_module, 'get_client')
                         client = client_function_from_module()
                         RequestAttributes.client = client
-                        connection = client[mongo_conf.database_name][param_value["table"]]
-                        RequestAttributes.mongo_collection = connection
+                        RequestAttributes.table = param_value["table"]
+                        if RequestAttributes.source == 'mongo':
+                            connection = client[mongo_conf.database_name][RequestAttributes.table]
+                            RequestAttributes.mongo_collection = connection
                     if RequestAttributes.entry_id != None:
                         if RequestAttributes.pre_entry_type == None:
                             RequestAttributes.function = param_value["functions"]["id_query_function_name_assigned"]
@@ -211,10 +213,10 @@ def set_entry_type_configuration(self):
                 elif param_key == 'schema':
                     if RequestAttributes.qparams.meta.requestedSchemas != []:
                         for schema in RequestAttributes.qparams.meta.requestedSchemas:
-                            if schema == param_value["default_schema_id"]:
-                                RequestAttributes.returned_schema = [SchemasPerEntity(entityType=entry_typeid,schema=schema).model_dump()]
-                            elif schema in param_value["supported_schemas"]:
-                                RequestAttributes.returned_schema = [SchemasPerEntity(entityType=entry_typeid,schema=schema).model_dump()]
+                            if schema["schema"] == param_value["default_schema_id"]:
+                                RequestAttributes.returned_schema = [SchemasPerEntity(entityType=entry_typeid,schema=schema["schema"]).model_dump()]
+                            elif schema["schema"] in param_value["supported_schemas"]:
+                                RequestAttributes.returned_schema = [SchemasPerEntity(entityType=entry_typeid,schema=schema["schema"]).model_dump()]
                             else:
                                 RequestAttributes.returned_schema = [SchemasPerEntity(entityType=entry_typeid,schema=param_value["default_schema_id"]).model_dump()]
                     elif RequestAttributes.entry_type not in ['filtering_terms', 'map', 'configuration', 'info', 'service-info', 'entry_types']:

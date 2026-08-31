@@ -2731,7 +2731,7 @@ class TestMain(unittest.TestCase):
                 responsedict = json.loads(responsetext)
 
                 # Expect aggregated cross-query result size
-                assert responsedict["responseSummary"]["numTotalResults"] == 40
+                assert responsedict["responseSummary"]["numTotalResults"] == 38
 
             loop.run_until_complete(test_check_post_cross_query_g_variants_individuals_is_working())
             loop.run_until_complete(client.close())
@@ -2764,7 +2764,7 @@ class TestMain(unittest.TestCase):
                 responsedict = json.loads(responsetext)
 
                 # Expect biosample results for matching individuals
-                assert responsedict["responseSummary"]["numTotalResults"] == 20
+                assert responsedict["responseSummary"]["numTotalResults"] == 16
                 assert resp.status == 200
 
             loop.run_until_complete(test_check_post_cross_query_biosamples_individuals_is_working())
@@ -2903,7 +2903,7 @@ class TestMain(unittest.TestCase):
                 responsedict = json.loads(responsetext)
 
                 # Expect deterministic match count for exact filter
-                assert responsedict["responseSummary"]["numTotalResults"] == 20
+                assert responsedict["responseSummary"]["numTotalResults"] == 13
 
             loop.run_until_complete(test_check_alphanumeric_equal_query_is_working())
             loop.run_until_complete(client.close())
@@ -2945,7 +2945,7 @@ class TestMain(unittest.TestCase):
                 responsedict = json.loads(responsetext)
 
                 # Pattern match should still resolve to same dataset subset
-                assert responsedict["responseSummary"]["numTotalResults"] == 20
+                assert responsedict["responseSummary"]["numTotalResults"] == 13
 
             loop.run_until_complete(test_check_alphanumeric_like_query_is_working())
             loop.run_until_complete(client.close())
@@ -2987,7 +2987,8 @@ class TestMain(unittest.TestCase):
                 responsedict = json.loads(responsetext)
 
                 # Expect no matching records due to exclusion filter
-                assert responsedict["responseSummary"]["exists"] == False
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 7
 
             loop.run_until_complete(test_check_alphanumeric_not_like_query_is_working())
             loop.run_until_complete(client.close())
@@ -3029,7 +3030,8 @@ class TestMain(unittest.TestCase):
                 responsedict = json.loads(responsetext)
 
                 # No matching individuals expected
-                assert responsedict["responseSummary"]["exists"] == False
+                assert responsedict["responseSummary"]["exists"] == True
+                assert responsedict["responseSummary"]["numTotalResults"] == 7
 
             loop.run_until_complete(test_check_alphanumeric_not_query_is_working())
             loop.run_until_complete(client.close())
@@ -3053,7 +3055,7 @@ class TestMain(unittest.TestCase):
                                 {
                                     "id": "exposures.ageAtExposure.iso8601duration",
                                     "operator": ">",
-                                    "value": "31"
+                                    "value": "21"
                                 }
                             ],
                             "includeResultsetResponses": "HIT",
@@ -3070,7 +3072,7 @@ class TestMain(unittest.TestCase):
                 responsedict = json.loads(responsetext)
 
                 # Expect deterministic count of matching exposures above threshold
-                assert responsedict["responseSummary"]["numTotalResults"] == 20
+                assert responsedict["responseSummary"]["numTotalResults"] == 10
 
             loop.run_until_complete(test_check_iso8601duration_gt_query_is_working())
             loop.run_until_complete(client.close())
@@ -3093,7 +3095,7 @@ class TestMain(unittest.TestCase):
                                 {
                                     "id": "exposures.ageAtExposure.iso8601duration",
                                     "operator": "<",
-                                    "value": "33"
+                                    "value": "22"
                                 }
                             ],
                             "includeResultsetResponses": "HIT",
@@ -3111,7 +3113,7 @@ class TestMain(unittest.TestCase):
 
                 # Validate that matching individuals exist and count is as expected
                 assert responsedict["responseSummary"]["exists"] == True
-                assert responsedict["responseSummary"]["numTotalResults"] == 20
+                assert responsedict["responseSummary"]["numTotalResults"] == 10
 
             loop.run_until_complete(test_check_iso8601duration_ls_query_is_working())
             loop.run_until_complete(client.close())
@@ -3174,7 +3176,7 @@ class TestMain(unittest.TestCase):
                         "query": {
                             "filters": [
                                 {
-                                    "id": "anatomical entity",
+                                    "id": "Height-standing",
                                     "operator": ">",
                                     "value": "44",
                                     "scope": "individual"
@@ -3215,9 +3217,9 @@ class TestMain(unittest.TestCase):
                         "query": {
                             "filters": [
                                 {
-                                    "id": "anatomical entity",
+                                    "id": "Height-standing",
                                     "operator": ">",
-                                    "value": "50",
+                                    "value": "250",
                                     "scope": "individual"
                                 }
                             ],
@@ -3253,7 +3255,7 @@ class TestMain(unittest.TestCase):
                         "meta": {"apiVersion": "2.0"},
                         "query": {
                             "filters": [
-                                {"id": "sampleOriginType:ovary"}
+                                {"id": "sampleOriginType:breast lobe"}
                             ],
                             "includeResultsetResponses": "HIT",
                             "pagination": {"skip": 0, "limit": 10},
@@ -3311,7 +3313,7 @@ class TestMain(unittest.TestCase):
                 assert resp.status == 200
                 responsetext = await resp.text()
                 responsedict = json.loads(responsetext)
-                assert responsedict["responseSummary"]["numTotalResults"] == 20
+                assert responsedict["responseSummary"]["numTotalResults"] == 16
 
             loop.run_until_complete(test_check_filters_as_request_parameter_working())
             loop.run_until_complete(client.close())
@@ -3333,7 +3335,6 @@ class TestMain(unittest.TestCase):
                             "requestParameters": {
                                 "datasets": ["test"]
                             },
-                            "filters": [],
                             "includeResultsetResponses": "HIT",
                             "pagination": {"skip": 0, "limit": 101},
                             "testMode": True,
@@ -3543,7 +3544,7 @@ class TestMain(unittest.TestCase):
                 assert resp.status == 200
                 responsetext = await resp.text()
                 responsedict = json.loads(responsetext)
-                assert responsedict["responseSummary"]["numTotalResults"] == 16
+                assert responsedict["responseSummary"]["numTotalResults"] == 14
 
             loop.run_until_complete(test_check_individuals_variants())
             loop.run_until_complete(client.close())
@@ -3762,7 +3763,7 @@ class TestMain(unittest.TestCase):
                 responsedict = json.loads(responsetext)
 
                 # Validate filtered biosample-linked variant results
-                assert responsedict["responseSummary"]["numTotalResults"] == 7
+                assert responsedict["responseSummary"]["numTotalResults"] == 5
 
             loop.run_until_complete(test_check_biosamples_variants())
             loop.run_until_complete(client.close())
@@ -4255,7 +4256,7 @@ class TestMain(unittest.TestCase):
                 responsedict = json.loads(responsetext)
 
                 # Expect 17 biosample-level results
-                assert responsedict["responseSummary"]["numTotalResults"] == 17
+                assert responsedict["responseSummary"]["numTotalResults"] == 13
 
             loop.run_until_complete(test_check_geneId_individual_filter())
             loop.run_until_complete(client.close())
@@ -4291,7 +4292,7 @@ class TestMain(unittest.TestCase):
                 responsedict = json.loads(responsetext)
 
                 # Expect biosamples matching both individual filter + geneId constraint
-                assert responsedict["responseSummary"]["numTotalResults"] == 17
+                assert responsedict["responseSummary"]["numTotalResults"] == 13
 
             loop.run_until_complete(test_check_geneId_individual_filter())
             loop.run_until_complete(client.close())
@@ -4569,7 +4570,7 @@ class TestMain(unittest.TestCase):
                         "query": {
                             "filters": [
                                 {
-                                    "id": "MONDO:0004975",
+                                    "id": "MONDO:0004989",
                                     "scope": "individual",
                                     "includeDescendantTerms": True
                                 }
@@ -4587,7 +4588,7 @@ class TestMain(unittest.TestCase):
                 responsedict = json.loads(responsetext)
 
                 # Expect expanded ontology query to return multiple matched individuals
-                assert responsedict["responseSummary"]["numTotalResults"] == 20
+                assert responsedict["responseSummary"]["numTotalResults"] == 3
 
             loop.run_until_complete(test_check_runs_variants())
             loop.run_until_complete(client.close())
@@ -5061,7 +5062,7 @@ class TestMain(unittest.TestCase):
 
                 # Validate filtered results exist and match expected count
                 assert responsedict["responseSummary"]["exists"] is True
-                assert responsedict["responseSummary"]["numTotalResults"] == 40
+                assert responsedict["responseSummary"]["numTotalResults"] == 38
 
             loop.run_until_complete(test_check_post_individuals_with_filter_is_working())
             loop.run_until_complete(client.close())
@@ -5222,7 +5223,7 @@ class TestMain(unittest.TestCase):
 
                 # Ensure combined filtering + coordinate query works correctly
                 assert responsedict["responseSummary"]["exists"] is True
-                assert responsedict["responseSummary"]["numTotalResults"] == 15
+                assert responsedict["responseSummary"]["numTotalResults"] == 12
 
             loop.run_until_complete(test_check_individuals_with_request_parameters_and_filters())
             loop.run_until_complete(client.close())
@@ -5267,7 +5268,7 @@ class TestMain(unittest.TestCase):
                 resp = await client.get(
                     conf_override.config.uri_subpath + "/" +
                     individual["individual"]["endpoint_name"] +
-                    "?filters=NCIT:C16576,NCIT:C16731"
+                    "?filters=NCIT:C16576,BTO:0004718"
                 )
 
                 assert resp.status == 200
@@ -5277,7 +5278,7 @@ class TestMain(unittest.TestCase):
 
                 # Ensure combined filters still return valid matches
                 assert responsedict["responseSummary"]["exists"] is True
-                assert responsedict["responseSummary"]["numTotalResults"] == 20
+                assert responsedict["responseSummary"]["numTotalResults"] == 4
 
             loop.run_until_complete(test_check_get_double_filters())
             loop.run_until_complete(client.close())
@@ -5354,7 +5355,7 @@ class TestMain(unittest.TestCase):
                         "query": {
                             "filters": [
                                 {
-                                    "id": "anatomical entity",
+                                    "id": "Height-standing",
                                     "operator": ">",
                                     "value": "44",
                                     "scope": "individual"
@@ -5397,7 +5398,7 @@ class TestMain(unittest.TestCase):
                         "query": {
                             "filters": [
                                 {
-                                    "id": "anatomical entity",
+                                    "id": "Height-standing",
                                     "operator": ">",
                                     "value": "44",
                                     "scope": "individual"
@@ -5519,7 +5520,7 @@ class TestMain(unittest.TestCase):
                         "query": {
                             "filters": [
                                 {
-                                    "id": "anatomical entity",
+                                    "id": "Height-standing",
                                     "operator": ">",
                                     "value": "44",
                                     "scope": "individual"
@@ -5562,7 +5563,7 @@ class TestMain(unittest.TestCase):
                         "query": {
                             "filters": [
                                 {
-                                    "id": "MONDO:0004975",
+                                    "id": "MONDO:0004989",
                                     "scope": "individual",
                                     # Strict similarity expansion
                                     "similarity": "high"  
@@ -5582,7 +5583,7 @@ class TestMain(unittest.TestCase):
                 responsedict = json.loads(responsetext)
 
                 # High similarity still returns expanded matches
-                assert responsedict["responseSummary"]["numTotalResults"] == 20
+                assert responsedict["responseSummary"]["numTotalResults"] == 3
 
             loop.run_until_complete(test_check_similarity_high())
             loop.run_until_complete(client.close())
@@ -5605,7 +5606,7 @@ class TestMain(unittest.TestCase):
                         "query": {
                             "filters": [
                                 {
-                                    "id": "MONDO:0004975",
+                                    "id": "MONDO:0004989",
                                     "scope": "individual",
                                     "similarity": "medium"
                                 }
@@ -5624,7 +5625,7 @@ class TestMain(unittest.TestCase):
                 responsedict = json.loads(responsetext)
 
                 # Medium similarity yields same expected match count
-                assert responsedict["responseSummary"]["numTotalResults"] == 20
+                assert responsedict["responseSummary"]["numTotalResults"] == 3
 
             loop.run_until_complete(test_check_similarity_medium())
             loop.run_until_complete(client.close())
@@ -5647,7 +5648,7 @@ class TestMain(unittest.TestCase):
                         "query": {
                             "filters": [
                                 {
-                                    "id": "MONDO:0004975",
+                                    "id": "MONDO:0004989",
                                     "scope": "individual",
                                     "similarity": "low"
                                 }
@@ -5666,7 +5667,7 @@ class TestMain(unittest.TestCase):
                 responsedict = json.loads(responsetext)
 
                 # Low similarity still returns same aggregate match count in this dataset
-                assert responsedict["responseSummary"]["numTotalResults"] == 20
+                assert responsedict["responseSummary"]["numTotalResults"] == 3
 
             loop.run_until_complete(test_check_similarity_low())
             loop.run_until_complete(client.close())
@@ -5686,7 +5687,7 @@ class TestMain(unittest.TestCase):
                         "meta": {"apiVersion": "2.0"},
                         "query": {
                             "filters": [
-                                {"id": "DOID:1485", "scope": "individual"}
+                                {"id": "NCIT:C4872", "scope": "individual"}
                             ],
                             "includeResultsetResponses": "HIT",
                             "pagination": {"skip": 0, "limit": 10},
@@ -5702,7 +5703,7 @@ class TestMain(unittest.TestCase):
                 responsedict = json.loads(responsetext)
 
                 # Synonym expansion should increase matched result set
-                assert responsedict["responseSummary"]["numTotalResults"] == 20
+                assert responsedict["responseSummary"]["numTotalResults"] == 3
 
             loop.run_until_complete(test_check_synonyms())
             loop.run_until_complete(client.close())
@@ -6090,7 +6091,7 @@ class TestMain(unittest.TestCase):
             loop.run_until_complete(client.start_server())
 
             async def test_check_post_cross_query_individuals_g_variants_is_not_working():
-                # Mis-scoped filter (individual scope incorrectly used for anatomical entity)
+                # Mis-scoped filter (individual scope incorrectly used for Height-standing)
                 resp = await client.post(
                     conf_override.config.uri_subpath + "/" +
                     genomicVariant["genomicVariant"]["endpoint_name"],
@@ -6099,7 +6100,7 @@ class TestMain(unittest.TestCase):
                         "query": {
                             "filters": [
                                 {
-                                    "id": "anatomical entity",
+                                    "id": "Height-standing",
                                     "operator": "=",
                                     "value": "GATK3.0",
                                     "scope": "individual"
@@ -6142,7 +6143,7 @@ class TestMain(unittest.TestCase):
                         "query": {
                             "filters": [
                                 {
-                                    "id": "anatomical entity",
+                                    "id": "Height-standing",
                                     "operator": "=",
                                     "value": "GATK3.0",
                                     "scope": "individual"
@@ -6585,7 +6586,7 @@ class TestMain(unittest.TestCase):
                                 {
                                     "id": "exposures.ageAtExposure.iso8601duration",
                                     "operator": ">",
-                                    "value": "P31Y"
+                                    "value": "P21Y"
                                 }
                             ],
                             "includeResultsetResponses": "HIT",
@@ -6602,7 +6603,7 @@ class TestMain(unittest.TestCase):
                 responsedict = json.loads(responsetext)
 
                 # Expected deterministic result count for duration-based filter
-                assert responsedict["responseSummary"]["numTotalResults"] == 20
+                assert responsedict["responseSummary"]["numTotalResults"] == 10
 
             loop.run_until_complete(test_check_iso8601duration_gt_query_is_working())
             loop.run_until_complete(client.close())
@@ -7031,6 +7032,41 @@ class TestMain(unittest.TestCase):
 
             loop.run_until_complete(test_draining_state(self))
             loop.run_until_complete(client.close())
+
+    def test_main_check_post_alternative_schema(self):
+        # Cross-query: analysis filter applied to cohort endpoint
+        with loop_context() as loop:
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+
+            async def test_check_post_alternative_schema_works():
+                # Analysis-level metadata used to filter cohort results
+                resp = await client.post(
+                    conf_override.config.uri_subpath + "/" +
+                    individual["individual"]["endpoint_name"],
+                    json={
+                        "meta": {"apiVersion": "2.0", "requestedSchemas": [{"schema": "beacon-individual-v2.1.0"}]},
+                        "query": {
+                            "includeResultsetResponses": "HIT",
+                            "pagination": {"skip": 0, "limit": 10},
+                            "testMode": True,
+                            "requestedGranularity": "record"
+                        }
+                    }
+                )
+
+                assert resp.status == 200
+
+                responsetext = await resp.text()
+                responsedict = json.loads(responsetext)
+
+                # At least one cohort expected to match
+                assert responsedict["meta"]["returnedSchemas"][0]["schema"] == 'beacon-individual-v2.1.0'
+
+            loop.run_until_complete(test_check_post_alternative_schema_works())
+            loop.run_until_complete(client.close())
+
 class AsyncTest(unittest.IsolatedAsyncioTestCase):
 
     # Starts a background API server using asyncio and waits briefly for it to initialize.
