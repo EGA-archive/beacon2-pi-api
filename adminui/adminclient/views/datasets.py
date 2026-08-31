@@ -8,6 +8,7 @@ from beacon.connections.mongo.__init__ import client
 from adminbackend.forms.datasets import DatasetsForm
 import yaml
 from django.contrib.auth.decorators import login_required, permission_required
+import os
 
 import logging
 
@@ -22,103 +23,125 @@ LOG.addHandler(sh)
 #@login_required
 #@permission_required('adminclient.can_see_view', raise_exception=True)
 def default_view(request):
-    analyses=client["beacon"].analyses
-    datasets=client["beacon"].datasets
-    biosamples=client["beacon"].biosamples
-    cohorts=client["beacon"].cohorts
-    runs=client["beacon"].runs
-    g_variants=client["beacon"].genomicVariations
-    individuals=client["beacon"].individuals
-    caseLevelData=client["beacon"].caseLevelData
-    targets=client["beacon"].targets
-    all_datasets=datasets.find({})
-    dataset_list=[]
-    for dataset in all_datasets:
-        entry_types_included=["datasets"]
-        dataset_dict={}
-        dataset_dict["name"]=dataset["name"]
-        dataset_dict["id"]=dataset["id"]
-        dataset_dict["description"]=dataset["description"]
-        total_ids=biosamples.find({"datasetId": dataset["id"]})
-        total_ids=list(total_ids)
-        dataset_dict["Total_IDs"]=len(total_ids)
-        analyses_list=analyses.find_one({"datasetId": dataset["id"]})
-        try:
-            analyses_list=list(analyses_list)
-        except Exception:
-            analyses_list=[]
-        cohorts_list=cohorts.find_one({"datasetId": dataset["id"]})
-        try:
-            cohorts_list=list(cohorts_list)
-        except Exception:
-            cohorts_list=[]
-        runs_list=runs.find_one({"datasetId": dataset["id"]})
-        try:
-            runs_list=list(runs_list)
-        except Exception:
-            runs_list=[]
-        g_variants_list=g_variants.find_one({"datasetId": dataset["id"]})
-        try:
-            g_variants_list=list(g_variants_list)
-        except Exception:
-            g_variants_list=[]
-        individuals_list=individuals.find_one({"datasetId": dataset["id"]})
-        try:
-            individuals_list=list(individuals_list)
-        except Exception:
-            individuals_list=[]
-        if len(total_ids) > 0:
-            entry_types_included.append('biosamples')
-        if len(analyses_list) > 0:
-            entry_types_included.append('analyses')
-        if len(cohorts_list) > 0:
-            entry_types_included.append('cohorts')
-        if len(individuals_list) > 0:
-            entry_types_included.append('individuals')
-        if len(runs_list) > 0:
-            entry_types_included.append('runs')
-        if len(g_variants_list) > 0:
-            entry_types_included.append('g_variants')
-        dataset_dict["entry_types_included"]=entry_types_included
-        dataset_list.append(dataset_dict)
+    LOG.warning('starting')
+
+    models = {}
+    context = {'models': models}
+
+    with open(
+        "/home/app/web/beacon/conf/models/models_conf.yml"
+    ) as f:
+        models_conf = yaml.safe_load(f)
+
+    connections = {}
+    datasets_connections = {}
+    datasets_forms = []
+    for model, config in models_conf.items():
+        if model not in models:
+            models[model]={}
+
+        if config['model_enabled']:
+
+            
+
+            path = (
+                "/home/app/web/beacon/models/"
+                f"{model}/conf/entry_types"
+            )
+            
+            for filename in os.listdir(path):
+                
+
+                if filename.endswith(".yml"):
+                    entry_type = filename[:-4]
+                
+                    with open(path+'/'+filename) as f:
+                        entry_type_yaml = yaml.safe_load(f)
+
+                    database_name=entry_type_yaml[entry_type]['connection']['database']
+                    collection_name=entry_type_yaml[entry_type]['connection']['table']
+                    endpoint_name=entry_type_yaml[entry_type]['endpoint_name']
+                    print(entry_type, flush=True)
+                    if 'data set' in entry_type_yaml[entry_type]['info']['ontology_name'].lower() or 'dataset' in entry_type_yaml[entry_type]['info']['ontology_name'].lower():
+                        datasets_connections[endpoint_name]=client[database_name][collection_name]
+                    else:
+                        connections[endpoint_name]=client[database_name][collection_name]
+
+        print(model, flush=True)
+        print(datasets_connections, flush=True)
+        caseLevelData=client["beacon"].caseLevelData
+        connections['caseLevelData']=caseLevelData
+        targets=client["beacon"].targets
+        connections['targets']=targets
+
+        models[model]['connections']= connections
+        models[model]['dataset_connections']= datasets_connections
+
+        for endpoint, dataset_connection in datasets_connections.items():
+            all_datasets=dataset_connection.find({})
+            dataset_list=[]
+            for dataset in all_datasets:
+                entry_types_included=["datasets"]
+                dataset_dict={}
+                dataset_dict["Total_IDs"]={}
+                dataset_dict["name"]=dataset["name"]
+                dataset_dict["id"]=dataset["id"]
+                dataset_dict["description"]=dataset["description"]
+                datasets_forms.append(
+                    DatasetsForm(
+                        request.POST or None,
+                        prefix=f"{model}_{dataset["id"]}",
+                        model=model,
+                        dataset=dataset["id"]
+                    )
+                )
+                
+                for endpoint_connection, connection in connections.items():
+                    if endpoint_connection not in ['targets', 'caseLevelData']:
+                        total_ids=connection.find({"datasetId": dataset["id"]})
+                        total_ids=list(total_ids)
+                        if len(total_ids) > 0:
+                            dataset_dict["Total_IDs"][endpoint_connection]=len(total_ids)
+                            entry_types_included.append(endpoint_connection)
+                dataset_dict["entry_types_included"]=entry_types_included
+                dataset_list.append(dataset_dict)
+            models[model]['forms']= datasets_forms
+            models[model]['dataset_list']= dataset_list
     with open("beacon/conf/datasets/datasets_conf.yml") as f:
         datasets_test=yaml.safe_load(f)
     if request.method == 'POST':
-        form = DatasetsForm(request.POST)
-        if form.is_valid():
-            dataID = form.cleaned_data['DatasetID']
-            if 'Test Mode' in request.POST:
-                with open("beacon/conf/datasets/datasets_conf.yml") as f:
-                    datasets_conf=yaml.safe_load(f)
-                test_datasets=[]
-                for key2, value2 in request.POST.items():
-                    if value2 == 'on':
-                        try:
-                            datasets_conf[key2]['isTest']=True
-                        except Exception:
-                            datasets_conf[key2]={}
-                            datasets_conf[key2]['isTest']=True
-                        test_datasets.append(key2)
-                for key, value in datasets_conf.items():
-                    if key not in test_datasets:
-                        try:
-                            datasets_conf[key]['isTest']=False
-                        except Exception:
-                            datasets_conf[key]={}
-                            datasets_conf[key]['isTest']=False
-                with open('/home/app/web/beacon/conf/datasets/datasets_conf.yml', 'w') as outfile:
-                    yaml.dump(datasets_conf, outfile)
-            elif 'Delete Dataset' in request.POST:
-                analyses.delete_many({"datasetId": dataID})
-                biosamples.delete_many({"datasetId": dataID})
-                caseLevelData.delete_many({"datasetId": dataID})
-                cohorts.delete_many({"datasetId": dataID})
-                datasets.delete_many({"id": dataID})
-                g_variants.delete_many({"datasetId": dataID})
-                individuals.delete_many({"datasetId": dataID})
-                runs.delete_many({"datasetId": dataID})
-                targets.delete_many({"datasetId": dataID})
+        for model, key_model in models['forms'].items():
+            for dataset_form in key_model['forms']:
+                dataID = dataset_form.cleaned_data['DatasetID']
+                if 'Test Mode' in request.POST:
+                    with open("beacon/conf/datasets/datasets_conf.yml") as f:
+                        datasets_conf=yaml.safe_load(f)
+                    test_datasets=[]
+                    for key2, value2 in request.POST.items():
+                        if value2 == 'on':
+                            try:
+                                datasets_conf[key2]['isTest']=True
+                            except Exception:
+                                datasets_conf[key2]={}
+                                datasets_conf[key2]['isTest']=True
+                            test_datasets.append(key2)
+                    for key, value in datasets_conf.items():
+                        if key not in test_datasets:
+                            try:
+                                datasets_conf[key]['isTest']=False
+                            except Exception:
+                                datasets_conf[key]={}
+                                datasets_conf[key]['isTest']=False
+                    with open('/home/app/web/beacon/conf/datasets/datasets_conf.yml', 'w') as outfile:
+                        yaml.dump(datasets_conf, outfile)
+                elif 'Delete Dataset' in request.POST:
+                    for connections in key_model['connections']:
+                        for endpoint_connection, connection in connections:
+                            connection.delete_many({"datasetId": dataID})
+                    for datasets_connections in key_model['dataset_connections']:
+                        for endpoint, dataset_connection in datasets_connections:
+                            dataset_connection.delete_many({"id": dataID})
             return redirect("adminclient:datasets")
-    context={"datasets_found": dataset_list, "datasets_test": datasets_test}
+    context={"models": models, "datasets_test": datasets_test}
     template = "general_configuration/datasets.html"
     return render(request, template, context)

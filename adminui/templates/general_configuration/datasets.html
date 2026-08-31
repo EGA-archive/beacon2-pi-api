@@ -14,13 +14,26 @@
 
 <body>
   <body class="bg-custom-powder-light" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
-    {% for dataset in datasets_found %}
-    <div class="dataset">
+    <form method="post" onsubmit="openLoader()">
+    {% csrf_token %}
+    <div class="tabs">
+        {% for model, model_values in models.items %}
+            <button
+                type="button"
+                class="tab-button {% if forloop.first %}active{% endif %}"
+                data-tab="tab-{{ forloop.counter }}"
+            >
+                {{ model }}
+            </button>
+    </div>
+    {% for dataset in model_values.dataset_list %}
+                        <div
+            id="formtab-{{model}}{{ forloop.counter }}"
+            class="dataset formtab-content {% if forloop.first %}active{% endif %}"
+        >
         {% for key, value in dataset.items %}
             <div><span>{{key}}: </span><span>{{value}}</span></div>
             {% if key == 'id' %}
-            <form method="post" onsubmit="openLoader()">
-                {% csrf_token %}
                 <div>               
                     <input hidden type="text" id="id_DatasetID" name="DatasetID" value="{{value}}">
 
@@ -49,6 +62,50 @@
 
     </div>
     {% endfor %}
+    {%endfor%}
     <button type="submit" class="btn btn-danger mb-3" name="Test Mode" value="Test Mode">Save</button>
     </form>
+    
 </body>
+  <script>
+document.addEventListener("DOMContentLoaded", () => {
+    const buttons = document.querySelectorAll(".tab-button");
+    const contents = document.querySelectorAll(".tab-content");
+
+    buttons.forEach(btn => {
+        btn.addEventListener("click", () => {
+
+            contents.forEach(c => c.style.display = "none");
+            buttons.forEach(b => b.classList.remove("active"));
+
+            document.getElementById(btn.dataset.tab).style.display = "block";
+            btn.classList.add("active");
+        });
+    });
+
+    contents.forEach(c => c.style.display = "none");
+    if (contents.length)
+        contents[0].style.display = "block";
+});
+</script>
+  <script>
+document.addEventListener("DOMContentLoaded", () => {
+    const buttons = document.querySelectorAll(".formtab-button");
+    const contents = document.querySelectorAll(".formtab-content");
+
+    buttons.forEach(btn => {
+        btn.addEventListener("click", () => {
+
+            contents.forEach(c => c.style.display = "none");
+            buttons.forEach(b => b.classList.remove("active"));
+
+            document.getElementById(btn.dataset.tab).style.display = "block";
+            btn.classList.add("active");
+        });
+    });
+
+    contents.forEach(c => c.style.display = "none");
+    if (contents.length)
+        contents[0].style.display = "block";
+});
+</script>

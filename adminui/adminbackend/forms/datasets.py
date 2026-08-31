@@ -28,5 +28,8 @@ def formatting_field(self, line):
 
 
 class DatasetsForm(forms.Form):
+    def __init__(self, *args, model=None, dataset=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.model = model
     DatasetID = forms.CharField()
     
