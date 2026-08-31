@@ -61,14 +61,13 @@ def default_view(request):
                     database_name=entry_type_yaml[entry_type]['connection']['database']
                     collection_name=entry_type_yaml[entry_type]['connection']['table']
                     endpoint_name=entry_type_yaml[entry_type]['endpoint_name']
-                    print(entry_type, flush=True)
+
                     if 'data set' in entry_type_yaml[entry_type]['info']['ontology_name'].lower() or 'dataset' in entry_type_yaml[entry_type]['info']['ontology_name'].lower():
                         datasets_connections[endpoint_name]=client[database_name][collection_name]
                     else:
                         connections[endpoint_name]=client[database_name][collection_name]
 
-        print(model, flush=True)
-        print(datasets_connections, flush=True)
+
         caseLevelData=client["beacon"].caseLevelData
         connections['caseLevelData']=caseLevelData
         targets=client["beacon"].targets
@@ -81,7 +80,7 @@ def default_view(request):
             all_datasets=dataset_connection.find({})
             dataset_list=[]
             for dataset in all_datasets:
-                entry_types_included=["datasets"]
+                entry_types_included=[endpoint]
                 dataset_dict={}
                 dataset_dict["Total_IDs"]={}
                 dataset_dict["name"]=dataset["name"]

@@ -25,12 +25,15 @@
             >
                 {{ model }}
             </button>
+        {% endfor %}
     </div>
+    {% for model, model_values in models.items %}
+    <div
+        id="tab-{{ forloop.counter }}"
+        class="dataset tab-content {% if forloop.first %}active{% endif %}"
+    >
     {% for dataset in model_values.dataset_list %}
-                        <div
-            id="formtab-{{model}}{{ forloop.counter }}"
-            class="dataset formtab-content {% if forloop.first %}active{% endif %}"
-        >
+
         {% for key, value in dataset.items %}
             <div><span>{{key}}: </span><span>{{value}}</span></div>
             {% if key == 'id' %}
@@ -62,6 +65,7 @@
 
     </div>
     {% endfor %}
+    </div>
     {%endfor%}
     <button type="submit" class="btn btn-danger mb-3" name="Test Mode" value="Test Mode">Save</button>
     </form>
