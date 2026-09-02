@@ -11,6 +11,7 @@ import json
 import logging
 import subprocess
 from django.contrib.auth.decorators import login_required, permission_required
+import os
 
 
 LOG = logging.getLogger(__name__)
@@ -109,6 +110,7 @@ def default_view(request):
         final_fterms_list.append(final_fterm)
     presynonyms.delete_many({})
     predescendants.delete_many({})
-    context={"filtering_terms": final_fterms_list, "headers": headers, "all_similarities": list(all_similarities), "similarities_headers": similarities_headers, "form2": form2}
+    dirs = os.listdir("/home/app/web/beacon/models")
+    context={"filtering_terms": final_fterms_list, "headers": headers, "all_similarities": list(all_similarities), "similarities_headers": similarities_headers, "form2": form2, "models": dirs}
     template = "general_configuration/filtering_terms.html"
     return render(request, template, context)

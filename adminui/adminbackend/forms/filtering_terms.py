@@ -1,6 +1,7 @@
 from django import forms
 import yaml
 import logging
+import os
 
 LOG = logging.getLogger(__name__)
 fmt = '%(levelname)s - %(asctime)s - %(message)s'
@@ -39,10 +40,9 @@ class AddFilteringTerm(forms.Form):
     FilteringTermLabel = forms.CharField(required=False, help_text="Label")
     Synonym = forms.CharField(help_text='Synonym', required=False)
     Descendant = forms.CharField(help_text='Descendant', required=False)
-    scopes_choices=[('individual', 'individual'), ('biosample', 'biosample'), ('analysis', 'analysis'), ('cohort', 'cohort'), ('genomicVariation', 'genomicVariation'), ('run', 'run'), ('dataset', 'dataset')]
     Scope = forms.MultipleChoiceField(
-        choices=scopes_choices, 
+        choices=[], 
         widget=forms.CheckboxSelectMultiple,
-        required=False,
+        required=True,
         help_text="Scope"
     )

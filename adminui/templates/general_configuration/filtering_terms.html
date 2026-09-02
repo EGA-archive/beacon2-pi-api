@@ -112,8 +112,14 @@
   <button hx-get="/descendants" hx-swap="innerHTML" hx-target="#descendant" hx-include="[name='Descendant'], [name='Synonym_FilteringTermID']">
     +
   </button>
-              
-              
+              {% elif f.help_text == 'Scope' %}
+              {% for model in models %}
+              <button type="button" onclick='loadChoices("{{model}}")'>{{model}}</button>
+              {% endfor %}
+
+    <p>{{f.help_text|safe}} {{f}} </p>
+
+    <button type="submit">Submit</button>
 
             {% else %}
             <p>{{f.help_text|safe}} {{f}} </p>
@@ -127,3 +133,44 @@
       </form>
                   </div>
 </body>
+<script>
+    function loadChoices(model) {
+        fetch(`/get-choices?${model}/`)
+            .then(response => response.json())
+            .then(data => {
+                const select = document.getElementById("id_Scope");
+
+                // Remove old choices
+                select.innerHTML = "";
+
+                // Add choices received from Django
+                data.choices.forEach((choice, index) => {
+                    const id = "id_Scope_" + index;
+
+                    // Create div
+                    const div = document.createElement("div");
+
+                    // Create label
+                    const label = document.createElement("label");
+                    label.htmlFor = id;
+
+                    // Create checkbox
+                    const input_option = document.createElement("input");
+                    input_option.type = "checkbox";
+                    input_option.name = "Scope";
+                    input_option.value = choice;
+                    input_option.id = id;
+
+                    // Put checkbox inside label
+                    label.appendChild(input_option);
+                    label.appendChild(document.createTextNode(" " + choice));
+
+                    // Put label inside div
+                    div.appendChild(label);
+
+                    // Put div inside the container
+                    select.appendChild(div);
+                });
+            });
+    }
+</script>

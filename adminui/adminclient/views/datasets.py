@@ -82,7 +82,6 @@ def default_view(request):
             for dataset in all_datasets:
                 entry_types_included=[endpoint]
                 dataset_dict={}
-                dataset_dict["Total_IDs"]={}
                 dataset_dict["name"]=dataset["name"]
                 dataset_dict["id"]=dataset["id"]
                 dataset_dict["description"]=dataset["description"]
@@ -97,11 +96,7 @@ def default_view(request):
                 
                 for endpoint_connection, connection in connections.items():
                     if endpoint_connection not in ['targets', 'caseLevelData']:
-                        total_ids=connection.find({"datasetId": dataset["id"]})
-                        total_ids=list(total_ids)
-                        if len(total_ids) > 0:
-                            dataset_dict["Total_IDs"][endpoint_connection]=len(total_ids)
-                            entry_types_included.append(endpoint_connection)
+                        entry_types_included.append(endpoint_connection)
                 dataset_dict["entry_types_included"]=entry_types_included
                 dataset_list.append(dataset_dict)
             models[model]['forms']= datasets_forms
