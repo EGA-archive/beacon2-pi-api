@@ -30,7 +30,6 @@ def default_view(request):
     similarities_headers = ['id', 'label', 'similarities']
     filtering_terms=client["beacon"].filtering_terms
     presynonyms=client["beacon"].presynonyms
-    predescendants=client["beacon"].predescendants
     synonyms=client["beacon"].synonyms
     similarities=client["beacon"].similarities
     all_similarities=similarities.find({}).limit(0)
@@ -39,6 +38,7 @@ def default_view(request):
     if request.method == 'POST':
         form = FilteringTermsForm(request.POST, request.FILES)
         if form2.is_valid():
+            print('yessss', flush=True)
             filteringTermID = form2.cleaned_data['Synonym_FilteringTermID']
             ft_type = form2.cleaned_data['FilteringTermType']
             ft_label = form2.cleaned_data['FilteringTermLabel']
@@ -49,14 +49,8 @@ def default_view(request):
                 ft_synonyms_list.append(ft_synonym)
             if ft_synonyms_list != []:
                 synonyms.insert_many(ft_synonyms_list)
-            ft_descendants = predescendants.find({"id": filteringTermID})
-            ft_descendants_list=[]
-            for ft_descendant in ft_descendants:
-                ft_descendants_list.append(ft_descendant["descendants"])
-            if ft_descendants_list != []:
-                similarities.insert_one({"id": filteringTermID, "descendants": ft_descendants_list})
+
             presynonyms.delete_many({})
-            predescendants.delete_many({})
             ft_dict={}
             ft_dict["id"]=filteringTermID
             ft_dict["type"]=ft_type.lower()
@@ -78,7 +72,10 @@ def default_view(request):
             context={"filtering_terms": final_fterms_list, "headers": headers, "all_similarities": list(all_similarities), "similarities_headers": similarities_headers, "form2": form2}
             template = "general_configuration/filtering_terms.html"
             return render(request, template, context)
-            
+        else:
+            print('whaaaaat', flush=True)
+            print(form2.errors, flush=True)
+        """
         elif form.is_valid():
             filteringTermID = form.cleaned_data['FilteringTermID']
             if 'Delete Filtering Term' in request.POST:
@@ -93,8 +90,10 @@ def default_view(request):
                 bash = subprocess.check_output([bash_string], shell=True)
 
             presynonyms.delete_many({})
-            predescendants.delete_many({})
             return redirect("adminclient:filtering_terms")
+        """
+
+
     elif request.method == 'GET':
         if form2.is_valid():
             pass
@@ -109,7 +108,6 @@ def default_view(request):
         final_fterm["similarities"]=similarity
         final_fterms_list.append(final_fterm)
     presynonyms.delete_many({})
-    predescendants.delete_many({})
     dirs = os.listdir("/home/app/web/beacon/models")
     context={"filtering_terms": final_fterms_list, "headers": headers, "all_similarities": list(all_similarities), "similarities_headers": similarities_headers, "form2": form2, "models": dirs}
     template = "general_configuration/filtering_terms.html"

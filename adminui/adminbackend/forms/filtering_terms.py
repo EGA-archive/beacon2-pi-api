@@ -1,31 +1,48 @@
 from django import forms
 import yaml
-import logging
 import os
 
-LOG = logging.getLogger(__name__)
-fmt = '%(levelname)s - %(asctime)s - %(message)s'
-formatter = logging.Formatter(fmt)
-sh = logging.StreamHandler()
-sh.setLevel('NOTSET')
-sh.setFormatter(formatter)
-LOG.addHandler(sh)
+def get_all_entry_types():
+    entry_types=[]
+    with open("/home/app/web/beacon/conf/models/models_conf.yml", 'r') as pfile:
+        models_confile= yaml.safe_load(pfile)
+    dirs = os.listdir("/home/app/web/beacon/models")
+    for folder in dirs:
+        subdirs = os.listdir("/home/app/web/beacon/models/"+folder)
+        if folder in models_confile:
+            if models_confile[folder]["model_enabled"] == False:
+                continue
+        # Go over the conf for the entry types of the models enabled
+        if "conf" in subdirs:
+            path = (
+                "/home/app/web/beacon/models/"
+                f"{folder}/conf/entry_types"
+            )
+            for filename in os.listdir(path):
 
-def formatting_field(self, line):
-    linestring=str(line)
-    splitted_line=linestring.split("=")
-    placeholder=splitted_line[1].replace('"', '')
-    placeholder=str(placeholder)
-    placeholder=placeholder.strip()
-    if "#" in placeholder:
-        placeholder_def=placeholder.split('#')
-        placeholder=placeholder_def[0]
-        placeholder=placeholder.strip()
-    if placeholder.startswith("'"):
-        placeholder=placeholder[1:]
-    if placeholder.endswith("'"):
-        placeholder=placeholder[0:-1]
-    return placeholder
+                if filename.endswith(".yml"):
+                    entry_type = filename[:-4]
+                    entry_types.append((entry_type,entry_type))
+        else:
+            for subfolder in subdirs:
+                if subfolder not in ['validator', 'conf', 'connections']:
+                    underdirs = os.listdir("/home/app/web/beacon/models/"+folder+"/"+subfolder)
+                    if folder+'/'+subfolder in models_confile:
+                        if models_confile[folder+'/'+subfolder ]["model_enabled"] == False:
+                            continue
+                    # Go over the conf for the entry types of the models enabled
+                    if "conf" in underdirs:
+                        path = (
+                            "/home/app/web/beacon/models/"
+                            f"{folder}/{subfolder}/conf/entry_types"
+                        )
+                        for filename in os.listdir(path):
+
+                            if filename.endswith(".yml"):
+                                entry_type = filename[:-4]
+                                entry_types.append((entry_type,entry_type))
+
+    return entry_types
 
 class FilteringTermsForm(forms.Form):
     FilteringTermID = forms.CharField(required=False)
@@ -39,9 +56,8 @@ class AddFilteringTerm(forms.Form):
     FilteringTermType = forms.ChoiceField(choices=type_choices, help_text="Type", required=True)
     FilteringTermLabel = forms.CharField(required=False, help_text="Label")
     Synonym = forms.CharField(help_text='Synonym', required=False)
-    Descendant = forms.CharField(help_text='Descendant', required=False)
     Scope = forms.MultipleChoiceField(
-        choices=[], 
+        choices=get_all_entry_types(), 
         widget=forms.CheckboxSelectMultiple,
         required=True,
         help_text="Scope"
