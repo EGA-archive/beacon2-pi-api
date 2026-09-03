@@ -20,6 +20,7 @@ class EndpointView(web.View, CorsViewMixin):
         RequestAttributes.entry_id=None
         RequestAttributes.pre_entry_type=None
         RequestAttributes.returned_schema=None
+        RequestAttributes.source = None
         RequestAttributes.returned_apiVersion="v2.2.0"
         RequestAttributes.qparams=RequestParams()
         RequestAttributes.returned_granularity="boolean"
