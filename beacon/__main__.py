@@ -11,6 +11,8 @@ from beacon.logs.logs import initialize_logger
 from beacon.utils.modules import check_database_connections
 import datetime
 import warnings
+from beacon.connections.postgresql_omop import initialize
+import yaml
 
 warnings.filterwarnings("ignore", category=UserWarning)
 
@@ -41,6 +43,20 @@ async def create_api(port):
                 track_requests_middleware
             ]
         )
+
+        async def startup(app):
+            with open('/beacon/conf/connections/connections_conf.yml') as infile:
+                connections_conf=yaml.safe_load(infile)
+            for connection_name, connection_config in connections_conf.items():
+                if not connection_config.get("connection_enabled"):
+                    continue
+                if connection_name == "postgresql_omop":
+                    await initialize()                    
+                elif connection_name == "mongo":
+                    pass
+
+        app.on_startup.append(startup)
+
         # Add the different attributes to the app object that will be needed for logger and status checks
         app['logger'] = LOG
         app['pending_requests'] = set()
