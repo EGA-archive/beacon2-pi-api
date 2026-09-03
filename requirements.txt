@@ -23,7 +23,6 @@ paramiko==3.4.0
 six==1.16.0
 progressbar==2.5
 tqdm==4.66.3
-obonet==0.3.1
 python-dateutil==2.9.0
 rfc3339_validator==0.1.4
 datamodel-code-generator==0.68.1
