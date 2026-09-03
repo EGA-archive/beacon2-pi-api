@@ -23,21 +23,28 @@ class MyProgressBar:
         else:
             self.pbar.finish()
 
-def get_all_ancestors(ontology_id, code, data):
+def discard_non_scanned_ontologies(list_of_all_ontologies, ontology_codes_list):
+    definitive_list=[]
+    for similar_ontology in list_of_all_ontologies:
+        if similar_ontology in ontology_codes_list:
+            definitive_list.append(similar_ontology)
+    return definitive_list
+
+def get_all_ancestors_descendants(ontology_id, code, data):
     similarity_high=[]
-    ancestors_url = f"https://www.ebi.ac.uk/ols4/api/ontologies/{ontology_id.lower()}/descendants?id={ontology_id}:{code}"
+    ancestors_url = f"https://www.ebi.ac.uk/ols4/api/ontologies/{ontology_id.lower()}/ancestors?id={ontology_id}:{code}"
     ancestors_data = requests.get(ancestors_url).json()
     if "_embedded" in ancestors_data:
         list_of_ancestors_full=data["_embedded"]["terms"]
         for ancestor in list_of_ancestors_full:
-            ancestor_descendants_url = f"https://www.ebi.ac.uk/ols4/api/ontologies/{ontology_id.lower()}/descendants?id={ancestor["obo_id"]}"
+            ancestor_descendants_url = f"https://www.ebi.ac.uk/ols4/api/ontologies/{ontology_id.lower()}/ancestors?id={ancestor["obo_id"]}"
             ancestor_descendants_data = requests.get(ancestor_descendants_url).json()
             if "_embedded" in ancestor_descendants_data:
                 list_of_ancestor_descendants_full=data["_embedded"]["terms"]
                 for ancestor_descendant in list_of_ancestor_descendants_full:
                     if ancestor_descendant["obo_id"] == ontology_id+":"+code:
                         similarity_high = list_of_ancestor_descendants_full
-                        return similarity_high
+                        return similarity_high, list_of_ancestor_descendants_full
 
 def get_descendants_and_similarities():
     list_of_ontology_families=[]
@@ -74,30 +81,29 @@ def get_descendants_and_similarities():
                     if descendant["obo_id"] in ontology_codes_list:
                         list_of_existing_descendants.append(descendant["obo_id"])
 
-            print(f"\n===== {ontology_id}:{code} =====")
-            print(list_of_existing_descendants)
-
-            similarity_high = get_all_ancestors(ontology_id, code, data)
+            similarity_high, similarity_low = get_all_ancestors_descendants(ontology_id, code, data)
             similarity_high.remove[ontology_id+":"+code]
-            definitive_similarity_high=[]
-            for similar_high_ontology in similarity_high:
-                if similar_high_ontology in ontology_codes_list:
-                    definitive_similarity_high.append(similar_high_ontology)
+            definitive_similarity_high=discard_non_scanned_ontologies(similarity_high, ontology_codes_list)
 
-            definitive_similarity_low=[]
             for similar_high_ontology in definitive_similarity_high:
                 split_similar_high = similar_high_ontology.split(":")
-                similarity_medium = get_all_ancestors(split_similar_high[0], split_similar_high[1], data)
+                similarity_medium, cousins_ancestors_list = get_all_ancestors_descendants(split_similar_high[0], split_similar_high[1], data)
                 similarity_medium.remove(similar_high_ontology)
 
-            definitive_similarity_medium=[]
-            for similar_medium_ontology in similarity_medium:
-                if similar_medium_ontology in ontology_codes_list:
-                    definitive_similarity_medium.append(similar_medium_ontology)
+            definitive_similarity_medium=discard_non_scanned_ontologies(similarity_medium, ontology_codes_list)
 
-            
-            
+            definitive_similarity_low=discard_non_scanned_ontologies(similarity_low, ontology_codes_list)
 
+
+            print(f"\n===== {ontology_id}:{code} =====")
+            print('-----DESCENDANTS-----')
+            print(list_of_existing_descendants)
+            print('-----SIMILARITY_HIGH-----')
+            print(definitive_similarity_high)
+            print('-----SIMILARITY_MEDIUM-----')
+            print(definitive_similarity_medium)
+            print('-----SIMILARITY_LOW-----')
+            print(definitive_similarity_low)
             """
             dict={}
             dict['id']=ontology
