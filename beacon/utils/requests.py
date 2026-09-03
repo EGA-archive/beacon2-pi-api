@@ -184,12 +184,15 @@ def set_entry_type_configuration(self):
                 elif param_key == 'connection':
                     RequestAttributes.source = param_value["name"]
                     if RequestAttributes.entry_type not in ['filtering_terms', 'map', 'configuration', 'info', 'service-info', 'entry_types']:
-                        client_module=load_source_module(self, 'client')
-                        client_function_from_module = getattr(client_module, 'get_client')
-                        client = client_function_from_module()
-                        RequestAttributes.client = client
-                        connection = client[mongo_conf.database_name][param_value["table"]]
-                        RequestAttributes.mongo_collection = connection
+                        if RequestAttributes.source == 'mongo':
+                            client_module=load_source_module(self, 'client')
+                            client_function_from_module = getattr(client_module, 'get_client')
+                            client = client_function_from_module()
+                            RequestAttributes.client = client
+                            connection = client[mongo_conf.database_name][param_value["table"]]
+                            RequestAttributes.mongo_collection = connection
+                        elif RequestAttributes.source == 'postgresql_omop':
+                            pass
                     if RequestAttributes.entry_id != None:
                         if RequestAttributes.pre_entry_type == None:
                             RequestAttributes.function = param_value["functions"]["id_query_function_name_assigned"]
