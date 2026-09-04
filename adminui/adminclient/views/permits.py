@@ -35,23 +35,6 @@ def default_view(request):
 
     datasets = client["beacon"].datasets
 
-    # ---------------------------------------------------------
-    # Get datasets
-    # ---------------------------------------------------------
-
-    all_datasets = list(
-        datasets.find({})
-    )
-
-    dataset_ids = [
-        dataset["id"]
-        for dataset in all_datasets
-    ]
-
-    # ---------------------------------------------------------
-    # Load existing permissions
-    # ---------------------------------------------------------
-
     try:
         with open(PERMISSIONS_FILE) as f:
             datasets_permissions = (
@@ -59,6 +42,18 @@ def default_view(request):
             )
     except FileNotFoundError:
         datasets_permissions = {}
+
+    # ---------------------------------------------------------
+    # Get datasets
+    # ---------------------------------------------------------
+
+    dataset_ids = [k for k,v in datasets_permissions.items()]
+
+    # ---------------------------------------------------------
+    # Load existing permissions
+    # ---------------------------------------------------------
+
+
 
     forms_by_dataset = {}
 

@@ -1,6 +1,6 @@
 from django.urls import path
 #from .views import HomePageView
-from .views import views, datasets, filtering_terms, synonyms, permits, budget, rounding_counts, connections, service_status, identity_provider, verifier, admin_settings, models, get_choices
+from .views import views, datasets, filtering_terms, synonyms, permits, budget, rounding_counts, connections, service_status, identity_provider, verifier, admin_settings, models, get_choices, new_permit
 app_name = 'adminclients'
 
 urlpatterns = [
@@ -22,5 +22,6 @@ urlpatterns = [
         "get-choices",
         get_choices.default_view,
         name="get_choices"
-    )
+    ),
+    path('new_permit', new_permit.default_view, name='new_permit')
 ]

@@ -470,7 +470,15 @@
 
 </form>
 
-
+<span>New Dataset's name: <input type="text" id="id_New_Dataset" 
+        name="New_Dataset"></span>
+<button
+    hx-get="/new_permit"
+    hx-include="[name='New_Dataset']"
+    hx-swap="none"
+    hx-on::after-request="window.location.reload()">
+  Add new dataset
+</button>
 
 
 
