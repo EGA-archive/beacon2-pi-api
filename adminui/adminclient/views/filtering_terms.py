@@ -72,10 +72,6 @@ def default_view(request):
             context={"filtering_terms": final_fterms_list, "headers": headers, "all_similarities": list(all_similarities), "similarities_headers": similarities_headers, "form2": form2}
             template = "general_configuration/filtering_terms.html"
             return render(request, template, context)
-        else:
-            print('whaaaaat', flush=True)
-            print(form2.errors, flush=True)
-        """
         elif form.is_valid():
             filteringTermID = form.cleaned_data['FilteringTermID']
             if 'Delete Filtering Term' in request.POST:
@@ -91,7 +87,6 @@ def default_view(request):
 
             presynonyms.delete_many({})
             return redirect("adminclient:filtering_terms")
-        """
 
 
     elif request.method == 'GET':

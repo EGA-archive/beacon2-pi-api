@@ -894,3 +894,14 @@ input[type="radio"]:not([id^="id_ga4gh/beacon_v2_default_model"]) {
   height: 10px;
   display: none;
 }
+
+.permits-form input[type="radio"] {
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    appearance: auto !important;
+    -webkit-appearance: radio !important;
+    width: 1rem !important;
+    height: 1rem !important;
+    cursor: pointer !important;
+}

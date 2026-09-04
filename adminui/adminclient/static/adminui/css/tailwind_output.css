@@ -1795,8 +1795,24 @@ label[for=id_usergranularity_2]{
     display: block;
 }
 
+/* Hide radios except the Beacon radios */
 input[type="radio"]:not([id^="id_ga4gh/beacon_v2_default_model"]) {
-  cursor: pointer;
-  height: 10px;
-  display: none;
+    cursor: pointer;
+    height: 10px;
+    display: none;
 }
+
+.permits-form input[type="radio"] {
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: 16px !important;
+    height: 16px !important;
+    min-width: 16px !important;
+    min-height: 16px !important;
+    margin: 0 !important;
+    appearance: auto !important;
+    -webkit-appearance: radio !important;
+    cursor: pointer !important;
+}
+

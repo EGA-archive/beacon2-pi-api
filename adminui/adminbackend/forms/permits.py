@@ -1,158 +1,121 @@
 from django import forms
-import yaml
-import logging
-
-LOG = logging.getLogger(__name__)
-fmt = '%(levelname)s - %(asctime)s - %(message)s'
-formatter = logging.Formatter(fmt)
-sh = logging.StreamHandler()
-sh.setLevel('NOTSET')
-sh.setFormatter(formatter)
-LOG.addHandler(sh)
-
-def formatting_field(self, line):
-    linestring=str(line)
-    splitted_line=linestring.split("=")
-    placeholder=splitted_line[1].replace('"', '')
-    placeholder=str(placeholder)
-    placeholder=placeholder.strip()
-    if "#" in placeholder:
-        placeholder_def=placeholder.split('#')
-        placeholder=placeholder_def[0]
-        placeholder=placeholder.strip()
-    if placeholder.startswith("'"):
-        placeholder=placeholder[1:]
-    if placeholder.endswith("'"):
-        placeholder=placeholder[0:-1]
-    return placeholder
+from django.forms import BaseFormSet, formset_factory
+from adminbackend.forms.filtering_terms import get_all_entry_types
 
 
 class PermitsForm(forms.Form):
-    def __init__(self, *args, **kwargs):
-        super(PermitsForm, self).__init__(*args, **kwargs)
-        # assign a (computed, I assume) default value to the choice field
-        self.fields['DatasetID'].widget.attrs['readonly'] = True
-    DatasetID= forms.CharField(help_text='DatasetId')
-    datasetgranularity_choices = [
-        ('boolean', 'Boolean'),
-        ('count', 'Count'),
-        ('record', 'Record'),
-    ]
-    granularity_choices = [
-        ('-', '-'),
-        ('boolean', 'Boolean'),
-        ('count', 'Count'),
-        ('record', 'Record'),
-    ]
-    granularity= forms.ChoiceField(
-        widget=forms.RadioSelect,
-        choices=datasetgranularity_choices,
-        help_text='Granularity',
-        required=False
-    )
-    security_level_choices = [
-        ('public', 'Public'),
-        ('registered', 'Registered'),
-        ('controlled', 'Controlled')
-    ]
-    SecurityLevel= forms.ChoiceField(
-        choices=security_level_choices, 
-        widget=forms.RadioSelect,
-        help_text='Security Level',
-        required=False
-    )
-    individualgranularity= forms.ChoiceField(
-        choices=granularity_choices,
-        required=False,
-        help_text='Individual'
-    )
-    datasetgranularity= forms.ChoiceField(
-        choices=granularity_choices,
-        required=False,
-        help_text='Dataset'
-    )
-    analysisgranularity= forms.ChoiceField(
-        choices=granularity_choices,
-        required=False,
-        help_text='Analysis'
-    )
-    biosamplegranularity= forms.ChoiceField(
-        choices=granularity_choices,
-        required=False,
-        help_text='Biosample'
-    )
-    cohortgranularity= forms.ChoiceField(
-        choices=granularity_choices,
-        required=False,
-        help_text='Cohort'
-    )
-    genomicVariationgranularity = forms.ChoiceField(
-        choices=granularity_choices,
-        required=False,
-        help_text='Genomic Variant'
-    )
-    rungranularity= forms.ChoiceField(
-        choices=granularity_choices,
-        required=False,
-        help_text='Run'
+    DatasetID = forms.CharField(
+        help_text="Dataset ID"
     )
 
-class UserPermitsForm(forms.Form):
-    def __init__(self, *args, **kwargs):
-        super(UserPermitsForm, self).__init__(*args, **kwargs)
-        # assign a (computed, I assume) default value to the choice field
-        self.initial['usergranularity'] = 'count'
-    DatasetID= forms.CharField(help_text='DatasetId')
-    UserEmail= forms.CharField(help_text='User')
-    usergranularity_choices = [
-        ('boolean', 'Boolean'),
-        ('count', 'Count'),
-        ('record', 'Record'),
+
+class SecurityLevelForm(forms.Form):
+    security_level_choices = [
+        ("public", "Public"),
+        ("registered", "Registered"),
+        ("controlled", "Controlled"),
     ]
-    granularity_choices = [
-        ('-', '-'),
-        ('boolean', 'Boolean'),
-        ('count', 'Count'),
-        ('record', 'Record'),
-    ]
-    usergranularity= forms.ChoiceField(
+
+    SecurityLevel = forms.ChoiceField(
+        choices=security_level_choices,
         widget=forms.RadioSelect,
-        choices=usergranularity_choices,
-        help_text='Granularity',
-        required=False
+        help_text="Security Level",
+        required=True,
     )
-    userindividualgranularity= forms.ChoiceField(
+
+    granularity_choices = [
+        ("-", "-"),
+        ("boolean", "Boolean"),
+        ("count", "Count"),
+        ("record", "Record"),
+    ]
+
+    granularity = forms.ChoiceField(
+        widget=forms.RadioSelect,
         choices=granularity_choices,
-        required=False,
-        help_text='Individual'
+        help_text="Default Granularity",
+        required=True,
     )
-    userdatasetgranularity= forms.ChoiceField(
+
+    def __init__(self, *args, dataset_id=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.dataset_id = dataset_id
+
+
+class GranularityForm(forms.Form):
+    entry_type = forms.ChoiceField(
+        widget=forms.RadioSelect,
+        choices=[],
+        help_text="Entry Type",
+        required=True,
+    )
+
+    granularity_choices = [
+        ("-", "-"),
+        ("boolean", "Boolean"),
+        ("count", "Count"),
+        ("record", "Record"),
+    ]
+
+    granularity = forms.ChoiceField(
+        widget=forms.RadioSelect,
         choices=granularity_choices,
-        required=False,
-        help_text='Dataset'
+        help_text="Granularity for this Entry Type",
+        required=True,
     )
-    useranalysisgranularity= forms.ChoiceField(
-        choices=granularity_choices,
-        required=False,
-        help_text='Analysis'
-    )
-    userbiosamplegranularity= forms.ChoiceField(
-        choices=granularity_choices,
-        required=False,
-        help_text='Biosample'
-    )
-    usercohortgranularity= forms.ChoiceField(
-        choices=granularity_choices,
-        required=False,
-        help_text='Cohort'
-    )
-    usergenomicVariationgranularity = forms.ChoiceField(
-        choices=granularity_choices,
-        required=False,
-        help_text='GenomicVariant'
-    )
-    userrungranularity= forms.ChoiceField(
-        choices=granularity_choices,
-        required=False,
-        help_text='Run'
-    )
+
+    def __init__(
+        self,
+        *args,
+        dataset_id=None,
+        security_level=None,
+        entry_type_choices=None,
+        **kwargs,
+    ):
+        super().__init__(*args, **kwargs)
+
+        self.dataset_id = dataset_id
+        self.security_level = security_level
+
+        self.fields["entry_type"].choices = (
+            entry_type_choices
+            if entry_type_choices is not None
+            else get_all_entry_types()
+        )
+        
+class BaseGranularityFormSet(BaseFormSet):
+
+    def clean(self):
+        super().clean()
+
+        entry_types = set()
+
+        for form in self.forms:
+
+            if not form.cleaned_data:
+                continue
+
+            if form.cleaned_data.get("DELETE"):
+                continue
+
+            entry_type = form.cleaned_data.get("entry_type")
+
+            if not entry_type:
+                continue
+
+            if entry_type in entry_types:
+                raise forms.ValidationError(
+                    "An entry type can only be added once "
+                    "for each security level."
+                )
+
+            entry_types.add(entry_type)
+
+
+
+GranularityFormSet = formset_factory(
+    GranularityForm,
+    formset=BaseGranularityFormSet,
+    extra=1,
+    can_delete=True,
+)
