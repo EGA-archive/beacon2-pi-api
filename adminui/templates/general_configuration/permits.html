@@ -5,17 +5,33 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="htmx-config" content='{"selfRequestsOnly":false}'>
-  <title>Admin UI</title>
-  <script type="text/javascript" src="{% static '/adminui/js/htmx.min.js' %}"></script>
-  <link rel="stylesheet" href="media/mystyle.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="htmx-config"
+        content='{"selfRequestsOnly":false}'
+    >
+
+    <title>Admin UI</title>
+
+    <script
+        type="text/javascript"
+        src="{% static '/adminui/js/htmx.min.js' %}"
+    ></script>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'adminui/css/mystyle.css' %}"
+    >
 </head>
 
-<body>
-  <body class="bg-custom-powder-light" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+
+<body
+    class="bg-custom-powder-light"
+    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+>
 
 <form method="post" class="permits-form">
 
@@ -48,7 +64,6 @@
             <div>
 
                 {{ dataset_forms.permits.non_field_errors }}
-
                 {{ dataset_forms.permits.DatasetID.errors }}
 
                 <label
@@ -79,81 +94,86 @@
                     {% for security_level in security_levels %}
 
                         {% with security_form=dataset_forms.security|get_item:security_level %}
-                        {% with granularity_formset=dataset_forms.granularity|get_item:security_level %}
+
+                        <div
+                            class="security-level-container
+                                   border border-gray-200
+                                   rounded-lg
+                                   p-5
+                                   bg-gray-50"
+                            data-security-level="{{ security_level }}"
+                        >
+
+                            <!-- ================================= -->
+                            <!-- HEADER -->
+                            <!-- ================================= -->
 
                             <div
-                                class="security-level-container
-                                       border border-gray-200
-                                       rounded-lg
-                                       p-5
-                                       bg-gray-50"
-                                data-security-level="{{ security_level }}"
+                                class="flex items-center justify-between mb-5"
                             >
 
-                                <!-- ================================= -->
-                                <!-- HEADER -->
-                                <!-- ================================= -->
-
-                                <div
-                                    class="flex items-center justify-between mb-5"
+                                <label
+                                    class="flex items-center gap-3
+                                           text-lg font-semibold
+                                           text-gray-800"
                                 >
 
-                                    <label
-                                        class="flex items-center gap-3
-                                               text-lg font-semibold
-                                               text-gray-800"
+                                    <input
+                                        type="checkbox"
+                                        name="enabled-{{ dataset_id }}-{{ security_level }}"
+                                        value="1"
+                                        class="security-level-toggle w-4 h-4"
+
+                                        {% if security_level in dataset_forms.existing_security_levels %}
+                                            checked
+                                        {% endif %}
                                     >
 
-                                        <input
-                                            type="checkbox"
-                                            name="enabled-{{ dataset_id }}-{{ security_level }}"
-                                            value="1"
-                                            class="security-level-toggle w-4 h-4"
-                                            {% if security_level in dataset_forms.existing_security_levels %}
-                                                checked
-                                            {% endif %}
-                                        >
+                                    <span>
+                                        {{ security_level|title }}
+                                    </span>
 
-                                        <h3 class="text-lg font-semibold text-gray-800">
-                                            {{ security_level|title }}
-                                        </h3>
+                                    {{ security_form.SecurityLevel }}
 
-                                        {{ security_form.SecurityLevel }}
-
-                                    </label>
+                                </label>
 
 
-                                    <button
-                                        type="button"
-                                        class="remove-security-level
-                                               text-sm
-                                               text-red-600
-                                               hover:text-red-800"
-                                    >
-                                        Remove
-                                    </button>
+                                <button
+                                    type="button"
+                                    class="remove-security-level
+                                           text-sm
+                                           text-red-600
+                                           hover:text-red-800"
+                                >
+                                    Remove
+                                </button>
 
-                                </div>
+                            </div>
+
+
+                            <!-- ================================= -->
+                            <!-- SECURITY FORM -->
+                            <!-- ================================= -->
+
+                            <div class="security-level-content">
+
+                                {{ security_form.non_field_errors }}
 
 
                                 <!-- ================================= -->
-                                <!-- SECURITY FORM -->
+                                <!-- NON-CONTROLLED LEVELS -->
                                 <!-- ================================= -->
 
-                                <div class="security-level-content">
+                                {% if security_level != "controlled" %}
 
-                                    {{ security_form.non_field_errors }}
-
-                                    {{ security_form.SecurityLevel.as_hidden }}
-
-
-                                    <!-- ================================= -->
                                     <!-- DEFAULT GRANULARITY -->
-                                    <!-- ================================= -->
 
                                     <div class="mb-6">
 
-                                        <p class="text-sm font-medium text-gray-700 mb-3">
+                                        <p
+                                            class="text-sm font-medium
+                                                   text-gray-700 mb-3"
+                                        >
                                             {{ security_form.granularity.help_text }}
                                         </p>
 
@@ -167,13 +187,13 @@
                                                     for="{{ radio.id_for_label }}"
                                                     class="flex items-center gap-2 cursor-pointer"
                                                 >
-
                                                     {{ radio.tag }}
 
-                                                    <span class="text-sm text-gray-700">
+                                                    <span
+                                                        class="text-sm text-gray-700"
+                                                    >
                                                         {{ radio.choice_label }}
                                                     </span>
-
                                                 </label>
 
                                             {% endfor %}
@@ -183,65 +203,189 @@
                                     </div>
 
 
-                                    <!-- ================================= -->
                                     <!-- ENTRY TYPE EXCEPTIONS -->
-                                    <!-- ================================= -->
 
                                     <div class="border-t pt-5">
 
-                                        <h4 class="font-semibold text-gray-800 mb-4">
+                                        <h4
+                                            class="font-semibold
+                                                   text-gray-800 mb-4"
+                                        >
                                             Entry Type Granularity Exceptions
                                         </h4>
 
+                                        {% with formset=dataset_forms.entry_types|get_item:security_level %}
 
-                                        {{ granularity_formset.management_form }}
+                                            {{ formset.management_form }}
+                                            {{ formset.non_form_errors }}
 
-                                        {{ granularity_formset.non_form_errors }}
+                                            <div
+                                                class="granularity-forms
+                                                       space-y-4"
+                                            >
+
+                                                {% for form in formset %}
+
+                                                    <div
+                                                        class="granularity-form
+                                                               border
+                                                               border-gray-200
+                                                               bg-white
+                                                               rounded-lg
+                                                               p-4"
+                                                    >
+
+                                                        {{ form.id }}
+
+                                                        <!-- ENTRY TYPE -->
+
+                                                        <div class="mb-5">
+
+                                                            <p
+                                                                class="text-sm
+                                                                       font-medium
+                                                                       text-gray-700
+                                                                       mb-3"
+                                                            >
+                                                                {{ form.entry_type.help_text }}
+                                                            </p>
+
+                                                            {{ form.entry_type.errors }}
+
+                                                            <div class="space-y-2">
+
+                                                                {% for radio in form.entry_type %}
+
+                                                                    <label
+                                                                        for="{{ radio.id_for_label }}"
+                                                                        class="flex items-center gap-2 cursor-pointer"
+                                                                    >
+                                                                        {{ radio.tag }}
+
+                                                                        <span
+                                                                            class="text-sm
+                                                                                   text-gray-700"
+                                                                        >
+                                                                            {{ radio.choice_label }}
+                                                                        </span>
+                                                                    </label>
+
+                                                                {% endfor %}
+
+                                                            </div>
+
+                                                        </div>
 
 
-                                        <div
-                                            class="granularity-forms
-                                                   space-y-4"
-                                        >
+                                                        <!-- GRANULARITY -->
 
-                                            {% for form in granularity_formset %}
+                                                        <div class="mb-4">
+
+                                                            <p
+                                                                class="text-sm
+                                                                       font-medium
+                                                                       text-gray-700
+                                                                       mb-3"
+                                                            >
+                                                                {{ form.granularity.help_text }}
+                                                            </p>
+
+                                                            {{ form.granularity.errors }}
+
+                                                            <div class="space-y-2">
+
+                                                                {% for radio in form.granularity %}
+
+                                                                    <label
+                                                                        for="{{ radio.id_for_label }}"
+                                                                        class="flex items-center gap-2 cursor-pointer"
+                                                                    >
+                                                                        {{ radio.tag }}
+
+                                                                        <span
+                                                                            class="text-sm
+                                                                                   text-gray-700"
+                                                                        >
+                                                                            {{ radio.choice_label }}
+                                                                        </span>
+                                                                    </label>
+
+                                                                {% endfor %}
+
+                                                            </div>
+
+                                                        </div>
+
+
+                                                        <!-- DELETE -->
+
+                                                        <div class="hidden">
+                                                            {{ form.DELETE }}
+                                                        </div>
+
+
+                                                        <button
+                                                            type="button"
+                                                            class="remove-entry-type
+                                                                   text-sm
+                                                                   text-red-600
+                                                                   hover:text-red-800"
+                                                        >
+                                                            Remove entry type
+                                                        </button>
+
+                                                    </div>
+
+                                                {% endfor %}
+
+                                            </div>
+
+
+                                            <!-- EMPTY FORM -->
+
+                                            <template class="empty-entry-type">
 
                                                 <div
                                                     class="granularity-form
-                                                           border border-gray-200
+                                                           border
+                                                           border-gray-200
                                                            bg-white
                                                            rounded-lg
                                                            p-4"
                                                 >
 
-                                                    {{ form.id }}
+                                                    {{ formset.empty_form.id }}
 
 
-                                                    <!-- Entry Type -->
+                                                    <!-- ENTRY TYPE -->
 
                                                     <div class="mb-5">
 
-                                                        <p class="text-sm font-medium text-gray-700 mb-3">
-                                                            {{ form.entry_type.help_text }}
+                                                        <p
+                                                            class="text-sm
+                                                                   font-medium
+                                                                   text-gray-700
+                                                                   mb-3"
+                                                        >
+                                                            {{ formset.empty_form.entry_type.help_text }}
                                                         </p>
-
-                                                        {{ form.entry_type.errors }}
 
                                                         <div class="space-y-2">
 
-                                                            {% for radio in form.entry_type %}
+                                                            {% for radio in formset.empty_form.entry_type %}
 
                                                                 <label
                                                                     for="{{ radio.id_for_label }}"
                                                                     class="flex items-center gap-2 cursor-pointer"
                                                                 >
-
                                                                     {{ radio.tag }}
 
-                                                                    <span class="text-sm text-gray-700">
+                                                                    <span
+                                                                        class="text-sm
+                                                                               text-gray-700"
+                                                                    >
                                                                         {{ radio.choice_label }}
                                                                     </span>
-
                                                                 </label>
 
                                                             {% endfor %}
@@ -251,31 +395,35 @@
                                                     </div>
 
 
-                                                    <!-- Granularity -->
+                                                    <!-- GRANULARITY -->
 
                                                     <div class="mb-4">
 
-                                                        <p class="text-sm font-medium text-gray-700 mb-3">
-                                                            {{ form.granularity.help_text }}
+                                                        <p
+                                                            class="text-sm
+                                                                   font-medium
+                                                                   text-gray-700
+                                                                   mb-3"
+                                                        >
+                                                            {{ formset.empty_form.granularity.help_text }}
                                                         </p>
-
-                                                        {{ form.granularity.errors }}
 
                                                         <div class="space-y-2">
 
-                                                            {% for radio in form.granularity %}
+                                                            {% for radio in formset.empty_form.granularity %}
 
                                                                 <label
                                                                     for="{{ radio.id_for_label }}"
                                                                     class="flex items-center gap-2 cursor-pointer"
                                                                 >
-
                                                                     {{ radio.tag }}
 
-                                                                    <span class="text-sm text-gray-700">
+                                                                    <span
+                                                                        class="text-sm
+                                                                               text-gray-700"
+                                                                    >
                                                                         {{ radio.choice_label }}
                                                                     </span>
-
                                                                 </label>
 
                                                             {% endfor %}
@@ -285,10 +433,8 @@
                                                     </div>
 
 
-                                                    <!-- DELETE -->
-
                                                     <div class="hidden">
-                                                        {{ form.DELETE }}
+                                                        {{ formset.empty_form.DELETE }}
                                                     </div>
 
 
@@ -304,129 +450,622 @@
 
                                                 </div>
 
+                                            </template>
+
+
+                                            <button
+                                                type="button"
+                                                class="add-entry-type
+                                                       mt-4
+                                                       px-3 py-2
+                                                       text-sm
+                                                       bg-gray-200
+                                                       text-gray-800
+                                                       rounded-md
+                                                       hover:bg-gray-300"
+                                            >
+                                                + Add entry type
+                                            </button>
+
+                                        {% endwith %}
+
+                                    </div>
+
+
+                                <!-- ================================= -->
+                                <!-- CONTROLLED -->
+                                <!-- ================================= -->
+
+                                {% else %}
+
+                                    <!-- DEFAULT USER GRANULARITY -->
+
+                                    <div class="mb-6">
+
+                                        <p
+                                            class="text-sm font-medium
+                                                   text-gray-700 mb-3"
+                                        >
+                                            {{ security_form.user_granularity.help_text }}
+                                        </p>
+
+                                        {{ security_form.user_granularity.errors }}
+
+                                        <div class="flex flex-wrap gap-4">
+
+                                            {% for radio in security_form.user_granularity %}
+
+                                                <label
+                                                    for="{{ radio.id_for_label }}"
+                                                    class="flex items-center gap-2 cursor-pointer"
+                                                >
+                                                    {{ radio.tag }}
+
+                                                    <span
+                                                        class="text-sm text-gray-700"
+                                                    >
+                                                        {{ radio.choice_label }}
+                                                    </span>
+                                                </label>
+
                                             {% endfor %}
 
                                         </div>
 
-
-                                        <!-- ================================= -->
-                                        <!-- EMPTY FORM TEMPLATE -->
-                                        <!-- ================================= -->
-
-                                        <template class="empty-entry-type">
-
-                                            <div
-                                                class="granularity-form
-                                                       border border-gray-200
-                                                       bg-white
-                                                       rounded-lg
-                                                       p-4"
-                                            >
-
-                                                {{ granularity_formset.empty_form.id }}
+                                    </div>
 
 
-                                                <div class="mb-5">
+                                    <!-- USERS -->
 
-                                                    <p class="text-sm font-medium text-gray-700 mb-3">
-                                                        {{ granularity_formset.empty_form.entry_type.help_text }}
-                                                    </p>
+                                    <div class="border-t pt-5">
 
-                                                    <div class="space-y-2">
+                                        <h4
+                                            class="font-semibold
+                                                   text-gray-800 mb-4"
+                                        >
+                                            Users
+                                        </h4>
 
-                                                        {% for radio in granularity_formset.empty_form.entry_type %}
+                                        {% with user_formset=dataset_forms.users|get_item:security_level %}
 
-                                                            <label
-                                                                for="{{ radio.id_for_label }}"
-                                                                class="flex items-center gap-2 cursor-pointer"
+                                            {{ user_formset.management_form }}
+                                            {{ user_formset.non_form_errors }}
+
+                                            <div class="users-forms space-y-4">
+
+                                                {% for form in user_formset %}
+
+                                                    <div
+                                                        class="user-form
+                                                               border
+                                                               border-gray-200
+                                                               bg-white
+                                                               rounded-lg
+                                                               p-4"
+                                                    >
+
+                                                        {{ form.id }}
+
+                                                        <!-- USER -->
+
+                                                        <div class="mb-5">
+
+                                                            <p
+                                                                class="text-sm
+                                                                       font-medium
+                                                                       text-gray-700
+                                                                       mb-3"
                                                             >
+                                                                {{ form.user.help_text }}
+                                                            </p>
 
-                                                                {{ radio.tag }}
+                                                            {{ form.user.errors }}
 
-                                                                <span class="text-sm text-gray-700">
-                                                                    {{ radio.choice_label }}
-                                                                </span>
+                                                            <div class="space-y-2">
 
-                                                            </label>
+                                                                {% for radio in form.user %}
 
-                                                        {% endfor %}
+                                                                    <label
+                                                                        for="{{ radio.id_for_label }}"
+                                                                        class="flex items-center gap-2 cursor-pointer"
+                                                                    >
+                                                                        {{ radio.tag }}
+
+                                                                        <span
+                                                                            class="text-sm
+                                                                                   text-gray-700"
+                                                                        >
+                                                                            {{ radio.choice_label }}
+                                                                        </span>
+                                                                    </label>
+
+                                                                {% endfor %}
+
+                                                            </div>
+
+                                                        </div>
+
+
+                                                        <!-- USER GRANULARITY -->
+
+                                                        <div class="mb-5">
+
+                                                            <p
+                                                                class="text-sm
+                                                                       font-medium
+                                                                       text-gray-700
+                                                                       mb-3"
+                                                            >
+                                                                {{ form.user_granularity.help_text }}
+                                                            </p>
+
+                                                            {{ form.user_granularity.errors }}
+
+                                                            <div class="flex flex-wrap gap-4">
+
+                                                                {% for radio in form.user_granularity %}
+
+                                                                    <label
+                                                                        for="{{ radio.id_for_label }}"
+                                                                        class="flex items-center gap-2 cursor-pointer"
+                                                                    >
+                                                                        {{ radio.tag }}
+
+                                                                        <span
+                                                                            class="text-sm
+                                                                                   text-gray-700"
+                                                                        >
+                                                                            {{ radio.choice_label }}
+                                                                        </span>
+                                                                    </label>
+
+                                                                {% endfor %}
+
+                                                            </div>
+
+                                                        </div>
+
+
+                                                        <!-- USER ENTRY TYPE EXCEPTIONS -->
+
+                                                        {% if form.user.value %}
+
+                                                            {% with user_email=form.user.value %}
+
+                                                                {% with user_formsets=dataset_forms.user_entry_types|get_item:security_level %}
+
+                                                                    {% with exception_formset=user_formsets|get_item:user_email %}
+
+                                                                        {% if exception_formset %}
+
+                                                                            <div class="border-t pt-5">
+
+                                                                                <h5
+                                                                                    class="font-semibold
+                                                                                           text-gray-800
+                                                                                           mb-4"
+                                                                                >
+                                                                                    Entry Type Exceptions
+                                                                                </h5>
+
+                                                                                {{ exception_formset.management_form }}
+                                                                                {{ exception_formset.non_form_errors }}
+
+                                                                                <div class="user-entry-type-forms space-y-4">
+
+                                                                                    {% for exception_form in exception_formset %}
+
+                                                                                        <div
+                                                                                            class="user-entry-type-form
+                                                                                                   border
+                                                                                                   border-gray-200
+                                                                                                   bg-gray-50
+                                                                                                   rounded-lg
+                                                                                                   p-4"
+                                                                                        >
+
+                                                                                            {{ exception_form.id }}
+
+
+                                                                                            <!-- ENTRY TYPE -->
+
+                                                                                            <div class="mb-5">
+
+                                                                                                <p
+                                                                                                    class="text-sm
+                                                                                                           font-medium
+                                                                                                           text-gray-700
+                                                                                                           mb-3"
+                                                                                                >
+                                                                                                    {{ exception_form.entry_type.help_text }}
+                                                                                                </p>
+
+                                                                                                {{ exception_form.entry_type.errors }}
+
+                                                                                                <div class="space-y-2">
+
+                                                                                                    {% for radio in exception_form.entry_type %}
+
+                                                                                                        <label
+                                                                                                            for="{{ radio.id_for_label }}"
+                                                                                                            class="flex items-center gap-2 cursor-pointer"
+                                                                                                        >
+                                                                                                            {{ radio.tag }}
+
+                                                                                                            <span
+                                                                                                                class="text-sm
+                                                                                                                       text-gray-700"
+                                                                                                            >
+                                                                                                                {{ radio.choice_label }}
+                                                                                                            </span>
+                                                                                                        </label>
+
+                                                                                                    {% endfor %}
+
+                                                                                                </div>
+
+                                                                                            </div>
+
+
+                                                                                            <!-- GRANULARITY -->
+
+                                                                                            <div class="mb-4">
+
+                                                                                                <p
+                                                                                                    class="text-sm
+                                                                                                           font-medium
+                                                                                                           text-gray-700
+                                                                                                           mb-3"
+                                                                                                >
+                                                                                                    {{ exception_form.granularity.help_text }}
+                                                                                                </p>
+
+                                                                                                {{ exception_form.granularity.errors }}
+
+                                                                                                <div class="space-y-2">
+
+                                                                                                    {% for radio in exception_form.granularity %}
+
+                                                                                                        <label
+                                                                                                            for="{{ radio.id_for_label }}"
+                                                                                                            class="flex items-center gap-2 cursor-pointer"
+                                                                                                        >
+                                                                                                            {{ radio.tag }}
+
+                                                                                                            <span
+                                                                                                                class="text-sm
+                                                                                                                       text-gray-700"
+                                                                                                            >
+                                                                                                                {{ radio.choice_label }}
+                                                                                                            </span>
+                                                                                                        </label>
+
+                                                                                                    {% endfor %}
+
+                                                                                                </div>
+
+                                                                                            </div>
+
+
+                                                                                            <div class="hidden">
+                                                                                                {{ exception_form.DELETE }}
+                                                                                            </div>
+
+
+                                                                                            <button
+                                                                                                type="button"
+                                                                                                class="remove-entry-type
+                                                                                                       text-sm
+                                                                                                       text-red-600
+                                                                                                       hover:text-red-800"
+                                                                                            >
+                                                                                                Remove exception
+                                                                                            </button>
+
+                                                                                        </div>
+
+                                                                                    {% endfor %}
+
+                                                                                </div>
+
+
+                                                                                <!-- EMPTY USER EXCEPTION FORM -->
+
+                                                                                <template
+                                                                                    class="empty-user-entry-type"
+                                                                                >
+
+                                                                                    <div
+                                                                                        class="user-entry-type-form
+                                                                                               border
+                                                                                               border-gray-200
+                                                                                               bg-gray-50
+                                                                                               rounded-lg
+                                                                                               p-4"
+                                                                                    >
+
+                                                                                        {{ exception_formset.empty_form.id }}
+
+
+                                                                                        <div class="mb-5">
+
+                                                                                            <p
+                                                                                                class="text-sm
+                                                                                                       font-medium
+                                                                                                       text-gray-700
+                                                                                                       mb-3"
+                                                                                            >
+                                                                                                {{ exception_formset.empty_form.entry_type.help_text }}
+                                                                                            </p>
+
+                                                                                            <div class="space-y-2">
+
+                                                                                                {% for radio in exception_formset.empty_form.entry_type %}
+
+                                                                                                    <label
+                                                                                                        for="{{ radio.id_for_label }}"
+                                                                                                        class="flex items-center gap-2 cursor-pointer"
+                                                                                                    >
+                                                                                                        {{ radio.tag }}
+
+                                                                                                        <span
+                                                                                                            class="text-sm
+                                                                                                                   text-gray-700"
+                                                                                                        >
+                                                                                                            {{ radio.choice_label }}
+                                                                                                        </span>
+                                                                                                    </label>
+
+                                                                                                {% endfor %}
+
+                                                                                            </div>
+
+                                                                                        </div>
+
+
+                                                                                        <div class="mb-4">
+
+                                                                                            <p
+                                                                                                class="text-sm
+                                                                                                       font-medium
+                                                                                                       text-gray-700
+                                                                                                       mb-3"
+                                                                                            >
+                                                                                                {{ exception_formset.empty_form.granularity.help_text }}
+                                                                                            </p>
+
+                                                                                            <div class="space-y-2">
+
+                                                                                                {% for radio in exception_formset.empty_form.granularity %}
+
+                                                                                                    <label
+                                                                                                        for="{{ radio.id_for_label }}"
+                                                                                                        class="flex items-center gap-2 cursor-pointer"
+                                                                                                    >
+                                                                                                        {{ radio.tag }}
+
+                                                                                                        <span
+                                                                                                            class="text-sm
+                                                                                                                   text-gray-700"
+                                                                                                        >
+                                                                                                            {{ radio.choice_label }}
+                                                                                                        </span>
+                                                                                                    </label>
+
+                                                                                                {% endfor %}
+
+                                                                                            </div>
+
+                                                                                        </div>
+
+
+                                                                                        <div class="hidden">
+                                                                                            {{ exception_formset.empty_form.DELETE }}
+                                                                                        </div>
+
+
+                                                                                        <button
+                                                                                            type="button"
+                                                                                            class="remove-entry-type
+                                                                                                   text-sm
+                                                                                                   text-red-600
+                                                                                                   hover:text-red-800"
+                                                                                        >
+                                                                                            Remove exception
+                                                                                        </button>
+
+                                                                                    </div>
+
+                                                                                </template>
+
+
+                                                                                <button
+                                                                                    type="button"
+                                                                                    class="add-user-entry-type
+                                                                                           mt-4
+                                                                                           px-3 py-2
+                                                                                           text-sm
+                                                                                           bg-gray-200
+                                                                                           text-gray-800
+                                                                                           rounded-md
+                                                                                           hover:bg-gray-300"
+                                                                                >
+                                                                                    + Add entry type exception
+                                                                                </button>
+
+                                                                            </div>
+
+                                                                        {% endif %}
+
+                                                                    {% endwith %}
+
+                                                                {% endwith %}
+
+                                                            {% endwith %}
+
+                                                        {% endif %}
+
+
+                                                        <!-- DELETE USER -->
+
+                                                        <div class="hidden">
+                                                            {{ form.DELETE }}
+                                                        </div>
+
+
+                                                        <button
+                                                            type="button"
+                                                            class="remove-user
+                                                                   text-sm
+                                                                   text-red-600
+                                                                   hover:text-red-800"
+                                                        >
+                                                            Remove user
+                                                        </button>
 
                                                     </div>
 
-                                                </div>
-
-
-                                                <div class="mb-4">
-
-                                                    <p class="text-sm font-medium text-gray-700 mb-3">
-                                                        {{ granularity_formset.empty_form.granularity.help_text }}
-                                                    </p>
-
-                                                    <div class="space-y-2">
-
-                                                        {% for radio in granularity_formset.empty_form.granularity %}
-
-                                                            <label
-                                                                for="{{ radio.id_for_label }}"
-                                                                class="flex items-center gap-2 cursor-pointer"
-                                                            >
-
-                                                                {{ radio.tag }}
-
-                                                                <span class="text-sm text-gray-700">
-                                                                    {{ radio.choice_label }}
-                                                                </span>
-
-                                                            </label>
-
-                                                        {% endfor %}
-
-                                                    </div>
-
-                                                </div>
-
-
-                                                <div class="hidden">
-                                                    {{ granularity_formset.empty_form.DELETE }}
-                                                </div>
-
-
-                                                <button
-                                                    type="button"
-                                                    class="remove-entry-type
-                                                           text-sm
-                                                           text-red-600
-                                                           hover:text-red-800"
-                                                >
-                                                    Remove entry type
-                                                </button>
+                                                {% endfor %}
 
                                             </div>
 
-                                        </template>
+
+                                            <!-- EMPTY USER FORM -->
+
+                                            <template class="empty-user">
+
+                                                <div
+                                                    class="user-form
+                                                           border
+                                                           border-gray-200
+                                                           bg-white
+                                                           rounded-lg
+                                                           p-4"
+                                                >
+
+                                                    {{ user_formset.empty_form.id }}
 
 
-                                        <button
-                                            type="button"
-                                            class="add-entry-type
-                                                   mt-4
-                                                   px-3 py-2
-                                                   text-sm
-                                                   bg-gray-200
-                                                   text-gray-800
-                                                   rounded-md
-                                                   hover:bg-gray-300"
-                                        >
-                                            + Add entry type
-                                        </button>
+                                                    <!-- USER -->
+
+                                                    <div class="mb-5">
+
+                                                        <p
+                                                            class="text-sm
+                                                                   font-medium
+                                                                   text-gray-700
+                                                                   mb-3"
+                                                        >
+                                                            {{ user_formset.empty_form.user.help_text }}
+                                                        </p>
+
+                                                        <div class="space-y-2">
+
+                                                            {% for radio in user_formset.empty_form.user %}
+
+                                                                <label
+                                                                    for="{{ radio.id_for_label }}"
+                                                                    class="flex items-center gap-2 cursor-pointer"
+                                                                >
+                                                                    {{ radio.tag }}
+
+                                                                    <span
+                                                                        class="text-sm
+                                                                               text-gray-700"
+                                                                    >
+                                                                        {{ radio.choice_label }}
+                                                                    </span>
+                                                                </label>
+
+                                                            {% endfor %}
+
+                                                        </div>
+
+                                                    </div>
+
+
+                                                    <!-- USER GRANULARITY -->
+
+                                                    <div class="mb-4">
+
+                                                        <p
+                                                            class="text-sm
+                                                                   font-medium
+                                                                   text-gray-700
+                                                                   mb-3"
+                                                        >
+                                                            {{ user_formset.empty_form.user_granularity.help_text }}
+                                                        </p>
+
+                                                        <div class="flex flex-wrap gap-4">
+
+                                                            {% for radio in user_formset.empty_form.user_granularity %}
+
+                                                                <label
+                                                                    for="{{ radio.id_for_label }}"
+                                                                    class="flex items-center gap-2 cursor-pointer"
+                                                                >
+                                                                    {{ radio.tag }}
+
+                                                                    <span
+                                                                        class="text-sm
+                                                                               text-gray-700"
+                                                                    >
+                                                                        {{ radio.choice_label }}
+                                                                    </span>
+                                                                </label>
+
+                                                            {% endfor %}
+
+                                                        </div>
+
+                                                    </div>
+
+
+                                                    <div class="hidden">
+                                                        {{ user_formset.empty_form.DELETE }}
+                                                    </div>
+
+
+                                                    <button
+                                                        type="button"
+                                                        class="remove-user
+                                                               text-sm
+                                                               text-red-600
+                                                               hover:text-red-800"
+                                                    >
+                                                        Remove user
+                                                    </button>
+
+                                                </div>
+
+                                            </template>
+
+
+                                            <button
+                                                type="button"
+                                                class="add-user
+                                                       mt-4
+                                                       px-3 py-2
+                                                       text-sm
+                                                       bg-gray-200
+                                                       text-gray-800
+                                                       rounded-md
+                                                       hover:bg-gray-300"
+                                            >
+                                                + Add user
+                                            </button>
+
+                                        {% endwith %}
 
                                     </div>
 
-                                </div>
+                                {% endif %}
 
                             </div>
 
-                        {% endwith %}
+                        </div>
+
                         {% endwith %}
 
                     {% endfor %}
@@ -470,220 +1109,545 @@
 
 </form>
 
-<span>New Dataset's name: <input type="text" id="id_New_Dataset" 
-        name="New_Dataset"></span>
-<button
-    hx-get="/new_permit"
-    hx-include="[name='New_Dataset']"
-    hx-swap="none"
-    hx-on::after-request="window.location.reload()">
-  Add new dataset
-</button>
-
-
-
-
-
-
-</body>
 
 <!-- ========================================================= -->
-<!-- JavaScript -->
+<!-- NEW DATASET -->
+<!-- ========================================================= -->
+
+<div class="mt-6">
+
+    <span>
+        New Dataset's name:
+
+        <input
+            type="text"
+            id="id_New_Dataset"
+            name="New_Dataset"
+        >
+    </span>
+
+    <button
+        hx-get="/new_permit"
+        hx-include="[name='New_Dataset']"
+        hx-swap="none"
+        hx-on::after-request="window.location.reload()"
+    >
+        Add new dataset
+    </button>
+
+</div>
+
+
+<!-- ========================================================= -->
+<!-- JAVASCRIPT -->
 <!-- ========================================================= -->
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
 
-    /*
-     * ---------------------------------------------------------
-     * SECURITY LEVELS
-     * ---------------------------------------------------------
-     */
-
-    document.querySelectorAll(
-        ".security-level-container"
-    ).forEach(function (container) {
-
-        const checkbox = container.querySelector(
-            ".security-level-toggle"
-        );
-
-        const content = container.querySelector(
-            ".security-level-content"
-        );
-
-        const removeButton = container.querySelector(
-            ".remove-security-level"
-        );
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
 
 
-        function updateSecurityVisibility() {
+        /* =====================================================
+         * SECURITY LEVELS
+         * ===================================================== */
 
-            if (checkbox.checked) {
+        document.querySelectorAll(
+            ".security-level-container"
+        ).forEach(
+            function (container) {
 
-                content.classList.remove(
-                    "hidden"
-                );
+                const checkbox =
+                    container.querySelector(
+                        ".security-level-toggle"
+                    );
 
-            } else {
+                const content =
+                    container.querySelector(
+                        ".security-level-content"
+                    );
 
-                content.classList.add(
-                    "hidden"
-                );
-
-            }
-        }
-
-
-        checkbox.addEventListener(
-            "change",
-            updateSecurityVisibility
-        );
-
-
-        removeButton.addEventListener(
-            "click",
-            function () {
-
-                checkbox.checked = false;
-
-                updateSecurityVisibility();
-            }
-        );
+                const removeButton =
+                    container.querySelector(
+                        ".remove-security-level"
+                    );
 
 
-        updateSecurityVisibility();
-    });
+                if (!checkbox || !content) {
+                    return;
+                }
 
 
-    /*
-     * ---------------------------------------------------------
-     * ENTRY TYPE FORMSETS
-     * ---------------------------------------------------------
-     */
+                function updateSecurityVisibility() {
 
-    document.querySelectorAll(
-        ".security-level-container"
-    ).forEach(function (container) {
+                    if (checkbox.checked) {
 
-        const addButton = container.querySelector(
-            ".add-entry-type"
-        );
-
-        const formsContainer = container.querySelector(
-            ".granularity-forms"
-        );
-
-        const template = container.querySelector(
-            ".empty-entry-type"
-        );
-
-        const totalForms = container.querySelector(
-            'input[name$="-TOTAL_FORMS"]'
-        );
-
-
-        if (
-            !addButton ||
-            !formsContainer ||
-            !template ||
-            !totalForms
-        ) {
-            return;
-        }
-
-
-        addButton.addEventListener(
-            "click",
-            function () {
-
-                const formIndex = parseInt(
-                    totalForms.value,
-                    10
-                );
-
-                let html = template.innerHTML;
-
-                /*
-                 * Replace Django's __prefix__
-                 * with the next form index.
-                 */
-
-                html = html.replace(
-                    /__prefix__/g,
-                    formIndex
-                );
-
-                formsContainer.insertAdjacentHTML(
-                    "beforeend",
-                    html
-                );
-
-                totalForms.value =
-                    formIndex + 1;
-
-                attachRemoveButton(
-                    formsContainer.lastElementChild
-                );
-            }
-        );
-
-
-        /*
-         * Attach remove buttons to existing forms.
-         */
-
-        formsContainer.querySelectorAll(
-            ".granularity-form"
-        ).forEach(function (form) {
-
-            attachRemoveButton(form);
-        });
-
-
-        function attachRemoveButton(form) {
-
-            const removeButton =
-                form.querySelector(
-                    ".remove-entry-type"
-                );
-
-            if (!removeButton) {
-                return;
-            }
-
-            removeButton.addEventListener(
-                "click",
-                function () {
-
-                    /*
-                     * Django formsets expect DELETE
-                     * to be submitted instead of simply
-                     * removing an existing form.
-                     */
-
-                    const deleteInput =
-                        form.querySelector(
-                            'input[name$="-DELETE"]'
-                        );
-
-                    if (deleteInput) {
-
-                        deleteInput.checked = true;
-
-                        form.classList.add(
+                        content.classList.remove(
                             "hidden"
                         );
 
                     } else {
 
-                        form.remove();
+                        content.classList.add(
+                            "hidden"
+                        );
+
                     }
                 }
-            );
-        }
 
-    });
 
-});
+                checkbox.addEventListener(
+                    "change",
+                    updateSecurityVisibility
+                );
+
+
+                if (removeButton) {
+
+                    removeButton.addEventListener(
+                        "click",
+                        function () {
+
+                            checkbox.checked = false;
+
+                            updateSecurityVisibility();
+
+                        }
+                    );
+
+                }
+
+
+                updateSecurityVisibility();
+
+            }
+        );
+
+
+        /* =====================================================
+         * ADD / REMOVE NORMAL ENTRY TYPE EXCEPTIONS
+         * ===================================================== */
+
+        document.querySelectorAll(
+            ".security-level-container"
+        ).forEach(
+            function (container) {
+
+                const addButton =
+                    container.querySelector(
+                        ".add-entry-type"
+                    );
+
+                const formsContainer =
+                    container.querySelector(
+                        ".granularity-forms"
+                    );
+
+                const template =
+                    container.querySelector(
+                        ".empty-entry-type"
+                    );
+
+                const totalForms =
+                    container.querySelector(
+                        'input[name$="-TOTAL_FORMS"]'
+                    );
+
+
+                if (
+                    !addButton ||
+                    !formsContainer ||
+                    !template ||
+                    !totalForms
+                ) {
+                    return;
+                }
+
+
+                addButton.addEventListener(
+                    "click",
+                    function () {
+
+                        const formIndex =
+                            parseInt(
+                                totalForms.value,
+                                10
+                            );
+
+                        let html =
+                            template.innerHTML;
+
+                        html = html.replace(
+                            /__prefix__/g,
+                            formIndex
+                        );
+
+                        formsContainer.insertAdjacentHTML(
+                            "beforeend",
+                            html
+                        );
+
+                        totalForms.value =
+                            formIndex + 1;
+
+                        attachRemoveButton(
+                            formsContainer.lastElementChild
+                        );
+
+                    }
+                );
+
+
+                formsContainer
+                    .querySelectorAll(
+                        ".granularity-form"
+                    )
+                    .forEach(
+                        function (form) {
+
+                            attachRemoveButton(
+                                form
+                            );
+
+                        }
+                    );
+
+
+                function attachRemoveButton(form) {
+
+                    const removeButton =
+                        form.querySelector(
+                            ".remove-entry-type"
+                        );
+
+                    if (!removeButton) {
+                        return;
+                    }
+
+                    removeButton.addEventListener(
+                        "click",
+                        function () {
+
+                            const deleteInput =
+                                form.querySelector(
+                                    'input[name$="-DELETE"]'
+                                );
+
+                            if (deleteInput) {
+
+                                deleteInput.checked = true;
+
+                                form.classList.add(
+                                    "hidden"
+                                );
+
+                            } else {
+
+                                form.remove();
+
+                            }
+
+                        }
+                    );
+
+                }
+
+            }
+        );
+
+
+        /* =====================================================
+         * ADD / REMOVE USERS
+         * ===================================================== */
+
+        document.querySelectorAll(
+            ".security-level-container"
+        ).forEach(
+            function (container) {
+
+                const addButton =
+                    container.querySelector(
+                        ".add-user"
+                    );
+
+                const formsContainer =
+                    container.querySelector(
+                        ".users-forms"
+                    );
+
+                const template =
+                    container.querySelector(
+                        ".empty-user"
+                    );
+
+                const totalForms =
+                    container.querySelector(
+                        'input[name$="-TOTAL_FORMS"]'
+                    );
+
+
+                if (
+                    !addButton ||
+                    !formsContainer ||
+                    !template ||
+                    !totalForms
+                ) {
+                    return;
+                }
+
+
+                addButton.addEventListener(
+                    "click",
+                    function () {
+
+                        const formIndex =
+                            parseInt(
+                                totalForms.value,
+                                10
+                            );
+
+                        let html =
+                            template.innerHTML;
+
+                        html = html.replace(
+                            /__prefix__/g,
+                            formIndex
+                        );
+
+                        formsContainer.insertAdjacentHTML(
+                            "beforeend",
+                            html
+                        );
+
+                        totalForms.value =
+                            formIndex + 1;
+
+                        attachUserRemoveButton(
+                            formsContainer.lastElementChild
+                        );
+
+                    }
+                );
+
+
+                formsContainer
+                    .querySelectorAll(
+                        ".user-form"
+                    )
+                    .forEach(
+                        function (form) {
+
+                            attachUserRemoveButton(
+                                form
+                            );
+
+                        }
+                    );
+
+
+                function attachUserRemoveButton(form) {
+
+                    const removeButton =
+                        form.querySelector(
+                            ".remove-user"
+                        );
+
+                    if (!removeButton) {
+                        return;
+                    }
+
+
+                    removeButton.addEventListener(
+                        "click",
+                        function () {
+
+                            const deleteInput =
+                                form.querySelector(
+                                    'input[name$="-DELETE"]'
+                                );
+
+                            if (deleteInput) {
+
+                                deleteInput.checked = true;
+
+                                form.classList.add(
+                                    "hidden"
+                                );
+
+                            } else {
+
+                                form.remove();
+
+                            }
+
+                        }
+                    );
+
+                }
+
+            }
+        );
+
+
+        /* =====================================================
+         * ADD / REMOVE USER ENTRY TYPE EXCEPTIONS
+         * ===================================================== */
+
+        document.querySelectorAll(
+            ".security-level-container"
+        ).forEach(
+            function (container) {
+
+                container
+                    .querySelectorAll(
+                        ".add-user-entry-type"
+                    )
+                    .forEach(
+                        function (addButton) {
+
+                            const exceptionContainer =
+                                addButton
+                                    .closest(
+                                        ".border-t"
+                                    );
+
+                            if (!exceptionContainer) {
+                                return;
+                            }
+
+
+                            const formsContainer =
+                                exceptionContainer
+                                    .querySelector(
+                                        ".user-entry-type-forms"
+                                    );
+
+                            const template =
+                                exceptionContainer
+                                    .querySelector(
+                                        ".empty-user-entry-type"
+                                    );
+
+                            const totalForms =
+                                exceptionContainer
+                                    .querySelector(
+                                        'input[name$="-TOTAL_FORMS"]'
+                                    );
+
+
+                            if (
+                                !formsContainer ||
+                                !template ||
+                                !totalForms
+                            ) {
+                                return;
+                            }
+
+
+                            addButton.addEventListener(
+                                "click",
+                                function () {
+
+                                    const formIndex =
+                                        parseInt(
+                                            totalForms.value,
+                                            10
+                                        );
+
+                                    let html =
+                                        template.innerHTML;
+
+                                    html = html.replace(
+                                        /__prefix__/g,
+                                        formIndex
+                                    );
+
+                                    formsContainer
+                                        .insertAdjacentHTML(
+                                            "beforeend",
+                                            html
+                                        );
+
+                                    totalForms.value =
+                                        formIndex + 1;
+
+                                    attachExceptionRemoveButton(
+                                        formsContainer.lastElementChild
+                                    );
+
+                                }
+                            );
+
+
+                            formsContainer
+                                .querySelectorAll(
+                                    ".user-entry-type-form"
+                                )
+                                .forEach(
+                                    function (form) {
+
+                                        attachExceptionRemoveButton(
+                                            form
+                                        );
+
+                                    }
+                                );
+
+
+                            function attachExceptionRemoveButton(
+                                form
+                            ) {
+
+                                const removeButton =
+                                    form.querySelector(
+                                        ".remove-entry-type"
+                                    );
+
+                                if (!removeButton) {
+                                    return;
+                                }
+
+
+                                removeButton.addEventListener(
+                                    "click",
+                                    function () {
+
+                                        const deleteInput =
+                                            form.querySelector(
+                                                'input[name$="-DELETE"]'
+                                            );
+
+                                        if (deleteInput) {
+
+                                            deleteInput.checked =
+                                                true;
+
+                                            form.classList.add(
+                                                "hidden"
+                                            );
+
+                                        } else {
+
+                                            form.remove();
+
+                                        }
+
+                                    }
+                                );
+
+                            }
+
+                        }
+                    );
+
+            }
+        );
+
+    }
+);
+
 </script>
+
+</body>
+</html>
