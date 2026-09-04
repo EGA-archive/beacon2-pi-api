@@ -79,20 +79,19 @@ def _build_user_initial(user_list):
         if not isinstance(user_config, dict):
             continue
 
-        email = user_config.get("user-e-mail")
+        email = user_config.get("user_e-mail")
 
         if not email:
             continue
 
         initial.append({
             "user": email,
-            "user_granularity": user_config.get(
-                "default_entry_types_granularity",
-                "-",
-            ),
         })
 
     return initial
+
+
+
 
 
 def _get_user_entry_type_initial(user_config):
@@ -112,7 +111,7 @@ def _get_existing_user_config(user_list, email):
         if not isinstance(user_config, dict):
             continue
 
-        if user_config.get("user-e-mail") == email:
+        if user_config.get("user_e-mail") == email:
             return user_config
 
     return {}
@@ -284,28 +283,17 @@ def default_view(request):
                 if security_level == "controlled":
 
                     security_initial = {
-                        "SecurityLevel":
-                            security_level,
-
-                        "user_granularity":
-                            existing_config.get(
-                                "default_entry_types_granularity",
-                                "-",
-                            ),
+                        "SecurityLevel": security_level,
                     }
+
 
                 else:
 
                     security_initial = {
-                        "SecurityLevel":
-                            security_level,
-
-                        "granularity":
-                            existing_config.get(
-                                "default_entry_types_granularity",
-                                "-",
-                            ),
+                        "SecurityLevel": security_level,
+                        "granularity": "-",
                     }
+
 
             else:
 
@@ -755,12 +743,6 @@ def default_view(request):
                             if not email:
                                 continue
 
-                            user_granularity = (
-                                user_form.cleaned_data.get(
-                                    "user_granularity",
-                                    "-",
-                                )
-                            )
 
                             # ---------------------------------
                             # Nested exceptions
@@ -813,11 +795,8 @@ def default_view(request):
                             # ---------------------------------
 
                             user_list.append({
-                                "user-e-mail":
+                                "user_e-mail":
                                     email,
-
-                                "default_entry_types_granularity":
-                                    user_granularity,
 
                                 "entry_types_exceptions":
                                     user_exceptions,

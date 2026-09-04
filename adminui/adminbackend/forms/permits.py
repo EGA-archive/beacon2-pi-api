@@ -45,13 +45,6 @@ class SecurityLevelForm(forms.Form):
         required=False,
     )
 
-    user_granularity = forms.ChoiceField(
-        widget=forms.RadioSelect,
-        choices=GRANULARITY_CHOICES,
-        help_text="Default Granularity for Users",
-        required=False,
-    )
-
 
 # ============================================================
 # ENTRY TYPE GRANULARITY EXCEPTION
