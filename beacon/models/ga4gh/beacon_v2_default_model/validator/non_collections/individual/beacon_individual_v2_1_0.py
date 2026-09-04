@@ -46,8 +46,6 @@ class Diseases(BaseModel):
     stage: Optional[OntologyTerm]=None
     @field_validator('ageOfOnset')
     @classmethod
-    @field_validator('ageOfOnset')
-    @classmethod
     def check_ageOfOnset(cls, v: Union[str,dict]) -> Union[str,dict]:
         if v is None:
             return v
@@ -65,7 +63,6 @@ class Diseases(BaseModel):
                 except Exception:
                     continue
             raise ValueError('ageOfOnset, if object, must be any format possible between age, ageRange, gestationalAge, timeInterval or OntologyTerm')
-            return v
     
 class Exposures(BaseModel):
     ageAtExposure: Age

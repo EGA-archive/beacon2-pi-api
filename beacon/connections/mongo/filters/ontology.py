@@ -4,7 +4,7 @@ from beacon.connections.mongo.utils import get_documents, choose_scope
 from beacon.connections.mongo.client import get_client
 from beacon.logs.logs import log_with_args
 from beacon.conf.conf_override import config
-from beacon.utils.modules import get_all_modules_mongo_connections_script
+from beacon.utils.modules import get_all_modules_connections_script
 
 @log_with_args(config.level)
 def apply_ontology_filter(self, query: dict, filter: OntologyFilter, request_parameters: dict, dataset: str) -> dict:
@@ -125,7 +125,7 @@ def apply_ontology_filter(self, query: dict, filter: OntologyFilter, request_par
             new_query['$or'].append(query_id)
         query = new_query
     # Execute the cross query in case it's needed
-    list_modules = get_all_modules_mongo_connections_script("filters.cross_queries.cross_query")
+    list_modules = get_all_modules_connections_script("filters.cross_queries.cross_query", "mongo")
     for module in list_modules:
         query = module.cross_query(self, query, scope, request_parameters, dataset)
     return query

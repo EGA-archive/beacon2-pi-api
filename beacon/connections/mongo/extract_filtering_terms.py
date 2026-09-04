@@ -42,6 +42,7 @@ def get_ontology_field_name(ontology_id:str, term_id:str, collection:str, fields
         query['$or'].append(fieldquery)
     # Execute the query
     results = client['beacon'].get_collection(collection).find(query).limit(1)
+
     # Get the results in a dictionary and extract the labels of the ontologies
     try:
         results = list(results)
@@ -244,7 +245,7 @@ def insert_all_ontology_terms_used():
                                             })
                     insert_zygosity_terms()
                 elif entity == 'individual':
-                    individuals_fields=['diseases.ageOfOnset.id','diseases.diseaseCode.id','diseases.severity.id','diseases.stage.id','ethnicity.id','exposures.exposureCode.id','exposures.unit.id','geographicOrigin.id','interventionsOrProcedures.ageAtProcedure.id','interventionsOrProcedures.bodySite.id','interventionsOrProcedures.procedureCode.id','measures.assayCode.id','measures.measurementValue.id','measures.measurementValue.typedQuantities.quantity.unit.id','measures.measurementValue.unit.id','measures.observationMoment.id','measures.procedure.bodySite.id','measures.procedure.procedureCode.id','pedigrees.disease.diseaseCode.id','pedigrees.disease.severity.id','pedigrees.disease.stage.id','pedigrees.id','pedigrees.members.role.id','phenotypicFeatures.evidence.evidenceCode.id','phenotypicFeatures.evidence.reference.id','phenotypicFeatures.featureType.id','phenotypicFeatures.modifiers.id','phenotypicFeatures.onset.id','phenotypicFeatures.resolution.id','phenotypicFeatures.severity.id','sex.id','treatments.cumulativeDose.referenceRange.id','treatments.doseIntervals.id','treatments.routeOfAdministration.id','treatments.treatmentCode.id']
+                    individuals_fields=['diseases.ageOfOnset.id','diseases.diseaseCode.id','diseases.severity.id','diseases.stage.id','ethnicity.id','exposures.exposureCode.id','exposures.unit.id','geographicOrigin.id','interventionsOrProcedures.ageAtProcedure.id','interventionsOrProcedures.bodySite.id','interventionsOrProcedures.procedureCode.id','measurements.assayCode.id','measurements.measurementValue.id','measurements.measurementValue.typedQuantities.quantity.unit.id','measurements.measurementValue.unit.id','measurements.observationMoment.id','measurements.procedure.bodySite.id','measurements.procedure.procedureCode.id','pedigrees.disease.diseaseCode.id','pedigrees.disease.severity.id','pedigrees.disease.stage.id','pedigrees.id','pedigrees.members.role.id','phenotypicFeatures.evidence.evidenceCode.id','phenotypicFeatures.evidence.reference.id','phenotypicFeatures.featureType.id','phenotypicFeatures.modifiers.id','phenotypicFeatures.onset.id','phenotypicFeatures.resolution.id','phenotypicFeatures.severity.id','sex.id','treatments.cumulativeDose.referenceRange.id','treatments.doseIntervals.id','treatments.routeOfAdministration.id','treatments.treatmentCode.id']
                     insert_found_terms(individuals, individuals_fields)
                     for alphanumeric_term in alphanumeric_terms_individuals:
                         alphanumterms.append({
@@ -334,8 +335,6 @@ def get_filtering_object(terms_ids: list, collection, fields):
         ontology = onto.split(':')
         ontology_id = ontology[0]
         term_id = ontology[1]
-        #if ontology_id not in ontologies:
-            #ontologies[ontology_id] = load_ontology(ontology_id)
         if ontology_id.isupper():
             field_dict = get_ontology_field_name(ontology_id, term_id, collection.name, fields)
         else:
@@ -345,8 +344,6 @@ def get_filtering_object(terms_ids: list, collection, fields):
             label = field_dict['label']
             value_id=None
             if 'measurements.assayCode' in field:
-                value_id = label
-            if 'measures.assayCode' in field:
                 value_id = label
             ontology_label = label
             if field is not None:
@@ -394,7 +391,7 @@ def get_filtering_object(terms_ids: list, collection, fields):
                                             })
 
                 print(terms)
-        except Exception:
+        except Exception as e:
             pass
 
     return terms

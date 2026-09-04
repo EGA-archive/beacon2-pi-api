@@ -1,0 +1,21 @@
+[
+    {
+        "createDateTime": "2021-12-29T20:33:40Z",
+        "dataUseConditions": {
+            "duoDataUse": [
+                {
+                    "id": "DUO:0000019",
+                    "label": "publication required",
+                    "version": "7-1-19"
+                }
+            ]
+        },
+        "description": "Bear in mind that both genomic and metadata information is synthetic",
+        "externalUrl": "http://synthetic_usecases_4beacon_testingV4.com",
+        "id": "test",
+        "name": "Dataset with synthetic data for beacon testing",
+        "updateDateTime": "2021-12-29T20:33:40Z",
+        "version": "v1.0",
+        "_id": "a0b167c885bf11ece6a25b76e767ffa64cca21701c0eb1c8cee88c74049ef84d"
+    }
+]

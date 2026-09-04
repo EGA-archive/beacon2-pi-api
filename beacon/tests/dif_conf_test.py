@@ -678,14 +678,7 @@ class TestNoFilters(unittest.TestCase):
             async def test_check_configuration_http():
                 # Verify configuration checker accepts HTTPS scheme
                 check_configuration(
-                    LOG=initialize_logger(config.level),
-                    analysis_confile=analysis,
-                    biosample_confile=biosample,
-                    cohort_confile=cohort,
-                    dataset_confile=dataset,
-                    genomicVariant_confile=genomicVariant,
-                    individual_confile=individual,
-                    run_confile=run
+                    LOG=initialize_logger(config.level)
                 )
 
             loop.run_until_complete(test_check_configuration_http())
