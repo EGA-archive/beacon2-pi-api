@@ -158,15 +158,20 @@ class UserPermissionForm(forms.Form):
     user = forms.ChoiceField(
         widget=forms.RadioSelect,
         choices=[],
-        help_text="User",
         required=False,
+        help_text="User",
     )
 
     user_granularity = forms.ChoiceField(
         widget=forms.RadioSelect,
-        choices=GRANULARITY_CHOICES,
-        help_text="Default Granularity for this User",
+        choices=[
+            ("-", "-"),
+            ("boolean", "Boolean"),
+            ("count", "Count"),
+            ("record", "Record"),
+        ],
         required=False,
+        help_text="Default Granularity",
     )
 
     def __init__(
@@ -178,19 +183,9 @@ class UserPermissionForm(forms.Form):
         super().__init__(*args, **kwargs)
 
         self.fields["user"].choices = (
-            user_choices
-            if user_choices is not None
-            else [
-                (
-                    "john.doe@beacon.ga4gh",
-                    "john.doe@beacon.ga4gh",
-                ),
-                (
-                    "jane.smith@beacon.ga4gh",
-                    "jane.smith@beacon.ga4gh",
-                ),
-            ]
+            user_choices or []
         )
+
 
 
 # ============================================================

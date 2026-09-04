@@ -86,9 +86,14 @@ def _build_user_initial(user_list):
 
         initial.append({
             "user": email,
+            "user_granularity": user_config.get(
+                "default_entry_types_granularity",
+                "-",
+            ),
         })
 
     return initial
+
 
 
 
@@ -278,14 +283,23 @@ def default_view(request):
             # SECURITY FORM INITIAL
             # =================================================
 
-            if existing_config:
+            if security_level == "controlled":
 
-                if security_level == "controlled":
+                security_initial = {
+                    "SecurityLevel": security_level,
+                }
+
+            else:
+
+                if existing_config:
 
                     security_initial = {
                         "SecurityLevel": security_level,
+                        "granularity": existing_config.get(
+                            "default_entry_types_granularity",
+                            "-",
+                        ),
                     }
-
 
                 else:
 
@@ -294,19 +308,6 @@ def default_view(request):
                         "granularity": "-",
                     }
 
-
-            else:
-
-                security_initial = {
-                    "SecurityLevel":
-                        security_level,
-
-                    "granularity":
-                        "-",
-
-                    "user_granularity":
-                        "-",
-                }
 
             # =================================================
             # SECURITY FORM
@@ -740,6 +741,12 @@ def default_view(request):
                                 )
                             )
 
+                            user_granularity = user_form.cleaned_data.get(
+                                "user_granularity",
+                                "-",
+                            )
+
+
                             if not email:
                                 continue
 
@@ -782,6 +789,8 @@ def default_view(request):
                                         )
                                     )
 
+
+
                                     if not entry_type:
                                         continue
 
@@ -795,12 +804,11 @@ def default_view(request):
                             # ---------------------------------
 
                             user_list.append({
-                                "user_e-mail":
-                                    email,
-
-                                "entry_types_exceptions":
-                                    user_exceptions,
+                                "user-e-mail": email,
+                                "default_entry_types_granularity": user_granularity,
+                                "entry_types_exceptions": user_exceptions,
                             })
+
 
                         # -------------------------------------
                         # Controlled configuration
