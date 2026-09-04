@@ -12,294 +12,477 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import render
 
 
+import copy
+
+from django.contrib import messages
+
+
+
+
+SECURITY_LEVELS = (
+    "public",
+    "registered",
+    "controlled",
+)
+
+PERMISSIONS_FILE = (
+    "/home/app/web/beacon/permissions/datasets/"
+    "datasets_permissions.yml"
+)
+
+
 def default_view(request):
+
     datasets = client["beacon"].datasets
 
-    # Materialize the MongoDB cursor because we need to iterate
-    # over the datasets more than once.
-    all_datasets = list(datasets.find({}))
+    # ---------------------------------------------------------
+    # Get datasets
+    # ---------------------------------------------------------
+
+    all_datasets = list(
+        datasets.find({})
+    )
 
     dataset_ids = [
         dataset["id"]
         for dataset in all_datasets
     ]
 
-    security_levels = (
-        "public",
-        "registered",
-        "controlled",
-    )
+    # ---------------------------------------------------------
+    # Load existing permissions
+    # ---------------------------------------------------------
+
+    try:
+        with open(PERMISSIONS_FILE) as f:
+            datasets_permissions = (
+                yaml.safe_load(f) or {}
+            )
+    except FileNotFoundError:
+        datasets_permissions = {}
 
     forms_by_dataset = {}
 
-    # ---------------------------------------------------------
-    # BUILD ALL FORMS
-    # ---------------------------------------------------------
+    # =========================================================
+    # BUILD FORMS
+    # =========================================================
 
-    for dataset_index, dataset_id in enumerate(dataset_ids):
+    for dataset_index, dataset_id in enumerate(
+        dataset_ids
+    ):
 
-        # Use a safe prefix based on the dataset index.
-        #
-        # Dataset IDs may contain "/", spaces, etc., which can
-        # make them awkward as HTML form prefixes.
-        dataset_prefix = f"dataset-{dataset_index}"
+        dataset_prefix = (
+            f"dataset-{dataset_index}"
+        )
+
+        # -----------------------------------------------------
+        # Existing configuration for this dataset
+        # -----------------------------------------------------
+
+        existing_dataset = (
+            datasets_permissions.get(
+                dataset_id,
+                {}
+            )
+        )
+
+        # =====================================================
+        # Dataset ID form
+        # =====================================================
+
+        permits_form = PermitsForm(
+            request.POST or None,
+            prefix=f"{dataset_prefix}-permits",
+            initial={
+                "DatasetID": dataset_id,
+            },
+        )
+
+        # =====================================================
+        # Security level forms
+        # =====================================================
+
+        security_forms = {}
+
+        granularity_formsets = {}
+
+        for security_level in SECURITY_LEVELS:
+
+            security_prefix = (
+                f"{dataset_prefix}-"
+                f"security-{security_level}"
+            )
+
+            granularity_prefix = (
+                f"{dataset_prefix}-"
+                f"granularity-{security_level}"
+            )
+
+            existing_config = (
+                existing_dataset.get(
+                    security_level
+                )
+            )
+
+            # -------------------------------------------------
+            # Determine whether this security level exists
+            # -------------------------------------------------
+
+            if existing_config is not None:
+
+                default_granularity = (
+                    existing_config.get(
+                        "default_entry_types_granularity",
+                        "-"
+                    )
+                )
+
+                security_initial = {
+                    "SecurityLevel": security_level,
+                    "granularity": default_granularity,
+                }
+
+            else:
+
+                security_initial = {
+                    "SecurityLevel": security_level,
+                    "granularity": "-",
+                }
+
+            # -------------------------------------------------
+            # Security level form
+            # -------------------------------------------------
+
+            security_form = SecurityLevelForm(
+                request.POST or None,
+                prefix=security_prefix,
+                initial=security_initial,
+            )
+
+
+            security_forms[security_level] = (
+                security_form
+            )
+
+            # -------------------------------------------------
+            # Existing entry type exceptions
+            # -------------------------------------------------
+
+            initial_exceptions = []
+
+            if existing_config:
+
+                existing_exceptions = (
+                    existing_config.get(
+                        "entry_types_exceptions",
+                        []
+                    )
+                )
+
+                for exception in existing_exceptions:
+
+                    if not isinstance(
+                        exception,
+                        dict
+                    ):
+                        continue
+
+                    for entry_type, granularity in (
+                        exception.items()
+                    ):
+
+                        initial_exceptions.append({
+                            "entry_type": entry_type,
+                            "granularity": granularity,
+                        })
+
+            # -------------------------------------------------
+            # Granularity formset
+            # -------------------------------------------------
+
+            if request.method == "POST":
+
+                granularity_formset = (
+                    GranularityFormSet(
+                        request.POST,
+                        prefix=granularity_prefix,
+                        form_kwargs={
+                            "dataset_id": dataset_id,
+                            "security_level": security_level,
+                        },
+                    )
+                )
+
+            else:
+
+                granularity_formset = (
+                    GranularityFormSet(
+                        prefix=granularity_prefix,
+                        initial=initial_exceptions,
+                        form_kwargs={
+                            "dataset_id": dataset_id,
+                            "security_level": security_level,
+                        },
+                    )
+                )
+
+            granularity_formsets[
+                security_level
+            ] = granularity_formset
+
+        # =====================================================
+        # Store forms
+        # =====================================================
+        existing_security_levels = [
+    level
+    for level in SECURITY_LEVELS
+    if level in existing_dataset
+]
 
         forms_by_dataset[dataset_id] = {
-            # -------------------------------------------------
-            # Dataset ID form
-            # -------------------------------------------------
-
-            "permits": PermitsForm(
-                request.POST or None,
-                prefix=f"{dataset_prefix}-permits",
-                initial={
-                    "DatasetID": dataset_id,
-                },
-            ),
-
-            # -------------------------------------------------
-            # Security level + default granularity
-            # -------------------------------------------------
-
-            "security": SecurityLevelForm(
-                request.POST or None,
-                dataset_id=dataset_id,
-                prefix=f"{dataset_prefix}-security",
-            ),
-
-            # -------------------------------------------------
-            # Granularity formsets
-            #
-            # One formset for each security level.
-            # -------------------------------------------------
-
-            "granularity": {
-                security_level: GranularityFormSet(
-                    request.POST or None,
-                    prefix=(
-                        f"{dataset_prefix}-"
-                        f"{security_level}-granularity"
-                    ),
-                    form_kwargs={
-                        "dataset_id": dataset_id,
-                        "security_level": security_level,
-                    },
-                )
-                for security_level in security_levels
-            },
+            "permits": permits_form,
+            "security": security_forms,
+            "granularity": granularity_formsets,
+            "existing_security_levels": existing_security_levels,
         }
 
-    # ---------------------------------------------------------
+
+    # =========================================================
     # POST
-    # ---------------------------------------------------------
+    # =========================================================
 
     if request.method == "POST":
 
         all_valid = True
 
         # -----------------------------------------------------
-        # Validate PermitsForm, SecurityLevelForm AND all
-        # GranularityFormSets.
+        # Validate all datasets
         # -----------------------------------------------------
 
-        for dataset_id, dataset_forms in forms_by_dataset.items():
+        for dataset_id, dataset_forms in (
+            forms_by_dataset.items()
+        ):
 
-            permits_form = dataset_forms["permits"]
-            security_form = dataset_forms["security"]
+            # ================================================
+            # Permits
+            # ================================================
+
+            permits_form = (
+                dataset_forms["permits"]
+            )
 
             if not permits_form.is_valid():
                 all_valid = False
 
-            if not security_form.is_valid():
-                all_valid = False
+            # ================================================
+            # Security levels
+            # ================================================
 
-            # Validate every security-level formset.
-            #
-            # We validate all of them rather than only the
-            # selected security level. This is important because
-            # a user may have added exception rows under several
-            # security levels.
-            for security_level, formset in (
-                dataset_forms["granularity"].items()
-            ):
-                if not formset.is_valid():
+            for security_level in SECURITY_LEVELS:
+
+                security_form = (
+                    dataset_forms["security"][
+                        security_level
+                    ]
+                )
+
+                if not security_form.is_valid():
                     all_valid = False
 
-        # -----------------------------------------------------
-        # PROCESS DATA
-        # -----------------------------------------------------
+                # ============================================
+                # Granularity formset
+                # ============================================
+
+                granularity_formset = (
+                    dataset_forms["granularity"][
+                        security_level
+                    ]
+                )
+
+                if not granularity_formset.is_valid():
+                    all_valid = False
+
+        # =====================================================
+        # SAVE
+        # =====================================================
 
         if all_valid:
 
-            permissions_file = (
-                "/home/app/web/beacon/permissions/datasets/"
-                "datasets_permissions.yml"
+            new_permissions = copy.deepcopy(
+                datasets_permissions
             )
 
-            # Load existing permissions.
-            with open(permissions_file) as f:
-                datasets_permissions = yaml.safe_load(f) or {}
-
-            # Work on a copy.
-            new_permissions = datasets_permissions.copy()
-
-            # -------------------------------------------------
-            # Process every dataset
-            # -------------------------------------------------
-
-            for dataset_id, dataset_forms in forms_by_dataset.items():
+            for dataset_id, dataset_forms in (
+                forms_by_dataset.items()
+            ):
 
                 # =================================================
-                # 1. DATASET ID
+                # Dataset ID
                 # =================================================
 
-                permits_data = (
-                    dataset_forms["permits"].cleaned_data
-                )
-
-                datasetID = permits_data["DatasetID"]
-
-                # =================================================
-                # 2. SECURITY LEVEL + DEFAULT GRANULARITY
-                # =================================================
-
-                security_data = (
-                    dataset_forms["security"].cleaned_data
-                )
-
-                SecurityLevel = (
-                    security_data["SecurityLevel"]
-                )
-
-                default_granularity = (
-                    security_data["granularity"]
+                datasetID = (
+                    dataset_forms[
+                        "permits"
+                    ].cleaned_data[
+                        "DatasetID"
+                    ]
                 )
 
                 # =================================================
-                # 3. MAKE SURE DATASET EXISTS
+                # Make sure dataset exists
                 # =================================================
 
                 if datasetID not in new_permissions:
-                    new_permissions[datasetID] = {}
+
+                    new_permissions[
+                        datasetID
+                    ] = {}
 
                 dataset_permissions = (
-                    new_permissions[datasetID]
+                    new_permissions[
+                        datasetID
+                    ]
                 )
 
                 # =================================================
-                # 4. FIND EXISTING SECURITY-LEVEL CONFIGURATION
+                # Rebuild security-level configuration
                 # =================================================
 
-                existing_config = None
+                for security_level in SECURITY_LEVELS:
 
-                for level in security_levels:
+                    security_form = (
+                        dataset_forms[
+                            "security"
+                        ][security_level]
+                    )
 
-                    if level in dataset_permissions:
+                    granularity_formset = (
+                        dataset_forms[
+                            "granularity"
+                        ][security_level]
+                    )
 
-                        existing_config = (
-                            dataset_permissions[level]
+                    # ------------------------------------------------
+                    # Determine if security level is enabled.
+                    #
+                    # We use the checkbox submitted by JavaScript.
+                    # ------------------------------------------------
+
+                    enabled_key = (
+                        f"enabled-{datasetID}-"
+                        f"{security_level}"
+                    )
+
+                    enabled = request.POST.get(
+                        enabled_key
+                    )
+
+                    # ------------------------------------------------
+                    # If not enabled, remove it.
+                    # ------------------------------------------------
+
+                    if not enabled:
+
+                        dataset_permissions.pop(
+                            security_level,
+                            None
                         )
 
-                        break
-
-                if existing_config is None:
-                    existing_config = {}
-
-                # =================================================
-                # 5. REMOVE EXISTING SECURITY LEVELS
-                # =================================================
-
-                for level in security_levels:
-                    dataset_permissions.pop(level, None)
-
-                # =================================================
-                # 6. PUT CONFIGURATION UNDER SELECTED SECURITY
-                #    LEVEL
-                # =================================================
-
-                dataset_permissions[SecurityLevel] = (
-                    existing_config
-                )
-
-                selected_config = (
-                    dataset_permissions[SecurityLevel]
-                )
-
-                # =================================================
-                # 7. SET DEFAULT GRANULARITY
-                # =================================================
-
-                selected_config[
-                    "default_entry_types_granularity"
-                ] = default_granularity
-
-                # =================================================
-                # 8. SET ENTRY-TYPE EXCEPTIONS
-                # =================================================
-
-                exceptions = []
-
-                # Get the formset for the selected security level.
-                selected_formset = (
-                    dataset_forms["granularity"][SecurityLevel]
-                )
-
-                for form in selected_formset:
-
-                    # Empty forms can occur because formsets have
-                    # extra forms.
-                    if not form.cleaned_data:
                         continue
 
-                    # Ignore forms marked for deletion.
-                    if form.cleaned_data.get("DELETE"):
-                        continue
+                    # ------------------------------------------------
+                    # Security level
+                    # ------------------------------------------------
 
-                    entry_type = (
-                        form.cleaned_data["entry_type"]
+                    default_granularity = (
+                        security_form.cleaned_data[
+                            "granularity"
+                        ]
                     )
 
-                    entry_type_granularity = (
-                        form.cleaned_data["granularity"]
-                    )
+                    # ------------------------------------------------
+                    # Entry type exceptions
+                    # ------------------------------------------------
 
-                    exceptions.append(
-                        {
-                            entry_type: entry_type_granularity
-                        }
-                    )
+                    exceptions = []
 
-                selected_config[
-                    "entry_types_exceptions"
-                ] = exceptions
+                    for form in granularity_formset:
 
-            # -----------------------------------------------------
-            # SAVE YAML ONCE
-            # -----------------------------------------------------
+                        if not form.cleaned_data:
+                            continue
 
-            with open(permissions_file, "w") as outfile:
+                        if form.cleaned_data.get(
+                            "DELETE"
+                        ):
+                            continue
+
+                        entry_type = (
+                            form.cleaned_data[
+                                "entry_type"
+                            ]
+                        )
+
+                        granularity = (
+                            form.cleaned_data[
+                                "granularity"
+                            ]
+                        )
+
+                        exceptions.append({
+                            entry_type:
+                                granularity
+                        })
+
+                    # ------------------------------------------------
+                    # Save security-level configuration
+                    # ------------------------------------------------
+
+                    dataset_permissions[
+                        security_level
+                    ] = {
+                        "default_entry_types_granularity":
+                            default_granularity,
+
+                        "entry_types_exceptions":
+                            exceptions,
+                    }
+
+            # =====================================================
+            # Save YAML
+            # =====================================================
+
+            with open(
+                PERMISSIONS_FILE,
+                "w"
+            ) as outfile:
+
                 yaml.safe_dump(
                     new_permissions,
                     outfile,
                     sort_keys=False,
                 )
 
-            return redirect("adminclient:permits")
+            messages.success(
+                request,
+                "Permissions saved successfully."
+            )
 
-    # ---------------------------------------------------------
-    # GET OR INVALID POST
-    # ---------------------------------------------------------
+            return redirect(
+                "adminclient:permits"
+            )
 
-    template = "general_configuration/permits.html"
+    # =========================================================
+    # GET / invalid POST
+    # =========================================================
 
     return render(
         request,
-        template,
+        "general_configuration/permits.html",
         {
             "forms_by_dataset": forms_by_dataset,
-            "security_levels": security_levels,
+            "security_levels": SECURITY_LEVELS,
         },
     )
+
 
 
 

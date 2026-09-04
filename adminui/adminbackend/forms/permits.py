@@ -10,16 +10,9 @@ class PermitsForm(forms.Form):
 
 
 class SecurityLevelForm(forms.Form):
-    security_level_choices = [
-        ("public", "Public"),
-        ("registered", "Registered"),
-        ("controlled", "Controlled"),
-    ]
 
-    SecurityLevel = forms.ChoiceField(
-        choices=security_level_choices,
-        widget=forms.RadioSelect,
-        help_text="Security Level",
+    SecurityLevel = forms.CharField(
+        widget=forms.HiddenInput(),
         required=True,
     )
 
@@ -37,9 +30,7 @@ class SecurityLevelForm(forms.Form):
         required=True,
     )
 
-    def __init__(self, *args, dataset_id=None, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.dataset_id = dataset_id
+
 
 
 class GranularityForm(forms.Form):
@@ -98,7 +89,9 @@ class BaseGranularityFormSet(BaseFormSet):
             if form.cleaned_data.get("DELETE"):
                 continue
 
-            entry_type = form.cleaned_data.get("entry_type")
+            entry_type = form.cleaned_data.get(
+                "entry_type"
+            )
 
             if not entry_type:
                 continue
@@ -113,9 +106,12 @@ class BaseGranularityFormSet(BaseFormSet):
 
 
 
+
+
 GranularityFormSet = formset_factory(
     GranularityForm,
     formset=BaseGranularityFormSet,
-    extra=1,
+    extra=0,
     can_delete=True,
 )
+

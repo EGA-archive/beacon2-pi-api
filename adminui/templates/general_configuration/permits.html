@@ -1,4 +1,6 @@
 {% load static %}
+{% load permits_tags %}
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -16,14 +18,22 @@
   <body class="bg-custom-powder-light" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
 
 <form method="post" class="permits-form">
+
     {% csrf_token %}
+
 
     {% for dataset_id, dataset_forms in forms_by_dataset.items %}
 
-        <div class="border border-gray-300 rounded-lg p-6 space-y-6">
+        <div
+            class="dataset-container
+                   border border-gray-300
+                   rounded-lg
+                   p-6
+                   space-y-6"
+        >
 
             <!-- ================================================= -->
-            <!-- Dataset -->
+            <!-- DATASET -->
             <!-- ================================================= -->
 
             <h2 class="text-xl font-semibold text-gray-800">
@@ -32,10 +42,11 @@
 
 
             <!-- ================================================= -->
-            <!-- Dataset ID -->
+            <!-- DATASET ID -->
             <!-- ================================================= -->
 
             <div>
+
                 {{ dataset_forms.permits.non_field_errors }}
 
                 {{ dataset_forms.permits.DatasetID.errors }}
@@ -48,339 +59,75 @@
                 </label>
 
                 {{ dataset_forms.permits.DatasetID }}
-            </div>
-
-
-            <!-- ================================================= -->
-            <!-- Security Level -->
-            <!-- ================================================= -->
-
-            <div class="border-t pt-5">
-
-                <h3 class="text-lg font-semibold text-gray-800 mb-4">
-                    Security Level
-                </h3>
-
-                {{ dataset_forms.security.non_field_errors }}
-
-                <!-- Security Level -->
-
-                <div class="mb-6">
-
-                    <p class="text-sm font-medium text-gray-700 mb-3">
-                        {{ dataset_forms.security.SecurityLevel.help_text }}
-                    </p>
-
-                    {{ dataset_forms.security.SecurityLevel.errors }}
-
-                    <div class="flex flex-wrap gap-4">
-
-                        {% for radio in dataset_forms.security.SecurityLevel %}
-
-                            <label
-                                for="{{ radio.id_for_label }}"
-                                class="flex items-center gap-2 cursor-pointer"
-                            >
-                                {{ radio.tag }}
-
-                                <span class="text-sm text-gray-700">
-                                    {{ radio.choice_label }}
-                                </span>
-                            </label>
-
-                        {% endfor %}
-
-                    </div>
-
-                </div>
-
-
-                <!-- Default Granularity -->
-
-                <div>
-
-                    <p class="text-sm font-medium text-gray-700 mb-3">
-                        {{ dataset_forms.security.granularity.help_text }}
-                    </p>
-
-                    {{ dataset_forms.security.granularity.errors }}
-
-                    <div class="flex flex-wrap gap-4">
-
-                        {% for radio in dataset_forms.security.granularity %}
-
-                            <label
-                                for="{{ radio.id_for_label }}"
-                                class="flex items-center gap-2 cursor-pointer"
-                            >
-                                {{ radio.tag }}
-
-                                <span class="text-sm text-gray-700">
-                                    {{ radio.choice_label }}
-                                </span>
-                            </label>
-
-                        {% endfor %}
-
-                    </div>
-
-                </div>
 
             </div>
 
 
             <!-- ================================================= -->
-            <!-- Entry Type Granularity Exceptions -->
+            <!-- SECURITY LEVELS -->
             <!-- ================================================= -->
 
             <div class="border-t pt-5">
 
-                <h3 class="text-lg font-semibold text-gray-800 mb-4">
-                    Entry Type Granularity Exceptions
+                <h3 class="text-lg font-semibold text-gray-800 mb-5">
+                    Security Levels
                 </h3>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-                    {% for security_level, formset in dataset_forms.granularity.items %}
+                <div class="security-levels space-y-6">
 
-                        <div
-                            class="border border-gray-200 rounded-lg p-4 bg-gray-50"
-                            data-security-level="{{ security_level }}"
-                        >
+                    {% for security_level in security_levels %}
 
-                            <!-- ================================= -->
-                            <!-- Security Level Title -->
-                            <!-- ================================= -->
-
-                            <h4 class="font-semibold text-gray-800 mb-4">
-                                {{ security_level|title }}
-                            </h4>
-
-
-                            <!-- ================================= -->
-                            <!-- Management Form -->
-                            <!-- ================================= -->
-
-                            {{ formset.management_form }}
-
-                            {{ formset.non_form_errors }}
-
-
-                            <!-- ================================= -->
-                            <!-- Existing Forms -->
-                            <!-- ================================= -->
+                        {% with security_form=dataset_forms.security|get_item:security_level %}
+                        {% with granularity_formset=dataset_forms.granularity|get_item:security_level %}
 
                             <div
-                                class="granularity-formset space-y-5"
+                                class="security-level-container
+                                       border border-gray-200
+                                       rounded-lg
+                                       p-5
+                                       bg-gray-50"
+                                data-security-level="{{ security_level }}"
                             >
 
-                                {% for form in formset %}
-
-                                    <div
-                                        class="granularity-form border border-gray-200 bg-white rounded-lg p-4"
-                                    >
-
-                                        {{ form.id }}
-
-
-                                        <!-- Form errors -->
-
-                                        {% if form.non_field_errors %}
-                                            <div class="mb-4 text-sm text-red-600">
-                                                {{ form.non_field_errors }}
-                                            </div>
-                                        {% endif %}
-
-
-                                        <!-- ================================= -->
-                                        <!-- Entry Type -->
-                                        <!-- ================================= -->
-
-                                        <div class="mb-5">
-
-                                            <p class="text-sm font-medium text-gray-700 mb-3">
-                                                {{ form.entry_type.help_text }}
-                                            </p>
-
-                                            {{ form.entry_type.errors }}
-
-                                            <div class="space-y-2">
-
-                                                {% for radio in form.entry_type %}
-
-                                                    <label
-                                                        for="{{ radio.id_for_label }}"
-                                                        class="flex items-center gap-2 cursor-pointer"
-                                                    >
-                                                        {{ radio.tag }}
-
-                                                        <span class="text-sm text-gray-700">
-                                                            {{ radio.choice_label }}
-                                                        </span>
-                                                    </label>
-
-                                                {% endfor %}
-
-                                            </div>
-
-                                        </div>
-
-
-                                        <!-- ================================= -->
-                                        <!-- Granularity -->
-                                        <!-- ================================= -->
-
-                                        <div class="mb-4">
-
-                                            <p class="text-sm font-medium text-gray-700 mb-3">
-                                                {{ form.granularity.help_text }}
-                                            </p>
-
-                                            {{ form.granularity.errors }}
-
-                                            <div class="space-y-2">
-
-                                                {% for radio in form.granularity %}
-
-                                                    <label
-                                                        for="{{ radio.id_for_label }}"
-                                                        class="flex items-center gap-2 cursor-pointer"
-                                                    >
-                                                        {{ radio.tag }}
-
-                                                        <span class="text-sm text-gray-700">
-                                                            {{ radio.choice_label }}
-                                                        </span>
-                                                    </label>
-
-                                                {% endfor %}
-
-                                            </div>
-
-                                        </div>
-
-
-                                        <!-- ================================= -->
-                                        <!-- Delete -->
-                                        <!-- ================================= -->
-
-                                        {% if form.DELETE %}
-                                            <div class="hidden">
-                                                {{ form.DELETE }}
-                                            </div>
-                                        {% endif %}
-
-
-                                        <!-- ================================= -->
-                                        <!-- Remove -->
-                                        <!-- ================================= -->
-
-                                        <button
-                                            type="button"
-                                            class="remove-granularity-form
-                                                   text-sm text-red-600
-                                                   hover:text-red-800"
-                                        >
-                                            Remove
-                                        </button>
-
-                                    </div>
-
-                                {% endfor %}
-
-                            </div>
-
-
-                            <!-- ================================================= -->
-                            <!-- Empty Form Template -->
-                            <!-- ================================================= -->
-
-                            <template class="empty-granularity-form">
+                                <!-- ================================= -->
+                                <!-- HEADER -->
+                                <!-- ================================= -->
 
                                 <div
-                                    class="granularity-form border border-gray-200 bg-white rounded-lg p-4"
+                                    class="flex items-center justify-between mb-5"
                                 >
 
-                                    {{ formset.empty_form.id }}
+                                    <label
+                                        class="flex items-center gap-3
+                                               text-lg font-semibold
+                                               text-gray-800"
+                                    >
 
+                                        <input
+                                            type="checkbox"
+                                            name="enabled-{{ dataset_id }}-{{ security_level }}"
+                                            value="1"
+                                            class="security-level-toggle w-4 h-4"
+                                            {% if security_level in dataset_forms.existing_security_levels %}
+                                                checked
+                                            {% endif %}
+                                        >
 
-                                    <!-- ================================= -->
-                                    <!-- Entry Type -->
-                                    <!-- ================================= -->
+                                        <h3 class="text-lg font-semibold text-gray-800">
+                                            {{ security_level|title }}
+                                        </h3>
 
-                                    <div class="mb-5">
+                                        {{ security_form.SecurityLevel }}
 
-                                        <p class="text-sm font-medium text-gray-700 mb-3">
-                                            {{ formset.empty_form.entry_type.help_text }}
-                                        </p>
+                                    </label>
 
-                                        <div class="space-y-2">
-
-                                            {% for radio in formset.empty_form.entry_type %}
-
-                                                <label
-                                                    for="{{ radio.id_for_label }}"
-                                                    class="flex items-center gap-2 cursor-pointer"
-                                                >
-                                                    {{ radio.tag }}
-
-                                                    <span class="text-sm text-gray-700">
-                                                        {{ radio.choice_label }}
-                                                    </span>
-                                                </label>
-
-                                            {% endfor %}
-
-                                        </div>
-
-                                    </div>
-
-
-                                    <!-- ================================= -->
-                                    <!-- Granularity -->
-                                    <!-- ================================= -->
-
-                                    <div class="mb-4">
-
-                                        <p class="text-sm font-medium text-gray-700 mb-3">
-                                            {{ formset.empty_form.granularity.help_text }}
-                                        </p>
-
-                                        <div class="space-y-2">
-
-                                            {% for radio in formset.empty_form.granularity %}
-
-                                                <label
-                                                    for="{{ radio.id_for_label }}"
-                                                    class="flex items-center gap-2 cursor-pointer"
-                                                >
-                                                    {{ radio.tag }}
-
-                                                    <span class="text-sm text-gray-700">
-                                                        {{ radio.choice_label }}
-                                                    </span>
-                                                </label>
-
-                                            {% endfor %}
-
-                                        </div>
-
-                                    </div>
-
-
-                                    <!-- Delete -->
-
-                                    <div class="hidden">
-                                        {{ formset.empty_form.DELETE }}
-                                    </div>
-
-
-                                    <!-- Remove -->
 
                                     <button
                                         type="button"
-                                        class="remove-granularity-form
-                                               text-sm text-red-600
+                                        class="remove-security-level
+                                               text-sm
+                                               text-red-600
                                                hover:text-red-800"
                                     >
                                         Remove
@@ -388,27 +135,299 @@
 
                                 </div>
 
-                            </template>
+
+                                <!-- ================================= -->
+                                <!-- SECURITY FORM -->
+                                <!-- ================================= -->
+
+                                <div class="security-level-content">
+
+                                    {{ security_form.non_field_errors }}
+
+                                    {{ security_form.SecurityLevel.as_hidden }}
 
 
-                            <!-- ================================================= -->
-                            <!-- Add Entry Type -->
-                            <!-- ================================================= -->
+                                    <!-- ================================= -->
+                                    <!-- DEFAULT GRANULARITY -->
+                                    <!-- ================================= -->
 
-                            <button
-                                type="button"
-                                class="add-granularity-form
-                                       mt-4 px-3 py-2
-                                       text-sm
-                                       bg-gray-200
-                                       text-gray-800
-                                       rounded-md
-                                       hover:bg-gray-300"
-                            >
-                                + Add entry type
-                            </button>
+                                    <div class="mb-6">
 
-                        </div>
+                                        <p class="text-sm font-medium text-gray-700 mb-3">
+                                            {{ security_form.granularity.help_text }}
+                                        </p>
+
+                                        {{ security_form.granularity.errors }}
+
+                                        <div class="flex flex-wrap gap-4">
+
+                                            {% for radio in security_form.granularity %}
+
+                                                <label
+                                                    for="{{ radio.id_for_label }}"
+                                                    class="flex items-center gap-2 cursor-pointer"
+                                                >
+
+                                                    {{ radio.tag }}
+
+                                                    <span class="text-sm text-gray-700">
+                                                        {{ radio.choice_label }}
+                                                    </span>
+
+                                                </label>
+
+                                            {% endfor %}
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <!-- ================================= -->
+                                    <!-- ENTRY TYPE EXCEPTIONS -->
+                                    <!-- ================================= -->
+
+                                    <div class="border-t pt-5">
+
+                                        <h4 class="font-semibold text-gray-800 mb-4">
+                                            Entry Type Granularity Exceptions
+                                        </h4>
+
+
+                                        {{ granularity_formset.management_form }}
+
+                                        {{ granularity_formset.non_form_errors }}
+
+
+                                        <div
+                                            class="granularity-forms
+                                                   space-y-4"
+                                        >
+
+                                            {% for form in granularity_formset %}
+
+                                                <div
+                                                    class="granularity-form
+                                                           border border-gray-200
+                                                           bg-white
+                                                           rounded-lg
+                                                           p-4"
+                                                >
+
+                                                    {{ form.id }}
+
+
+                                                    <!-- Entry Type -->
+
+                                                    <div class="mb-5">
+
+                                                        <p class="text-sm font-medium text-gray-700 mb-3">
+                                                            {{ form.entry_type.help_text }}
+                                                        </p>
+
+                                                        {{ form.entry_type.errors }}
+
+                                                        <div class="space-y-2">
+
+                                                            {% for radio in form.entry_type %}
+
+                                                                <label
+                                                                    for="{{ radio.id_for_label }}"
+                                                                    class="flex items-center gap-2 cursor-pointer"
+                                                                >
+
+                                                                    {{ radio.tag }}
+
+                                                                    <span class="text-sm text-gray-700">
+                                                                        {{ radio.choice_label }}
+                                                                    </span>
+
+                                                                </label>
+
+                                                            {% endfor %}
+
+                                                        </div>
+
+                                                    </div>
+
+
+                                                    <!-- Granularity -->
+
+                                                    <div class="mb-4">
+
+                                                        <p class="text-sm font-medium text-gray-700 mb-3">
+                                                            {{ form.granularity.help_text }}
+                                                        </p>
+
+                                                        {{ form.granularity.errors }}
+
+                                                        <div class="space-y-2">
+
+                                                            {% for radio in form.granularity %}
+
+                                                                <label
+                                                                    for="{{ radio.id_for_label }}"
+                                                                    class="flex items-center gap-2 cursor-pointer"
+                                                                >
+
+                                                                    {{ radio.tag }}
+
+                                                                    <span class="text-sm text-gray-700">
+                                                                        {{ radio.choice_label }}
+                                                                    </span>
+
+                                                                </label>
+
+                                                            {% endfor %}
+
+                                                        </div>
+
+                                                    </div>
+
+
+                                                    <!-- DELETE -->
+
+                                                    <div class="hidden">
+                                                        {{ form.DELETE }}
+                                                    </div>
+
+
+                                                    <button
+                                                        type="button"
+                                                        class="remove-entry-type
+                                                               text-sm
+                                                               text-red-600
+                                                               hover:text-red-800"
+                                                    >
+                                                        Remove entry type
+                                                    </button>
+
+                                                </div>
+
+                                            {% endfor %}
+
+                                        </div>
+
+
+                                        <!-- ================================= -->
+                                        <!-- EMPTY FORM TEMPLATE -->
+                                        <!-- ================================= -->
+
+                                        <template class="empty-entry-type">
+
+                                            <div
+                                                class="granularity-form
+                                                       border border-gray-200
+                                                       bg-white
+                                                       rounded-lg
+                                                       p-4"
+                                            >
+
+                                                {{ granularity_formset.empty_form.id }}
+
+
+                                                <div class="mb-5">
+
+                                                    <p class="text-sm font-medium text-gray-700 mb-3">
+                                                        {{ granularity_formset.empty_form.entry_type.help_text }}
+                                                    </p>
+
+                                                    <div class="space-y-2">
+
+                                                        {% for radio in granularity_formset.empty_form.entry_type %}
+
+                                                            <label
+                                                                for="{{ radio.id_for_label }}"
+                                                                class="flex items-center gap-2 cursor-pointer"
+                                                            >
+
+                                                                {{ radio.tag }}
+
+                                                                <span class="text-sm text-gray-700">
+                                                                    {{ radio.choice_label }}
+                                                                </span>
+
+                                                            </label>
+
+                                                        {% endfor %}
+
+                                                    </div>
+
+                                                </div>
+
+
+                                                <div class="mb-4">
+
+                                                    <p class="text-sm font-medium text-gray-700 mb-3">
+                                                        {{ granularity_formset.empty_form.granularity.help_text }}
+                                                    </p>
+
+                                                    <div class="space-y-2">
+
+                                                        {% for radio in granularity_formset.empty_form.granularity %}
+
+                                                            <label
+                                                                for="{{ radio.id_for_label }}"
+                                                                class="flex items-center gap-2 cursor-pointer"
+                                                            >
+
+                                                                {{ radio.tag }}
+
+                                                                <span class="text-sm text-gray-700">
+                                                                    {{ radio.choice_label }}
+                                                                </span>
+
+                                                            </label>
+
+                                                        {% endfor %}
+
+                                                    </div>
+
+                                                </div>
+
+
+                                                <div class="hidden">
+                                                    {{ granularity_formset.empty_form.DELETE }}
+                                                </div>
+
+
+                                                <button
+                                                    type="button"
+                                                    class="remove-entry-type
+                                                           text-sm
+                                                           text-red-600
+                                                           hover:text-red-800"
+                                                >
+                                                    Remove entry type
+                                                </button>
+
+                                            </div>
+
+                                        </template>
+
+
+                                        <button
+                                            type="button"
+                                            class="add-entry-type
+                                                   mt-4
+                                                   px-3 py-2
+                                                   text-sm
+                                                   bg-gray-200
+                                                   text-gray-800
+                                                   rounded-md
+                                                   hover:bg-gray-300"
+                                        >
+                                            + Add entry type
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        {% endwith %}
+                        {% endwith %}
 
                     {% endfor %}
 
@@ -427,9 +446,9 @@
     {% endfor %}
 
 
-    <!-- ================================================= -->
-    <!-- Submit -->
-    <!-- ================================================= -->
+    <!-- ========================================================= -->
+    <!-- SAVE -->
+    <!-- ========================================================= -->
 
     <div class="pt-4">
 
@@ -457,6 +476,7 @@
 
 
 
+
 </body>
 
 <!-- ========================================================= -->
@@ -468,219 +488,192 @@ document.addEventListener("DOMContentLoaded", function () {
 
     /*
      * ---------------------------------------------------------
-     * Add a new GranularityForm
+     * SECURITY LEVELS
      * ---------------------------------------------------------
      */
 
     document.querySelectorAll(
-        ".add-granularity-form"
-    ).forEach(function (button) {
+        ".security-level-container"
+    ).forEach(function (container) {
 
-        button.addEventListener("click", function () {
+        const checkbox = container.querySelector(
+            ".security-level-toggle"
+        );
 
-            const section = button.closest(
-                "[data-security-level]"
-            );
+        const content = container.querySelector(
+            ".security-level-content"
+        );
 
-            const container = section.querySelector(
-                ".granularity-formset"
-            );
+        const removeButton = container.querySelector(
+            ".remove-security-level"
+        );
 
-            const template = section.querySelector(
-                ".empty-granularity-form"
-            );
 
-            const totalFormsInput = section.querySelector(
-                'input[name$="-TOTAL_FORMS"]'
-            );
+        function updateSecurityVisibility() {
 
-            const formIndex = parseInt(
-                totalFormsInput.value,
-                10
-            );
+            if (checkbox.checked) {
 
-            /*
-             * Replace Django's __prefix__ with the
-             * actual form index.
-             */
+                content.classList.remove(
+                    "hidden"
+                );
 
-            const html = template.innerHTML.replace(
-                /__prefix__/g,
-                formIndex
-            );
+            } else {
 
-            container.insertAdjacentHTML(
-                "beforeend",
-                html
-            );
+                content.classList.add(
+                    "hidden"
+                );
 
-            totalFormsInput.value = formIndex + 1;
+            }
+        }
 
-            updateEntryTypeAvailability(section);
-        });
 
+        checkbox.addEventListener(
+            "change",
+            updateSecurityVisibility
+        );
+
+
+        removeButton.addEventListener(
+            "click",
+            function () {
+
+                checkbox.checked = false;
+
+                updateSecurityVisibility();
+            }
+        );
+
+
+        updateSecurityVisibility();
     });
 
 
     /*
      * ---------------------------------------------------------
-     * Remove a GranularityForm
-     * ---------------------------------------------------------
-     */
-
-    document.addEventListener(
-        "click",
-        function (event) {
-
-            if (
-                !event.target.classList.contains(
-                    "remove-granularity-form"
-                )
-            ) {
-                return;
-            }
-
-            const row = event.target.closest(
-                ".granularity-form"
-            );
-
-            const section = event.target.closest(
-                "[data-security-level]"
-            );
-
-            /*
-             * Existing forms have a DELETE field.
-             *
-             * We mark them as deleted instead of removing
-             * them from the DOM, because Django needs the
-             * DELETE value when processing the formset.
-             */
-
-            const deleteInput = row.querySelector(
-                'input[name$="-DELETE"]'
-            );
-
-            if (deleteInput) {
-
-                deleteInput.checked = true;
-
-                row.style.display = "none";
-
-            } else {
-
-                /*
-                 * Newly created forms can simply be removed.
-                 */
-
-                row.remove();
-            }
-
-            updateEntryTypeAvailability(section);
-        }
-    );
-
-
-    /*
-     * ---------------------------------------------------------
-     * Entry type changed
-     * ---------------------------------------------------------
-     */
-
-    document.addEventListener(
-        "change",
-        function (event) {
-
-            if (
-                !event.target.matches(
-                    'input[type="radio"][name*="-entry_type"]'
-                )
-            ) {
-                return;
-            }
-
-            const section = event.target.closest(
-                "[data-security-level]"
-            );
-
-            updateEntryTypeAvailability(section);
-        }
-    );
-
-
-    /*
-     * ---------------------------------------------------------
-     * Disable entry types that have already been selected
-     * ---------------------------------------------------------
-     */
-
-    function updateEntryTypeAvailability(section) {
-
-        const selected = new Set();
-
-        /*
-         * Find all selected entry types in this
-         * security-level formset.
-         */
-
-        section.querySelectorAll(
-            '.granularity-form:not([style*="display: none"]) ' +
-            'input[type="radio"][name*="-entry_type"]:checked'
-        ).forEach(function (radio) {
-
-            selected.add(radio.value);
-
-        });
-
-
-        /*
-         * Disable selected entry types in other forms.
-         */
-
-        section.querySelectorAll(
-            '.granularity-form:not([style*="display: none"]) ' +
-            'input[type="radio"][name*="-entry_type"]'
-        ).forEach(function (radio) {
-
-            const currentForm = radio.closest(
-                ".granularity-form"
-            );
-
-            const currentSelection = currentForm.querySelector(
-                'input[type="radio"][name*="-entry_type"]:checked'
-            );
-
-            /*
-             * Don't disable the currently selected value
-             * in its own form.
-             */
-
-            if (
-                currentSelection &&
-                currentSelection.value === radio.value
-            ) {
-                radio.disabled = false;
-                return;
-            }
-
-            radio.disabled = selected.has(
-                radio.value
-            );
-
-        });
-    }
-
-
-    /*
-     * ---------------------------------------------------------
-     * Initialize
+     * ENTRY TYPE FORMSETS
      * ---------------------------------------------------------
      */
 
     document.querySelectorAll(
-        "[data-security-level]"
-    ).forEach(function (section) {
+        ".security-level-container"
+    ).forEach(function (container) {
 
-        updateEntryTypeAvailability(section);
+        const addButton = container.querySelector(
+            ".add-entry-type"
+        );
+
+        const formsContainer = container.querySelector(
+            ".granularity-forms"
+        );
+
+        const template = container.querySelector(
+            ".empty-entry-type"
+        );
+
+        const totalForms = container.querySelector(
+            'input[name$="-TOTAL_FORMS"]'
+        );
+
+
+        if (
+            !addButton ||
+            !formsContainer ||
+            !template ||
+            !totalForms
+        ) {
+            return;
+        }
+
+
+        addButton.addEventListener(
+            "click",
+            function () {
+
+                const formIndex = parseInt(
+                    totalForms.value,
+                    10
+                );
+
+                let html = template.innerHTML;
+
+                /*
+                 * Replace Django's __prefix__
+                 * with the next form index.
+                 */
+
+                html = html.replace(
+                    /__prefix__/g,
+                    formIndex
+                );
+
+                formsContainer.insertAdjacentHTML(
+                    "beforeend",
+                    html
+                );
+
+                totalForms.value =
+                    formIndex + 1;
+
+                attachRemoveButton(
+                    formsContainer.lastElementChild
+                );
+            }
+        );
+
+
+        /*
+         * Attach remove buttons to existing forms.
+         */
+
+        formsContainer.querySelectorAll(
+            ".granularity-form"
+        ).forEach(function (form) {
+
+            attachRemoveButton(form);
+        });
+
+
+        function attachRemoveButton(form) {
+
+            const removeButton =
+                form.querySelector(
+                    ".remove-entry-type"
+                );
+
+            if (!removeButton) {
+                return;
+            }
+
+            removeButton.addEventListener(
+                "click",
+                function () {
+
+                    /*
+                     * Django formsets expect DELETE
+                     * to be submitted instead of simply
+                     * removing an existing form.
+                     */
+
+                    const deleteInput =
+                        form.querySelector(
+                            'input[name$="-DELETE"]'
+                        );
+
+                    if (deleteInput) {
+
+                        deleteInput.checked = true;
+
+                        form.classList.add(
+                            "hidden"
+                        );
+
+                    } else {
+
+                        form.remove();
+                    }
+                }
+            );
+        }
 
     });
 
