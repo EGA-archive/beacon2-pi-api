@@ -64,6 +64,7 @@ PATHS_TO_RESTART = [
     "/beacon/models",
     "/beacon/conf/models",
     "/beacon/connections/mongo/conf.py"
+    "/beacon/connections/postgresql_omop/conf.py"
 ]
 
 async def monitor_pending(app):
