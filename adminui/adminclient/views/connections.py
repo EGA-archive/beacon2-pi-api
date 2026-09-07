@@ -10,23 +10,12 @@ import subprocess
 from django.contrib.auth.decorators import login_required, permission_required
 import os
 import logging
-from dotenv import load_dotenv, get_key,set_key
-
-complete_module='beacon.connections.'+config.query_budget_database
-import importlib
-module = importlib.import_module(complete_module, package=None)
-
-LOG = logging.getLogger(__name__)
-fmt = '%(levelname)s - %(asctime)s - %(message)s'
-formatter = logging.Formatter(fmt)
-sh = logging.StreamHandler()
-sh.setLevel('NOTSET')
-sh.setFormatter(formatter)
-LOG.addHandler(sh)
+from dotenv import load_dotenv, get_key, set_key
 
 #@login_required
 #@permission_required('adminclient.can_see_view', raise_exception=True)
 def default_view(request):
+    form=ConnectionsForm()
     connections_dict={}
     dict_of_forms = {}
     dirs = os.listdir("/home/app/web/beacon/connections")
@@ -46,124 +35,10 @@ def default_view(request):
     dict_of_forms["API"]=APIConnection
     dict_of_forms["UI"]=UIConnection
     context = {'non_db_forms': dict_of_forms, 'db_forms': connections_dict}
-    """
-    try:
+
+    if request.method == 'POST':
+        form = ConnectionsForm(request.POST)
         if 'Test Connection' in request.POST:
-            try:
-                form = ConnectionsForm(request.POST,dire=request.POST['Host'])
-                if form.is_valid():
-                    Host = form.cleaned_data['Host']
-                    Port = form.cleaned_data['Port']
-                    User = form.cleaned_data['User']
-                    Password = form.cleaned_data['Password']
-                    Name = form.cleaned_data['Name']
-                    Auth = form.cleaned_data['Auth']
-                    Certificate = form.cleaned_data['Certificate']
-                    CAFile = form.cleaned_data['CAFile']
-                    Cluster = form.cleaned_data['Cluster']
-
-
-                    try:
-                        if Cluster:
-                            uri = "mongodb+srv://{}:{}@{}/?tls=true&authMechanism=SCRAM-SHA-256&retrywrites=false&maxIdleTimeMS=120000".format(
-                                User,
-                                Password,
-                                Host
-                            )
-                        else:
-                            uri = "mongodb://{}:{}@{}:{}/{}?authSource={}".format(
-                                User,
-                                Password,
-                                Host,
-                                Port,
-                                Name,
-                                Auth
-                            )
-
-                        if Certificate != '' and CAFile != '':
-                            uri += '&tls=true&tlsCertificateKeyFile={}&tlsCAFile={}'.format(Certificate, CAFile)
-                    except Exception:
-                        uri = "mongodb://{}:{}@{}:{}/{}?authSource={}".format(
-                                User,
-                                Password,
-                                Host,
-                                Port,
-                                Name,
-                                Auth
-                            )
-
-
-                
-                    
-                    try:
-                        client = MongoClient(uri)
-                        client = module.client.server_info()
-                        client = "Ok and running in a mongo " + client["version"] + "version"
-                    except Exception:
-                        client = 'Connection could not be established'
-                    #client = module.client.admin.command('ismaster')
-            except Exception:
-                linkform = LinkConnection(request.POST)
-                if linkform.is_valid():
-                    Connection = linkform.cleaned_data['Connection']
-                    try:
-                        client = subprocess.check_output("curl -s -o /dev/null -v {}".format(Connection), shell=True)
-                        client = 'Connection successful'
-                    except Exception:
-                        client = 'Connection could not be established'
-                        
-
-
-            template = "general_configuration/connections.html"
-            context = {'form': form, 'client': client, 'formchoose': formchoose}
-            return render(request, template, context)
-        elif form.is_valid():
-            Host = form.cleaned_data['Host']
-            Port = form.cleaned_data['Port']
-            User = form.cleaned_data['User']
-            Password = form.cleaned_data['Password']
-            Name = form.cleaned_data['Name']
-            Auth = form.cleaned_data['Auth']
-            Certificate = form.cleaned_data['Certificate']
-            CAFile = form.cleaned_data['CAFile']
-            Cluster = form.cleaned_data['Cluster']
-            with open("/home/app/web/beacon/connections/"+form.dire+"/conf.py") as f:
-                lines = f.readlines()
-            with open("/home/app/web/beacon/connections/"+form.dire+"/conf.py", "w") as f:
-                new_lines =''
-                for line in lines:
-                    if 'database_host' in str(line):
-                        new_lines+="database_host="+'"'+Host+'"'+"\n"
-                    elif 'host' in str(line):
-                        new_lines+="host="+'"'+Host+'"'+"\n"
-                    elif 'database_port' in str(line):
-                        new_lines+="database_port="+str(Port)+"\n"
-                    elif 'database_user' in str(line):
-                        new_lines+="database_user="+'"'+User+'"'+"\n"
-                    elif 'username' in str(line):
-                        new_lines+="username="+'"'+User+'"'+"\n"
-                    elif 'database_password' in str(line):
-                        new_lines+="database_password="+'"'+Password+'"'+"\n"
-                    elif 'password' in str(line):
-                        new_lines+="password="+'"'+Password+'"'+"\n"
-                    elif 'database_name' in str(line):
-                        new_lines+="database_name="+'"'+Name+'"'+"\n"
-                    elif 'database_auth_source' in str(line):
-                        new_lines+="database_auth_source="+'"'+Auth+'"'+"\n"
-                    elif 'database_certificate' in str(line):
-                        new_lines+="database_certificate="+'"'+Certificate+'"'+"\n"
-                    elif 'database_cafile' in str(line):
-                        new_lines+="database_cafile="+'"'+CAFile+'"'+"\n"
-                    elif 'database_cluster' in str(line):
-                        new_lines+="database_cluster="+'"'+str(Cluster)+'"'+"\n"
-                    else:
-                        new_lines+=line
-                    
-                f.write(new_lines)
-            f.close()
-    except Exception:
-        if 'Test Connection' in request.POST:
-            form = ConnectionsForm(request.POST,dire=request.POST['Host'])
             if form.is_valid():
                 Host = form.cleaned_data['Host']
                 Port = form.cleaned_data['Port']
@@ -204,22 +79,43 @@ def default_view(request):
                             Name,
                             Auth
                         )
-            else:
-                client = 'Configuration not valid'
-            #client = module.client.admin.command('ismaster')
-            client = MongoClient(uri)
+
+
+            
                 
-            try:
-                client = module.client.server_info()
-                client = "Ok and running in a mongo " + client["version"] + "version"
-            except Exception:
-                client = 'Connection could not be established'
+                try:
+                    client = MongoClient(uri)
+                    client = module.client.server_info()
+                    client = "Ok and running in a mongo " + client["version"] + "version"
+                except Exception:
+                    client = 'Connection could not be established'
+                #client = module.client.admin.command('ismaster')
+                        
+
+
             template = "general_configuration/connections.html"
-            context = {'form': form, 'client': client, 'formchoose': formchoose}
             return render(request, template, context)
-        else:
-            linkform = LinkConnection(request.POST)
-        return redirect("adminclient:connections")
-    """
+        elif form.is_valid() and 'Save' in request.POST:
+            folder=request.POST.get('Save')
+            Host = form.cleaned_data['Host']
+            Port = form.cleaned_data['Port']
+            User = form.cleaned_data['User']
+            Password = form.cleaned_data['Password']
+            Name = form.cleaned_data['Name']
+            Auth = form.cleaned_data['Auth']
+            Certificate = form.cleaned_data['Certificate']
+            CAFile = form.cleaned_data['CAFile']
+            Cluster = form.cleaned_data['Cluster']
+            #set_key(dotenv_path="/home/app/web/beacon/connections/" + folder + "/conf.env", key_to_set="database_host", value_to_set=Host)
+            #set_key(dotenv_path="/home/app/web/beacon/connections/" + folder + "/conf.env", key_to_set="database_port", value_to_set=Port)
+            #set_key(dotenv_path="/home/app/web/beacon/connections/" + folder + "/conf.env", key_to_set="database_user", value_to_set=User)
+            #set_key(dotenv_path="/home/app/web/beacon/connections/" + folder + "/conf.env", key_to_set="database_password", value_to_set=Password)
+            #set_key(dotenv_path="/home/app/web/beacon/connections/" + folder + "/conf.env", key_to_set="database_name", value_to_set=Name)
+            #set_key(dotenv_path="/home/app/web/beacon/connections/" + folder + "/conf.env", key_to_set="database_auth_source", value_to_set=Auth)
+            #set_key(dotenv_path="/home/app/web/beacon/connections/" + folder + "/conf.env", key_to_set="database_certificate", value_to_set=Certificate)
+            #set_key(dotenv_path="/home/app/web/beacon/connections/" + folder + "/conf.env", key_to_set="database_cafile", value_to_set=CAFile)
+            #set_key(dotenv_path="/home/app/web/beacon/connections/" + folder + "/conf.env", key_to_set="database_cluster", value_to_set=Cluster)
+            return redirect("adminclient:connections")
+
     template = "general_configuration/connections.html"
     return render(request, template, context)

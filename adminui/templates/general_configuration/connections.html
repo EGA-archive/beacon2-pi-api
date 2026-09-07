@@ -14,10 +14,11 @@
 
 <body>
   <body class="bg-custom-powder-light" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
-  {% csrf_token %}
+
 {% for title, form in db_forms.items %}
       <form method="post" onsubmit="openLoader()">
         {{title}}
+        {% csrf_token %}
         
           <div>
             {% for key, value in form.items %}
@@ -34,9 +35,29 @@
             {% endfor %}
           </div>
           <div>
+            <button type="submit" class="btn btn-danger mb-3" name="Save" value="{{title}}">Save</button>
+          </div>
+          <button type="submit" class="btn btn-danger mb-3" name="Test Connection" value="Test {{title}} Connection">Test Connection</button>
+      </form>
+{% endfor %}
+{% for title, form in non_db_forms.items %}
+      <form method="post" onsubmit="openLoader()">
+        {{title}}
+        
+        {% csrf_token %}
+    <div>
+            {% for f in form %}
+            <p>{{f.help_text|safe}} {{f}} </p>
+            {% endfor %}
+            <span id="active-label"></span>
+
+
+
+    </div>
+          <div>
             <button type="submit" class="btn btn-danger mb-3">Save</button>
           </div>
-          <button type="submit" class="btn btn-danger mb-3" name="Test Connection" value="Test {{form.title}} Connection">Test Connection</button>
+          <button type="submit" class="btn btn-danger mb-3" name="Test Connection" value="Test {{title}} Connection">Test Connection</button>
       </form>
 {% endfor %}
 </body>
