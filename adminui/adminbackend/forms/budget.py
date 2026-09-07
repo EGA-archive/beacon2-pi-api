@@ -67,7 +67,7 @@ class BudgetForm(forms.Form):
     BudgetUser = forms.BooleanField(required=False,help_text='Limit Queries per User Account')
     BudgetIP = forms.BooleanField(required=False,help_text='Limit Queries per IP address')
     BudgetAmount = forms.IntegerField(help_text="Max. number of queries")
-    BudgetTime = forms.IntegerField(help_text='Time for reset')
+    BudgetTime = forms.IntegerField(help_text='Time for reset (seconds)')
     dirs = os.listdir("/home/app/web/beacon/connections")
     list_databases=[]
     for dir in dirs:

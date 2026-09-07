@@ -3,6 +3,7 @@ import yaml
 import logging
 import os
 from beacon.conf.conf_override import config
+from dotenv import load_dotenv, set_key
 
 LOG = logging.getLogger(__name__)
 fmt = '%(levelname)s - %(asctime)s - %(message)s'
@@ -28,59 +29,21 @@ def formatting_field(self, line):
         placeholder=placeholder[0:-1]
     return placeholder
 
-
-
-
-
 class ConnectionsForm(forms.Form):
     def __init__(self, *args, **kwargs):
         self.dire = kwargs.pop('dire')
         super(ConnectionsForm,self).__init__(*args,**kwargs)
 
-        # assign a (computed, I assume) default value to the choice field
-        with open("/home/app/web/beacon/connections/" + self.dire + "/conf.py") as f:
-            lines = f.readlines()
-        with open("/home/app/web/beacon/connections/" + self.dire + "/conf.py", "r") as f:
-            for line in lines:
-                if 'database_host' in str(line):
-                    placeholder = formatting_field(self, line)
-                    self.initial['Host'] = placeholder
-                elif 'host' in str(line):
-                    placeholder = formatting_field(self, line)
-                    self.initial['Host'] = placeholder
-                elif 'database_port' in str(line):
-                    placeholder = formatting_field(self, line)
-                    self.initial['Port'] = placeholder
-                elif 'database_user' in str(line):
-                    placeholder = formatting_field(self, line)
-                    self.initial['User'] = placeholder
-                elif 'username' in str(line):
-                    placeholder = formatting_field(self, line)
-                    self.initial['User'] = placeholder
-                elif 'database_password' in str(line):
-                    placeholder = formatting_field(self, line)
-                    self.initial['Password'] = placeholder
-                elif 'password' in str(line):
-                    placeholder = formatting_field(self, line)
-                    self.initial['Password'] = placeholder
-                elif 'database_user' in str(line):
-                    placeholder = formatting_field(self, line)
-                    self.initial['User'] = placeholder
-                elif 'database_name' in str(line):
-                    placeholder = formatting_field(self, line)
-                    self.initial['Name'] = placeholder
-                elif 'database_auth_source' in str(line):
-                    placeholder = formatting_field(self, line)
-                    self.initial['Auth'] = placeholder
-                elif 'database_certificate' in str(line):
-                    placeholder = formatting_field(self, line)
-                    self.initial['Certificate'] = placeholder
-                elif 'database_cafile' in str(line):
-                    placeholder = formatting_field(self, line)
-                    self.initial['CAFile'] = placeholder
-                elif 'database_cluster' in str(line):
-                    placeholder = formatting_field(self, line)
-                    self.initial['Cluster'] = placeholder
+        load_dotenv("/home/app/web/beacon/connections/" + self.dire + "/conf.env", override=True)
+        self.initial['Host'] = os.getenv('database_host')
+        self.initial['Port'] = os.getenv('database_port')
+        self.initial['User'] = os.getenv('database_user')
+        self.initial['Password'] = os.getenv('database_password')
+        self.initial['Name'] = os.getenv('database_name')
+        self.initial['Auth'] = os.getenv('database_auth_source')
+        self.initial['Certificate'] = os.getenv('database_certificate')
+        self.initial['CAFile'] = os.getenv('database_cafile')
+        self.initial['Cluster'] = os.getenv('database_cluster')
 
     Host = forms.CharField(help_text='Host', required=False)
     Port = forms.IntegerField(help_text='Port', required=False)
@@ -92,18 +55,15 @@ class ConnectionsForm(forms.Form):
     CAFile = forms.CharField(help_text='Path to CAFile', required=False)
     Cluster = forms.BooleanField(help_text='Cluster', required=False)
 
-class ChooseConnection(forms.Form):
-    dirs = os.listdir("/home/app/web/beacon/connections")
-    list_of_dirs=[]
-    for dir in dirs:
-        list_of_dirs.append((dir,dir))
-    list_of_dirs.append(('API', 'API'))
-    list_of_dirs.append(('UI', 'UI'))
-    Connection = forms.ChoiceField(choices=list_of_dirs)
-
-class LinkConnection(forms.Form):
+class APIConnection(forms.Form):
     def __init__(self, *args, **kwargs):
-        super(LinkConnection,self).__init__(*args,**kwargs)
-        self.initial['Connection'] = config.uri + config.uri_subpath
+        super(APIConnection,self).__init__(*args,**kwargs)
+        self.initial['Connection'] = config.complete_url
+    Connection = forms.URLField()
+
+class UIConnection(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super(UIConnection,self).__init__(*args,**kwargs)
+        self.initial['Connection'] = config.welcome_url
     Connection = forms.URLField()
     

@@ -38,25 +38,24 @@ class RoundingCountsForm(forms.Form):
                 if 'round_to_tens' in str(line):
                     placeholder = formatting_field(self, line)
                     if placeholder == 'True':
-                        self.initial['Activate'] = True
+                        self.initial['Activate_Rounding'] = True
                         self.initial['Rounding'] = 'tenths'
                         self.initial['Type'] = 'rounded'
                 elif 'round_to_hundreds' in str(line):
                     placeholder = formatting_field(self, line)
                     if placeholder == 'True':
-                        self.initial['Activate'] = True
+                        self.initial['Activate_Rounding'] = True
                         self.initial['Rounding'] = 'hundredths'
                         self.initial['Type'] = 'rounded'
                 elif 'imprecise_count' in str(line):
                     placeholder = formatting_field(self, line)
                     self.initial['Imprecise'] = placeholder
                     if placeholder != '0':
-                        self.initial['Activate'] = True
+                        self.initial['Activate_Imprecise'] = True
                         self.initial['Type'] = 'imprecise'
-    Activate = forms.BooleanField(help_text='activate')
-    precision_choices = [('imprecise', 'imprecise'), ('rounded', 'rounded')]
-    Type = forms.ChoiceField(choices=precision_choices, help_text="Precision of the counts")
+    Activate_Rounding = forms.BooleanField(help_text='Activate Rounding')
     type_choices = [('tenths', 'tenths'), ('hundredths','hundredths')]
-    Rounding = forms.ChoiceField(choices=type_choices, help_text='Rounded to tenths or hundredths', required=False)
-    Imprecise = forms.IntegerField(help_text='Threshold lowest value', required=False)
+    Rounding = forms.ChoiceField(choices=type_choices, help_text='Type of rounding', required=False)
+    Activate_Imprecise = forms.BooleanField(help_text='Activate Threshold')
+    Imprecise = forms.IntegerField(help_text='Minimum required matches', required=False)
     

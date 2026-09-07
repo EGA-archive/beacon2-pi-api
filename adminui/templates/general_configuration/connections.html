@@ -14,52 +14,29 @@
 
 <body>
   <body class="bg-custom-powder-light" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+  {% csrf_token %}
+{% for title, form in db_forms.items %}
       <form method="post" onsubmit="openLoader()">
-        {% csrf_token %}
+        {{title}}
+        
           <div>
-            
-                {% for f in formchoose %}
-                <p>{{f.help_text|safe}} {{f}} {{f.errors}} </p>
-                {% endfor %}
-            <span id="active-label"></span>
-          </div>
-          <div>
-            <button type="submit" class="btn btn-danger mb-3" name="ChooseConnection" value="ChooseConnection">Choose</button>
-          </div>
-      </form>
-    {% if form or client %}
-      <form method="post" onsubmit="openLoader()">
-        {% csrf_token %}
-          <div>
-            
-                {% for f in form %}
-                <p>{{f.help_text|safe}} {{f}} {{f.errors}}</p>
-                {% endfor %}
-            <span id="active-label"></span>
+            {% for key, value in form.items %}
+            <div>{{key}}</div>
+            {% if key != 'Password' %}
+                <div>               
+                    <input type="text" id="id_{{key}}" name="{{key}}" value="{{value}}">
+                </div>
+            {% else %}
+                <div>               
+                    <input type="password" id="id_{{key}}" name="{{key}}" value="{{value}}">
+                </div>
+            {% endif %}
+            {% endfor %}
           </div>
           <div>
             <button type="submit" class="btn btn-danger mb-3">Save</button>
           </div>
-          <button type="submit" class="btn btn-danger mb-3" name="Test Connection" value="Test Connection">Test Connection</button>
-          {% if client %}
-          <div>{{client}}</div>
-          {% endif %}
+          <button type="submit" class="btn btn-danger mb-3" name="Test Connection" value="Test {{form.title}} Connection">Test Connection</button>
       </form>
-    {% endif %}
-    {% if linkform %}
-      <form method="post" onsubmit="openLoader()">
-        {% csrf_token %}
-          <div>
-            
-                {% for f in form %}
-                <p>{{f.help_text|safe}} {{f}} {{f.errors}}</p>
-                {% endfor %}
-            <span id="active-label"></span>
-          </div>
-          <div>
-            <button type="submit" class="btn btn-danger mb-3">Save</button>
-          </div>
-          <button type="submit" class="btn btn-danger mb-3" name="Test Connection" value="Test Connection">Test Connection</button>
-      </form>
-    {% endif %}
+{% endfor %}
 </body>
