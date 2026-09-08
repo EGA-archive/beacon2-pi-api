@@ -16,15 +16,9 @@ class ConnectionsForm(forms.Form):
     CAFile = forms.CharField(help_text='Path to CAFile', required=False)
     Cluster = forms.BooleanField(help_text='Cluster', required=False)
 
-class APIConnection(forms.Form):
-    def __init__(self, *args, **kwargs):
-        super(APIConnection,self).__init__(*args,**kwargs)
-        self.initial['Connection'] = config.complete_url
-    Connection = forms.URLField()
-
-class UIConnection(forms.Form):
-    def __init__(self, *args, **kwargs):
-        super(UIConnection,self).__init__(*args,**kwargs)
-        self.initial['Connection'] = config.welcome_url
+class LinkConnection(forms.Form):
+    def __init__(self, *args, link=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.initial['Connection'] = link
     Connection = forms.URLField()
     

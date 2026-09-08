@@ -23,7 +23,19 @@
           <div>
             {% for key, value in form.items %}
             <div>{{key}}</div>
-            {% if key != 'Password' %}
+            {% if key == 'Port' %}
+                <div>               
+                    <input type="number" id="id_{{key}}" name="{{key}}" value="{{value}}">
+                </div>
+            {% elif key == 'Cluster' %}
+                <div>
+                  {% if value == 'True' %}
+                    <input type="checkbox" id="id_{{key}}" name="{{key}}" value="{{key}}" checked>
+                  {% else %}
+                    <input type="checkbox" id="id_{{key}}" name="{{key}}" value="{{key}}">
+                  {% endif %}
+                </div>
+            {% elif key != 'Password' %}
                 <div>               
                     <input type="text" id="id_{{key}}" name="{{key}}" value="{{value}}">
                 </div>
@@ -55,7 +67,7 @@
 
     </div>
           <div>
-            <button type="submit" class="btn btn-danger mb-3">Save</button>
+            <button type="submit" class="btn btn-danger mb-3" name="{{title}}">Save</button>
           </div>
           <button type="submit" class="btn btn-danger mb-3" name="Test Connection" value="Test {{title}} Connection">Test Connection</button>
       </form>

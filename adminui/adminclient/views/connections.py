@@ -4,8 +4,8 @@ from django.http import HttpResponseRedirect, HttpResponseBadRequest
 import logging
 from pymongo.mongo_client import MongoClient
 from django.urls import resolve
-from adminbackend.forms.connections import ConnectionsForm, APIConnection, UIConnection
-from beacon.conf.conf_override import config
+from adminbackend.forms.connections import ConnectionsForm, LinkConnection
+from beacon.conf.conf import complete_url, welcome_url
 import subprocess
 from django.contrib.auth.decorators import login_required, permission_required
 import os
@@ -32,12 +32,14 @@ def default_view(request):
         connection_dict['CAFile']=get_key(dotenv_path="/home/app/web/beacon/connections/" + dir + "/conf.env", key_to_get="database_cafile")
         connection_dict['Cluster']=get_key(dotenv_path="/home/app/web/beacon/connections/" + dir + "/conf.env", key_to_get="database_cluster")
         connections_dict[dir]=connection_dict
-    dict_of_forms["API"]=APIConnection
-    dict_of_forms["UI"]=UIConnection
+    dict_of_forms["API"]=LinkConnection(link=complete_url)
+    dict_of_forms["UI"]=LinkConnection(link=welcome_url)
     context = {'non_db_forms': dict_of_forms, 'db_forms': connections_dict}
 
     if request.method == 'POST':
         form = ConnectionsForm(request.POST)
+        api_form = LinkConnection(request.POST)
+        ui_form = LinkConnection(request.POST)
         if 'Test Connection' in request.POST:
             if form.is_valid():
                 Host = form.cleaned_data['Host']
@@ -97,6 +99,7 @@ def default_view(request):
             return render(request, template, context)
         elif form.is_valid() and 'Save' in request.POST:
             folder=request.POST.get('Save')
+            load_dotenv("/home/app/web/beacon/connections/" + folder + "/conf.env", override=True)
             Host = form.cleaned_data['Host']
             Port = form.cleaned_data['Port']
             User = form.cleaned_data['User']
@@ -106,16 +109,81 @@ def default_view(request):
             Certificate = form.cleaned_data['Certificate']
             CAFile = form.cleaned_data['CAFile']
             Cluster = form.cleaned_data['Cluster']
-            #set_key(dotenv_path="/home/app/web/beacon/connections/" + folder + "/conf.env", key_to_set="database_host", value_to_set=Host)
-            #set_key(dotenv_path="/home/app/web/beacon/connections/" + folder + "/conf.env", key_to_set="database_port", value_to_set=Port)
-            #set_key(dotenv_path="/home/app/web/beacon/connections/" + folder + "/conf.env", key_to_set="database_user", value_to_set=User)
-            #set_key(dotenv_path="/home/app/web/beacon/connections/" + folder + "/conf.env", key_to_set="database_password", value_to_set=Password)
-            #set_key(dotenv_path="/home/app/web/beacon/connections/" + folder + "/conf.env", key_to_set="database_name", value_to_set=Name)
-            #set_key(dotenv_path="/home/app/web/beacon/connections/" + folder + "/conf.env", key_to_set="database_auth_source", value_to_set=Auth)
-            #set_key(dotenv_path="/home/app/web/beacon/connections/" + folder + "/conf.env", key_to_set="database_certificate", value_to_set=Certificate)
-            #set_key(dotenv_path="/home/app/web/beacon/connections/" + folder + "/conf.env", key_to_set="database_cafile", value_to_set=CAFile)
-            #set_key(dotenv_path="/home/app/web/beacon/connections/" + folder + "/conf.env", key_to_set="database_cluster", value_to_set=Cluster)
+            set_key(dotenv_path="/home/app/web/beacon/connections/" + folder + "/conf.env", key_to_set="database_host", value_to_set=Host)
+            set_key(dotenv_path="/home/app/web/beacon/connections/" + folder + "/conf.env", key_to_set="database_port", value_to_set=str(Port))
+            set_key(dotenv_path="/home/app/web/beacon/connections/" + folder + "/conf.env", key_to_set="database_user", value_to_set=User)
+            set_key(dotenv_path="/home/app/web/beacon/connections/" + folder + "/conf.env", key_to_set="database_password", value_to_set=Password)
+            set_key(dotenv_path="/home/app/web/beacon/connections/" + folder + "/conf.env", key_to_set="database_name", value_to_set=Name)
+            set_key(dotenv_path="/home/app/web/beacon/connections/" + folder + "/conf.env", key_to_set="database_auth_source", value_to_set=Auth)
+            set_key(dotenv_path="/home/app/web/beacon/connections/" + folder + "/conf.env", key_to_set="database_certificate", value_to_set=Certificate)
+            set_key(dotenv_path="/home/app/web/beacon/connections/" + folder + "/conf.env", key_to_set="database_cafile", value_to_set=CAFile)
+            if Cluster == True:
+                set_key(dotenv_path="/home/app/web/beacon/connections/" + folder + "/conf.env", key_to_set="database_cluster", value_to_set='True')
+            else:
+                set_key(dotenv_path="/home/app/web/beacon/connections/" + folder + "/conf.env", key_to_set="database_cluster", value_to_set='False')
             return redirect("adminclient:connections")
-
+        elif form.is_valid() and 'Save' in request.POST:
+            folder=request.POST.get('Save')
+            load_dotenv("/home/app/web/beacon/connections/" + folder + "/conf.env", override=True)
+            Host = form.cleaned_data['Host']
+            Port = form.cleaned_data['Port']
+            User = form.cleaned_data['User']
+            Password = form.cleaned_data['Password']
+            Name = form.cleaned_data['Name']
+            Auth = form.cleaned_data['Auth']
+            Certificate = form.cleaned_data['Certificate']
+            CAFile = form.cleaned_data['CAFile']
+            Cluster = form.cleaned_data['Cluster']
+            set_key(dotenv_path="/home/app/web/beacon/connections/" + folder + "/conf.env", key_to_set="database_host", value_to_set=Host)
+            set_key(dotenv_path="/home/app/web/beacon/connections/" + folder + "/conf.env", key_to_set="database_port", value_to_set=str(Port))
+            set_key(dotenv_path="/home/app/web/beacon/connections/" + folder + "/conf.env", key_to_set="database_user", value_to_set=User)
+            set_key(dotenv_path="/home/app/web/beacon/connections/" + folder + "/conf.env", key_to_set="database_password", value_to_set=Password)
+            set_key(dotenv_path="/home/app/web/beacon/connections/" + folder + "/conf.env", key_to_set="database_name", value_to_set=Name)
+            set_key(dotenv_path="/home/app/web/beacon/connections/" + folder + "/conf.env", key_to_set="database_auth_source", value_to_set=Auth)
+            set_key(dotenv_path="/home/app/web/beacon/connections/" + folder + "/conf.env", key_to_set="database_certificate", value_to_set=Certificate)
+            set_key(dotenv_path="/home/app/web/beacon/connections/" + folder + "/conf.env", key_to_set="database_cafile", value_to_set=CAFile)
+            if Cluster == True:
+                set_key(dotenv_path="/home/app/web/beacon/connections/" + folder + "/conf.env", key_to_set="database_cluster", value_to_set='True')
+            else:
+                set_key(dotenv_path="/home/app/web/beacon/connections/" + folder + "/conf.env", key_to_set="database_cluster", value_to_set='False')
+            return redirect("adminclient:connections")
+        elif api_form.is_valid() and 'API' in request.POST:
+            print('here I am', flush=True)
+            API_link = api_form.cleaned_data['Connection']
+            API_link_splitted = API_link.split('/')
+            print(API_link_splitted, flush=True)
+            with open("/home/app/web/beacon/conf/conf.py") as f:
+                lines = f.readlines()
+            with open("/home/app/web/beacon/conf/conf.py", "w") as f:
+                new_lines =''
+                for line in lines:
+                    if 'uri_subpath' in str(line) and 'complete_url' not in str(line) and 'security_levels' not in str(line):
+                        new_lines+="uri_subpath="+"'/"+str(API_link_splitted[-1])+"'"+"\n"
+                    elif 'uri' in str(line) and 'complete_url' not in str(line) and 'security_levels' not in str(line):
+                        new_lines+="uri="+"'"+'http://'+str(API_link_splitted[2])+"'"+"\n"
+                    else:
+                        new_lines+=line
+                f.write(new_lines)
+            f.close()
+            dict_of_forms["API"]=LinkConnection(link=API_link)
+            context = {'non_db_forms': dict_of_forms, 'db_forms': connections_dict}
+        elif ui_form.is_valid() and 'UI' in request.POST:
+            UI_link = api_form.cleaned_data['Connection']
+            with open("/home/app/web/beacon/conf/conf.py") as f:
+                lines = f.readlines()
+            with open("/home/app/web/beacon/conf/conf.py", "w") as f:
+                new_lines =''
+                for line in lines:
+                    if 'welcome_url' in str(line) and 'org_' not in str(line):
+                        new_lines+="welcome_url="+"'"+str(UI_link)+"'"+"\n"
+                    else:
+                        new_lines+=line
+                    
+                f.write(new_lines)
+            f.close()
+            dict_of_forms["UI"]=LinkConnection(link=UI_link)
+            context = {'non_db_forms': dict_of_forms, 'db_forms': connections_dict}
+        else:
+            print(request.POST, flush=True)
     template = "general_configuration/connections.html"
     return render(request, template, context)
