@@ -5,12 +5,14 @@ import logging
 from pymongo.mongo_client import MongoClient
 from django.urls import resolve
 from adminbackend.forms.connections import ConnectionsForm, LinkConnection
+from beacon.conf.conf_override import config
 from beacon.conf.conf import complete_url, welcome_url
 import subprocess
 from django.contrib.auth.decorators import login_required, permission_required
 import os
 import logging
 from dotenv import load_dotenv, get_key, set_key
+import requests
 
 #@login_required
 #@permission_required('adminclient.can_see_view', raise_exception=True)
@@ -42,59 +44,41 @@ def default_view(request):
         ui_form = LinkConnection(request.POST)
         if 'Test Connection' in request.POST:
             if form.is_valid():
-                Host = form.cleaned_data['Host']
-                Port = form.cleaned_data['Port']
-                User = form.cleaned_data['User']
-                Password = form.cleaned_data['Password']
-                Name = form.cleaned_data['Name']
-                Auth = form.cleaned_data['Auth']
-                Certificate = form.cleaned_data['Certificate']
-                CAFile = form.cleaned_data['CAFile']
-                Cluster = form.cleaned_data['Cluster']
-
-
+                for dir in dirs:
+                    if dir in request.POST:
+                        complete_client_module='beacon.connections.'+dir+'.client'
+                        import importlib
+                        module = importlib.import_module(complete_client_module, package=None)
+                        client_from_module = getattr(module, 'get_client')
+                        # Perform the ping of each of the connections with a timeout
+                        try:
+                            ping=client_from_module.admin.command("ping")
+                            context["ping"]=ping
+                            context["ping_title"]=dir
+                        # In case of timeout or ping not successful, raise an error of the database being down
+                        except Exception as e:
+                            context["ping"]=e
+                            context["ping_title"]=dir
+            elif api_form.is_valid():
+                print('here I am', flush=True)
+                url=api_form.cleaned_data.get('Connection')
                 try:
-                    if Cluster:
-                        uri = "mongodb+srv://{}:{}@{}/?tls=true&authMechanism=SCRAM-SHA-256&retrywrites=false&maxIdleTimeMS=120000".format(
-                            User,
-                            Password,
-                            Host
-                        )
-                    else:
-                        uri = "mongodb://{}:{}@{}:{}/{}?authSource={}".format(
-                            User,
-                            Password,
-                            Host,
-                            Port,
-                            Name,
-                            Auth
-                        )
-
-                    if Certificate != '' and CAFile != '':
-                        uri += '&tls=true&tlsCertificateKeyFile={}&tlsCAFile={}'.format(Certificate, CAFile)
-                except Exception:
-                    uri = "mongodb://{}:{}@{}:{}/{}?authSource={}".format(
-                            User,
-                            Password,
-                            Host,
-                            Port,
-                            Name,
-                            Auth
-                        )
-
-
-            
-                
+                    ping=requests.get(url,  timeout=5)
+                    context["ping"]=ping.status_code
+                    context["ping_title"]="API"
+                except Exception as e:
+                    context["ping"]=e
+                    context["ping_title"]="API"
+            elif ui_form.is_valid():
+                print('here I am', flush=True)
+                url=api_form.cleaned_data.get('Connection')
                 try:
-                    client = MongoClient(uri)
-                    client = module.client.server_info()
-                    client = "Ok and running in a mongo " + client["version"] + "version"
-                except Exception:
-                    client = 'Connection could not be established'
-                #client = module.client.admin.command('ismaster')
-                        
-
-
+                    ping=requests.get(url,  timeout=5)
+                    context["ping"]=ping.status_code
+                    context["ping_title"]="UI"
+                except Exception as e:
+                    context["ping"]=e
+                    context["ping_title"]="UI"
             template = "general_configuration/connections.html"
             return render(request, template, context)
         elif form.is_valid() and 'Save' in request.POST:

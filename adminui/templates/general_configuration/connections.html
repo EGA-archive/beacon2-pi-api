@@ -49,7 +49,25 @@
           <div>
             <button type="submit" class="btn btn-danger mb-3" name="Save" value="{{title}}">Save</button>
           </div>
-          <button type="submit" class="btn btn-danger mb-3" name="Test Connection" value="Test {{title}} Connection">Test Connection</button>
+            <button
+                type="submit"
+                class="btn btn-danger mb-3"
+                name="Test Connection"
+                value="Test Connection {{title}}"
+                hx-target="#ping_{{title}}"
+                hx-swap="innerHTML"
+            >
+                Test Connection
+            </button>
+
+            <div id="ping_{{title}}"
+                {% if title != ping_title %}style="display: none;"{% endif %}>
+                {% if title == ping_title %}
+                    {{ ping }}
+                {% endif %}
+            </div>
+
+
       </form>
 {% endfor %}
 {% for title, form in non_db_forms.items %}
@@ -69,7 +87,25 @@
           <div>
             <button type="submit" class="btn btn-danger mb-3" name="{{title}}">Save</button>
           </div>
-          <button type="submit" class="btn btn-danger mb-3" name="Test Connection" value="Test {{title}} Connection">Test Connection</button>
+              <button
+                  type="submit"
+                  class="btn btn-danger mb-3"
+                  name="Test Connection"
+                  value="Test Connection {{title}}"
+                  hx-target="#ping_{{title}}"
+                  hx-swap="innerHTML"
+              >
+                  Test Connection
+              </button>
+              <div id="ping_{{title}}"
+                  {% if title != ping_title %}style="display: none;"{% endif %}>
+                  {% if title == ping_title %}
+                      {{ ping }}
+                  {% endif %}
+              </div>
+
+
+
       </form>
 {% endfor %}
 </body>
