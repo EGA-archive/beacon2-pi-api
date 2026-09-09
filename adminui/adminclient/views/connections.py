@@ -43,16 +43,21 @@ def default_view(request):
         api_form = LinkConnection(request.POST)
         ui_form = LinkConnection(request.POST)
         if 'Test Connection' in request.POST:
+            print('wow', flush=True)
             if form.is_valid():
+                print('valid', flush=True)
+                print(request.POST, flush=True)
                 for dir in dirs:
-                    if dir in request.POST:
+                    if dir in request.POST.get('Test Connection'):
+                        print('dir is', flush=True)
                         complete_client_module='beacon.connections.'+dir+'.client'
                         import importlib
                         module = importlib.import_module(complete_client_module, package=None)
                         client_from_module = getattr(module, 'get_client')
                         # Perform the ping of each of the connections with a timeout
                         try:
-                            ping=client_from_module.admin.command("ping")
+                            client = client_from_module()
+                            ping=client.admin.command("ping")
                             context["ping"]=ping
                             context["ping_title"]=dir
                         # In case of timeout or ping not successful, raise an error of the database being down
