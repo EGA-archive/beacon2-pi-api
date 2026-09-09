@@ -16,22 +16,20 @@
   <body class="bg-custom-powder-light" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
     <form method="post" onsubmit="openLoader()">
         {% csrf_token %}
-          <button type="submit" class="btn btn-danger mb-3" name="TestDatabase" value="TestDatabase">Test Database</button>
           <button type="submit" class="btn btn-danger mb-3" name="TestAPI" value="TestAPI">Test API</button>
-          <button type="submit" class="btn btn-danger mb-3" name="BudgetDatabase" value="BudgetDatabase">Test Budget Database</button>
+          <button type="submit" class="btn btn-danger mb-3" name="IdentityProviders" value="IdentityProviders">Test Identity Providers</button>
           <button type="submit" class="btn btn-danger mb-3" name="UserInterface" value="UserInterface">Test User Interface</button>
           <button type="submit" class="btn btn-danger mb-3" name="GeneralStatus" value="GeneralStatus">Test General Status</button>
     </form>
-          {% if client %}
-          <div>{{client}}</div>
-          {% endif %}
-          {% if database %}
-          <div>Database status is: {{database}}</div>
+          {% if ui %}
+          <div>UI status is: {{ui}}</div>
           {% endif %}
           {% if api %}
           <div>API status is: {{api}}</div>
           {% endif %}
-          {% if budget %}
-          <div>Budget database status is: {{budget}}</div>
+          {% if idp %}
+          {% for idp_name, status in idp.items %}
+          <div>{{idp_name}} status is: {{status}}</div>
+          {% endfor %}
           {% endif %}
 </body>
