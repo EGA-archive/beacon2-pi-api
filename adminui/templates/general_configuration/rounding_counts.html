@@ -28,3 +28,26 @@
           </div>
       </form>
 </body>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const activateRounding = document.getElementById('id_Activate_Rounding');
+    const rounding = document.getElementById('id_Rounding');
+
+    const activateImprecise = document.getElementById('id_Activate_Imprecise');
+    const imprecise = document.getElementById('id_Imprecise');
+
+    function updateRounding() {
+        rounding.disabled = !activateRounding.checked;
+    }
+
+    function updateImprecise() {
+        imprecise.disabled = !activateImprecise.checked;
+    }
+
+    activateRounding.addEventListener('change', updateRounding);
+    activateImprecise.addEventListener('change', updateImprecise);
+
+    updateRounding();
+    updateImprecise();
+});
+</script>

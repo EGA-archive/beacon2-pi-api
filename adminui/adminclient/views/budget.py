@@ -8,18 +8,7 @@ from adminbackend.forms.budget import BudgetForm
 from beacon.conf.conf_override import config
 from django.contrib.auth.decorators import login_required, permission_required
 import logging
-
-complete_module='beacon.connections.'+config.query_budget_database
-import importlib
-module = importlib.import_module(complete_module, package=None)
-
-LOG = logging.getLogger(__name__)
-fmt = '%(levelname)s - %(asctime)s - %(message)s'
-formatter = logging.Formatter(fmt)
-sh = logging.StreamHandler()
-sh.setLevel('NOTSET')
-sh.setFormatter(formatter)
-LOG.addHandler(sh)
+import os
 
 #@login_required
 #@permission_required('adminclient.can_see_view', raise_exception=True)
@@ -29,15 +18,22 @@ def default_view(request):
     if request.method == 'POST':
         form = BudgetForm(request.POST)
         if 'Test Budget Connection' in request.POST:
-            if 'mongo' in config.query_budget_database:
-                try:
-                    client = module.client.server_info()
-                    client = "Ok and running in a mongo " + client["version"] + "version"
-                except Exception:
-                    client = 'Connection could not be established'
+            dirs = os.listdir("/home/app/web/beacon/connections")
+            for dir in dirs:
+                if dir == config.query_budget_database:
+                    complete_client_module='beacon.connections.'+dir+'.client'
+                    import importlib
+                    module = importlib.import_module(complete_client_module, package=None)
+                    client_from_module = getattr(module, 'get_client')
+                    try:
+                        client = client_from_module()
+                        ping=client.admin.command("ping")
+                    # In case of timeout or ping not successful, raise an error of the database being down
+                    except Exception as e:
+                        ping=e
             #client = module.client.admin.command('ismaster')
             template = "general_configuration/budget.html"
-            context = {'form': form, 'client': client}
+            context = {'form': form, 'client': ping}
             return render(request, template, context)
         if form.is_valid():
             budgetUser = form.cleaned_data['BudgetUser']

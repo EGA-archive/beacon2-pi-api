@@ -53,9 +53,29 @@ class RoundingCountsForm(forms.Form):
                     if placeholder != '0':
                         self.initial['Activate_Imprecise'] = True
                         self.initial['Type'] = 'imprecise'
-    Activate_Rounding = forms.BooleanField(help_text='Activate Rounding')
-    type_choices = [('tenths', 'tenths'), ('hundredths','hundredths')]
-    Rounding = forms.ChoiceField(choices=type_choices, help_text='Type of rounding', required=False)
-    Activate_Imprecise = forms.BooleanField(help_text='Activate Threshold')
-    Imprecise = forms.IntegerField(help_text='Minimum required matches', required=False)
+    Activate_Rounding = forms.BooleanField(
+        help_text='Activate Rounding',
+        required=False
+    )
+
+    type_choices = [
+        ('tenths', 'tenths'),
+        ('hundredths', 'hundredths'),
+    ]
+
+    Rounding = forms.ChoiceField(
+        choices=type_choices,
+        help_text='Type of rounding',
+        required=False
+    )
+
+    Activate_Imprecise = forms.BooleanField(
+        help_text='Activate Threshold',
+        required=False
+    )
+
+    Imprecise = forms.IntegerField(
+        help_text='Minimum required matches',
+        required=False
+    )
     
