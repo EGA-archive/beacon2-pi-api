@@ -36,6 +36,7 @@ services:
     volumes:
       - ./beacon:/home/app/web/beacon
       - ./adminui:/home/app/web
+      - ./template-ui/src/config/config.json:/home/app/web/template-ui-config.json
     networks:
       - pub
   

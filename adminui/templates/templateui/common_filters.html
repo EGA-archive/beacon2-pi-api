@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="htmx-config" content='{"selfRequestsOnly":false}'>
+  <title>Admin UI</title>
+  <script type="text/javascript" src="{% static '/adminui/js/htmx.min.js' %}"></script>
+  <link rel="stylesheet" href="media/mystyle.css">
+</head>
+
+<body>
+  <body class="bg-custom-powder-light" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+
+{% for form in list_of_forms %}
+      <form method="post" onsubmit="openLoader()">
+       </fieldset>
+                <fieldset>
+                    <h3>{{ form.category.value }}</h3>
+    {% for field in form %}
+        <p>
+            {% if field.help_text %}
+                <small>{{ field.help_text }}</small>
+            {% endif %}
+
+            {{ field }}
+
+
+            {% for error in field.errors %}
+                <span class="error">{{ error }}</span>
+            {% endfor %}
+        </p>
+    {% endfor %}
+                </fieldset>
+                {% endfor %}
+<button type="submit" name='categories' value='categories' id="categories_button">Save</button>
+      </form>
+
+
+</body>

@@ -1,6 +1,8 @@
 from django.urls import path
 #from .views import HomePageView
 from .views import views, datasets, filtering_terms, synonyms, permits, budget, rounding_counts, connections, service_status, identity_provider, verifier, admin_settings, models, get_choices, new_permit
+from .views.templateui import common_filters
+
 app_name = 'adminclients'
 
 urlpatterns = [
@@ -23,5 +25,6 @@ urlpatterns = [
         get_choices.default_view,
         name="get_choices"
     ),
-    path('new_permit', new_permit.default_view, name='new_permit')
+    path('new_permit', new_permit.default_view, name='new_permit'),
+    path('common_filters', common_filters.default_view, name='common_filters')
 ]

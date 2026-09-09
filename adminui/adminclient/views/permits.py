@@ -26,11 +26,6 @@ PERMISSIONS_FILE = (
     "datasets_permissions.yml"
 )
 
-
-# ============================================================
-# HELPERS
-# ============================================================
-
 def _load_permissions():
     try:
         with open(PERMISSIONS_FILE) as f:
@@ -121,11 +116,6 @@ def _get_existing_user_config(user_list, email):
 
     return {}
 
-
-# ============================================================
-# BUILD USER ENTRY TYPE FORMSETS
-# ============================================================
-
 def _build_user_entry_type_formsets(
     request,
     user_formset,
@@ -133,17 +123,6 @@ def _build_user_entry_type_formsets(
     user_prefix,
     entry_type_choices,
 ):
-    """
-    Build one nested formset for every user form.
-
-    IMPORTANT:
-    We build a nested formset for EVERY user form index,
-    regardless of whether the user has been filled in yet.
-
-    This guarantees that the management form exists in the
-    template for every possible user row.
-    """
-
     nested_formsets = {}
 
     for user_index, user_form in enumerate(user_formset):
@@ -153,16 +132,6 @@ def _build_user_entry_type_formsets(
             f"user-{user_index}-"
             f"entry-types"
         )
-
-        # -----------------------------------------------
-        # Determine initial data.
-        #
-        # For an existing GET form, use the existing
-        # user's exceptions.
-        #
-        # For a POST, do NOT use cleaned_data here.
-        # The POST itself supplies the values.
-        # -----------------------------------------------
 
         initial = []
 
@@ -175,10 +144,6 @@ def _build_user_entry_type_formsets(
                 initial = _get_user_entry_type_initial(
                     user_config
                 )
-
-        # -----------------------------------------------
-        # Build nested formset
-        # -----------------------------------------------
 
         nested_formset = (
             UserEntryTypeGranularityFormSet(
@@ -196,14 +161,7 @@ def _build_user_entry_type_formsets(
 
     return nested_formsets
 
-
-# ============================================================
-# VIEW
-# ============================================================
-
 def default_view(request):
-
-    datasets = client["beacon"].datasets
 
     datasets_permissions = _load_permissions()
 
@@ -215,10 +173,6 @@ def default_view(request):
     entry_type_choices = _get_entry_types()
 
     forms_by_dataset = {}
-
-    # ========================================================
-    # BUILD FORMS
-    # ========================================================
 
     for dataset_index, dataset_id in enumerate(
         dataset_ids
@@ -235,10 +189,6 @@ def default_view(request):
             )
         )
 
-        # ====================================================
-        # DATASET FORM
-        # ====================================================
-
         permits_form = PermitsForm(
             request.POST or None,
             prefix=f"{dataset_prefix}-permits",
@@ -251,10 +201,6 @@ def default_view(request):
         entry_type_formsets = {}
         user_formsets = {}
         user_entry_type_formsets = {}
-
-        # ====================================================
-        # SECURITY LEVELS
-        # ====================================================
 
         for security_level in SECURITY_LEVELS:
 
@@ -278,10 +224,6 @@ def default_view(request):
                     security_level
                 )
             )
-
-            # =================================================
-            # SECURITY FORM INITIAL
-            # =================================================
 
             if security_level == "controlled":
 
@@ -308,11 +250,6 @@ def default_view(request):
                         "granularity": "-",
                     }
 
-
-            # =================================================
-            # SECURITY FORM
-            # =================================================
-
             security_form = SecurityLevelForm(
                 request.POST or None,
                 prefix=security_prefix,
@@ -322,10 +259,6 @@ def default_view(request):
             security_forms[
                 security_level
             ] = security_form
-
-            # =================================================
-            # PUBLIC / REGISTERED
-            # =================================================
 
             if security_level != "controlled":
 
@@ -370,10 +303,6 @@ def default_view(request):
                     security_level
                 ] = {}
 
-            # =================================================
-            # CONTROLLED
-            # =================================================
-
             else:
 
                 user_list = []
@@ -392,10 +321,6 @@ def default_view(request):
                         user_list
                     )
                 )
-
-                # ---------------------------------------------
-                # User formset
-                # ---------------------------------------------
 
                 user_formset = (
                     UserPermissionFormSet(
@@ -417,10 +342,6 @@ def default_view(request):
                     security_level
                 ] = None
 
-                # ---------------------------------------------
-                # ALWAYS BUILD ALL NESTED FORMSETS
-                # ---------------------------------------------
-
                 user_entry_type_formsets[
                     security_level
                 ] = _build_user_entry_type_formsets(
@@ -431,19 +352,11 @@ def default_view(request):
                     entry_type_choices=entry_type_choices,
                 )
 
-        # ====================================================
-        # EXISTING SECURITY LEVELS
-        # ====================================================
-
         existing_security_levels = [
             level
             for level in SECURITY_LEVELS
             if level in existing_dataset
         ]
-
-        # ====================================================
-        # STORE FORMS
-        # ====================================================
 
         forms_by_dataset[
             dataset_id
@@ -467,25 +380,13 @@ def default_view(request):
                 existing_security_levels,
         }
 
-    # ========================================================
-    # POST
-    # ========================================================
-
     if request.method == "POST":
 
         all_valid = True
 
-        # ====================================================
-        # VALIDATE EVERYTHING
-        # ====================================================
-
         for dataset_id, dataset_forms in (
             forms_by_dataset.items()
         ):
-
-            # ------------------------------------------------
-            # Dataset
-            # ------------------------------------------------
 
             permits_form = (
                 dataset_forms[
@@ -495,10 +396,6 @@ def default_view(request):
 
             if not permits_form.is_valid():
                 all_valid = False
-
-            # ------------------------------------------------
-            # Security levels
-            # ------------------------------------------------
 
             for security_level in SECURITY_LEVELS:
 
@@ -511,10 +408,6 @@ def default_view(request):
                 if not security_form.is_valid():
                     all_valid = False
 
-                # ============================================
-                # PUBLIC / REGISTERED
-                # ============================================
-
                 if security_level != "controlled":
 
                     formset = (
@@ -525,10 +418,6 @@ def default_view(request):
 
                     if not formset.is_valid():
                         all_valid = False
-
-                # ============================================
-                # CONTROLLED
-                # ============================================
 
                 else:
 
@@ -547,14 +436,6 @@ def default_view(request):
                         ][security_level]
                     )
 
-                    # ----------------------------------------
-                    # Validate EVERY nested formset.
-                    #
-                    # Because the view now creates a nested
-                    # formset for every user index, Django
-                    # will always have its ManagementForm.
-                    # ----------------------------------------
-
                     for user_index, user_entry_formset in (
                         nested_formsets.items()
                     ):
@@ -562,19 +443,11 @@ def default_view(request):
                         if not user_entry_formset.is_valid():
                             all_valid = False
 
-        # ====================================================
-        # SAVE
-        # ====================================================
-
         if all_valid:
 
             new_permissions = copy.deepcopy(
                 datasets_permissions
             )
-
-            # =================================================
-            # DATASETS
-            # =================================================
 
             for original_dataset_id, dataset_forms in (
                 forms_by_dataset.items()
@@ -604,16 +477,7 @@ def default_view(request):
                     ]
                 )
 
-                # =============================================
-                # SECURITY LEVELS
-                # =============================================
-
                 for security_level in SECURITY_LEVELS:
-
-                    # -----------------------------------------
-                    # Enabled checkbox
-                    # -----------------------------------------
-
                     enabled_key = (
                         f"enabled-{original_dataset_id}-"
                         f"{security_level}"
@@ -637,10 +501,6 @@ def default_view(request):
                             "security"
                         ][security_level]
                     )
-
-                    # =========================================
-                    # PUBLIC / REGISTERED
-                    # =========================================
 
                     if security_level != "controlled":
 
@@ -699,10 +559,6 @@ def default_view(request):
                                 exceptions,
                         }
 
-                    # =========================================
-                    # CONTROLLED
-                    # =========================================
-
                     else:
 
                         user_formset = (
@@ -718,11 +574,6 @@ def default_view(request):
                         )
 
                         user_list = []
-
-                        # -------------------------------------
-                        # USERS
-                        # -------------------------------------
-
                         for user_index, user_form in enumerate(
                             user_formset
                         ):
@@ -749,11 +600,6 @@ def default_view(request):
 
                             if not email:
                                 continue
-
-
-                            # ---------------------------------
-                            # Nested exceptions
-                            # ---------------------------------
 
                             user_entry_formset = (
                                 nested_formsets.get(
@@ -798,33 +644,17 @@ def default_view(request):
                                         entry_type:
                                             granularity
                                     })
-
-                            # ---------------------------------
-                            # Build YAML user
-                            # ---------------------------------
-
                             user_list.append({
                                 "user-e-mail": email,
                                 "default_entry_types_granularity": user_granularity,
                                 "entry_types_exceptions": user_exceptions,
                             })
-
-
-                        # -------------------------------------
-                        # Controlled configuration
-                        # -------------------------------------
-
                         dataset_permissions[
                             security_level
                         ] = {
                             "user-list":
                                 user_list,
                         }
-
-            # =================================================
-            # WRITE YAML
-            # =================================================
-
             with open(
                 PERMISSIONS_FILE,
                 "w"
@@ -844,11 +674,6 @@ def default_view(request):
             return redirect(
                 "adminclient:permits"
             )
-
-    # ========================================================
-    # GET / INVALID POST
-    # ========================================================
-
     return render(
         request,
         "general_configuration/permits.html",
