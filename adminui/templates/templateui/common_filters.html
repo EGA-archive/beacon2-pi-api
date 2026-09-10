@@ -7,15 +7,24 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="htmx-config" content='{"selfRequestsOnly":false}'>
+
     <title>Admin UI</title>
-    <script type="text/javascript" src="{% static '/adminui/js/htmx.min.js' %}"></script>
+
+    <script
+        type="text/javascript"
+        src="{% static '/adminui/js/htmx.min.js' %}">
+    </script>
+
     <link rel="stylesheet" href="media/mystyle.css">
 </head>
 
-<body class="bg-custom-powder-light"
-      hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+<body
+    class="bg-custom-powder-light"
+    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+>
 
-<form method="post" onsubmit="openLoader()">
+<form method="post" id="main-form">
+
     {% csrf_token %}
 
     {% for form in list_of_forms %}
@@ -49,15 +58,14 @@
                             {{ field }}
 
                             {% for error in field.errors %}
-                                <span class="error">{{ error }}</span>
+                                <span class="error">
+                                    {{ error }}
+                                </span>
                             {% endfor %}
 
                         </p>
 
-
                     {% endif %}
-
-                    
 
                 {% endfor %}
 
@@ -108,16 +116,14 @@
                             </td>
 
                             <td>
-
                                 <button
                                     type="submit"
                                     name="FilteringTermLabel"
-                                    value="id_{{fterm.id}}_label_{{ fterm.label }}_scopes_{{fterm.scopes}}"
+                                    value="id_{{ fterm.id }}_label_{{ fterm.label }}_scopes_{{ fterm.scopes }}"
                                     class="btn btn-danger mb-3 add-label-button"
                                 >
                                     +
                                 </button>
-
                             </td>
 
                         </tr>
@@ -132,117 +138,230 @@
 
     {% endif %}
 
-
-    <button
-        type="submit"
-        name="categories"
-        value="categories"
-        id="categories_button"
-    >
-        Save
-    </button>
-
 </form>
 
 
 <script>
+
 document.addEventListener("DOMContentLoaded", function () {
 
-    const checkboxes =
+    const form = document.getElementById("main-form");
+
+    const categoryCheckboxes =
         document.querySelectorAll(".category-checkbox");
 
-    const forms =
+    const categoryForms =
         document.querySelectorAll(".category-form");
 
     const selectedCategory =
         document.getElementById("selected_category");
 
 
-    function setFormDisabled(form, disabled) {
+    /*
+     * Disable all fields initially.
+     */
+    categoryForms.forEach(function (categoryForm) {
 
-        const fields = form.querySelectorAll(
-            ".form-fields input, " +
-            ".form-fields select, " +
-            ".form-fields textarea, " +
-            ".form-fields button"
-        );
+        const fields =
+            categoryForm.querySelectorAll(
+                ".form-fields input, " +
+                ".form-fields select, " +
+                ".form-fields textarea"
+            );
 
         fields.forEach(function (field) {
-            field.disabled = disabled;
+            field.disabled = true;
         });
-    }
 
-
-    forms.forEach(function (form) {
-        setFormDisabled(form, true);
     });
 
 
-    checkboxes.forEach(function (checkbox) {
+    /*
+     * Category checkbox.
+     *
+     * Selecting a category enables all the fields
+     * belonging to that category.
+     */
+    categoryCheckboxes.forEach(function (categoryCheckbox) {
 
-        checkbox.addEventListener("change", function () {
+        categoryCheckbox.addEventListener(
+            "change",
+            function () {
 
-            if (this.checked) {
-
-                selectedCategory.value = this.value;
-
-                checkboxes.forEach(function (otherCheckbox) {
-
-                    const otherForm =
-                        otherCheckbox.closest(".category-form");
-
-                    if (otherCheckbox === checkbox) {
-
-                        setFormDisabled(otherForm, false);
-
-                    } else {
-
-                        otherCheckbox.checked = false;
-
-                        setFormDisabled(otherForm, true);
-                    }
-
-                });
-
-            } else {
-
-                selectedCategory.value = "";
-
-                const form =
+                const categoryForm =
                     this.closest(".category-form");
 
-                setFormDisabled(form, true);
-            }
 
-        });
+                if (this.checked) {
+
+                    selectedCategory.value =
+                        this.value;
+
+
+                    categoryCheckboxes.forEach(
+                        function (otherCheckbox) {
+
+                            const otherForm =
+                                otherCheckbox.closest(
+                                    ".category-form"
+                                );
+
+                            const otherFields =
+                                otherForm.querySelectorAll(
+                                    ".form-fields input, " +
+                                    ".form-fields select, " +
+                                    ".form-fields textarea"
+                                );
+
+
+                            if (
+                                otherCheckbox ===
+                                categoryCheckbox
+                            ) {
+
+                                otherFields.forEach(
+                                    function (field) {
+                                        field.disabled = false;
+                                    }
+                                );
+
+                            } else {
+
+                                otherCheckbox.checked =
+                                    false;
+
+                                otherFields.forEach(
+                                    function (field) {
+                                        field.disabled = true;
+                                    }
+                                );
+
+                            }
+
+                        }
+                    );
+
+                } else {
+
+                    selectedCategory.value = "";
+
+                    const fields =
+                        categoryForm.querySelectorAll(
+                            ".form-fields input, " +
+                            ".form-fields select, " +
+                            ".form-fields textarea"
+                        );
+
+                    fields.forEach(function (field) {
+                        field.disabled = true;
+                    });
+
+                }
+
+            }
+        );
 
     });
 
 
-    document.querySelector("form").addEventListener("submit", function (event) {
+    /*
+     * FIELD CHECKBOXES
+     *
+     * Every {{ field }} that is a checkbox gets its
+     * own change handler.
+     *
+     * When checked OR unchecked, submit:
+     *
+     * FilteringTermLabel = label_<field value>
+     */
+    categoryForms.forEach(function (categoryForm) {
 
-        const clickedButton = event.submitter;
+        const categoryCheckbox =
+            categoryForm.querySelector(
+                ".category-checkbox"
+            );
 
-        if (
-            clickedButton &&
-            clickedButton.classList.contains("add-label-button")
-        ) {
 
-            const checked =
-                document.querySelector(".category-checkbox:checked");
+        const fields =
+            categoryForm.querySelectorAll(
+                ".form-fields input[type='checkbox']"
+            );
 
-            if (!checked) {
-                event.preventDefault();
-                alert("Please select a category first.");
-                return;
-            }
 
-            selectedCategory.value = checked.value;
-        }
+        fields.forEach(function (field) {
+
+            field.addEventListener(
+                "change",
+                function () {
+
+                    /*
+                     * Make sure this field belongs to
+                     * the selected category.
+                     */
+                    if (
+                        !categoryCheckbox ||
+                        !categoryCheckbox.checked
+                    ) {
+                        return;
+                    }
+
+
+                    selectedCategory.value =
+                        categoryCheckbox.value;
+
+
+                    /*
+                     * Remove an old automatic value.
+                     */
+                    const oldInput =
+                        form.querySelector(
+                            ".automatic-filtering-term"
+                        );
+
+                    if (oldInput) {
+                        oldInput.remove();
+                    }
+
+
+                    /*
+                     * Send ONLY:
+                     *
+                     * label_<field value>
+                     */
+                    const filteringTermInput =
+                        document.createElement("input");
+
+                    filteringTermInput.type = "hidden";
+
+                    filteringTermInput.name =
+                        "FilteringTermLabel";
+
+                    filteringTermInput.value =
+                        "label_" + field.value;
+
+                    filteringTermInput.className =
+                        "automatic-filtering-term";
+
+
+                    form.appendChild(
+                        filteringTermInput
+                    );
+
+
+                    /*
+                     * Submit immediately.
+                     */
+                    form.submit();
+
+                }
+            );
+
+        });
 
     });
 
 });
+
 </script>
 
 </body>
