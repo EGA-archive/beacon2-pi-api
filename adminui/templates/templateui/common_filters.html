@@ -3,41 +3,247 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="htmx-config" content='{"selfRequestsOnly":false}'>
-  <title>Admin UI</title>
-  <script type="text/javascript" src="{% static '/adminui/js/htmx.min.js' %}"></script>
-  <link rel="stylesheet" href="media/mystyle.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="htmx-config" content='{"selfRequestsOnly":false}'>
+    <title>Admin UI</title>
+    <script type="text/javascript" src="{% static '/adminui/js/htmx.min.js' %}"></script>
+    <link rel="stylesheet" href="media/mystyle.css">
 </head>
 
-<body>
-  <body class="bg-custom-powder-light" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+<body class="bg-custom-powder-light"
+      hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
 
-{% for form in list_of_forms %}
-      <form method="post" onsubmit="openLoader()">
-       </fieldset>
-                <fieldset>
-                    <h3>{{ form.category.value }}</h3>
-    {% for field in form %}
-        <p>
-            {% if field.help_text %}
-                <small>{{ field.help_text }}</small>
-            {% endif %}
+<form method="post" onsubmit="openLoader()">
+    {% csrf_token %}
 
-            {{ field }}
+    {% for form in list_of_forms %}
+
+        <fieldset class="category-form">
+
+            <label>
+                <input
+                    type="checkbox"
+                    class="category-checkbox"
+                    value="{{ form.category.value }}"
+                    name="checky"
+                    id="generic_checkbox_{{ form.category.value }}"
+                >
+
+                <strong>{{ form.category.value }}</strong>
+            </label>
+
+            <div class="form-fields">
+
+                {% for field in form %}
+
+                    {% if field.name != "category" %}
+
+                        <p>
+
+                            {% if field.help_text %}
+                                <small>{{ field.help_text }}</small>
+                            {% endif %}
+
+                            {{ field }}
+
+                            {% for error in field.errors %}
+                                <span class="error">{{ error }}</span>
+                            {% endfor %}
+
+                        </p>
 
 
-            {% for error in field.errors %}
-                <span class="error">{{ error }}</span>
-            {% endfor %}
-        </p>
-    {% endfor %}
-                </fieldset>
+                    {% endif %}
+
+                    
+
                 {% endfor %}
-<button type="submit" name='categories' value='categories' id="categories_button">Save</button>
-      </form>
 
+            </div>
+
+        </fieldset>
+
+    {% endfor %}
+
+
+    <input
+        type="hidden"
+        name="category"
+        id="selected_category"
+        value=""
+    >
+
+
+    {% if fterms_list %}
+
+        <table id="EGAtable center" style="margin-left: 150px;">
+
+            <tbody style="border: 2px solid #7B1B58;">
+
+                <tr class="center">
+                    <th scope="col">ID</th>
+                    <th scope="col">Label</th>
+                    <th scope="col">Scopes</th>
+                    <th scope="col"></th>
+                </tr>
+
+                {% for fterm in fterms_list %}
+
+                    {% if fterm.type == 'ontology' %}
+
+                        <tr class="center">
+
+                            <td>
+                                {{ fterm.id }}
+                            </td>
+
+                            <td>
+                                {{ fterm.label }}
+                            </td>
+
+                            <td>
+                                {{ fterm.scopes }}
+                            </td>
+
+                            <td>
+
+                                <button
+                                    type="submit"
+                                    name="FilteringTermLabel"
+                                    value="id_{{fterm.id}}_label_{{ fterm.label }}_scopes_{{fterm.scopes}}"
+                                    class="btn btn-danger mb-3 add-label-button"
+                                >
+                                    +
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+                    {% endif %}
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    {% endif %}
+
+
+    <button
+        type="submit"
+        name="categories"
+        value="categories"
+        id="categories_button"
+    >
+        Save
+    </button>
+
+</form>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const checkboxes =
+        document.querySelectorAll(".category-checkbox");
+
+    const forms =
+        document.querySelectorAll(".category-form");
+
+    const selectedCategory =
+        document.getElementById("selected_category");
+
+
+    function setFormDisabled(form, disabled) {
+
+        const fields = form.querySelectorAll(
+            ".form-fields input, " +
+            ".form-fields select, " +
+            ".form-fields textarea, " +
+            ".form-fields button"
+        );
+
+        fields.forEach(function (field) {
+            field.disabled = disabled;
+        });
+    }
+
+
+    forms.forEach(function (form) {
+        setFormDisabled(form, true);
+    });
+
+
+    checkboxes.forEach(function (checkbox) {
+
+        checkbox.addEventListener("change", function () {
+
+            if (this.checked) {
+
+                selectedCategory.value = this.value;
+
+                checkboxes.forEach(function (otherCheckbox) {
+
+                    const otherForm =
+                        otherCheckbox.closest(".category-form");
+
+                    if (otherCheckbox === checkbox) {
+
+                        setFormDisabled(otherForm, false);
+
+                    } else {
+
+                        otherCheckbox.checked = false;
+
+                        setFormDisabled(otherForm, true);
+                    }
+
+                });
+
+            } else {
+
+                selectedCategory.value = "";
+
+                const form =
+                    this.closest(".category-form");
+
+                setFormDisabled(form, true);
+            }
+
+        });
+
+    });
+
+
+    document.querySelector("form").addEventListener("submit", function (event) {
+
+        const clickedButton = event.submitter;
+
+        if (
+            clickedButton &&
+            clickedButton.classList.contains("add-label-button")
+        ) {
+
+            const checked =
+                document.querySelector(".category-checkbox:checked");
+
+            if (!checked) {
+                event.preventDefault();
+                alert("Please select a category first.");
+                return;
+            }
+
+            selectedCategory.value = checked.value;
+        }
+
+    });
+
+});
+</script>
 
 </body>
+</html>

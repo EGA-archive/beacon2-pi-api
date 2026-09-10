@@ -38,7 +38,6 @@ def default_view(request):
     if request.method == 'POST':
         form = FilteringTermsForm(request.POST, request.FILES)
         if form2.is_valid():
-            print('yessss', flush=True)
             filteringTermID = form2.cleaned_data['Synonym_FilteringTermID']
             ft_type = form2.cleaned_data['FilteringTermType']
             ft_label = form2.cleaned_data['FilteringTermLabel']

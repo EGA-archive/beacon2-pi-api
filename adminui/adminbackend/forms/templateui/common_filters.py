@@ -15,11 +15,14 @@ class GroupForm(forms.Form):
         supported_choices = []
         initial_choices = TEMPLATE_CONF["ui"]["commonFilters"]["filterLabels"][category]
         for initial_choice in initial_choices:
-            supported_choices.append((initial_choice, initial_choice))
+            supported_choices.append((initial_choice["label"], initial_choice["label"]))
         self.fields['labels'].choices = supported_choices
         self.fields["labels"].initial = [
             value for value, label in supported_choices
-        ]    
+        ]
+        self.fields["category"].initial = category
+        self.fields['category'].widget.attrs['readonly'] = True
+    category=forms.CharField(required=True)
     labels=forms.MultipleChoiceField(
             choices=[], 
             widget=forms.CheckboxSelectMultiple,
