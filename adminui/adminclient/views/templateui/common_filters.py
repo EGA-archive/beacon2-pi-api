@@ -34,9 +34,11 @@ def default_view(request):
         ft_splitted = filteringTerm.split('_')
         category = request.POST['category']
         new_conf=TEMPLATE_CONF
-        labels= request.POST['labels']
+        labels = request.POST.getlist('labels')
         new_category_dict_list=[]
+        print(type(labels), flush=True)
         for label_dict in new_conf["ui"]["commonFilters"]["filterLabels"][category]:
+            print(label_dict["key"], flush=True)
             if label_dict["key"] not in labels:
                 continue
             else:
@@ -44,7 +46,8 @@ def default_view(request):
         new_conf["ui"]["commonFilters"]["filterLabels"][category]=new_category_dict_list
         new_dict={"key": ft_splitted[3], "id": ft_splitted[1], "label": ft_splitted[3], "type": "ontology", "scopes": ast.literal_eval(ft_splitted[5])}
         print(new_dict, flush=True)
-        new_conf["ui"]["commonFilters"]["filterLabels"][category].append(new_dict)
+        if new_dict["key"] not in labels:
+            new_conf["ui"]["commonFilters"]["filterLabels"][category].append(new_dict)
         
 
         with open("/home/app/web/template-ui-config.json", "w") as f:
