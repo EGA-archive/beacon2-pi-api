@@ -6,7 +6,8 @@ from pydantic import (
     create_model
 )
 from beacon.conf import conf_override
-from beacon.utils.modules import load_class, get_modules_confiles
+from beacon.utils.modules import get_modules_confiles
+from beacon.framework.validator.v2_0_0.meta import InformationalMeta
 
 class RelatedEndpoint(BaseModel):
     returnedEntryType: str
@@ -111,5 +112,5 @@ class MapSchema(BaseModel):
         return self(endpointSets=endpointEntriesClass)
 
 class MapResponse(BaseModel):
-    meta: load_class("meta", "InformationalMeta")
+    meta: InformationalMeta
     response: MapSchema

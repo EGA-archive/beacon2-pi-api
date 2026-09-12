@@ -1,10 +1,8 @@
-import obonet
-import networkx
-import os
-import urllib.request
-from urllib.error import HTTPError
 import progressbar
 from beacon.connections.mongo.client import get_client
+import requests
+import tqdm
+from beacon.connections.mongo.conf import database_name
 
 class MyProgressBar:
     def __init__(self):
@@ -21,125 +19,129 @@ class MyProgressBar:
         else:
             self.pbar.finish()
 
-def load_ontology(ontology_id: str):
-    if ontology_id.isalpha():
-        print(ontology_id)
-        url_alt = "https://www.ebi.ac.uk/efo/EFO.obo"
-        url = "http://purl.obolibrary.org/obo/{}.obo".format(ontology_id.lower())
-        path = "/beacon/connections/mongo/ontologies/{}.obo".format(ontology_id)
-        try:
-            if not os.path.exists(path):
-                full_path = os.path.realpath(__file__)
-                print(full_path)
-                urllib.request.urlretrieve(url, path, MyProgressBar())
-        except HTTPError:
-            # TODO: Handle error in case the HTTP address could not be reached.
-            pass
-        except ValueError:
-            # TODO: Handle error in case there was a wrong ontology trying to be mapped.
-            pass
-        except Exception:
-            pass
-        try:
-            if os.stat(path).st_size == 0:
-                try:
-                    urllib.request.urlretrieve(url_alt, path, MyProgressBar())
-                except HTTPError:
-                    # TODO: Handle error in case the HTTP address could not be reached.
-                    pass
-                except ValueError:
-                    # TODO: Handle error in case there was a wrong ontology trying to be mapped.
-                    pass
-        except Exception:
-                pass
-    return '{}'.format(ontology_id)
+def discard_non_scanned_ontologies(list_of_all_ontologies, ontology_codes_list):
+    definitive_list=[]
+    for similar_ontology in list_of_all_ontologies:
+        if similar_ontology in ontology_codes_list:
+            definitive_list.append(similar_ontology)
+    return definitive_list
 
+def get_all_ancestors_descendants(ontology_id, code):
+
+    ancestors_url = f"https://www.ebi.ac.uk/ols4/api/ontologies/{ontology_id.lower()}/ancestors?id={ontology_id}:{code}"
+    ancestors_data = requests.get(ancestors_url).json()
+    if "_embedded" in ancestors_data:
+        list_of_ancestors_full=ancestors_data["_embedded"]["terms"]
+        for ancestor in list_of_ancestors_full:
+            ancestor_descendants_url = f"https://www.ebi.ac.uk/ols4/api/ontologies/{ontology_id.lower()}/children?id={ancestor['obo_id']}"
+            ancestor_descendants_data = requests.get(ancestor_descendants_url).json()
+            if "_embedded" in ancestor_descendants_data:
+                list_of_ancestor_descendants_full=ancestor_descendants_data["_embedded"]["terms"]
+                list_of_ancestors_descendants=[]
+                is_list=False
+                for ancestor_descendant in list_of_ancestor_descendants_full:
+                    list_of_ancestors_descendants.append(ancestor_descendant["obo_id"])
+                    if ancestor_descendant["obo_id"] == ontology_id+":"+code:
+                        is_list=True
+                if is_list==True:
+                    return list_of_ancestors_descendants, list_of_ancestors_full
+    else:
+        return None, None
+    return None, list_of_ancestors_full
 
 def get_descendants_and_similarities():
+    list_of_ontology_families=[]
+    dict_of_ontology_families={}
     client=get_client()
     try:
-        client['beacon'].drop_collection("similarities")
+        client[database_name].drop_collection("similarities")
     except Exception:
-        client['beacon'].create_collection(name="similarities")
+        client[database_name].create_collection(name="similarities")
     try:
-        client['beacon'].validate_collection("similarities")
+        client[database_name].validate_collection("similarities")
     except Exception:
-        db=client['beacon'].create_collection(name="similarities")
-    filtering_docs=client['beacon'].filtering_terms.find({"type": "ontology"})
+        db=client[database_name].create_collection(name="similarities")
+    filtering_docs=client[database_name].filtering_terms.find({"type": "ontology"})
     array_of_ontologies=[]
     for ft_doc in filtering_docs:
         if ft_doc["id"] not in array_of_ontologies:
             array_of_ontologies.append(ft_doc["id"])
     for ontology in array_of_ontologies:
         ontology_list = ontology.split(':')
-        load_ontology(ontology_list[0])    
-        url = "/beacon/connections/mongo/ontologies/{}.obo".format(ontology_list[0].lower())
-        list_of_cousins = []
-        list_of_brothers = []
-        list_of_uncles = []
-        list_of_grandpas = []
-        url_alt = "https://www.ebi.ac.uk/efo/EFO.obo"
-        try:
-            graph = obonet.read_obo(url)
-        except Exception:
-            graph = obonet.read_obo(url_alt)
-        try:
-            descendants = networkx.ancestors(graph, ontology)
-        except Exception:
-            descendants = ''
-        descendants=list(descendants)
+        if ontology_list[0] not in dict_of_ontology_families:
+            dict_of_ontology_families[ontology_list[0]]=[ontology_list[1]]
+        else:
+            dict_of_ontology_families[ontology_list[0]].append(ontology_list[1])
+    i=0
+    j=0
+    for ontology_id, ontology_codes_list in dict_of_ontology_families.items():
+        pbar = tqdm.tqdm(total=len(ontology_codes_list))
+        list_of_existing_descendants = []
+        for code in ontology_codes_list:
+            definitive_similarity_high=[]
+            definitive_similarity_medium=[]
+            definitive_similarity_low=[]
+            #url = f"https://api-evsrest.nci.nih.gov/api/v1/concept/{ontology_id.lower()}/{code}/descendants"
+            url = f"https://www.ebi.ac.uk/ols4/api/ontologies/{ontology_id.lower()}/descendants?id={ontology_id}:{code}"
+            data = requests.get(url).json()
+            if "_embedded" in data:
+                list_of_descendants_full=data["_embedded"]["terms"]
+                for descendant in list_of_descendants_full:
+                    if descendant["obo_id"] in ontology_codes_list:
+                        list_of_existing_descendants.append(descendant["obo_id"])
+            similarity_high, similarity_low = get_all_ancestors_descendants(ontology_id, code)
 
-        print(descendants)
+            if similarity_high == None:
+                similarity_medium = None
+                pass
+            else:
+                similarity_high.remove(ontology_id+":"+code)
+                definitive_similarity_high=discard_non_scanned_ontologies(similarity_high, ontology_codes_list)
+                similarity_medium_list=[]
+                for similar_high_ontology in definitive_similarity_high:
+                    split_similar_high = similar_high_ontology.split(":")
+                    similarity_medium, cousins_ancestors_list = get_all_ancestors_descendants(split_similar_high[0], split_similar_high[1])
+                    if similarity_medium is not None:
+                        if similar_high_ontology in similarity_medium:
+                            similarity_medium.remove(similar_high_ontology)
+                        if ontology_id+":"+code in similarity_medium:
+                            similarity_medium.remove(ontology_id+":"+code)
+                        for medium_ontology in similarity_medium:
+                            similarity_medium_list.append(medium_ontology)
 
+                definitive_similarity_medium=discard_non_scanned_ontologies(similarity_medium_list, ontology_codes_list)
+            similarity_low_corrected=[]
+            if similarity_low is not None:
+                for low_similar_ontology in similarity_low:
+                    similarity_low_corrected.append(low_similar_ontology["obo_id"])
+                definitive_similarity_low=discard_non_scanned_ontologies(similarity_low_corrected, ontology_codes_list)
 
-        try:
-            tree = [n for n in graph.successors(ontology)]
-            for onto in tree:
-                predecessors = [n for n in graph.successors(onto)]
-                successors = [n for n in graph.predecessors(onto)]
-                list_of_brothers.append(successors)
-                list_of_grandpas.append(predecessors)
-            similarity_high=[]
-            similarity_medium=[]
-            similarity_low=[]
-            for llista in list_of_grandpas:
-                for item in llista:
-                    uncles = [n for n in graph.predecessors(item)]
-                    list_of_uncles.append(uncles)
-                    for uncle in uncles:
-                        cousins = [n for n in graph.predecessors(uncle)]
-                        if ontology not in cousins:
-                            list_of_cousins.append(cousins)
+            definitive_similarity_medium=definitive_similarity_high+definitive_similarity_medium
+            definitive_similarity_low=definitive_similarity_medium+definitive_similarity_low
+            print(f"\n===== {ontology_id}:{code} =====")
+            print('-----DESCENDANTS-----')
+            print(list_of_existing_descendants)
+            print('-----SIMILARITY_HIGH-----')
+            print(definitive_similarity_high)
+            print('-----SIMILARITY_MEDIUM-----')
+            print(definitive_similarity_medium)
+            print('-----SIMILARITY_LOW-----')
+            print(definitive_similarity_low)
 
-            for llista in list_of_brothers:
-                for item in llista:
-                    similarity_high.append(item)
-                    similarity_medium.append(item)
-                    similarity_low.append(item)
+            dict={}
+            if list_of_existing_descendants != [] or definitive_similarity_low != []:
+                dict['id']=ontology_id+":"+code
+                dict['descendants']=list_of_existing_descendants
+                dict['similarity_high']=definitive_similarity_high
+                dict['similarity_medium']=definitive_similarity_medium
+                dict['similarity_low']=definitive_similarity_low
+                
+                client[database_name].similarities.insert_one(dict)
+                j+=1
 
-            for llista in list_of_cousins:
-                for item in llista:
-                    similarity_medium.append(item)
-                    similarity_low.append(item)
-            
-            for llista in list_of_uncles:
-                for item in llista:
-                    similarity_low.append(item)
-
-        except Exception:
-            similarity_high=[]
-            similarity_medium=[]
-            similarity_low=[]
-
-        dict={}
-        dict['id']=ontology
-        dict['descendants']=descendants
-        dict['similarity_high']=similarity_high
-        dict['similarity_medium']=similarity_medium
-        dict['similarity_low']=similarity_low
-        
-        client['beacon'].similarities.insert_one(dict)
-        print("succesfully retrieved descendants from {}".format(ontology))
+            pbar.update(1)
+            i+=1
+    print("succesfully retrieved {} terms relationships and inserted {} of those".format(i,j))
         
     
 get_descendants_and_similarities()

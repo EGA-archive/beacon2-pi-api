@@ -1,8 +1,8 @@
 from typing import Optional, List
 from pydantic import (
     BaseModel, field_validator)
-from beacon.utils.modules import load_class
 import json
+from beacon.framework.validator.v2_0_0.meta import InformationalMeta
 
 class FilteringTermInResponse(BaseModel):
     """
@@ -104,7 +104,7 @@ class FilteringTermsResponse(BaseModel):
     """
 
     # Response metadata such as API version and schema information.
-    meta: load_class("meta", "InformationalMeta")
+    meta: InformationalMeta
 
     # Main response payload containing filtering terms and resources.
     response: FilteringTermsResults

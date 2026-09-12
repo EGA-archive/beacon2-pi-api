@@ -2,7 +2,6 @@ from beacon.logs.logs import log_with_args
 from beacon.conf.conf_override import config
 import aiohttp.web as web
 from bson import json_util
-from beacon.request.classes import RequestAttributes
 from beacon.exceptions.exceptions import InvalidData
 from beacon.views.endpoint import EndpointView
 from pydantic import ValidationError
@@ -18,7 +17,7 @@ class InfoView(EndpointView):
             # Generate the Info class for the info part of the response and populate it with data from the configuration
             info = module_info.InfoBody()
             # Generate the Meta class for the meta part of the response and populate it with data from the configuration
-            meta = module_meta.InformationalMeta(returnedSchemas=[RequestAttributes.returned_schema])
+            meta = module_meta.InformationalMeta(returnedSchemas=[self.request_attributes.returned_schema])
             # Create the response class that will allocate both Meta and Info parts of the response
             self.classResponse = module_info.InfoResponse(meta=meta.model_dump(exclude_none=True),response=info.model_dump(exclude_none=True))
             # Convert the class to JSON to return it in the final stream response
@@ -26,6 +25,6 @@ class InfoView(EndpointView):
         # Catch the cases where the Info response is not valid against the reference schema
         except ValidationError as v:
             # Stdout the information about what entry type failed about it not being according to the spec
-            raise InvalidData('{} templates or data are not correct'.format(RequestAttributes.entry_type))
+            raise InvalidData('{} templates or data are not correct'.format(self.request_attributes.entry_type))
         # Give a HTTP response with json data application and a 200 status, and the Info object class collected
         return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
