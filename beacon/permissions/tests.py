@@ -191,13 +191,14 @@ class TestAuthZ(unittest.TestCase):
 
             loop.run_until_complete(client.start_server())
 
-            MagicClass = MagicMock(_id='hohoho')
+            
 
             async def test_authorization():
                 # Attach Authorization header with mocked access token
                 headers = {'Authorization': 'Bearer ' + mock_access_token}
-                RequestAttributes.headers = headers
-
+                request_attributes = RequestAttributes()
+                request_attributes.headers=headers
+                MagicClass = MagicMock(_id='hohoho', request_attributes=request_attributes)
                 # Resolve username and visa dataset context
                 username, list_visa_datasets = await authorization(
                     self=MagicClass
@@ -221,7 +222,6 @@ class TestAuthZ(unittest.TestCase):
 
             async def test_granularity_returned():
                 # Individual-level granularity
-                RequestAttributes.entry_type_id = 'individual'
                 returned_granularity = return_found_granularity_in_exceptions(
                     self=MagicClass,
                     granularity_exceptions=[
@@ -229,12 +229,13 @@ class TestAuthZ(unittest.TestCase):
                         {"biosample": "count"},
                         {"analysis": "boolean"}
                     ],
-                    default_granularity=None
+                    default_granularity=None,
+                    entry_type_id='individual'
                 )
                 assert returned_granularity == 'record'
 
                 # Biosample-level granularity
-                RequestAttributes.entry_type_id = 'biosample'
+
                 returned_granularity = return_found_granularity_in_exceptions(
                     self=MagicClass,
                     granularity_exceptions=[
@@ -242,12 +243,12 @@ class TestAuthZ(unittest.TestCase):
                         {"biosample": "count"},
                         {"analysis": "boolean"}
                     ],
-                    default_granularity=None
+                    default_granularity=None,
+                    entry_type_id='biosample'
                 )
                 assert returned_granularity == 'count'
 
                 # Analysis-level granularity
-                RequestAttributes.entry_type_id = 'analysis'
                 returned_granularity = return_found_granularity_in_exceptions(
                     self=MagicClass,
                     granularity_exceptions=[
@@ -255,7 +256,8 @@ class TestAuthZ(unittest.TestCase):
                         {"biosample": "count"},
                         {"analysis": "boolean"}
                     ],
-                    default_granularity=None
+                    default_granularity=None,
+                    entry_type_id='analysis'
                 )
                 assert returned_granularity == 'boolean'
 
@@ -283,7 +285,7 @@ class TestAuthZ(unittest.TestCase):
                     if dataset == 'test2':
 
                         # --- Individual level ---
-                        RequestAttributes.entry_type_id = 'individual'
+
                         returned_granularity, exceptions = return_granularity_and_exceptions(
                             self=MagicClass,
                             security_level_dict=security_level_dict,
@@ -295,12 +297,12 @@ class TestAuthZ(unittest.TestCase):
                         returned_granularity = return_found_granularity_in_exceptions(
                             self=MagicClass,
                             granularity_exceptions=exceptions,
-                            default_granularity=returned_granularity
+                            default_granularity=returned_granularity,
+                            entry_type_id='individual'
                         )
                         assert returned_granularity == 'record'
 
                         # --- Biosample level ---
-                        RequestAttributes.entry_type_id = 'biosample'
                         returned_granularity, exceptions = return_granularity_and_exceptions(
                             self=MagicClass,
                             security_level_dict=security_level_dict,
@@ -312,7 +314,8 @@ class TestAuthZ(unittest.TestCase):
                         returned_granularity = return_found_granularity_in_exceptions(
                             self=MagicClass,
                             granularity_exceptions=exceptions,
-                            default_granularity=returned_granularity
+                            default_granularity=returned_granularity,
+                            entry_type_id='biosample'
                         )
                         assert returned_granularity == 'count'
 
@@ -329,7 +332,8 @@ class TestAuthZ(unittest.TestCase):
                         returned_granularity = return_found_granularity_in_exceptions(
                             self=MagicClass,
                             granularity_exceptions=exceptions,
-                            default_granularity=returned_granularity
+                            default_granularity=returned_granularity,
+                            entry_type_id='analysis'
                         )
                         assert returned_granularity == 'boolean'
 

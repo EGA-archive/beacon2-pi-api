@@ -73,7 +73,7 @@ def query_permissions(func):
         # Get the usernq, and the list of datasets that the user has permissions for from visas.
         username, list_visa_datasets = await authorization(self)
         # Get the datasets that the user has permissions for from the datasets permissions conf file in a list of classes for the datasets.
-        datasets_permissions = await PermissionsProxy.get_permissions(self, username=username, requested_datasets=requested_datasets, testMode=self.request_attributes.qparams.query.testMode)
+        datasets_permissions = await PermissionsProxy.get_permissions(self, username=username, requested_datasets=requested_datasets, testMode=self.request_attributes.qparams.query.testMode, entry_type_id=self.request_attributes.entry_type_id)
         # Return the time to be inserted in the budget in case the budget doesn't return an exception for the query.
         time_now = check_budget(self, username)
         # Add as well in the list of dataset classes, the dataset classes that have permissions for the query coming from visas.
