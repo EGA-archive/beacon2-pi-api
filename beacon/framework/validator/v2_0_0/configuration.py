@@ -6,7 +6,7 @@ from pydantic import (
 )
 from beacon.conf.conf_override import config
 from beacon.framework.validator.v2_0_0.meta import InformationalMeta
-from entry_types import EntryTypesSchema
+from beacon.framework.validator.v2_0_0.entry_types  import EntryTypesSchema
 
 class SecurityAttributes(BaseModel):
     # Default granularity level used by the Beacon when none is explicitly requested.

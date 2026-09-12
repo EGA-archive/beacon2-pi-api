@@ -7,7 +7,7 @@ from pydantic import (
 import re
 from typing import List, Optional
 from beacon.utils.modules import get_modules_confiles
-from common import ReferenceToAnSchema
+from beacon.framework.validator.v2_0_0.common import ReferenceToAnSchema
 from beacon.framework.validator.v2_0_0.meta import InformationalMeta
 
 class OntologyTerm(BaseModel):

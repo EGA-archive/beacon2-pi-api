@@ -6,7 +6,7 @@ from typing import List, Optional, Union, Dict
 import math
 from beacon.conf import conf_override
 from beacon.framework.validator.v2_0_0.meta import Meta
-from common import Handover
+from beacon.framework.validator.v2_0_0.common import Handover
 
 class CountResponseSummary(BaseModel):
     """
