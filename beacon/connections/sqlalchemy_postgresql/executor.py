@@ -5,7 +5,6 @@ from beacon.conf.conf_override import config
 from beacon.exceptions.exceptions import NoPermissionsAvailable, DatabaseIsDown
 from pymongo.errors import ConnectionFailure
 from beacon.response.classes import MultipleDatasetsResponse
-from beacon.request.classes import RequestAttributes
 from beacon.utils.modules import get_all_modules_connections_script
 
 @log_with_args(config.level)
@@ -16,7 +15,7 @@ async def execute_function(self, datasets: list):
     list_of_non_collection_modules = get_all_modules_connections_script("non_collections", "sqlalchemy_postgresql")
     for non_collection_module in list_of_non_collection_modules:
         try:
-            function = getattr(non_collection_module, RequestAttributes.function)
+            function = getattr(non_collection_module, self.request_attributes.function)
         except Exception:
             continue
     # Get the current process where the app is being run

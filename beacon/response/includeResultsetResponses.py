@@ -1,4 +1,3 @@
-from beacon.request.classes import RequestAttributes
 from beacon.logs.logs import log_with_args
 from beacon.conf.conf_override import config
 from beacon.response.classes import MultipleDatasetsResponse
@@ -13,7 +12,7 @@ def gather_final_datasets_to_return(self, responseClass, finalMultiDatasetsClass
 @log_with_args(config.level)
 def include_resultSet_responses(self, multipleDatasetsClass):
     # Load the include resultSet response from the request attributes.
-    include = RequestAttributes.qparams.query.includeResultsetResponses
+    include = self.request_attributes.qparams.query.includeResultsetResponses
     # Start a multiple datasets class that is empty.
     finalMultiDatasetsClass = MultipleDatasetsResponse(total_count=0, datasets_responses=[])
     for dataset in multipleDatasetsClass.datasets_responses:
