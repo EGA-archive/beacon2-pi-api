@@ -1,8 +1,6 @@
 from beacon.logs.logs import log_with_args_mongo
 from beacon.conf.conf_override import config
 from datetime import datetime, timedelta
-from beacon.request.classes import RequestAttributes
-import aiohttp.web as web
 from beacon.exceptions.exceptions import NumberOfQueriesExceeded, NoPermissionsAvailable
 
 @log_with_args_mongo(config.level)
@@ -22,10 +20,10 @@ def check_budget(self, username):
         else: # Return the time to store in the database
             return time_now
     # Check if there is ip in case the budget is meant to be done by ip and get the remaining budget
-    elif config.query_budget_per_ip == True and RequestAttributes.ip is not None:
+    elif config.query_budget_per_ip == True and self.request_attributes.ip is not None:
         remaining_budget=module.get_remaining_budget_by_ip(self, start_budget_time)
         if len(remaining_budget)>=config.query_budget_amount:
-            raise NumberOfQueriesExceeded("Number of queries exceeded for this ip: {}".format(RequestAttributes.ip))
+            raise NumberOfQueriesExceeded("Number of queries exceeded for this ip: {}".format(self.request_attributes.ip))
         else: # Return the time to store in the database
             return time_now
     # Check if there is username in case the budget is meant to be done only by user and if there was no ip, then throw an exception

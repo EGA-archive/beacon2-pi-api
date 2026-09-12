@@ -5,7 +5,8 @@ from pydantic import (
     Field
 )
 from beacon.conf.conf_override import config
-from beacon.utils.modules import load_class
+from beacon.framework.validator.v2_0_0.meta import InformationalMeta
+from entry_types import EntryTypesSchema
 
 class SecurityAttributes(BaseModel):
     # Default granularity level used by the Beacon when none is explicitly requested.
@@ -45,7 +46,7 @@ maturity_attributes = MaturityAttributes().model_dump(exclude_none=True)
 security_attributes = SecurityAttributes().model_dump(exclude_none=True)
 
 
-class ConfigurationSchema(load_class("entry_types", "EntryTypesSchema")):
+class ConfigurationSchema(EntryTypesSchema):
     """
     Beacon configuration schema.
 
@@ -80,7 +81,7 @@ class ConfigurationResponse(BaseModel):
     """
 
     # Response metadata (API version, timestamps, etc.).
-    meta: load_class("meta", "InformationalMeta")
+    meta: InformationalMeta
 
     # Main configuration payload returned to the client.
     response: ConfigurationSchema

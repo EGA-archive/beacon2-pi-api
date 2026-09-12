@@ -1,4 +1,4 @@
-from beacon.request.classes import RequestAttributes
+
 import os
 from typing import Union
 import re
@@ -12,7 +12,7 @@ import asyncio
 
 def load_framework_module(self, script_name):
     """Choose what is the validator object class that will be loaded depending on the API version to return"""
-    module='beacon.framework.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.'+script_name
+    module='beacon.framework.validator.'+self.request_attributes.returned_apiVersion.replace(".","_")+'.'+script_name
     import importlib
     loaded_module = importlib.import_module(module, package=None)
     return loaded_module
@@ -20,7 +20,7 @@ def load_framework_module(self, script_name):
 @log_with_args(config.level)
 def load_source_module(self, script_name):
     """Choose on the fly what is the database that is going to be used for the current request"""
-    complete_module='beacon.connections.'+RequestAttributes.source+'.' + script_name
+    complete_module='beacon.connections.'+self.request_attributes.source+'.' + script_name
     import importlib
     module = importlib.import_module(complete_module, package=None)
     return module
@@ -30,9 +30,9 @@ async def check_database_connections(LOG=None, entry_type=None, pre_entry_type=N
     """Choose on the fly what is the database that is going to be used for the current request"""
     try:
         # Store the value for the entry type requested
-        entry_type=RequestAttributes.entry_type
+        entry_type=self.request_attributes.entry_type
         # In case of a cross query, store the value for the entry type that will serve the requested id
-        pre_entry_type=RequestAttributes.pre_entry_type
+        pre_entry_type=self.request_attributes.pre_entry_type
     except Exception:
         # In case there is an exception, load the variables to be added to the error response
         entry_type=None
@@ -151,15 +151,15 @@ def load_client(folder):
     module = importlib.import_module(complete_client_module, package=None)
     client_from_module = getattr(module, 'get_client')
 
-def load_class(script_name, className):
+def load_class(self, script_name, className):
     """Method to get the classes for the validators that match the API version to return"""
-    module='beacon.framework.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.'+script_name
+    module='beacon.framework.validator.'+self.request_attributes.returned_apiVersion.replace(".","_")+'.'+script_name
     import importlib
     loaded_module = importlib.import_module(module, package=None)
     klass = getattr(loaded_module, className)
     return klass
 
-def load_types_of_results(response_type):
+def load_types_of_results(self, response_type):
     """Method to get the type of schema that are accepted (for validation) in case of a model and entry type match"""
     # Load the configuration file for the models that are enabled
     with open("/beacon/conf/models/models_conf.yml", 'r') as pfile:
@@ -168,7 +168,7 @@ def load_types_of_results(response_type):
     # Initialize the array to collect all the entry types objects to be accepted for validation
     list_of_results_classes_accepted=[]
     # Generate a search of the version getting rid of the characters that join the string to the version number in conf
-    version_catch = re.search(r"(v\d+(\.\d+)*)", RequestAttributes.returned_schema[0]["schema"])
+    version_catch = re.search(r"(v\d+(\.\d+)*)", self.request_attributes.returned_schema[0]["schema"])
     # Keep the version number
     if version_catch:
         version = version_catch.group(1)

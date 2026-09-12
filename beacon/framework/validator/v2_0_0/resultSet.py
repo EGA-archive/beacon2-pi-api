@@ -26,10 +26,10 @@ def validate_count_precision(v: str) -> str:
     return v
 
 
-def make_ResultsetInstance():
+def make_ResultsetInstance(self):
     # Create the types of the results and the handovers depending on the existing entry types in the models
-    ResultType = load_types_of_results("non_collections")
-    HandoverType = load_class("common", "Handover")
+    ResultType = load_types_of_results(self, "non_collections")
+    HandoverType = load_class(self, "common", "Handover")
 
     @field_validator('countPrecision')
     def countPrecision_validator(cls, v):
@@ -116,11 +116,11 @@ def make_Resultsets(ResultsetInstance):
     return model
 
         
-def make_ResultsetsResponse(Resultsets):
+def make_ResultsetsResponse(self, Resultsets):
     # Create the types of the meta, responseSumarry and the handovers depending on the existing entry types in the models
-    MetaType = load_class("meta", "Meta")
-    ResponseSummaryType = load_class("common", "ResponseSummary")
-    HandoverType = load_class("common", "Handover")
+    MetaType = load_class(self, "meta", "Meta")
+    ResponseSummaryType = load_class(self, "common", "ResponseSummary")
+    HandoverType = load_class(self, "common", "Handover")
     # Create the dynamic class with the properties and types defined previously
     model = create_model(
         "ResultsetsResponse",
@@ -146,12 +146,12 @@ def make_ResultsetsResponse(Resultsets):
 
     return model
 
-def build_full_dynamic_response():
+def build_full_dynamic_response(self):
     # Generate the three classes for an object of the Resultsets class, the class of all the resultSets as a list of the single object ResultsetInstance classs and the whole ResultSetsResponse class dynamically
-    ResultsetInstance = make_ResultsetInstance()
+    ResultsetInstance = make_ResultsetInstance(self)
 
     Resultsets = make_Resultsets(ResultsetInstance)
 
-    ResultsetsResponse = make_ResultsetsResponse(Resultsets)
+    ResultsetsResponse = make_ResultsetsResponse(self, Resultsets)
 
     return ResultsetInstance, Resultsets, ResultsetsResponse

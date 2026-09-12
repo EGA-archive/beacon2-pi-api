@@ -15,8 +15,9 @@ class HealthView(web.View, CorsViewMixin):
     def __init__(self, request: Request):
         # Initialize dhe endpoint with some of the attributes that will need to be collected later on
         self._request = request
-        RequestAttributes.ip = None
-        RequestAttributes.headers=None
+        self.request_attributes = RequestAttributes()
+        self.request_attributes.ip = None
+        self.request_attributes.headers=None
         self.LOG=self.request.app['logger']
         self._id=None
         self._id = generate_txid(self)

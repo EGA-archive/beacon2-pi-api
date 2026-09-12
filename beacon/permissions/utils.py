@@ -1,11 +1,11 @@
-from beacon.request.classes import RequestAttributes
+
 
 def return_found_granularity_in_exceptions(self, granularity_exceptions, default_granularity):
     """Method to get the granularity needed to be returned for a specific permissions case"""
     for granularity_exception in granularity_exceptions:
         # Loop over all the exceptions that are handed in and take the one that belongs to the entry type that is being requested
         for entry_type_id, entry_type_granularity in granularity_exception.items():
-            if entry_type_id == RequestAttributes.entry_type_id:
+            if entry_type_id == self.request_attributes.entry_type_id:
                 # Assign the entry type granularity and return it back
                 default_granularity = entry_type_granularity
                 return default_granularity
