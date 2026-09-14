@@ -118,6 +118,7 @@
                             <td>
                                 <button
                                     type="submit"
+                                    id="button_{{fterm.id}}"
                                     name="FilteringTermLabel"
                                     value="id_{{ fterm.id }}_label_{{ fterm.label }}_scopes_{{ fterm.scopes }}"
                                     class="btn btn-danger mb-3 add-label-button"
@@ -156,10 +157,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const selectedCategory =
         document.getElementById("selected_category");
 
-
-    /*
-     * Disable all fields initially.
-     */
     categoryForms.forEach(function (categoryForm) {
 
         const fields =
@@ -175,13 +172,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     });
 
-
-    /*
-     * Category checkbox.
-     *
-     * Selecting a category enables all the fields
-     * belonging to that category.
-     */
     categoryCheckboxes.forEach(function (categoryCheckbox) {
 
         categoryCheckbox.addEventListener(
@@ -263,17 +253,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     });
 
-
-    /*
-     * FIELD CHECKBOXES
-     *
-     * Every {{ field }} that is a checkbox gets its
-     * own change handler.
-     *
-     * When checked OR unchecked, submit:
-     *
-     * FilteringTermLabel = label_<field value>
-     */
     categoryForms.forEach(function (categoryForm) {
 
         const categoryCheckbox =
@@ -294,10 +273,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 "change",
                 function () {
 
-                    /*
-                     * Make sure this field belongs to
-                     * the selected category.
-                     */
                     if (
                         !categoryCheckbox ||
                         !categoryCheckbox.checked
@@ -310,9 +285,6 @@ document.addEventListener("DOMContentLoaded", function () {
                         categoryCheckbox.value;
 
 
-                    /*
-                     * Remove an old automatic value.
-                     */
                     const oldInput =
                         form.querySelector(
                             ".automatic-filtering-term"
@@ -323,11 +295,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
 
 
-                    /*
-                     * Send ONLY:
-                     *
-                     * label_<field value>
-                     */
                     const filteringTermInput =
                         document.createElement("input");
 
@@ -348,9 +315,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     );
 
 
-                    /*
-                     * Submit immediately.
-                     */
                     form.submit();
 
                 }
@@ -363,6 +327,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 </script>
+
 
 </body>
 </html>
