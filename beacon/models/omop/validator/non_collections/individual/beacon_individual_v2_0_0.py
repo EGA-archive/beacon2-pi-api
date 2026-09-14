@@ -7,7 +7,7 @@ from pydantic import (
 
 from typing import Optional, Union
 from beacon.framework.validator.v2_0_0.common import OntologyTerm
-from beacon.models.ga4gh.beacon_v2_default_model.validator.non_collections.biosample.beacon_biosample_v2_1_0 import GestationalAge, TimeInterval, Quantity, Age, AgeRange, TypedQuantities
+from beacon.models.omop.validator.non_collections.biosample.beacon_biosample_v2_1_0 import GestationalAge, TimeInterval, Quantity, Age, AgeRange, TypedQuantities
 # Regex used across multiple clinical timestamp-like fields.
 # Expected format resembles: "...DD/Mon/YYYY:HH:MM:SS"
 timestamp_regex = re.compile(r"^.+(\d{2}/\w{3}/\d{4}:\d{2}:\d{2}:\d{2})")
