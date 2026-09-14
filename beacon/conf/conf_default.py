@@ -8,8 +8,13 @@ try:
 except Exception as e:
     raise FileNotFound('There are issues with the api_version.yml file. Check if it can be opened or if has any content')
 
+# logs
 level=logging.DEBUG
-log_file=None
+log_file='/beacon/logs/log_files/logs.log' # path needs to be pointing to a file inside a volumed dir, preferably /beacon/logs/log_files, e.g. /beacon/logs/log_files/logs.log
+log_retention_days = 7 # days which the file will be kept until it is destroyed
+log_rotating_interval = 'midnight' # S, M, H, D, W0, W1, W2, W3, W4, W5, W6, midnight
+
+# Beacon generic conf
 beacon_id = 'org.ega-archive.beacon-ri-demo'  # ID of the Beacon
 beacon_name = 'Beacon Production Implementation demo'  # Name of the Beacon service
 api_version = 'v2.2.0' # Version of the Beacon implementation
