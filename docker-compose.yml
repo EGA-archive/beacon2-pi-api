@@ -14,7 +14,7 @@ services:
       - "5050:5050"
     entrypoint: ['python','-m','beacon']
     volumes:
-      - ./beacon/logs/logs.log:/beacon/logs/logs.log
+      - ./beacon/logs/log_files:/beacon/logs/log_files
       - ./beacon/conf/conf.py:/beacon/conf/conf.py
       - ./beacon/conf/conf_default.py:/beacon/conf/conf_default.py
       - ./beacon/connections/mongo/conf.py:/beacon/connections/mongo/conf.py

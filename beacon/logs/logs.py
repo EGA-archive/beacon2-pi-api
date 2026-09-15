@@ -2,6 +2,7 @@ import logging
 import time
 from beacon.conf.conf_override import config
 import datetime
+from logging import handlers
 
 def initialize_logger(level):
     try:
@@ -20,9 +21,17 @@ def initialize_logger(level):
             datefmt='%Y-%m-%dT%H:%M:%S'
         )
         formatter.converter = time.gmtime
-        # Choose which type of logs you want (in a file or in stream)
+        # Choose which type of logs you want (in a file or in stream). If file option is chosen, also remember to set how many days you 
+        # want the file to be kept for before rotating, so the file is not grown too big.
         if config.log_file is not None:
-            handler = logging.FileHandler(config.log_file)
+            handler = handlers.TimedRotatingFileHandler(
+                filename=config.log_file,
+                when=config.log_rotating_interval,
+                interval=1,
+                backupCount=config.log_num_of_files_to_keep,
+                encoding="utf-8",
+                delay=True,
+            )
         else:
             handler = logging.StreamHandler()
         # Set the same lavel and format to the handlers
