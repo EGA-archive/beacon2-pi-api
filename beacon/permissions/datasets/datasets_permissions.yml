@@ -3,6 +3,9 @@ coadread_tcga_pan_can_atlas_2018:
     default_entry_types_granularity: record
     entry_types_exceptions:
     - individual: record
+synthetic_usecases_4beacon_testingV4:
+  public:
+    default_entry_types_granularity: record
 AV_Dataset:
   controlled:
     user-list:
