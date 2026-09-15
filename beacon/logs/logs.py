@@ -28,7 +28,7 @@ def initialize_logger(level):
                 filename=config.log_file,
                 when=config.log_rotating_interval,
                 interval=1,
-                backupCount=config.log_retention_days,
+                backupCount=config.log_num_of_files_to_keep,
                 encoding="utf-8",
                 delay=True,
             )

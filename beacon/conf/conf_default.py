@@ -11,7 +11,7 @@ except Exception as e:
 # logs
 level=logging.DEBUG
 log_file=None # path needs to be pointing to a file inside a volumed dir, preferably /beacon/logs/log_files, e.g. /beacon/logs/log_files/logs.log
-log_retention_days = 7 # days which the file will be kept until it is destroyed
+log_num_of_files_to_keep = 7 # number of files that will be kept for backup, the most recent ones, the oldest will get deleted
 log_rotating_interval = 'midnight' # S, M, H, D, W0, W1, W2, W3, W4, W5, W6, midnight
 
 # Beacon generic conf

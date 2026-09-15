@@ -7,6 +7,7 @@ from beacon.validator.configuration import check_configuration
 import yaml
 from beacon.logs.logs import initialize_logger
 from beacon.conf.conf_override import config
+import asyncio
 
 def import_genomicVariant_confile():
     """Get the information about the genomic variant entry type gor ga4gh model"""
@@ -1315,6 +1316,50 @@ class TestNoFilters(unittest.TestCase):
 
             # Restore valid default granularity
             conf_override.config.log_file=None
+
+    def test_main_check_logs_files_are_deleted(self):
+        with loop_context() as loop:
+            from beacon.conf import conf_override
+
+            # Configure unsupported default granularity
+            conf_override.config.log_file='/beacon/logs/log_files/logs_test.log'
+            conf_override.config.num_of_files_to_keep=1
+            conf_override.config.log_rotating_interval='S'
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+
+            async def test_check_logs_files_are_deleted():
+                from pathlib import Path
+
+                directory = Path("/beacon/logs/log_files")
+
+
+                resp = await client.get(
+                    conf_override.config.uri_subpath + "/" +
+                    biosample["biosample"]["endpoint_name"]
+                )
+                await asyncio.sleep(5)
+
+                resp = await client.get(
+                    conf_override.config.uri_subpath + "/" +
+                    biosample["biosample"]["endpoint_name"]
+                )
+                num_logs = sum(
+                    1 for p in Path(directory).glob("logs_test.log*")
+                    if p.is_file()
+                )
+
+                assert num_logs == 3
+
+
+            loop.run_until_complete(test_check_logs_files_are_deleted())
+            loop.run_until_complete(client.close())
+
+            # Restore valid default granularity
+            conf_override.config.log_file=None
+            conf_override.config.num_of_files_to_keep=7
+            conf_override.config.log_rotating_interval='midnight'
     
 
     
