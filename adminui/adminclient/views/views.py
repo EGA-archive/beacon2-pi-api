@@ -165,11 +165,7 @@ def entry_types(request):
 
             for entry_type, type_of_forms in entry_types.items():
                 if type_of_forms['basic'].is_valid():
-                    LOG.warning('is valiiiid')
                     entry_type_name=type_of_forms['basic'].cleaned_data["entry_type_name"]
-                    LOG.warning(entry_type_name)
-                    LOG.warning(request.POST)
-                    LOG.warning(request.POST.get('entry_type_name'))
                     if entry_type_name == request.POST.get('entry_type_name'):
                         LOG.warning('yesss')
                         for filename in os.listdir(path):

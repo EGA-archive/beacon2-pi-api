@@ -83,6 +83,10 @@
         value=""
     >
 
+    <div id="category-message" class="error-message" style="display: none;">
+    Please select one category first.
+    </div>
+
 
     {% if fterms_list %}
 
@@ -120,7 +124,7 @@
                                     type="submit"
                                     id="button_{{fterm.id}}"
                                     name="FilteringTermLabel"
-                                    value="id_{{ fterm.id }}_label_{{ fterm.label }}_scopes_{{ fterm.scopes }}"
+                                    value="id¿{{ fterm.id }}¿label¿{{ fterm.label }}¿scopes¿{{ fterm.scopes }}"
                                     class="btn btn-danger mb-3 add-label-button"
                                 >
                                     +
@@ -157,6 +161,24 @@ document.addEventListener("DOMContentLoaded", function () {
     const selectedCategory =
         document.getElementById("selected_category");
 
+    const addLabelButtons =
+        document.querySelectorAll(".add-label-button");
+
+    const categoryMessage =
+        document.getElementById("category-message");
+
+
+    /*
+     * Restore previously selected category
+     * after page reload / Django redirect.
+     */
+    const savedCategory =
+        sessionStorage.getItem("selectedCategory");
+
+
+    /*
+     * Initially disable all fields.
+     */
     categoryForms.forEach(function (categoryForm) {
 
         const fields =
@@ -172,6 +194,74 @@ document.addEventListener("DOMContentLoaded", function () {
 
     });
 
+
+    /*
+     * Restore the saved category.
+     */
+    if (savedCategory) {
+
+        categoryCheckboxes.forEach(function (checkbox) {
+
+            if (checkbox.value === savedCategory) {
+
+                checkbox.checked = true;
+
+                selectedCategory.value =
+                    savedCategory;
+
+                const categoryForm =
+                    checkbox.closest(".category-form");
+
+                const fields =
+                    categoryForm.querySelectorAll(
+                        ".form-fields input, " +
+                        ".form-fields select, " +
+                        ".form-fields textarea"
+                    );
+
+                fields.forEach(function (field) {
+                    field.disabled = false;
+                });
+
+            }
+
+        });
+
+    }
+
+
+    /*
+     * + button:
+     * Prevent submission if no category is selected.
+     */
+    addLabelButtons.forEach(function (button) {
+
+        button.addEventListener("click", function (event) {
+
+            if (!selectedCategory.value) {
+
+                event.preventDefault();
+
+                categoryMessage.textContent =
+                    "Please select one category first.";
+
+                categoryMessage.style.display =
+                    "block";
+
+                return false;
+            }
+
+            categoryMessage.style.display =
+                "none";
+
+        });
+
+    });
+
+
+    /*
+     * Category checkbox handling.
+     */
     categoryCheckboxes.forEach(function (categoryCheckbox) {
 
         categoryCheckbox.addEventListener(
@@ -184,10 +274,27 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 if (this.checked) {
 
+                    /*
+                     * Set hidden category value.
+                     */
                     selectedCategory.value =
                         this.value;
 
 
+                    /*
+                     * Save category so it survives
+                     * the Django redirect.
+                     */
+                    sessionStorage.setItem(
+                        "selectedCategory",
+                        this.value
+                    );
+
+
+                    /*
+                     * Enable selected category
+                     * and disable all others.
+                     */
                     categoryCheckboxes.forEach(
                         function (otherCheckbox) {
 
@@ -231,9 +338,28 @@ document.addEventListener("DOMContentLoaded", function () {
                         }
                     );
 
+
+                    /*
+                     * Hide error message once a
+                     * category has been selected.
+                     */
+                    if (categoryMessage) {
+                        categoryMessage.style.display =
+                            "none";
+                    }
+
+
                 } else {
 
                     selectedCategory.value = "";
+
+                    /*
+                     * Remove saved category.
+                     */
+                    sessionStorage.removeItem(
+                        "selectedCategory"
+                    );
+
 
                     const fields =
                         categoryForm.querySelectorAll(
@@ -253,6 +379,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     });
 
+
+    /*
+     * Handle checkboxes inside the selected category.
+     */
     categoryForms.forEach(function (categoryForm) {
 
         const categoryCheckbox =
@@ -273,6 +403,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 "change",
                 function () {
 
+                    /*
+                     * Do nothing if the category itself
+                     * is not selected.
+                     */
                     if (
                         !categoryCheckbox ||
                         !categoryCheckbox.checked
@@ -281,10 +415,22 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
 
 
+                    /*
+                     * Make sure the category is stored.
+                     */
                     selectedCategory.value =
                         categoryCheckbox.value;
 
+                    sessionStorage.setItem(
+                        "selectedCategory",
+                        categoryCheckbox.value
+                    );
 
+
+                    /*
+                     * Remove any previously created
+                     * automatic filtering term input.
+                     */
                     const oldInput =
                         form.querySelector(
                             ".automatic-filtering-term"
@@ -295,10 +441,15 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
 
 
+                    /*
+                     * Create hidden input for
+                     * FilteringTermLabel.
+                     */
                     const filteringTermInput =
                         document.createElement("input");
 
-                    filteringTermInput.type = "hidden";
+                    filteringTermInput.type =
+                        "hidden";
 
                     filteringTermInput.name =
                         "FilteringTermLabel";
@@ -315,6 +466,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     );
 
 
+                    /*
+                     * Submit form.
+                     */
                     form.submit();
 
                 }
@@ -327,6 +481,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 </script>
+
 
 
 </body>

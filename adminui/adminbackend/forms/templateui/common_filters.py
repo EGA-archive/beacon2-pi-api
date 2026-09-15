@@ -4,7 +4,7 @@ import logging
 import os
 import json
 
-with open("/home/app/web/template-ui-config.json") as config_file:
+with open("/home/app/template-ui-config.json") as config_file:
     TEMPLATE_CONF = json.load(config_file)
 
 class GroupForm(forms.Form):

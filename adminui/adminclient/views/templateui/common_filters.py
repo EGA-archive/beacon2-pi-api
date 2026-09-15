@@ -29,16 +29,14 @@ def default_view(request):
         final_fterm=fterm
         final_fterms_list.append(final_fterm)
     if request.method == 'POST':
-        print(request.POST, flush=True)
         filteringTerm= request.POST['FilteringTermLabel']
-        ft_splitted = filteringTerm.split('_')
+        ft_splitted = filteringTerm.split('¿')
         category = request.POST['category']
         new_conf=TEMPLATE_CONF
         labels = request.POST.getlist('labels')
         if 'scope' not in filteringTerm:
             new_category_dict_list=[]
             for label_dict in new_conf["ui"]["commonFilters"]["filterLabels"][category]:
-                print(label_dict["key"], flush=True)
                 if label_dict["key"] == ft_splitted[1]:
                     continue
                 else:
@@ -46,16 +44,13 @@ def default_view(request):
             new_conf["ui"]["commonFilters"]["filterLabels"][category]=new_category_dict_list
         else:
             new_category_dict_list=[]
-            print(type(labels), flush=True)
             for label_dict in new_conf["ui"]["commonFilters"]["filterLabels"][category]:
-                print(label_dict["key"], flush=True)
                 if label_dict["key"] not in labels:
                     continue
                 else:
                     new_category_dict_list.append(label_dict)
             new_conf["ui"]["commonFilters"]["filterLabels"][category]=new_category_dict_list
             new_dict={"key": ft_splitted[3], "id": ft_splitted[1], "label": ft_splitted[3], "type": "ontology", "scopes": ast.literal_eval(ft_splitted[5])}
-            print(new_dict, flush=True)
             if new_dict["key"] not in labels:
                 new_conf["ui"]["commonFilters"]["filterLabels"][category].append(new_dict)
         
