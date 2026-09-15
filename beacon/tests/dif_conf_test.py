@@ -1281,6 +1281,40 @@ class TestNoFilters(unittest.TestCase):
 
             # Confirm override differs from framework defaults
             assert conf_override.config.uri != conf_default.uri
+
+
+    def test_main_check_logs_configuration(self):
+        with loop_context() as loop:
+            from beacon.conf import conf_override
+
+            # Configure unsupported default granularity
+            conf_override.config.log_file='/beacon/logs/log_files/logs_test.log'
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+
+            async def test_check_logs_files_is_saved():
+                from pathlib import Path
+
+                log_file = Path("/beacon/logs/log_files/logs_test.log")
+
+
+                resp = await client.get(
+                    conf_override.config.uri_subpath + "/" +
+                    biosample["biosample"]["endpoint_name"]
+                )
+
+                if log_file.is_file():
+                    pass
+                else:
+                    raise Exception
+
+
+            loop.run_until_complete(test_check_logs_files_is_saved())
+            loop.run_until_complete(client.close())
+
+            # Restore valid default granularity
+            conf_override.config.log_file=None
     
 
     
