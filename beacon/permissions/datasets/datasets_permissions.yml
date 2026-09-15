@@ -1,3 +1,8 @@
+coadread_tcga_pan_can_atlas_2018:
+  public:
+    default_entry_types_granularity: record
+    entry_types_exceptions:
+    - individual: record
 AV_Dataset:
   controlled:
     user-list:

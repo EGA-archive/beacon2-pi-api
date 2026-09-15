@@ -73,8 +73,10 @@ def get_variants_of_phenotypic_endpoint(self, dataset: SingleDatasetResponse):
     runs=client['beacon'].runs
     targets_=client['beacon'].targets
     caseLevelData=client['beacon'].caseLevelData
+    biosamples=client['beacon'].biosamples
     analysis_confile=import_analysis_confile()
     run_confile=import_run_confile()
+    individual_confile=import_individual_confile()
     new_entry_id = self.request_attributes.entry_id
     # Check which is the queried initial entry type of the cross query and process and get the ids to convert to the final entry type response.
     if self.request_attributes.pre_entry_type == analysis_confile["analysis"]["endpoint_name"] or self.request_attributes.pre_entry_type == run_confile["run"]["endpoint_name"]:
@@ -88,6 +90,15 @@ def get_variants_of_phenotypic_endpoint(self, dataset: SingleDatasetResponse):
                 .find_one(query, {"biosampleId": 1, "_id": 0})  
         try:
             new_entry_id = initial_ids["biosampleId"]
+        except Exception as e:
+            return dataset
+    elif self.request_attributes.pre_entry_type == individual_confile["individual"]["endpoint_name"]:
+        query = {"$and": [{"individualId": self.request_attributes.entry_id}]}
+        query = apply_filters(self, query, self.request_attributes.qparams.query.filters, {}, dataset.dataset)
+        initial_ids = biosamples \
+            .find_one(query, {"id": 1, "_id": 0}) 
+        try:
+            new_entry_id = initial_ids["id"]
         except Exception as e:
             return dataset
     try:
