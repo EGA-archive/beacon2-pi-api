@@ -1,0 +1,33 @@
+[
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "cohortSize": 592,
+        "cohortType": "study-defined",
+        "collectionEvents": [
+            {
+                "eventGenders": {
+                    "availability": true,
+                    "availabilityCount": 592,
+                    "distribution": {
+                        "genders": {
+                            "female": 312,
+                            "male": 280
+                        }
+                    }
+                }
+            }
+        ],
+        "id": "coadread_tcga_pan_can_atlas_2018",
+        "inclusionCriteria": {
+            "ageRange": {
+                "end": {
+                    "iso8601duration": "P90Y"
+                },
+                "start": {
+                    "iso8601duration": "P31Y"
+                }
+            }
+        },
+        "name": "Colorectal Adenocarcinoma (TCGA, PanCancer Atlas)"
+    }
+]

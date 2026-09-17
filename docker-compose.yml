@@ -106,7 +106,7 @@ services:
       #- ./test-ca.pem:/test-ca.pem
       #- ./test-client.pem:/test-client.pem
     networks:
-      - pub
+      - pub-elixir
     command: ["mongod", "--config", "/etc/mongod.conf"]
 
   
@@ -163,26 +163,3 @@ services:
     environment:
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true
-
-
-  postgres:
-    image: postgres:16
-    container_name: postgres-db
-    restart: unless-stopped
-
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: your_secure_password
-      POSTGRES_DB: beacon
-
-    volumes:
-      - ./beacon/connections/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
-
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d beacon"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-    networks:
-      - pub

@@ -1,0 +1,5330 @@
+[
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AF-2687-01",
+        "id": "SRR00000001",
+        "individualId": "TCGA-AF-2687",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AF-2689-01",
+        "id": "SRR00000002",
+        "individualId": "TCGA-AF-2689",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AF-2690-01",
+        "id": "SRR00000003",
+        "individualId": "TCGA-AF-2690",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AF-2691-01",
+        "id": "SRR00000004",
+        "individualId": "TCGA-AF-2691",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AF-2692-01",
+        "id": "SRR00000005",
+        "individualId": "TCGA-AF-2692",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AF-2693-01",
+        "id": "SRR00000006",
+        "individualId": "TCGA-AF-2693",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AF-3400-01",
+        "id": "SRR00000007",
+        "individualId": "TCGA-AF-3400",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AF-3911-01",
+        "id": "SRR00000008",
+        "individualId": "TCGA-AF-3911",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AF-4110-01",
+        "id": "SRR00000009",
+        "individualId": "TCGA-AF-4110",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AF-5654-01",
+        "id": "SRR00000010",
+        "individualId": "TCGA-AF-5654",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AF-6136-01",
+        "id": "SRR00000011",
+        "individualId": "TCGA-AF-6136",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AF-6655-01",
+        "id": "SRR00000012",
+        "individualId": "TCGA-AF-6655",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AF-6672-01",
+        "id": "SRR00000013",
+        "individualId": "TCGA-AF-6672",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AF-A56K-01",
+        "id": "SRR00000014",
+        "individualId": "TCGA-AF-A56K",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AF-A56L-01",
+        "id": "SRR00000015",
+        "individualId": "TCGA-AF-A56L",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AF-A56N-01",
+        "id": "SRR00000016",
+        "individualId": "TCGA-AF-A56N",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-3574-01",
+        "id": "SRR00000017",
+        "individualId": "TCGA-AG-3574",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-3575-01",
+        "id": "SRR00000018",
+        "individualId": "TCGA-AG-3575",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-3578-01",
+        "id": "SRR00000019",
+        "individualId": "TCGA-AG-3578",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-3580-01",
+        "id": "SRR00000020",
+        "individualId": "TCGA-AG-3580",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-3581-01",
+        "id": "SRR00000021",
+        "individualId": "TCGA-AG-3581",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-3582-01",
+        "id": "SRR00000022",
+        "individualId": "TCGA-AG-3582",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-3583-01",
+        "id": "SRR00000023",
+        "individualId": "TCGA-AG-3583",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-3584-01",
+        "id": "SRR00000024",
+        "individualId": "TCGA-AG-3584",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-3586-01",
+        "id": "SRR00000025",
+        "individualId": "TCGA-AG-3586",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-3587-01",
+        "id": "SRR00000026",
+        "individualId": "TCGA-AG-3587",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-3591-01",
+        "id": "SRR00000027",
+        "individualId": "TCGA-AG-3591",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-3592-01",
+        "id": "SRR00000028",
+        "individualId": "TCGA-AG-3592",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-3593-01",
+        "id": "SRR00000029",
+        "individualId": "TCGA-AG-3593",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-3594-01",
+        "id": "SRR00000030",
+        "individualId": "TCGA-AG-3594",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-3598-01",
+        "id": "SRR00000031",
+        "individualId": "TCGA-AG-3598",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-3599-01",
+        "id": "SRR00000032",
+        "individualId": "TCGA-AG-3599",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-3600-01",
+        "id": "SRR00000033",
+        "individualId": "TCGA-AG-3600",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-3601-01",
+        "id": "SRR00000034",
+        "individualId": "TCGA-AG-3601",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-3602-01",
+        "id": "SRR00000035",
+        "individualId": "TCGA-AG-3602",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-3605-01",
+        "id": "SRR00000036",
+        "individualId": "TCGA-AG-3605",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-3608-01",
+        "id": "SRR00000037",
+        "individualId": "TCGA-AG-3608",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-3609-01",
+        "id": "SRR00000038",
+        "individualId": "TCGA-AG-3609",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-3725-01",
+        "id": "SRR00000039",
+        "individualId": "TCGA-AG-3725",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-3726-01",
+        "id": "SRR00000040",
+        "individualId": "TCGA-AG-3726",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-3727-01",
+        "id": "SRR00000041",
+        "individualId": "TCGA-AG-3727",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-3728-01",
+        "id": "SRR00000042",
+        "individualId": "TCGA-AG-3728",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-3731-01",
+        "id": "SRR00000043",
+        "individualId": "TCGA-AG-3731",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-3732-01",
+        "id": "SRR00000044",
+        "individualId": "TCGA-AG-3732",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-3742-01",
+        "id": "SRR00000045",
+        "individualId": "TCGA-AG-3742",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-3878-01",
+        "id": "SRR00000046",
+        "individualId": "TCGA-AG-3878",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-3881-01",
+        "id": "SRR00000047",
+        "individualId": "TCGA-AG-3881",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-3882-01",
+        "id": "SRR00000048",
+        "individualId": "TCGA-AG-3882",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-3883-01",
+        "id": "SRR00000049",
+        "individualId": "TCGA-AG-3883",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-3885-01",
+        "id": "SRR00000050",
+        "individualId": "TCGA-AG-3885",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-3887-01",
+        "id": "SRR00000051",
+        "individualId": "TCGA-AG-3887",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-3890-01",
+        "id": "SRR00000052",
+        "individualId": "TCGA-AG-3890",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-3892-01",
+        "id": "SRR00000053",
+        "individualId": "TCGA-AG-3892",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-3893-01",
+        "id": "SRR00000054",
+        "individualId": "TCGA-AG-3893",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-3894-01",
+        "id": "SRR00000055",
+        "individualId": "TCGA-AG-3894",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-3896-01",
+        "id": "SRR00000056",
+        "individualId": "TCGA-AG-3896",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-3898-01",
+        "id": "SRR00000057",
+        "individualId": "TCGA-AG-3898",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-3901-01",
+        "id": "SRR00000058",
+        "individualId": "TCGA-AG-3901",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-3902-01",
+        "id": "SRR00000059",
+        "individualId": "TCGA-AG-3902",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-3909-01",
+        "id": "SRR00000060",
+        "individualId": "TCGA-AG-3909",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-3999-01",
+        "id": "SRR00000061",
+        "individualId": "TCGA-AG-3999",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-4001-01",
+        "id": "SRR00000062",
+        "individualId": "TCGA-AG-4001",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-4005-01",
+        "id": "SRR00000063",
+        "individualId": "TCGA-AG-4005",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-4007-01",
+        "id": "SRR00000064",
+        "individualId": "TCGA-AG-4007",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-4008-01",
+        "id": "SRR00000065",
+        "individualId": "TCGA-AG-4008",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-4015-01",
+        "id": "SRR00000066",
+        "individualId": "TCGA-AG-4015",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-4021-01",
+        "id": "SRR00000067",
+        "individualId": "TCGA-AG-4021",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-4022-01",
+        "id": "SRR00000068",
+        "individualId": "TCGA-AG-4022",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-A002-01",
+        "id": "SRR00000069",
+        "individualId": "TCGA-AG-A002",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-A008-01",
+        "id": "SRR00000070",
+        "individualId": "TCGA-AG-A008",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-A00C-01",
+        "id": "SRR00000071",
+        "individualId": "TCGA-AG-A00C",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-A00Y-01",
+        "id": "SRR00000072",
+        "individualId": "TCGA-AG-A00Y",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-A011-01",
+        "id": "SRR00000073",
+        "individualId": "TCGA-AG-A011",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-A015-01",
+        "id": "SRR00000074",
+        "individualId": "TCGA-AG-A015",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-A016-01",
+        "id": "SRR00000075",
+        "individualId": "TCGA-AG-A016",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-A01J-01",
+        "id": "SRR00000076",
+        "individualId": "TCGA-AG-A01J",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-A01L-01",
+        "id": "SRR00000077",
+        "individualId": "TCGA-AG-A01L",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-A01N-01",
+        "id": "SRR00000078",
+        "individualId": "TCGA-AG-A01N",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-A01W-01",
+        "id": "SRR00000079",
+        "individualId": "TCGA-AG-A01W",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-A01Y-01",
+        "id": "SRR00000080",
+        "individualId": "TCGA-AG-A01Y",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-A020-01",
+        "id": "SRR00000081",
+        "individualId": "TCGA-AG-A020",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-A025-01",
+        "id": "SRR00000082",
+        "individualId": "TCGA-AG-A025",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-A026-01",
+        "id": "SRR00000083",
+        "individualId": "TCGA-AG-A026",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-A02G-01",
+        "id": "SRR00000084",
+        "individualId": "TCGA-AG-A02G",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-A02N-01",
+        "id": "SRR00000085",
+        "individualId": "TCGA-AG-A02N",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-A02X-01",
+        "id": "SRR00000086",
+        "individualId": "TCGA-AG-A02X",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AG-A032-01",
+        "id": "SRR00000087",
+        "individualId": "TCGA-AG-A032",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AH-6544-01",
+        "id": "SRR00000088",
+        "individualId": "TCGA-AH-6544",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AH-6547-01",
+        "id": "SRR00000089",
+        "individualId": "TCGA-AH-6547",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AH-6643-01",
+        "id": "SRR00000090",
+        "individualId": "TCGA-AH-6643",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AH-6644-01",
+        "id": "SRR00000091",
+        "individualId": "TCGA-AH-6644",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AH-6897-01",
+        "id": "SRR00000092",
+        "individualId": "TCGA-AH-6897",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AH-6903-01",
+        "id": "SRR00000093",
+        "individualId": "TCGA-AH-6903",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CI-6619-01",
+        "id": "SRR00000094",
+        "individualId": "TCGA-CI-6619",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CI-6620-01",
+        "id": "SRR00000095",
+        "individualId": "TCGA-CI-6620",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CI-6621-01",
+        "id": "SRR00000096",
+        "individualId": "TCGA-CI-6621",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CI-6622-01",
+        "id": "SRR00000097",
+        "individualId": "TCGA-CI-6622",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CI-6623-01",
+        "id": "SRR00000098",
+        "individualId": "TCGA-CI-6623",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CI-6624-01",
+        "id": "SRR00000099",
+        "individualId": "TCGA-CI-6624",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CL-4957-01",
+        "id": "SRR00000100",
+        "individualId": "TCGA-CL-4957",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CL-5917-01",
+        "id": "SRR00000101",
+        "individualId": "TCGA-CL-5917",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CL-5918-01",
+        "id": "SRR00000102",
+        "individualId": "TCGA-CL-5918",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DC-4745-01",
+        "id": "SRR00000103",
+        "individualId": "TCGA-DC-4745",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DC-4749-01",
+        "id": "SRR00000104",
+        "individualId": "TCGA-DC-4749",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DC-5337-01",
+        "id": "SRR00000105",
+        "individualId": "TCGA-DC-5337",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DC-5869-01",
+        "id": "SRR00000106",
+        "individualId": "TCGA-DC-5869",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DC-6154-01",
+        "id": "SRR00000107",
+        "individualId": "TCGA-DC-6154",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DC-6155-01",
+        "id": "SRR00000108",
+        "individualId": "TCGA-DC-6155",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DC-6156-01",
+        "id": "SRR00000109",
+        "individualId": "TCGA-DC-6156",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DC-6157-01",
+        "id": "SRR00000110",
+        "individualId": "TCGA-DC-6157",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DC-6158-01",
+        "id": "SRR00000111",
+        "individualId": "TCGA-DC-6158",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DC-6160-01",
+        "id": "SRR00000112",
+        "individualId": "TCGA-DC-6160",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DC-6681-01",
+        "id": "SRR00000113",
+        "individualId": "TCGA-DC-6681",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DC-6682-01",
+        "id": "SRR00000114",
+        "individualId": "TCGA-DC-6682",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DC-6683-01",
+        "id": "SRR00000115",
+        "individualId": "TCGA-DC-6683",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DT-5265-01",
+        "id": "SRR00000116",
+        "individualId": "TCGA-DT-5265",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DY-A0XA-01",
+        "id": "SRR00000117",
+        "individualId": "TCGA-DY-A0XA",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DY-A1DC-01",
+        "id": "SRR00000118",
+        "individualId": "TCGA-DY-A1DC",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DY-A1DD-01",
+        "id": "SRR00000119",
+        "individualId": "TCGA-DY-A1DD",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DY-A1DE-01",
+        "id": "SRR00000120",
+        "individualId": "TCGA-DY-A1DE",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DY-A1DF-01",
+        "id": "SRR00000121",
+        "individualId": "TCGA-DY-A1DF",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DY-A1DG-01",
+        "id": "SRR00000122",
+        "individualId": "TCGA-DY-A1DG",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DY-A1H8-01",
+        "id": "SRR00000123",
+        "individualId": "TCGA-DY-A1H8",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-EF-5830-01",
+        "id": "SRR00000124",
+        "individualId": "TCGA-EF-5830",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-EF-5831-01",
+        "id": "SRR00000125",
+        "individualId": "TCGA-EF-5831",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-EI-6506-01",
+        "id": "SRR00000126",
+        "individualId": "TCGA-EI-6506",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-EI-6507-01",
+        "id": "SRR00000127",
+        "individualId": "TCGA-EI-6507",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-EI-6508-01",
+        "id": "SRR00000128",
+        "individualId": "TCGA-EI-6508",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-EI-6509-01",
+        "id": "SRR00000129",
+        "individualId": "TCGA-EI-6509",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-EI-6510-01",
+        "id": "SRR00000130",
+        "individualId": "TCGA-EI-6510",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-EI-6511-01",
+        "id": "SRR00000131",
+        "individualId": "TCGA-EI-6511",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-EI-6512-01",
+        "id": "SRR00000132",
+        "individualId": "TCGA-EI-6512",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-EI-6513-01",
+        "id": "SRR00000133",
+        "individualId": "TCGA-EI-6513",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-EI-6514-01",
+        "id": "SRR00000134",
+        "individualId": "TCGA-EI-6514",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-EI-6881-01",
+        "id": "SRR00000135",
+        "individualId": "TCGA-EI-6881",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-EI-6882-01",
+        "id": "SRR00000136",
+        "individualId": "TCGA-EI-6882",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-EI-6883-01",
+        "id": "SRR00000137",
+        "individualId": "TCGA-EI-6883",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-EI-6884-01",
+        "id": "SRR00000138",
+        "individualId": "TCGA-EI-6884",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-EI-6885-01",
+        "id": "SRR00000139",
+        "individualId": "TCGA-EI-6885",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-EI-6917-01",
+        "id": "SRR00000140",
+        "individualId": "TCGA-EI-6917",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-EI-7002-01",
+        "id": "SRR00000141",
+        "individualId": "TCGA-EI-7002",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-EI-7004-01",
+        "id": "SRR00000142",
+        "individualId": "TCGA-EI-7004",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-F5-6464-01",
+        "id": "SRR00000143",
+        "individualId": "TCGA-F5-6464",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-F5-6465-01",
+        "id": "SRR00000144",
+        "individualId": "TCGA-F5-6465",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-F5-6571-01",
+        "id": "SRR00000145",
+        "individualId": "TCGA-F5-6571",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-F5-6702-01",
+        "id": "SRR00000146",
+        "individualId": "TCGA-F5-6702",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-F5-6810-01",
+        "id": "SRR00000147",
+        "individualId": "TCGA-F5-6810",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-F5-6811-01",
+        "id": "SRR00000148",
+        "individualId": "TCGA-F5-6811",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-F5-6812-01",
+        "id": "SRR00000149",
+        "individualId": "TCGA-F5-6812",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-F5-6813-01",
+        "id": "SRR00000150",
+        "individualId": "TCGA-F5-6813",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-F5-6814-01",
+        "id": "SRR00000151",
+        "individualId": "TCGA-F5-6814",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-F5-6861-01",
+        "id": "SRR00000152",
+        "individualId": "TCGA-F5-6861",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-F5-6863-01",
+        "id": "SRR00000153",
+        "individualId": "TCGA-F5-6863",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-F5-6864-01",
+        "id": "SRR00000154",
+        "individualId": "TCGA-F5-6864",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-G5-6641-01",
+        "id": "SRR00000155",
+        "individualId": "TCGA-G5-6641",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-3L-AA1B-01",
+        "id": "SRR00000156",
+        "individualId": "TCGA-3L-AA1B",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-4N-A93T-01",
+        "id": "SRR00000157",
+        "individualId": "TCGA-4N-A93T",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-4T-AA8H-01",
+        "id": "SRR00000158",
+        "individualId": "TCGA-4T-AA8H",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-5M-AAT4-01",
+        "id": "SRR00000159",
+        "individualId": "TCGA-5M-AAT4",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-5M-AAT6-01",
+        "id": "SRR00000160",
+        "individualId": "TCGA-5M-AAT6",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-5M-AATE-01",
+        "id": "SRR00000161",
+        "individualId": "TCGA-5M-AATE",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-2671-01",
+        "id": "SRR00000162",
+        "individualId": "TCGA-A6-2671",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-2672-01",
+        "id": "SRR00000163",
+        "individualId": "TCGA-A6-2672",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-2674-01",
+        "id": "SRR00000164",
+        "individualId": "TCGA-A6-2674",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-2675-01",
+        "id": "SRR00000165",
+        "individualId": "TCGA-A6-2675",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-2676-01",
+        "id": "SRR00000166",
+        "individualId": "TCGA-A6-2676",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-2677-01",
+        "id": "SRR00000167",
+        "individualId": "TCGA-A6-2677",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-2678-01",
+        "id": "SRR00000168",
+        "individualId": "TCGA-A6-2678",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-2679-01",
+        "id": "SRR00000169",
+        "individualId": "TCGA-A6-2679",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-2680-01",
+        "id": "SRR00000170",
+        "individualId": "TCGA-A6-2680",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-2681-01",
+        "id": "SRR00000171",
+        "individualId": "TCGA-A6-2681",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-2682-01",
+        "id": "SRR00000172",
+        "individualId": "TCGA-A6-2682",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-2683-01",
+        "id": "SRR00000173",
+        "individualId": "TCGA-A6-2683",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-2684-01",
+        "id": "SRR00000174",
+        "individualId": "TCGA-A6-2684",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-2685-01",
+        "id": "SRR00000175",
+        "individualId": "TCGA-A6-2685",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-2686-01",
+        "id": "SRR00000176",
+        "individualId": "TCGA-A6-2686",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-3807-01",
+        "id": "SRR00000177",
+        "individualId": "TCGA-A6-3807",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-3808-01",
+        "id": "SRR00000178",
+        "individualId": "TCGA-A6-3808",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-3809-01",
+        "id": "SRR00000179",
+        "individualId": "TCGA-A6-3809",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-3810-01",
+        "id": "SRR00000180",
+        "individualId": "TCGA-A6-3810",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-4105-01",
+        "id": "SRR00000181",
+        "individualId": "TCGA-A6-4105",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-4107-01",
+        "id": "SRR00000182",
+        "individualId": "TCGA-A6-4107",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-5656-01",
+        "id": "SRR00000183",
+        "individualId": "TCGA-A6-5656",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-5657-01",
+        "id": "SRR00000184",
+        "individualId": "TCGA-A6-5657",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-5659-01",
+        "id": "SRR00000185",
+        "individualId": "TCGA-A6-5659",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-5660-01",
+        "id": "SRR00000186",
+        "individualId": "TCGA-A6-5660",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-5661-01",
+        "id": "SRR00000187",
+        "individualId": "TCGA-A6-5661",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-5662-01",
+        "id": "SRR00000188",
+        "individualId": "TCGA-A6-5662",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-5664-01",
+        "id": "SRR00000189",
+        "individualId": "TCGA-A6-5664",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-5665-01",
+        "id": "SRR00000190",
+        "individualId": "TCGA-A6-5665",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-5666-01",
+        "id": "SRR00000191",
+        "individualId": "TCGA-A6-5666",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-5667-01",
+        "id": "SRR00000192",
+        "individualId": "TCGA-A6-5667",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-6137-01",
+        "id": "SRR00000193",
+        "individualId": "TCGA-A6-6137",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-6138-01",
+        "id": "SRR00000194",
+        "individualId": "TCGA-A6-6138",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-6140-01",
+        "id": "SRR00000195",
+        "individualId": "TCGA-A6-6140",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-6141-01",
+        "id": "SRR00000196",
+        "individualId": "TCGA-A6-6141",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-6142-01",
+        "id": "SRR00000197",
+        "individualId": "TCGA-A6-6142",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-6648-01",
+        "id": "SRR00000198",
+        "individualId": "TCGA-A6-6648",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-6649-01",
+        "id": "SRR00000199",
+        "individualId": "TCGA-A6-6649",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-6650-01",
+        "id": "SRR00000200",
+        "individualId": "TCGA-A6-6650",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-6651-01",
+        "id": "SRR00000201",
+        "individualId": "TCGA-A6-6651",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-6652-01",
+        "id": "SRR00000202",
+        "individualId": "TCGA-A6-6652",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-6653-01",
+        "id": "SRR00000203",
+        "individualId": "TCGA-A6-6653",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-6654-01",
+        "id": "SRR00000204",
+        "individualId": "TCGA-A6-6654",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-6780-01",
+        "id": "SRR00000205",
+        "individualId": "TCGA-A6-6780",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-6781-01",
+        "id": "SRR00000206",
+        "individualId": "TCGA-A6-6781",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-6782-01",
+        "id": "SRR00000207",
+        "individualId": "TCGA-A6-6782",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-A565-01",
+        "id": "SRR00000208",
+        "individualId": "TCGA-A6-A565",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-A566-01",
+        "id": "SRR00000209",
+        "individualId": "TCGA-A6-A566",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-A567-01",
+        "id": "SRR00000210",
+        "individualId": "TCGA-A6-A567",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-A56B-01",
+        "id": "SRR00000211",
+        "individualId": "TCGA-A6-A56B",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-A6-A5ZU-01",
+        "id": "SRR00000212",
+        "individualId": "TCGA-A6-A5ZU",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3488-01",
+        "id": "SRR00000213",
+        "individualId": "TCGA-AA-3488",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3489-01",
+        "id": "SRR00000214",
+        "individualId": "TCGA-AA-3489",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3492-01",
+        "id": "SRR00000215",
+        "individualId": "TCGA-AA-3492",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3494-01",
+        "id": "SRR00000216",
+        "individualId": "TCGA-AA-3494",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3495-01",
+        "id": "SRR00000217",
+        "individualId": "TCGA-AA-3495",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3496-01",
+        "id": "SRR00000218",
+        "individualId": "TCGA-AA-3496",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3502-01",
+        "id": "SRR00000219",
+        "individualId": "TCGA-AA-3502",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3506-01",
+        "id": "SRR00000220",
+        "individualId": "TCGA-AA-3506",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3510-01",
+        "id": "SRR00000221",
+        "individualId": "TCGA-AA-3510",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3511-01",
+        "id": "SRR00000222",
+        "individualId": "TCGA-AA-3511",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3514-01",
+        "id": "SRR00000223",
+        "individualId": "TCGA-AA-3514",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3517-01",
+        "id": "SRR00000224",
+        "individualId": "TCGA-AA-3517",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3518-01",
+        "id": "SRR00000225",
+        "individualId": "TCGA-AA-3518",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3519-01",
+        "id": "SRR00000226",
+        "individualId": "TCGA-AA-3519",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3520-01",
+        "id": "SRR00000227",
+        "individualId": "TCGA-AA-3520",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3521-01",
+        "id": "SRR00000228",
+        "individualId": "TCGA-AA-3521",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3522-01",
+        "id": "SRR00000229",
+        "individualId": "TCGA-AA-3522",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3524-01",
+        "id": "SRR00000230",
+        "individualId": "TCGA-AA-3524",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3525-01",
+        "id": "SRR00000231",
+        "individualId": "TCGA-AA-3525",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3526-01",
+        "id": "SRR00000232",
+        "individualId": "TCGA-AA-3526",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3527-01",
+        "id": "SRR00000233",
+        "individualId": "TCGA-AA-3527",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3529-01",
+        "id": "SRR00000234",
+        "individualId": "TCGA-AA-3529",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3530-01",
+        "id": "SRR00000235",
+        "individualId": "TCGA-AA-3530",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3531-01",
+        "id": "SRR00000236",
+        "individualId": "TCGA-AA-3531",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3532-01",
+        "id": "SRR00000237",
+        "individualId": "TCGA-AA-3532",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3534-01",
+        "id": "SRR00000238",
+        "individualId": "TCGA-AA-3534",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3538-01",
+        "id": "SRR00000239",
+        "individualId": "TCGA-AA-3538",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3542-01",
+        "id": "SRR00000240",
+        "individualId": "TCGA-AA-3542",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3543-01",
+        "id": "SRR00000241",
+        "individualId": "TCGA-AA-3543",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3544-01",
+        "id": "SRR00000242",
+        "individualId": "TCGA-AA-3544",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3548-01",
+        "id": "SRR00000243",
+        "individualId": "TCGA-AA-3548",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3549-01",
+        "id": "SRR00000244",
+        "individualId": "TCGA-AA-3549",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3552-01",
+        "id": "SRR00000245",
+        "individualId": "TCGA-AA-3552",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3553-01",
+        "id": "SRR00000246",
+        "individualId": "TCGA-AA-3553",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3555-01",
+        "id": "SRR00000247",
+        "individualId": "TCGA-AA-3555",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3558-01",
+        "id": "SRR00000248",
+        "individualId": "TCGA-AA-3558",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3560-01",
+        "id": "SRR00000249",
+        "individualId": "TCGA-AA-3560",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3561-01",
+        "id": "SRR00000250",
+        "individualId": "TCGA-AA-3561",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3655-01",
+        "id": "SRR00000251",
+        "individualId": "TCGA-AA-3655",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3660-01",
+        "id": "SRR00000252",
+        "individualId": "TCGA-AA-3660",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3663-01",
+        "id": "SRR00000253",
+        "individualId": "TCGA-AA-3663",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3664-01",
+        "id": "SRR00000254",
+        "individualId": "TCGA-AA-3664",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3666-01",
+        "id": "SRR00000255",
+        "individualId": "TCGA-AA-3666",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3667-01",
+        "id": "SRR00000256",
+        "individualId": "TCGA-AA-3667",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3673-01",
+        "id": "SRR00000257",
+        "individualId": "TCGA-AA-3673",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3675-01",
+        "id": "SRR00000258",
+        "individualId": "TCGA-AA-3675",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3678-01",
+        "id": "SRR00000259",
+        "individualId": "TCGA-AA-3678",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3679-01",
+        "id": "SRR00000260",
+        "individualId": "TCGA-AA-3679",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3680-01",
+        "id": "SRR00000261",
+        "individualId": "TCGA-AA-3680",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3681-01",
+        "id": "SRR00000262",
+        "individualId": "TCGA-AA-3681",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3684-01",
+        "id": "SRR00000263",
+        "individualId": "TCGA-AA-3684",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3685-01",
+        "id": "SRR00000264",
+        "individualId": "TCGA-AA-3685",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3688-01",
+        "id": "SRR00000265",
+        "individualId": "TCGA-AA-3688",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3692-01",
+        "id": "SRR00000266",
+        "individualId": "TCGA-AA-3692",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3693-01",
+        "id": "SRR00000267",
+        "individualId": "TCGA-AA-3693",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3695-01",
+        "id": "SRR00000268",
+        "individualId": "TCGA-AA-3695",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3696-01",
+        "id": "SRR00000269",
+        "individualId": "TCGA-AA-3696",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3710-01",
+        "id": "SRR00000270",
+        "individualId": "TCGA-AA-3710",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3712-01",
+        "id": "SRR00000271",
+        "individualId": "TCGA-AA-3712",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3713-01",
+        "id": "SRR00000272",
+        "individualId": "TCGA-AA-3713",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3715-01",
+        "id": "SRR00000273",
+        "individualId": "TCGA-AA-3715",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3811-01",
+        "id": "SRR00000274",
+        "individualId": "TCGA-AA-3811",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3812-01",
+        "id": "SRR00000275",
+        "individualId": "TCGA-AA-3812",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3814-01",
+        "id": "SRR00000276",
+        "individualId": "TCGA-AA-3814",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3818-01",
+        "id": "SRR00000277",
+        "individualId": "TCGA-AA-3818",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3819-01",
+        "id": "SRR00000278",
+        "individualId": "TCGA-AA-3819",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3821-01",
+        "id": "SRR00000279",
+        "individualId": "TCGA-AA-3821",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3831-01",
+        "id": "SRR00000280",
+        "individualId": "TCGA-AA-3831",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3833-01",
+        "id": "SRR00000281",
+        "individualId": "TCGA-AA-3833",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3837-01",
+        "id": "SRR00000282",
+        "individualId": "TCGA-AA-3837",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3841-01",
+        "id": "SRR00000283",
+        "individualId": "TCGA-AA-3841",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3842-01",
+        "id": "SRR00000284",
+        "individualId": "TCGA-AA-3842",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3844-01",
+        "id": "SRR00000285",
+        "individualId": "TCGA-AA-3844",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3845-01",
+        "id": "SRR00000286",
+        "individualId": "TCGA-AA-3845",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3846-01",
+        "id": "SRR00000287",
+        "individualId": "TCGA-AA-3846",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3848-01",
+        "id": "SRR00000288",
+        "individualId": "TCGA-AA-3848",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3850-01",
+        "id": "SRR00000289",
+        "individualId": "TCGA-AA-3850",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3851-01",
+        "id": "SRR00000290",
+        "individualId": "TCGA-AA-3851",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3852-01",
+        "id": "SRR00000291",
+        "individualId": "TCGA-AA-3852",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3854-01",
+        "id": "SRR00000292",
+        "individualId": "TCGA-AA-3854",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3855-01",
+        "id": "SRR00000293",
+        "individualId": "TCGA-AA-3855",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3856-01",
+        "id": "SRR00000294",
+        "individualId": "TCGA-AA-3856",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3858-01",
+        "id": "SRR00000295",
+        "individualId": "TCGA-AA-3858",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3864-01",
+        "id": "SRR00000296",
+        "individualId": "TCGA-AA-3864",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3866-01",
+        "id": "SRR00000297",
+        "individualId": "TCGA-AA-3866",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3867-01",
+        "id": "SRR00000298",
+        "individualId": "TCGA-AA-3867",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3869-01",
+        "id": "SRR00000299",
+        "individualId": "TCGA-AA-3869",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3870-01",
+        "id": "SRR00000300",
+        "individualId": "TCGA-AA-3870",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3872-01",
+        "id": "SRR00000301",
+        "individualId": "TCGA-AA-3872",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3875-01",
+        "id": "SRR00000302",
+        "individualId": "TCGA-AA-3875",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3877-01",
+        "id": "SRR00000303",
+        "individualId": "TCGA-AA-3877",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3930-01",
+        "id": "SRR00000304",
+        "individualId": "TCGA-AA-3930",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3939-01",
+        "id": "SRR00000305",
+        "individualId": "TCGA-AA-3939",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3941-01",
+        "id": "SRR00000306",
+        "individualId": "TCGA-AA-3941",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3947-01",
+        "id": "SRR00000307",
+        "individualId": "TCGA-AA-3947",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3949-01",
+        "id": "SRR00000308",
+        "individualId": "TCGA-AA-3949",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3950-01",
+        "id": "SRR00000309",
+        "individualId": "TCGA-AA-3950",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3952-01",
+        "id": "SRR00000310",
+        "individualId": "TCGA-AA-3952",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3955-01",
+        "id": "SRR00000311",
+        "individualId": "TCGA-AA-3955",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3956-01",
+        "id": "SRR00000312",
+        "individualId": "TCGA-AA-3956",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3966-01",
+        "id": "SRR00000313",
+        "individualId": "TCGA-AA-3966",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3968-01",
+        "id": "SRR00000314",
+        "individualId": "TCGA-AA-3968",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3971-01",
+        "id": "SRR00000315",
+        "individualId": "TCGA-AA-3971",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3973-01",
+        "id": "SRR00000316",
+        "individualId": "TCGA-AA-3973",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3975-01",
+        "id": "SRR00000317",
+        "individualId": "TCGA-AA-3975",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3976-01",
+        "id": "SRR00000318",
+        "individualId": "TCGA-AA-3976",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3977-01",
+        "id": "SRR00000319",
+        "individualId": "TCGA-AA-3977",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3979-01",
+        "id": "SRR00000320",
+        "individualId": "TCGA-AA-3979",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3980-01",
+        "id": "SRR00000321",
+        "individualId": "TCGA-AA-3980",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3982-01",
+        "id": "SRR00000322",
+        "individualId": "TCGA-AA-3982",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3984-01",
+        "id": "SRR00000323",
+        "individualId": "TCGA-AA-3984",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3986-01",
+        "id": "SRR00000324",
+        "individualId": "TCGA-AA-3986",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3989-01",
+        "id": "SRR00000325",
+        "individualId": "TCGA-AA-3989",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-3994-01",
+        "id": "SRR00000326",
+        "individualId": "TCGA-AA-3994",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-A004-01",
+        "id": "SRR00000327",
+        "individualId": "TCGA-AA-A004",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-A00A-01",
+        "id": "SRR00000328",
+        "individualId": "TCGA-AA-A00A",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-A00D-01",
+        "id": "SRR00000329",
+        "individualId": "TCGA-AA-A00D",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-A00E-01",
+        "id": "SRR00000330",
+        "individualId": "TCGA-AA-A00E",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-A00F-01",
+        "id": "SRR00000331",
+        "individualId": "TCGA-AA-A00F",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-A00J-01",
+        "id": "SRR00000332",
+        "individualId": "TCGA-AA-A00J",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-A00K-01",
+        "id": "SRR00000333",
+        "individualId": "TCGA-AA-A00K",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-A00L-01",
+        "id": "SRR00000334",
+        "individualId": "TCGA-AA-A00L",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-A00N-01",
+        "id": "SRR00000335",
+        "individualId": "TCGA-AA-A00N",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-A00O-01",
+        "id": "SRR00000336",
+        "individualId": "TCGA-AA-A00O",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-A00Q-01",
+        "id": "SRR00000337",
+        "individualId": "TCGA-AA-A00Q",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-A00R-01",
+        "id": "SRR00000338",
+        "individualId": "TCGA-AA-A00R",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-A00U-01",
+        "id": "SRR00000339",
+        "individualId": "TCGA-AA-A00U",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-A00W-01",
+        "id": "SRR00000340",
+        "individualId": "TCGA-AA-A00W",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-A00Z-01",
+        "id": "SRR00000341",
+        "individualId": "TCGA-AA-A00Z",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-A010-01",
+        "id": "SRR00000342",
+        "individualId": "TCGA-AA-A010",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-A017-01",
+        "id": "SRR00000343",
+        "individualId": "TCGA-AA-A017",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-A01C-01",
+        "id": "SRR00000344",
+        "individualId": "TCGA-AA-A01C",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-A01D-01",
+        "id": "SRR00000345",
+        "individualId": "TCGA-AA-A01D",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-A01F-01",
+        "id": "SRR00000346",
+        "individualId": "TCGA-AA-A01F",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-A01G-01",
+        "id": "SRR00000347",
+        "individualId": "TCGA-AA-A01G",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-A01I-01",
+        "id": "SRR00000348",
+        "individualId": "TCGA-AA-A01I",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-A01K-01",
+        "id": "SRR00000349",
+        "individualId": "TCGA-AA-A01K",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-A01P-01",
+        "id": "SRR00000350",
+        "individualId": "TCGA-AA-A01P",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-A01Q-01",
+        "id": "SRR00000351",
+        "individualId": "TCGA-AA-A01Q",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-A01R-01",
+        "id": "SRR00000352",
+        "individualId": "TCGA-AA-A01R",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-A01S-01",
+        "id": "SRR00000353",
+        "individualId": "TCGA-AA-A01S",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-A01T-01",
+        "id": "SRR00000354",
+        "individualId": "TCGA-AA-A01T",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-A01V-01",
+        "id": "SRR00000355",
+        "individualId": "TCGA-AA-A01V",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-A01X-01",
+        "id": "SRR00000356",
+        "individualId": "TCGA-AA-A01X",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-A01Z-01",
+        "id": "SRR00000357",
+        "individualId": "TCGA-AA-A01Z",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-A022-01",
+        "id": "SRR00000358",
+        "individualId": "TCGA-AA-A022",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-A024-01",
+        "id": "SRR00000359",
+        "individualId": "TCGA-AA-A024",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-A029-01",
+        "id": "SRR00000360",
+        "individualId": "TCGA-AA-A029",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-A02E-01",
+        "id": "SRR00000361",
+        "individualId": "TCGA-AA-A02E",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-A02F-01",
+        "id": "SRR00000362",
+        "individualId": "TCGA-AA-A02F",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-A02H-01",
+        "id": "SRR00000363",
+        "individualId": "TCGA-AA-A02H",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-A02J-01",
+        "id": "SRR00000364",
+        "individualId": "TCGA-AA-A02J",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-A02O-01",
+        "id": "SRR00000365",
+        "individualId": "TCGA-AA-A02O",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-A02R-01",
+        "id": "SRR00000366",
+        "individualId": "TCGA-AA-A02R",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-A02W-01",
+        "id": "SRR00000367",
+        "individualId": "TCGA-AA-A02W",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-A02Y-01",
+        "id": "SRR00000368",
+        "individualId": "TCGA-AA-A02Y",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-A03F-01",
+        "id": "SRR00000369",
+        "individualId": "TCGA-AA-A03F",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AA-A03J-01",
+        "id": "SRR00000370",
+        "individualId": "TCGA-AA-A03J",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AD-5900-01",
+        "id": "SRR00000371",
+        "individualId": "TCGA-AD-5900",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AD-6548-01",
+        "id": "SRR00000372",
+        "individualId": "TCGA-AD-6548",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AD-6888-01",
+        "id": "SRR00000373",
+        "individualId": "TCGA-AD-6888",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AD-6889-01",
+        "id": "SRR00000374",
+        "individualId": "TCGA-AD-6889",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AD-6890-01",
+        "id": "SRR00000375",
+        "individualId": "TCGA-AD-6890",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AD-6895-01",
+        "id": "SRR00000376",
+        "individualId": "TCGA-AD-6895",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AD-6899-01",
+        "id": "SRR00000377",
+        "individualId": "TCGA-AD-6899",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AD-6901-01",
+        "id": "SRR00000378",
+        "individualId": "TCGA-AD-6901",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AD-6963-01",
+        "id": "SRR00000379",
+        "individualId": "TCGA-AD-6963",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AD-6964-01",
+        "id": "SRR00000380",
+        "individualId": "TCGA-AD-6964",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AD-6965-01",
+        "id": "SRR00000381",
+        "individualId": "TCGA-AD-6965",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AD-A5EJ-01",
+        "id": "SRR00000382",
+        "individualId": "TCGA-AD-A5EJ",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AD-A5EK-01",
+        "id": "SRR00000383",
+        "individualId": "TCGA-AD-A5EK",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AM-5820-01",
+        "id": "SRR00000384",
+        "individualId": "TCGA-AM-5820",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AM-5821-01",
+        "id": "SRR00000385",
+        "individualId": "TCGA-AM-5821",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AU-3779-01",
+        "id": "SRR00000386",
+        "individualId": "TCGA-AU-3779",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AU-6004-01",
+        "id": "SRR00000387",
+        "individualId": "TCGA-AU-6004",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AY-4070-01",
+        "id": "SRR00000388",
+        "individualId": "TCGA-AY-4070",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AY-4071-01",
+        "id": "SRR00000389",
+        "individualId": "TCGA-AY-4071",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AY-5543-01",
+        "id": "SRR00000390",
+        "individualId": "TCGA-AY-5543",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AY-6196-01",
+        "id": "SRR00000391",
+        "individualId": "TCGA-AY-6196",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AY-6197-01",
+        "id": "SRR00000392",
+        "individualId": "TCGA-AY-6197",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AY-6386-01",
+        "id": "SRR00000393",
+        "individualId": "TCGA-AY-6386",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AY-A54L-01",
+        "id": "SRR00000394",
+        "individualId": "TCGA-AY-A54L",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AY-A69D-01",
+        "id": "SRR00000395",
+        "individualId": "TCGA-AY-A69D",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AY-A71X-01",
+        "id": "SRR00000396",
+        "individualId": "TCGA-AY-A71X",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AY-A8YK-01",
+        "id": "SRR00000397",
+        "individualId": "TCGA-AY-A8YK",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AZ-4308-01",
+        "id": "SRR00000398",
+        "individualId": "TCGA-AZ-4308",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AZ-4313-01",
+        "id": "SRR00000399",
+        "individualId": "TCGA-AZ-4313",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AZ-4315-01",
+        "id": "SRR00000400",
+        "individualId": "TCGA-AZ-4315",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AZ-4323-01",
+        "id": "SRR00000401",
+        "individualId": "TCGA-AZ-4323",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AZ-4614-01",
+        "id": "SRR00000402",
+        "individualId": "TCGA-AZ-4614",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AZ-4615-01",
+        "id": "SRR00000403",
+        "individualId": "TCGA-AZ-4615",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AZ-4616-01",
+        "id": "SRR00000404",
+        "individualId": "TCGA-AZ-4616",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AZ-4681-01",
+        "id": "SRR00000405",
+        "individualId": "TCGA-AZ-4681",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AZ-4682-01",
+        "id": "SRR00000406",
+        "individualId": "TCGA-AZ-4682",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AZ-4684-01",
+        "id": "SRR00000407",
+        "individualId": "TCGA-AZ-4684",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AZ-5403-01",
+        "id": "SRR00000408",
+        "individualId": "TCGA-AZ-5403",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AZ-5407-01",
+        "id": "SRR00000409",
+        "individualId": "TCGA-AZ-5407",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AZ-6598-01",
+        "id": "SRR00000410",
+        "individualId": "TCGA-AZ-6598",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AZ-6599-01",
+        "id": "SRR00000411",
+        "individualId": "TCGA-AZ-6599",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AZ-6600-01",
+        "id": "SRR00000412",
+        "individualId": "TCGA-AZ-6600",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AZ-6603-01",
+        "id": "SRR00000413",
+        "individualId": "TCGA-AZ-6603",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AZ-6605-01",
+        "id": "SRR00000414",
+        "individualId": "TCGA-AZ-6605",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AZ-6606-01",
+        "id": "SRR00000415",
+        "individualId": "TCGA-AZ-6606",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-AZ-6607-01",
+        "id": "SRR00000416",
+        "individualId": "TCGA-AZ-6607",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CA-5254-01",
+        "id": "SRR00000417",
+        "individualId": "TCGA-CA-5254",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CA-5255-01",
+        "id": "SRR00000418",
+        "individualId": "TCGA-CA-5255",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CA-5256-01",
+        "id": "SRR00000419",
+        "individualId": "TCGA-CA-5256",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CA-5796-01",
+        "id": "SRR00000420",
+        "individualId": "TCGA-CA-5796",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CA-5797-01",
+        "id": "SRR00000421",
+        "individualId": "TCGA-CA-5797",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CA-6715-01",
+        "id": "SRR00000422",
+        "individualId": "TCGA-CA-6715",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CA-6716-01",
+        "id": "SRR00000423",
+        "individualId": "TCGA-CA-6716",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CA-6717-01",
+        "id": "SRR00000424",
+        "individualId": "TCGA-CA-6717",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CA-6718-01",
+        "id": "SRR00000425",
+        "individualId": "TCGA-CA-6718",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CA-6719-01",
+        "id": "SRR00000426",
+        "individualId": "TCGA-CA-6719",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CK-4947-01",
+        "id": "SRR00000427",
+        "individualId": "TCGA-CK-4947",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CK-4948-01",
+        "id": "SRR00000428",
+        "individualId": "TCGA-CK-4948",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CK-4950-01",
+        "id": "SRR00000429",
+        "individualId": "TCGA-CK-4950",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CK-4951-01",
+        "id": "SRR00000430",
+        "individualId": "TCGA-CK-4951",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CK-4952-01",
+        "id": "SRR00000431",
+        "individualId": "TCGA-CK-4952",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CK-5912-01",
+        "id": "SRR00000432",
+        "individualId": "TCGA-CK-5912",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CK-5913-01",
+        "id": "SRR00000433",
+        "individualId": "TCGA-CK-5913",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CK-5914-01",
+        "id": "SRR00000434",
+        "individualId": "TCGA-CK-5914",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CK-5915-01",
+        "id": "SRR00000435",
+        "individualId": "TCGA-CK-5915",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CK-5916-01",
+        "id": "SRR00000436",
+        "individualId": "TCGA-CK-5916",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CK-6746-01",
+        "id": "SRR00000437",
+        "individualId": "TCGA-CK-6746",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CK-6747-01",
+        "id": "SRR00000438",
+        "individualId": "TCGA-CK-6747",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CK-6748-01",
+        "id": "SRR00000439",
+        "individualId": "TCGA-CK-6748",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CK-6751-01",
+        "id": "SRR00000440",
+        "individualId": "TCGA-CK-6751",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CM-4743-01",
+        "id": "SRR00000441",
+        "individualId": "TCGA-CM-4743",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CM-4744-01",
+        "id": "SRR00000442",
+        "individualId": "TCGA-CM-4744",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CM-4746-01",
+        "id": "SRR00000443",
+        "individualId": "TCGA-CM-4746",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CM-4747-01",
+        "id": "SRR00000444",
+        "individualId": "TCGA-CM-4747",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CM-4748-01",
+        "id": "SRR00000445",
+        "individualId": "TCGA-CM-4748",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CM-4750-01",
+        "id": "SRR00000446",
+        "individualId": "TCGA-CM-4750",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CM-4751-01",
+        "id": "SRR00000447",
+        "individualId": "TCGA-CM-4751",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CM-4752-01",
+        "id": "SRR00000448",
+        "individualId": "TCGA-CM-4752",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CM-5341-01",
+        "id": "SRR00000449",
+        "individualId": "TCGA-CM-5341",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CM-5344-01",
+        "id": "SRR00000450",
+        "individualId": "TCGA-CM-5344",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CM-5348-01",
+        "id": "SRR00000451",
+        "individualId": "TCGA-CM-5348",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CM-5349-01",
+        "id": "SRR00000452",
+        "individualId": "TCGA-CM-5349",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CM-5860-01",
+        "id": "SRR00000453",
+        "individualId": "TCGA-CM-5860",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CM-5861-01",
+        "id": "SRR00000454",
+        "individualId": "TCGA-CM-5861",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CM-5862-01",
+        "id": "SRR00000455",
+        "individualId": "TCGA-CM-5862",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CM-5863-01",
+        "id": "SRR00000456",
+        "individualId": "TCGA-CM-5863",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CM-5864-01",
+        "id": "SRR00000457",
+        "individualId": "TCGA-CM-5864",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CM-5868-01",
+        "id": "SRR00000458",
+        "individualId": "TCGA-CM-5868",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CM-6161-01",
+        "id": "SRR00000459",
+        "individualId": "TCGA-CM-6161",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CM-6162-01",
+        "id": "SRR00000460",
+        "individualId": "TCGA-CM-6162",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CM-6163-01",
+        "id": "SRR00000461",
+        "individualId": "TCGA-CM-6163",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CM-6164-01",
+        "id": "SRR00000462",
+        "individualId": "TCGA-CM-6164",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CM-6165-01",
+        "id": "SRR00000463",
+        "individualId": "TCGA-CM-6165",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CM-6166-01",
+        "id": "SRR00000464",
+        "individualId": "TCGA-CM-6166",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CM-6167-01",
+        "id": "SRR00000465",
+        "individualId": "TCGA-CM-6167",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CM-6168-01",
+        "id": "SRR00000466",
+        "individualId": "TCGA-CM-6168",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CM-6169-01",
+        "id": "SRR00000467",
+        "individualId": "TCGA-CM-6169",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CM-6170-01",
+        "id": "SRR00000468",
+        "individualId": "TCGA-CM-6170",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CM-6171-01",
+        "id": "SRR00000469",
+        "individualId": "TCGA-CM-6171",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CM-6172-01",
+        "id": "SRR00000470",
+        "individualId": "TCGA-CM-6172",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CM-6674-01",
+        "id": "SRR00000471",
+        "individualId": "TCGA-CM-6674",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CM-6675-01",
+        "id": "SRR00000472",
+        "individualId": "TCGA-CM-6675",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CM-6676-01",
+        "id": "SRR00000473",
+        "individualId": "TCGA-CM-6676",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CM-6677-01",
+        "id": "SRR00000474",
+        "individualId": "TCGA-CM-6677",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CM-6678-01",
+        "id": "SRR00000475",
+        "individualId": "TCGA-CM-6678",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CM-6679-01",
+        "id": "SRR00000476",
+        "individualId": "TCGA-CM-6679",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-CM-6680-01",
+        "id": "SRR00000477",
+        "individualId": "TCGA-CM-6680",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-D5-5537-01",
+        "id": "SRR00000478",
+        "individualId": "TCGA-D5-5537",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-D5-5538-01",
+        "id": "SRR00000479",
+        "individualId": "TCGA-D5-5538",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-D5-5539-01",
+        "id": "SRR00000480",
+        "individualId": "TCGA-D5-5539",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-D5-5540-01",
+        "id": "SRR00000481",
+        "individualId": "TCGA-D5-5540",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-D5-5541-01",
+        "id": "SRR00000482",
+        "individualId": "TCGA-D5-5541",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-D5-6529-01",
+        "id": "SRR00000483",
+        "individualId": "TCGA-D5-6529",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-D5-6530-01",
+        "id": "SRR00000484",
+        "individualId": "TCGA-D5-6530",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-D5-6531-01",
+        "id": "SRR00000485",
+        "individualId": "TCGA-D5-6531",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-D5-6532-01",
+        "id": "SRR00000486",
+        "individualId": "TCGA-D5-6532",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-D5-6533-01",
+        "id": "SRR00000487",
+        "individualId": "TCGA-D5-6533",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-D5-6534-01",
+        "id": "SRR00000488",
+        "individualId": "TCGA-D5-6534",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-D5-6535-01",
+        "id": "SRR00000489",
+        "individualId": "TCGA-D5-6535",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-D5-6536-01",
+        "id": "SRR00000490",
+        "individualId": "TCGA-D5-6536",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-D5-6537-01",
+        "id": "SRR00000491",
+        "individualId": "TCGA-D5-6537",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-D5-6538-01",
+        "id": "SRR00000492",
+        "individualId": "TCGA-D5-6538",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-D5-6539-01",
+        "id": "SRR00000493",
+        "individualId": "TCGA-D5-6539",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-D5-6540-01",
+        "id": "SRR00000494",
+        "individualId": "TCGA-D5-6540",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-D5-6541-01",
+        "id": "SRR00000495",
+        "individualId": "TCGA-D5-6541",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-D5-6898-01",
+        "id": "SRR00000496",
+        "individualId": "TCGA-D5-6898",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-D5-6920-01",
+        "id": "SRR00000497",
+        "individualId": "TCGA-D5-6920",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-D5-6922-01",
+        "id": "SRR00000498",
+        "individualId": "TCGA-D5-6922",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-D5-6923-01",
+        "id": "SRR00000499",
+        "individualId": "TCGA-D5-6923",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-D5-6924-01",
+        "id": "SRR00000500",
+        "individualId": "TCGA-D5-6924",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-D5-6926-01",
+        "id": "SRR00000501",
+        "individualId": "TCGA-D5-6926",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-D5-6927-01",
+        "id": "SRR00000502",
+        "individualId": "TCGA-D5-6927",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-D5-6928-01",
+        "id": "SRR00000503",
+        "individualId": "TCGA-D5-6928",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-D5-6929-01",
+        "id": "SRR00000504",
+        "individualId": "TCGA-D5-6929",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-D5-6930-01",
+        "id": "SRR00000505",
+        "individualId": "TCGA-D5-6930",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-D5-6931-01",
+        "id": "SRR00000506",
+        "individualId": "TCGA-D5-6931",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-D5-6932-01",
+        "id": "SRR00000507",
+        "individualId": "TCGA-D5-6932",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-D5-7000-01",
+        "id": "SRR00000508",
+        "individualId": "TCGA-D5-7000",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DM-A0X9-01",
+        "id": "SRR00000509",
+        "individualId": "TCGA-DM-A0X9",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DM-A0XD-01",
+        "id": "SRR00000510",
+        "individualId": "TCGA-DM-A0XD",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DM-A0XF-01",
+        "id": "SRR00000511",
+        "individualId": "TCGA-DM-A0XF",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DM-A1D0-01",
+        "id": "SRR00000512",
+        "individualId": "TCGA-DM-A1D0",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DM-A1D4-01",
+        "id": "SRR00000513",
+        "individualId": "TCGA-DM-A1D4",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DM-A1D6-01",
+        "id": "SRR00000514",
+        "individualId": "TCGA-DM-A1D6",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DM-A1D7-01",
+        "id": "SRR00000515",
+        "individualId": "TCGA-DM-A1D7",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DM-A1D8-01",
+        "id": "SRR00000516",
+        "individualId": "TCGA-DM-A1D8",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DM-A1D9-01",
+        "id": "SRR00000517",
+        "individualId": "TCGA-DM-A1D9",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DM-A1DA-01",
+        "id": "SRR00000518",
+        "individualId": "TCGA-DM-A1DA",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DM-A1DB-01",
+        "id": "SRR00000519",
+        "individualId": "TCGA-DM-A1DB",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DM-A1HA-01",
+        "id": "SRR00000520",
+        "individualId": "TCGA-DM-A1HA",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DM-A1HB-01",
+        "id": "SRR00000521",
+        "individualId": "TCGA-DM-A1HB",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DM-A280-01",
+        "id": "SRR00000522",
+        "individualId": "TCGA-DM-A280",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DM-A282-01",
+        "id": "SRR00000523",
+        "individualId": "TCGA-DM-A282",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DM-A285-01",
+        "id": "SRR00000524",
+        "individualId": "TCGA-DM-A285",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DM-A288-01",
+        "id": "SRR00000525",
+        "individualId": "TCGA-DM-A288",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DM-A28A-01",
+        "id": "SRR00000526",
+        "individualId": "TCGA-DM-A28A",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DM-A28C-01",
+        "id": "SRR00000527",
+        "individualId": "TCGA-DM-A28C",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DM-A28E-01",
+        "id": "SRR00000528",
+        "individualId": "TCGA-DM-A28E",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DM-A28F-01",
+        "id": "SRR00000529",
+        "individualId": "TCGA-DM-A28F",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DM-A28G-01",
+        "id": "SRR00000530",
+        "individualId": "TCGA-DM-A28G",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DM-A28H-01",
+        "id": "SRR00000531",
+        "individualId": "TCGA-DM-A28H",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DM-A28K-01",
+        "id": "SRR00000532",
+        "individualId": "TCGA-DM-A28K",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-DM-A28M-01",
+        "id": "SRR00000533",
+        "individualId": "TCGA-DM-A28M",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-F4-6459-01",
+        "id": "SRR00000534",
+        "individualId": "TCGA-F4-6459",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-F4-6460-01",
+        "id": "SRR00000535",
+        "individualId": "TCGA-F4-6460",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-F4-6461-01",
+        "id": "SRR00000536",
+        "individualId": "TCGA-F4-6461",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-F4-6463-01",
+        "id": "SRR00000537",
+        "individualId": "TCGA-F4-6463",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-F4-6569-01",
+        "id": "SRR00000538",
+        "individualId": "TCGA-F4-6569",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-F4-6570-01",
+        "id": "SRR00000539",
+        "individualId": "TCGA-F4-6570",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-F4-6703-01",
+        "id": "SRR00000540",
+        "individualId": "TCGA-F4-6703",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-F4-6704-01",
+        "id": "SRR00000541",
+        "individualId": "TCGA-F4-6704",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-F4-6805-01",
+        "id": "SRR00000542",
+        "individualId": "TCGA-F4-6805",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-F4-6806-01",
+        "id": "SRR00000543",
+        "individualId": "TCGA-F4-6806",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-F4-6807-01",
+        "id": "SRR00000544",
+        "individualId": "TCGA-F4-6807",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-F4-6808-01",
+        "id": "SRR00000545",
+        "individualId": "TCGA-F4-6808",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-F4-6809-01",
+        "id": "SRR00000546",
+        "individualId": "TCGA-F4-6809",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-F4-6854-01",
+        "id": "SRR00000547",
+        "individualId": "TCGA-F4-6854",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-F4-6855-01",
+        "id": "SRR00000548",
+        "individualId": "TCGA-F4-6855",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-F4-6856-01",
+        "id": "SRR00000549",
+        "individualId": "TCGA-F4-6856",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-G4-6293-01",
+        "id": "SRR00000550",
+        "individualId": "TCGA-G4-6293",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-G4-6294-01",
+        "id": "SRR00000551",
+        "individualId": "TCGA-G4-6294",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-G4-6295-01",
+        "id": "SRR00000552",
+        "individualId": "TCGA-G4-6295",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-G4-6297-01",
+        "id": "SRR00000553",
+        "individualId": "TCGA-G4-6297",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-G4-6298-01",
+        "id": "SRR00000554",
+        "individualId": "TCGA-G4-6298",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-G4-6299-01",
+        "id": "SRR00000555",
+        "individualId": "TCGA-G4-6299",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-G4-6302-01",
+        "id": "SRR00000556",
+        "individualId": "TCGA-G4-6302",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-G4-6303-01",
+        "id": "SRR00000557",
+        "individualId": "TCGA-G4-6303",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-G4-6304-01",
+        "id": "SRR00000558",
+        "individualId": "TCGA-G4-6304",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-G4-6306-01",
+        "id": "SRR00000559",
+        "individualId": "TCGA-G4-6306",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-G4-6307-01",
+        "id": "SRR00000560",
+        "individualId": "TCGA-G4-6307",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-G4-6309-01",
+        "id": "SRR00000561",
+        "individualId": "TCGA-G4-6309",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-G4-6311-01",
+        "id": "SRR00000562",
+        "individualId": "TCGA-G4-6311",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-G4-6315-01",
+        "id": "SRR00000563",
+        "individualId": "TCGA-G4-6315",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-G4-6317-01",
+        "id": "SRR00000564",
+        "individualId": "TCGA-G4-6317",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-G4-6320-01",
+        "id": "SRR00000565",
+        "individualId": "TCGA-G4-6320",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-G4-6321-01",
+        "id": "SRR00000566",
+        "individualId": "TCGA-G4-6321",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-G4-6322-01",
+        "id": "SRR00000567",
+        "individualId": "TCGA-G4-6322",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-G4-6323-01",
+        "id": "SRR00000568",
+        "individualId": "TCGA-G4-6323",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-G4-6586-01",
+        "id": "SRR00000569",
+        "individualId": "TCGA-G4-6586",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-G4-6588-01",
+        "id": "SRR00000570",
+        "individualId": "TCGA-G4-6588",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-G4-6626-01",
+        "id": "SRR00000571",
+        "individualId": "TCGA-G4-6626",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-G4-6627-01",
+        "id": "SRR00000572",
+        "individualId": "TCGA-G4-6627",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-G4-6628-01",
+        "id": "SRR00000573",
+        "individualId": "TCGA-G4-6628",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-NH-A50T-01",
+        "id": "SRR00000574",
+        "individualId": "TCGA-NH-A50T",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-NH-A50U-01",
+        "id": "SRR00000575",
+        "individualId": "TCGA-NH-A50U",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-NH-A50V-01",
+        "id": "SRR00000576",
+        "individualId": "TCGA-NH-A50V",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-NH-A5IV-01",
+        "id": "SRR00000577",
+        "individualId": "TCGA-NH-A5IV",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-NH-A6GA-01",
+        "id": "SRR00000578",
+        "individualId": "TCGA-NH-A6GA",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-NH-A6GB-01",
+        "id": "SRR00000579",
+        "individualId": "TCGA-NH-A6GB",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-NH-A6GC-01",
+        "id": "SRR00000580",
+        "individualId": "TCGA-NH-A6GC",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-NH-A8F7-01",
+        "id": "SRR00000581",
+        "individualId": "TCGA-NH-A8F7",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-NH-A8F8-01",
+        "id": "SRR00000582",
+        "individualId": "TCGA-NH-A8F8",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-QG-A5YV-01",
+        "id": "SRR00000583",
+        "individualId": "TCGA-QG-A5YV",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-QG-A5YW-01",
+        "id": "SRR00000584",
+        "individualId": "TCGA-QG-A5YW",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-QG-A5YX-01",
+        "id": "SRR00000585",
+        "individualId": "TCGA-QG-A5YX",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-QG-A5Z1-01",
+        "id": "SRR00000586",
+        "individualId": "TCGA-QG-A5Z1",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-QG-A5Z2-01",
+        "id": "SRR00000587",
+        "individualId": "TCGA-QG-A5Z2",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-QL-A97D-01",
+        "id": "SRR00000588",
+        "individualId": "TCGA-QL-A97D",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-RU-A8FL-01",
+        "id": "SRR00000589",
+        "individualId": "TCGA-RU-A8FL",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-SS-A7HO-01",
+        "id": "SRR00000590",
+        "individualId": "TCGA-SS-A7HO",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-T9-A92H-01",
+        "id": "SRR00000591",
+        "individualId": "TCGA-T9-A92H",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    },
+    {
+        "datasetId": "coadread_tcga_pan_can_atlas_2018",
+        "biosampleId": "TCGA-WS-AB45-01",
+        "id": "SRR00000592",
+        "individualId": "TCGA-WS-AB45",
+        "libraryStrategy": "WES sequencing",
+        "platform": "Illumina",
+        "runDate": "2016-01-28"
+    }
+]
