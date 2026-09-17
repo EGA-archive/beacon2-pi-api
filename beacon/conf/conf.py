@@ -28,7 +28,7 @@ security_levels = ['PUBLIC', 'REGISTERED', 'CONTROLLED']
 documentation_url = 'https://b2ri-documentation-demo.ega-archive.org/'
 max_limit_of_records_per_dataset_in_a_page=100
 pending_requests_timeout_in_seconds=10 # Timeout waiting pending requests
-cors_urls = ["http://localhost:3003", "http://localhost:3000", "https://beacon-images-test.ega-archive.org", "https://elixir-single-beacon-demo.ega-archive.org"]
+cors_urls = ["http://localhost:3003", "http://localhost:3000", "https://beacon-images-test.ega-archive.org", "https://elixir-single-beacon-demo.ega-archive.org", "https://cancer-beacon-demo.ega-archive.org"]
 
 # Service Info
 ga4gh_service_type_group = 'org.ga4gh'
