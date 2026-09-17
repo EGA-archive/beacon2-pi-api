@@ -1,0 +1,50 @@
+[
+    {
+        "id": "synthetic_usecases_4beacon_testingV4_cohort",
+        "name": "synthetic_usecases_4beacon_testingV4_cohort_afr_asia_eur",
+        "cohortType": "user-defined",
+        "collectionEvents": [
+            {
+                "eventSize": 20,
+                "eventDiseases": {
+                    "availability": true,
+                    "availabilityCount": 20,
+                    "distribution": {
+                        "MONDO:0004989": 3,
+                        "MONDO:0003661": 3,
+                        "MONDO:0005138": 3,
+                        "MONDO:0006181": 4,
+                        "MONDO:0003354": 4,
+                        "MONDO:0005060": 3
+                    }
+                },
+                "eventEthnicities": {
+                    "availability": true,
+                    "availabilityCount": 20,
+                    "distribution": {
+                        "NCIT:C41260": 4,
+                        "NCIT:C43851": 13,
+                        "NCIT:C42331": 3
+                    }
+                },
+                "eventPhenotypes": {
+                    "availability": true,
+                    "availabilityCount": 20,
+                    "distribution": {
+                        "HP:0012245": 20
+                    }
+                },
+                "eventGenders": {
+                    "availability": true,
+                    "availabilityCount": 20,
+                    "distribution": {
+                        "NCIT:C16576": 16,
+                        "NCIT:C20197": 4
+                    }
+                }
+            }
+        ],
+        "datasetId": "synthetic_usecases_4beacon_testingV4",
+        "_id": "ddcf93b16978704a7f6371516c9b83ed202617b2a64d0d3c58c0953d15dc44b9"
+    }
+]
