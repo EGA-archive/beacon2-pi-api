@@ -1,9 +1,7 @@
-from pymongo.cursor import Cursor
-from beacon.connections.mongo.__init__ import genomicVariations, biosamples, runs, cohorts, analyses, datasets, individuals
 from pymongo.collection import Collection
-from beacon.logs.logs import log_with_args_mongo, LOG
+from beacon.logs.logs import log_with_args_mongo
 from beacon.conf.conf_override import config
-from beacon.exceptions.exceptions import InvalidRequest
+from beacon.connections.mongo.client import get_client
 import aiohttp.web as web
 import yaml
 
@@ -63,6 +61,14 @@ def get_phenotypic_cross_query_attributes(self, entry_type, pre_entry_type):
     dataset_confile = import_dataset_confile()
     genomicVariant_confile = import_genomicVariant_confile()
     run_confile = import_run_confile()
+    client=get_client()
+    analyses=client['beacon'].analyses
+    biosamples=client['beacon'].biosamples
+    cohorts=client['beacon'].cohorts
+    datasets=client['beacon'].datasets
+    genomicVariations=client['beacon'].genomicVariations
+    individuals=client['beacon'].individuals
+    runs=client['beacon'].runs
     # For cross queries, save the attributes for the translation (linkage) between endpoints (idq to idq2) and the name of the collection for the initial endpoint queried (secondary_collection)
     mapping = {individual_confile["individual"]["endpoint_name"]: {analysis_confile["analysis"]["endpoint_name"]: {"idq": "id",
                                                          "idq2": "individualId",

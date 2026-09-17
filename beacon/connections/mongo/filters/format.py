@@ -1,6 +1,6 @@
 from typing import List, Union
 from beacon.request.classes import Operator
-from beacon.logs.logs import log_with_args, LOG
+from beacon.logs.logs import log_with_args
 from beacon.conf.conf_override import config
 
 @log_with_args(config.level)

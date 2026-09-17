@@ -1,14 +1,11 @@
-import logging
 import jwt
 import glob
-from aiohttp import ClientSession, BasicAuth, FormData
-from aiohttp import web
+from aiohttp import ClientSession
 import os
 from dotenv import load_dotenv
-from beacon.logs.logs import log_with_args, LOG
+from beacon.logs.logs import log_with_args
 from beacon.conf.conf_override import config
 from beacon.exceptions.exceptions import NoPermissionsAvailable
-import re
 
 @log_with_args(config.level)
 def validate_access_token(self, access_token, idp_issuer, jwks_url, algorithm, aud):

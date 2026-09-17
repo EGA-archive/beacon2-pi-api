@@ -2,11 +2,11 @@ import json
 import argparse
 from pydantic import (
     BaseModel,
-    ValidationError,
     PrivateAttr
 )
-from typing import Optional, Union
+from typing import Optional
 
+# This is the generic class to validate a record for an analysis
 class Analysis(BaseModel):
     def __init__(self, **data) -> None:
         for private_key in self.__class__.__private_attributes__.keys():

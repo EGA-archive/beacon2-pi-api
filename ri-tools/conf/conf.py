@@ -6,7 +6,6 @@ entry_type='all'
 #### VCF Conversion config parameters ####
 only_process_reads_with_allele_frequency=True
 populations_by_allele_counts=True # Variable to choose if allele frequencies are to be read by single allele or by the whole genotype of the individual, if True the populations.json fields of Homozygous, Heterozygous and Hemizygous counts will be alleleCount, if False, genotype.
-reference_genome='GRCh37' # Choose one between NCBI36, GRCh37, GRCh38
 datasetId='test'
 case_level_data=False
 num_rows=15000000

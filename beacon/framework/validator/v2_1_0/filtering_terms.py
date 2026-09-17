@@ -1,9 +1,9 @@
 from typing import Optional, List
 from pydantic import (
     BaseModel, field_validator)
-from beacon.utils.modules import load_class
 from beacon.framework.validator.v2_0_0.filtering_terms import Resource
 import json
+from beacon.framework.validator.v2_1_0.meta import InformationalMeta
 
 class FilteringTermInResponse(BaseModel):
     id: str
@@ -31,5 +31,5 @@ class FilteringTermsResults(BaseModel):
     resources: Optional[List[Resource]] = resources
 
 class FilteringTermsResponse(BaseModel):
-    meta: load_class("meta", "InformationalMeta")
+    meta: InformationalMeta
     response: FilteringTermsResults

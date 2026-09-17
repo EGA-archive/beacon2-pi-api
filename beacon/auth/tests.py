@@ -5,141 +5,275 @@ import jwt
 from aiohttp import web
 from beacon.auth.__main__ import fetch_idp, validate_access_token, authentication, fetch_user_info
 from dotenv import load_dotenv
-import re
-from beacon.logs.logs import LOG
+from beacon.logs.logs import initialize_logger
+from beacon.conf.conf_override import config
+from beacon.utils.middlewares import error_middleware
+from beacon.utils.routes import append_routes
+from aiohttp_middlewares import cors_middleware
+import beacon.conf.conf_override as conf_override
 
 # for keycloak, create aud in mappers, with custom, aud and beacon for audience
-mock_access_token = 'eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJreS1tUXNxZ0ZYeHdSUVRfRUhuQlJJUGpmbVhfRXZuUTVEbzZWUTJCazdZIn0.eyJleHAiOjE3NzMxNjE5NzQsImlhdCI6MTc3MzE2MTY3NCwianRpIjoiMWRmMjhhNGYtNjc3NC00YmQ1LThlOTEtNjMxNmNiMjdiNjMzIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL0JlYWNvbiIsImF1ZCI6ImJlYWNvbiIsInN1YiI6IjQ3ZWZmMWIxLTc2MjEtNDU3MC1hMGJiLTAxYTcxOWZiYTBhMiIsInR5cCI6IkJlYXJlciIsImF6cCI6ImJlYWNvbiIsInNlc3Npb25fc3RhdGUiOiJlYjIwZWRiNy02OTg0LTRlMjUtYmI2Mi05YmJkMzM4NmMwZjIiLCJhY3IiOiIxIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBlbWFpbCBtaWNyb3Byb2ZpbGUtand0Iiwic2lkIjoiZWIyMGVkYjctNjk4NC00ZTI1LWJiNjItOWJiZDMzODZjMGYyIiwidXBuIjoiamFuZSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwibmFtZSI6IkphbmUgU21pdGgiLCJncm91cHMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXSwicHJlZmVycmVkX3VzZXJuYW1lIjoiamFuZSIsImdpdmVuX25hbWUiOiJKYW5lIiwiZmFtaWx5X25hbWUiOiJTbWl0aCIsImVtYWlsIjoiamFuZS5zbWl0aEBiZWFjb24uZ2E0Z2gifQ.kFp3W53979Ib3Z17miTlWCqP-hoDJYo3aYLGfZOgRJI0HM08ngPi87fItWPBurx9Fb1fiHTZqeTMZ-XBuIK1bIRszq9E9Dg9Hem2nxgr_b8OMlmns1S6aE3p8kxWm3-Csmpmelt01HJlNxlYysTMK5mH6QOU2sANL1iCa0z9n-FX8H9IPQ9dKFdRGCvGU0vwUw4LwHW2SVk5DDGYBIy-z5hSjkdqLZ72OTRQWb_ZZEJlsT7gv-xPkjEW3AJW2vgRyZILqiUtAkrfapIPA42Iva2PsFzp1PnJeis_UksBOh1yH_BR6C9ycxfi__251JoaPrIqb4G3YidarYOcMCQSzA'
+mock_access_token = 'eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJreS1tUXNxZ0ZYeHdSUVRfRUhuQlJJUGpmbVhfRXZuUTVEbzZWUTJCazdZIn0.eyJleHAiOjE3ODkyMTY5NjAsImlhdCI6MTc4OTIxNjY2MCwianRpIjoiODhiOGM5YmItNGYxYy00MDBhLWFkYzUtNWUxOGE0ZmNhMTM2IiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL0JlYWNvbiIsImF1ZCI6ImJlYWNvbiIsInN1YiI6IjQ3ZWZmMWIxLTc2MjEtNDU3MC1hMGJiLTAxYTcxOWZiYTBhMiIsInR5cCI6IkJlYXJlciIsImF6cCI6ImJlYWNvbiIsInNlc3Npb25fc3RhdGUiOiI2NjVmYzE4Mi0zNGZkLTRmNDktODIyNi1lYTI3NGJhYmIxYTIiLCJhY3IiOiIxIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBlbWFpbCBtaWNyb3Byb2ZpbGUtand0Iiwic2lkIjoiNjY1ZmMxODItMzRmZC00ZjQ5LTgyMjYtZWEyNzRiYWJiMWEyIiwidXBuIjoiamFuZSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwibmFtZSI6IkphbmUgU21pdGgiLCJncm91cHMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXSwicHJlZmVycmVkX3VzZXJuYW1lIjoiamFuZSIsImdpdmVuX25hbWUiOiJKYW5lIiwiZmFtaWx5X25hbWUiOiJTbWl0aCIsImVtYWlsIjoiamFuZS5zbWl0aEBiZWFjb24uZ2E0Z2gifQ.ognNPMqZYlQCXmj0ZXu_IodasLHCWJtBHX3ElWEFyakbAkHsOzLxGwrFkRyrmwB1jyg_lXcXt7E9z2mB7FzNfCpzdhIXBqBQf_v9OFjZv0-maVIItjRzmHLF5jnbPwBj6jQVzwkvCHOAqFYx0wBTviDWsVYSgNOuPmZcCj3KKrzDrJzUUSZ82DoyGjc9aTfMJQFFb0Sw-d2-ubN4XlFjwvGreJB3OG0n_eUkbvmFDwxWnR5OKcb7r0IYr15RigaKaqFiurNWC9vsttDZPL2LC5LuesMj6QMA3xkCMVReazj28-bFkOsGIgr9QSGx-OpJ4pKqubP4X7MtIx3TN7xpFw'
 mock_access_token_false = 'public'
-#dummy test anonymous
-#dummy test login
-#add test coverage
-#audit --> agafar informació molt específica que ens interessa guardar per sempre (de quins individuals ha obtingut resultats positius)
+
+#audit --> TODO: get very specific information that we are interested in saving and keeping it (example: what individuals were returned in response)
 
 def create_test_app():
-    app = web.Application()
-    #app.on_startup.append(initialize)
+    LOG = initialize_logger(config.level)
+    app = web.Application(
+        middlewares=[
+            cors_middleware(origins=conf_override.config.cors_urls), error_middleware
+        ]
+    )
+    app['logger'] = LOG
+    app['pending_requests'] = set()
+    app['shutting_down'] = False
+    app['state'] = 'Running - healthy'
+    app = append_routes(app=app)
     return app
 
+# Authentication and identity provider (IdP) integration test suite
 class TestAuthN(unittest.TestCase):
+
     def __init__(self, methodName: str = "runTest") -> None:
         super().__init__(methodName)
+
+        # Initialize logging system for authentication test diagnostics
+        LOG = initialize_logger(config.level)
+
+        # Assign test identifier (used in downstream auth/context logic)
         self._id = 'test'
+
+        # Attach logger instance to test class
+        self.LOG = LOG
+
     def test_auth_fetch_idp(self):
+        # Test retrieval of Identity Provider configuration from environment/system
         with loop_context() as loop:
+
+            # Create isolated application instance for authentication flow
             app = create_test_app()
+
+            # Wrap app in test HTTP server/client
             client = TestClient(TestServer(app), loop=loop)
+
             loop.run_until_complete(client.start_server())
+
             async def test_fetch_idp():
-                idp_issuer, user_info, idp_client_id, idp_client_secret, idp_introspection, idp_jwks_url, algorithm, aud = fetch_idp(self, mock_access_token)
+                # Fetch IdP configuration dynamically using mock access token
+                idp_issuer, user_info, idp_client_id, idp_client_secret, \
+                idp_introspection, idp_jwks_url, algorithm, aud = fetch_idp(
+                    self, mock_access_token
+                )
+
+                # Load expected configuration from Keycloak environment file
                 load_dotenv("beacon/auth/idp_providers/keycloak.env", override=True)
+
+                # Extract expected values from environment variables
                 IDP_ISSUER = os.getenv('ISSUER')
                 IDP_CLIENT_ID = os.getenv('CLIENT_ID')
                 IDP_CLIENT_SECRET = os.getenv('CLIENT_SECRET')
                 IDP_USER_INFO = os.getenv('USER_INFO')
                 IDP_INTROSPECTION = os.getenv('INTROSPECTION')
                 IDP_JWKS_URL = os.getenv('JWKS_URL')
+
+                # Validate fetched configuration matches environment configuration
                 assert IDP_ISSUER == idp_issuer
                 assert IDP_CLIENT_ID == idp_client_id
                 assert IDP_CLIENT_SECRET == idp_client_secret
                 assert IDP_USER_INFO == user_info
                 assert IDP_INTROSPECTION == idp_introspection
                 assert IDP_JWKS_URL == idp_jwks_url
+
+            # Execute async test inside event loop
             loop.run_until_complete(test_fetch_idp())
+
+            # Clean shutdown of test server
             loop.run_until_complete(client.close())
+
     def test_auth_validate_access_token(self):
+        # Test JWT validation pipeline without verifying signature (unit-level check)
         with loop_context() as loop:
+
             app = create_test_app()
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
+
             async def test_validate_access_token():
+                # Load IdP configuration for validation context
                 load_dotenv("beacon/auth/idp_providers/keycloak.env", override=True)
+
                 IDP_ISSUER = os.getenv('ISSUER')
                 IDP_CLIENT_ID = os.getenv('CLIENT_ID')
                 IDP_CLIENT_SECRET = os.getenv('CLIENT_SECRET')
                 IDP_USER_INFO = os.getenv('USER_INFO')
                 IDP_INTROSPECTION = os.getenv('INTROSPECTION')
                 IDP_JWKS_URL = os.getenv('JWKS_URL')
+
                 try:
+                    # Extract JWT header without verification (inspect algorithm)
                     header = jwt.get_unverified_header(mock_access_token)
-                    algorithm=header["alg"]
+                    algorithm = header["alg"]
+
+                    # Decode token payload without signature verification (unsafe but test-only)
                     decoded = jwt.decode(mock_access_token, options={"verify_signature": False})
+
+                    # Extract issuer and audience for validation step
                     issuer = decoded['iss']
                     aud = decoded['aud']
+
                 except Exception:
+                    # Any parsing failure results in unauthorized request
                     raise web.HTTPUnauthorized()
-                access_token_validation = validate_access_token(self, mock_access_token, IDP_ISSUER, IDP_JWKS_URL, algorithm, aud)
+
+                # Validate token against IdP configuration and JWKS endpoint
+                access_token_validation = validate_access_token(
+                    self,
+                    mock_access_token,
+                    IDP_ISSUER,
+                    IDP_JWKS_URL,
+                    algorithm,
+                    aud
+                )
+
+                # Expect token to be valid under mocked conditions
                 assert access_token_validation == True
+
             loop.run_until_complete(test_validate_access_token())
             loop.run_until_complete(client.close())
+
     def test_auth_fetch_user_info(self):
+        # Test retrieval of user profile data from IdP userinfo endpoint
         with loop_context() as loop:
+
             app = create_test_app()
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
+
             async def test_fetch_user_info():
+                # Load IdP configuration for API calls
                 load_dotenv("beacon/auth/idp_providers/keycloak.env", override=True)
+
                 IDP_ISSUER = os.getenv('ISSUER')
                 IDP_CLIENT_ID = os.getenv('CLIENT_ID')
                 IDP_CLIENT_SECRET = os.getenv('CLIENT_SECRET')
                 IDP_USER_INFO = os.getenv('USER_INFO')
                 IDP_INTROSPECTION = os.getenv('INTROSPECTION')
                 IDP_JWKS_URL = os.getenv('JWKS_URL')
-                list_visa_datasets=[]
-                user, list_visa_datasets = await fetch_user_info(self, mock_access_token, IDP_USER_INFO, IDP_ISSUER, list_visa_datasets)
+
+                # Initialize visa dataset accumulator (GA4GH passport model)
+                list_visa_datasets = []
+
+                # Fetch authenticated user profile from IdP
+                user, list_visa_datasets = await fetch_user_info(
+                    self,
+                    mock_access_token,
+                    IDP_USER_INFO,
+                    IDP_ISSUER,
+                    list_visa_datasets
+                )
+
+                # Validate returned identity information
                 assert user.get('email') == 'jane.smith@beacon.ga4gh'
+
             loop.run_until_complete(test_fetch_user_info())
             loop.run_until_complete(client.close())
+
     def test_auth_authentication(self):
+        # End-to-end authentication flow test (valid token case)
         with loop_context() as loop:
+
             app = create_test_app()
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
+
             async def test_authentication():
-                user, list_visa_datasets = await authentication(self, mock_access_token)
+                # Perform full authentication pipeline using valid token
+                user, list_visa_datasets = await authentication(
+                    self,
+                    mock_access_token
+                )
+
+                # Confirm authenticated identity resolution
                 assert user.get('email') == 'jane.smith@beacon.ga4gh'
+
             loop.run_until_complete(test_authentication())
             loop.run_until_complete(client.close())
+
     def test_auth_authentication_false(self):
+        # Negative authentication test: invalid token should fall back to public user
         with loop_context() as loop:
+
             app = create_test_app()
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
+
             async def test_authentication_false():
-                user, list_visa_datasets = await authentication(self, mock_access_token_false)
+                # Authentication should fail gracefully for invalid token
+                user, list_visa_datasets = await authentication(
+                    self,
+                    mock_access_token_false
+                )
+
+                # Expect fallback identity for unauthenticated requests
                 assert user == 'public'
+
             loop.run_until_complete(test_authentication_false())
             loop.run_until_complete(client.close())
+
     def test_auth_check_visa_passports(self):
+        # Test GA4GH visa parsing and dataset extraction from passport claims
         with loop_context() as loop:
+
             app = create_test_app()
             client = TestClient(TestServer(app), loop=loop)
             loop.run_until_complete(client.start_server())
+
             async def test_check_visa_passports():
-                user={}
-                user['ga4gh_passport_v1']=['visa']
+                # Simulated decoded user passport containing visas
+                user = {}
+                user['ga4gh_passport_v1'] = ['visa']
+
                 visa_datasets = user['ga4gh_passport_v1']
-                list_visa_datasets=[]
+                list_visa_datasets = []
+
+                # Process each visa entry in passport
                 if visa_datasets is not None:
                     for visa_dataset in visa_datasets:
                         try:
                             visa = {}
+
+                            # Load issuer configuration for validation
                             load_dotenv("beacon/auth/idp_providers/keycloak.env", override=True)
                             IDP_ISSUER = os.getenv('ISSUER')
-                            visa['iss']=IDP_ISSUER
-                            visa["ga4gh_visa_v1"]={}
-                            visa["ga4gh_visa_v1"]["value"]='visa/dataset'
-                            if visa['iss']==IDP_ISSUER:
+
+                            # Construct minimal visa structure
+                            visa['iss'] = IDP_ISSUER
+                            visa["ga4gh_visa_v1"] = {}
+                            visa["ga4gh_visa_v1"]["value"] = 'visa/dataset'
+
+                            # Validate issuer integrity
+                            if visa['iss'] == IDP_ISSUER:
                                 pass
                             else:
                                 raise web.HTTPUnauthorized('invalid visa token')
+
+                            # Extract dataset identifier from structured visa string
                             dataset_url = visa["ga4gh_visa_v1"]["value"]
                             dataset_url_splitted = dataset_url.split('/')
+
                             visa_dataset = dataset_url_splitted[-1]
+
+                            # Collect resolved dataset identifier
                             list_visa_datasets.append(visa_dataset)
+
                         except Exception:
+                            # Ignore malformed visa entries
                             visa_dataset = None
+
+                # Expect correct dataset extraction from visa structure
                 assert list_visa_datasets == ['dataset']
+
             loop.run_until_complete(test_check_visa_passports())
             loop.run_until_complete(client.close())
 

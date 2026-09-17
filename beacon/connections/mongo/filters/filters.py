@@ -1,7 +1,7 @@
 from typing import List
 import re
 from beacon.request.parameters import AlphanumericFilter, CustomFilter, OntologyFilter
-from beacon.logs.logs import log_with_args, LOG
+from beacon.logs.logs import log_with_args
 from beacon.conf.conf_override import config
 from beacon.connections.mongo.filters.request_parameters import request_parameters_from_modules
 from beacon.connections.mongo.filters.alphanumeric import apply_alphanumeric_filter

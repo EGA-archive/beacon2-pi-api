@@ -25,9 +25,9 @@ except Exception as e:
     raise DatabaseIsDown(str(e))
 
 # Mongo dbname
-dbname='beacon'
+dbname = conf.database_name
 
-# Collections clients
+# Collection clients initialized
 analyses=client[dbname].analyses
 biosamples=client[dbname].biosamples
 cohorts=client[dbname].cohorts

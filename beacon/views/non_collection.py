@@ -1,17 +1,29 @@
-from beacon.logs.logs import log_with_args, LOG
+from beacon.logs.logs import log_with_args
 from beacon.conf.conf_override import config
 import aiohttp.web as web
 from beacon.permissions.__main__ import query_permissions
-from bson import json_util
-from beacon.request.classes import RequestAttributes
-from beacon.budget.__main__ import insert_budget
+import json
+from beacon.budget.__main__ import load_module_to_insert_budget
 from pydantic import ValidationError
 from beacon.exceptions.exceptions import InvalidData
 from beacon.views.endpoint import EndpointView
 from beacon.response.includeResultsetResponses import include_resultSet_responses
 from beacon.utils.modules import load_framework_module, load_source_module
+from beacon.utils.checks import state_check
+from datetime import date as DateType
+from datetime import datetime as DateTimeType
+import json
+from enum import Enum
+
+def json_default(obj):
+    if isinstance(obj, (DateType, DateTimeType)):
+        return obj.isoformat()
+    if isinstance(obj, Enum):
+        return obj.value
+    raise TypeError(f"Object of type {type(obj).__name__} is not JSON serializable")
 
 class EntryTypeView(EndpointView):
+    @state_check
     @query_permissions
     @log_with_args(config.level)
     async def handler(self, datasets, username, time_now):
@@ -25,8 +37,8 @@ class EntryTypeView(EndpointView):
         module_meta = load_framework_module(self, "meta")
         try:
             # Instantiat the meta class with the attributes collected in the request
-            meta = module_meta.Meta(receivedRequestSummary=RequestAttributes.qparams.summary(),returnedGranularity=RequestAttributes.returned_granularity,returnedSchemas=RequestAttributes.returned_schema,testMode=RequestAttributes.qparams.query.testMode)
-            if RequestAttributes.response_type == 'resultSet':
+            meta = module_meta.Meta(receivedRequestSummary=self.request_attributes.qparams.summary(),returnedGranularity=self.request_attributes.returned_granularity,returnedSchemas=self.request_attributes.returned_schema,testMode=self.request_attributes.qparams.query.testMode)
+            if self.request_attributes.response_type == 'resultSet':
                 # Load the modules that have the classes that will serve as the resultSet and responseSummary part of the response
                 module_resultSet = load_framework_module(self, "resultSet")
                 module_common = load_framework_module(self, "common")
@@ -34,23 +46,28 @@ class EntryTypeView(EndpointView):
                 list_of_resultSets=[]
                 new_datasets=[]
                 # Generate the dynamic classes to be instantiated for the response that depend on the request and the entry types available
-                ResultsetInstance, Resultsets, ResultsetsResponse = module_resultSet.build_full_dynamic_response()
+                ResultsetInstance, Resultsets, ResultsetsResponse = module_resultSet.build_full_dynamic_response(self)
                 # Instantiate the different datasets found using the ResultSetInstance class created and store them in the arrays
                 for dataset in multipleDatasetsResponseClass.datasets_responses:
                     try:
-                        resultSet = ResultsetInstance.build_response_by_dataset(dataset, RequestAttributes.allowed_granularity,RequestAttributes.qparams.query.requestedGranularity)
+                        # Create each of the ResultInstance object fed by the incoming dataset and its granularity depending on permissions and restrictions for the entry type
+                        resultSet = ResultsetInstance.build_response_by_dataset(dataset, self.request_attributes.allowed_granularity,self.request_attributes.qparams.query.requestedGranularity)
+                        # Accumulate the datasets instance of results in a list
                         list_of_resultSets.append(resultSet)
+                        # Accumulate the dataset object class in a list
                         new_datasets.append(dataset)
+                    # Catch the exception where the dataset is not valid
                     except ValidationError as v:
-                        LOG.error('{} dataset is invalid: {}'.format(dataset.dataset, str(v)))
+                        # Format the output dataset with the name of the dataset and the exception caught and log it out
+                        self.LOG.error('{} dataset is invalid: {}'.format(dataset.dataset, str(v)))
                 # Instantiate the responseSummary and the resultSets with the datasets to be in the response
-                responseSummary = module_common.ResponseSummary.build_response_summary_by_dataset(module_common.ResponseSummary, new_datasets)
+                responseSummary = module_common.ResponseSummary.build_response_summary_by_dataset(self, new_datasets)
                 resultSets = Resultsets.return_resultSets(list_of_resultSets)
                 # Create the response class that will allocate the Meta, responseSumary and resultSet parts of the response
                 self.classResponse = ResultsetsResponse.return_response(meta, resultSets, responseSummary)
                 # Convert the class to JSON to return it in the final stream response
                 response_obj = self.create_response()
-            elif RequestAttributes.response_type == 'count':
+            elif self.request_attributes.response_type == 'count':
                 # Load the module that have the class that will serve as the count part of the response
                 module_count = load_framework_module(self, "count")
                 # Instantiate the responseSummary with the class CountResponseSummary filled in with the counts found for the query
@@ -68,9 +85,16 @@ class EntryTypeView(EndpointView):
                 self.classResponse = module_boolean.BooleanResponse(meta=meta, responseSummary=responseSummary)
                 # Convert the class to JSON to return it in the final stream response
                 response_obj = self.create_response()
+        # Catch the cases where the NonCollection response is not valid against the reference schema
         except ValidationError as v:
-            raise InvalidData('{} templates or data are not correct'.format(RequestAttributes.entry_type))
+            raise InvalidData('{} templates or data are not correct'.format(self.request_attributes.entry_type))
         # If a time could be obtained for the moment of the query, register it for the budget count
         if time_now is not None:
-            insert_budget(self, username, time_now)
-        return web.Response(text=json_util.dumps(response_obj), status=200, content_type='application/json')
+            load_module_to_insert_budget(self, username, time_now)
+        # Give a HTTP response with json data application and a 200 status, and the NonCollection object class collected
+
+        return web.Response(
+            text=json.dumps(response_obj, default=json_default),
+            status=200,
+            content_type="application/json",
+        )

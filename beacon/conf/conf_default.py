@@ -8,8 +8,13 @@ try:
 except Exception as e:
     raise FileNotFound('There are issues with the api_version.yml file. Check if it can be opened or if has any content')
 
+# logs
 level=logging.DEBUG
-log_file=None
+log_file=None # path needs to be pointing to a file inside a volumed dir, preferably /beacon/logs/log_files, e.g. /beacon/logs/log_files/logs.log
+log_num_of_files_to_keep = 7 # number of files that will be kept for backup, the most recent ones, the oldest will get deleted
+log_rotating_interval = 'midnight' # S, M, H, D, W0, W1, W2, W3, W4, W5, W6, midnight
+
+# Beacon generic conf
 beacon_id = 'org.ega-archive.beacon-ri-demo'  # ID of the Beacon
 beacon_name = 'Beacon Production Implementation demo'  # Name of the Beacon service
 api_version = 'v2.2.0' # Version of the Beacon implementation
@@ -27,6 +32,8 @@ default_beacon_granularity = "record" # boolean, count or record
 security_levels = ['PUBLIC', 'REGISTERED', 'CONTROLLED']
 documentation_url = 'https://b2ri-documentation-demo.ega-archive.org/'
 cors_urls = ["http://localhost:3003", "http://localhost:3000"]
+max_limit_of_records_per_dataset_in_a_page=100
+pending_requests_timeout_in_seconds=10 # Timeout waiting pending requests
 
 # Service Info
 ga4gh_service_type_group = 'org.ga4gh'

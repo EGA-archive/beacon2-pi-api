@@ -1,4 +1,4 @@
-from typing import Optional, Any
+from typing import Optional
 from pydantic import (
     BaseModel,
     model_validator,
@@ -6,8 +6,8 @@ from pydantic import (
     create_model
 )
 from beacon.conf import conf_override
-from beacon.utils.modules import load_class, get_modules_confiles
-from beacon.logs.logs import LOG
+from beacon.utils.modules import get_modules_confiles
+from beacon.framework.validator.v2_0_0.meta import InformationalMeta
 
 class RelatedEndpoint(BaseModel):
     returnedEntryType: str
@@ -75,7 +75,7 @@ class EndpointEntries(EndpointEntries):
         return values
 
 class MapSchema(BaseModel):
-    schema: str = Field(alias="$schema", default="https://raw.githubusercontent.com/ga4gh-beacon/beacon-framework-v2/main/configuration/beaconConfigurationSchema.json")
+    schema: str = Field(alias="$schema", default="https://raw.githubusercontent.com/ga4gh-beacon/beacon-framework-v2/main/configuration/beaconMapSchema.json")
     endpointSets: EndpointEntries
     def populate_endpoints(self):
         # Load all_modules and do a loop per populating EndpointEntries(loaded_module=Endpoint...) and loading the variables _lookup = True by name, getting endpoint_names per each lookup = True.
@@ -112,5 +112,5 @@ class MapSchema(BaseModel):
         return self(endpointSets=endpointEntriesClass)
 
 class MapResponse(BaseModel):
-    meta: load_class("meta", "InformationalMeta")
+    meta: InformationalMeta
     response: MapSchema

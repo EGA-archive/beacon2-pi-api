@@ -6,6 +6,7 @@ test:
 test2:
   isSynthetic: true
   isTest: true
+  isDeprecated: true
 DemoDatasetBreast:
   isSynthetic: true
   isTest: true

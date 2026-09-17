@@ -2,14 +2,14 @@ from beacon.conf import conf_override
 from typing import Optional, Dict
 from pydantic import (
     BaseModel)
-from beacon.utils.modules import load_class
+from beacon.framework.validator.v2_0_0.meta import InformationalMeta
 
 class BeaconOrganization(BaseModel):
     address: Optional[str]=conf_override.config.org_adress if conf_override.config.org_adress != "" else None
     contactUrl: Optional[str]=conf_override.config.org_contact_url if conf_override.config.org_contact_url != "" else None
     description: Optional[str]=conf_override.config.org_description if conf_override.config.org_description != "" else None
     id: str=conf_override.config.org_id
-    info: Optional[str]=conf_override.config.org_info if conf_override.config.org_info != "" else None
+    info: Optional[Dict]={"organizationInfo": conf_override.config.org_info} if conf_override.config.org_info != "" else None
     logoUrl: Optional[str]=conf_override.config.org_logo_url if conf_override.config.org_logo_url != "" else None
     name: str=conf_override.config.org_name
     welcomeUrl: Optional[str]=conf_override.config.org_welcome_url if conf_override.config.welcome_url != "" else None
@@ -29,5 +29,5 @@ class InfoBody(BaseModel):
     organization: BeaconOrganization = BeaconOrganization().model_dump(exclude_none=True)
     
 class InfoResponse(BaseModel):
-    meta: load_class("meta", "InformationalMeta")
+    meta: InformationalMeta
     response: InfoBody

@@ -18,9 +18,9 @@ def validate_count_precision(v: str) -> str:
     return v
 
 
-def make_ResultsetInstance():
-    ResultType = load_types_of_results("non_collections")
-    HandoverType = load_class("common", "Handover")
+def make_ResultsetInstance(self):
+    ResultType = load_types_of_results(self, "non_collections")
+    HandoverType = load_class(self, "common", "Handover")
 
     @field_validator('countPrecision')
     def countPrecision_validator(cls, v):
@@ -125,11 +125,11 @@ def make_Resultsets(ResultsetInstance):
     return model
 
         
-def make_ResultsetsResponse(Resultsets):
+def make_ResultsetsResponse(self, Resultsets):
 
-    MetaType = load_class("meta", "Meta")
-    ResponseSummaryType = load_class("common", "ResponseSummary")
-    HandoverType = load_class("common", "Handover")
+    MetaType = load_class(self, "meta", "Meta")
+    ResponseSummaryType = load_class(self, "common", "ResponseSummary")
+    HandoverType = load_class(self, "common", "Handover")
 
     model = create_model(
         "ResultsetsResponse",
@@ -155,11 +155,11 @@ def make_ResultsetsResponse(Resultsets):
 
     return model
 
-def build_full_dynamic_response():
-    ResultsetInstance = make_ResultsetInstance()
+def build_full_dynamic_response(self):
+    ResultsetInstance = make_ResultsetInstance(self)
 
     Resultsets = make_Resultsets(ResultsetInstance)
 
-    ResultsetsResponse = make_ResultsetsResponse(Resultsets)
+    ResultsetsResponse = make_ResultsetsResponse(self, Resultsets)
 
     return ResultsetInstance, Resultsets, ResultsetsResponse

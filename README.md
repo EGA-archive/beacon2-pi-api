@@ -2,46 +2,123 @@
 
 Welcome to Beacon v2 Production Implementation (B2PI). This is an application that makes an instance of Beacon v2 be production ready.
 
+Note: admin-ui container is a new extra service that will create a UI to manage conf but is still in development, deploy the rest of the services for now, please.
+
 ## Documentation
 
-Please, go to [B2RI/B2PI docs website](https://b2ri-documentation-demo.ega-archive.org/) to know how to use Beacon v2 Production Implementation.
+Please, go to [CRG Beacon docs website](https://b2ri-documentation-demo.ega-archive.org/) to know how to use Beacon v2 Production Implementation.
 
-## New release beacon (4/2/2026) features added
+## Upgrading mongoDB (New release v2.2)
 
-* Integration with template UI. Deploy your UI for your beacon PI now: [deploy template UI](https://github.com/EGA-archive/beacon-production-prototype/tree/main/template-ui)
-* Beacon PI now waits for on going requests to finish before restarting after a change in conf file.
-* Latest Beacon RI Tools features integrated (only AF reads and populations slightly changed).
-* Timestamps in UTC are now used everywhere in beacon.
-* Query by iso8601 values for iso8601duration attributes in alphanumeric queries.
-* Added mongobleed exploit fix (CVE-2025-14847) and test checks.
+As mongoDB version 5 is [end of life](https://github.com/EGA-archive/beacon2-pi-api/issues/161), two new images for versions 6 and 7 of mongoDB are now available. Just comment and uncomment the image you prefer. **The mongoDB image that is recommended for production is the one at version 7 (default one).**
 
-## New release beacon v2.0-d4012a4 features added
+### Upgrading MongoDB to version 6 from a container with an existing data for version 5
 
-* Models plug in. Beacon PI now accepts different beacon flavours, based on different model specifications. Kicking off with two models: ga4gh beacon v2 default model and EUCAIM.
-* Conf now is not affected by further releases. Use your conf and keep it forever.
-* Cross queries between collections and non collections now are ready to be performed at full power.
-* Schema request now working: feel free to request any schema you'd like for beacon to return.
-* Validation on the fly per framework and model(s).
-* Configuration of the entities of each entry type now done by .yml files.
-* Restart of the app when conf files or generic conf is modified (no need to rebuild).
-* OR Filters (in test approach, as it is still not approved officially by GA4GH).
-* Other bug fixes.
-* Unit tests expanded, with a total of 313 now.
+This version is compatible with previous version 5. Just build the container with the version 6 uncommented and you will be ready to use it without further actions on your side.
 
-## Main changes from B2RI
+### Upgrading MongoDB to version 7 from a container with an existing data for version 5
 
-* Handlers of the endpoints are classes, not functions
-* Unit testing has been developed for the application, starting with 108 unit tests that cover 4000 lines of code approximately (100%)
-* Concurrency testing has been applied for this new beacon instance, showing results of responses for more than 3 million genomic variants splitted in different datasets in less than 100 millisecs, for a total of 1000 requests made by 10 users per second at the same time.
-* Linking ids to a dataset in a yaml file is not needed anymore
-* A couple more indexes for mongoDB have been applied, that, in addition to the restructuration of the code, have improved the quickness of the responses
-* Authentication/Authorization is now applied as a decorator, not as a different container
-* LOGS now show more relevant information about the different processes (from request to response) including transaction id, the time of execution of each function and the initial call and the return call
-* Exceptions now are raised from the lower layer to the top layer, with information and status for the origin of the exception
-* Architecture of the code is not dependent on a particular database, meaning that different types of databases (and more than one) can be potentially applied to this instance (although now only MongoDB is the one developed)
-* Parameters are sanitized
-* Users can manage what entry types want their beacon to show by editing a manage conf file inside source
-* Admin-ui to manage all the configuration settings from a UI is in development.
+If your container you want to upgrade is version 5 and you want version 7, first you will have to rebuild the container with the version 6. After that you will need to go to the mongoshell of the container:
+
+```bash
+docker exec -it mongoprod mongosh
+```
+
+And go to admin database:
+
+```bash
+use admin
+```
+
+Once authenticated, you will need to make your mongodb instance upgrades compatible with version 6 by executing the following command:
+
+```bash
+db.adminCommand({ setFeatureCompatibilityVersion: "6.0" })
+```
+
+After that, stop the container, comment version 6 and uncomment image for version 7 and rebuild the container and your mongoDB will be upgraded to version 7.
+
+### Upgrading MongoDB to version 8 from a container with an existing data for version 7
+
+If your container you want to upgrade is version 7 and you want version 8, the procedure is a bit more complex than for other mongo version updates.
+
+First of all, you will need to dump your database executing the following command:
+
+```bash
+docker exec mongoprod mongodump \                  
+  -u root \
+  -p example \
+  --authenticationDatabase admin \
+  --out /data/db/dump
+```
+
+After that, you will need to copy out the dumped files from the volume to your root local filesystem:
+```bash
+cp -r ./beacon/connections/mongo/data/db/dump ./dump
+```
+
+After that, delete completely the mongo instance with version 7:
+```bash
+docker stop mongoprod
+docker rm mongoprod
+```
+
+And the persistent data remaining:
+```bash
+rm -r beacon/connections/mongo/data/db
+```
+
+If all steps before have completed successfully, comment version 7 and uncomment version 8 for db service (mongo) at `docker-compose.yml` file. Then, build the mongo instance with version 8:
+```bash
+docker compose up -d --build db  
+```
+
+Copy the dumped files to the persistent folder in your new mongo version 8 instance:
+```bash
+cp -r ./dump ./beacon/connections/mongo/data/db 
+```
+
+And restore the dumped files to be compatible with version 8 of mongo instance:
+```bash
+docker exec mongoprod mongorestore \            
+  -u root \
+  -p example \
+  --authenticationDatabase admin \
+  --drop \
+  /data/db/dump
+```
+
+Then remove the dumped files that have already been inserted to your new mongo instance with version 8:
+```bash
+rm -r dump 
+```
+
+And reindex the data:
+```bash
+docker exec beaconprod python -m beacon.connections.mongo.reindex
+```
+
+### Downgrading MongoDB to version 5 from an exising mongodb container with a greater version
+
+First, you will have to build the mongodb container using version 6. When up and running, execute the next commands:
+
+```bash
+docker exec -it mongoprod mongosh
+```
+
+And go to admin database:
+
+```bash
+use admin
+```
+
+Once authenticated, you will need to make your mongodb instance upgrades compatible with version 6 by executing the following command:
+
+```bash
+db.adminCommand({ setFeatureCompatibilityVersion: "5.0" })
+```
+
+After that, stop the container, comment version 6 and uncomment image for version 5 and rebuild the container and your mongoDB will be downgraded to version 5.
 
 ### TLS configuration
 
@@ -673,6 +750,33 @@ After editing any comfiguration variable, save the file and restart the API to a
 
 ```bash
 docker compose restart beaconprod
+```
+
+### State checks
+
+Now state checks are available through `/health` endpoint. The implemented checks and their flow are the ones that are shown in the diagram below:
+
+![MongoDB vulnerabilities](https://github.com/EGA-archive/beacon-production-prototype/blob/main/ri-tools/files/Machine_State_v3.jpg)
+
+## Alternative Schemas
+
+Now you can also have your own "alternative" schemas included in a plugged model. For that purpose, you will need to have the JSON schema reference and have pydantic's datamodel-code-generator framework installed. To generate the schema, you will need to execute the following command:
+
+```bash
+datamodel-codegen --url <url_to_schema> --input-file-type jsonschema --output <entry_type_name.py> --class-name <Entry_type_name_with_capital_letter> --allow-remote-refs
+```
+Example: for analysis, you need to name the class-name as Analysis.
+
+The name of the python script needs to be separated by underscores. If you include versions, at them at the end, like analysis_schema_v1_0_0.py
+
+After that include it in the models.<model_name>.validators.<entry_type> folder, and then make sure you add it in the supported schemas of models.<model_name>.conf.entry_types.
+
+Note: In case there are fields that are named different as in the original schemas but are the same, you will need to add an alias for the property modifying the generated schemas by datamodel-codegen, in order to be able to map it to the original property name and is compatible with the original spec's schema.
+
+Example:
+
+```bash
+sampleTypeAtTheOrigin: str = Field(alias='sampleOriginType') # output: sampleOriginType
 ```
 
 ## Fix for MongoDB exploit (CVE-2025-14847)
