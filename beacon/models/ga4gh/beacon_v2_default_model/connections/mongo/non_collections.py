@@ -73,8 +73,10 @@ def get_variants_of_phenotypic_endpoint(self, dataset: SingleDatasetResponse):
     runs=client['beacon'].runs
     targets_=client['beacon'].targets
     caseLevelData=client['beacon'].caseLevelData
+    biosamples=client['beacon'].biosamples
     analysis_confile=import_analysis_confile()
     run_confile=import_run_confile()
+    individual_confile=import_individual_confile()
     new_entry_id = self.request_attributes.entry_id
     # Check which is the queried initial entry type of the cross query and process and get the ids to convert to the final entry type response.
     if self.request_attributes.pre_entry_type == analysis_confile["analysis"]["endpoint_name"] or self.request_attributes.pre_entry_type == run_confile["run"]["endpoint_name"]:
@@ -88,6 +90,15 @@ def get_variants_of_phenotypic_endpoint(self, dataset: SingleDatasetResponse):
                 .find_one(query, {"biosampleId": 1, "_id": 0})  
         try:
             new_entry_id = initial_ids["biosampleId"]
+        except Exception as e:
+            return dataset
+    elif self.request_attributes.pre_entry_type == individual_confile["individual"]["endpoint_name"]:
+        query = {"$and": [{"individualId": self.request_attributes.entry_id}]}
+        query = apply_filters(self, query, self.request_attributes.qparams.query.filters, {}, dataset.dataset)
+        initial_ids = biosamples \
+            .find_one(query, {"id": 1, "_id": 0}) 
+        try:
+            new_entry_id = initial_ids["id"]
         except Exception as e:
             return dataset
     try:
@@ -109,7 +120,7 @@ def get_variants_of_phenotypic_endpoint(self, dataset: SingleDatasetResponse):
     # Query the caseLevelData to get the variants that are related to these ids.
     query_cl={"$or": [{ position: "10", "datasetId": dataset.dataset},{ position: "11", "datasetId": dataset.dataset}, { position: "01", "datasetId": dataset.dataset}, { position: "y", "datasetId": dataset.dataset}]}
     string_of_ids = caseLevelData \
-        .find(query_cl, {"id": 1, "_id": 0}).limit(self.request_attributes.qparams.query.pagination.limit).skip(self.request_attributes.qparams.query.pagination.skip)
+        .find(query_cl, {"id": 1, "_id": 0})
     HGVSIds=list(string_of_ids)
     # Build the query using the identifiers.genomicHGVSId
     query={}
