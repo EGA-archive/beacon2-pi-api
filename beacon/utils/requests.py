@@ -239,30 +239,38 @@ def set_entry_type(self, request):
     def_uri = config.uri + config.uri_subpath
     if 'https' not in abs_url and 'https' in def_uri:
         abs_url = abs_url.replace('http', 'https')
+    used_uri=None
     if abs_url[:starting_endpoint] != def_uri :
         self.LOG.warning('configuration variable uri: {} not the same as where the beacon is hosted'.format(config.uri))
         for alternative_uri in config.allowed_uris:
+            if alternative_uri == '*':
+                used_uri='*'
+                break
             new_starting_endpoint=len(alternative_uri)
             new_starting_endpoints.append(new_starting_endpoint)
             if abs_url[:new_starting_endpoint] != alternative_uri:
                 self.LOG.warning('configuration variable allowed uri: {} not the same as where the beacon is hosted'.format(alternative_uri))
+            else:
+                used_uri=alternative_uri
+                starting_endpoint=new_starting_endpoint
+    else:
+        used_uri = def_uri
+    if used_uri is None:
+        raise WrongURIPath('the {} parameter from conf.py is not the same as the root one received in request: {}. Configure you uri accordingly.'.format(config.uri, abs_url))
     if abs_url_with_query_string.endswith('/api'):
         self.request_attributes.entry_type='info'
         set_entry_type_configuration(self)
     else:
-        path_list = abs_url[starting_endpoint:].split('/')
-        path_list = list(filter(None, path_list))
-        is_uri_path_correct=False
-        if path_list == []:
-            for startingendpoint in new_starting_endpoints:
-                path_list = abs_url[startingendpoint:].split('/')
-                path_list = list(filter(None, path_list))
-                if path_list!=[]:
-                    is_uri_path_correct=True
-                    break
+        if used_uri != '*':
+            path_list = abs_url[starting_endpoint:].split('/')
+            path_list = list(filter(None, path_list))
         else:
-            is_uri_path_correct=True
-        if is_uri_path_correct == False:
+            used_uri_splitted = abs_url.split('/')
+            if '.' not in used_uri_splitted[-3]:
+                path_list=used_uri_splitted[-3:]
+            else:
+                path_list=[used_uri_splitted[-1]]
+        if path_list == []:
             raise WrongURIPath('the {} parameter from conf.py is not the same as the root one received in request: {}. Configure you uri accordingly.'.format(config.uri, abs_url))
         if len(path_list) > 2:
             try:
