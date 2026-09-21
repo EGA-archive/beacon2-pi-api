@@ -25,6 +25,7 @@ async def authorization(self):
         # Get the token's email as the username if the token is valid.
         if user is None:
             user = 'public'
+            username = 'public'  # fix: senza questa riga username non è definito se il token non è valido
         elif user == 'public':
             username = 'public'
         else:
