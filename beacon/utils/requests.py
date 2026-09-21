@@ -235,18 +235,34 @@ def set_entry_type(self, request):
     abs_url=abs_url_with_query_string.split('?')
     abs_url=abs_url[0]
     starting_endpoint = len(config.uri) + len(config.uri_subpath)
+    new_starting_endpoints = []
     def_uri = config.uri + config.uri_subpath
     if 'https' not in abs_url and 'https' in def_uri:
         abs_url = abs_url.replace('http', 'https')
     if abs_url[:starting_endpoint] != def_uri :
         self.LOG.warning('configuration variable uri: {} not the same as where the beacon is hosted'.format(config.uri))
+        for alternative_uri in config.allowed_uris:
+            new_starting_endpoint=len(alternative_uri)
+            new_starting_endpoints.append(new_starting_endpoint)
+            if abs_url[:new_starting_endpoint] != alternative_uri:
+                self.LOG.warning('configuration variable allowed uri: {} not the same as where the beacon is hosted'.format(alternative_uri))
     if abs_url_with_query_string.endswith('/api'):
         self.request_attributes.entry_type='info'
         set_entry_type_configuration(self)
     else:
         path_list = abs_url[starting_endpoint:].split('/')
         path_list = list(filter(None, path_list))
+        is_uri_path_correct=False
         if path_list == []:
+            for startingendpoint in new_starting_endpoints:
+                path_list = abs_url[startingendpoint:].split('/')
+                path_list = list(filter(None, path_list))
+                if path_list!=[]:
+                    is_uri_path_correct=True
+                    break
+        else:
+            is_uri_path_correct=True
+        if is_uri_path_correct == False:
             raise WrongURIPath('the {} parameter from conf.py is not the same as the root one received in request: {}. Configure you uri accordingly.'.format(config.uri, abs_url))
         if len(path_list) > 2:
             try:
