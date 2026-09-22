@@ -21,7 +21,7 @@ api_version = 'v2.2.0' # Version of the Beacon implementation
 uri = 'http://localhost:5050'
 uri_subpath = '/api'
 complete_url = uri + uri_subpath
-allowed_uris = ["*"] # example: ["http://localhost:5054/api"] or if you want to enable all: ["*"]
+allowed_uris = [] # example: ["http://localhost:5054/api"] or if you want to enable all: ["*"]
 environment = 'test'
 description = r"This Beacon is based on synthetic data hosted at the <a href='https://ega-archive.org/datasets/EGAD00001003338'>EGA</a>. The dataset contains 2504 samples including genetic data based on 1K Genomes data, and 76 individual attributes and phenotypic data derived from UKBiobank."
 version = api_version_yaml['api_version']
