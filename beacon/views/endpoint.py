@@ -25,8 +25,7 @@ class EndpointView(web.View, CorsViewMixin):
         self.request_attributes.qparams=RequestParams()
         self.request_attributes.returned_granularity="boolean"
         self.LOG=self.request.app['logger']
-        self._id=None
-        self._id = generate_txid(self)
+        self._id = request["txid"]
 
     async def get(self):
         try:

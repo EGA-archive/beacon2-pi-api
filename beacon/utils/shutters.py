@@ -3,8 +3,6 @@ import asyncio
 from beacon.conf.conf_override import config
 import signal
 
-from beacon.logs.logs import initialize_logger
-
 async def _graceful_shutdown(app, LOG, runner, stop_event=None):
     """Stop the app in case of receiving signal for shutdown, handling pending requests in case any is alive"""
     LOG.info("API ready. Listening to requests")

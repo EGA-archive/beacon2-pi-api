@@ -9,6 +9,7 @@ from beacon.utils.middlewares import error_middleware, track_requests_middleware
 from beacon.utils.shutters import _graceful_shutdown, on_startup as on_start
 from beacon.logs.logs import initialize_logger
 from beacon.utils.modules import check_database_connections
+from beacon.auditing.audit import audit_middleware
 import datetime
 import warnings
 
@@ -38,7 +39,8 @@ async def create_api(port):
             middlewares=[
                 cors_middleware(origins=config.cors_urls),
                 error_middleware,
-                track_requests_middleware
+                track_requests_middleware,
+                audit_middleware
             ]
         )
         # Add the different attributes to the app object that will be needed for logger and status checks

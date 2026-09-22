@@ -188,3 +188,36 @@ services:
 
     networks:
       - pub
+
+  rabbitmq:
+    image: rabbitmq:4.2-management
+    container_name: rabbitmq
+    hostname: rabbitmq
+    ports:
+      - "5672:5672"   # AMQP
+      - "15672:15672" # Management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: audit_user
+      RABBITMQ_DEFAULT_PASS: audit_password
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - pub
+
+  beacon-auditing-consumer:
+    restart: on-failure
+    build:
+      context: .
+    container_name: beacon-auditing-consumer
+    entrypoint: ['python', '-m', 'beacon.auditing.consumer']
+    depends_on:
+      - rabbitmq
+      - db
+    networks:
+      - pub
+
+volumes:
+  rabbitmq_data:
