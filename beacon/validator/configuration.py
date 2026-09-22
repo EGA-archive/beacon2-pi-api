@@ -407,6 +407,25 @@ def check_configuration(
                 )
             )
 
+    # Validate allowed uris are an array
+    if not isinstance(conf_override.config.allowed_uris, list):
+        raise Exception("The conf parameter allowed_uris must be an array")
+
+    # Validate elements in allowed_uris are uris or *
+    for uri in conf_override.config.allowed_uris:
+        if uri.startswith('http://'):
+            LOG.warning(
+                'The alternative uri: {} for your beacon is not https. Please change to https as soon as you can.'.format(uri)
+            )
+        elif uri.startswith('https://'):
+            pass
+        elif uri == '*':
+            pass
+        else:
+            raise Exception(
+                "The alternative uri: {} for your beacon must start with https protocol.".format(uri)
+            )
+
     # Validate dataset permissions configuration file
     try:
         with open("/beacon/permissions/datasets/datasets_permissions.yml", 'r') as pfile:
