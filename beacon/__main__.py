@@ -36,6 +36,7 @@ async def create_api(port):
 
         # Create the aiohttp object that will be used to run the API
         app = web.Application(
+            # TODO: Explain and document the middlewares and the order criteria
             middlewares=[
                 cors_middleware(origins=config.cors_urls),
                 error_middleware,
