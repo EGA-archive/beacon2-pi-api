@@ -136,13 +136,20 @@ async def check_database_connections(LOG=None, entry_type=None, pre_entry_type=N
         import importlib
         module = importlib.import_module(complete_client_module, package=None)
         client_from_module = getattr(module, 'get_client')
+        client = client_from_module()
         # Perform the ping of each of the connections with a timeout
         try:
-            await asyncio.wait_for(ping_from_module(client_from_module()), timeout=config.pending_requests_timeout_in_seconds)
+            await asyncio.wait_for(ping_from_module(client), timeout=config.pending_requests_timeout_in_seconds)
         # In case of timeout or ping not successful, raise an error of the database being down
         except Exception:
             LOG.error('{} database is down'.format(folder))
-            raise DatabaseIsDown(folder)
+            raise DatabaseIsDown(folder)       
+        # Initialize the connection if it provides an initialize() function
+        complete_connection_module = 'beacon.connections.' + folder
+        connection_module = importlib.import_module(complete_connection_module, package=None)
+        initialize_from_module = getattr(connection_module, 'initialize', None)
+        if initialize_from_module is not None:
+            await initialize_from_module()
         
 def load_client(folder):
     """Method to get the modules of the connection strings for the databases dynamically"""
