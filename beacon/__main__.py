@@ -5,11 +5,11 @@ from aiohttp_middlewares import cors_middleware
 from beacon.conf.conf_override import config
 from beacon.validator.configuration import check_configuration, check_logs_configuration
 from beacon.utils.routes import append_routes
-from beacon.utils.middlewares import error_middleware, track_requests_middleware
+from beacon.utils.middlewares import error_before_request_reaches_destination_middleware, track_pending_requests_middleware, generate_txid
 from beacon.utils.shutters import _graceful_shutdown, on_startup as on_start
 from beacon.logs.logs import initialize_logger
 from beacon.utils.modules import check_database_connections
-from beacon.auditing.audit import audit_middleware
+from beacon.auditing.audit import auditing_middleware
 import datetime
 import warnings
 
@@ -36,12 +36,18 @@ async def create_api(port):
 
         # Create the aiohttp object that will be used to run the API
         app = web.Application(
-            # TODO: Explain and document the middlewares and the order criteria
+            # The criteria is:
+            # 0. generate a transaction id for all the processes that are related to the API server
+            # 1. audit everything that tries to reach/reaches the server
+            # 2. handle error in request headers
+            # 3. handle other types of errors for requests that try to reach the server
+            # 4. keep track of the requests that reach te server until they give a response to the client
             middlewares=[
+                generate_txid,
+                auditing_middleware,
                 cors_middleware(origins=config.cors_urls),
-                error_middleware,
-                track_requests_middleware,
-                audit_middleware
+                error_before_request_reaches_destination_middleware,
+                track_pending_requests_middleware,
             ]
         )
         # Add the different attributes to the app object that will be needed for logger and status checks

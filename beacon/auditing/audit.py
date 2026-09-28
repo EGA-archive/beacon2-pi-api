@@ -12,13 +12,12 @@ audit_publisher = AuditPublisher(
 )
 
 @web.middleware
-async def audit_middleware(request: web.Request, handler):
-    # Attach a correlation ID
+async def auditing_middleware(request: web.Request, handler):
     # TODO: create middleware to generate only the transaction id
-    txid = generate_txid(request)
-    request["txid"] = txid
-    start = time.perf_counter()
+    # txid = generate_txid(request)
+    # request["txid"] = txid
     error = None
+    event = {}
     try:
         response = await handler(request)
         return response
@@ -26,12 +25,11 @@ async def audit_middleware(request: web.Request, handler):
         error = e
         raise
     finally:
-        # TODO: remove duration of the request in audit, keep it in the conventional logs
-        duration_ms = (time.perf_counter() - start) * 1000
-
+        event["timestamp"]=datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3]
+        entry_type=request.path.split('/')[-1]
+        event["event"]='{}.view'.format(entry_type)
+        event['request_id']=request['txid']
         event = {
-            "timestamp": datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3],
-            "action": "HTTP_REQUEST",
             "request": {
                 "id": txid,
                 "method": request.method,
