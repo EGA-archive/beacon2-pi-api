@@ -9,6 +9,10 @@ from typing import Any, Literal
 
 from pydantic import AnyUrl, BaseModel, ConfigDict, Field, RootModel, conint, constr
 
+class CamelModel(BaseModel):
+    model_config = ConfigDict(
+        extra='allow',
+    )
 
 class Info(BaseModel):
     pass
@@ -291,7 +295,7 @@ class ClinicalRelevance(Enum):
     pathogenic = 'pathogenic'
 
 
-class PopulationFrequency(BaseModel):
+class PopulationFrequency(CamelModel):
     alleleFrequency: float = Field(
         ..., description='Allele frequency between 0 and 1.', examples=[3.186e-05]
     )
@@ -307,7 +311,7 @@ class PopulationFrequency(BaseModel):
     )
 
 
-class SoftwareTool(BaseModel):
+class SoftwareTool(CamelModel):
     toolName: str = Field(
         ...,
         description='Name of the tool.',
@@ -437,7 +441,7 @@ class Pagination(BaseModel):
     skip: Skip | None = Field(0, validate_default=True)
 
 
-class FrequencyInPopulations(BaseModel):
+class FrequencyInPopulations(CamelModel):
     frequencies: list[PopulationFrequency] = Field(..., min_length=1)
     source: str = Field(
         ...,
@@ -470,7 +474,7 @@ class GenomicFeature(BaseModel):
     )
 
 
-class Identifiers(BaseModel):
+class Identifiers(CamelModel):
     clinvarVariantId: constr(pattern=r'^(clinvar:)?\d+$') | None = Field(
         None,
         description='ClinVar variant id. Other id values used by ClinVar can be added to `variantAlternativeIds`',
@@ -543,7 +547,7 @@ class MolecularAttributes(BaseModel):
     )
 
 
-class PhenoClinicEffect(BaseModel):
+class PhenoClinicEffect(CamelModel):
     annotatedWith: SoftwareTool | None = None
     category: OntologyTerm | None = Field(
         None,
@@ -584,7 +588,7 @@ class PhenoClinicEffect(BaseModel):
     )
 
 
-class VariantLevelData(BaseModel):
+class VariantLevelData(CamelModel):
     clinicalInterpretations: list[PhenoClinicEffect] | None = None
     phenotypicEffects: list[PhenoClinicEffect] | None = None
 
@@ -687,7 +691,7 @@ class Feature(RootModel[Gene]):
     )
 
 
-class CaseLevelVariant(BaseModel):
+class CaseLevelVariant(CamelModel):
     alleleOrigin: OntologyTerm | None = Field(
         None,
         description='Ontology value for allele origin of variant in sample from the Variant Origin (SO:0001762). Categories are `somatic variant`, `germline variant`, `maternal variant`, `paternal variant`, `de novo variant`, `pedigree specific variant`, `population specific variant`. Corresponds to Variant Inheritance in FHIR.',
@@ -880,7 +884,7 @@ class GenotypeMember(BaseModel):
     )
 
 
-class LegacyVariation(BaseModel):
+class LegacyVariation(CamelModel):
     alternateBases: constr(pattern=r'^([ACGTUNRYSWKMBDHV\-\.]*)$') = Field(
         ...,
         description='Alternate bases for this variant (starting from `start`). * Accepted values: IUPAC codes for nucleotides (e.g. `https://www.bioinformatics.org/sms/iupac.html`). * N is a wildcard, that denotes the position of any base, and can be used as\n  a standalone base of any type or within a partially known sequence.\n* an *empty value* is used in the case of deletions with the maximally\n  trimmed, deleted sequence being indicated in `ReferenceBases`',
@@ -956,9 +960,6 @@ class VariationSet(BaseModel):
 
 
 class Genomicvariant(BaseModel):
-    model_config = ConfigDict(
-        extra='allow',
-    )
     caseLevelData: list[CaseLevelVariant] | None = Field(
         None,
         description='caseLevelData reports about the variation instances observed in individual analyses.',

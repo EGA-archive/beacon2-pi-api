@@ -7066,6 +7066,33 @@ class TestMain(unittest.TestCase):
 
             loop.run_until_complete(test_check_post_alternative_schema_works())
             loop.run_until_complete(client.close())
+    def test_main_check_allele_frequency_per_zygosity_shows_up(self):
+        with loop_context() as loop:
+            # Specific genomic variant lookup by hash-like identifier
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+
+            loop.run_until_complete(client.start_server())
+
+            async def test_check_allele_frequency_per_zygosity_shows_up():
+                # Query single genomic variant by unique ID (hash)
+                resp = await client.get(
+                    conf_override.config.uri_subpath + "/" +
+                    genomicVariant["genomicVariant"]["endpoint_name"] +
+                    "/5e8df629d9ce607c1c56354eb012cbea32cf0f7744973db740724ad9578d667b"
+                )
+
+                responsetext = await resp.text()
+                responsedict = json.loads(responsetext)
+
+                # Ensure only one result is returned for unique variant
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
+                assert responsedict["response"]["resultSets"][0]["results"][0]["frequencyInPopulations"][0]["frequencies"][0]["alleleCountHomozygous"] == 0
+                assert responsedict["response"]["resultSets"][0]["results"][0]["frequencyInPopulations"][0]["frequencies"][0]["alleleNumber"] == 17906
+                assert resp.status == 200
+
+            loop.run_until_complete(test_check_allele_frequency_per_zygosity_shows_up())
+            loop.run_until_complete(client.close())
 
 class AsyncTest(unittest.IsolatedAsyncioTestCase):
 
