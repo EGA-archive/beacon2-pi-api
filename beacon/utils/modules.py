@@ -7,7 +7,6 @@ from beacon.logs.logs import log_with_args_check_configuration, log_with_args
 from beacon.conf.conf_override import config
 from beacon.exceptions.exceptions import DatabaseIsDown
 import asyncio
-import time
 
 #TODO: get_client() passing one variable with the database name.
 @log_with_args(config.level)
@@ -173,215 +172,79 @@ def load_types_of_results(self, response_type):
 
     import importlib
     import sys
-    import time
 
     global _RESULT_TYPES_CONFIG_MTIME
-
-    total_start = time.perf_counter()
-
-    # ---------------------------------------------------------
-    # Get schema version
-    # ---------------------------------------------------------
-    start = time.perf_counter()
-
     version_catch = re.search(
         r"(v\d+(\.\d+)*)",
         self.request_attributes.returned_schema[0]["schema"]
     )
-
     if not version_catch:
         raise ValueError(
             "Could not determine schema version from returned_schema"
         )
-
     version = version_catch.group(1)
     underscored_version = version.replace(".", "_")
-
-    print(
-        f"[TIMING] version processing: "
-        f"{(time.perf_counter() - start) * 1000:.2f} ms",
-        flush=True,
-    )
-
-    # ---------------------------------------------------------
     # Check models_conf.yml modification time
-    # ---------------------------------------------------------
-    start = time.perf_counter()
-
     config_mtime = os.stat(
         _MODELS_CONF_PATH
     ).st_mtime_ns
-
-    print(
-        f"[TIMING] config mtime check: "
-        f"{(time.perf_counter() - start) * 1000:.2f} ms",
-        flush=True,
-    )
-
-    # ---------------------------------------------------------
     # Invalidate entire cache if configuration changed
-    # ---------------------------------------------------------
     if _RESULT_TYPES_CONFIG_MTIME != config_mtime:
-
         if _RESULT_TYPES_CONFIG_MTIME is not None:
             print(
                 "[TIMING] models_conf.yml changed - "
                 "clearing result types cache",
                 flush=True,
             )
-
         _RESULT_TYPES_CACHE.clear()
-
         _RESULT_TYPES_CONFIG_MTIME = config_mtime
-
-    # ---------------------------------------------------------
     # Cache lookup
-    # ---------------------------------------------------------
     cache_key = (
         response_type,
         underscored_version,
     )
-
     if cache_key in _RESULT_TYPES_CACHE:
-
-        print(
-            f"[TIMING] load_types_of_results CACHE HIT: "
-            f"{cache_key}",
-            flush=True,
-        )
-
-        print(
-            f"[TIMING] load_types_of_results TOTAL: "
-            f"{(time.perf_counter() - total_start) * 1000:.2f} ms",
-            flush=True,
-        )
-
         return _RESULT_TYPES_CACHE[cache_key]
-
-    print(
-        f"[TIMING] load_types_of_results CACHE MISS: "
-        f"{cache_key}",
-        flush=True,
-    )
-
-    # ---------------------------------------------------------
     # Load configuration
-    # ---------------------------------------------------------
-    start = time.perf_counter()
-
     with open(
         _MODELS_CONF_PATH,
         "r"
     ) as pfile:
         models_confile = yaml.safe_load(pfile)
-
-    print(
-        f"[TIMING] load_types YAML: "
-        f"{(time.perf_counter() - start) * 1000:.2f} ms",
-        flush=True,
-    )
-
-    # ---------------------------------------------------------
     # Initialize
-    # ---------------------------------------------------------
     list_of_results_classes_accepted = []
-
     import_count = 0
     cached_import_count = 0
-
-    # ---------------------------------------------------------
     # Helper for imports
-    # ---------------------------------------------------------
     def timed_import(module_name):
-
         nonlocal import_count
         nonlocal cached_import_count
-
         already_cached = module_name in sys.modules
-
-        print(
-            f"[TIMING] IMPORT START: {module_name} "
-            f"(cached={already_cached})",
-            flush=True,
-        )
-
-        start_import = time.perf_counter()
-
         module = importlib.import_module(
             module_name,
             package=None
         )
-
-        elapsed_import = (
-            time.perf_counter() - start_import
-        )
-
         import_count += 1
-
         if already_cached:
             cached_import_count += 1
-
-        print(
-            f"[TIMING] IMPORT END: {module_name} "
-            f"{elapsed_import * 1000:.2f} ms "
-            f"(cached={already_cached})",
-            flush=True,
-        )
-
         return module
-
-    # ---------------------------------------------------------
     # Get model directories
-    # ---------------------------------------------------------
-    start = time.perf_counter()
-
     dirs = os.listdir(
         _MODELS_BASE_PATH
     )
-
-    print(
-        f"[TIMING] initial os.listdir: "
-        f"{(time.perf_counter() - start) * 1000:.2f} ms",
-        flush=True,
-    )
-
-    # ---------------------------------------------------------
     # Search models
-    # ---------------------------------------------------------
-    filesystem_start = time.perf_counter()
-
     for folder in dirs:
-
-        start = time.perf_counter()
-
         subdirs = os.listdir(
             _MODELS_BASE_PATH + "/" + folder
         )
-
-        elapsed = time.perf_counter() - start
-
-        if elapsed > 0.5 / 1000:
-            print(
-                f"[TIMING] os.listdir folder={folder}: "
-                f"{elapsed * 1000:.2f} ms",
-                flush=True,
-            )
-
-        # -----------------------------------------------------
         # Check if top-level model is enabled
-        # -----------------------------------------------------
         if folder in models_confile:
-
             if models_confile[
                 folder
             ]["model_enabled"] is False:
                 continue
-
-        # =====================================================
         # Direct validator directory
-        # =====================================================
         if "validator" in subdirs:
-
             validator_base_path = (
                 _MODELS_BASE_PATH
                 + "/"
@@ -389,49 +252,22 @@ def load_types_of_results(self, response_type):
                 + "/validator/"
                 + response_type
             )
-
-            start = time.perf_counter()
-
             validatordirs = os.listdir(
                 validator_base_path
             )
-
-            print(
-                f"[TIMING] os.listdir validators "
-                f"{validator_base_path}: "
-                f"{(time.perf_counter() - start) * 1000:.2f} ms",
-                flush=True,
-            )
-
             for validatorfolder in validatordirs:
-
                 validator_path = (
                     validator_base_path
                     + "/"
                     + validatorfolder
                 )
-
-                start = time.perf_counter()
-
                 validatorfiles = os.listdir(
                     validator_path
                 )
-
-                elapsed = time.perf_counter() - start
-
-                if elapsed > 0.5 / 1000:
-                    print(
-                        f"[TIMING] os.listdir validator "
-                        f"{validatorfolder}: "
-                        f"{elapsed * 1000:.2f} ms",
-                        flush=True,
-                    )
-
                 for validatorfile in validatorfiles:
 
                     if underscored_version not in validatorfile:
                         continue
-
                     complete_module = (
                         "beacon.models."
                         + folder
@@ -442,39 +278,23 @@ def load_types_of_results(self, response_type):
                         + "."
                         + validatorfile
                     )
-
                     complete_module = complete_module.replace(
                         ".py",
                         ""
                     )
-
                     module = timed_import(
                         complete_module
                     )
-
-                    start = time.perf_counter()
-
                     klass = getattr(
                         module,
                         validatorfolder.capitalize()
                     )
-
-                    print(
-                        f"[TIMING] getattr "
-                        f"{complete_module}: "
-                        f"{(time.perf_counter() - start) * 1000:.2f} ms",
-                        flush=True,
-                    )
-
                     list_of_results_classes_accepted.append(
                         klass
                     )
 
-        # =====================================================
         # Nested model directories
-        # =====================================================
         for subfolder in subdirs:
-
             model_path = (
                 _MODELS_BASE_PATH
                 + "/"
@@ -482,37 +302,19 @@ def load_types_of_results(self, response_type):
                 + "/"
                 + subfolder
             )
-
-            start = time.perf_counter()
-
             underdirs = os.listdir(
                 model_path
             )
-
-            elapsed = time.perf_counter() - start
-
-            if elapsed > 0.5 / 1000:
-                print(
-                    f"[TIMING] os.listdir model "
-                    f"{folder}/{subfolder}: "
-                    f"{elapsed * 1000:.2f} ms",
-                    flush=True,
-                )
-
             model_config_key = (
                 folder + "/" + subfolder
             )
-
             if model_config_key in models_confile:
-
                 if models_confile[
                     model_config_key
                 ]["model_enabled"] is False:
                     continue
-
             if "validator" not in underdirs:
                 continue
-
             validator_base_path = (
                 _MODELS_BASE_PATH
                 + "/"
@@ -522,54 +324,24 @@ def load_types_of_results(self, response_type):
                 + "/validator/"
                 + response_type
             )
-
             try:
-
-                start = time.perf_counter()
-
                 validatordirs = os.listdir(
                     validator_base_path
                 )
-
-                print(
-                    f"[TIMING] os.listdir nested validators "
-                    f"{folder}/{subfolder}: "
-                    f"{(time.perf_counter() - start) * 1000:.2f} ms",
-                    flush=True,
-                )
-
             except Exception:
                 return None
-
             for validatorfolder in validatordirs:
-
                 validator_path = (
                     validator_base_path
                     + "/"
                     + validatorfolder
                 )
-
-                start = time.perf_counter()
-
                 validatorfiles = os.listdir(
                     validator_path
                 )
-
-                elapsed = time.perf_counter() - start
-
-                if elapsed > 0.5 / 1000:
-                    print(
-                        f"[TIMING] os.listdir nested validator "
-                        f"{validatorfolder}: "
-                        f"{elapsed * 1000:.2f} ms",
-                        flush=True,
-                    )
-
                 for validatorfile in validatorfiles:
-
                     if underscored_version not in validatorfile:
                         continue
-
                     complete_module = (
                         "beacon.models."
                         + folder
@@ -582,97 +354,26 @@ def load_types_of_results(self, response_type):
                         + "."
                         + validatorfile
                     )
-
                     complete_module = complete_module.replace(
                         ".py",
                         ""
                     )
-
                     module = timed_import(
                         complete_module
                     )
-
-                    start = time.perf_counter()
-
                     klass = getattr(
                         module,
                         validatorfolder.capitalize()
                     )
-
-                    print(
-                        f"[TIMING] getattr "
-                        f"{complete_module}: "
-                        f"{(time.perf_counter() - start) * 1000:.2f} ms",
-                        flush=True,
-                    )
-
                     list_of_results_classes_accepted.append(
                         klass
                     )
-
-    # ---------------------------------------------------------
-    # Filesystem + imports timing
-    # ---------------------------------------------------------
-    print(
-        f"[TIMING] filesystem + imports: "
-        f"{(time.perf_counter() - filesystem_start) * 1000:.2f} ms "
-        f"({import_count} imports, "
-        f"{cached_import_count} already cached)",
-        flush=True,
-    )
-
-    # ---------------------------------------------------------
-    # Show discovered classes
-    # ---------------------------------------------------------
-    print(
-        f"[TIMING] result classes found: "
-        f"{len(list_of_results_classes_accepted)}",
-        flush=True,
-    )
-
-    for klass in list_of_results_classes_accepted:
-
-        print(
-            f"[TIMING] result class: "
-            f"{klass.__module__}.{klass.__name__}",
-            flush=True,
-        )
-
-    # ---------------------------------------------------------
     # Build Union
-    # ---------------------------------------------------------
-    start = time.perf_counter()
-
     union_type = Union[
         tuple(list_of_results_classes_accepted)
     ]
-
-    print(
-        f"[TIMING] Union construction: "
-        f"{(time.perf_counter() - start) * 1000:.2f} ms",
-        flush=True,
-    )
-
-    # ---------------------------------------------------------
     # Store in cache
-    # ---------------------------------------------------------
     _RESULT_TYPES_CACHE[cache_key] = union_type
-
-    print(
-        f"[TIMING] load_types_of_results cached: "
-        f"{cache_key}",
-        flush=True,
-    )
-
-    # ---------------------------------------------------------
-    # Total
-    # ---------------------------------------------------------
-    print(
-        f"[TIMING] load_types_of_results TOTAL: "
-        f"{(time.perf_counter() - total_start) * 1000:.2f} ms",
-        flush=True,
-    )
-
     return union_type
 
 def load_routes():
@@ -837,7 +538,7 @@ def get_all_modules_datasets(connection):
                 except Exception:
                     pass
     return list_of_modules
-                            
+                  
 def get_one_module_conf(entry_type):
     """Method to get the configuration of the desired entry types"""
     # TODO: Cache the module conf loading to only execute it once.
