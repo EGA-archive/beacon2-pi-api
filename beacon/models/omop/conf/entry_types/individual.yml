@@ -31,17 +31,17 @@ individual:
       - beacon-individual-v2.1.1
       - beacon-individual-v2.1.2
       - beacon-individual-v2.2.0
-  # lookups:
-  #   biosample:
-  #     endpoint_name: individuals/{id}/biosamples
-  #     response_type: non_collection
-  #     endpoint_enabled: True
-  #     connection:
-  #       name: postgresql_omop
-  #       database: beacon
-  #       table: biosamples
-  #       functions:
-  #         function_name_assigned: get_phenotypic_cross_query
+  lookups:
+    biosample:
+      endpoint_name: individuals/{id}/biosamples
+      response_type: non_collection
+      endpoint_enabled: True
+      connection:
+        name: postgresql_omop
+        database: beacon
+        table: biosamples
+        functions:
+          function_name_assigned: get_biosamples_of_individual
     # cohort:
     #   endpoint_name: individuals/{id}/cohorts
     #   response_type: collection

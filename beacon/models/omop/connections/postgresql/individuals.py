@@ -1,9 +1,8 @@
-import logging, re
-from typing import List, Optional
+import logging
+from typing import Optional
 from decimal import Decimal
 from sqlalchemy import select, func, bindparam, distinct, cast, String, case, or_, and_, literal, exists, extract, union_all
 from sqlalchemy.sql import operators
-from sqlalchemy.engine import Engine
 
 from beacon.connections.postgresql_omop.conf import database_driver
 from beacon.models.omop.connections.postgresql.utilities import RequestParams, DefaultSchemas, search_ontologies, basic_query, peek, search_ontologies_bio, MAX_LIMIT
@@ -934,119 +933,37 @@ def format_query_bio(biosamples):
         list_format.append(dict_biosample)
     return list_format
 
-def get_biosamples_of_individual(entry_id: Optional[str], qparams: RequestParams = RequestParams()):
-    with client.connect() as conn:
-        specimens = select(distinct(cdm_specimen.c.specimen_id)).where(cdm_specimen.c.person_id == entry_id)
-        specimens = conn.execute(specimens).fetchall()
-        listSpecimens = [specimen[0] for specimen in specimens ]
-        count = len(listSpecimens)
+async def get_biosamples_of_individual(entry_id: Optional[str], qparams: RequestParams = RequestParams()):
+    cdm_specimen = get_table("specimen", schema="cdm")
 
-        for biosample_id in listSpecimens:
-            records = select(
-                cdm_specimen.c.person_id, 
-                cdm_specimen.c.disease_status_concept_id, 
-                cdm_specimen.c.anatomic_site_concept_id, 
-                cast(cdm_specimen.c.specimen_date, String), 
-                cast(cdm_specimen.c.specimen_datetime, String)
-            ).where(
-                cdm_specimen.c.specimen_id == biosample_id)
-        records = conn.execute(records).fetchall()
+    person_id = int(entry_id)
+
+    async with client.connect() as conn:
+        records = select(
+            cdm_specimen.c.specimen_id,
+            cdm_specimen.c.person_id,
+            cdm_specimen.c.disease_status_concept_id,
+            cdm_specimen.c.anatomic_site_concept_id,
+            cast(cdm_specimen.c.specimen_date, String),
+            cast(cdm_specimen.c.specimen_datetime, String)
+        ).where(
+            cdm_specimen.c.person_id == person_id)
+
+        result = await conn.execute(records)
+        records = result.mappings().all()
+
+    count = len(records)
 
     listValues = []
     for record in records:
-        listValues.append({'specimen_id': biosample_id,
-                            'person_id': record[0],
-                            'disease_status_concept_id': record[1],
-                            'anatomic_site_concept_id': record[2],
-                            'specimen_date': record[3],
-                            'specimen_datetime': record[4]})
+        listValues.append({'specimen_id': record["specimen_id"],
+                            'person_id': record["person_id"],
+                            'disease_status_concept_id': record["disease_status_concept_id"],
+                            'anatomic_site_concept_id': record["anatomic_site_concept_id"],
+                            'specimen_date': record["specimen_date"],
+                            'specimen_datetime': record["specimen_datetime"]})
 
-    docs = search_ontologies_bio(listValues)
+    docs = await search_ontologies_bio(listValues)
     docs = format_query_bio(docs)
 
     return DefaultSchemas.BIOSAMPLES, count, docs
-
-###########
-
-def get_filtering_terms_of_individual(entry_id: Optional[str], qparams: RequestParams):
-    conn = client.connect()
-
-    sql_filtering_terms_race_gender = select(
-        distinct(func.concat(vocab_conc.c.vocabulary_id, vocab_conc.c.concept_code).label('uri')),
-        vocab_conc.c.concept_id,
-        vocab_conc.c.concept_name
-    ).select_from(
-        vocab_conc.join(
-            cdm_person,
-            (cdm_person.c.race_concept_id == vocab_conc.c.concept_id) |
-            (cdm_person.c.gender_concept_id == vocab_conc.c.concept_id)))
-        
-    sql_filtering_terms_condition = select(
-        distinct(func.concat(vocab_conc.c.vocabulary_id, vocab_conc.c.concept_code).label('uri')),
-        vocab_conc.c.concept_id,
-        vocab_conc.c.concept_name
-    ).select_from(
-        vocab_conc.join(
-            cdm_cond_occ,
-            (cdm_cond_occ.c.condition_concept_id == vocab_conc.c.concept_id)))
-
-    sql_filtering_terms_measurement = select(
-        distinct(func.concat(vocab_conc.c.vocabulary_id, vocab_conc.c.concept_code).label('uri')),
-        vocab_conc.c.concept_id,
-        vocab_conc.c.concept_name
-    ).select_from(
-        vocab_conc.join(
-            cdm_mesure,
-            (cdm_mesure.c.measurement_concept_id == vocab_conc.c.concept_id)))
-
-    sql_filtering_terms_procedure = select(
-        distinct(func.concat(vocab_conc.c.vocabulary_id, vocab_conc.c.concept_code).label('uri')),
-        vocab_conc.c.concept_id,
-        vocab_conc.c.concept_name
-    ).select_from(
-        vocab_conc.join(
-            cdm_proc_occ,
-            (cdm_proc_occ.c.procedure_concept_id == vocab_conc.c.concept_id)))
-
-    sql_filtering_terms_observation = select(
-        distinct(func.concat(vocab_conc.c.vocabulary_id, vocab_conc.c.concept_code).label('uri')),
-        vocab_conc.c.concept_id,
-        vocab_conc.c.concept_name
-    ).select_from(
-        vocab_conc.join(
-            cdm_obser,
-            (cdm_obser.c.observation_concept_id == vocab_conc.c.concept_id)))
-
-    sql_filtering_terms_drug_exposure = select(
-        distinct(func.concat(vocab_conc.c.vocabulary_id, vocab_conc.c.concept_code).label('uri')),
-        vocab_conc.c.concept_id,
-        vocab_conc.c.concept_name
-    ).select_from(
-        vocab_conc.join(
-            cdm_drug_exp,
-            (cdm_drug_exp.c.drug_concept_id == vocab_conc.c.concept_id)))
-    
-    sql_filtering_terms_race_gender = conn.execute(sql_filtering_terms_race_gender)
-    sql_filtering_terms_condition = conn.execute(sql_filtering_terms_condition)
-    sql_filtering_terms_measurement = conn.execute(sql_filtering_terms_measurement)
-    sql_filtering_terms_procedure = conn.execute(sql_filtering_terms_procedure)
-    sql_filtering_terms_observation = conn.execute(sql_filtering_terms_observation)
-    sql_filtering_terms_drug_exposure = conn.execute(sql_filtering_terms_drug_exposure)
-
-    l_sql_filters = [sql_filtering_terms_race_gender,
-                    sql_filtering_terms_condition,
-                    sql_filtering_terms_measurement,
-                    sql_filtering_terms_procedure,
-                    sql_filtering_terms_observation,
-                    sql_filtering_terms_drug_exposure]
-    l_indFilters = []
-    for ind_filters in l_sql_filters:
-        for filters in ind_filters:
-            if filters[0].endswith("OMOP generated"):
-                continue
-            dict_filter = {"id":filters[0],"omop_id":filters[1],"label":filters[2],"scopes":["individual"],"type":"ontology"}
-            l_indFilters.append(dict_filter)
-    
-    conn.close()
-
-    return DefaultSchemas.FILTERINGTERMS, len(l_indFilters), l_indFilters
