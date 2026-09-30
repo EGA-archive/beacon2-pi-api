@@ -1,6 +1,5 @@
 import aiohttp.web as web
 from aiohttp.web_request import Request
-from beacon.utils.txid import generate_txid
 from bson import json_util
 from beacon.request.classes import RequestAttributes
 from beacon.utils.requests import deconstruct_request, RequestParams

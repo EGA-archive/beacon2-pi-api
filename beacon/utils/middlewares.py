@@ -44,4 +44,4 @@ async def generate_txid(request: web.Request, handler):
     uniqueid = uuid.uuid4()
     uniqueid = str(uniqueid)[0:8]
     request['txid']=uniqueid
-    return request
+    return await handler(request)

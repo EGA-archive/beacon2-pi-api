@@ -2,8 +2,8 @@ import asyncio
 import os
 import time
 from aiohttp import web
-from beacon.utils.txid import generate_txid
 import datetime
+import json
 
 from beacon.auditing.publisher import AuditPublisher
 
@@ -26,16 +26,22 @@ async def auditing_middleware(request: web.Request, handler):
         raise
     finally:
         event["timestamp"]=datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3]
+        # TODO: event["actor"] -> from request.headers
+        # TODO: event["auth"]["method"] -> from request.headers, if valid token -> oidc, otherwise None
+        # TODO: event["auth"]["mfa"] -> 
+        # TODO: event["source_ip"] -> get from request.ip
+        # TODO: relevant change?
+        # TODO: reason/context?
         entry_type=request.path.split('/')[-1]
         event["event"]='{}.view'.format(entry_type)
-        event['request_id']=request['txid']
+        event["request_id"]=request['txid']
+        # TODO: event["target"] -> Get it from request.path, otherwise None?
+        # TODO: event["outcome"] Success -> only status or responsedict = json.loads(responsetext) and get if the target was achieved?
         event = {
             "request": {
-                "id": txid,
                 "method": request.method,
                 "path": request.path,
-                "status": response.status if response else 500,
-                "duration_ms": duration_ms,
+                "status": response.status if response else 500
             },
             "client": {
                 "ip": request.remote,
