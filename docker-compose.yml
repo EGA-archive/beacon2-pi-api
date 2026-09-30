@@ -138,6 +138,9 @@ services:
       - ./ri-tools/csv:/usr/src/app/csv
       - ./ri-tools/files/updated_json:/usr/src/app/files/updated_json
       - ./ri-tools/pipelines/default/templates:/usr/src/app/pipelines/default/templates
+      - ./ri-tools/refgen-data:/opt/refgen-data
+      - ./ri-tools/files/headers:/usr/src/app/files/headers
+      - ./ri-tools/files/deref_schemas:/usr/src/app/files/deref_schemas
 
   phenopackets-to-BFF:
     image: ghcr.io/ega-archive/phenopackets-to-bff:latest

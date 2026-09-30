@@ -6,3 +6,5 @@ beacon/connections/mongo/data/db/*
 adminui/node_modules
 *.vcf.bgz
 ri-tools/files/vcf/files_to_read/*
+*.msgpack
+*.initialized

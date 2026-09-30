@@ -31,7 +31,7 @@
                 "id": "",
                 "label": ""
             },
-            "familyHistory": true,
+            "familyHistory": false,
             "notes": "",
             "severity": {
                 "id": "",
@@ -61,7 +61,8 @@
             "unit": {
                 "id": "",
                 "label": ""
-            }
+            },
+            "value": 0
         }
     ],
     "geographicOrigin": {
@@ -109,8 +110,8 @@
             }
         }
     ],
-    "karyotypicSex": "",
-    "measures": [
+    "karyotypicSex": "UNKNOWN_KARYOTYPE",
+    "measurements": [
         {
             "assayCode": {
                 "id": "",
@@ -126,35 +127,41 @@
                             "id": "",
                             "label": ""
                         }
-                    }
-                },
-                {
+                    },
                     "unit": {
                         "id": "",
                         "label": ""
                     },
-                    "value": 0,
+                    "value": 0
+                },
+                {
                     "id": "",
                     "label": ""
                 },
                 {
-                    "typedQuantities": {
-                        "quantity": {
-                            "referenceRange": {
-                                "high": 0,
-                                "low": 0,
+                    "typedQuantities": [
+                        {
+                            "quantity": {
+                                "referenceRange": {
+                                    "high": 0,
+                                    "low": 0,
+                                    "unit": {
+                                        "id": "",
+                                        "label": ""
+                                    }
+                                },
                                 "unit": {
                                     "id": "",
                                     "label": ""
-                                }
+                                },
+                                "value": 0
                             },
-                            "unit": {
+                            "quantityType": {
                                 "id": "",
                                 "label": ""
-                            },
-                            "value": 0
+                            }
                         }
-                    }
+                    ]
                 }
             ],
             "notes": "",
@@ -256,7 +263,7 @@
                     "id": "",
                     "label": ""
                 },
-                "familyHistory": true,
+                "familyHistory": false,
                 "notes": "",
                 "severity": {
                     "id": "",
@@ -268,14 +275,17 @@
                 }
             },
             "id": "",
-            "members": {
-                "affected": true,
-                "memberId": "",
-                "role": {
-                    "id": "",
-                    "label": ""
+            "members": [
+                {
+                    "affected": false,
+                    "memberId": "",
+                    "role": {
+                        "id": "",
+                        "label": ""
+                    }
                 }
-            }
+            ],
+            "numSubjects": 0
         }
     ],
     "phenotypicFeatures": [
@@ -291,7 +301,7 @@
                     "reference": ""
                 }
             },
-            "excluded": true,
+            "excluded": false,
             "featureType": {
                 "id": "",
                 "label": ""
@@ -372,15 +382,44 @@
             },
             "cumulativeDose": {
                 "referenceRange": {
+                    "high": 0,
+                    "low": 0,
+                    "unit": {
+                        "id": "",
+                        "label": ""
+                    }
+                },
+                "unit": {
                     "id": "",
                     "label": ""
                 },
-                "unit": {}
+                "value": 0
             },
             "doseIntervals": [
                 {
-                    "id": "",
-                    "label": ""
+                    "interval": {
+                        "end": "",
+                        "start": ""
+                    },
+                    "quantity": {
+                        "referenceRange": {
+                            "high": 0,
+                            "low": 0,
+                            "unit": {
+                                "id": "",
+                                "label": ""
+                            }
+                        },
+                        "unit": {
+                            "id": "",
+                            "label": ""
+                        },
+                        "value": 0
+                    },
+                    "scheduleFrequency": {
+                        "id": "",
+                        "label": ""
+                    }
                 }
             ],
             "routeOfAdministration": {
