@@ -3,7 +3,6 @@ from pydantic import (
     field_validator
 )
 from typing import Optional
-from beacon.request.classes import RequestAttributes
 from beacon.conf import conf_override
 import math
 import re
@@ -38,7 +37,8 @@ class ResponseSummary(BaseModel):
     exists: bool
     numTotalResults: Optional[int] = None
 
-    def build_response_summary_by_dataset(self, datasets):
+    @classmethod
+    def build_response_summary_by_dataset(self, handler, datasets):
         """
         Compute aggregated response metadata across datasets.
 
@@ -53,13 +53,13 @@ class ResponseSummary(BaseModel):
         non_counted = 0
 
         # Requested granularity from request context
-        granularity = RequestAttributes.qparams.query.requestedGranularity
+        granularity = handler.request_attributes.qparams.query.requestedGranularity
 
         # Iterate over all datasets contributing to the response
         for dataset in datasets:
 
             # If dataset is not boolean-only and system is not forcing boolean responses
-            if dataset.granularity != 'boolean' and RequestAttributes.allowed_granularity != 'boolean' and granularity != 'boolean':
+            if dataset.granularity != 'boolean' and handler.request_attributes.allowed_granularity != 'boolean' and granularity != 'boolean':
 
                 # --- Case 1: imprecise count mode ---
                 if conf_override.config.imprecise_count != 0:
@@ -89,7 +89,7 @@ class ResponseSummary(BaseModel):
 
         # Case 1: nothing counted but non-counted results exist
         if count == 0 and non_counted > 0:
-            RequestAttributes.returned_granularity = 'boolean'
+            handler.request_attributes.returned_granularity = 'boolean'
             return self(exists=True)
 
         # Case 2: counted results exist
@@ -98,7 +98,7 @@ class ResponseSummary(BaseModel):
 
         # Case 3: no results at all
         else:
-            RequestAttributes.returned_granularity = 'boolean'
+            handler.request_attributes.returned_granularity = 'boolean'
             return self(exists=False)
 
 

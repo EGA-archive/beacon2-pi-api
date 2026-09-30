@@ -1,6 +1,23 @@
 [
     {
         "_id": "5e8df629d9ce607c1c56354eb012cbea32cf0f7744973db740724ad9578d667b",
+        "frequencyInPopulations": [
+        {
+        "frequencies": [
+            {
+            "alleleFrequency": 0,
+            "population": "Total",
+            "alleleCount": 0,
+            "alleleCountHomozygous": 0,
+            "alleleCountHeterozygous": 0,
+            "alleleCountHemizygous": 0,
+            "alleleNumber": 17906
+            }
+        ],
+        "source": "Federated EGA Spain",
+        "sourceReference": "https://metadata.ega-archive.org/datasets/EGAD50000000955"
+        }
+        ],
         "identifiers": {
             "genomicHGVSId": "NC_000001.10:g.1234567_1234866del"
         },

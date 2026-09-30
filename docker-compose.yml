@@ -14,7 +14,7 @@ services:
       - "5050:5050"
     entrypoint: ['python','-m','beacon']
     volumes:
-      - ./beacon/logs/logs.log:/beacon/logs/logs.log
+      - ./beacon/logs/log_files:/beacon/logs/log_files
       - ./beacon/conf/conf.py:/beacon/conf/conf.py
       - ./beacon/conf/conf_default.py:/beacon/conf/conf_default.py
       - ./beacon/connections/mongo/conf.py:/beacon/connections/mongo/conf.py
@@ -126,7 +126,7 @@ services:
       - pub
 
   beacon-ri-tools:
-    image: ghcr.io/ega-archive/beacon2-ri-tools-v2:2.3.0
+    image: ghcr.io/ega-archive/beacon2-ri-tools-v2:2.3.1
     hostname: beacon-ri-tools
     container_name: ri-tools
     networks:
@@ -139,6 +139,9 @@ services:
       - ./ri-tools/csv:/usr/src/app/csv
       - ./ri-tools/files/updated_json:/usr/src/app/files/updated_json
       - ./ri-tools/pipelines/default/templates:/usr/src/app/pipelines/default/templates
+      - ./ri-tools/refgen-data:/opt/refgen-data
+      - ./ri-tools/files/headers:/usr/src/app/files/headers
+      - ./ri-tools/files/deref_schemas:/usr/src/app/files/deref_schemas
 
   phenopackets-to-BFF:
     image: ghcr.io/ega-archive/phenopackets-to-bff:latest
@@ -151,22 +154,15 @@ services:
       - pub
 
   templateUI:
-    image: ghcr.io/ega-archive/beacon-template-ui:main
-    restart: always
-    hostname: template-ui
-    container_name: template-ui
-    command: node /opt/yarn-v1.22.22/bin/yarn.js start
-    ports:
-      - 3000:3000
-    volumes:
-      - ./template-ui/src/config/config.json:/client/src/config/config.json
-      - ./template-ui/.env:/client/.env
+    image: ghcr.io/ega-archive/beacon-template-ui:egadev
+    hostname: frontend
+    container_name: "template-ui"
     networks:
       - pub
-    environment:
-      - CHOKIDAR_USEPOLLING=true
-      - WATCHPACK_POLLING=true
-
+    ports:
+      - '3000:80'
+    volumes:
+      - ./template-ui/config:/usr/share/nginx/html/config:ro
 
   postgres:
     image: postgres:16

@@ -2,7 +2,6 @@ from beacon.logs.logs import log_with_args
 from beacon.conf.conf_override import config
 import aiohttp.web as web
 from bson import json_util
-from beacon.request.classes import RequestAttributes
 from pydantic import ValidationError
 from beacon.exceptions.exceptions import InvalidData
 from beacon.views.endpoint import EndpointView
@@ -33,19 +32,19 @@ class CollectionEntryTypeView(EndpointView):
         module_common = load_framework_module(self, "common")
         module_collection = load_framework_module(self, "collection")
         # Generate the dynamic class to be instantiated for the response that depend on the request and the collection entry types available
-        Collections = module_collection.make_Collections()
-        CollectionResponse = module_collection.make_CollectionResponse(Collections)
+        Collections = module_collection.make_Collections(self)
+        CollectionResponse = module_collection.make_CollectionResponse(self, Collections)
         try:
             # Instantiate the meta class with the attributes collected in the request
-            meta = module_meta.Meta(receivedRequestSummary=RequestAttributes.qparams.summary(),returnedGranularity=RequestAttributes.returned_granularity,returnedSchemas=RequestAttributes.returned_schema,testMode=RequestAttributes.qparams.query.testMode)
-            if RequestAttributes.qparams.query.requestedGranularity == 'record' and RequestAttributes.allowed_granularity == 'record':
+            meta = module_meta.Meta(receivedRequestSummary=self.request_attributes.qparams.summary(),returnedGranularity=self.request_attributes.returned_granularity,returnedSchemas=self.request_attributes.returned_schema,testMode=self.request_attributes.qparams.query.testMode)
+            if self.request_attributes.qparams.query.requestedGranularity == 'record' and self.request_attributes.allowed_granularity == 'record':
                 # Instantiate the responseSummary class with the counts and yes/no found to be in the response
                 responseSummary = module_common.ResponseSummary(exists=collectionsResponseClass.count>0,numTotalResults=collectionsResponseClass.count)
                 # Instantiate the final response class with the meta, responseSumary end collections classes generated previously
                 self.classResponse = CollectionResponse(meta=meta.model_dump(exclude_none=True),response=Collections(collections=collectionsResponseClass.docs).model_dump(exclude_none=True),responseSummary=responseSummary.model_dump(exclude_none=True))
                 # Convert the class to JSON to return it in the final stream response
                 response_obj = self.create_response()
-            elif RequestAttributes.qparams.query.requestedGranularity == 'count' and RequestAttributes.allowed_granularity in ['count', 'record']:
+            elif self.request_attributes.qparams.query.requestedGranularity == 'count' and self.request_attributes.allowed_granularity in ['count', 'record']:
                 # Load the module that have the class that will serve as the count part of the response
                 module_count = load_framework_module(self, "count")
                 # Instantiate the responseSummary with the class CountResponseSummary filled in with the counts found for the query
@@ -67,7 +66,7 @@ class CollectionEntryTypeView(EndpointView):
         except ValidationError as v:
             self.LOG.error(str(v))
             # Stdout the information about what entry type failed about it not being according to the spec
-            raise InvalidData('{} templates or data are not correct'.format(RequestAttributes.entry_type))
+            raise InvalidData('{} templates or data are not correct'.format(self.request_attributes.entry_type))
         # Give a HTTP response with json data application and a 200 status, and the Collection object class collected
         return web.Response(
             text=json.dumps(response_obj, default=json_default),

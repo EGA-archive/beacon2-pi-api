@@ -14,15 +14,16 @@ class EndpointView(web.View, CorsViewMixin):
     def __init__(self, request: Request):
         # Initialize dhe endpoint with some of the attributes that will need to be collected later on
         self._request = request
-        RequestAttributes.ip = None
-        RequestAttributes.headers=None
-        RequestAttributes.entry_type=None
-        RequestAttributes.entry_id=None
-        RequestAttributes.pre_entry_type=None
-        RequestAttributes.returned_schema=None
-        RequestAttributes.returned_apiVersion="v2.2.0"
-        RequestAttributes.qparams=RequestParams()
-        RequestAttributes.returned_granularity="boolean"
+        self.request_attributes = RequestAttributes()
+        self.request_attributes.ip = None
+        self.request_attributes.headers=None
+        self.request_attributes.entry_type=None
+        self.request_attributes.entry_id=None
+        self.request_attributes.pre_entry_type=None
+        self.request_attributes.returned_schema=None
+        self.request_attributes.returned_apiVersion="v2.2.0"
+        self.request_attributes.qparams=RequestParams()
+        self.request_attributes.returned_granularity="boolean"
         self.LOG=self.request.app['logger']
         self._id=None
         self._id = generate_txid(self)
@@ -70,7 +71,7 @@ class EndpointView(web.View, CorsViewMixin):
             # Instantiate the error class with the status and the message collected during the error handling
             error = module_error.BeaconError(errorCode=status,errorMessage=message)
             # Instantiat the meta class with the attributes collected in the request
-            meta = module_meta.Meta(receivedRequestSummary=RequestAttributes.qparams.summary(),returnedGranularity=RequestAttributes.returned_granularity,returnedSchemas=[{"schema": "error-v2.2.0"}],testMode=RequestAttributes.qparams.query.testMode)
+            meta = module_meta.Meta(receivedRequestSummary=self.request_attributes.qparams.summary(),returnedGranularity=self.request_attributes.returned_granularity,returnedSchemas=[{"schema": "error-v2.2.0"}],testMode=self.request_attributes.qparams.query.testMode)
             # Create the response class that will allocate the Meta and error parts of the response
             self.classResponse = module_error.ErrorResponse(meta=meta.model_dump(exclude_none=True),error=error.model_dump(exclude_none=True))
             # Convert the class to JSON to return it in the final stream response

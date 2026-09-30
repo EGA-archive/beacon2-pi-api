@@ -1,1 +1,19 @@
-{"biosampleId": "", "id": "", "individualId": "", "info": {}, "libraryLayout": "", "librarySelection": "", "librarySource": {"id": "", "label": ""}, "libraryStrategy": "", "platform": "", "platformModel": {"id": "", "label": ""}, "runDate": ""}
+{
+    "biosampleId": "",
+    "id": "",
+    "individualId": "",
+    "info": {},
+    "libraryLayout": "",
+    "librarySelection": "",
+    "librarySource": {
+        "id": "",
+        "label": ""
+    },
+    "libraryStrategy": "",
+    "platform": "",
+    "platformModel": {
+        "id": "",
+        "label": ""
+    },
+    "runDate": ""
+}
