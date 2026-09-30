@@ -266,8 +266,10 @@ def set_entry_type(self, request):
             path_list = list(filter(None, path_list))
         else:
             used_uri_splitted = abs_url.split('/')
-            if '.' not in used_uri_splitted[-3]:
+            if '.' not in used_uri_splitted[-3] and '/'+used_uri_splitted[-3] != config.uri_subpath:
                 path_list=used_uri_splitted[-3:]
+            elif '.' not in used_uri_splitted[-3]:
+                path_list=used_uri_splitted[-2:]
             else:
                 path_list=[used_uri_splitted[-1]]
         if path_list == []:
