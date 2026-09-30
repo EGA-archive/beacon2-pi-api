@@ -1,0 +1,40 @@
+{
+    "_id": "e4099e2aab49581017751a6c310775818d4146845e13f12811643684041ab801",
+    "caseLevelData": [
+        {
+            "biosampleId": "SAMPLE17",
+            "phenotypicEffects": [
+                {
+                    "conditionId": "Melanoma",
+                    "effect": {
+                        "id": "DOID:1909",
+                        "label": "melanoma"
+                    }
+                }
+            ]
+        }
+    ],
+    "variantInternalId": "4dbae68746e521da4d8fe4da3b61f56e579e001400b4410f9b5f1316fdb24bbb",
+    "variation": {
+        "alternateBases": "T",
+        "location": {
+            "_id:": "Var:00002",
+            "type": "SequenceLocation",
+            "sequence_id": "ga4gh:SQ.-BOZ8Esn8J88qDwNiSEwUr5425UXdiGX",
+            "interval": {
+                "type": "SequenceInterval",
+                "start": {
+                    "type": "Number",
+                    "value": 7232463
+                },
+                "end": {
+                    "type": "Number",
+                    "value": 7232464
+                }
+            }
+        },
+        "referenceBases": "A",
+        "variantType": "SNP "
+    },
+    "datasetId": "test"
+}
