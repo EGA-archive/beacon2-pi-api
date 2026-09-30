@@ -1,0 +1,17 @@
+{
+    "name": "",
+    "id": "",
+    "description": "",
+    "subjectsCount": 0,
+    "studiesCount": 0,
+    "ageRange": {"min": 0, "max": 0},
+    "modalities": [
+        ""
+    ],
+    "bodyParts": [
+        ""
+    ],
+    "gender": [
+        ""
+    ]
+}

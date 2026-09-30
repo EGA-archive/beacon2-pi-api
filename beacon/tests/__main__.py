@@ -784,7 +784,7 @@ class TestMain(unittest.TestCase):
 
                 # Expect multiple matches for variant-linked analyses
                 assert responsedict["responseSummary"]["exists"] is True
-                assert responsedict["responseSummary"]["numTotalResults"] == 10
+                assert responsedict["responseSummary"]["numTotalResults"] == 21
 
             loop.run_until_complete(test_check_analyses_g_variants_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -1042,7 +1042,7 @@ class TestMain(unittest.TestCase):
 
                 # Verify existence of matching records and expected cardinality
                 assert responsedict["responseSummary"]["exists"] is True
-                assert responsedict["responseSummary"]["numTotalResults"] == 10
+                assert responsedict["responseSummary"]["numTotalResults"] == 22
 
             loop.run_until_complete(test_check_biosamples_g_variants_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -1273,7 +1273,7 @@ class TestMain(unittest.TestCase):
 
                 # Expect multiple matches for variant association
                 assert responsedict["responseSummary"]["exists"] is True
-                assert responsedict["responseSummary"]["numTotalResults"] == 10
+                assert responsedict["responseSummary"]["numTotalResults"] == 23
 
             loop.run_until_complete(test_check_individuals_g_variants_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -1490,7 +1490,7 @@ class TestMain(unittest.TestCase):
 
                 # Expect multiple linked results for variant association
                 assert responsedict["responseSummary"]["exists"] is True
-                assert responsedict["responseSummary"]["numTotalResults"] == 10
+                assert responsedict["responseSummary"]["numTotalResults"] == 21
 
             loop.run_until_complete(test_check_runs_g_variants_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -7093,7 +7093,6 @@ class TestMain(unittest.TestCase):
 
             loop.run_until_complete(test_check_allele_frequency_per_zygosity_shows_up())
             loop.run_until_complete(client.close())
-
 class AsyncTest(unittest.IsolatedAsyncioTestCase):
 
     # Starts a background API server using asyncio and waits briefly for it to initialize.
@@ -7276,7 +7275,6 @@ class TestHealthHandler(unittest.IsolatedAsyncioTestCase):
             self.assertIn("database is down", body)
 
             self.assertEqual(app['state'], 'Running - degraded')
-
 
 
 

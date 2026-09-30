@@ -1,8 +1,9 @@
 createDateTime
-dataUseConditions|duoDataUse|description
+dataUseConditions|duoDataUse
 dataUseConditions|duoDataUse|id
 dataUseConditions|duoDataUse|label
-dataUseConditions|duoDataUse|modifiers
+dataUseConditions|duoDataUse|modifiers|id
+dataUseConditions|duoDataUse|modifiers|label
 dataUseConditions|duoDataUse|version
 description
 externalUrl
