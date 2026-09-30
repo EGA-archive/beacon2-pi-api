@@ -6,6 +6,7 @@ from beacon.models.omop.connections.postgresql.utilities import RequestParams, D
 import beacon.models.omop.connections.postgresql.mappings as mappings
 from beacon.connections.postgresql_omop.__init__ import client
 from beacon.connections.postgresql_omop import get_table
+from beacon.models.omop.connections.postgresql.individuals import ind_base, iso, format_query
 
 LOG = logging.getLogger(__name__)
 
@@ -259,3 +260,22 @@ async def get_filtering_terms_of_biosample(entry_id: Optional[str], qparams: Req
         dict_filter = {"id":filters[0],"label":filters[1],"scopes":["biosample"],"type":"ontology"}
         l_bioFilters.append(dict_filter)
     return DefaultSchemas.FILTERINGTERMS, len(l_bioFilters), l_bioFilters
+
+####
+
+async def get_individuals_of_biosample(entry_id: Optional[str], qparams: RequestParams = RequestParams()):    
+    cdm_specimen = get_table("specimen", schema="cdm")
+    biosample_id = int(entry_id)
+
+    async with client.connect() as conn:
+        query = select(cdm_specimen.c.person_id).where(cdm_specimen.c.specimen_id == biosample_id)
+        result = await conn.execute(query)
+        person = result.scalar_one()
+
+        docs = await ind_base(person, qparams=qparams)
+        counter = len(docs)
+
+    docs = format_query(docs)
+    docs = iso(docs)
+    
+    return DefaultSchemas.INDIVIDUALS, counter, docs

@@ -12,6 +12,12 @@ async def execute_function(self, datasets):
             RequestAttributes.entry_id,
             RequestAttributes.qparams,
         )
+    elif (RequestAttributes.pre_entry_type == "biosamples"
+            and RequestAttributes.entry_type == "individuals"):
+            schema, count, docs = await biosamples.get_individuals_of_biosample(
+                RequestAttributes.entry_id,
+                RequestAttributes.qparams,
+            )
     elif RequestAttributes.entry_type == "individuals":
         schema, count, docs = await individuals.get_the_individuals(
             RequestAttributes.entry_id,

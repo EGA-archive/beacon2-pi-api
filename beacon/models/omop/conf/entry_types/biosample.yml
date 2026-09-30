@@ -31,7 +31,7 @@ biosample:
       - beacon-biosample-v2.1.1
       - beacon-biosample-v2.1.2
       - beacon-biosample-v2.2.0
-  # lookups:
+  lookups:
   #   cohort:
   #     endpoint_name: biosamples/{id}/cohorts
   #     response_type: collection
@@ -42,13 +42,13 @@ biosample:
   #       table: cohorts
   #       functions:
   #         function_name_assigned: get_cross_collections
-  #   individual:
-  #     endpoint_name: biosamples/{id}/individuals
-  #     response_type: non_collection
-  #     endpoint_enabled: True
-  #     connection:
-  #       name: mongo
-  #       database: beacon
-  #       table: individuals
-  #       functions:
-  #         function_name_assigned: get_phenotypic_cross_query
+    individual:
+      endpoint_name: biosamples/{id}/individuals
+      response_type: non_collection
+      endpoint_enabled: True
+      connection:
+        name: mongo
+        database: beacon
+        table: individuals
+        functions:
+          function_name_assigned: get_individuals_of_biosample
