@@ -8,3 +8,4 @@ adminui/node_modules
 ri-tools/files/vcf/files_to_read/*
 *.msgpack
 *.initialized
+ri-tools/refgen-data/*
