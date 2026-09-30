@@ -784,7 +784,7 @@ class TestMain(unittest.TestCase):
 
                 # Expect multiple matches for variant-linked analyses
                 assert responsedict["responseSummary"]["exists"] is True
-                assert responsedict["responseSummary"]["numTotalResults"] == 10
+                assert responsedict["responseSummary"]["numTotalResults"] == 21
 
             loop.run_until_complete(test_check_analyses_g_variants_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -1042,7 +1042,7 @@ class TestMain(unittest.TestCase):
 
                 # Verify existence of matching records and expected cardinality
                 assert responsedict["responseSummary"]["exists"] is True
-                assert responsedict["responseSummary"]["numTotalResults"] == 10
+                assert responsedict["responseSummary"]["numTotalResults"] == 22
 
             loop.run_until_complete(test_check_biosamples_g_variants_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -1273,7 +1273,7 @@ class TestMain(unittest.TestCase):
 
                 # Expect multiple matches for variant association
                 assert responsedict["responseSummary"]["exists"] is True
-                assert responsedict["responseSummary"]["numTotalResults"] == 10
+                assert responsedict["responseSummary"]["numTotalResults"] == 23
 
             loop.run_until_complete(test_check_individuals_g_variants_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -1490,7 +1490,7 @@ class TestMain(unittest.TestCase):
 
                 # Expect multiple linked results for variant association
                 assert responsedict["responseSummary"]["exists"] is True
-                assert responsedict["responseSummary"]["numTotalResults"] == 10
+                assert responsedict["responseSummary"]["numTotalResults"] == 21
 
             loop.run_until_complete(test_check_runs_g_variants_endpoint_is_working())
             loop.run_until_complete(client.close())
@@ -7066,7 +7066,33 @@ class TestMain(unittest.TestCase):
 
             loop.run_until_complete(test_check_post_alternative_schema_works())
             loop.run_until_complete(client.close())
+    def test_main_check_allele_frequency_per_zygosity_shows_up(self):
+        with loop_context() as loop:
+            # Specific genomic variant lookup by hash-like identifier
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
 
+            loop.run_until_complete(client.start_server())
+
+            async def test_check_allele_frequency_per_zygosity_shows_up():
+                # Query single genomic variant by unique ID (hash)
+                resp = await client.get(
+                    conf_override.config.uri_subpath + "/" +
+                    genomicVariant["genomicVariant"]["endpoint_name"] +
+                    "/5e8df629d9ce607c1c56354eb012cbea32cf0f7744973db740724ad9578d667b"
+                )
+
+                responsetext = await resp.text()
+                responsedict = json.loads(responsetext)
+
+                # Ensure only one result is returned for unique variant
+                assert responsedict["responseSummary"]["numTotalResults"] == 1
+                assert responsedict["response"]["resultSets"][0]["results"][0]["frequencyInPopulations"][0]["frequencies"][0]["alleleCountHomozygous"] == 0
+                assert responsedict["response"]["resultSets"][0]["results"][0]["frequencyInPopulations"][0]["frequencies"][0]["alleleNumber"] == 17906
+                assert resp.status == 200
+
+            loop.run_until_complete(test_check_allele_frequency_per_zygosity_shows_up())
+            loop.run_until_complete(client.close())
 class AsyncTest(unittest.IsolatedAsyncioTestCase):
 
     # Starts a background API server using asyncio and waits briefly for it to initialize.
@@ -7249,7 +7275,6 @@ class TestHealthHandler(unittest.IsolatedAsyncioTestCase):
             self.assertIn("database is down", body)
 
             self.assertEqual(app['state'], 'Running - degraded')
-
 
 
 

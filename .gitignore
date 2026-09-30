@@ -15,3 +15,5 @@ adminui/node_modules
 *.vcf.bgz
 beacon/conf/conf.py
 beacon/models/prova
+*.msgpack
+*.initialized

@@ -7,6 +7,7 @@ from beacon.validator.configuration import check_configuration
 import yaml
 from beacon.logs.logs import initialize_logger
 from beacon.conf.conf_override import config
+import asyncio
 
 def import_genomicVariant_confile():
     """Get the information about the genomic variant entry type gor ga4gh model"""
@@ -321,7 +322,6 @@ class TestNoFilters(unittest.TestCase):
             run["run"]["entry_type_enabled"]=True
             with open("/beacon/tests/mock_conf_files/conf/entry_types/ga4gh/beacon_v2_default_model/run.yml", 'w') as outfile:
                 yaml.dump(run, outfile, default_flow_style=False)
-
     def test_configuration_endpoint_response_with_disabled_endpoint(self):
         with loop_context() as loop:
             # Disable analysis entry type in configuration
@@ -357,6 +357,7 @@ class TestNoFilters(unittest.TestCase):
             analysis["analysis"]["entry_type_enabled"] = True
             with open("/beacon/tests/mock_conf_files/conf/entry_types/ga4gh/beacon_v2_default_model/analysis.yml", 'w') as outfile:
                 yaml.dump(analysis, outfile, default_flow_style=False)
+
     def test_main_check_configuration_with_wrong_analysis_enable_endpoint(self):
         with loop_context() as loop:
             # Inject an invalid value where a boolean is expected
@@ -1279,8 +1280,119 @@ class TestNoFilters(unittest.TestCase):
             # User configuration should override default configuration values
             assert conf_override.config.uri == conf.uri
 
+            conf_default.uri = 'invent'
             # Confirm override differs from framework defaults
             assert conf_override.config.uri != conf_default.uri
+            conf_default.uri = 'http://localhost:5050/api'
+
+
+    def test_main_check_logs_configuration(self):
+        with loop_context() as loop:
+            from beacon.conf import conf_override
+
+            # Configure unsupported default granularity
+            conf_override.config.log_file='/beacon/logs/log_files/logs_test.log'
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+
+            async def test_check_logs_files_is_saved():
+                from pathlib import Path
+
+                log_file = Path("/beacon/logs/log_files/logs_test.log")
+
+
+                resp = await client.get(
+                    conf_override.config.uri_subpath + "/" +
+                    biosample["biosample"]["endpoint_name"]
+                )
+
+                if log_file.is_file():
+                    pass
+                else:
+                    raise Exception
+
+
+            loop.run_until_complete(test_check_logs_files_is_saved())
+            loop.run_until_complete(client.close())
+
+            # Restore valid default granularity
+            conf_override.config.log_file=None
+
+    def test_main_check_logs_files_are_deleted(self):
+        with loop_context() as loop:
+            from beacon.conf import conf_override
+
+            # Configure unsupported default granularity
+            conf_override.config.log_file='/beacon/logs/log_files/logs_test.log'
+            conf_override.config.num_of_files_to_keep=1
+            conf_override.config.log_rotating_interval='S'
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+
+            async def test_check_logs_files_are_deleted():
+                from pathlib import Path
+
+                directory = Path("/beacon/logs/log_files")
+
+
+                resp = await client.get(
+                    conf_override.config.uri_subpath + "/" +
+                    biosample["biosample"]["endpoint_name"]
+                )
+                await asyncio.sleep(5)
+
+                resp = await client.get(
+                    conf_override.config.uri_subpath + "/" +
+                    biosample["biosample"]["endpoint_name"]
+                )
+                num_logs = sum(
+                    1 for p in Path(directory).glob("logs_test.log*")
+                    if p.is_file()
+                )
+
+                assert num_logs == 3
+
+
+            loop.run_until_complete(test_check_logs_files_are_deleted())
+            loop.run_until_complete(client.close())
+
+            # Restore valid default granularity
+            conf_override.config.log_file=None
+            conf_override.config.num_of_files_to_keep=7
+            conf_override.config.log_rotating_interval='midnight'
+
+    def test_main_allowed_uris_fails(self):
+        with loop_context() as loop:
+            from beacon.conf import conf_override
+
+            # Configure unsupported default granularity
+            conf_override.config.allowed_uris=[]
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+
+            async def test_check_allowed_uris_fails():
+                from pathlib import Path
+
+                directory = Path("/beacon/logs/log_files")
+
+                try:
+                    resp = await client.get(
+                        conf_override.config.uri_subpath + "/" +
+                        biosample["biosample"]["endpoint_name"]
+                    )
+                    raise('Allowed uris must fail and it is not')
+                except Exception:
+                    pass
+
+
+            loop.run_until_complete(test_check_allowed_uris_fails())
+            loop.run_until_complete(client.close())
+
+            # Restore valid default granularity
+            conf_override.config.allowed_uris=['*']
     
 
     
