@@ -37,7 +37,7 @@ class AuditPublisher:
                 durable=True,
             )
             queue = await self._channel.declare_queue("audit_queue", durable=True)
-            await queue.bind(exchange=self._exchange, routing_key="audit.*")
+            await queue.bind(exchange=self._exchange, routing_key="api.*")
             self._initialized = True
             self.LOG.info("Audit publisher connected to RabbitMQ")
 
@@ -58,7 +58,7 @@ class AuditPublisher:
         )
 
         try:
-            routing_key = f"audit.{event_type}"
+            routing_key = f"{event_type}"
             await self._exchange.publish(message=message, routing_key=routing_key)
         except Exception as e:
             self.LOG.error("Failed to publish audit event (non-blocking): %s", e)

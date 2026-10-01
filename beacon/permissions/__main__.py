@@ -13,6 +13,7 @@ from beacon.exceptions.exceptions import InvalidRequest, NoPermissionsAvailable
 @log_with_args(config.level)
 async def authorization(self):
     try:
+        self._request["auth"]={}
         # Get the token from the header Authorization
         auth = self.request_attributes.headers.get('Authorization')
         if not auth or not auth.lower().startswith('bearer '):
@@ -25,13 +26,31 @@ async def authorization(self):
         # Get the token's email as the username if the token is valid.
         if user is None:
             user = 'public'
+            self._request["auth"]["actor"]= "public"
+            self._request["auth"]["method"] = "oidc"
+            self._request["auth"]["acr"] = "invalid token"
         elif user == 'public':
             username = 'public'
+            self._request["auth"]["actor"]= "public"
+            self._request["auth"]["method"] = "oidc"
+            self._request["auth"]["acr"] = "invalid token"
         else:
             username = user.get('email')
+            self._request["auth"]["actor"]= user.get('sub')
+            self._request["auth"]["method"] = "oidc"
+            self._request["auth"]["acr"] = user.get('acr')
+    except NoPermissionsAvailable:
+        list_visa_datasets = []
+        username = 'public'
+        self._request["auth"]["actor"]= "public"
+        self._request["auth"]["method"] = "no token provided"
+        self._request["auth"]["acr"] = "no token provided"
+        return username, list_visa_datasets
     except Exception as e:
         list_visa_datasets = []
         username = 'public'
+        self._request["auth"]["method"] = "oidc"
+        self._request["auth"]["acr"] = "invalid token"
         return username, list_visa_datasets
     return username, list_visa_datasets
 
