@@ -8,7 +8,7 @@ from beacon.conf.conf_override import config
 from beacon.exceptions.exceptions import NoPermissionsAvailable
 
 @log_with_args(config.level)
-def validate_access_token(self, access_token, idp_issuer, jwks_url, algorithm, aud):
+def validate_access_token(self, access_token, idp_issuer, jwks_url, aud):
     if not jwt.algorithms.has_crypto:
         raise NoPermissionsAvailable("Unauthorized. The token is not encrypted with an algorithm.")
     try:
@@ -18,7 +18,7 @@ def validate_access_token(self, access_token, idp_issuer, jwks_url, algorithm, a
         data = jwt.decode(
             access_token,
             signing_key.key,
-            algorithms=[algorithm],
+            algorithms=config.access_token_accepted_algorithms,
             issuer=idp_issuer,
             audience=aud,
             options={
@@ -32,7 +32,33 @@ def validate_access_token(self, access_token, idp_issuer, jwks_url, algorithm, a
         )
         return True
     except jwt.exceptions.PyJWTError as err:
-        pass
+        return False
+
+@log_with_args(config.level)
+def validate_ga4gh_visa(self, visa_token, visa_issuer, jwks_url):
+    if not jwt.algorithms.has_crypto:
+        raise NoPermissionsAvailable("Unauthorized. The token is not encrypted with an algorithm.")
+    try:
+        # Decode the token with the jwks keys
+        jwks_client = jwt.PyJWKClient(jwks_url, cache_jwk_set=True, lifespan=360)
+        signing_key = jwks_client.get_signing_key_from_jwt(visa_token)
+        data = jwt.decode(
+            visa_token,
+            signing_key.key,
+            algorithms=config.ga4gh_visa_accepted_algorithms,
+            issuer=visa_issuer,
+            options={
+                "verify_signature": True,
+                "verify_exp": True,
+                "verify_nbf": True,
+                "verify_iat": True,
+                "verify_aud": True,
+                "verify_iss": True,
+            },
+        )
+        return True
+    except jwt.exceptions.PyJWTError as err:
+        return False
 
 @log_with_args(config.level)
 def fetch_idp(self, access_token):
@@ -41,36 +67,43 @@ def fetch_idp(self, access_token):
         header = jwt.get_unverified_header(access_token)
         algorithm=header["alg"]
         decoded = jwt.decode(access_token, options={"verify_signature": False})
-        issuer = decoded['iss']
-        aud = decoded['aud']
     except Exception as e:
         raise NoPermissionsAvailable("Unauthorized. The token could not be decoded")
+    if algorithm not in config.access_token_accepted_algorithms:
+        raise NoPermissionsAvailable('Invalid token. Algorithm for the access token is not accepted')
+    issuer = decoded['iss']
+    if issuer not in config.access_token_trusted_issuers:
+        raise NoPermissionsAvailable('Invalid token. Issuer is not in the trusted list.')
+    aud = decoded['aud']
+
     # Initialize the user and idp issuer info variables
     user_info=''
     idp_issuer=None
     # Iterate through the different accepted idp providers and check if there is one that matches the issuer of the token
-    for env_filename in glob.glob("beacon/auth/idp_providers/*.env"):
-        load_dotenv(env_filename, override=True)
-        IDP_ISSUER = os.getenv('ISSUER')
-        # In case the issuer matches, set the idp values to be used later for validating the token
-        if issuer == IDP_ISSUER:
-            IDP_CLIENT_ID = os.getenv('CLIENT_ID')
-            IDP_CLIENT_SECRET = os.getenv('CLIENT_SECRET')
-            IDP_USER_INFO = os.getenv('USER_INFO')
-            IDP_INTROSPECTION = os.getenv('INTROSPECTION')
-            IDP_JWKS_URL = os.getenv('JWKS_URL')
-            idp_issuer = IDP_ISSUER
-            user_info = IDP_USER_INFO
-            idp_client_id = IDP_CLIENT_ID
-            idp_client_secret = IDP_CLIENT_SECRET
-            idp_introspection = IDP_INTROSPECTION
-            idp_jwks_url = IDP_JWKS_URL
-            break
-        else:
-            continue
+    for client_type in ['confidential', 'public']:
+        for env_filename in glob.glob("beacon/auth/{}/idp_providers/*.env".format(client_type)):
+            load_dotenv(env_filename, override=True)
+            idp_issuer = os.getenv('ISSUER')
+            # In case the issuer matches, set the idp values to be used later for validating the token
+            if issuer == idp_issuer:
+                idp_client_id = os.getenv('CLIENT_ID')
+                if client_type == 'confidential':
+                    idp_client_secret = os.getenv('CLIENT_SECRET')
+                else:
+                    idp_client_secret=None
+                user_info = os.getenv('USER_INFO')
+                idp_introspection = os.getenv('INTROSPECTION')
+                idp_jwks_url = os.getenv('JWKS_URL')
+                aud_must_include_url = os.getenv('MUST_INCLUDE_BEACON_URL_IN_AUDIENCE')
+                if aud_must_include_url == True:
+                    if config.complete_url not in aud:
+                        raise NoPermissionsAvailable("Unauthorized. The beacon's url is not included in the audience of the access token.")
+                break
+            else:
+                continue
     if idp_issuer is None:
         raise NoPermissionsAvailable("Unauthorized. There is no issuer in the token. Please, use a valid token with an issuer header.")
-    return idp_issuer, user_info, idp_client_id, idp_client_secret, idp_introspection, idp_jwks_url, algorithm, aud
+    return idp_issuer, user_info, idp_client_id, idp_client_secret, idp_introspection, idp_jwks_url, aud
 
 '''
 @log_with_args(config.level)
@@ -104,14 +137,29 @@ async def fetch_user_info(self, access_token, user_info, idp_issuer, list_visa_d
                             # Validate the visas and extract the datasets ids
                             try:
                                 visa = jwt.decode(visa_dataset, options={"verify_signature": False}, algorithms=["RS256"])
-                                if visa['iss']==idp_issuer:
+                                if visa['iss'] in config.ga4gh_visa_trusted_issuers:
                                     pass
                                 else:
-                                    raise NoPermissionsAvailable("Unauthorized. Invalid visa token.")
-                                dataset_url = visa["ga4gh_visa_v1"]["value"]
-                                dataset_url_splitted = dataset_url.split('/')
-                                visa_dataset = dataset_url_splitted[-1]
-                                list_visa_datasets.append(visa_dataset)
+                                    raise NoPermissionsAvailable("Unauthorized visa. Issuer not trusted.")
+                                visa_jwks_url=visa['iss']+'.well-known/openid-configuration'
+                                visa_validated = validate_ga4gh_visa(self, access_token, visa['iss'], visa_jwks_url)
+                                if visa_validated==True:
+                                    visa_values=visa['ga4gh_visa_v1']
+                                    if visa_values['type']=='AcceptedTermsAndPolicies':
+                                        if visa_values['value']=='accepted':
+                                            pass
+                                        else:
+                                            #TODO: have something in case T&C is rejected
+                                            pass
+                                    elif visa_values['type']=='ResearcherStatus':
+                                        if visa_values['value'] == 'RESEARCHER':
+                                            #TODO: have something tied to each role
+                                            pass
+                                    else:
+                                        dataset_url = visa["ga4gh_visa_v1"]["value"]
+                                        dataset_url_splitted = dataset_url.split('/')
+                                        visa_dataset = dataset_url_splitted[-1]
+                                        list_visa_datasets.append(visa_dataset)
                             except Exception:
                                 visa_dataset = None
                 except Exception:
@@ -125,8 +173,8 @@ async def authentication(self, access_token):
     # Initiate the lisst of the datasets permissions that come from visas
     list_visa_datasets=[]
     try:
-        idp_issuer, user_info, idp_client_id, idp_client_secret, idp_introspection, idp_jwks_url, algorithm, aud = fetch_idp(self, access_token)
-        access_token_validation = validate_access_token(self, access_token, idp_issuer, idp_jwks_url, algorithm, aud)
+        idp_issuer, user_info, idp_client_id, idp_client_secret, idp_introspection, idp_jwks_url, aud = fetch_idp(self, access_token)
+        access_token_validation = validate_access_token(self, access_token, idp_issuer, idp_jwks_url, aud)
         if access_token_validation == True:
             user, list_visa_datasets = await fetch_user_info(self, access_token, user_info, idp_issuer, list_visa_datasets)
             return user, list_visa_datasets

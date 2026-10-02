@@ -36,6 +36,12 @@ cors_urls = ["http://localhost:3003", "http://localhost:3000"]
 max_limit_of_records_per_dataset_in_a_page=100
 pending_requests_timeout_in_seconds=10 # Timeout waiting pending requests
 
+# Auth
+access_token_trusted_issuers=[]
+access_token_accepted_algorithms=[]
+ga4gh_visa_trusted_issuers=[]
+ga4gh_visa_accepted_algorithms=[]
+
 # Service Info
 ga4gh_service_type_group = 'org.ga4gh'
 ga4gh_service_type_artifact = 'beacon'

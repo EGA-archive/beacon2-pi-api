@@ -4,3 +4,4 @@ USER_INFO='http://idp:8080/auth/realms/Beacon/protocol/openid-connect/userinfo'
 INTROSPECTION='http://idp:8080/auth/realms/Beacon/protocol/openid-connect/token/introspect'
 ISSUER='http://localhost:8080/auth/realms/Beacon'
 JWKS_URL='http://idp:8080/auth/realms/Beacon/protocol/openid-connect/certs'
+MUST_INCLUDE_BEACON_URL_IN_AUDIENCE=True
