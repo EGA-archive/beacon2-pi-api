@@ -415,8 +415,8 @@ async def checkFilters(filtersDict, offset, limit, typeQuery):
                 listConcept_id = ['None']
                 try:
                     scope = filter['scope']
-                except:
-                    print("You need an scope if you are using 'ageOfOnset'")
+                except Exception:
+                    raise ValueError("You need a scope if you are using 'ageOfOnset'. The scope corresponds to an OMOP entity, so the options are 'condition', 'treatments', 'procedure', 'measurement' or 'observation'. Here is an example: { 'query': { 'filters': [{ 'id': 'ageOfOnset', 'value': 90, 'operator': '>', 'scope': 'individuals.condition.age.iso8601duration' }] } }")
 
                 try:
                     value = float(value)
@@ -452,11 +452,8 @@ async def checkFilters(filtersDict, offset, limit, typeQuery):
                     (clean_vocab == vocabulary_id) & (clean_concept == concept_code)
                 )
                 async with client.connect() as conn:
-                    result = conn.execute(records, {"vocabulary_id": vocabulary_id, "concept_code": concept_code})                    
-                    rows = result
-                    rows = rows.mappings().all()
-                    if "mssql" in database_driver:
-                        result.close()
+                    result = await conn.execute(records, {"vocabulary_id": vocabulary_id, "concept_code": concept_code})
+                    rows = result.mappings().all()
             
             elif "OMOP" in filterId: # change to 'elif' if the previous chunk is available
                 vocabulary_id, concept_code = filterId.split(':')
@@ -468,10 +465,7 @@ async def checkFilters(filtersDict, offset, limit, typeQuery):
                 ) 
                 async with client.connect() as conn:
                     result = await conn.execute(records, {"vocabulary_id": vocabulary_id, "concept_code": concept_code})
-                    rows = result
-                    rows = rows.mappings().all()
-                    if "mssql" in database_driver:
-                        result.close() 
+                    rows = result.mappings().all()
             else:
                 vocabulary_id, concept_code = filterId.split(':')
                 clean_concept = vocab_conc.c.concept_code
@@ -482,11 +476,8 @@ async def checkFilters(filtersDict, offset, limit, typeQuery):
                     (clean_vocab == vocabulary_id) & (clean_concept == concept_code)
                 )
                 async with client.connect() as conn:
-                    result = await conn.execute(records, {"vocabulary_id": vocabulary_id, "concept_code": concept_code})                    
-                    rows = result
-                    rows = rows.mappings().all()
-                    if "mssql" in database_driver:
-                        result.close()                                     
+                    result = await conn.execute(records, {"vocabulary_id": vocabulary_id, "concept_code": concept_code})
+                    rows = result.mappings().all()                                     
             
             # Check if records is empty
             res = peek(rows)      
@@ -612,6 +603,8 @@ async def ind_base(entry_id: Optional[str] = None, qparams: RequestParams = Requ
     cdm_obser = get_table("observation", schema="cdm")
     cdm_obser_per = get_table("observation_period", schema="cdm")
 
+    individuals = {}
+
     def normalize_ids(entry_id):
         if entry_id is None:
             return None
@@ -619,50 +612,22 @@ async def ind_base(entry_id: Optional[str] = None, qparams: RequestParams = Requ
             return [int(x) for x in entry_id]
         return [int(entry_id)]
     entry_id = normalize_ids(entry_id)
-
-    ids_subquery = union_all(
-        *[select(literal(v).label("person_id")) for v in entry_id]
-    ).subquery()
     
-    # Step 0: function for date formatting TODO: add more options if needed
+    # Step 0: function for date formatting
     def format_date(column, fmt='YYYY-MM-DD'):
         if "postgresql" in database_driver:
             return func.to_char(column, fmt)
-        elif 'mysql' in database_driver:
-            mysql_fmt = fmt.replace('YYYY', '%Y').replace('MM', '%m').replace('DD', '%d')
-            return func.date_format(column, mysql_fmt)
-        elif "denodo" in database_driver:
-            denodo_fmt = fmt.replace('YYYY', 'yyyy').replace('DD', 'dd')
-            return func.formatdate(denodo_fmt, column)
-        elif "mssql" in database_driver:
-            mssql_fmt = (
-                fmt.replace('YYYY', 'yyyy')
-                .replace('MM', 'MM')
-                .replace('DD', 'dd')
-            )
-            return func.format(column, mssql_fmt)
         else:
             # fallback: cast to string (ISO format)
             return cast(column, String)
        
     async with client.connect() as conn:
         # Step 1: Get base person_id data
-        if "denodo" in database_driver:
-            base_query = select(
-                    cdm_person.c.person_id,
-                    cdm_person.c.gender_concept_id,
-                    cdm_person.c.race_concept_id,
-            )
-            if entry_id is not None:
-                base_query = base_query.select_from(
-                    cdm_person.join(ids_subquery, cdm_person.c.person_id == ids_subquery.c.person_id)
-                )
-        else:
-            base_query = select(
-                cdm_person.c.person_id,
-                cdm_person.c.gender_concept_id,
-                cdm_person.c.race_concept_id,
-            ).where(cdm_person.c.person_id.in_(entry_id))
+        base_query = select(
+            cdm_person.c.person_id,
+            cdm_person.c.gender_concept_id,
+            cdm_person.c.race_concept_id,
+        ).where(cdm_person.c.person_id.in_(entry_id))
 
             
         base_result = await conn.execute(base_query)
@@ -673,33 +638,17 @@ async def ind_base(entry_id: Optional[str] = None, qparams: RequestParams = Requ
         } for row in rows}
 
         person_ids = list(individuals.keys())
-        
-        ids_subquery = union_all(
-            *[select(literal(v).label("person_id")) for v in person_ids]
-        ).subquery()
 
         # Step 2: Fetch and append conditions
-        if "denodo" in database_driver:
-            cond_query = select(
-                cdm_cond_occ.c.person_id,
-                cdm_cond_occ.c.condition_concept_id,
-                ageOfOnset_func(cdm_person.c.birth_datetime, cdm_person.c.year_of_birth, cdm_cond_occ.c.condition_start_date, 'condition_ageOfOnset')
-            ).select_from(
-                cdm_cond_occ
-                .join(cdm_person, cdm_cond_occ.c.person_id == cdm_person.c.person_id)
-                .join(ids_subquery, cdm_cond_occ.c.person_id == ids_subquery.c.person_id)
-            )
-        else:
-            cond_query = select(
-                cdm_cond_occ.c.person_id,
-                cdm_cond_occ.c.condition_concept_id,
-                ageOfOnset_func(cdm_person.c.birth_datetime, cdm_person.c.year_of_birth, cdm_cond_occ.c.condition_start_date, 'condition_ageOfOnset')
-            ).select_from(
-                cdm_cond_occ
-                .join(cdm_person, cdm_cond_occ.c.person_id == cdm_person.c.person_id)
-            ).where(
-               cdm_cond_occ.c.person_id.in_(person_ids)
-            )
+        cond_query = select(
+            cdm_cond_occ.c.person_id,
+            cdm_cond_occ.c.condition_concept_id,
+            ageOfOnset_func(cdm_person.c.birth_datetime, cdm_person.c.year_of_birth, cdm_cond_occ.c.condition_start_date, 'condition_ageOfOnset')
+        ).select_from(
+            cdm_cond_occ
+            .join(cdm_person, cdm_cond_occ.c.person_id == cdm_person.c.person_id)
+        ).where(
+            cdm_cond_occ.c.person_id.in_(person_ids))
 
         result = await conn.execute(cond_query, {"limit": qparams.query.pagination.limit, "offset": qparams.query.pagination.skip, "entry_id": entry_id})
         rows = result.mappings().all()
@@ -707,28 +656,16 @@ async def ind_base(entry_id: Optional[str] = None, qparams: RequestParams = Requ
             individuals[row["person_id"]]["conditions"].append(dict(row))
 
         # Step 3: Fetch and append procedures
-        if "denodo" in database_driver:
-            proc_query = select(
-                cdm_proc_occ.c.person_id,
-                cdm_proc_occ.c.procedure_concept_id,
-                format_date(cdm_proc_occ.c.procedure_date).label("procedure_date"),
-                ageOfOnset_func(cdm_person.c.birth_datetime, cdm_person.c.year_of_birth, cdm_proc_occ.c.procedure_date, 'procedure_ageOfOnset')
-            ).select_from(
-                cdm_proc_occ
-                .join(cdm_person, cdm_proc_occ.c.person_id == cdm_person.c.person_id)
-                .join(ids_subquery, cdm_proc_occ.c.person_id == ids_subquery.c.person_id)
-            )
-        else:
-            proc_query = select(
-                cdm_proc_occ.c.person_id,
-                cdm_proc_occ.c.procedure_concept_id,
-                format_date(cdm_proc_occ.c.procedure_date).label("procedure_date"),
-                ageOfOnset_func(cdm_person.c.birth_datetime, cdm_person.c.year_of_birth, cdm_proc_occ.c.procedure_date, 'procedure_ageOfOnset')
-            ).select_from(
-                cdm_proc_occ
-                .join(cdm_person, cdm_proc_occ.c.person_id == cdm_person.c.person_id)
-            ).where(
-               cdm_proc_occ.c.person_id.in_(person_ids))
+        proc_query = select(
+            cdm_proc_occ.c.person_id,
+            cdm_proc_occ.c.procedure_concept_id,
+            format_date(cdm_proc_occ.c.procedure_date).label("procedure_date"),
+            ageOfOnset_func(cdm_person.c.birth_datetime, cdm_person.c.year_of_birth, cdm_proc_occ.c.procedure_date, 'procedure_ageOfOnset')
+        ).select_from(
+            cdm_proc_occ
+            .join(cdm_person, cdm_proc_occ.c.person_id == cdm_person.c.person_id)
+        ).where(
+            cdm_proc_occ.c.person_id.in_(person_ids))
 
         result = await conn.execute(proc_query, {"limit": qparams.query.pagination.limit, "offset": qparams.query.pagination.skip, "entry_id": entry_id})
         rows = result.mappings().all()
@@ -736,30 +673,17 @@ async def ind_base(entry_id: Optional[str] = None, qparams: RequestParams = Requ
             individuals[row["person_id"]]["procedures"].append(dict(row))
 
         # Step 4: Fetch and append measurements
-        if "denodo" in database_driver:    
-            meas_query = select(
-                cdm_mesure.c.person_id,
-                cdm_mesure.c.measurement_concept_id,
-                format_date(cdm_mesure.c.measurement_date).label("measurement_date"),
-                ageOfOnset_func(cdm_person.c.birth_datetime, cdm_person.c.year_of_birth, cdm_mesure.c.measurement_date, 'measurement_ageOfOnset'),
-                cdm_mesure.c.unit_concept_id, cdm_mesure.c.value_source_value
-            ).select_from(
-                cdm_mesure
-                .join(cdm_person, cdm_mesure.c.person_id == cdm_person.c.person_id)
-                .join(ids_subquery, cdm_mesure.c.person_id == ids_subquery.c.person_id)
-            )
-        else:
-            meas_query = select(
-                cdm_mesure.c.person_id,
-                cdm_mesure.c.measurement_concept_id,
-                format_date(cdm_mesure.c.measurement_date).label("measurement_date"),
-                ageOfOnset_func(cdm_person.c.birth_datetime, cdm_person.c.year_of_birth, cdm_mesure.c.measurement_date, 'measurement_ageOfOnset'),
-                cdm_mesure.c.unit_concept_id, cdm_mesure.c.value_source_value
-            ).select_from(
-                cdm_mesure
-                .join(cdm_person, cdm_mesure.c.person_id == cdm_person.c.person_id)
-            ).where(
-                cdm_mesure.c.person_id.in_(person_ids))
+        meas_query = select(
+            cdm_mesure.c.person_id,
+            cdm_mesure.c.measurement_concept_id,
+            format_date(cdm_mesure.c.measurement_date).label("measurement_date"),
+            ageOfOnset_func(cdm_person.c.birth_datetime, cdm_person.c.year_of_birth, cdm_mesure.c.measurement_date, 'measurement_ageOfOnset'),
+            cdm_mesure.c.unit_concept_id, cdm_mesure.c.value_source_value
+        ).select_from(
+            cdm_mesure
+            .join(cdm_person, cdm_mesure.c.person_id == cdm_person.c.person_id)
+        ).where(
+            cdm_mesure.c.person_id.in_(person_ids))
 
         result = await conn.execute(meas_query, {"limit": qparams.query.pagination.limit, "offset": qparams.query.pagination.skip, "entry_id": entry_id})
         rows = result.mappings().all()
@@ -767,65 +691,36 @@ async def ind_base(entry_id: Optional[str] = None, qparams: RequestParams = Requ
             individuals[row["person_id"]]["measurements"].append(dict(row))
 
         # Step 5: Fetch and append observations
-        if "denodo" in database_driver: 
-            obs_query = select(
-                cdm_obser.c.person_id,
-                cdm_obser.c.observation_concept_id,
-                format_date(cdm_obser.c.observation_date).label("observation_date"),
-                ageOfOnset_func(cdm_person.c.birth_datetime, cdm_person.c.year_of_birth, cdm_obser.c.observation_date, 'observation_ageOfOnset'),
-                cdm_obser.c.unit_concept_id
-            ).select_from(
-                cdm_obser
-                .join(cdm_person, cdm_obser.c.person_id == cdm_person.c.person_id)
-                .join(ids_subquery, cdm_obser.c.person_id == ids_subquery.c.person_id)
-            )
-        else:
-            obs_query = select(
-                cdm_obser.c.person_id,
-                cdm_obser.c.observation_concept_id,
-                format_date(cdm_obser.c.observation_date).label("observation_date"),
-                ageOfOnset_func(cdm_person.c.birth_datetime, cdm_person.c.year_of_birth, cdm_obser.c.observation_date, 'observation_ageOfOnset'),
-                cdm_obser.c.unit_concept_id
-            ).select_from(
-                cdm_obser
-                .join(cdm_person, cdm_obser.c.person_id == cdm_person.c.person_id)
-            ).where(
-                cdm_obser.c.person_id.in_(person_ids))
+        obs_query = select(
+            cdm_obser.c.person_id,
+            cdm_obser.c.observation_concept_id,
+            format_date(cdm_obser.c.observation_date).label("observation_date"),
+            ageOfOnset_func(cdm_person.c.birth_datetime, cdm_person.c.year_of_birth, cdm_obser.c.observation_date, 'observation_ageOfOnset'),
+            cdm_obser.c.unit_concept_id
+        ).select_from(
+            cdm_obser
+            .join(cdm_person, cdm_obser.c.person_id == cdm_person.c.person_id)
+        ).where(
+            cdm_obser.c.person_id.in_(person_ids))
 
         result = await conn.execute(obs_query, {"limit": qparams.query.pagination.limit, "offset": qparams.query.pagination.skip, "entry_id": entry_id})
         rows = result.mappings().all()
         for row in rows:
             individuals[row["person_id"]]["observations"].append(dict(row))
 
-        if "denodo" in database_driver: 
-            duration_query = select(
-                cdm_obser_per.c.person_id,
-                func.concat(
-                    'P',
-                    func.extract('year', cdm_obser_per.c.observation_period_end_date) - func.extract('year', cdm_obser_per.c.observation_period_start_date),
-                    'Y',
-                    func.extract('month', cdm_obser_per.c.observation_period_end_date) - func.extract('month', cdm_obser_per.c.observation_period_start_date),
-                    'M',
-                    func.extract('day', cdm_obser_per.c.observation_period_end_date) - func.extract('day', cdm_obser_per.c.observation_period_start_date),
-                    'D'
-                ).label('duration')
-            ).select_from(
-                cdm_obser_per.join(ids_subquery,cdm_obser_per.c.person_id == ids_subquery.c.person_id)
-            )
-        else:
-            duration_query = select(
-                cdm_obser_per.c.person_id,
-                func.concat(
-                    'P',
-                    func.extract('year', cdm_obser_per.c.observation_period_end_date) - func.extract('year', cdm_obser_per.c.observation_period_start_date),
-                    'Y',
-                    func.extract('month', cdm_obser_per.c.observation_period_end_date) - func.extract('month', cdm_obser_per.c.observation_period_start_date),
-                    'M',
-                    func.extract('day', cdm_obser_per.c.observation_period_end_date) - func.extract('day', cdm_obser_per.c.observation_period_start_date),
-                    'D'
-                ).label('duration')
-            ).where(
-                cdm_obser_per.c.person_id.in_(person_ids))
+        duration_query = select(
+            cdm_obser_per.c.person_id,
+            func.concat(
+                'P',
+                func.extract('year', cdm_obser_per.c.observation_period_end_date) - func.extract('year', cdm_obser_per.c.observation_period_start_date),
+                'Y',
+                func.extract('month', cdm_obser_per.c.observation_period_end_date) - func.extract('month', cdm_obser_per.c.observation_period_start_date),
+                'M',
+                func.extract('day', cdm_obser_per.c.observation_period_end_date) - func.extract('day', cdm_obser_per.c.observation_period_start_date),
+                'D'
+            ).label('duration')
+        ).where(
+            cdm_obser_per.c.person_id.in_(person_ids))
 
         result = await conn.execute(duration_query, {"limit": qparams.query.pagination.limit, "offset": qparams.query.pagination.skip, "entry_id": entry_id})
         records_duration = result.mappings().all()
@@ -836,26 +731,15 @@ async def ind_base(entry_id: Optional[str] = None, qparams: RequestParams = Requ
                 obs["duration"] = duration
 
         # Step 6: Fetch and append drug exposures
-        if "denodo" in database_driver: 
-            drug_query = select(
-                cdm_drug_exp.c.person_id,
-                cdm_drug_exp.c.drug_concept_id,
-                ageOfOnset_func(cdm_person.c.birth_datetime, cdm_person.c.year_of_birth, cdm_drug_exp.c.drug_exposure_start_date, 'drug_exposure_ageOfOnset')
-            ).select_from(
-                cdm_drug_exp
-                .join(cdm_person, cdm_drug_exp.c.person_id == cdm_person.c.person_id)
-                .join(ids_subquery, cdm_drug_exp.c.person_id == ids_subquery.c.person_id)
-            )
-        else:
-            drug_query = select(
-                cdm_drug_exp.c.person_id,
-                cdm_drug_exp.c.drug_concept_id,
-                ageOfOnset_func(cdm_person.c.birth_datetime, cdm_person.c.year_of_birth, cdm_drug_exp.c.drug_exposure_start_date, 'drug_exposure_ageOfOnset')
-            ).select_from(
-                cdm_drug_exp
-                .join(cdm_person, cdm_drug_exp.c.person_id == cdm_person.c.person_id)
-            ).where(
-                cdm_drug_exp.c.person_id.in_(person_ids))
+        drug_query = select(
+            cdm_drug_exp.c.person_id,
+            cdm_drug_exp.c.drug_concept_id,
+            ageOfOnset_func(cdm_person.c.birth_datetime, cdm_person.c.year_of_birth, cdm_drug_exp.c.drug_exposure_start_date, 'drug_exposure_ageOfOnset')
+        ).select_from(
+            cdm_drug_exp
+            .join(cdm_person, cdm_drug_exp.c.person_id == cdm_person.c.person_id)
+        ).where(
+            cdm_drug_exp.c.person_id.in_(person_ids))
         
         result = await conn.execute(drug_query, {"limit": qparams.query.pagination.limit, "offset": qparams.query.pagination.skip, "entry_id": entry_id})
         rows = result.mappings().all()
