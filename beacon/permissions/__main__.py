@@ -8,7 +8,7 @@ from beacon.conf.conf_override import config
 from beacon.budget.__main__ import check_budget
 from beacon.utils.modules import get_all_modules_datasets
 from beacon.response.classes import SingleDatasetResponse
-from beacon.exceptions.exceptions import InvalidRequest, NoPermissionsAvailable
+from beacon.exceptions.exceptions import InvalidRequest, NoPermissionsAvailable, NoTermsAndConditionsForResearcherAvailable
 
 @log_with_args(config.level)
 async def authorization(self):
@@ -23,15 +23,12 @@ async def authorization(self):
         # Validate the token
         user, list_visa_datasets = await authentication(self, access_token)
         # Get the token's email as the username if the token is valid.
-        if user is None:
-            user = 'public'
-        elif user == 'public':
-            username = 'public'
-        else:
-            username = user.get('email')
+        username = user.get('email')
+    except NoTermsAndConditionsForResearcherAvailable:
+        raise
     except Exception as e:
         list_visa_datasets = []
-        username = 'public'
+        username = None
         return username, list_visa_datasets
     return username, list_visa_datasets
 
@@ -64,7 +61,7 @@ def query_permissions(func):
     async def permission(self):
         # Initialize the variables of the time where the request is made and the username.
         time_now=None
-        username = 'public'
+        username = None
         try:
             # Get the requested datasets and save them in a list.
             requested_datasets = self.request_attributes.qparams.query.requestParameters["datasets"]

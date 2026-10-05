@@ -13,7 +13,7 @@ def check_budget(self, username):
     time_now=datetime.now()
     start_budget_time=time_now+timedelta(seconds=-period_of_not_expired_time)
     # Check if there is username in case the budget is meant to be done by user and get the remaining budget
-    if username is not None and username != 'public' and config.query_budget_per_user == True:
+    if username is not None and username != None and config.query_budget_per_user == True:
         remaining_budget=module.get_remaining_budget_by_user(self, username, start_budget_time)
         if len(remaining_budget)>=config.query_budget_amount: # Throw an exception if the query budget is exceeded for the user
             raise NumberOfQueriesExceeded("Number of queries exceeded for this user: {}".format(username))
@@ -27,7 +27,7 @@ def check_budget(self, username):
         else: # Return the time to store in the database
             return time_now
     # Check if there is username in case the budget is meant to be done only by user and if there was no ip, then throw an exception
-    elif config.query_budget_per_user == True and username is None or config.query_budget_per_user == True and username == 'public':
+    elif config.query_budget_per_user == True and username is None or config.query_budget_per_user == True and username == None:
         raise NoPermissionsAvailable("Authentication failed. Please, log in to see results for the query")
     return time_now # Return the time to store in the database
 

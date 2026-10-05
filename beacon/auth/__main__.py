@@ -5,7 +5,7 @@ import os
 from dotenv import load_dotenv
 from beacon.logs.logs import log_with_args
 from beacon.conf.conf_override import config
-from beacon.exceptions.exceptions import NoPermissionsAvailable
+from beacon.exceptions.exceptions import NoPermissionsAvailable, NoTermsAndConditionsForResearcherAvailable
 
 @log_with_args(config.level)
 def validate_access_token(self, access_token, idp_issuer, jwks_url, aud):
@@ -68,11 +68,14 @@ def fetch_idp(self, access_token):
         algorithm=header["alg"]
         decoded = jwt.decode(access_token, options={"verify_signature": False})
     except Exception as e:
+        self.LOG.warning("Unauthorized. The token could not be decoded")
         raise NoPermissionsAvailable("Unauthorized. The token could not be decoded")
     if algorithm not in config.access_token_accepted_algorithms:
+        self.LOG.warning('Invalid token. Algorithm for the access token is not accepted')
         raise NoPermissionsAvailable('Invalid token. Algorithm for the access token is not accepted')
     issuer = decoded['iss']
     if issuer not in config.access_token_trusted_issuers:
+        self.LOG.warning('Invalid token. Issuer is not in the trusted list.')
         raise NoPermissionsAvailable('Invalid token. Issuer is not in the trusted list.')
     aud = decoded['aud']
 
@@ -132,6 +135,10 @@ async def fetch_user_info(self, access_token, user_info, idp_issuer, list_visa_d
                 try:
                     # Check if there are ny visas in the user info of the response
                     visa_datasets = user['ga4gh_passport_v1']
+                except Exception:
+                    self.LOG.warning("No GA4GH visas found for the user")
+                    visa_datasets=None
+                finally:
                     if visa_datasets is not None:
                         for visa_dataset in visa_datasets:
                             # Validate the visas and extract the datasets ids
@@ -140,30 +147,36 @@ async def fetch_user_info(self, access_token, user_info, idp_issuer, list_visa_d
                                 if visa['iss'] in config.ga4gh_visa_trusted_issuers:
                                     pass
                                 else:
+                                    self.LOG.warning("Unauthorized visa: {}. Issuer not trusted.".format(visa_dataset))
                                     raise NoPermissionsAvailable("Unauthorized visa. Issuer not trusted.")
                                 visa_jwks_url=visa['iss']+'.well-known/openid-configuration'
                                 visa_validated = validate_ga4gh_visa(self, access_token, visa['iss'], visa_jwks_url)
                                 if visa_validated==True:
                                     visa_values=visa['ga4gh_visa_v1']
-                                    if visa_values['type']=='AcceptedTermsAndPolicies':
-                                        if visa_values['value']=='accepted':
-                                            pass
-                                        else:
-                                            #TODO: have something in case T&C is rejected
-                                            pass
-                                    elif visa_values['type']=='ResearcherStatus':
-                                        if visa_values['value'] == 'RESEARCHER':
-                                            #TODO: have something tied to each role
-                                            pass
-                                    else:
-                                        dataset_url = visa["ga4gh_visa_v1"]["value"]
-                                        dataset_url_splitted = dataset_url.split('/')
-                                        visa_dataset = dataset_url_splitted[-1]
-                                        list_visa_datasets.append(visa_dataset)
-                            except Exception:
+                                    if config.terms_and_conditions_to_be_accepted_and_researcher_status_to_appear_through_ga4gh_visas == True:
+                                        if visa_values['type']=='AcceptedTermsAndPolicies':
+                                            if visa_values['value']=='accepted':
+                                                pass
+                                            else:
+                                                self.LOG.warning('Terms and Conditions not accepted for the user')
+                                                raise NoTermsAndConditionsForResearcherAvailable('Terms and Conditions not accepted for the user')
+                                        elif visa_values['type']=='ResearcherStatus':
+                                            if visa_values['value'] == 'RESEARCHER':
+                                                pass
+                                            else:
+                                                self.LOG.warning('Researcher Status is not RESEARCHER')
+                                                raise NoTermsAndConditionsForResearcherAvailable('Researcher Status is not RESEARCHER')
+                                    if visa['iss'] in config.ga4gh_visa_accepted_dataset_issuers:
+                                        if visa_values['type']=='ControlledAccessGrants':
+                                            dataset_url = visa["ga4gh_visa_v1"]["value"]
+                                            dataset_url_splitted = dataset_url.split('/')
+                                            visa_dataset = dataset_url_splitted[-1]
+                                            list_visa_datasets.append(visa_dataset)
+                            except NoTermsAndConditionsForResearcherAvailable:
+                                raise
+                            except Exception as e:
+                                self.LOG.warning("Invalid GA4GH Visa: {}".format(visa_dataset))
                                 visa_dataset = None
-                except Exception:
-                    pass
                 return user, list_visa_datasets
             else:
                 raise NoPermissionsAvailable("Unauthorized. Could not fetch the user info from the token.")
@@ -178,9 +191,11 @@ async def authentication(self, access_token):
         if access_token_validation == True:
             user, list_visa_datasets = await fetch_user_info(self, access_token, user_info, idp_issuer, list_visa_datasets)
             return user, list_visa_datasets
+    except NoTermsAndConditionsForResearcherAvailable:
+        raise
     except Exception as e:
         #LOG.debug(e)
         #access_token_validation = await introspection(idp_introspection, idp_client_id, idp_client_secret, access_token, list_visa_datasets)
-        user = 'public'
+        user = None
         list_visa_datasets=[]
         return user, list_visa_datasets

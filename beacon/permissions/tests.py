@@ -52,7 +52,7 @@ class TestAuthZ(unittest.TestCase):
                 # Fetch permissions for anonymous/public user
                 datasets = await PermissionsProxy.get_permissions(
                     self=PermissionsProxy,
-                    username='public',
+                    username=None,
                     requested_datasets=[]
                 )
 

@@ -20,11 +20,11 @@ def return_granularity_and_exceptions(self, security_level_dict, username, defau
             default_granularity = dataset_properties.get('default_entry_types_granularity')
             granularity_exceptions = dataset_properties.get('entry_types_exceptions')
         # If the request is correctly authenticated (username is not public) get the granularity and entry types exceptions in case the dataset has registered security level
-        if username != 'public' and security_level == 'registered':
+        if username != None and security_level == 'registered':
             default_granularity = dataset_properties.get('default_entry_types_granularity')
             granularity_exceptions = dataset_properties.get('entry_types_exceptions')
         # If the request is correctly authenticated (username is not public) get the granularity and entry types exceptions for the specific user that has logged in and in case the dataset has controlled security level
-        elif username != 'public' and security_level == 'controlled':
+        elif username != None and security_level == 'controlled':
             # Get the user list from the yaml file
             user_exceptions = dataset_properties.get('user-list')
             # If the user-list exists for the security level controlled

@@ -40,7 +40,9 @@ pending_requests_timeout_in_seconds=10 # Timeout waiting pending requests
 access_token_trusted_issuers=[]
 access_token_accepted_algorithms=[]
 ga4gh_visa_trusted_issuers=[]
+ga4gh_visa_accepted_dataset_issuers=[]
 ga4gh_visa_accepted_algorithms=[]
+terms_and_conditions_to_be_accepted_and_researcher_status_to_appear_through_ga4gh_visas=False
 
 # Service Info
 ga4gh_service_type_group = 'org.ga4gh'
