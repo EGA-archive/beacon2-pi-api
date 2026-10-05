@@ -77,34 +77,39 @@ def fetch_idp(self, access_token):
     if issuer not in config.access_token_trusted_issuers:
         self.LOG.warning('Invalid token. Issuer is not in the trusted list.')
         raise NoPermissionsAvailable('Invalid token. Issuer is not in the trusted list.')
-    aud = decoded['aud']
+    try:
+        aud = decoded['aud']
 
-    # Initialize the user and idp issuer info variables
-    user_info=''
-    idp_issuer=None
-    # Iterate through the different accepted idp providers and check if there is one that matches the issuer of the token
-    for client_type in ['confidential', 'public']:
-        for env_filename in glob.glob("beacon/auth/{}/idp_providers/*.env".format(client_type)):
-            load_dotenv(env_filename, override=True)
-            idp_issuer = os.getenv('ISSUER')
-            # In case the issuer matches, set the idp values to be used later for validating the token
-            if issuer == idp_issuer:
-                idp_client_id = os.getenv('CLIENT_ID')
-                if client_type == 'confidential':
-                    idp_client_secret = os.getenv('CLIENT_SECRET')
+        # Initialize the user and idp issuer info variables
+        user_info=''
+        idp_issuer=None
+        # Iterate through the different accepted idp providers and check if there is one that matches the issuer of the token
+        for client_type in ['confidential', 'public']:
+            for env_filename in glob.glob("beacon/auth/idp_providers/{}/*.env".format(client_type)):
+                load_dotenv(env_filename, override=True)
+                idp_issuer = os.getenv('ISSUER')
+                # In case the issuer matches, set the idp values to be used later for validating the token
+                if issuer == idp_issuer:
+                    idp_client_id = os.getenv('CLIENT_ID')
+                    if client_type == 'confidential':
+                        idp_client_secret = os.getenv('CLIENT_SECRET')
+                    else:
+                        idp_client_secret=None
+                    user_info = os.getenv('USER_INFO')
+                    idp_introspection = os.getenv('INTROSPECTION')
+                    idp_jwks_url = os.getenv('JWKS_URL')
+                    aud_must_include_url = os.getenv('MUST_INCLUDE_BEACON_URL_IN_AUDIENCE')
+                    if aud_must_include_url == True:
+                        if config.complete_url not in aud:
+                            self.LOG.warning("Unauthorized. The beacon's url is not included in the audience of the access token.")
+                            raise NoPermissionsAvailable("Unauthorized. The beacon's url is not included in the audience of the access token.")
+                    break
                 else:
-                    idp_client_secret=None
-                user_info = os.getenv('USER_INFO')
-                idp_introspection = os.getenv('INTROSPECTION')
-                idp_jwks_url = os.getenv('JWKS_URL')
-                aud_must_include_url = os.getenv('MUST_INCLUDE_BEACON_URL_IN_AUDIENCE')
-                if aud_must_include_url == True:
-                    if config.complete_url not in aud:
-                        raise NoPermissionsAvailable("Unauthorized. The beacon's url is not included in the audience of the access token.")
-                break
-            else:
-                continue
+                    continue
+    except Exception as e:
+        self.LOG.warning(e)
     if idp_issuer is None:
+        self.LOG.warning("Unauthorized. There is no issuer in the token. Please, use a valid token with an issuer header.")
         raise NoPermissionsAvailable("Unauthorized. There is no issuer in the token. Please, use a valid token with an issuer header.")
     return idp_issuer, user_info, idp_client_id, idp_client_secret, idp_introspection, idp_jwks_url, aud
 
