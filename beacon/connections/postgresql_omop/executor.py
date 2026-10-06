@@ -1,9 +1,10 @@
 
-from beacon.response.classes import SingleDatasetResponse, MultipleDatasetsResponse
+from beacon.response.classes import SingleDatasetResponse, MultipleDatasetsResponse, CollectionsResponse
 from beacon.request.classes import RequestAttributes
 
 import beacon.models.omop.connections.postgresql.individuals as individuals
 import beacon.models.omop.connections.postgresql.biosamples as biosamples
+import beacon.models.omop.connections.postgresql.cohorts as cohorts
 
 async def execute_function(self, datasets):
     if (RequestAttributes.pre_entry_type == "individuals"
@@ -39,4 +40,22 @@ async def execute_function(self, datasets):
             )
         ],
         total_count=count,
+    )
+
+async def execute_collection_function(endpoint_view):
+    if RequestAttributes.entry_type == "cohorts":
+        if RequestAttributes.entry_id:
+            schema, count, docs = await cohorts.get_cohort_with_id(
+                RequestAttributes.entry_id,
+                RequestAttributes.qparams,
+            )
+        else:
+            schema, count, docs = await cohorts.get_cohorts(
+                RequestAttributes.entry_id,
+                RequestAttributes.qparams,
+            )
+
+    return CollectionsResponse(
+        docs=docs,
+        count=count,           
     )
