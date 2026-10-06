@@ -1,4 +1,4 @@
-GOE-ES-CRG-1:
+GDI-ES-CRG-1:
   public:
     default_entry_types_granularity: record
 
