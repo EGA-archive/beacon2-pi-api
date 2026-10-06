@@ -12,6 +12,7 @@ from beacon.utils.routes import append_routes
 from aiohttp_middlewares import cors_middleware
 import beacon.conf.conf_override as conf_override
 from beacon.exceptions.exceptions import NoTermsAndConditionsForResearcherAvailable
+import requests
 
 # for keycloak, create aud in mappers, with custom, aud and beacon for audience
 mock_access_token = 'eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJreS1tUXNxZ0ZYeHdSUVRfRUhuQlJJUGpmbVhfRXZuUTVEbzZWUTJCazdZIn0.eyJleHAiOjE3OTEyMTU3NzYsImlhdCI6MTc5MTIxNTQ3NiwianRpIjoiZDM4MGZlYzQtYmRlMi00Y2RiLTgxOWQtYzRiOTVkMjQwNGY2IiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL0JlYWNvbiIsImF1ZCI6ImJlYWNvbiIsInN1YiI6IjQ3ZWZmMWIxLTc2MjEtNDU3MC1hMGJiLTAxYTcxOWZiYTBhMiIsInR5cCI6IkJlYXJlciIsImF6cCI6ImJlYWNvbiIsInNlc3Npb25fc3RhdGUiOiJmNmE1MTYyYy1mM2E4LTQ3N2MtOTc1ZS0xZDFmYWU4ZGJhZDEiLCJhY3IiOiIxIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBlbWFpbCBtaWNyb3Byb2ZpbGUtand0Iiwic2lkIjoiZjZhNTE2MmMtZjNhOC00NzdjLTk3NWUtMWQxZmFlOGRiYWQxIiwidXBuIjoiamFuZSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwibmFtZSI6IkphbmUgU21pdGgiLCJncm91cHMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXSwicHJlZmVycmVkX3VzZXJuYW1lIjoiamFuZSIsImdpdmVuX25hbWUiOiJKYW5lIiwiZmFtaWx5X25hbWUiOiJTbWl0aCIsImVtYWlsIjoiamFuZS5zbWl0aEBiZWFjb24uZ2E0Z2gifQ.i2QZfR4-k_h2MaBuOTQTUZQ-CmGqMEyGSEcdwbW3D838L7J-PatfPb2_jej-YAeRg3TM6usGShlRNX0zH65QSTzY5lrIkxL68fQ0hp_QZPPV0m4e-vQG_Ef0jiKbLrD0OYUYF9LHqnQOm8VukFYBE2WXkOEf3vxMwD2TlzikL7t8CknfsHVStHMBDgBRQqeg-BXxj3yhDbFfS6rSRIxB0QLlmnvRq6VfDgigMf-_p83gfFrsj9RVKgisD0J86T3YFnUoa19pqGYCVlyztUVOfQ9uYlygdNlI1Te154j-6-TSQtJ--iOkGlOk9yGheQHghUigox2u9jNoPhimTtXKPg'
@@ -75,17 +76,18 @@ class TestAuthN(unittest.TestCase):
                 IDP_ISSUER = os.getenv('ISSUER')
                 IDP_CLIENT_ID = os.getenv('CLIENT_ID')
                 IDP_CLIENT_SECRET = os.getenv('CLIENT_SECRET')
-                IDP_USER_INFO = os.getenv('USER_INFO')
-                IDP_INTROSPECTION = os.getenv('INTROSPECTION')
-                IDP_JWKS_URL = os.getenv('JWKS_URL')
-
+                IDP_WELL_KNOWN_ENDPOINT = os.getenv('WELL_KNOWN_ENDPOINT')
+                response = requests.get(IDP_WELL_KNOWN_ENDPOINT)
+                response.raise_for_status()
+                well_known_info = response.json()
+                JWKS_URL=well_known_info["jwks_uri"]
+                INTROSPECTION=well_known_info["introspection_endpoint"]
                 # Validate fetched configuration matches environment configuration
                 assert IDP_ISSUER == idp_issuer
                 assert IDP_CLIENT_ID == idp_client_id
                 assert IDP_CLIENT_SECRET == idp_client_secret
-                assert IDP_USER_INFO == user_info
-                assert IDP_INTROSPECTION == idp_introspection
-                assert IDP_JWKS_URL == idp_jwks_url
+                assert JWKS_URL == idp_jwks_url
+                assert INTROSPECTION == idp_introspection
 
             # Execute async test inside event loop
             loop.run_until_complete(test_fetch_idp())
@@ -106,11 +108,13 @@ class TestAuthN(unittest.TestCase):
                 load_dotenv("beacon/auth/idp_providers/keycloak.env", override=True)
 
                 IDP_ISSUER = os.getenv('ISSUER')
-                IDP_CLIENT_ID = os.getenv('CLIENT_ID')
-                IDP_CLIENT_SECRET = os.getenv('CLIENT_SECRET')
-                IDP_USER_INFO = os.getenv('USER_INFO')
-                IDP_INTROSPECTION = os.getenv('INTROSPECTION')
-                IDP_JWKS_URL = os.getenv('JWKS_URL')
+                IDP_ISSUER = os.getenv('ISSUER')
+                IDP_WELL_KNOWN_ENDPOINT = os.getenv('WELL_KNOWN_ENDPOINT')
+                response = requests.get(IDP_WELL_KNOWN_ENDPOINT)
+                response.raise_for_status()
+                well_known_info = response.json()
+                IDP_JWKS_URL=well_known_info["jwks_uri"]
+                # Validate fetched configuration matches environment configuration
                 aud_must_include_url = os.getenv('MUST_INCLUDE_BEACON_URL_IN_AUDIENCE')
                 if aud_must_include_url == True:
                     if config.complete_url not in aud:
@@ -161,11 +165,12 @@ class TestAuthN(unittest.TestCase):
                 load_dotenv("beacon/auth/idp_providers/keycloak.env", override=True)
 
                 IDP_ISSUER = os.getenv('ISSUER')
-                IDP_CLIENT_ID = os.getenv('CLIENT_ID')
-                IDP_CLIENT_SECRET = os.getenv('CLIENT_SECRET')
-                IDP_USER_INFO = os.getenv('USER_INFO')
-                IDP_INTROSPECTION = os.getenv('INTROSPECTION')
-                IDP_JWKS_URL = os.getenv('JWKS_URL')
+                IDP_ISSUER = os.getenv('ISSUER')
+                IDP_WELL_KNOWN_ENDPOINT = os.getenv('WELL_KNOWN_ENDPOINT')
+                response = requests.get(IDP_WELL_KNOWN_ENDPOINT)
+                response.raise_for_status()
+                well_known_info = response.json()
+                IDP_USER_INFO=well_known_info["userinfo_endpoint"]
 
                 # Initialize visa dataset accumulator (GA4GH passport model)
                 list_visa_datasets = []

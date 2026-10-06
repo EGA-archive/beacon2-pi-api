@@ -1,0 +1,15 @@
+AcceptedTermsAndPolicies:
+  - iss: https://id.portal.dev.gdi.lu/realms/gdi
+    accepted_values:
+      - accepted
+  - iss: https://id.portal.dev.gdi.lu//realms/gdi
+    accepted_values: 
+      - accepted
+ResearcherStatus:
+  - iss: https://id.portal.dev.gdi.lu/realms/gdi
+    accepted_values: 
+      - RESEARCHER
+ControlledAccessGrants:
+  - iss: https://ega-archive.org
+    accepted_values:
+      - https://ega-archive.org/test

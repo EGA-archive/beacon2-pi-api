@@ -6,6 +6,8 @@ from dotenv import load_dotenv
 from beacon.logs.logs import log_with_args
 from beacon.conf.conf_override import config
 from beacon.exceptions.exceptions import NoPermissionsAvailable, NoTermsAndConditionsForResearcherAvailable
+import requests
+import yaml
 
 @log_with_args(config.level)
 def validate_access_token(self, access_token, idp_issuer, jwks_url, aud):
@@ -88,6 +90,13 @@ def fetch_idp(self, access_token):
             for env_filename in glob.glob("beacon/auth/idp_providers/{}/*.env".format(client_type)):
                 load_dotenv(env_filename, override=True)
                 idp_issuer = os.getenv('ISSUER')
+                idp_well_known_endpoint = os.getenv('WELL_KNOWN_ENDPOINT')
+                response = requests.get(idp_well_known_endpoint)
+                response.raise_for_status()
+                well_known_info = response.json()
+                user_info= well_known_info["userinfo_endpoint"]
+                idp_jwks_url=well_known_info["jwks_uri"]
+                idp_introspection=well_known_info["introspection_endpoint"]
                 # In case the issuer matches, set the idp values to be used later for validating the token
                 if issuer == idp_issuer:
                     idp_client_id = os.getenv('CLIENT_ID')
@@ -95,9 +104,6 @@ def fetch_idp(self, access_token):
                         idp_client_secret = os.getenv('CLIENT_SECRET')
                     else:
                         idp_client_secret=None
-                    user_info = os.getenv('USER_INFO')
-                    idp_introspection = os.getenv('INTROSPECTION')
-                    idp_jwks_url = os.getenv('JWKS_URL')
                     aud_must_include_url = os.getenv('MUST_INCLUDE_BEACON_URL_IN_AUDIENCE')
                     if aud_must_include_url == True:
                         if config.complete_url not in aud:
@@ -157,28 +163,42 @@ async def fetch_user_info(self, access_token, user_info, idp_issuer, list_visa_d
                                 visa_jwks_url=visa['iss']+'.well-known/openid-configuration'
                                 visa_validated = validate_ga4gh_visa(self, access_token, visa['iss'], visa_jwks_url)
                                 if visa_validated==True:
+                                    with open("/beacon/permissions/ga4gh_visas/visas_conf.yml", 'r') as pfile:
+                                        visas_conf = yaml.safe_load(pfile)
+                                    pfile.close()
                                     visa_values=visa['ga4gh_visa_v1']
-                                    if config.terms_and_conditions_to_be_accepted_and_researcher_status_to_appear_through_ga4gh_visas == True:
-                                        if visa_values['type']=='AcceptedTermsAndPolicies':
-                                            if visa_values['value']=='accepted':
-                                                pass
-                                            else:
-                                                self.LOG.warning('Terms and Conditions not accepted for the user')
-                                                raise NoTermsAndConditionsForResearcherAvailable('Terms and Conditions not accepted for the user')
-                                        elif visa_values['type']=='ResearcherStatus':
-                                            if visa_values['value'] == 'RESEARCHER':
-                                                pass
-                                            else:
-                                                self.LOG.warning('Researcher Status is not RESEARCHER')
-                                                raise NoTermsAndConditionsForResearcherAvailable('Researcher Status is not RESEARCHER')
-                                    if visa['iss'] in config.ga4gh_visa_accepted_dataset_issuers:
-                                        if visa_values['type']=='ControlledAccessGrants':
-                                            dataset_url = visa["ga4gh_visa_v1"]["value"]
-                                            dataset_url_splitted = dataset_url.split('/')
-                                            visa_dataset = dataset_url_splitted[-1]
-                                            list_visa_datasets.append(visa_dataset)
-                            except NoTermsAndConditionsForResearcherAvailable:
-                                raise
+                                    accepted_visa=False
+                                    if visa_values['type']=='AcceptedTermsAndPolicies':
+                                        for trusted_acceptedterms_visa in visas_conf['AcceptedTermsAndPolicies']:
+                                            if visa_values['value'] in trusted_acceptedterms_visa["accepted_values"]:
+                                                if visa["iss"] == trusted_acceptedterms_visa["iss"]:
+                                                    accepted_visa=True
+                                                    break
+                                        if accepted_visa==False:
+                                            self.LOG.warning('Terms and Conditions not accepted for the user')
+                                            raise NoTermsAndConditionsForResearcherAvailable('Terms and Conditions not accepted for the user')
+                                    elif visa_values['type']=='ResearcherStatus':
+                                        for trusted_acceptedterms_visa in visas_conf['ResearcherStatus']:
+                                            if visa_values['value'] in trusted_acceptedterms_visa["accepted_values"]:
+                                                if visa["iss"] == trusted_acceptedterms_visa["iss"]:
+                                                    accepted_visa=True
+                                                    break
+                                        if accepted_visa==False:
+                                            self.LOG.warning('Researcher Status: {} is not accepted'.format(visa_values['value']))
+                                            raise NoTermsAndConditionsForResearcherAvailable('Researcher Status is not RESEARCHER')
+                                    elif visa_values['type']=='ControlledAccessGrants':
+                                        for trusted_acceptedterms_visa in visas_conf['ControlledAccessGrants']:
+                                            if visa_values['value'] in trusted_acceptedterms_visa["accepted_values"]:
+                                                if visa["iss"] == trusted_acceptedterms_visa["iss"]:
+                                                    accepted_visa=True
+                                                    dataset_url = visa["ga4gh_visa_v1"]["value"]
+                                                    dataset_url_splitted = dataset_url.split('/')
+                                                    visa_dataset = dataset_url_splitted[-1]
+                                                    list_visa_datasets.append(visa_dataset)
+                                                    break
+                                        if accepted_visa==False:
+                                            self.LOG.warning('Invalid datasets visa')
+                                            raise NoTermsAndConditionsForResearcherAvailable('Invalid Visa')
                             except Exception as e:
                                 self.LOG.warning("Invalid GA4GH Visa: {}".format(visa_dataset))
                                 visa_dataset = None
