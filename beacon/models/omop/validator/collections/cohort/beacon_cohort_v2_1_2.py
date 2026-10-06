@@ -1,0 +1,1 @@
+from beacon.models.ga4gh.beacon_v2_default_model.validator.collections.cohort.beacon_cohort_v2_0_0 import Cohort
