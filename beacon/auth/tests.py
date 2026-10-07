@@ -13,6 +13,7 @@ from aiohttp_middlewares import cors_middleware
 import beacon.conf.conf_override as conf_override
 from beacon.exceptions.exceptions import NoTermsAndConditionsForResearcherAvailable
 import requests
+import yaml
 
 # for keycloak, create aud in mappers, with custom, aud and beacon for audience
 mock_access_token = 'eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJreS1tUXNxZ0ZYeHdSUVRfRUhuQlJJUGpmbVhfRXZuUTVEbzZWUTJCazdZIn0.eyJleHAiOjE3OTEyMTU3NzYsImlhdCI6MTc5MTIxNTQ3NiwianRpIjoiZDM4MGZlYzQtYmRlMi00Y2RiLTgxOWQtYzRiOTVkMjQwNGY2IiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL0JlYWNvbiIsImF1ZCI6ImJlYWNvbiIsInN1YiI6IjQ3ZWZmMWIxLTc2MjEtNDU3MC1hMGJiLTAxYTcxOWZiYTBhMiIsInR5cCI6IkJlYXJlciIsImF6cCI6ImJlYWNvbiIsInNlc3Npb25fc3RhdGUiOiJmNmE1MTYyYy1mM2E4LTQ3N2MtOTc1ZS0xZDFmYWU4ZGJhZDEiLCJhY3IiOiIxIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBlbWFpbCBtaWNyb3Byb2ZpbGUtand0Iiwic2lkIjoiZjZhNTE2MmMtZjNhOC00NzdjLTk3NWUtMWQxZmFlOGRiYWQxIiwidXBuIjoiamFuZSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwibmFtZSI6IkphbmUgU21pdGgiLCJncm91cHMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXSwicHJlZmVycmVkX3VzZXJuYW1lIjoiamFuZSIsImdpdmVuX25hbWUiOiJKYW5lIiwiZmFtaWx5X25hbWUiOiJTbWl0aCIsImVtYWlsIjoiamFuZS5zbWl0aEBiZWFjb24uZ2E0Z2gifQ.i2QZfR4-k_h2MaBuOTQTUZQ-CmGqMEyGSEcdwbW3D838L7J-PatfPb2_jej-YAeRg3TM6usGShlRNX0zH65QSTzY5lrIkxL68fQ0hp_QZPPV0m4e-vQG_Ef0jiKbLrD0OYUYF9LHqnQOm8VukFYBE2WXkOEf3vxMwD2TlzikL7t8CknfsHVStHMBDgBRQqeg-BXxj3yhDbFfS6rSRIxB0QLlmnvRq6VfDgigMf-_p83gfFrsj9RVKgisD0J86T3YFnUoa19pqGYCVlyztUVOfQ9uYlygdNlI1Te154j-6-TSQtJ--iOkGlOk9yGheQHghUigox2u9jNoPhimTtXKPg'
@@ -108,7 +109,6 @@ class TestAuthN(unittest.TestCase):
                 load_dotenv("beacon/auth/idp_providers/keycloak.env", override=True)
 
                 IDP_ISSUER = os.getenv('ISSUER')
-                IDP_ISSUER = os.getenv('ISSUER')
                 IDP_WELL_KNOWN_ENDPOINT = os.getenv('WELL_KNOWN_ENDPOINT')
                 response = requests.get(IDP_WELL_KNOWN_ENDPOINT)
                 response.raise_for_status()
@@ -164,7 +164,6 @@ class TestAuthN(unittest.TestCase):
                 # Load IdP configuration for API calls
                 load_dotenv("beacon/auth/idp_providers/keycloak.env", override=True)
 
-                IDP_ISSUER = os.getenv('ISSUER')
                 IDP_ISSUER = os.getenv('ISSUER')
                 IDP_WELL_KNOWN_ENDPOINT = os.getenv('WELL_KNOWN_ENDPOINT')
                 response = requests.get(IDP_WELL_KNOWN_ENDPOINT)
@@ -255,9 +254,47 @@ class TestAuthN(unittest.TestCase):
                     issuer,
                     jwks_url
                 )
+                with open("/beacon/permissions/ga4gh_visas/visas_conf.yml", 'r') as pfile:
+                    visas_conf = yaml.safe_load(pfile)
+                pfile.close()
                 if visa_validated==False:
                     visa_values=visa['ga4gh_visa_v1']
-                    if config.terms_and_conditions_to_be_accepted_and_researcher_status_to_appear_through_ga4gh_visas == True:
+                    with open("/beacon/permissions/ga4gh_visas/visas_conf.yml", 'r') as pfile:
+                        visas_conf = yaml.safe_load(pfile)
+                    pfile.close()
+                    visa_values=visa['ga4gh_visa_v1']
+                    accepted_visa=False
+                    if visa_values['type']=='AcceptedTermsAndPolicies':
+                        for trusted_acceptedterms_visa in visas_conf['AcceptedTermsAndPolicies']:
+                            if visa_values['value'] in trusted_acceptedterms_visa["accepted_values"]:
+                                if visa["iss"] == trusted_acceptedterms_visa["iss"]:
+                                    accepted_visa=True
+                                    break
+                        if accepted_visa==False:
+                            self.LOG.warning('Terms and Conditions not accepted for the user')
+                            raise NoTermsAndConditionsForResearcherAvailable('Terms and Conditions not accepted for the user')
+                    elif visa_values['type']=='ResearcherStatus':
+                        for trusted_acceptedterms_visa in visas_conf['ResearcherStatus']:
+                            if visa_values['value'] in trusted_acceptedterms_visa["accepted_values"]:
+                                if visa["iss"] == trusted_acceptedterms_visa["iss"]:
+                                    accepted_visa=True
+                                    break
+                        if accepted_visa==False:
+                            self.LOG.warning('Researcher Status: {} is not accepted'.format(visa_values['value']))
+                            raise NoTermsAndConditionsForResearcherAvailable('Researcher Status is not RESEARCHER')
+                    elif visa_values['type']=='ControlledAccessGrants':
+                        for trusted_acceptedterms_visa in visas_conf['ControlledAccessGrants']:
+                            if visa_values['value'] in trusted_acceptedterms_visa["accepted_values"]:
+                                if visa["iss"] == trusted_acceptedterms_visa["iss"]:
+                                    accepted_visa=True
+                                    dataset_url = visa["ga4gh_visa_v1"]["value"]
+                                    dataset_url_splitted = dataset_url.split('/')
+                                    visa_dataset = dataset_url_splitted[-1]
+                                    list_visa_datasets.append(visa_dataset)
+                                    break
+                        if accepted_visa==False:
+                            self.LOG.warning('Invalid datasets visa')
+                            raise NoTermsAndConditionsForResearcherAvailable('Invalid Visa')
                         if visa_values['type']=='AcceptedTermsAndPolicies':
                             if visa_values['value']=='accepted':
                                 pass

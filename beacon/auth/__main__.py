@@ -76,9 +76,6 @@ def fetch_idp(self, access_token):
         self.LOG.warning('Invalid token. Algorithm for the access token is not accepted')
         raise NoPermissionsAvailable('Invalid token. Algorithm for the access token is not accepted')
     issuer = decoded['iss']
-    if issuer not in config.access_token_trusted_issuers:
-        self.LOG.warning('Invalid token. Issuer is not in the trusted list.')
-        raise NoPermissionsAvailable('Invalid token. Issuer is not in the trusted list.')
     try:
         aud = decoded['aud']
 
