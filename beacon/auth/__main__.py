@@ -63,7 +63,7 @@ def validate_ga4gh_visa(self, visa_token, visa_issuer, jwks_url):
         return False
 
 @log_with_args(config.level)
-def fetch_idp(self, access_token, test_mode=False):
+def fetch_idp(self, access_token):
     try:
         # Get the payload values of the token
         header = jwt.get_unverified_header(access_token)
@@ -96,7 +96,7 @@ def fetch_idp(self, access_token, test_mode=False):
                     user_info= well_known_info["userinfo_endpoint"]
                     idp_jwks_url=well_known_info["jwks_uri"]
                     idp_introspection=well_known_info["introspection_endpoint"]
-                    if test_mode==True:
+                    if 'testing_idp' in env_filename:
                         if 'localhost' in user_info:
                             user_info=user_info.replace('localhost','idp')
                         if 'localhost' in idp_jwks_url:
@@ -211,11 +211,11 @@ async def fetch_user_info(self, access_token, user_info, idp_issuer, list_visa_d
                 raise NoPermissionsAvailable("Unauthorized. Could not fetch the user info from the token.")
 
 @log_with_args(config.level)
-async def authentication(self, access_token, test_mode=False):
+async def authentication(self, access_token):
     # Initiate the lisst of the datasets permissions that come from visas
     list_visa_datasets=[]
     try:
-        idp_issuer, user_info, idp_client_id, idp_client_secret, idp_introspection, idp_jwks_url, aud = fetch_idp(self, access_token, test_mode)
+        idp_issuer, user_info, idp_client_id, idp_client_secret, idp_introspection, idp_jwks_url, aud = fetch_idp(self, access_token)
         access_token_validation = validate_access_token(self, access_token, idp_issuer, idp_jwks_url, aud)
         if access_token_validation == True:
             user, list_visa_datasets = await fetch_user_info(self, access_token, user_info, idp_issuer, list_visa_datasets)

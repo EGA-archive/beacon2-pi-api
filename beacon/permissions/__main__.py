@@ -22,7 +22,7 @@ async def authorization(self):
         access_token = auth[7:].strip() # the number 7 is the length of executing len('Bearer ')
         # Validate the token
         user, list_visa_datasets = await authentication(self, access_token)
-        # Get the token's email as the user_id if the token is valid.
+        # Get the token's sub as the user_id if the token is valid.
         user_id = user.get('sub')
     except NoTermsAndConditionsForResearcherAvailable:
         raise

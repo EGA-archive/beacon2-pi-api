@@ -203,7 +203,6 @@ class TestAuthZ(unittest.TestCase):
                 user_id, list_visa_datasets = await authorization(
                     self=MagicClass
                 )
-
                 # Ensure token maps to correct identity
                 assert user_id == '47eff1b1-7621-4570-a0bb-01a719fba0a2'
 

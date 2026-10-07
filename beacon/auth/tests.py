@@ -16,7 +16,7 @@ import requests
 import yaml
 
 # for keycloak, create aud in mappers, with custom, aud and beacon for audience
-mock_access_token = 'eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJreS1tUXNxZ0ZYeHdSUVRfRUhuQlJJUGpmbVhfRXZuUTVEbzZWUTJCazdZIn0.eyJleHAiOjE3OTEzNjk3MDcsImlhdCI6MTc5MTM2OTQwNywianRpIjoiMmM3OGFmMDEtZDVkZS00NzhkLWJmMDYtMTU4OTE5NDQ1OTMyIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL0JlYWNvbiIsImF1ZCI6ImJlYWNvbiIsInN1YiI6IjQ3ZWZmMWIxLTc2MjEtNDU3MC1hMGJiLTAxYTcxOWZiYTBhMiIsInR5cCI6IkJlYXJlciIsImF6cCI6ImJlYWNvbiIsInNlc3Npb25fc3RhdGUiOiIxOTY2NTQxZS05YTljLTQzNDYtYjQ5Ni01NDM0OWJkMzU1ODciLCJhY3IiOiIxIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBlbWFpbCBtaWNyb3Byb2ZpbGUtand0Iiwic2lkIjoiMTk2NjU0MWUtOWE5Yy00MzQ2LWI0OTYtNTQzNDliZDM1NTg3IiwidXBuIjoiamFuZSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwibmFtZSI6IkphbmUgU21pdGgiLCJncm91cHMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXSwicHJlZmVycmVkX3VzZXJuYW1lIjoiamFuZSIsImdpdmVuX25hbWUiOiJKYW5lIiwiZmFtaWx5X25hbWUiOiJTbWl0aCIsImVtYWlsIjoiamFuZS5zbWl0aEBiZWFjb24uZ2E0Z2gifQ.hXL1NxhNGIrP7JdlYmnxwhlvqElhQh0NfXITnFyZo3NypYsYyHQeQgWHLqFuFvc440_kprv2My-7vsrvM08EYp9pwwy5_tb0QxvH5RzTQxC4UqPC4kZsTjxzDvo1GDZhbnF_15mMmESHmQmQ_DdrTcqf2kcQVaaS6EOfikHdQ5dPgVAQJtIrfWvMM7T5lRNA-U62xFfn4xlP3VW-noyaKEiDGkwPMZhCqwFJYniAj02QRTOSgYM4WdsptnDu2DhDKJR8Cj2-gXqDvjv1cuv5B5wHAq1C-tsjggMQXua7pRwcWu33fvZtWm3xNe6-e7puKTwuKgBbDLIXUs1RNAqBUA'
+mock_access_token = 'eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJreS1tUXNxZ0ZYeHdSUVRfRUhuQlJJUGpmbVhfRXZuUTVEbzZWUTJCazdZIn0.eyJleHAiOjE3OTEzNzkwNzcsImlhdCI6MTc5MTM3ODc3NywianRpIjoiNjRmZGNmNDEtMDM5NS00ZGUzLTk5NWQtYTk3ZTRkNjM0YWE3IiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL0JlYWNvbiIsImF1ZCI6ImJlYWNvbiIsInN1YiI6IjQ3ZWZmMWIxLTc2MjEtNDU3MC1hMGJiLTAxYTcxOWZiYTBhMiIsInR5cCI6IkJlYXJlciIsImF6cCI6ImJlYWNvbiIsInNlc3Npb25fc3RhdGUiOiI4ZTE0NzI5MS1hZmQwLTRkOTAtYTAwNy1lY2RjOGY5YTY4YzIiLCJhY3IiOiIxIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBlbWFpbCBtaWNyb3Byb2ZpbGUtand0Iiwic2lkIjoiOGUxNDcyOTEtYWZkMC00ZDkwLWEwMDctZWNkYzhmOWE2OGMyIiwidXBuIjoiamFuZSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwibmFtZSI6IkphbmUgU21pdGgiLCJncm91cHMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXSwicHJlZmVycmVkX3VzZXJuYW1lIjoiamFuZSIsImdpdmVuX25hbWUiOiJKYW5lIiwiZmFtaWx5X25hbWUiOiJTbWl0aCIsImVtYWlsIjoiamFuZS5zbWl0aEBiZWFjb24uZ2E0Z2gifQ.S1UIqenFG_vd7vhllzn8VcuxyI-qwV_lBoAzX76Qq1Dx86Hd2p2lx_7PxE39JfJNawFT33GuS5VitsQomESMqowl1mZ7mz8Q08sK95wW-9zUV5SgfnHU6lXEysCZGFY0M7kjoyws4yBh8WxN-6olrTXgKgtxnA4af3Hm5_qanzh49OgWsadtfipV_sq1C9KRU2__i01_teWztqRAIhdz3XQu18qbSK8WY80fN5-HhicWKMRMnwd9BR2Epm7kfv4T46ZbykxAfcfzOYg2Cb78YA_ddZ1eH0gdikYn-kqJ4t0PS19jWW5baV2kh-N7QaGcE8zsiZTQVnjKFFiNmiGddA'
 mock_access_token_false = 'public'
 mock_ga4gh_visa_dataset = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL3JlbXMudGVzdC5leGFtcGxlLm9yZy8iLCJzdWIiOiJ0ZXN0LXVzZXItMTIzIiwiaWF0IjoxNzAwMDAwMDAwLCJleHAiOjE5MDAwMDAwMDAsImdhNGdoX3Zpc2FfdjEiOnsidHlwZSI6IkNvbnRyb2xsZWRBY2Nlc3NHcmFudHMiLCJhc3NlcnRlZCI6MTcwMDAwMDAwMCwidmFsdWUiOiJodHRwczovL3JlbXMudGVzdC5leGFtcGxlLm9yZy9kYXRhc2V0cy90ZXN0LWRhdGFzZXQiLCJzb3VyY2UiOiJodHRwczovL3JlbXMudGVzdC5leGFtcGxlLm9yZy8iLCJieSI6ImRhYyJ9fQ.c3ludGhldGljLXRlc3Qtc2lnbmF0dXJl'
 
@@ -70,8 +70,8 @@ class TestAuthN(unittest.TestCase):
                     self, mock_access_token
                 )
 
-                # Load expected configuration from Keycloak environment file
-                load_dotenv("beacon/auth/idp_providers/confidential/keycloak.env", override=True)
+                # Load expected configuration from Keycloak testing_idp environment file
+                load_dotenv("beacon/auth/idp_providers/confidential/testing_idp.env", override=True)
 
                 # Extract expected values from environment variables
                 IDP_ISSUER = os.getenv('ISSUER')
@@ -83,6 +83,10 @@ class TestAuthN(unittest.TestCase):
                 well_known_info = response.json()
                 IDP_JWKS_URL=well_known_info["jwks_uri"]
                 INTROSPECTION=well_known_info["introspection_endpoint"]
+                if 'localhost'in IDP_JWKS_URL:
+                    IDP_JWKS_URL=IDP_JWKS_URL.replace('localhost', 'idp')
+                if 'localhost'in INTROSPECTION:
+                    INTROSPECTION=INTROSPECTION.replace('localhost', 'idp')
                 # Validate fetched configuration matches environment configuration
                 assert IDP_ISSUER == idp_issuer
                 assert IDP_CLIENT_ID == idp_client_id
@@ -105,7 +109,7 @@ class TestAuthN(unittest.TestCase):
 
             async def test_validate_access_token():
                 # Load IdP configuration for validation context
-                load_dotenv("beacon/auth/idp_providers/confidential/keycloak.env", override=True)
+                load_dotenv("beacon/auth/idp_providers/confidential/testing_idp.env", override=True)
 
                 IDP_ISSUER = os.getenv('ISSUER')
                 IDP_WELL_KNOWN_ENDPOINT = os.getenv('WELL_KNOWN_ENDPOINT')
@@ -160,7 +164,7 @@ class TestAuthN(unittest.TestCase):
 
             async def test_fetch_user_info():
                 # Load IdP configuration for API calls
-                load_dotenv("beacon/auth/idp_providers/confidential/keycloak.env", override=True)
+                load_dotenv("beacon/auth/idp_providers/confidential/testing_idp.env", override=True)
 
                 IDP_ISSUER = os.getenv('ISSUER')
                 IDP_WELL_KNOWN_ENDPOINT = os.getenv('WELL_KNOWN_ENDPOINT')
@@ -199,8 +203,7 @@ class TestAuthN(unittest.TestCase):
                 # Perform full authentication pipeline using valid token
                 user, list_visa_datasets = await authentication(
                     self,
-                    mock_access_token,
-                    True
+                    mock_access_token
                 )
 
                 # Confirm authenticated identity resolution
