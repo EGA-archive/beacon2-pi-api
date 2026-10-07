@@ -5,14 +5,11 @@ AcceptedTermsAndPolicies:
   - iss: https://id.portal.dev.gdi.lu//realms/gdi
     accepted_values: 
       - accepted
-  - iss: https://rems.test.example.org/
-    accepted_values:
-      - accepted
 ResearcherStatus:
   - iss: https://id.portal.dev.gdi.lu/realms/gdi
     accepted_values: 
       - RESEARCHER
 ControlledAccessGrants:
-  - iss: https://ega-archive.org
+  - iss: https://rems.test.example.org/
     accepted_values:
-      - https://ega-archive.org/test
+      - https://rems.test.example.org/datasets/test-dataset

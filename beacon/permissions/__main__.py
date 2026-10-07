@@ -22,15 +22,15 @@ async def authorization(self):
         access_token = auth[7:].strip() # the number 7 is the length of executing len('Bearer ')
         # Validate the token
         user, list_visa_datasets = await authentication(self, access_token)
-        # Get the token's email as the username if the token is valid.
-        username = user.get('email')
+        # Get the token's email as the user_id if the token is valid.
+        user_id = user.get('sub')
     except NoTermsAndConditionsForResearcherAvailable:
         raise
     except Exception as e:
         list_visa_datasets = []
-        username = None
-        return username, list_visa_datasets
-    return username, list_visa_datasets
+        user_id = None
+        return user_id, list_visa_datasets
+    return user_id, list_visa_datasets
 
 @log_with_args(config.level)
 async def get_datasets_list(self, authorized_datasets):
@@ -59,25 +59,25 @@ async def get_datasets_list(self, authorized_datasets):
 def query_permissions(func):
     @log_with_args(config.level)
     async def permission(self):
-        # Initialize the variables of the time where the request is made and the username.
+        # Initialize the variables of the time where the request is made and the user_id.
         time_now=None
-        username = None
+        user_id = None
         try:
             # Get the requested datasets and save them in a list.
             requested_datasets = self.request_attributes.qparams.query.requestParameters["datasets"]
         except Exception:
             requested_datasets = []
         # Get the usernq, and the list of datasets that the user has permissions for from visas.
-        username, list_visa_datasets = await authorization(self)
+        user_id, list_visa_datasets = await authorization(self)
         # Get the datasets that the user has permissions for from the datasets permissions conf file in a list of classes for the datasets.
-        datasets_permissions = await PermissionsProxy.get_permissions(self, username=username, requested_datasets=requested_datasets, testMode=self.request_attributes.qparams.query.testMode, entry_type_id=self.request_attributes.entry_type_id)
+        datasets_permissions = await PermissionsProxy.get_permissions(self, user_id=user_id, requested_datasets=requested_datasets, testMode=self.request_attributes.qparams.query.testMode, entry_type_id=self.request_attributes.entry_type_id)
         # Return the time to be inserted in the budget in case the budget doesn't return an exception for the query.
-        time_now = check_budget(self, username)
+        time_now = check_budget(self, user_id)
         # Add as well in the list of dataset classes, the dataset classes that have permissions for the query coming from visas.
         for visa_dataset in list_visa_datasets:
             datasets_permissions.append(SingleDatasetResponse(dataset=visa_dataset, granularity=config.default_beacon_granularity))
         # Using the list of dataset classes, get rid of the ones thet are not found in the databases.
         response_datasets= await get_datasets_list(self, datasets_permissions)
-        return await func(self, response_datasets, username, time_now)
+        return await func(self, response_datasets, user_id, time_now)
     return permission
 

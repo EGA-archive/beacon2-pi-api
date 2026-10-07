@@ -52,7 +52,7 @@ class TestAuthZ(unittest.TestCase):
                 # Fetch permissions for anonymous/public user
                 datasets = await PermissionsProxy.get_permissions(
                     self=PermissionsProxy,
-                    username=None,
+                    user_id=None,
                     requested_datasets=[]
                 )
 
@@ -92,7 +92,7 @@ class TestAuthZ(unittest.TestCase):
                 # Query permission layer for authenticated user
                 datasets = await PermissionsProxy.get_permissions(
                     self=PermissionsProxy,
-                    username='dummy_user@example.com',
+                    user_id='dummy_user@example.com',
                     requested_datasets=[]
                 )
 
@@ -130,7 +130,7 @@ class TestAuthZ(unittest.TestCase):
 
                 datasets = await PermissionsProxy.get_permissions(
                     self=PermissionsProxy,
-                    username='jane.smith@beacon.ga4gh',
+                    user_id='47eff1b1-7621-4570-a0bb-01a719fba0a2',
                     requested_datasets=[]
                 )
 
@@ -199,13 +199,13 @@ class TestAuthZ(unittest.TestCase):
                 request_attributes = RequestAttributes()
                 request_attributes.headers=headers
                 MagicClass = MagicMock(_id='hohoho', request_attributes=request_attributes)
-                # Resolve username and visa dataset context
-                username, list_visa_datasets = await authorization(
+                # Resolve user_id and visa dataset context
+                user_id, list_visa_datasets = await authorization(
                     self=MagicClass
                 )
 
                 # Ensure token maps to correct identity
-                assert username == 'jane.smith@beacon.ga4gh'
+                assert user_id == '47eff1b1-7621-4570-a0bb-01a719fba0a2'
 
             loop.run_until_complete(test_authorization())
             loop.run_until_complete(client.close())
@@ -289,7 +289,7 @@ class TestAuthZ(unittest.TestCase):
                         returned_granularity, exceptions = return_granularity_and_exceptions(
                             self=MagicClass,
                             security_level_dict=security_level_dict,
-                            username='jane.smith@beacon.ga4gh',
+                            user_id='47eff1b1-7621-4570-a0bb-01a719fba0a2',
                             default_granularity=None,
                             granularity_exceptions=None
                         )
@@ -306,7 +306,7 @@ class TestAuthZ(unittest.TestCase):
                         returned_granularity, exceptions = return_granularity_and_exceptions(
                             self=MagicClass,
                             security_level_dict=security_level_dict,
-                            username='jane.smith@beacon.ga4gh',
+                            user_id='47eff1b1-7621-4570-a0bb-01a719fba0a2',
                             default_granularity=None,
                             granularity_exceptions=None
                         )
@@ -324,7 +324,7 @@ class TestAuthZ(unittest.TestCase):
                         returned_granularity, exceptions = return_granularity_and_exceptions(
                             self=MagicClass,
                             security_level_dict=security_level_dict,
-                            username='jane.smith@beacon.ga4gh',
+                            user_id='47eff1b1-7621-4570-a0bb-01a719fba0a2',
                             default_granularity=None,
                             granularity_exceptions=None
                         )

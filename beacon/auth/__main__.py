@@ -63,7 +63,7 @@ def validate_ga4gh_visa(self, visa_token, visa_issuer, jwks_url):
         return False
 
 @log_with_args(config.level)
-def fetch_idp(self, access_token):
+def fetch_idp(self, access_token, test_mode=False):
     try:
         # Get the payload values of the token
         header = jwt.get_unverified_header(access_token)
@@ -87,15 +87,22 @@ def fetch_idp(self, access_token):
             for env_filename in glob.glob("beacon/auth/idp_providers/{}/*.env".format(client_type)):
                 load_dotenv(env_filename, override=True)
                 idp_issuer = os.getenv('ISSUER')
-                idp_well_known_endpoint = os.getenv('WELL_KNOWN_ENDPOINT')
-                response = requests.get(idp_well_known_endpoint)
-                response.raise_for_status()
-                well_known_info = response.json()
-                user_info= well_known_info["userinfo_endpoint"]
-                idp_jwks_url=well_known_info["jwks_uri"]
-                idp_introspection=well_known_info["introspection_endpoint"]
                 # In case the issuer matches, set the idp values to be used later for validating the token
                 if issuer == idp_issuer:
+                    idp_well_known_endpoint = os.getenv('WELL_KNOWN_ENDPOINT')
+                    response = requests.get(idp_well_known_endpoint)
+                    response.raise_for_status()
+                    well_known_info = response.json()
+                    user_info= well_known_info["userinfo_endpoint"]
+                    idp_jwks_url=well_known_info["jwks_uri"]
+                    idp_introspection=well_known_info["introspection_endpoint"]
+                    if test_mode==True:
+                        if 'localhost' in user_info:
+                            user_info=user_info.replace('localhost','idp')
+                        if 'localhost' in idp_jwks_url:
+                            idp_jwks_url=idp_jwks_url.replace('localhost','idp')
+                        if 'localhost' in idp_introspection:
+                            idp_introspection=idp_introspection.replace('localhost', 'idp')
                     idp_client_id = os.getenv('CLIENT_ID')
                     if client_type == 'confidential':
                         idp_client_secret = os.getenv('CLIENT_SECRET')
@@ -204,11 +211,11 @@ async def fetch_user_info(self, access_token, user_info, idp_issuer, list_visa_d
                 raise NoPermissionsAvailable("Unauthorized. Could not fetch the user info from the token.")
 
 @log_with_args(config.level)
-async def authentication(self, access_token):
+async def authentication(self, access_token, test_mode=False):
     # Initiate the lisst of the datasets permissions that come from visas
     list_visa_datasets=[]
     try:
-        idp_issuer, user_info, idp_client_id, idp_client_secret, idp_introspection, idp_jwks_url, aud = fetch_idp(self, access_token)
+        idp_issuer, user_info, idp_client_id, idp_client_secret, idp_introspection, idp_jwks_url, aud = fetch_idp(self, access_token, test_mode)
         access_token_validation = validate_access_token(self, access_token, idp_issuer, idp_jwks_url, aud)
         if access_token_validation == True:
             user, list_visa_datasets = await fetch_user_info(self, access_token, user_info, idp_issuer, list_visa_datasets)
