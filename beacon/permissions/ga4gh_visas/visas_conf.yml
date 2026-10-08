@@ -4,7 +4,7 @@ AcceptedTermsAndPolicies:
   - iss: https://id.portal.dev.gdi.lu/realms/gdi
     accepted_values:
       - accepted
-  - iss: https://id.portal.dev.gdi.lu//realms/gdi
+  - iss: https://id.portal.gdi.lu//realms/gdi
     accepted_values: 
       - accepted
 ResearcherStatus:

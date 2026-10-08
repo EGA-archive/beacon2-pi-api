@@ -176,6 +176,7 @@ async def fetch_user_info(self, access_token, user_info, idp_issuer, list_visa_t
                                 pfile.close()
                                 accepted_issuer=False
                                 for visa_type,conditions in visas_conf.items():
+                                    
                                     if conditions['enabled']==True:
                                         if visa_type not in visas_outcome:
                                             visas_outcome[visa_type]=False
@@ -184,18 +185,18 @@ async def fetch_user_info(self, access_token, user_info, idp_issuer, list_visa_t
                                     else:
                                         continue
                                     visa = jwt.decode(visa_token, options={"verify_signature": False}, algorithms=["RS256"])
-                                    for issuer in conditions['issuers']:
-                                        if visa['iss'] in issuer['iss']:
-                                            accepted_issuer=True
-                                            break
-                                    if accepted_issuer==False:
-                                        self.LOG.warning("Unauthorized visa: {}. Issuer not trusted.".format(visa_token))
-                                        raise NoPermissionsAvailable("Unauthorized visa. Issuer not trusted.")
-                                    visa_jwks_url=visa['iss']+'.well-known/openid-configuration'
-                                    visa_validated = validate_ga4gh_visa(self, access_token, visa['iss'], visa_jwks_url)
-                                    if visa_validated==True:
-                                        visa_values=visa['ga4gh_visa_v1']
+                                    visa_values=visa['ga4gh_visa_v1']
                                     if visa_values['type']==visa_type:
+                                        for issuer in conditions['issuers']:
+                                            if visa['iss'] == issuer:
+                                                accepted_issuer=True
+                                                break
+                                        if accepted_issuer==False:
+                                            self.LOG.warning("Unauthorized visa: {}. Issuer not trusted.".format(visa_token))
+                                            raise NoPermissionsAvailable("Unauthorized visa. Issuer not trusted.")
+                                        accepted_issuer=False
+                                        visa_jwks_url=visa['iss']+'.well-known/openid-configuration'
+                                        visa_validated = validate_ga4gh_visa(self, access_token, visa['iss'], visa_jwks_url)
                                         for trusted_acceptedterms_visa in visas_conf[visa_type]:
                                             if visa_values['value'] in trusted_acceptedterms_visa["accepted_values"]:
                                                 if visa["iss"] == trusted_acceptedterms_visa["iss"]:
