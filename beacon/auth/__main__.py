@@ -204,7 +204,7 @@ async def fetch_user_info(self, access_token, user_info, idp_issuer, list_visa_t
                                             response.raise_for_status()
                                             well_known_info = response.json()
                                             visa_jwks_url=well_known_info["jwks_uri"]
-                                            visa_validated = validate_ga4gh_visa(self, access_token, visa['iss'], visa_jwks_url)
+                                            visa_validated = validate_ga4gh_visa(self, visa_token, visa['iss'], visa_jwks_url)
                                             if visa_validated == False:
                                                 self.LOG.warning("Unauthorized visa: {}. Visa not valid.".format(visa_token))
                                                 raise NoPermissionsAvailable("Unauthorized visa. Visa not valid.")
@@ -224,7 +224,6 @@ async def fetch_user_info(self, access_token, user_info, idp_issuer, list_visa_t
                                             continue
                             except Exception as e:
                                 continue
-                self.LOG.warning(visas_outcome)
                 check_needed_visa_conf(self, visas_conf, visas_outcome)
                 return user, list_visa_tokens
             else:
