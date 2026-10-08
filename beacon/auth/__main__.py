@@ -37,13 +37,16 @@ def validate_access_token(self, access_token, idp_issuer, jwks_url, aud):
         return False
 
 @log_with_args(config.level)
-def apply_conf_to_received_visa(self, visas_conf):
-    if 'ResearcherStatus' in visas_conf:
-        self.LOG.warning('Researcher Status was not accepted')
-        raise NoTermsAndConditionsForResearcherAvailable('Researcher Status is not RESEARCHER')
-    elif 'AcceptedTermsAndPolicies' in visas_conf:
-        self.LOG.warning('Terms and Conditions not accepted for the user')
-        raise NoTermsAndConditionsForResearcherAvailable('Terms and Conditions not accepted for the user')
+def check_needed_visa_conf(self, visas_conf, visas_outcome):
+    for visa_type, conditions in visas_conf:
+        if conditions['enabled']==True:
+            if visa_type in visas_outcome:
+                if visas_outcome[visa_type]==False:
+                    self.LOG.warning('{} condition was not met'.format(visa_type))
+                    raise NoTermsAndConditionsForResearcherAvailable('{} condition was not met'.format(visa_type))
+            else:
+                self.LOG.warning('{} condition was not met'.format(visa_type))
+                raise NoTermsAndConditionsForResearcherAvailable('{} condition was not met'.format(visa_type))
 
 @log_with_args(config.level)
 def validate_ga4gh_visa(self, visa_token, visa_issuer, jwks_url):
@@ -164,6 +167,7 @@ async def fetch_user_info(self, access_token, user_info, idp_issuer, list_visa_t
                     visa_tokens=None
                 finally:
                     if visa_tokens is not None:
+                        visas_outcome={}
                         for visa_token in visa_tokens:
                             # Validate the visas and extract the datasets ids
                             try:
@@ -181,40 +185,32 @@ async def fetch_user_info(self, access_token, user_info, idp_issuer, list_visa_t
                                     pfile.close()
                                     visa_values=visa['ga4gh_visa_v1']
                                     accepted_visa=False
-                                    if visa_values['type']=='AcceptedTermsAndPolicies':
-                                        if 'AcceptedTermsAndPolicies' in visas_conf:
-                                            for trusted_acceptedterms_visa in visas_conf['AcceptedTermsAndPolicies']:
+                                    for visa_type,conditions in visas_conf.items():
+                                        if conditions['enabled']==True:
+                                            if visa_type not in visas_outcome:
+                                                visas_outcome[visa_type]=False
+                                            elif visas_outcome[visa_type]==True:
+                                                continue
+                                        else:
+                                            continue
+                                        if visa_values['type']==visa_type:
+                                            for trusted_acceptedterms_visa in visas_conf[visa_type]:
                                                 if visa_values['value'] in trusted_acceptedterms_visa["accepted_values"]:
                                                     if visa["iss"] == trusted_acceptedterms_visa["iss"]:
-                                                        accepted_visa=True
-                                                        break
-                                        if accepted_visa==False:
-                                            self.LOG.warning('Terms and Conditions not accepted for the user')
-                                            raise NoTermsAndConditionsForResearcherAvailable('Terms and Conditions not accepted for the user')
-                                    elif visa_values['type']=='ResearcherStatus':
-                                        if 'ResearcherStatus' in visas_conf:
-                                            for trusted_acceptedterms_visa in visas_conf['ResearcherStatus']:
-                                                if visa_values['value'] in trusted_acceptedterms_visa["accepted_values"]:
-                                                    if visa["iss"] == trusted_acceptedterms_visa["iss"]:
-                                                        accepted_visa=True
-                                                        break
-                                        if accepted_visa==False:
-                                            self.LOG.warning('Researcher Status: {} is not accepted'.format(visa_values['value']))
-                                            raise NoTermsAndConditionsForResearcherAvailable('Researcher Status is not RESEARCHER')
-                                    elif visa_values['type']=='ControlledAccessGrants':
-                                        if 'ControlledAccessGrants' in visas_conf:
-                                            for trusted_acceptedterms_visa in visas_conf['ControlledAccessGrants']:
-                                                if visa_values['value'] in trusted_acceptedterms_visa["accepted_values"]:
-                                                    if visa["iss"] == trusted_acceptedterms_visa["iss"]:
-                                                        dataset_url = visa["ga4gh_visa_v1"]["value"]
-                                                        dataset_url_splitted = dataset_url.split('/')
-                                                        visa_dataset = dataset_url_splitted[-1]
-                                                        list_visa_tokens.append(visa_dataset)
+                                                        if visa_type == 'ControlledAccessGrants':
+                                                            dataset_url = visa["ga4gh_visa_v1"]["value"]
+                                                            dataset_url_splitted = dataset_url.split('/')
+                                                            visa_dataset = dataset_url_splitted[-1]
+                                                            list_visa_tokens.append(visa_dataset)
+                                                            visas_outcome[visa_type]=visa_dataset
+                                                        else:
+                                                            visas_outcome[visa_type]=True
                                                         break
                                 else:
-                                    apply_conf_to_received_visa(self, visas_conf)
+                                    continue
                             except Exception as e:
-                                apply_conf_to_received_visa(self, visas_conf)
+                                check_needed_visa_conf(self, visas_conf, visas_outcome)
+                check_needed_visa_conf(self, visas_conf, visas_outcome)
                 return user, list_visa_tokens
             else:
                 raise NoPermissionsAvailable("Unauthorized. Could not fetch the user info from the token.")
