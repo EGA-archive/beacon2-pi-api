@@ -1,33 +1,32 @@
 
 from beacon.response.classes import SingleDatasetResponse, MultipleDatasetsResponse, CollectionsResponse
-from beacon.request.classes import RequestAttributes
 
 import beacon.models.omop.connections.postgresql.individuals as individuals
 import beacon.models.omop.connections.postgresql.biosamples as biosamples
 import beacon.models.omop.connections.postgresql.cohorts as cohorts
 
 async def execute_function(self, datasets):
-    if (RequestAttributes.pre_entry_type == "individuals"
-        and RequestAttributes.entry_type == "biosamples"):
+    if (self.request_attributes.pre_entry_type == "individuals"
+        and self.request_attributes.entry_type == "biosamples"):
         schema, count, docs = await individuals.get_biosamples_of_individual(
-            RequestAttributes.entry_id,
-            RequestAttributes.qparams,
+            self.request_attributes.entry_id,
+            self.request_attributes.qparams,
         )
-    elif (RequestAttributes.pre_entry_type == "biosamples"
-            and RequestAttributes.entry_type == "individuals"):
+    elif (self.request_attributes.pre_entry_type == "biosamples"
+            and self.request_attributes.entry_type == "individuals"):
             schema, count, docs = await biosamples.get_individuals_of_biosample(
-                RequestAttributes.entry_id,
-                RequestAttributes.qparams,
+                self.request_attributes.entry_id,
+                self.request_attributes.qparams,
             )
-    elif RequestAttributes.entry_type == "individuals":
+    elif self.request_attributes.entry_type == "individuals":
         schema, count, docs = await individuals.get_the_individuals(
-            RequestAttributes.entry_id,
-            RequestAttributes.qparams,
+            self.request_attributes.entry_id,
+            self.request_attributes.qparams,
         )
-    elif RequestAttributes.entry_type == "biosamples":
+    elif self.request_attributes.entry_type == "biosamples":
         schema, count, docs = await biosamples.get_biosamples(
-            RequestAttributes.entry_id,
-            RequestAttributes.qparams,
+            self.request_attributes.entry_id,
+            self.request_attributes.qparams,
         )
     return MultipleDatasetsResponse(
         datasets_responses=[
@@ -43,16 +42,17 @@ async def execute_function(self, datasets):
     )
 
 async def execute_collection_function(endpoint_view):
-    if RequestAttributes.entry_type == "cohorts":
-        if RequestAttributes.entry_id:
+    request_attributes = endpoint_view.request_attributes
+    if request_attributes.entry_type == "cohorts":
+        if request_attributes.entry_id:
             schema, count, docs = await cohorts.get_cohort_with_id(
-                RequestAttributes.entry_id,
-                RequestAttributes.qparams,
+                request_attributes.entry_id,
+                request_attributes.qparams,
             )
         else:
             schema, count, docs = await cohorts.get_cohorts(
-                RequestAttributes.entry_id,
-                RequestAttributes.qparams,
+                request_attributes.entry_id,
+                request_attributes.qparams,
             )
 
     return CollectionsResponse(
