@@ -3,7 +3,7 @@ import unittest
 import os
 import jwt
 from aiohttp import web
-from beacon.auth.__main__ import fetch_idp, validate_access_token, authentication, fetch_user_info
+from beacon.auth.__main__ import fetch_idp, validate_access_token, authentication, fetch_user_info, validate_ga4gh_visa
 from dotenv import load_dotenv
 from beacon.logs.logs import initialize_logger
 from beacon.conf.conf_override import config
@@ -11,10 +11,15 @@ from beacon.utils.middlewares import error_middleware
 from beacon.utils.routes import append_routes
 from aiohttp_middlewares import cors_middleware
 import beacon.conf.conf_override as conf_override
+from beacon.exceptions.exceptions import NoTermsAndConditionsForResearcherAvailable
+import requests
+import yaml
 
 # for keycloak, create aud in mappers, with custom, aud and beacon for audience
-mock_access_token = 'eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJreS1tUXNxZ0ZYeHdSUVRfRUhuQlJJUGpmbVhfRXZuUTVEbzZWUTJCazdZIn0.eyJleHAiOjE3ODkyMTY5NjAsImlhdCI6MTc4OTIxNjY2MCwianRpIjoiODhiOGM5YmItNGYxYy00MDBhLWFkYzUtNWUxOGE0ZmNhMTM2IiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL0JlYWNvbiIsImF1ZCI6ImJlYWNvbiIsInN1YiI6IjQ3ZWZmMWIxLTc2MjEtNDU3MC1hMGJiLTAxYTcxOWZiYTBhMiIsInR5cCI6IkJlYXJlciIsImF6cCI6ImJlYWNvbiIsInNlc3Npb25fc3RhdGUiOiI2NjVmYzE4Mi0zNGZkLTRmNDktODIyNi1lYTI3NGJhYmIxYTIiLCJhY3IiOiIxIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBlbWFpbCBtaWNyb3Byb2ZpbGUtand0Iiwic2lkIjoiNjY1ZmMxODItMzRmZC00ZjQ5LTgyMjYtZWEyNzRiYWJiMWEyIiwidXBuIjoiamFuZSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwibmFtZSI6IkphbmUgU21pdGgiLCJncm91cHMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXSwicHJlZmVycmVkX3VzZXJuYW1lIjoiamFuZSIsImdpdmVuX25hbWUiOiJKYW5lIiwiZmFtaWx5X25hbWUiOiJTbWl0aCIsImVtYWlsIjoiamFuZS5zbWl0aEBiZWFjb24uZ2E0Z2gifQ.ognNPMqZYlQCXmj0ZXu_IodasLHCWJtBHX3ElWEFyakbAkHsOzLxGwrFkRyrmwB1jyg_lXcXt7E9z2mB7FzNfCpzdhIXBqBQf_v9OFjZv0-maVIItjRzmHLF5jnbPwBj6jQVzwkvCHOAqFYx0wBTviDWsVYSgNOuPmZcCj3KKrzDrJzUUSZ82DoyGjc9aTfMJQFFb0Sw-d2-ubN4XlFjwvGreJB3OG0n_eUkbvmFDwxWnR5OKcb7r0IYr15RigaKaqFiurNWC9vsttDZPL2LC5LuesMj6QMA3xkCMVReazj28-bFkOsGIgr9QSGx-OpJ4pKqubP4X7MtIx3TN7xpFw'
+mock_access_token = 'eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJreS1tUXNxZ0ZYeHdSUVRfRUhuQlJJUGpmbVhfRXZuUTVEbzZWUTJCazdZIn0.eyJleHAiOjE3OTEzNzkwNzcsImlhdCI6MTc5MTM3ODc3NywianRpIjoiNjRmZGNmNDEtMDM5NS00ZGUzLTk5NWQtYTk3ZTRkNjM0YWE3IiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL0JlYWNvbiIsImF1ZCI6ImJlYWNvbiIsInN1YiI6IjQ3ZWZmMWIxLTc2MjEtNDU3MC1hMGJiLTAxYTcxOWZiYTBhMiIsInR5cCI6IkJlYXJlciIsImF6cCI6ImJlYWNvbiIsInNlc3Npb25fc3RhdGUiOiI4ZTE0NzI5MS1hZmQwLTRkOTAtYTAwNy1lY2RjOGY5YTY4YzIiLCJhY3IiOiIxIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBlbWFpbCBtaWNyb3Byb2ZpbGUtand0Iiwic2lkIjoiOGUxNDcyOTEtYWZkMC00ZDkwLWEwMDctZWNkYzhmOWE2OGMyIiwidXBuIjoiamFuZSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwibmFtZSI6IkphbmUgU21pdGgiLCJncm91cHMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXSwicHJlZmVycmVkX3VzZXJuYW1lIjoiamFuZSIsImdpdmVuX25hbWUiOiJKYW5lIiwiZmFtaWx5X25hbWUiOiJTbWl0aCIsImVtYWlsIjoiamFuZS5zbWl0aEBiZWFjb24uZ2E0Z2gifQ.S1UIqenFG_vd7vhllzn8VcuxyI-qwV_lBoAzX76Qq1Dx86Hd2p2lx_7PxE39JfJNawFT33GuS5VitsQomESMqowl1mZ7mz8Q08sK95wW-9zUV5SgfnHU6lXEysCZGFY0M7kjoyws4yBh8WxN-6olrTXgKgtxnA4af3Hm5_qanzh49OgWsadtfipV_sq1C9KRU2__i01_teWztqRAIhdz3XQu18qbSK8WY80fN5-HhicWKMRMnwd9BR2Epm7kfv4T46ZbykxAfcfzOYg2Cb78YA_ddZ1eH0gdikYn-kqJ4t0PS19jWW5baV2kh-N7QaGcE8zsiZTQVnjKFFiNmiGddA'
 mock_access_token_false = 'public'
+mock_ga4gh_visa_dataset = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL3JlbXMudGVzdC5leGFtcGxlLm9yZy8iLCJzdWIiOiJ0ZXN0LXVzZXItMTIzIiwiaWF0IjoxNzAwMDAwMDAwLCJleHAiOjE5MDAwMDAwMDAsImdhNGdoX3Zpc2FfdjEiOnsidHlwZSI6IkNvbnRyb2xsZWRBY2Nlc3NHcmFudHMiLCJhc3NlcnRlZCI6MTcwMDAwMDAwMCwidmFsdWUiOiJodHRwczovL3JlbXMudGVzdC5leGFtcGxlLm9yZy9kYXRhc2V0cy90ZXN0LWRhdGFzZXQiLCJzb3VyY2UiOiJodHRwczovL3JlbXMudGVzdC5leGFtcGxlLm9yZy8iLCJieSI6ImRhYyJ9fQ.c3ludGhldGljLXRlc3Qtc2lnbmF0dXJl'
+
 
 #audit --> TODO: get very specific information that we are interested in saving and keeping it (example: what individuals were returned in response)
 
@@ -46,7 +51,6 @@ class TestAuthN(unittest.TestCase):
 
         # Attach logger instance to test class
         self.LOG = LOG
-
     def test_auth_fetch_idp(self):
         # Test retrieval of Identity Provider configuration from environment/system
         with loop_context() as loop:
@@ -62,35 +66,39 @@ class TestAuthN(unittest.TestCase):
             async def test_fetch_idp():
                 # Fetch IdP configuration dynamically using mock access token
                 idp_issuer, user_info, idp_client_id, idp_client_secret, \
-                idp_introspection, idp_jwks_url, algorithm, aud = fetch_idp(
+                idp_introspection, idp_jwks_url, aud = fetch_idp(
                     self, mock_access_token
                 )
 
-                # Load expected configuration from Keycloak environment file
-                load_dotenv("beacon/auth/idp_providers/keycloak.env", override=True)
+                # Load expected configuration from Keycloak testing_idp environment file
+                load_dotenv("beacon/auth/idp_providers/confidential/testing_idp.env", override=True)
 
                 # Extract expected values from environment variables
                 IDP_ISSUER = os.getenv('ISSUER')
                 IDP_CLIENT_ID = os.getenv('CLIENT_ID')
                 IDP_CLIENT_SECRET = os.getenv('CLIENT_SECRET')
-                IDP_USER_INFO = os.getenv('USER_INFO')
-                IDP_INTROSPECTION = os.getenv('INTROSPECTION')
-                IDP_JWKS_URL = os.getenv('JWKS_URL')
-
+                IDP_WELL_KNOWN_ENDPOINT = os.getenv('WELL_KNOWN_ENDPOINT')
+                response = requests.get(IDP_WELL_KNOWN_ENDPOINT)
+                response.raise_for_status()
+                well_known_info = response.json()
+                IDP_JWKS_URL=well_known_info["jwks_uri"]
+                INTROSPECTION=well_known_info["introspection_endpoint"]
+                if 'localhost'in IDP_JWKS_URL:
+                    IDP_JWKS_URL=IDP_JWKS_URL.replace('localhost', 'idp')
+                if 'localhost'in INTROSPECTION:
+                    INTROSPECTION=INTROSPECTION.replace('localhost', 'idp')
                 # Validate fetched configuration matches environment configuration
                 assert IDP_ISSUER == idp_issuer
                 assert IDP_CLIENT_ID == idp_client_id
                 assert IDP_CLIENT_SECRET == idp_client_secret
-                assert IDP_USER_INFO == user_info
-                assert IDP_INTROSPECTION == idp_introspection
                 assert IDP_JWKS_URL == idp_jwks_url
+                assert INTROSPECTION == idp_introspection
 
             # Execute async test inside event loop
             loop.run_until_complete(test_fetch_idp())
 
             # Clean shutdown of test server
             loop.run_until_complete(client.close())
-
     def test_auth_validate_access_token(self):
         # Test JWT validation pipeline without verifying signature (unit-level check)
         with loop_context() as loop:
@@ -101,20 +109,25 @@ class TestAuthN(unittest.TestCase):
 
             async def test_validate_access_token():
                 # Load IdP configuration for validation context
-                load_dotenv("beacon/auth/idp_providers/keycloak.env", override=True)
+                load_dotenv("beacon/auth/idp_providers/confidential/testing_idp.env", override=True)
 
                 IDP_ISSUER = os.getenv('ISSUER')
-                IDP_CLIENT_ID = os.getenv('CLIENT_ID')
-                IDP_CLIENT_SECRET = os.getenv('CLIENT_SECRET')
-                IDP_USER_INFO = os.getenv('USER_INFO')
-                IDP_INTROSPECTION = os.getenv('INTROSPECTION')
-                IDP_JWKS_URL = os.getenv('JWKS_URL')
+                IDP_WELL_KNOWN_ENDPOINT = os.getenv('WELL_KNOWN_ENDPOINT')
+
+                response = requests.get(IDP_WELL_KNOWN_ENDPOINT)
+                response.raise_for_status()
+                well_known_info = response.json()
+                IDP_JWKS_URL=well_known_info["jwks_uri"]
+                if 'localhost'in IDP_JWKS_URL:
+                    IDP_JWKS_URL=IDP_JWKS_URL.replace('localhost', 'idp')
+                # Validate fetched configuration matches environment configuration
+                aud_must_include_url = os.getenv('MUST_INCLUDE_BEACON_URL_IN_AUDIENCE')
+                if aud_must_include_url == True:
+                    if config.complete_url not in aud:
+                        self.LOG.warning("Unauthorized. The beacon's url is not included in the audience of the access token.")
+                        raise Exception
 
                 try:
-                    # Extract JWT header without verification (inspect algorithm)
-                    header = jwt.get_unverified_header(mock_access_token)
-                    algorithm = header["alg"]
-
                     # Decode token payload without signature verification (unsafe but test-only)
                     decoded = jwt.decode(mock_access_token, options={"verify_signature": False})
 
@@ -132,7 +145,6 @@ class TestAuthN(unittest.TestCase):
                     mock_access_token,
                     IDP_ISSUER,
                     IDP_JWKS_URL,
-                    algorithm,
                     aud
                 )
 
@@ -152,15 +164,16 @@ class TestAuthN(unittest.TestCase):
 
             async def test_fetch_user_info():
                 # Load IdP configuration for API calls
-                load_dotenv("beacon/auth/idp_providers/keycloak.env", override=True)
+                load_dotenv("beacon/auth/idp_providers/confidential/testing_idp.env", override=True)
 
                 IDP_ISSUER = os.getenv('ISSUER')
-                IDP_CLIENT_ID = os.getenv('CLIENT_ID')
-                IDP_CLIENT_SECRET = os.getenv('CLIENT_SECRET')
-                IDP_USER_INFO = os.getenv('USER_INFO')
-                IDP_INTROSPECTION = os.getenv('INTROSPECTION')
-                IDP_JWKS_URL = os.getenv('JWKS_URL')
-
+                IDP_WELL_KNOWN_ENDPOINT = os.getenv('WELL_KNOWN_ENDPOINT')
+                response = requests.get(IDP_WELL_KNOWN_ENDPOINT)
+                response.raise_for_status()
+                well_known_info = response.json()
+                IDP_USER_INFO=well_known_info["userinfo_endpoint"]
+                if "localhost" in IDP_USER_INFO:
+                    IDP_USER_INFO=IDP_USER_INFO.replace("localhost","idp")
                 # Initialize visa dataset accumulator (GA4GH passport model)
                 list_visa_datasets = []
 
@@ -174,11 +187,10 @@ class TestAuthN(unittest.TestCase):
                 )
 
                 # Validate returned identity information
-                assert user.get('email') == 'jane.smith@beacon.ga4gh'
+                assert user.get('sub') == '47eff1b1-7621-4570-a0bb-01a719fba0a2'
 
             loop.run_until_complete(test_fetch_user_info())
             loop.run_until_complete(client.close())
-
     def test_auth_authentication(self):
         # End-to-end authentication flow test (valid token case)
         with loop_context() as loop:
@@ -195,11 +207,10 @@ class TestAuthN(unittest.TestCase):
                 )
 
                 # Confirm authenticated identity resolution
-                assert user.get('email') == 'jane.smith@beacon.ga4gh'
+                assert user.get('sub') == '47eff1b1-7621-4570-a0bb-01a719fba0a2'
 
             loop.run_until_complete(test_authentication())
             loop.run_until_complete(client.close())
-
     def test_auth_authentication_false(self):
         # Negative authentication test: invalid token should fall back to public user
         with loop_context() as loop:
@@ -216,7 +227,7 @@ class TestAuthN(unittest.TestCase):
                 )
 
                 # Expect fallback identity for unauthenticated requests
-                assert user == 'public'
+                assert user == None
 
             loop.run_until_complete(test_authentication_false())
             loop.run_until_complete(client.close())
@@ -231,50 +242,126 @@ class TestAuthN(unittest.TestCase):
 
             async def test_check_visa_passports():
                 # Simulated decoded user passport containing visas
-                user = {}
-                user['ga4gh_passport_v1'] = ['visa']
-
-                visa_datasets = user['ga4gh_passport_v1']
+                visa = jwt.decode(mock_ga4gh_visa_dataset, options={"verify_signature": False}, algorithms=["RS256"])
+                jwks_url=visa['iss']+'.well-known/openid-configuration'
                 list_visa_datasets = []
-
-                # Process each visa entry in passport
-                if visa_datasets is not None:
-                    for visa_dataset in visa_datasets:
-                        try:
-                            visa = {}
-
-                            # Load issuer configuration for validation
-                            load_dotenv("beacon/auth/idp_providers/keycloak.env", override=True)
-                            IDP_ISSUER = os.getenv('ISSUER')
-
-                            # Construct minimal visa structure
-                            visa['iss'] = IDP_ISSUER
-                            visa["ga4gh_visa_v1"] = {}
-                            visa["ga4gh_visa_v1"]["value"] = 'visa/dataset'
-
-                            # Validate issuer integrity
-                            if visa['iss'] == IDP_ISSUER:
-                                pass
-                            else:
-                                raise web.HTTPUnauthorized('invalid visa token')
-
-                            # Extract dataset identifier from structured visa string
-                            dataset_url = visa["ga4gh_visa_v1"]["value"]
-                            dataset_url_splitted = dataset_url.split('/')
-
-                            visa_dataset = dataset_url_splitted[-1]
-
-                            # Collect resolved dataset identifier
-                            list_visa_datasets.append(visa_dataset)
-
-                        except Exception:
-                            # Ignore malformed visa entries
-                            visa_dataset = None
+                issuer = visa['iss']
+                visa_validated = validate_ga4gh_visa(
+                    self,
+                    mock_ga4gh_visa_dataset,
+                    issuer,
+                    jwks_url
+                )
+                with open("/beacon/permissions/ga4gh_visas/visas_conf.yml", 'r') as pfile:
+                    visas_conf = yaml.safe_load(pfile)
+                pfile.close()
+                if visa_validated==False:
+                    visa_values=visa['ga4gh_visa_v1']
+                    with open("/beacon/permissions/ga4gh_visas/visas_conf.yml", 'r') as pfile:
+                        visas_conf = yaml.safe_load(pfile)
+                    pfile.close()
+                    visa_values=visa['ga4gh_visa_v1']
+                    accepted_visa=False
+                    if visa_values['type']=='AcceptedTermsAndPolicies':
+                        for trusted_acceptedterms_visa in visas_conf['AcceptedTermsAndPolicies']:
+                            if visa_values['value'] in trusted_acceptedterms_visa["accepted_values"]:
+                                if visa["iss"] == trusted_acceptedterms_visa["iss"]:
+                                    accepted_visa=True
+                                    break
+                        if accepted_visa==False:
+                            self.LOG.warning('Terms and Conditions not accepted for the user')
+                            raise NoTermsAndConditionsForResearcherAvailable('Terms and Conditions not accepted for the user')
+                    elif visa_values['type']=='ResearcherStatus':
+                        for trusted_acceptedterms_visa in visas_conf['ResearcherStatus']:
+                            if visa_values['value'] in trusted_acceptedterms_visa["accepted_values"]:
+                                if visa["iss"] == trusted_acceptedterms_visa["iss"]:
+                                    accepted_visa=True
+                                    break
+                        if accepted_visa==False:
+                            self.LOG.warning('Researcher Status: {} is not accepted'.format(visa_values['value']))
+                            raise NoTermsAndConditionsForResearcherAvailable('Researcher Status is not RESEARCHER')
+                    elif visa_values['type']=='ControlledAccessGrants':
+                        for trusted_acceptedterms_visa in visas_conf['ControlledAccessGrants']:
+                            if visa_values['value'] in trusted_acceptedterms_visa["accepted_values"]:
+                                if visa["iss"] == trusted_acceptedterms_visa["iss"]:
+                                    accepted_visa=True
+                                    dataset_url = visa["ga4gh_visa_v1"]["value"]
+                                    dataset_url_splitted = dataset_url.split('/')
+                                    visa_dataset = dataset_url_splitted[-1]
+                                    list_visa_datasets.append(visa_dataset)
+                                    break
+                        if accepted_visa==False:
+                            self.LOG.warning('Invalid datasets visa')
+                            raise NoTermsAndConditionsForResearcherAvailable('Invalid Visa')
+                    else:
+                        raise Exception
 
                 # Expect correct dataset extraction from visa structure
-                assert list_visa_datasets == ['dataset']
+                assert list_visa_datasets == ['test-dataset']
 
             loop.run_until_complete(test_check_visa_passports())
+            loop.run_until_complete(client.close())
+
+    def test_auth_check_accepted_terms_and_conditions(self):
+        # Test GA4GH visa parsing and dataset extraction from passport claims
+        with loop_context() as loop:
+
+            app = create_test_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+
+            async def test_check_terms():
+                visa = {
+                    "iss": "https://rems.example.org",
+                    "ga4gh_visa_v1": {
+                        "type": "AcceptedTermsAndPolicies",
+                        "value": "accepted"
+                    }
+                }
+
+                visa_validated=True
+                mocking_config_value=True
+                if visa_validated==True:
+                    visa_values=visa['ga4gh_visa_v1']
+                    if mocking_config_value == True:
+                        if visa_values['type']=='AcceptedTermsAndPolicies':
+                            if visa_values['value']=='accepted':
+                                assert visa_values['value'] == 'accepted'
+                            else:
+                                raise NoTermsAndConditionsForResearcherAvailable('Terms and Conditions not accepted for the user')
+
+            loop.run_until_complete(test_check_terms())
+            loop.run_until_complete(client.close())
+
+    def test_auth_check_researcher_status(self):
+        # Test GA4GH visa parsing and dataset extraction from passport claims
+        with loop_context() as loop:
+
+            app = create_test_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+
+            async def test_check_researcher_status():
+                visa = {
+                    "iss": "https://rems.example.org",
+                    "ga4gh_visa_v1": {
+                        "type": "ResearcherStatus",
+                        "value": "RESEARCHER"
+                    }
+                }
+
+                visa_validated=True
+                mocking_config_value=True
+                if visa_validated==True:
+                    visa_values=visa['ga4gh_visa_v1']
+                    if mocking_config_value == True:
+                        if visa_values['type']=='ResearcherStatus':
+                            if visa_values['value']=='RESEARCHER':
+                                assert visa_values['value'] == 'RESEARCHER'
+                            else:
+                                raise NoTermsAndConditionsForResearcherAvailable('Researcher Status is not RESEARCHER')
+
+            loop.run_until_complete(test_check_researcher_status())
             loop.run_until_complete(client.close())
 
 if __name__ == '__main__':

@@ -26,7 +26,7 @@ class EntryTypeView(EndpointView):
     @state_check
     @query_permissions
     @log_with_args(config.level)
-    async def handler(self, datasets, username, time_now):
+    async def handler(self, datasets, user_id, time_now):
         # Load the executor from the module that owns the source of the entry type
         module = load_source_module(self, "executor")
         # Execute the function "execute_function" from the executor previously loaded. This will return a class with multiple nested classes, one per each dataset, with the docs retrieved from the source.
@@ -90,7 +90,7 @@ class EntryTypeView(EndpointView):
             raise InvalidData('{} templates or data are not correct'.format(self.request_attributes.entry_type))
         # If a time could be obtained for the moment of the query, register it for the budget count
         if time_now is not None:
-            load_module_to_insert_budget(self, username, time_now)
+            load_module_to_insert_budget(self, user_id, time_now)
         # Give a HTTP response with json data application and a 200 status, and the NonCollection object class collected
 
         return web.Response(
