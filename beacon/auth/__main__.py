@@ -188,7 +188,7 @@ async def fetch_user_info(self, access_token, user_info, idp_issuer, list_visa_t
                                     visa_values=visa['ga4gh_visa_v1']
                                     if visa_values['type']==visa_type:
                                         for issuer in conditions['issuers']:
-                                            if visa['iss'] == issuer:
+                                            if visa['iss'] == issuer['iss']:
                                                 accepted_issuer=True
                                                 break
                                         if accepted_issuer==False:
@@ -196,10 +196,10 @@ async def fetch_user_info(self, access_token, user_info, idp_issuer, list_visa_t
                                             raise NoPermissionsAvailable("Unauthorized visa. Issuer not trusted.")
                                         accepted_issuer=False
                                         visa_jwks_url=visa['iss']+'.well-known/openid-configuration'
-                                        visa_validated = validate_ga4gh_visa(self, access_token, visa['iss'], visa_jwks_url)
-                                        for trusted_acceptedterms_visa in visas_conf[visa_type]:
-                                            if visa_values['value'] in trusted_acceptedterms_visa["accepted_values"]:
-                                                if visa["iss"] == trusted_acceptedterms_visa["iss"]:
+                                        #visa_validated = validate_ga4gh_visa(self, access_token, visa['iss'], visa_jwks_url)
+                                        for issuers_values in conditions['issuers']:
+                                            if visa_values['value'] in issuers_values["accepted_values"]:
+                                                if visa["iss"] == issuers_values["iss"]:
                                                     if visa_type == 'ControlledAccessGrants':
                                                         dataset_url = visa["ga4gh_visa_v1"]["value"]
                                                         dataset_url_splitted = dataset_url.split('/')
@@ -213,6 +213,7 @@ async def fetch_user_info(self, access_token, user_info, idp_issuer, list_visa_t
                                         continue
                             except Exception as e:
                                 continue
+                self.LOG.warning(visas_outcome)
                 check_needed_visa_conf(self, visas_conf, visas_outcome)
                 return user, list_visa_tokens
             else:
