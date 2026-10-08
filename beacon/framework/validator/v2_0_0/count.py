@@ -5,7 +5,8 @@ from pydantic import (
 from typing import List, Optional, Union, Dict
 import math
 from beacon.conf import conf_override
-from beacon.utils.modules import load_class
+from beacon.framework.validator.v2_0_0.meta import Meta
+from beacon.framework.validator.v2_0_0.common import Handover
 
 class CountResponseSummary(BaseModel):
     """
@@ -116,7 +117,7 @@ class CountResponse(BaseModel):
     - Optional handover links to external systems
     """
 
-    meta: load_class("meta", "Meta")
+    meta: Meta
     responseSummary: CountResponseSummary
     info: Optional[Dict] = None
-    beaconHandovers: Optional[List[load_class("common", "Handover")]] = None
+    beaconHandovers: Optional[List[Handover]] = None

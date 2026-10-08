@@ -1,4 +1,4 @@
-from beacon.request.classes import RequestAttributes
+
 import os
 from typing import Union
 import re
@@ -9,10 +9,10 @@ from beacon.exceptions.exceptions import DatabaseIsDown
 import asyncio
 
 #TODO: get_client() passing one variable with the database name.
-
+@log_with_args(config.level)
 def load_framework_module(self, script_name):
     """Choose what is the validator object class that will be loaded depending on the API version to return"""
-    module='beacon.framework.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.'+script_name
+    module='beacon.framework.validator.'+self.request_attributes.returned_apiVersion.replace(".","_")+'.'+script_name
     import importlib
     loaded_module = importlib.import_module(module, package=None)
     return loaded_module
@@ -20,7 +20,7 @@ def load_framework_module(self, script_name):
 @log_with_args(config.level)
 def load_source_module(self, script_name):
     """Choose on the fly what is the database that is going to be used for the current request"""
-    complete_module='beacon.connections.'+RequestAttributes.source+'.' + script_name
+    complete_module='beacon.connections.'+self.request_attributes.source+'.' + script_name
     import importlib
     module = importlib.import_module(complete_module, package=None)
     return module
@@ -28,15 +28,6 @@ def load_source_module(self, script_name):
 @log_with_args_check_configuration(config.level)
 async def check_database_connections(LOG=None, entry_type=None, pre_entry_type=None):
     """Choose on the fly what is the database that is going to be used for the current request"""
-    try:
-        # Store the value for the entry type requested
-        entry_type=RequestAttributes.entry_type
-        # In case of a cross query, store the value for the entry type that will serve the requested id
-        pre_entry_type=RequestAttributes.pre_entry_type
-    except Exception:
-        # In case there is an exception, load the variables to be added to the error response
-        entry_type=None
-        pre_entry_type=None
     # Load the configuration file for the models that are enabled
     with open("/beacon/conf/models/models_conf.yml", 'r') as pfile:
         models_confile= yaml.safe_load(pfile)
@@ -158,81 +149,238 @@ def load_client(folder):
     module = importlib.import_module(complete_client_module, package=None)
     client_from_module = getattr(module, 'get_client')
 
-def load_class(script_name, className):
+def load_class(self, script_name, className):
     """Method to get the classes for the validators that match the API version to return"""
-    module='beacon.framework.validator.'+RequestAttributes.returned_apiVersion.replace(".","_")+'.'+script_name
+    module='beacon.framework.validator.'+self.request_attributes.returned_apiVersion.replace(".","_")+'.'+script_name
     import importlib
     loaded_module = importlib.import_module(module, package=None)
     klass = getattr(loaded_module, className)
     return klass
 
-def load_types_of_results(response_type):
-    """Method to get the type of schema that are accepted (for validation) in case of a model and entry type match"""
-    # Load the configuration file for the models that are enabled
-    with open("/beacon/conf/models/models_conf.yml", 'r') as pfile:
-        models_confile= yaml.safe_load(pfile)
-    pfile.close()
-    # Initialize the array to collect all the entry types objects to be accepted for validation
-    list_of_results_classes_accepted=[]
-    # Generate a search of the version getting rid of the characters that join the string to the version number in conf
-    version_catch = re.search(r"(v\d+(\.\d+)*)", RequestAttributes.returned_schema[0]["schema"])
-    # Keep the version number
-    if version_catch:
-        version = version_catch.group(1)
-    
-    # Replace dot for underscores of the version number as dots are not allowed for file names
-    underscored_version = version.replace(".","_")
-    dirs = os.listdir("/beacon/models")
+# Module-level cache.
+# Put these OUTSIDE load_types_of_results(), near the top of the module.
 
-    # Loop over the folders found in the mentioned path and save the ones that are active (enabled)
+_RESULT_TYPES_CACHE = {}
+_RESULT_TYPES_CONFIG_MTIME = None
+
+_MODELS_CONF_PATH = "/beacon/conf/models/models_conf.yml"
+_MODELS_BASE_PATH = "/beacon/models"
+
+
+def load_types_of_results(self, response_type):
+    """
+    Load the result validator types for the requested response type/version.
+
+    The discovered Union type is cached so that filesystem scanning,
+    YAML parsing and dynamic imports do not happen on every request.
+
+    The cache is automatically invalidated when models_conf.yml changes.
+    """
+
+    import importlib
+    import sys
+
+    global _RESULT_TYPES_CONFIG_MTIME
+    version_catch = re.search(
+        r"(v\d+(\.\d+)*)",
+        self.request_attributes.returned_schema[0]["schema"]
+    )
+    if not version_catch:
+        raise ValueError(
+            "Could not determine schema version from returned_schema"
+        )
+    version = version_catch.group(1)
+    underscored_version = version.replace(".", "_")
+    # Check models_conf.yml modification time
+    config_mtime = os.stat(
+        _MODELS_CONF_PATH
+    ).st_mtime_ns
+    # Invalidate entire cache if configuration changed
+    if _RESULT_TYPES_CONFIG_MTIME != config_mtime:
+        if _RESULT_TYPES_CONFIG_MTIME is not None:
+            print(
+                "[TIMING] models_conf.yml changed - "
+                "clearing result types cache",
+                flush=True,
+            )
+        _RESULT_TYPES_CACHE.clear()
+        _RESULT_TYPES_CONFIG_MTIME = config_mtime
+    # Cache lookup
+    cache_key = (
+        response_type,
+        underscored_version,
+    )
+    if cache_key in _RESULT_TYPES_CACHE:
+        return _RESULT_TYPES_CACHE[cache_key]
+    # Load configuration
+    with open(
+        _MODELS_CONF_PATH,
+        "r"
+    ) as pfile:
+        models_confile = yaml.safe_load(pfile)
+    # Initialize
+    list_of_results_classes_accepted = []
+    import_count = 0
+    cached_import_count = 0
+    # Helper for imports
+    def timed_import(module_name):
+        nonlocal import_count
+        nonlocal cached_import_count
+        already_cached = module_name in sys.modules
+        module = importlib.import_module(
+            module_name,
+            package=None
+        )
+        import_count += 1
+        if already_cached:
+            cached_import_count += 1
+        return module
+    # Get model directories
+    dirs = os.listdir(
+        _MODELS_BASE_PATH
+    )
+    # Search models
     for folder in dirs:
-        subdirs = os.listdir("/beacon/models/"+folder)
+        subdirs = os.listdir(
+            _MODELS_BASE_PATH + "/" + folder
+        )
+        # Check if top-level model is enabled
         if folder in models_confile:
-            if models_confile[folder]["model_enabled"] == False:
+            if models_confile[
+                folder
+            ]["model_enabled"] is False:
                 continue
-        # Go over the validator folders for the entry types of the models enabled
+        # Direct validator directory
         if "validator" in subdirs:
-            validatordirs = os.listdir("/beacon/models/"+folder+"/validator/"+response_type)
+            validator_base_path = (
+                _MODELS_BASE_PATH
+                + "/"
+                + folder
+                + "/validator/"
+                + response_type
+            )
+            validatordirs = os.listdir(
+                validator_base_path
+            )
             for validatorfolder in validatordirs:
-                validatorfiles = os.listdir("/beacon/models/"+folder+"/validator/"+response_type+"/"+validatorfolder)
-                # In case a validator folder is found, load the modules dynamically
+                validator_path = (
+                    validator_base_path
+                    + "/"
+                    + validatorfolder
+                )
+                validatorfiles = os.listdir(
+                    validator_path
+                )
                 for validatorfile in validatorfiles:
-                    if underscored_version in validatorfile:
-                        complete_module='beacon.models.'+folder+'.validator.'+response_type+'.'+validatorfolder+'.'+validatorfile
-                        # Replace the python extension of the file in case there's any to avoid name not matching module
-                        complete_module=complete_module.replace('.py', '')
-                        import importlib
-                        module = importlib.import_module(complete_module, package=None)
-                        # Extract the module class matching the module name
-                        klass = getattr(module, validatorfolder.capitalize())
-                        list_of_results_classes_accepted.append(klass)
-        # Loop over the subfolders found in the targeted path and save the ones that are active (enabled)
+
+                    if underscored_version not in validatorfile:
+                        continue
+                    complete_module = (
+                        "beacon.models."
+                        + folder
+                        + ".validator."
+                        + response_type
+                        + "."
+                        + validatorfolder
+                        + "."
+                        + validatorfile
+                    )
+                    complete_module = complete_module.replace(
+                        ".py",
+                        ""
+                    )
+                    module = timed_import(
+                        complete_module
+                    )
+                    klass = getattr(
+                        module,
+                        validatorfolder.capitalize()
+                    )
+                    list_of_results_classes_accepted.append(
+                        klass
+                    )
+
+        # Nested model directories
         for subfolder in subdirs:
-            underdirs = os.listdir("/beacon/models/"+folder+"/"+subfolder)
-            if  folder+'/'+subfolder in models_confile:
-                if models_confile[folder+'/'+subfolder ]["model_enabled"] == False:
+            model_path = (
+                _MODELS_BASE_PATH
+                + "/"
+                + folder
+                + "/"
+                + subfolder
+            )
+            underdirs = os.listdir(
+                model_path
+            )
+            model_config_key = (
+                folder + "/" + subfolder
+            )
+            if model_config_key in models_confile:
+                if models_confile[
+                    model_config_key
+                ]["model_enabled"] is False:
                     continue
-            # Go over the validator for the entry types of the models enabled
-            if "validator" in underdirs:
-                try:
-                    validatordirs = os.listdir("/beacon/models/"+folder+"/"+subfolder+"/validator/"+response_type)
-                except Exception:
-                    return None
-                # In case a validator folder is found, load the modules dynamically
-                for validatorfolder in validatordirs:
-                    validatorfiles = os.listdir("/beacon/models/"+folder+"/"+subfolder+"/validator/"+response_type+"/"+validatorfolder)
-                    for validatorfile in validatorfiles:
-                        if underscored_version in validatorfile:
-                            complete_module='beacon.models.'+folder+'.'+subfolder+'.validator.'+response_type+'.'+validatorfolder+'.'+validatorfile
-                            # Replace the python extension of the file in case there's any to avoid name not matching module
-                            complete_module=complete_module.replace('.py', '')
-                            import importlib
-                            module = importlib.import_module(complete_module, package=None)
-                            # Extract the module class matching the module name
-                            klass = getattr(module, validatorfolder.capitalize())
-                            list_of_results_classes_accepted.append(klass)
-    # Return a pydantinc Union type of response having all the possible entry types to be returned in response as validators of the response
-    union_type = Union[tuple(list_of_results_classes_accepted)]
+            if "validator" not in underdirs:
+                continue
+            validator_base_path = (
+                _MODELS_BASE_PATH
+                + "/"
+                + folder
+                + "/"
+                + subfolder
+                + "/validator/"
+                + response_type
+            )
+            try:
+                validatordirs = os.listdir(
+                    validator_base_path
+                )
+            except Exception:
+                return None
+            for validatorfolder in validatordirs:
+                validator_path = (
+                    validator_base_path
+                    + "/"
+                    + validatorfolder
+                )
+                validatorfiles = os.listdir(
+                    validator_path
+                )
+                for validatorfile in validatorfiles:
+                    if underscored_version not in validatorfile:
+                        continue
+                    complete_module = (
+                        "beacon.models."
+                        + folder
+                        + "."
+                        + subfolder
+                        + ".validator."
+                        + response_type
+                        + "."
+                        + validatorfolder
+                        + "."
+                        + validatorfile
+                    )
+                    complete_module = complete_module.replace(
+                        ".py",
+                        ""
+                    )
+                    module = timed_import(
+                        complete_module
+                    )
+                    klass = getattr(
+                        module,
+                        validatorfolder.capitalize()
+                    )
+                    list_of_results_classes_accepted.append(
+                        klass
+                    )
+    # Build Union
+    union_type = Union[
+        tuple(list_of_results_classes_accepted)
+    ]
+    # Store in cache
+    _RESULT_TYPES_CACHE[cache_key] = union_type
     return union_type
 
 def load_routes():
@@ -397,7 +545,7 @@ def get_all_modules_datasets(connection):
                 except Exception:
                     pass
     return list_of_modules
-                            
+                  
 def get_one_module_conf(entry_type):
     """Method to get the configuration of the desired entry types"""
     # TODO: Cache the module conf loading to only execute it once.

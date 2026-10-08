@@ -1,7 +1,7 @@
 from typing import Optional
 from pydantic import (
     BaseModel)
-from beacon.utils.modules import load_class
+from beacon.framework.validator.v2_0_0.meta import Meta
 
 class BeaconError(BaseModel):
     errorCode: int
@@ -9,4 +9,4 @@ class BeaconError(BaseModel):
 
 class ErrorResponse(BaseModel):
     error: BeaconError
-    meta: load_class("meta", "Meta")
+    meta: Meta

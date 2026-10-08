@@ -25,7 +25,7 @@ class DummyPermissions(Permissions):
     async def initialize(self):
         pass
     
-    async def get_permissions(self, username, requested_datasets=None, testMode=False):
+    async def get_permissions(self, username, requested_datasets=None, testMode=False, entry_type_id=None):
         # Initialize the list of datasets that will be returned depending on the permissions.
         datasets = []
         try:
@@ -59,7 +59,7 @@ class DummyPermissions(Permissions):
                 default_granularity, granularity_exceptions = return_granularity_and_exceptions(self, security_level_dict, username, default_granularity, granularity_exceptions)
                 # If there is any restriction apply it to the max granularity to return.
                 if granularity_exceptions != None:
-                    default_granularity=return_found_granularity_in_exceptions(self, granularity_exceptions, default_granularity)
+                    default_granularity=return_found_granularity_in_exceptions(self, granularity_exceptions, default_granularity, entry_type_id)
                 # If there is a default granularity, return it instantiating initially the datasets with their name and the default granularity.
                 if default_granularity != None:
                     datasetInstance = SingleDatasetResponse(dataset=dataset, granularity=default_granularity)

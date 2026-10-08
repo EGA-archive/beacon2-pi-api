@@ -5,7 +5,6 @@ from beacon.conf.conf_override import config
 from beacon.connections.mongo.filters.alphanumeric import apply_alphanumeric_filter
 from beacon.connections.mongo.client import get_client
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.utils import lengthquery
-from beacon.request.classes import RequestAttributes
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.request_parameters.start import generate_position_filter_start
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.request_parameters.sequence import generate_position_filter_start_sequence_query
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.request_parameters.end import generate_position_filter_end
@@ -14,7 +13,7 @@ from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.reque
 @log_with_args(config.level)
 def apply_request_parameters(self, query: Dict[str, List[dict]], dataset: str):
     # Initiate the $and operator in case is not inside the query syntax
-    if len(RequestAttributes.qparams.query.requestParameters) > 0 and "$and" not in query:
+    if len(self.request_attributes.qparams.query.requestParameters) > 0 and "$and" not in query:
         query["$and"] = []
     # Initiate the different dictionaries that will be needed to process the different request parameters use cases
     subquery={}
@@ -34,14 +33,14 @@ def apply_request_parameters(self, query: Dict[str, List[dict]], dataset: str):
     equal=False
     isBracket=False
     # Check for the existance of end/start parameters to create some values that will help later to process each one of those parameters individually
-    for k, v in RequestAttributes.qparams.query.requestParameters.items():
+    for k, v in self.request_attributes.qparams.query.requestParameters.items():
         if k == 'end':
             equal=True
             endvalue=v
         if k == 'start':
             startvalue=v
     # Iterate through the different request parameters from the request
-    for k, v in RequestAttributes.qparams.query.requestParameters.items():
+    for k, v in self.request_attributes.qparams.query.requestParameters.items():
         if k == "start":
             # First, get how many parameters are being thrown and if there is more than one, assign the query to a bracket query.
             if isinstance(v, str):

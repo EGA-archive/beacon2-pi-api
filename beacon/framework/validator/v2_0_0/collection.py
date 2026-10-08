@@ -5,8 +5,8 @@ from pydantic import (
 from typing import List, Optional, Union, Dict
 from beacon.utils.modules import load_class, load_types_of_results
 
-def make_Collections():
-    CollectionType = load_types_of_results("collections")
+def make_Collections(self):
+    CollectionType = load_types_of_results(self,"collections")
     
 
     @classmethod
@@ -23,11 +23,11 @@ def make_Collections():
 
     return model
 
-def make_CollectionResponse(Collections):
+def make_CollectionResponse(self, Collections):
     # Create the types of the meta, responseSumarry and the handovers depending on the existing entry types in the models
-    MetaType = load_class("meta", "Meta")
-    ResponseSummaryType = load_class("common", "ResponseSummary")
-    HandoverType = load_class("common", "Handover")
+    MetaType = load_class(self, "meta", "Meta")
+    ResponseSummaryType = load_class(self, "common", "ResponseSummary")
+    HandoverType = load_class(self, "common", "Handover")
     # Create a function to obtain the class with the properties values of the Collections to come by args
     @classmethod
     def create(cls, meta, response: Collections, responseSummary, beaconHandovers=None, info=None):

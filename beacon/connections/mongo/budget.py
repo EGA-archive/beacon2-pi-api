@@ -1,7 +1,6 @@
 from beacon.connections.mongo.client import get_client
 from beacon.logs.logs import log_with_args_mongo
 from beacon.conf.conf_override import config
-from beacon.request.classes import RequestAttributes
 
 @log_with_args_mongo(config.level)
 def get_remaining_budget_by_user(self, username, start_budget_time):
@@ -25,7 +24,7 @@ def insert_budget(self, username, time_now):
     # Insert in the database one of the uses of the budget for the user/ip performing the query
     budget_query={}
     budget_query["username"]=username
-    budget_query["ip"]=RequestAttributes.ip
+    budget_query["ip"]=self.request_attributes.ip
     budget_query["date"]=time_now
     client[config.query_budget_db_name][config.query_budget_table].insert_one(budget_query)
 
@@ -34,7 +33,7 @@ def get_remaining_budget_by_ip(self, start_budget_time):
     client=get_client()
     # Initiate the dictionary to create the query syntax for getting the remaining budget of the ip that is performing the query
     budget_query={}
-    budget_query["ip"]=RequestAttributes.ip
+    budget_query["ip"]=self.request_attributes.ip
     budget_query["date"]={ "$gt": start_budget_time }
     remaining_budget = client[config.query_budget_db_name][config.query_budget_table].find(budget_query).max_time_ms(100 * 1000)
     remaining_budget=list(remaining_budget)

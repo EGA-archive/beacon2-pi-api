@@ -1,0 +1,10 @@
+ageRange|min
+ageRange|max
+description
+id
+name
+studiesCount
+subjectsCount
+modalities
+bodyParts
+gender

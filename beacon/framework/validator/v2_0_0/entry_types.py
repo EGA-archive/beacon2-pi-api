@@ -6,7 +6,9 @@ from pydantic import (
 )
 import re
 from typing import List, Optional
-from beacon.utils.modules import load_class, get_modules_confiles
+from beacon.utils.modules import get_modules_confiles
+from beacon.framework.validator.v2_0_0.common import ReferenceToAnSchema
+from beacon.framework.validator.v2_0_0.meta import InformationalMeta
 
 class OntologyTerm(BaseModel):
     """
@@ -51,11 +53,11 @@ class EntryTypes(BaseModel):
 
     # Additional schema definitions supported for this entry type
     additionallySupportedSchemas: Optional[List[
-        load_class("common", "ReferenceToAnSchema")
+        ReferenceToAnSchema
     ]] = None
 
     # Default schema definition for this entry type
-    defaultSchema: load_class("common", "ReferenceToAnSchema")
+    defaultSchema: ReferenceToAnSchema
 
     description: Optional[str] = None
 
@@ -91,7 +93,7 @@ fields_related = {
 Entries = create_model("Entries", **fields_related)
 
 # External schema reference model
-ReferenceToAnSchema = load_class("common", "ReferenceToAnSchema")
+ReferenceToAnSchema = ReferenceToAnSchema
 
 
 class Entries(Entries):
@@ -212,5 +214,5 @@ class EntryTypesResponse(BaseModel):
     Combines metadata and dynamically generated entry type schema.
     """
 
-    meta: load_class("meta", "InformationalMeta")
+    meta: InformationalMeta
     response: EntryTypesSchema
