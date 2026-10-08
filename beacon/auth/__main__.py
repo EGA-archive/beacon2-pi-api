@@ -38,7 +38,7 @@ def validate_access_token(self, access_token, idp_issuer, jwks_url, aud):
 
 @log_with_args(config.level)
 def check_needed_visa_conf(self, visas_conf, visas_outcome):
-    for visa_type, conditions in visas_conf:
+    for visa_type, conditions in visas_conf.items():
         if conditions['enabled']==True:
             if visa_type in visas_outcome:
                 if visas_outcome[visa_type]==False:
@@ -179,7 +179,10 @@ async def fetch_user_info(self, access_token, user_info, idp_issuer, list_visa_t
                                     
                                     if conditions['enabled']==True:
                                         if visa_type not in visas_outcome:
-                                            visas_outcome[visa_type]=False
+                                            if visa_type == 'ControlledAccessGrants':
+                                                visas_outcome[visa_type]=None
+                                            else:
+                                                visas_outcome[visa_type]=False
                                         elif visas_outcome[visa_type]==True:
                                             continue
                                     else:
@@ -195,8 +198,15 @@ async def fetch_user_info(self, access_token, user_info, idp_issuer, list_visa_t
                                             self.LOG.warning("Unauthorized visa: {}. Issuer not trusted.".format(visa_token))
                                             raise NoPermissionsAvailable("Unauthorized visa. Issuer not trusted.")
                                         accepted_issuer=False
-                                        visa_jwks_url=visa['iss']+'.well-known/openid-configuration'
-                                        #visa_validated = validate_ga4gh_visa(self, access_token, visa['iss'], visa_jwks_url)
+                                        visa_well_known=visa['iss']+'/.well-known/openid-configuration'
+                                        response = requests.get(visa_well_known)
+                                        response.raise_for_status()
+                                        well_known_info = response.json()
+                                        visa_jwks_url=well_known_info["jwks_uri"]
+                                        visa_validated = validate_ga4gh_visa(self, access_token, visa['iss'], visa_jwks_url)
+                                        if visa_validated == False:
+                                            self.LOG.warning("Unauthorized visa: {}. Visa not valid.".format(visa_token))
+                                            raise NoPermissionsAvailable("Unauthorized visa. Visa not valid.")
                                         for issuers_values in conditions['issuers']:
                                             if visa_values['value'] in issuers_values["accepted_values"]:
                                                 if visa["iss"] == issuers_values["iss"]:
