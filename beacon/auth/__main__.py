@@ -171,48 +171,51 @@ async def fetch_user_info(self, access_token, user_info, idp_issuer, list_visa_t
                         for visa_token in visa_tokens:
                             # Validate the visas and extract the datasets ids
                             try:
-                                visa = jwt.decode(visa_token, options={"verify_signature": False}, algorithms=["RS256"])
-                                if visa['iss'] in config.ga4gh_visa_trusted_issuers:
-                                    pass
-                                else:
-                                    self.LOG.warning("Unauthorized visa: {}. Issuer not trusted.".format(visa_token))
-                                    raise NoPermissionsAvailable("Unauthorized visa. Issuer not trusted.")
-                                visa_jwks_url=visa['iss']+'.well-known/openid-configuration'
-                                visa_validated = validate_ga4gh_visa(self, access_token, visa['iss'], visa_jwks_url)
-                                if visa_validated==True:
-                                    with open("/beacon/permissions/ga4gh_visas/visas_conf.yml", 'r') as pfile:
-                                        visas_conf = yaml.safe_load(pfile)
-                                    pfile.close()
-                                    visa_values=visa['ga4gh_visa_v1']
-                                    accepted_visa=False
-                                    for visa_type,conditions in visas_conf.items():
-                                        if conditions['enabled']==True:
-                                            if visa_type not in visas_outcome:
-                                                visas_outcome[visa_type]=False
-                                            elif visas_outcome[visa_type]==True:
-                                                continue
-                                        else:
+                                with open("/beacon/permissions/ga4gh_visas/visas_conf.yml", 'r') as pfile:
+                                    visas_conf = yaml.safe_load(pfile)
+                                pfile.close()
+                                accepted_issuer=False
+                                for visa_type,conditions in visas_conf.items():
+                                    if conditions['enabled']==True:
+                                        if visa_type not in visas_outcome:
+                                            visas_outcome[visa_type]=False
+                                        elif visas_outcome[visa_type]==True:
                                             continue
-                                        if visa_values['type']==visa_type:
-                                            for trusted_acceptedterms_visa in visas_conf[visa_type]:
-                                                if visa_values['value'] in trusted_acceptedterms_visa["accepted_values"]:
-                                                    if visa["iss"] == trusted_acceptedterms_visa["iss"]:
-                                                        if visa_type == 'ControlledAccessGrants':
-                                                            dataset_url = visa["ga4gh_visa_v1"]["value"]
-                                                            dataset_url_splitted = dataset_url.split('/')
-                                                            visa_dataset = dataset_url_splitted[-1]
-                                                            list_visa_tokens.append(visa_dataset)
-                                                            visas_outcome[visa_type]=visa_dataset
-                                                        else:
-                                                            visas_outcome[visa_type]=True
-                                                        break
-                                else:
-                                    continue
+                                    else:
+                                        continue
+                                    visa = jwt.decode(visa_token, options={"verify_signature": False}, algorithms=["RS256"])
+                                    for issuer in conditions['issuers']:
+                                        if visa['iss'] in issuer['iss']:
+                                            accepted_issuer=True
+                                            break
+                                    if accepted_issuer==False:
+                                        self.LOG.warning("Unauthorized visa: {}. Issuer not trusted.".format(visa_token))
+                                        raise NoPermissionsAvailable("Unauthorized visa. Issuer not trusted.")
+                                    visa_jwks_url=visa['iss']+'.well-known/openid-configuration'
+                                    visa_validated = validate_ga4gh_visa(self, access_token, visa['iss'], visa_jwks_url)
+                                    if visa_validated==True:
+                                        visa_values=visa['ga4gh_visa_v1']
+                                    if visa_values['type']==visa_type:
+                                        for trusted_acceptedterms_visa in visas_conf[visa_type]:
+                                            if visa_values['value'] in trusted_acceptedterms_visa["accepted_values"]:
+                                                if visa["iss"] == trusted_acceptedterms_visa["iss"]:
+                                                    if visa_type == 'ControlledAccessGrants':
+                                                        dataset_url = visa["ga4gh_visa_v1"]["value"]
+                                                        dataset_url_splitted = dataset_url.split('/')
+                                                        visa_dataset = dataset_url_splitted[-1]
+                                                        list_visa_tokens.append(visa_dataset)
+                                                        visas_outcome[visa_type]=visa_dataset
+                                                    else:
+                                                        visas_outcome[visa_type]=True
+                                                    break
+                                    else:
+                                        continue
                             except Exception as e:
-                                check_needed_visa_conf(self, visas_conf, visas_outcome)
+                                continue
                 check_needed_visa_conf(self, visas_conf, visas_outcome)
                 return user, list_visa_tokens
             else:
+                self.LOG.warning('Unauthorized. Could not fetch the user info from the token.')
                 raise NoPermissionsAvailable("Unauthorized. Could not fetch the user info from the token.")
 
 @log_with_args(config.level)
