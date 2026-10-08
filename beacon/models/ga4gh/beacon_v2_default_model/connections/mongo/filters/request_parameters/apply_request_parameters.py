@@ -3,8 +3,6 @@ from typing import List, Dict
 from beacon.logs.logs import log_with_args
 from beacon.conf.conf_override import config
 from beacon.connections.mongo.filters.alphanumeric import apply_alphanumeric_filter
-from beacon.connections.mongo.client import get_client
-from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.utils import lengthquery
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.request_parameters.start import generate_position_filter_start
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.request_parameters.sequence import generate_position_filter_start_sequence_query
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.request_parameters.end import generate_position_filter_end
@@ -103,8 +101,6 @@ def apply_request_parameters(self, query: Dict[str, List[dict]], dataset: str):
                 query["$and"].append(startquery)    
             # Otherwise, process the parameter as a range query
             elif isBracket==False:
-                client=get_client()
-                genomicVariations=client['beacon'].genomicVariations
                 # Generate a final start value, as if it came by filters (start,end) to then create a list and process it as the first part of the range for the end value
                 if isinstance(v, list) and isinstance(startvalue, list):
                     startvalue=startvalue[0]
@@ -129,18 +125,11 @@ def apply_request_parameters(self, query: Dict[str, List[dict]], dataset: str):
                 stage2v = str(int(v)+1)+','+str(9999999999)
                 stage2v =stage2v.split(',')
                 filters = generate_position_filter_end(self, k, stage2v)  
-                # Get the variants that have the length greater than the range end-start
-                docs_length = lengthquery(self, genomicVariations, {'length': {'$gte': int(v)-int(startvalue)}, 'datasetId': dataset})
-                length_array=[]
-                for lengthdoc in docs_length:
-                    try:
-                        # Keep in an array only the records that have a start value less than the start requested and greater than the requested end
-                        if int(lengthdoc["variation"]["location"]["interval"]["start"]["value"]) < int(startvalue) and int(lengthdoc["variation"]["location"]["interval"]["end"]["value"]) > int(v):
-                            length_array.append(lengthdoc["_id"])
-                    except Exception as e:
-                        continue
-                # Build the length query syntax
-                length_query["$and"].append({'_id': {'$in': length_array}})
+                # Build the query syntax for the variants that span the whole requested range.
+                # The query is shifted to the MongoDB for optimal use of indices.
+                length_query["$and"].append({'length': {'$gte': int(v)-int(startvalue)}})
+                length_query["$and"].append({'variation.location.interval.start.value': {'$lt': int(startvalue)}})
+                length_query["$and"].append({'variation.location.interval.end.value': {'$gt': int(v)}})
         elif k == "datasets":
             pass
         elif k == "variantMinLength":
