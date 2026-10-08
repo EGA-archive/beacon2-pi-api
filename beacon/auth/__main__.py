@@ -188,39 +188,40 @@ async def fetch_user_info(self, access_token, user_info, idp_issuer, list_visa_t
                                     else:
                                         continue
                                     visa = jwt.decode(visa_token, options={"verify_signature": False}, algorithms=["RS256"])
-                                    visa_values=visa['ga4gh_visa_v1']
-                                    if visa_values['type']==visa_type:
-                                        for issuer in conditions['issuers']:
-                                            if visa['iss'] == issuer['iss']:
-                                                accepted_issuer=True
-                                                break
-                                        if accepted_issuer==False:
-                                            self.LOG.warning("Unauthorized visa: {}. Issuer not trusted.".format(visa_token))
-                                            raise NoPermissionsAvailable("Unauthorized visa. Issuer not trusted.")
-                                        accepted_issuer=False
-                                        visa_well_known=visa['iss']+'/.well-known/openid-configuration'
-                                        response = requests.get(visa_well_known)
-                                        response.raise_for_status()
-                                        well_known_info = response.json()
-                                        visa_jwks_url=well_known_info["jwks_uri"]
-                                        visa_validated = validate_ga4gh_visa(self, access_token, visa['iss'], visa_jwks_url)
-                                        if visa_validated == False:
-                                            self.LOG.warning("Unauthorized visa: {}. Visa not valid.".format(visa_token))
-                                            raise NoPermissionsAvailable("Unauthorized visa. Visa not valid.")
-                                        for issuers_values in conditions['issuers']:
-                                            if visa_values['value'] in issuers_values["accepted_values"]:
-                                                if visa["iss"] == issuers_values["iss"]:
-                                                    if visa_type == 'ControlledAccessGrants':
-                                                        dataset_url = visa["ga4gh_visa_v1"]["value"]
-                                                        dataset_url_splitted = dataset_url.split('/')
-                                                        visa_dataset = dataset_url_splitted[-1]
-                                                        list_visa_tokens.append(visa_dataset)
-                                                        visas_outcome[visa_type]=visa_dataset
-                                                    else:
-                                                        visas_outcome[visa_type]=True
+                                    if 'ga4gh_visa_v1' in visa:
+                                        visa_values=visa['ga4gh_visa_v1']
+                                        if visa_values['type']==visa_type:
+                                            for issuer in conditions['issuers']:
+                                                if visa['iss'] == issuer['iss']:
+                                                    accepted_issuer=True
                                                     break
-                                    else:
-                                        continue
+                                            if accepted_issuer==False:
+                                                self.LOG.warning("Unauthorized visa: {}. Issuer not trusted.".format(visa_token))
+                                                raise NoPermissionsAvailable("Unauthorized visa. Issuer not trusted.")
+                                            accepted_issuer=False
+                                            visa_well_known=visa['iss']+'/.well-known/openid-configuration'
+                                            response = requests.get(visa_well_known)
+                                            response.raise_for_status()
+                                            well_known_info = response.json()
+                                            visa_jwks_url=well_known_info["jwks_uri"]
+                                            visa_validated = validate_ga4gh_visa(self, access_token, visa['iss'], visa_jwks_url)
+                                            if visa_validated == False:
+                                                self.LOG.warning("Unauthorized visa: {}. Visa not valid.".format(visa_token))
+                                                raise NoPermissionsAvailable("Unauthorized visa. Visa not valid.")
+                                            for issuers_values in conditions['issuers']:
+                                                if visa_values['value'] in issuers_values["accepted_values"]:
+                                                    if visa["iss"] == issuers_values["iss"]:
+                                                        if visa_type == 'ControlledAccessGrants':
+                                                            dataset_url = visa["ga4gh_visa_v1"]["value"]
+                                                            dataset_url_splitted = dataset_url.split('/')
+                                                            visa_dataset = dataset_url_splitted[-1]
+                                                            list_visa_tokens.append(visa_dataset)
+                                                            visas_outcome[visa_type]=visa_dataset
+                                                        else:
+                                                            visas_outcome[visa_type]=True
+                                                        break
+                                        else:
+                                            continue
                             except Exception as e:
                                 continue
                 self.LOG.warning(visas_outcome)
