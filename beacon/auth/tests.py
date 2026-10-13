@@ -16,7 +16,7 @@ import requests
 import yaml
 
 # for keycloak, create aud in mappers, with custom, aud and beacon for audience
-mock_access_token = 'eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJreS1tUXNxZ0ZYeHdSUVRfRUhuQlJJUGpmbVhfRXZuUTVEbzZWUTJCazdZIn0.eyJleHAiOjE3OTE4NzkwNDUsImlhdCI6MTc5MTg3ODc0NSwianRpIjoiNmI3MDNlZGItNmNkZi00ZTQ3LWJlMTYtNGI1Mzc4ZjM2ODMyIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL0JlYWNvbiIsImF1ZCI6ImJlYWNvbiIsInN1YiI6IjQ3ZWZmMWIxLTc2MjEtNDU3MC1hMGJiLTAxYTcxOWZiYTBhMiIsInR5cCI6IkJlYXJlciIsImF6cCI6ImJlYWNvbiIsInNlc3Npb25fc3RhdGUiOiJmODNlNTAxZS02MmY3LTQwM2EtOWVmYi05MDgwOTJlOTE4NmIiLCJhY3IiOiIxIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBlbWFpbCBtaWNyb3Byb2ZpbGUtand0Iiwic2lkIjoiZjgzZTUwMWUtNjJmNy00MDNhLTllZmItOTA4MDkyZTkxODZiIiwidXBuIjoiamFuZSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwibmFtZSI6IkphbmUgU21pdGgiLCJncm91cHMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXSwicHJlZmVycmVkX3VzZXJuYW1lIjoiamFuZSIsImdpdmVuX25hbWUiOiJKYW5lIiwiZmFtaWx5X25hbWUiOiJTbWl0aCIsImVtYWlsIjoiamFuZS5zbWl0aEBiZWFjb24uZ2E0Z2gifQ.anBaeL0aJy6vudQjg2kaAaGuXJuVkp7uDubCrogRRT9JBgocViNZAjUZBhXiiMuaCtBu_3i8tkP13ERv4Jo6ryLv7MWeBcBvPeUNBalCUiBSSKlQi_eKqdJaP6p_E0Znwt_MAIcjYNn-KeJ3SaTVpvzQ3UKbeEPUCHJRtIRcq_gn55rAt18xvZubDYD7HDOJwTGoN2dgB_tlLKsAXucCDbtdvGZPHplcjE2X6BuIrkxYo_iEFN8ERybkdqjklFzk5IvnT_8mos3fhUIXxqe05aVHKhNR5yy8Jd6GCTDl5HGnGjHb8yJSYTLZ0vnU1Whqvvt8nZ_O3n_WOOA72DNcXQ'
+mock_access_token = 'eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJreS1tUXNxZ0ZYeHdSUVRfRUhuQlJJUGpmbVhfRXZuUTVEbzZWUTJCazdZIn0.eyJleHAiOjE3OTE5MDk4MzgsImlhdCI6MTc5MTkwOTUzOCwianRpIjoiZmQ4NmEyNWUtMzc3NC00NmQ3LTg2YTgtNDBiYzkxODI1NDBjIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL0JlYWNvbiIsImF1ZCI6ImJlYWNvbiIsInN1YiI6IjQ3ZWZmMWIxLTc2MjEtNDU3MC1hMGJiLTAxYTcxOWZiYTBhMiIsInR5cCI6IkJlYXJlciIsImF6cCI6ImJlYWNvbiIsInNlc3Npb25fc3RhdGUiOiJjOGEyMTIwOC1mY2I0LTQ1OTItOGY0OC1hMzI3MTJkNmZmMTYiLCJhY3IiOiIxIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBlbWFpbCBtaWNyb3Byb2ZpbGUtand0Iiwic2lkIjoiYzhhMjEyMDgtZmNiNC00NTkyLThmNDgtYTMyNzEyZDZmZjE2IiwidXBuIjoiamFuZSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwibmFtZSI6IkphbmUgU21pdGgiLCJncm91cHMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXSwicHJlZmVycmVkX3VzZXJuYW1lIjoiamFuZSIsImdpdmVuX25hbWUiOiJKYW5lIiwiZmFtaWx5X25hbWUiOiJTbWl0aCIsImVtYWlsIjoiamFuZS5zbWl0aEBiZWFjb24uZ2E0Z2gifQ.RTn7TFXAS8Z62aaN5uV6EusoPh7lyMzDogMxVUwkoAYS2gwopk_9UAqf76xFjzu3wKPcEFjOvdfyqgnuuXa_9oVZ3osqKRfoXuafrM6k4c1RCh0nam9uAEhP0-7q8g61tzwTtPg_-eKwjd1eQsNDo63g8Dd-dMSFntJP49iDj-Z1yu8p_9vBlwm7sLvyobfhTweteE_5Gk8mWAoP9c6X9bK-XkhRuImmd9Zq1u4Nn1bIWGYGzhT21RHPAC0CWcgGsV2jyhKDDpWZ3gxjMN-bI3JK04kKD_TMqXt0Uybvhw8V3ebUrghM2y7-9bEUvuBF0G2mejjF0h8psil1esFqqw'
 mock_access_token_false = 'public'
 mock_ga4gh_visa_dataset = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL3JlbXMudGVzdC5leGFtcGxlLm9yZy8iLCJzdWIiOiJ0ZXN0LXVzZXItMTIzIiwiaWF0IjoxNzAwMDAwMDAwLCJleHAiOjE5MDAwMDAwMDAsImdhNGdoX3Zpc2FfdjEiOnsidHlwZSI6IkNvbnRyb2xsZWRBY2Nlc3NHcmFudHMiLCJhc3NlcnRlZCI6MTcwMDAwMDAwMCwidmFsdWUiOiJodHRwczovL3JlbXMudGVzdC5leGFtcGxlLm9yZy9kYXRhc2V0cy90ZXN0LWRhdGFzZXQiLCJzb3VyY2UiOiJodHRwczovL3JlbXMudGVzdC5leGFtcGxlLm9yZy8iLCJieSI6ImRhYyJ9fQ.c3ludGhldGljLXRlc3Qtc2lnbmF0dXJl'
 
@@ -288,6 +288,35 @@ class TestAuthN(unittest.TestCase):
 
                 # Expect correct dataset extraction from visa structure
                 assert list_accepted_datasets == ['test-dataset']
+
+                from beacon.permissions.plugins import DummyPermissions
+
+                datasets = await DummyPermissions.get_permissions(
+                    self=DummyPermissions,
+                    user_id='142140921401',
+                    requested_datasets=[],
+                    visa_datasets=list_accepted_datasets
+                )
+
+                # Collect dataset identifiers returned by permission system
+                list_datasets_names = []
+                for dataset in datasets:
+                    list_datasets_names.append(dataset.dataset)
+
+                # Validate public dataset visibility matches expected policy
+                tc = unittest.TestCase()
+                tc.assertSetEqual(
+                    set([
+                        'test',
+                        'test2',
+                        'DemoDatasetBreast',
+                        'CINECA_synthetic_cohort_EUROPE_UK1',
+                        'test-dataset',
+                        'test3',
+                        'test4'
+                    ]),
+                    set(list_datasets_names)
+                )
 
             loop.run_until_complete(test_check_visa_passports())
             loop.run_until_complete(client.close())

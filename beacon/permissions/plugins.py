@@ -25,7 +25,7 @@ class DummyPermissions(Permissions):
     async def initialize(self):
         pass
     
-    async def get_permissions(self, user_id, requested_datasets=None, testMode=False, entry_type_id=None):
+    async def get_permissions(self, user_id, requested_datasets=None, testMode=False, entry_type_id=None, visa_datasets=None):
         # Initialize the list of datasets that will be returned depending on the permissions.
         datasets = []
         try:
@@ -33,6 +33,12 @@ class DummyPermissions(Permissions):
             with open("/beacon/permissions/datasets/datasets_permissions.yml", 'r') as pfile:
                 datasets_permissions = yaml.safe_load(pfile)
             pfile.close()
+            if visa_datasets!=None:
+                for visa_dataset in visa_datasets:
+                    if visa_dataset in datasets_permissions:
+                        continue
+                    else:
+                        datasets_permissions[visa_dataset]={"controlled": {"default_entry_types_granularity": "boolean", "user-list": [{"user_id": user_id}]}}
             if testMode == True:
                 # If the testMode is requested, open the datasets configuration file and save it in a dictionary.
                 with open("/beacon/conf/datasets/datasets_conf.yml", 'r') as confile:
@@ -48,6 +54,9 @@ class DummyPermissions(Permissions):
                                 test_datasets.append(confdataset)
             # Iterate through the datasets permissions.
             for dataset, security_level_dict in datasets_permissions.items():
+                if requested_datasets != None and requested_datasets != []:
+                    if dataset not in requested_datasets:
+                        continue
                 if testMode == True:
                     # In case testMode is active, get rid of the datasets that are not meant for testMode.
                     if dataset not in test_datasets:

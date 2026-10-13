@@ -223,7 +223,7 @@ async def fetch_user_info(self, access_token, user_info, idp_issuer, list_visa_t
                 # If the response is good, get the user info of the esponse
                 user = await resp.json()
                 try:
-                    # Check if there are ny visas in the user info of the response
+                    # Check if there are any visas in the user info of the response
                     visa_tokens = user['ga4gh_passport_v1']
                 except Exception:
                     self.LOG.warning("No GA4GH visas found for the user")

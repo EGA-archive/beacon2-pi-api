@@ -70,12 +70,9 @@ def query_permissions(func):
         # Get the usernq, and the list of datasets that the user has permissions for from visas.
         user_id, list_visa_datasets = await authorization(self)
         # Get the datasets that the user has permissions for from the datasets permissions conf file in a list of classes for the datasets.
-        datasets_permissions = await PermissionsProxy.get_permissions(self, user_id=user_id, requested_datasets=requested_datasets, testMode=self.request_attributes.qparams.query.testMode, entry_type_id=self.request_attributes.entry_type_id)
+        datasets_permissions = await PermissionsProxy.get_permissions(self, user_id=user_id, requested_datasets=requested_datasets, testMode=self.request_attributes.qparams.query.testMode, entry_type_id=self.request_attributes.entry_type_id, visa_datasets=list_visa_datasets)
         # Return the time to be inserted in the budget in case the budget doesn't return an exception for the query.
         time_now = check_budget(self, user_id)
-        # Add as well in the list of dataset classes, the dataset classes that have permissions for the query coming from visas.
-        for visa_dataset in list_visa_datasets:
-            datasets_permissions.append(SingleDatasetResponse(dataset=visa_dataset, granularity=config.default_beacon_granularity))
         # Using the list of dataset classes, get rid of the ones thet are not found in the databases.
         response_datasets= await get_datasets_list(self, datasets_permissions)
         return await func(self, response_datasets, user_id, time_now)
