@@ -4,7 +4,7 @@ AV_Dataset:
     - default_entry_types_granularity: count
       entry_types_exceptions:
       - individual: record
-      user_e-mail: jane.smith@beacon.ga4gh
+      user_id: 47eff1b1-7621-4570-a0bb-01a719fba0a2
 CINECA_synthetic_cohort_EUROPE_UK1:
   public:
     default_entry_types_granularity: record
@@ -16,8 +16,8 @@ DemoDatasetBreast:
     - default_entry_types_granularity: count
       entry_types_exceptions:
       - individual: record
-      user_e-mail: jane.smith@beacon.ga4gh
-    - user_e-mail: john.doe@beacon.ga4gh
+      user_id: 47eff1b1-7621-4570-a0bb-01a719fba0a2
+    - user_id: 8718f980-47bc-4be6-9390-a01343eed37d
   public:
     default_entry_types_granularity: record
     entry_types_exceptions:
@@ -28,8 +28,8 @@ test:
     - default_entry_types_granularity: count
       entry_types_exceptions:
       - individual: record
-      user_e-mail: jane.smith@beacon.ga4gh
-    - user_e-mail: john.doe@beacon.ga4gh
+      user_id: 47eff1b1-7621-4570-a0bb-01a719fba0a2
+    - user_id: 8718f980-47bc-4be6-9390-a01343eed37d
   public:
     default_entry_types_granularity: record
     entry_types_exceptions:
@@ -42,8 +42,8 @@ test2:
       - individual: record
       - biosample: count
       - analysis: boolean
-      user_e-mail: jane.smith@beacon.ga4gh
-    - user_e-mail: john.doe@beacon.ga4gh
+      user_id: 47eff1b1-7621-4570-a0bb-01a719fba0a2
+    - user_id: 8718f980-47bc-4be6-9390-a01343eed37d
   public:
     default_entry_types_granularity: record
     entry_types_exceptions:

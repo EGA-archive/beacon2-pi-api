@@ -1,0 +1,4 @@
+CLIENT_ID=beacon
+WELL_KNOWN_ENDPOINT='http://idp:8080/auth/realms/Beacon/.well-known/openid-configuration'
+ISSUER='http://localhost:8080/auth/realms/Beacon'
+MUST_INCLUDE_BEACON_URL_IN_AUDIENCE=True

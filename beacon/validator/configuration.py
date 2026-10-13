@@ -475,14 +475,14 @@ def check_configuration(
 
                                             # Validate user-specific configuration keys
                                             if confuser not in [
-                                                'user_e-mail',
+                                                'user_id',
                                                 'default_entry_types_granularity',
                                                 'entry_types_exceptions'
                                             ]:
                                                 raise Exception(
                                                     "entries for user settings in user-list "
                                                     "must be be default_entry_types_granularity, "
-                                                    "entry_types_exceptions or user_e-mail"
+                                                    "entry_types_exceptions or user_id"
                                                 )
 
     except Exception:

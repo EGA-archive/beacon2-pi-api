@@ -408,7 +408,7 @@ AV_Dataset:
     entry_types_exceptions:
       - individual: boolean
     user-list:
-      - user_e-mail: jane.smith@beacon.ga4gh
+      - user_id: 47eff1b1-7621-4570-a0bb-01a719fba0a2
         default_entry_types_granularity: count
         entry_types_exceptions:
           - individual: record

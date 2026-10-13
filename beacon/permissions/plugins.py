@@ -12,8 +12,8 @@ class Permissions():
     async def initialize(self):
         raise NotImplementedError('Overload this function in a subclass')
 
-    async def get(self, username, requested_datasets=None):
-        """Return an iterable for the granted datasets for the given username and within a requested list of datasets."""
+    async def get(self, user_id, requested_datasets=None):
+        """Return an iterable for the granted datasets for the given user_id and within a requested list of datasets."""
         raise NotImplementedError('Overload this function in a subclass')
 
     async def close(self):
@@ -25,7 +25,7 @@ class DummyPermissions(Permissions):
     async def initialize(self):
         pass
     
-    async def get_permissions(self, username, requested_datasets=None, testMode=False, entry_type_id=None):
+    async def get_permissions(self, user_id, requested_datasets=None, testMode=False, entry_type_id=None, visa_datasets=None):
         # Initialize the list of datasets that will be returned depending on the permissions.
         datasets = []
         try:
@@ -33,6 +33,12 @@ class DummyPermissions(Permissions):
             with open("/beacon/permissions/datasets/datasets_permissions.yml", 'r') as pfile:
                 datasets_permissions = yaml.safe_load(pfile)
             pfile.close()
+            if visa_datasets!=None:
+                for visa_dataset in visa_datasets:
+                    if visa_dataset in datasets_permissions:
+                        continue
+                    else:
+                        datasets_permissions[visa_dataset]={"controlled": {"default_entry_types_granularity": "boolean", "user-list": [{"user_id": user_id}]}}
             if testMode == True:
                 # If the testMode is requested, open the datasets configuration file and save it in a dictionary.
                 with open("/beacon/conf/datasets/datasets_conf.yml", 'r') as confile:
@@ -48,6 +54,9 @@ class DummyPermissions(Permissions):
                                 test_datasets.append(confdataset)
             # Iterate through the datasets permissions.
             for dataset, security_level_dict in datasets_permissions.items():
+                if requested_datasets != None and requested_datasets != []:
+                    if dataset not in requested_datasets:
+                        continue
                 if testMode == True:
                     # In case testMode is active, get rid of the datasets that are not meant for testMode.
                     if dataset not in test_datasets:
@@ -56,7 +65,7 @@ class DummyPermissions(Permissions):
                 default_granularity = None
                 granularity_exceptions = None
                 # Get the default granularity and any granularity restriction to return for the dataset and user (in case there is authentication).
-                default_granularity, granularity_exceptions = return_granularity_and_exceptions(self, security_level_dict, username, default_granularity, granularity_exceptions)
+                default_granularity, granularity_exceptions = return_granularity_and_exceptions(self, security_level_dict, user_id, default_granularity, granularity_exceptions)
                 # If there is any restriction apply it to the max granularity to return.
                 if granularity_exceptions != None:
                     default_granularity=return_found_granularity_in_exceptions(self, granularity_exceptions, default_granularity, entry_type_id)

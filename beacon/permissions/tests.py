@@ -47,13 +47,14 @@ class TestAuthZ(unittest.TestCase):
 
             async def test_verify_public_datasets():
                 # Public users should have access to a restricted dataset subset
-                RequestAttributes.entry_type_id = 'individual'
 
                 # Fetch permissions for anonymous/public user
                 datasets = await PermissionsProxy.get_permissions(
                     self=PermissionsProxy,
-                    username='public',
-                    requested_datasets=[]
+                    user_id=None,
+                    requested_datasets=[],
+                    visa_datasets=[],
+                    entry_type_id='individual'
                 )
 
                 # Collect dataset identifiers returned by permission system
@@ -68,7 +69,8 @@ class TestAuthZ(unittest.TestCase):
                         'test',
                         'test2',
                         'DemoDatasetBreast',
-                        'CINECA_synthetic_cohort_EUROPE_UK1'
+                        'CINECA_synthetic_cohort_EUROPE_UK1',
+                        'test3'
                     ]),
                     set(list_datasets_names)
                 )
@@ -87,13 +89,14 @@ class TestAuthZ(unittest.TestCase):
 
             async def test_verify_registered_datasets():
                 # Registered user dataset visibility
-                RequestAttributes.entry_type_id = 'individual'
 
                 # Query permission layer for authenticated user
                 datasets = await PermissionsProxy.get_permissions(
                     self=PermissionsProxy,
-                    username='dummy_user@example.com',
-                    requested_datasets=[]
+                    user_id='3581209582102581208',
+                    requested_datasets=[],
+                    visa_datasets=[],
+                    entry_type_id='individual'
                 )
 
                 # Extract dataset names
@@ -108,7 +111,9 @@ class TestAuthZ(unittest.TestCase):
                         'CINECA_synthetic_cohort_EUROPE_UK1',
                         'test2',
                         'test',
-                        'DemoDatasetBreast'
+                        'DemoDatasetBreast',
+                        'test3',
+                        'test4'
                     ]),
                     set(list_datasets_names)
                 )
@@ -126,12 +131,13 @@ class TestAuthZ(unittest.TestCase):
 
             async def test_verify_registered_datasets():
                 # Controlled dataset access depends on user identity
-                RequestAttributes.entry_type_id = 'individual'
 
                 datasets = await PermissionsProxy.get_permissions(
                     self=PermissionsProxy,
-                    username='jane.smith@beacon.ga4gh',
-                    requested_datasets=[]
+                    user_id='47eff1b1-7621-4570-a0bb-01a719fba0a2',
+                    requested_datasets=[],
+                    visa_datasets=[],
+                    entry_type_id='individual'
                 )
 
                 # Collect dataset identifiers
@@ -147,7 +153,9 @@ class TestAuthZ(unittest.TestCase):
                         'test',
                         'test2',
                         'DemoDatasetBreast',
-                        'CINECA_synthetic_cohort_EUROPE_UK1'
+                        'CINECA_synthetic_cohort_EUROPE_UK1',
+                        'test3',
+                        'test4'
                     ]),
                     set(list_datasets_names)
                 )
@@ -199,13 +207,12 @@ class TestAuthZ(unittest.TestCase):
                 request_attributes = RequestAttributes()
                 request_attributes.headers=headers
                 MagicClass = MagicMock(_id='hohoho', request_attributes=request_attributes)
-                # Resolve username and visa dataset context
-                username, list_visa_datasets = await authorization(
+                # Resolve user_id and visa dataset context
+                user_id, list_visa_datasets = await authorization(
                     self=MagicClass
                 )
-
                 # Ensure token maps to correct identity
-                assert username == 'jane.smith@beacon.ga4gh'
+                assert user_id == '47eff1b1-7621-4570-a0bb-01a719fba0a2'
 
             loop.run_until_complete(test_authorization())
             loop.run_until_complete(client.close())
@@ -289,7 +296,7 @@ class TestAuthZ(unittest.TestCase):
                         returned_granularity, exceptions = return_granularity_and_exceptions(
                             self=MagicClass,
                             security_level_dict=security_level_dict,
-                            username='jane.smith@beacon.ga4gh',
+                            user_id='47eff1b1-7621-4570-a0bb-01a719fba0a2',
                             default_granularity=None,
                             granularity_exceptions=None
                         )
@@ -306,7 +313,7 @@ class TestAuthZ(unittest.TestCase):
                         returned_granularity, exceptions = return_granularity_and_exceptions(
                             self=MagicClass,
                             security_level_dict=security_level_dict,
-                            username='jane.smith@beacon.ga4gh',
+                            user_id='47eff1b1-7621-4570-a0bb-01a719fba0a2',
                             default_granularity=None,
                             granularity_exceptions=None
                         )
@@ -320,13 +327,13 @@ class TestAuthZ(unittest.TestCase):
                         assert returned_granularity == 'count'
 
                         # --- Analysis level ---
-                        RequestAttributes.entry_type_id = 'analysis'
                         returned_granularity, exceptions = return_granularity_and_exceptions(
                             self=MagicClass,
                             security_level_dict=security_level_dict,
-                            username='jane.smith@beacon.ga4gh',
+                            user_id='47eff1b1-7621-4570-a0bb-01a719fba0a2',
                             default_granularity=None,
-                            granularity_exceptions=None
+                            granularity_exceptions=None,
+                            entry_type_id='analysis'
                         )
 
                         returned_granularity = return_found_granularity_in_exceptions(
@@ -338,6 +345,221 @@ class TestAuthZ(unittest.TestCase):
                         assert returned_granularity == 'boolean'
 
             loop.run_until_complete(test_controlled_granularity_returned())
+            loop.run_until_complete(client.close())
+    def test_authZ_verify_dataset_sets_controlled_granularity_default(self):
+        #TODO: case where 3 security levels are present. Case where controlled is empty and public is filled. Case where only registered and controlled datasets are present. Case where only public is filled.
+        # Test access control for a controlled-access (authorized) user
+        with loop_context() as loop:
+            app = create_test_app()
+            client = TestClient(TestServer(app), loop=loop)
+
+            loop.run_until_complete(client.start_server())
+
+            async def test_verify_controlled_granularity_default():
+                # Controlled dataset access depends on user identity
+
+                datasets = await PermissionsProxy.get_permissions(
+                    self=PermissionsProxy,
+                    user_id='47eff1b1-7621-4570-a0bb-01a719fba0a2',
+                    requested_datasets=['test4'],
+                    visa_datasets=[],
+                    entry_type_id='individual'
+                )
+
+                # Collect dataset identifiers
+                list_datasets_names = []
+                for dataset in datasets:
+                    assert dataset.dataset == 'test4'
+                    assert dataset.granularity == 'count'
+                    list_datasets_names.append(dataset.dataset)
+
+            loop.run_until_complete(test_verify_controlled_granularity_default())
+            loop.run_until_complete(client.close())
+    def test_authZ_verify_dataset_sets_controlled_granularity_default2(self):
+        #TODO: case where 3 security levels are present. Case where controlled is empty and public is filled. Case where only registered and controlled datasets are present. Case where only public is filled.
+        # Test access control for a controlled-access (authorized) user
+        with loop_context() as loop:
+            app = create_test_app()
+            client = TestClient(TestServer(app), loop=loop)
+
+            loop.run_until_complete(client.start_server())
+
+            async def test_verify_controlled_granularity_default():
+                # Controlled dataset access depends on user identity
+
+                datasets = await PermissionsProxy.get_permissions(
+                    self=PermissionsProxy,
+                    user_id='47eff1b1-7621-4570-a0bb-01a719fba0a2',
+                    requested_datasets=['test4'],
+                    visa_datasets=[],
+                    entry_type_id='analysis'
+                )
+
+                # Collect dataset identifiers
+                list_datasets_names = []
+                for dataset in datasets:
+                    assert dataset.dataset == 'test4'
+                    assert dataset.granularity == 'record'
+                    list_datasets_names.append(dataset.dataset)
+
+            loop.run_until_complete(test_verify_controlled_granularity_default())
+            loop.run_until_complete(client.close())
+    def test_authZ_verify_dataset_sets_controlled_granularity_default3(self):
+        #TODO: case where 3 security levels are present. Case where controlled is empty and public is filled. Case where only registered and controlled datasets are present. Case where only public is filled.
+        # Test access control for a controlled-access (authorized) user
+        with loop_context() as loop:
+            app = create_test_app()
+            client = TestClient(TestServer(app), loop=loop)
+
+            loop.run_until_complete(client.start_server())
+
+            async def test_verify_controlled_granularity_default():
+                # Controlled dataset access depends on user identity
+
+                datasets = await PermissionsProxy.get_permissions(
+                    self=PermissionsProxy,
+                    user_id='8718f980-47bc-4be6-9390-a01343eed37d',
+                    requested_datasets=['test4'],
+                    visa_datasets=[],
+                    entry_type_id='individual'
+                )
+
+                # Collect dataset identifiers
+                list_datasets_names = []
+                for dataset in datasets:
+                    assert dataset.dataset == 'test4'
+                    assert dataset.granularity == 'count'
+                    list_datasets_names.append(dataset.dataset)
+
+            loop.run_until_complete(test_verify_controlled_granularity_default())
+            loop.run_until_complete(client.close())
+    def test_authZ_verify_dataset_sets_controlled_granularity_default4(self):
+        #TODO: case where 3 security levels are present. Case where controlled is empty and public is filled. Case where only registered and controlled datasets are present. Case where only public is filled.
+        # Test access control for a controlled-access (authorized) user
+        with loop_context() as loop:
+            app = create_test_app()
+            client = TestClient(TestServer(app), loop=loop)
+
+            loop.run_until_complete(client.start_server())
+
+            async def test_verify_controlled_granularity_default():
+                # Controlled dataset access depends on user identity
+
+                datasets = await PermissionsProxy.get_permissions(
+                    self=PermissionsProxy,
+                    user_id='testing_user',
+                    requested_datasets=['test4'],
+                    visa_datasets=[],
+                    entry_type_id='individual'
+                )
+
+                # Collect dataset identifiers
+                list_datasets_names = []
+                for dataset in datasets:
+                    assert dataset.dataset == 'test4'
+                    assert dataset.granularity == 'count'
+                    list_datasets_names.append(dataset.dataset)
+
+            loop.run_until_complete(test_verify_controlled_granularity_default())
+            loop.run_until_complete(client.close())
+    def test_authZ_verify_dataset_sets_controlled_granularity_default5(self):
+        #TODO: case where 3 security levels are present. Case where controlled is empty and public is filled. Case where only registered and controlled datasets are present. Case where only public is filled.
+        # Test access control for a controlled-access (authorized) user
+        with loop_context() as loop:
+            app = create_test_app()
+            client = TestClient(TestServer(app), loop=loop)
+
+            loop.run_until_complete(client.start_server())
+
+            async def test_verify_controlled_granularity_default():
+                # Controlled dataset access depends on user identity
+
+                datasets = await PermissionsProxy.get_permissions(
+                    self=PermissionsProxy,
+                    user_id='testing_user',
+                    requested_datasets=['test3'],
+                    visa_datasets=[],
+                    entry_type_id='individual'
+                )
+
+                # Collect dataset identifiers
+                list_datasets_names = []
+                for dataset in datasets:
+                    assert dataset.dataset == 'test3'
+                    assert dataset.granularity == 'count'
+                    list_datasets_names.append(dataset.dataset)
+
+            loop.run_until_complete(test_verify_controlled_granularity_default())
+            loop.run_until_complete(client.close())
+    def test_authZ_verify_dataset_sets_controlled_granularity_default6(self):
+        #TODO: case where 3 security levels are present. Case where controlled is empty and public is filled. Case where only registered and controlled datasets are present. Case where only public is filled.
+        # Test access control for a controlled-access (authorized) user
+        with loop_context() as loop:
+            app = create_test_app()
+            client = TestClient(TestServer(app), loop=loop)
+
+            loop.run_until_complete(client.start_server())
+
+            async def test_verify_controlled_granularity_default():
+                # Controlled dataset access depends on user identity
+
+                datasets = await PermissionsProxy.get_permissions(
+                    self=PermissionsProxy,
+                    user_id='8718f980-47bc-4be6-9390-a01343eed37d',
+                    requested_datasets=['test3'],
+                    visa_datasets=[],
+                    entry_type_id='individual'
+                )
+
+                # Collect dataset identifiers
+                list_datasets_names = []
+                for dataset in datasets:
+                    assert dataset.dataset == 'test3'
+                    assert dataset.granularity == 'record'
+                    list_datasets_names.append(dataset.dataset)
+
+            loop.run_until_complete(test_verify_controlled_granularity_default())
+            loop.run_until_complete(client.close())
+    def test_authZ_verify_dataset_sets_registered_granularity_default(self):
+        # Test access control for a controlled-access (authorized) user
+        with loop_context() as loop:
+            app = create_test_app()
+            client = TestClient(TestServer(app), loop=loop)
+
+            loop.run_until_complete(client.start_server())
+
+            async def test_verify_controlled_granularity_default():
+                # Controlled dataset access depends on user identity
+
+                datasets = await PermissionsProxy.get_permissions(
+                    self=PermissionsProxy,
+                    user_id='47eff1b1-7621-4570-a0bb-01a719fba0a2',
+                    requested_datasets=[],
+                    visa_datasets=[],
+                    entry_type_id='individual'
+                )
+
+                # Collect dataset identifiers
+                list_datasets_names = []
+                for dataset in datasets:
+                    list_datasets_names.append(dataset.dataset)
+
+                # Ensure controlled dataset access includes privileged datasets
+                tc = unittest.TestCase()
+                tc.assertSetEqual(
+                    set([
+                        'AV_Dataset',
+                        'test',
+                        'test2',
+                        'DemoDatasetBreast',
+                        'CINECA_synthetic_cohort_EUROPE_UK1',
+                        'test3',
+                        'test4'
+                    ]),
+                    set(list_datasets_names)
+                )
+
+            loop.run_until_complete(test_verify_controlled_granularity_default())
             loop.run_until_complete(client.close())
 
 if __name__ == '__main__':
