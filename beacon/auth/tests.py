@@ -3,7 +3,7 @@ import unittest
 import os
 import jwt
 from aiohttp import web
-from beacon.auth.__main__ import fetch_idp, validate_access_token, authentication, fetch_user_info, validate_ga4gh_visa
+from beacon.auth.__main__ import fetch_idp, validate_access_token, authentication, fetch_user_info, get_grants_from_visas
 from dotenv import load_dotenv
 from beacon.logs.logs import initialize_logger
 from beacon.conf.conf_override import config
@@ -11,15 +11,14 @@ from beacon.utils.middlewares import error_middleware
 from beacon.utils.routes import append_routes
 from aiohttp_middlewares import cors_middleware
 import beacon.conf.conf_override as conf_override
-from beacon.exceptions.exceptions import NoTermsAndConditionsForResearcherAvailable
+from beacon.exceptions.exceptions import NoTermsAndConditionsForResearcherAvailable, NoPermissionsAvailable
 import requests
 import yaml
 
 # for keycloak, create aud in mappers, with custom, aud and beacon for audience
-mock_access_token = 'eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJreS1tUXNxZ0ZYeHdSUVRfRUhuQlJJUGpmbVhfRXZuUTVEbzZWUTJCazdZIn0.eyJleHAiOjE3OTEzNzkwNzcsImlhdCI6MTc5MTM3ODc3NywianRpIjoiNjRmZGNmNDEtMDM5NS00ZGUzLTk5NWQtYTk3ZTRkNjM0YWE3IiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL0JlYWNvbiIsImF1ZCI6ImJlYWNvbiIsInN1YiI6IjQ3ZWZmMWIxLTc2MjEtNDU3MC1hMGJiLTAxYTcxOWZiYTBhMiIsInR5cCI6IkJlYXJlciIsImF6cCI6ImJlYWNvbiIsInNlc3Npb25fc3RhdGUiOiI4ZTE0NzI5MS1hZmQwLTRkOTAtYTAwNy1lY2RjOGY5YTY4YzIiLCJhY3IiOiIxIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBlbWFpbCBtaWNyb3Byb2ZpbGUtand0Iiwic2lkIjoiOGUxNDcyOTEtYWZkMC00ZDkwLWEwMDctZWNkYzhmOWE2OGMyIiwidXBuIjoiamFuZSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwibmFtZSI6IkphbmUgU21pdGgiLCJncm91cHMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXSwicHJlZmVycmVkX3VzZXJuYW1lIjoiamFuZSIsImdpdmVuX25hbWUiOiJKYW5lIiwiZmFtaWx5X25hbWUiOiJTbWl0aCIsImVtYWlsIjoiamFuZS5zbWl0aEBiZWFjb24uZ2E0Z2gifQ.S1UIqenFG_vd7vhllzn8VcuxyI-qwV_lBoAzX76Qq1Dx86Hd2p2lx_7PxE39JfJNawFT33GuS5VitsQomESMqowl1mZ7mz8Q08sK95wW-9zUV5SgfnHU6lXEysCZGFY0M7kjoyws4yBh8WxN-6olrTXgKgtxnA4af3Hm5_qanzh49OgWsadtfipV_sq1C9KRU2__i01_teWztqRAIhdz3XQu18qbSK8WY80fN5-HhicWKMRMnwd9BR2Epm7kfv4T46ZbykxAfcfzOYg2Cb78YA_ddZ1eH0gdikYn-kqJ4t0PS19jWW5baV2kh-N7QaGcE8zsiZTQVnjKFFiNmiGddA'
+mock_access_token = 'eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJreS1tUXNxZ0ZYeHdSUVRfRUhuQlJJUGpmbVhfRXZuUTVEbzZWUTJCazdZIn0.eyJleHAiOjE3OTE4NzkwNDUsImlhdCI6MTc5MTg3ODc0NSwianRpIjoiNmI3MDNlZGItNmNkZi00ZTQ3LWJlMTYtNGI1Mzc4ZjM2ODMyIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL0JlYWNvbiIsImF1ZCI6ImJlYWNvbiIsInN1YiI6IjQ3ZWZmMWIxLTc2MjEtNDU3MC1hMGJiLTAxYTcxOWZiYTBhMiIsInR5cCI6IkJlYXJlciIsImF6cCI6ImJlYWNvbiIsInNlc3Npb25fc3RhdGUiOiJmODNlNTAxZS02MmY3LTQwM2EtOWVmYi05MDgwOTJlOTE4NmIiLCJhY3IiOiIxIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBlbWFpbCBtaWNyb3Byb2ZpbGUtand0Iiwic2lkIjoiZjgzZTUwMWUtNjJmNy00MDNhLTllZmItOTA4MDkyZTkxODZiIiwidXBuIjoiamFuZSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwibmFtZSI6IkphbmUgU21pdGgiLCJncm91cHMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXSwicHJlZmVycmVkX3VzZXJuYW1lIjoiamFuZSIsImdpdmVuX25hbWUiOiJKYW5lIiwiZmFtaWx5X25hbWUiOiJTbWl0aCIsImVtYWlsIjoiamFuZS5zbWl0aEBiZWFjb24uZ2E0Z2gifQ.anBaeL0aJy6vudQjg2kaAaGuXJuVkp7uDubCrogRRT9JBgocViNZAjUZBhXiiMuaCtBu_3i8tkP13ERv4Jo6ryLv7MWeBcBvPeUNBalCUiBSSKlQi_eKqdJaP6p_E0Znwt_MAIcjYNn-KeJ3SaTVpvzQ3UKbeEPUCHJRtIRcq_gn55rAt18xvZubDYD7HDOJwTGoN2dgB_tlLKsAXucCDbtdvGZPHplcjE2X6BuIrkxYo_iEFN8ERybkdqjklFzk5IvnT_8mos3fhUIXxqe05aVHKhNR5yy8Jd6GCTDl5HGnGjHb8yJSYTLZ0vnU1Whqvvt8nZ_O3n_WOOA72DNcXQ'
 mock_access_token_false = 'public'
 mock_ga4gh_visa_dataset = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL3JlbXMudGVzdC5leGFtcGxlLm9yZy8iLCJzdWIiOiJ0ZXN0LXVzZXItMTIzIiwiaWF0IjoxNzAwMDAwMDAwLCJleHAiOjE5MDAwMDAwMDAsImdhNGdoX3Zpc2FfdjEiOnsidHlwZSI6IkNvbnRyb2xsZWRBY2Nlc3NHcmFudHMiLCJhc3NlcnRlZCI6MTcwMDAwMDAwMCwidmFsdWUiOiJodHRwczovL3JlbXMudGVzdC5leGFtcGxlLm9yZy9kYXRhc2V0cy90ZXN0LWRhdGFzZXQiLCJzb3VyY2UiOiJodHRwczovL3JlbXMudGVzdC5leGFtcGxlLm9yZy8iLCJieSI6ImRhYyJ9fQ.c3ludGhldGljLXRlc3Qtc2lnbmF0dXJl'
-
 
 #audit --> TODO: get very specific information that we are interested in saving and keeping it (example: what individuals were returned in response)
 
@@ -241,63 +240,54 @@ class TestAuthN(unittest.TestCase):
             loop.run_until_complete(client.start_server())
 
             async def test_check_visa_passports():
-                # Simulated decoded user passport containing visas
-                visa = jwt.decode(mock_ga4gh_visa_dataset, options={"verify_signature": False}, algorithms=["RS256"])
-                jwks_url=visa['iss']+'.well-known/openid-configuration'
-                list_visa_datasets = []
-                issuer = visa['iss']
-                visa_validated = validate_ga4gh_visa(
-                    self,
-                    mock_ga4gh_visa_dataset,
-                    issuer,
-                    jwks_url
-                )
+                list_accepted_datasets=[]
                 with open("/beacon/permissions/ga4gh_visas/visas_conf.yml", 'r') as pfile:
                     visas_conf = yaml.safe_load(pfile)
                 pfile.close()
-                if visa_validated==False:
-                    visa_values=visa['ga4gh_visa_v1']
-                    with open("/beacon/permissions/ga4gh_visas/visas_conf.yml", 'r') as pfile:
-                        visas_conf = yaml.safe_load(pfile)
-                    pfile.close()
-                    visa_values=visa['ga4gh_visa_v1']
-                    accepted_visa=False
-                    if visa_values['type']=='AcceptedTermsAndPolicies':
-                        for trusted_acceptedterms_visa in visas_conf['AcceptedTermsAndPolicies']:
-                            if visa_values['value'] in trusted_acceptedterms_visa["accepted_values"]:
-                                if visa["iss"] == trusted_acceptedterms_visa["iss"]:
-                                    accepted_visa=True
-                                    break
-                        if accepted_visa==False:
-                            self.LOG.warning('Terms and Conditions not accepted for the user')
-                            raise NoTermsAndConditionsForResearcherAvailable('Terms and Conditions not accepted for the user')
-                    elif visa_values['type']=='ResearcherStatus':
-                        for trusted_acceptedterms_visa in visas_conf['ResearcherStatus']:
-                            if visa_values['value'] in trusted_acceptedterms_visa["accepted_values"]:
-                                if visa["iss"] == trusted_acceptedterms_visa["iss"]:
-                                    accepted_visa=True
-                                    break
-                        if accepted_visa==False:
-                            self.LOG.warning('Researcher Status: {} is not accepted'.format(visa_values['value']))
-                            raise NoTermsAndConditionsForResearcherAvailable('Researcher Status is not RESEARCHER')
-                    elif visa_values['type']=='ControlledAccessGrants':
-                        for trusted_acceptedterms_visa in visas_conf['ControlledAccessGrants']:
-                            if visa_values['value'] in trusted_acceptedterms_visa["accepted_values"]:
-                                if visa["iss"] == trusted_acceptedterms_visa["iss"]:
-                                    accepted_visa=True
-                                    dataset_url = visa["ga4gh_visa_v1"]["value"]
-                                    dataset_url_splitted = dataset_url.split('/')
-                                    visa_dataset = dataset_url_splitted[-1]
-                                    list_visa_datasets.append(visa_dataset)
-                                    break
-                        if accepted_visa==False:
-                            self.LOG.warning('Invalid datasets visa')
-                            raise NoTermsAndConditionsForResearcherAvailable('Invalid Visa')
+                visas_conf["ControlledAccessGrants"]["enabled"]=True
+                visas_outcome={}
+                # Simulated decoded user passport containing visas
+                for visa_type,conditions in visas_conf.items():
+                    
+                    if conditions['enabled']==True:
+                        if visa_type not in visas_outcome:
+                            if visa_type == 'ControlledAccessGrants':
+                                visas_outcome[visa_type]=None
+                            else:
+                                visas_outcome[visa_type]=False
+                        elif visas_outcome[visa_type]==True:
+                            continue
                     else:
-                        raise Exception
+                        continue
+                    visa = jwt.decode(mock_ga4gh_visa_dataset, options={"verify_signature": False}, algorithms=["RS256"])
+                    if 'ga4gh_visa_v1' in visa:
+                        visa_values=visa['ga4gh_visa_v1']
+                        if visa_values['type']==visa_type:
+                            for issuer in conditions['issuers']:
+                                if visa['iss'] == issuer['iss']:
+                                    accepted_issuer=True
+                                    break
+                            if accepted_issuer==False:
+                                self.LOG.warning("Unauthorized visa: {}. Issuer not trusted.".format(visa))
+                                raise NoPermissionsAvailable("Unauthorized visa. Issuer not trusted.")
+                            accepted_issuer=False
+                            for issuers_values in conditions['issuers']:
+                                if visa_values['value'] in issuers_values["accepted_values"]:
+                                    if visa["iss"] == issuers_values["iss"]:
+                                        if visa_type == 'ControlledAccessGrants':
+                                            dataset_url = visa["ga4gh_visa_v1"]["value"]
+                                            dataset_url_splitted = dataset_url.split('/')
+                                            visa_dataset = dataset_url_splitted[-1]
+                                            list_accepted_datasets.append(visa_dataset)
+                                            visas_outcome[visa_type]=visa_dataset
+                                        else:
+                                            visas_outcome[visa_type]=True
+                                        break
+                        else:
+                            continue
 
                 # Expect correct dataset extraction from visa structure
-                assert list_visa_datasets == ['test-dataset']
+                assert list_accepted_datasets == ['test-dataset']
 
             loop.run_until_complete(test_check_visa_passports())
             loop.run_until_complete(client.close())
