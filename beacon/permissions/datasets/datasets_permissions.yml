@@ -5,7 +5,7 @@ AV_Dataset:
       entry_types_exceptions:
       - individual: record
       user_e-mail: jane.smith@beacon.ga4gh
-CINECA_synthetic_cohort_EUROPE_UK1:
+GDI-ES-FEGA-50000000955:
   public:
     default_entry_types_granularity: record
     entry_types_exceptions:
