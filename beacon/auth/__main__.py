@@ -181,7 +181,7 @@ def fetch_idp(self, access_token):
                 if isinstance(aud, str):
                     aud = [aud]
                 if idp_client_id not in aud:
-                    self.LOG.warning("Unauthorized. The client is not included in the audience of the access token.")
+                    idp_issuer=None
                     raise NoPermissionsAvailable("Unauthorized. The client is not included in the audience of the access token.")
                 aud_must_include_url = os.getenv('MUST_INCLUDE_BEACON_URL_IN_AUDIENCE')
                 if isinstance(aud_must_include_url, str):
@@ -191,7 +191,7 @@ def fetch_idp(self, access_token):
                         aud_must_include_url=False
                 if aud_must_include_url == True:
                     if config.complete_url not in aud:
-                        self.LOG.warning("Unauthorized. The beacon's url is not included in the audience of the access token.")
+                        idp_issuer=None
                         raise NoPermissionsAvailable("Unauthorized. The beacon's url is not included in the audience of the access token.")
                 if len(aud)==1:
                     aud=aud[0]
