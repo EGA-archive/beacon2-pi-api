@@ -158,60 +158,52 @@ def fetch_idp(self, access_token):
         user_info=''
         idp_issuer=None
         # Iterate through the different accepted idp providers and check if there is one that matches the issuer of the token
-        for client_type in ['confidential', 'public']:
-            for env_filename in glob.glob("beacon/auth/idp_providers/{}/*.env".format(client_type)):
-                load_dotenv(env_filename, override=True)
-                idp_issuer = os.getenv('ISSUER')
-                # In case the issuer matches, set the idp values to be used later for validating the token
-                if issuer == idp_issuer:
-                    idp_well_known_endpoint = os.getenv('WELL_KNOWN_ENDPOINT')
-                    response = requests.get(idp_well_known_endpoint)
-                    response.raise_for_status()
-                    well_known_info = response.json()
-                    user_info= well_known_info["userinfo_endpoint"]
-                    idp_jwks_url=well_known_info["jwks_uri"]
-                    idp_introspection=well_known_info["introspection_endpoint"]
-                    if 'testing_idp' in env_filename:
-                        if 'localhost' in user_info:
-                            user_info=user_info.replace('localhost','idp')
-                        if 'localhost' in idp_jwks_url:
-                            idp_jwks_url=idp_jwks_url.replace('localhost','idp')
-                        if 'localhost' in idp_introspection:
-                            idp_introspection=idp_introspection.replace('localhost', 'idp')
-                    idp_client_id = os.getenv('CLIENT_ID')
-                    if client_type == 'confidential':
-                        idp_client_secret = os.getenv('CLIENT_SECRET')
+        for env_filename in glob.glob("beacon/auth/idp_providers/*.env"):
+            load_dotenv(env_filename, override=True)
+            idp_issuer = os.getenv('ISSUER')
+            # In case the issuer matches, set the idp values to be used later for validating the token
+            if issuer == idp_issuer:
+                idp_well_known_endpoint = os.getenv('WELL_KNOWN_ENDPOINT')
+                response = requests.get(idp_well_known_endpoint)
+                response.raise_for_status()
+                well_known_info = response.json()
+                user_info= well_known_info["userinfo_endpoint"]
+                idp_jwks_url=well_known_info["jwks_uri"]
+                idp_introspection=well_known_info["introspection_endpoint"]
+                if 'testing_idp' in env_filename:
+                    if 'localhost' in user_info:
+                        user_info=user_info.replace('localhost','idp')
+                    if 'localhost' in idp_jwks_url:
+                        idp_jwks_url=idp_jwks_url.replace('localhost','idp')
+                    if 'localhost' in idp_introspection:
+                        idp_introspection=idp_introspection.replace('localhost', 'idp')
+                idp_client_id = os.getenv('CLIENT_ID')
+                if isinstance(aud, str):
+                    aud = [aud]
+                if idp_client_id not in aud:
+                    self.LOG.warning("Unauthorized. The client is not included in the audience of the access token.")
+                    raise NoPermissionsAvailable("Unauthorized. The client is not included in the audience of the access token.")
+                aud_must_include_url = os.getenv('MUST_INCLUDE_BEACON_URL_IN_AUDIENCE')
+                if isinstance(aud_must_include_url, str):
+                    if aud_must_include_url == 'True' or aud_must_include_url == 'true':
+                        aud_must_include_url=True
                     else:
-                        idp_client_secret=None
-                    aud_must_include_url = os.getenv('MUST_INCLUDE_BEACON_URL_IN_AUDIENCE')
-                    if aud_must_include_url == True:
-                        if config.complete_url not in aud:
-                            self.LOG.warning("Unauthorized. The beacon's url is not included in the audience of the access token.")
-                            raise NoPermissionsAvailable("Unauthorized. The beacon's url is not included in the audience of the access token.")
-                    break
-                else:
-                    continue
+                        aud_must_include_url=False
+                if aud_must_include_url == True:
+                    if config.complete_url not in aud:
+                        self.LOG.warning("Unauthorized. The beacon's url is not included in the audience of the access token.")
+                        raise NoPermissionsAvailable("Unauthorized. The beacon's url is not included in the audience of the access token.")
+                if len(aud)==1:
+                    aud=aud[0]
+                break
+            else:
+                continue
     except Exception as e:
         self.LOG.warning(e)
     if idp_issuer is None:
         self.LOG.warning("Unauthorized. There is no issuer in the token. Please, use a valid token with an issuer header.")
         raise NoPermissionsAvailable("Unauthorized. There is no issuer in the token. Please, use a valid token with an issuer header.")
-    return idp_issuer, user_info, idp_client_id, idp_client_secret, idp_introspection, idp_jwks_url, aud
-
-'''
-@log_with_args(config.level)
-async def introspection(self, idp_introspection, idp_client_id, idp_client_secret, access_token, list_visa_tokens):
-    async with ClientSession() as session:
-        async with session.post(idp_introspection,
-                                auth=BasicAuth(idp_client_id, password=idp_client_secret),
-                                data=FormData({ 'token': access_token, 'token_type_hint': 'access_token' }, charset='UTF-8')
-        ) as resp:
-            #content = await resp.text()
-            if resp.status == 200:
-                return True
-            else:
-                return False
-'''
+    return idp_issuer, user_info, idp_jwks_url, aud
 
 @log_with_args(config.level)
 async def fetch_user_info(self, access_token, user_info, idp_issuer, list_visa_tokens):
@@ -241,7 +233,7 @@ async def authentication(self, access_token):
     # Initiate the lisst of the datasets permissions that come from visas
     list_visa_tokens=[]
     try:
-        idp_issuer, user_info, idp_client_id, idp_client_secret, idp_introspection, idp_jwks_url, aud = fetch_idp(self, access_token)
+        idp_issuer, user_info, idp_jwks_url, aud = fetch_idp(self, access_token)
         access_token_validation = validate_access_token(self, access_token, idp_issuer, idp_jwks_url, aud)
         if access_token_validation == True:
             user, list_visa_tokens = await fetch_user_info(self, access_token, user_info, idp_issuer, list_visa_tokens)
@@ -249,8 +241,6 @@ async def authentication(self, access_token):
     except NoTermsAndConditionsForResearcherAvailable:
         raise
     except Exception as e:
-        #LOG.debug(e)
-        #access_token_validation = await introspection(idp_introspection, idp_client_id, idp_client_secret, access_token, list_visa_tokens)
         user = None
         list_visa_tokens=[]
         return user, list_visa_tokens
