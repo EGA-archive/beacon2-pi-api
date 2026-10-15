@@ -16,7 +16,7 @@ import requests
 import yaml
 
 # for keycloak, create aud in mappers, with custom, aud and beacon for audience
-mock_access_token = 'eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJreS1tUXNxZ0ZYeHdSUVRfRUhuQlJJUGpmbVhfRXZuUTVEbzZWUTJCazdZIn0.eyJleHAiOjE3OTE5MDk4MzgsImlhdCI6MTc5MTkwOTUzOCwianRpIjoiZmQ4NmEyNWUtMzc3NC00NmQ3LTg2YTgtNDBiYzkxODI1NDBjIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL0JlYWNvbiIsImF1ZCI6ImJlYWNvbiIsInN1YiI6IjQ3ZWZmMWIxLTc2MjEtNDU3MC1hMGJiLTAxYTcxOWZiYTBhMiIsInR5cCI6IkJlYXJlciIsImF6cCI6ImJlYWNvbiIsInNlc3Npb25fc3RhdGUiOiJjOGEyMTIwOC1mY2I0LTQ1OTItOGY0OC1hMzI3MTJkNmZmMTYiLCJhY3IiOiIxIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBlbWFpbCBtaWNyb3Byb2ZpbGUtand0Iiwic2lkIjoiYzhhMjEyMDgtZmNiNC00NTkyLThmNDgtYTMyNzEyZDZmZjE2IiwidXBuIjoiamFuZSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwibmFtZSI6IkphbmUgU21pdGgiLCJncm91cHMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXSwicHJlZmVycmVkX3VzZXJuYW1lIjoiamFuZSIsImdpdmVuX25hbWUiOiJKYW5lIiwiZmFtaWx5X25hbWUiOiJTbWl0aCIsImVtYWlsIjoiamFuZS5zbWl0aEBiZWFjb24uZ2E0Z2gifQ.RTn7TFXAS8Z62aaN5uV6EusoPh7lyMzDogMxVUwkoAYS2gwopk_9UAqf76xFjzu3wKPcEFjOvdfyqgnuuXa_9oVZ3osqKRfoXuafrM6k4c1RCh0nam9uAEhP0-7q8g61tzwTtPg_-eKwjd1eQsNDo63g8Dd-dMSFntJP49iDj-Z1yu8p_9vBlwm7sLvyobfhTweteE_5Gk8mWAoP9c6X9bK-XkhRuImmd9Zq1u4Nn1bIWGYGzhT21RHPAC0CWcgGsV2jyhKDDpWZ3gxjMN-bI3JK04kKD_TMqXt0Uybvhw8V3ebUrghM2y7-9bEUvuBF0G2mejjF0h8psil1esFqqw'
+mock_access_token = 'eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJreS1tUXNxZ0ZYeHdSUVRfRUhuQlJJUGpmbVhfRXZuUTVEbzZWUTJCazdZIn0.eyJleHAiOjE3OTIwNjUzODIsImlhdCI6MTc5MjA2NTA4MiwianRpIjoiNjY0YTJiNzAtNDMwMi00ZjAzLTkwODktYTlhZGUyNDkzOGEwIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL0JlYWNvbiIsImF1ZCI6ImJlYWNvbiIsInN1YiI6IjQ3ZWZmMWIxLTc2MjEtNDU3MC1hMGJiLTAxYTcxOWZiYTBhMiIsInR5cCI6IkJlYXJlciIsImF6cCI6ImJlYWNvbiIsInNlc3Npb25fc3RhdGUiOiJlYmI2ODlkMC01NWE4LTQwNWUtOGQ0Zi1jODU2YzkzZWUxZjEiLCJhY3IiOiIxIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBlbWFpbCBtaWNyb3Byb2ZpbGUtand0Iiwic2lkIjoiZWJiNjg5ZDAtNTVhOC00MDVlLThkNGYtYzg1NmM5M2VlMWYxIiwidXBuIjoiamFuZSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwibmFtZSI6IkphbmUgU21pdGgiLCJncm91cHMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXSwicHJlZmVycmVkX3VzZXJuYW1lIjoiamFuZSIsImdpdmVuX25hbWUiOiJKYW5lIiwiZmFtaWx5X25hbWUiOiJTbWl0aCIsImVtYWlsIjoiamFuZS5zbWl0aEBiZWFjb24uZ2E0Z2gifQ.SqSTOuC5e5v5Pr522FkaaCW12u30Nj8FE2n14Lak1vEKtq0Uglf4aF_p5x6yOi9dGOVqV1PBJhPeFDdj-k_Lee4zkSPcQeo230MnPGnTwhRp71ZhNtv3Xssr_es-VY2z7WnRkPkqKdDlSXdRHwev53fYqJM6a6BUm00czF8Sa9QKn7pA0n8u0Mus0Bl_1QQpIH58sR6Tz8W1AOaGOVX2IXHMQodJSzPRWnvN3fk4DdWlt48R5Cgp0qjIW0Ztzpk_w09md68iRKvwv-0AvtYyEECkesMyCwFfKoKPq9XAG0tDTQjet0YWwHiARGph4AzsVmPepu_kx72eB-l4-DnW3A'
 mock_access_token_false = 'public'
 mock_ga4gh_visa_dataset = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL3JlbXMudGVzdC5leGFtcGxlLm9yZy8iLCJzdWIiOiJ0ZXN0LXVzZXItMTIzIiwiaWF0IjoxNzAwMDAwMDAwLCJleHAiOjE5MDAwMDAwMDAsImdhNGdoX3Zpc2FfdjEiOnsidHlwZSI6IkNvbnRyb2xsZWRBY2Nlc3NHcmFudHMiLCJhc3NlcnRlZCI6MTcwMDAwMDAwMCwidmFsdWUiOiJodHRwczovL3JlbXMudGVzdC5leGFtcGxlLm9yZy9kYXRhc2V0cy90ZXN0LWRhdGFzZXQiLCJzb3VyY2UiOiJodHRwczovL3JlbXMudGVzdC5leGFtcGxlLm9yZy8iLCJieSI6ImRhYyJ9fQ.c3ludGhldGljLXRlc3Qtc2lnbmF0dXJl'
 
@@ -64,8 +64,7 @@ class TestAuthN(unittest.TestCase):
 
             async def test_fetch_idp():
                 # Fetch IdP configuration dynamically using mock access token
-                idp_issuer, user_info, idp_client_id, idp_client_secret, \
-                idp_introspection, idp_jwks_url, aud = fetch_idp(
+                idp_issuer, user_info, idp_jwks_url, aud = fetch_idp(
                     self, mock_access_token
                 )
 
@@ -74,8 +73,6 @@ class TestAuthN(unittest.TestCase):
 
                 # Extract expected values from environment variables
                 IDP_ISSUER = os.getenv('ISSUER')
-                IDP_CLIENT_ID = os.getenv('CLIENT_ID')
-                IDP_CLIENT_SECRET = os.getenv('CLIENT_SECRET')
                 IDP_WELL_KNOWN_ENDPOINT = os.getenv('WELL_KNOWN_ENDPOINT')
                 response = requests.get(IDP_WELL_KNOWN_ENDPOINT)
                 response.raise_for_status()
@@ -88,10 +85,7 @@ class TestAuthN(unittest.TestCase):
                     INTROSPECTION=INTROSPECTION.replace('localhost', 'idp')
                 # Validate fetched configuration matches environment configuration
                 assert IDP_ISSUER == idp_issuer
-                assert IDP_CLIENT_ID == idp_client_id
-                assert IDP_CLIENT_SECRET == idp_client_secret
                 assert IDP_JWKS_URL == idp_jwks_url
-                assert INTROSPECTION == idp_introspection
 
             # Execute async test inside event loop
             loop.run_until_complete(test_fetch_idp())
@@ -119,12 +113,25 @@ class TestAuthN(unittest.TestCase):
                 IDP_JWKS_URL=well_known_info["jwks_uri"]
                 if 'localhost'in IDP_JWKS_URL:
                     IDP_JWKS_URL=IDP_JWKS_URL.replace('localhost', 'idp')
+                decoded = jwt.decode(mock_access_token, options={"verify_signature": False})
+                aud = decoded['aud']
                 # Validate fetched configuration matches environment configuration
+                idp_client_id = os.getenv('CLIENT_ID')
+                if isinstance(aud, str):
+                    aud = [aud]
+                if idp_client_id not in aud:
+                    self.LOG.warning("Unauthorized. The client is not included in the audience of the access token.")
+                    raise NoPermissionsAvailable("Unauthorized. The client is not included in the audience of the access token.")
                 aud_must_include_url = os.getenv('MUST_INCLUDE_BEACON_URL_IN_AUDIENCE')
+                if isinstance(aud_must_include_url, str):
+                    if aud_must_include_url == 'True' or aud_must_include_url == 'true':
+                        aud_must_include_url=True
+                    else:
+                        aud_must_include_url=False
                 if aud_must_include_url == True:
                     if config.complete_url not in aud:
                         self.LOG.warning("Unauthorized. The beacon's url is not included in the audience of the access token.")
-                        raise Exception
+                        raise NoPermissionsAvailable("Unauthorized. The beacon's url is not included in the audience of the access token.")
 
                 try:
                     # Decode token payload without signature verification (unsafe but test-only)
