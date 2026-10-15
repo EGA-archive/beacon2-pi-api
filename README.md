@@ -370,12 +370,10 @@ And it will use the ontology filter to filter the results.
 
 Go to [auth folder](https://github.com/EGA-archive/beacon-production-prototype/tree/main/beacon/auth/idp_providers) and create an .env file with the next Oauthv2 OIDC Identity Provider Relying Party known information:
 ```bash
-CLIENT_ID='your_idp_client_id'
-CLIENT_SECRET='your_idp_client_secret'
-USER_INFO='https://login.elixir-czech.org/oidc/userinfo'
-INTROSPECTION='https://login.elixir-czech.org/oidc/introspect'
-ISSUER='https://login.elixir-czech.org/oidc/'
-JWKS_URL='https://login.elixir-czech.org/oidc/jwk'
+CLIENT_ID=beacon
+WELL_KNOWN_ENDPOINT='http://idp:8080/auth/realms/Beacon/.well-known/openid-configuration'
+ISSUER='http://localhost:8080/auth/realms/Beacon'
+MUST_INCLUDE_BEACON_URL_IN_AUDIENCE=False
 ```
 
 For Keycloak IDP, an "aud" parameter will need to be added to the token's mappers, matching the Audience for the Keycloak realm.
