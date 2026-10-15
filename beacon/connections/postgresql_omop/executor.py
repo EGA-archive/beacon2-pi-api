@@ -13,11 +13,17 @@ async def execute_function(self, datasets):
             self.request_attributes.qparams,
         )
     elif (self.request_attributes.pre_entry_type == "biosamples"
-            and self.request_attributes.entry_type == "individuals"):
-            schema, count, docs = await biosamples.get_individuals_of_biosample(
-                self.request_attributes.entry_id,
-                self.request_attributes.qparams,
-            )
+        and self.request_attributes.entry_type == "individuals"):
+        schema, count, docs = await biosamples.get_individuals_of_biosample(
+            self.request_attributes.entry_id,
+            self.request_attributes.qparams,
+        )
+    elif (self.request_attributes.pre_entry_type == "cohorts"
+        and self.request_attributes.entry_type == "individuals"):
+        schema, count, docs = await cohorts.get_individuals_of_cohort(
+            self.request_attributes.entry_id,
+            self.request_attributes.qparams,
+        )
     elif self.request_attributes.entry_type == "individuals":
         schema, count, docs = await individuals.get_the_individuals(
             self.request_attributes.entry_id,
@@ -53,7 +59,7 @@ async def execute_collection_function(endpoint_view):
             schema, count, docs = await cohorts.get_cohorts(
                 request_attributes.entry_id,
                 request_attributes.qparams,
-            )
+            )       
 
     return CollectionsResponse(
         docs=docs,

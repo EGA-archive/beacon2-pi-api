@@ -7,7 +7,7 @@ from sqlalchemy import select, func, distinct, cast, String, Integer, desc
 from beacon.models.omop.connections.postgresql.utilities import RequestParams, DefaultSchemas
 from beacon.connections.postgresql_omop.__init__ import client
 from beacon.connections.postgresql_omop import get_table
-from beacon.models.omop.connections.postgresql.individuals import ind_base, get_the_individuals
+from beacon.models.omop.connections.postgresql.individuals import ind_base, get_the_individuals, format_query, iso
 from beacon.connections.postgresql_omop.conf import database_driver
 
 LOG = logging.getLogger(__name__)
@@ -445,6 +445,8 @@ async def get_cohort_individuals(cohort_id, offset=0, limit=10):
         
     list_ids = [row.person_id for row in list_ids]
     ids = await ind_base(list_ids)
+    docs = format_query(ids)
+    docs = iso(docs)
     
     async with client.connect() as conn:
         count_ids = select(func.count("*")).select_from(cdm_cohort
@@ -454,12 +456,12 @@ async def get_cohort_individuals(cohort_id, offset=0, limit=10):
         count_ids = await conn.execute(count_ids)
         count_ids = count_ids.scalar_one() 
         
-    return DefaultSchemas.INDIVIDUALS, count_ids, ids
+    return DefaultSchemas.INDIVIDUALS, count_ids, docs
 
 
 async def get_individuals_of_cohort(cohort_id: Optional[str], qparams: RequestParams):
     cohort_id = int(cohort_id)
-    if cohort_id == '0':
+    if cohort_id == 0:
         print('all individuals')
         ind = await get_the_individuals(qparams=qparams)
         return ind
@@ -467,4 +469,3 @@ async def get_individuals_of_cohort(cohort_id: Optional[str], qparams: RequestPa
         coh_ind = await get_cohort_individuals(cohort_id, 
                                   offset=qparams.query.pagination.skip,
                                   limit=qparams.query.pagination.limit)
-        return coh_ind
