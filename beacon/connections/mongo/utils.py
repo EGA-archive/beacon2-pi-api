@@ -62,12 +62,8 @@ def get_count(self, collection: Collection, query: dict) -> int:
             else:
                 total_counts=counts[0]["num_results"]
         except Exception as e:
-            insert_dict={}
-            insert_dict['id']=str(query)
+            self.LOG.warning(f"get_count failed, result not cached")
             total_counts=0
-            insert_dict['num_results']=total_counts
-            insert_dict['collection']=str(collection)
-            insert_total=counts_.insert_one(insert_dict)
         return total_counts
 
 @log_with_args_mongo(config.level)
