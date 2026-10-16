@@ -6,6 +6,7 @@ from beacon.conf.conf_override import config
 from beacon.exceptions.exceptions import InvalidRequest
 from beacon.response.classes import SingleDatasetResponse
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.utils import import_genomicVariant_confile
+from beacon.connections.mongo import conf as mongo_conf
 
 @log_with_args_mongo(config.level)
 def query_id(self, query: dict, document_id) -> dict:
@@ -44,7 +45,7 @@ def get_documents_for_cohorts(self, collection: Collection, query: dict, skip: i
 @log_with_args_mongo(config.level)
 def get_count(self, collection: Collection, query: dict) -> int:
     client=get_client()
-    counts_=client['beacon'].counts
+    counts_=client[mongo_conf.database_name].counts
     if not query:
         return collection.estimated_document_count()
     else:
@@ -146,7 +147,7 @@ def get_filtering_documents(self, collection: Collection, query: dict, remove_id
 @log_with_args_mongo(config.level)
 def choose_scope(self, scope, filter):
     client=get_client()
-    filtering_terms=client['beacon'].filtering_terms
+    filtering_terms=client[mongo_conf.database_name].filtering_terms
     # Initiate the dictionaries and create the syntax to query the filtering terms database to get the available scopes
     query_filtering={}
     query_filtering['$and']=[]

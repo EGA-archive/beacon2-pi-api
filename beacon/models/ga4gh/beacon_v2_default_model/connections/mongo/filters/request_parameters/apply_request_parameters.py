@@ -9,6 +9,7 @@ from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.reque
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.request_parameters.sequence import generate_position_filter_start_sequence_query
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.request_parameters.end import generate_position_filter_end
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.request_parameters.mapping import VARIANTS_PROPERTY_MAP
+from beacon.connections.mongo import conf as mongo_conf
 
 @log_with_args(config.level)
 def apply_request_parameters(self, query: Dict[str, List[dict]], dataset: str):
@@ -104,7 +105,7 @@ def apply_request_parameters(self, query: Dict[str, List[dict]], dataset: str):
             # Otherwise, process the parameter as a range query
             elif isBracket==False:
                 client=get_client()
-                genomicVariations=client['beacon'].genomicVariations
+                genomicVariations=client[mongo_conf.database_name].genomicVariations
                 # Generate a final start value, as if it came by filters (start,end) to then create a list and process it as the first part of the range for the end value
                 if isinstance(v, list) and isinstance(startvalue, list):
                     startvalue=startvalue[0]
