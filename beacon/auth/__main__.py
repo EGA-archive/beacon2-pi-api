@@ -200,7 +200,7 @@ def fetch_idp(self, access_token):
         idp_issuer=None
         self.LOG.warning(e)
     if idp_issuer is None:
-        self.LOG.warning("Unauthorized. There is no issuer in the token. Please, use a valid token with an issuer header.")
+        self.LOG.warning("Unauthorized. There is no valid issuer in the token. Please, use a valid token that matches one of the configured identity providers.")
         raise NoPermissionsAvailable("Unauthorized. There is no issuer in the token. Please, use a valid token with an issuer header.")
     return idp_issuer, user_info, idp_jwks_url, aud
 
