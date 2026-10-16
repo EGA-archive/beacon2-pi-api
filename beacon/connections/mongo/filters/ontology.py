@@ -5,11 +5,12 @@ from beacon.connections.mongo.client import get_client
 from beacon.logs.logs import log_with_args
 from beacon.conf.conf_override import config
 from beacon.utils.modules import get_all_modules_connections_script
+from beacon.connections.mongo import conf as mongo_conf
 
 @log_with_args(config.level)
 def apply_ontology_filter(self, query: dict, filter: OntologyFilter, request_parameters: dict, dataset: str) -> dict:
     client=get_client()
-    synonyms_=client['beacon'].synonyms
+    synonyms_=client[mongo_conf.database_name].synonyms
     # Search for synonyms in the query filter
     final_term_list=[]    
     query_synonyms={}
@@ -40,7 +41,7 @@ def apply_ontology_filter(self, query: dict, filter: OntologyFilter, request_par
 
     # Search similar
     if filter.similarity != Similarity.EXACT:
-        similarities=client['beacon'].similarities
+        similarities=client[mongo_conf.database_name].similarities
         try:
             if filter.similarity == Similarity.HIGH:
                 ontology_dict=similarities.find({"id": filter.id})
@@ -66,7 +67,7 @@ def apply_ontology_filter(self, query: dict, filter: OntologyFilter, request_par
         except Exception:
             pass
     final_term_list.append(filter.id)
-    filtering_terms=client['beacon'].filtering_terms
+    filtering_terms=client[mongo_conf.database_name].filtering_terms
     # Create the query syntax for the filtering term to match the field with the ontology label
     query_filtering={}
     query_filtering['$and']=[]

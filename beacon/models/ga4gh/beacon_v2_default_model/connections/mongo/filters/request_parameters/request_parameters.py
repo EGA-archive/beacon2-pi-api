@@ -4,12 +4,12 @@ from beacon.logs.logs import log_with_args
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.cross_queries.get_biosampleIds import get_biosampleIds
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.cross_queries.get_total_query import get_total_query
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.utils import import_analysis_confile, import_biosample_confile, import_individual_confile, import_run_confile
-
+from beacon.connections.mongo import conf as mongo_conf
 
 @log_with_args(config.level)
 def request_parameters(self, total_query, request_parameters, dataset): 
     client=get_client()
-    biosamples=client['beacon'].biosamples
+    biosamples=client[mongo_conf.database_name].biosamples
     # Import all the configuration files for the entry types
     individual_confile=import_individual_confile()
     analysis_confile=import_analysis_confile()
