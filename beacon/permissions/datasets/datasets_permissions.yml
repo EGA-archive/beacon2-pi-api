@@ -52,3 +52,21 @@ test2:
     default_entry_types_granularity: count
     entry_types_exceptions:
     - cohort: boolean
+test3:
+  controlled:
+    default_entry_types_granularity: record
+    user-list:
+    - user_id: 8718f980-47bc-4be6-9390-a01343eed37d
+  public:
+    default_entry_types_granularity: count
+test4:
+  controlled:
+    default_entry_types_granularity: count
+    user-list:
+    - default_entry_types_granularity: record
+      entry_types_exceptions:
+      - individual: count
+      user_id: 47eff1b1-7621-4570-a0bb-01a719fba0a2
+    - user_id: 8718f980-47bc-4be6-9390-a01343eed37d
+  registered:
+    default_entry_types_granularity: count
