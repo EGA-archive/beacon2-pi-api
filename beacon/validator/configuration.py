@@ -172,29 +172,30 @@ def check_configuration(
                 raise Exception('The {} allow id query must be of type bool.'.format(k))
 
             # Check settings for lookups are correct
-            for klook, vlook in v["lookups"].items():
-                if vlook["connection"]["name"] not in connections_enabled:
-                    raise Exception(
-                        'The connection {} for lookup {} of {} records needs to be enabled in case you want to use it'.format(
-                            vlook["connection"]["name"], klook, k
+            if connections_enabled == 'mongo':
+                for klook, vlook in v["lookups"].items():
+                    if vlook["connection"]["name"] not in connections_enabled:
+                        raise Exception(
+                            'The connection {} for lookup {} of {} records needs to be enabled in case you want to use it'.format(
+                                vlook["connection"]["name"], klook, k
+                            )
                         )
-                    )
-                if isinstance(vlook["endpoint_enabled"], bool):
-                    pass
-                else:
-                    raise Exception(
-                        "lookup {}.endpoint_enabled variable from {}.yml must be boolean".format(
-                            klook, k
+                    if isinstance(vlook["endpoint_enabled"], bool):
+                        pass
+                    else:
+                        raise Exception(
+                            "lookup {}.endpoint_enabled variable from {}.yml must be boolean".format(
+                                klook, k
+                            )
                         )
-                    )
-                if vlook["response_type"] in ["collection", "non_collection"]:
-                    pass
-                else:
-                    raise Exception(
-                        "lookup {}.response_type variable from {}.yml must be one between collection or non_collection".format(
-                            klook, k
+                    if vlook["response_type"] in ["collection", "non_collection"]:
+                        pass
+                    else:
+                        raise Exception(
+                            "lookup {}.response_type variable from {}.yml must be one between collection or non_collection".format(
+                                klook, k
+                            )
                         )
-                    )
     
     # -------------------------------------------------------------------------
     # Beacon URI validation
@@ -236,33 +237,33 @@ def check_configuration(
     # Ensure that throttling parameters are correctly defined before startup.
     # -------------------------------------------------------------------------
 
-    if (
-        not isinstance(conf_override.config.query_budget_amount, int)
-        or conf_override.config.query_budget_amount < 0
-    ):
-        raise Exception(
-            "The amount of query budget attempts allowed must be a natural number."
-        )
+    # if (
+    #     not isinstance(conf_override.config.query_budget_amount, int)
+    #     or conf_override.config.query_budget_amount < 0
+    # ):
+    #     raise Exception(
+    #         "The amount of query budget attempts allowed must be a natural number."
+    #     )
 
-    if (
-        not isinstance(conf_override.config.query_budget_time_in_seconds, int)
-        or conf_override.config.query_budget_time_in_seconds < 0
-    ):
-        raise Exception(
-            "The rate of query time in seconds for the budget must be a natural number."
-        )
+    # if (
+    #     not isinstance(conf_override.config.query_budget_time_in_seconds, int)
+    #     or conf_override.config.query_budget_time_in_seconds < 0
+    # ):
+    #     raise Exception(
+    #         "The rate of query time in seconds for the budget must be a natural number."
+    #     )
 
-    # Validate user-based rate limiting configuration.
-    if not isinstance(conf_override.config.query_budget_per_user, bool):
-        raise Exception(
-            "The query budget per user parameter must be boolean."
-        )
+    # # Validate user-based rate limiting configuration.
+    # if not isinstance(conf_override.config.query_budget_per_user, bool):
+    #     raise Exception(
+    #         "The query budget per user parameter must be boolean."
+    #     )
 
-    # Validate IP-based rate limiting configuration.
-    if not isinstance(conf_override.config.query_budget_per_ip, bool):
-        raise Exception(
-            "The query budget per ip parameter must be boolean."
-        )
+    # # Validate IP-based rate limiting configuration.
+    # if not isinstance(conf_override.config.query_budget_per_ip, bool):
+    #     raise Exception(
+    #         "The query budget per ip parameter must be boolean."
+    #     )
 
     # -------------------------------------------------------------------------
     # Database backend validation
@@ -270,16 +271,16 @@ def check_configuration(
     # connection implementation under /beacon/connections.
     # -------------------------------------------------------------------------
 
-    if conf_override.config.query_budget_database not in [
-        name
-        for name in os.listdir("/beacon/connections")
-        if os.path.isdir(os.path.join("/beacon/connections", name))
-    ]:
-        raise Exception(
-            'The database {} for budget needs to match a directory name in the beacon/connections folder'.format(
-                conf_override.config.query_budget_database
-            )
-        )
+    # if conf_override.config.query_budget_database not in [
+    #     name
+    #     for name in os.listdir("/beacon/connections")
+    #     if os.path.isdir(os.path.join("/beacon/connections", name))
+    # ]:
+    #     raise Exception(
+    #         'The database {} for budget needs to match a directory name in the beacon/connections folder'.format(
+    #             conf_override.config.query_budget_database
+    #         )
+    #     )
 
     # Additional backend validations follow the same pattern for
     # genomicVariant, dataset, cohort, biosample and analysis entities.

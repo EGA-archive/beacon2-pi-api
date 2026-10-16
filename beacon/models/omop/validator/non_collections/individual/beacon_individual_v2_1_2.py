@@ -1,0 +1,1 @@
+from beacon.models.omop.validator.non_collections.individual.beacon_individual_v2_1_0 import Individual

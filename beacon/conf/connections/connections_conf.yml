@@ -1,5 +1,8 @@
-mongo:
-  connection_enabled: True
-
-sqlalchemy_postgresql:
+beaconCLI:
   connection_enabled: False
+
+mongo:
+  connection_enabled: False
+
+postgresql_omop:
+  connection_enabled: True

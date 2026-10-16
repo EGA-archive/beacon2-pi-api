@@ -1,0 +1,54 @@
+networks:
+  idp-priv:
+  pub:
+  beacon-network:
+    external: true
+    name: sqlalchemy_beacon-network
+
+services:
+  beaconprod:
+    restart: on-failure
+    build:
+      context: .
+    container_name: beaconprod
+    #depends_on:
+      #- postgres
+    ports:
+      - "5051:5050"
+    environment:
+      - DB_DRIVER=postgresql+asyncpg
+      - DB_USER=postgres
+      - DB_PASS=lollypop
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=demo_omop
+    entrypoint: ['python','-m','beacon']
+    volumes:
+      - ./beacon/logs/logs.log:/beacon/logs/logs.log
+      - ./beacon/conf/conf.py:/beacon/conf/conf.py
+      - ./beacon/conf/conf_default.py:/beacon/conf/conf_default.py
+      - ./beacon/connections/postgresql_omop/conf.py:/beacon/connections/postgresql_omop/conf.py
+      - ./beacon/permissions:/beacon/permissions
+      - ./beacon/models:/beacon/models
+      - ./beacon/conf/models:/beacon/conf/models
+    networks:
+      - pub
+      - beacon-network
+
+  
+  #templateUI:
+    #image: ghcr.io/ega-archive/beacon-template-ui:main
+    #restart: always
+    #hostname: template-ui
+    #container_name: template-ui
+    #command: node /opt/yarn-v1.22.22/bin/yarn.js start
+    #ports:
+      #- 3000:3000
+    #volumes:
+      #- ./template-ui/src/config/config.json:/client/src/config/config.json
+      #- ./template-ui/.env:/client/.env
+    #networks:
+      #- pub
+    #environment:
+      #- CHOKIDAR_USEPOLLING=true
+      #- WATCHPACK_POLLING=true

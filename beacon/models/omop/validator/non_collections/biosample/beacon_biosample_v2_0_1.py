@@ -1,0 +1,1 @@
+from beacon.models.omop.validator.non_collections.biosample.beacon_biosample_v2_0_0 import Biosample

@@ -41,6 +41,7 @@ async def create_api(port):
                 track_requests_middleware
             ]
         )
+
         # Add the different attributes to the app object that will be needed for logger and status checks
         app['logger'] = LOG
         app['pending_requests'] = set()
