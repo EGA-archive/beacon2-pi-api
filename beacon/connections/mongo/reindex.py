@@ -1,8 +1,9 @@
 from beacon.connections.mongo.client import get_client
+from beacon.connections.mongo import conf as mongo_conf
 
 def reindex_database():
     client = get_client()
-    db = client['beacon']
+    db = client[mongo_conf.database_name]
     genomicVariations = db.genomicVariations
     caseLevelData = db.caseLevelData
 

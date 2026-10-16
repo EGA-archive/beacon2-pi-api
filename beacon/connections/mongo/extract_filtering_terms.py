@@ -10,6 +10,7 @@ import os
 from beacon.connections.mongo.client import get_client
 from beacon.conf.filtering_terms import alphanumeric_terms_individuals, alphanumeric_terms_g_variants, alphanumeric_terms_analyses, alphanumeric_terms_biosamples, alphanumeric_terms_cohorts, alphanumeric_terms_datasets, alphanumeric_terms_runs, alphanumeric_terms_patients
 from beacon.utils.modules import get_modules_confiles
+from beacon.connections.mongo import conf as mongo_conf
 
 ONTOLOGY_REGEX = re.compile(r"([_A-Za-z0-9]+):([_A-Za-z0-9^\-]+)")
 ICD_REGEX = re.compile(r"(ICD[_A-Za-z0-9]+):([_A-Za-z0-9^\./-]+)")
@@ -41,7 +42,7 @@ def get_ontology_field_name(ontology_id:str, term_id:str, collection:str, fields
         fieldquery[field]=ontology_id + ":" + term_id
         query['$or'].append(fieldquery)
     # Execute the query
-    results = client['beacon'].get_collection(collection).find(query).limit(1)
+    results = client[mongo_conf.database_name].get_collection(collection).find(query).limit(1)
 
     # Get the results in a dictionary and extract the labels of the ontologies
     try:
@@ -176,22 +177,22 @@ def insert_found_terms(collection, fields_names):
         terms = get_filtering_object(terms_ids, collection, fields_names)
         if len(terms) > 0:
             client=get_client()
-            filtering_terms=client['beacon'].filtering_terms
+            filtering_terms=client[mongo_conf.database_name].filtering_terms
             filtering_terms.insert_many(terms)
 
 
 def insert_all_ontology_terms_used():
     client=get_client()
     
-    biosamples=client['beacon'].biosamples
-    cohorts=client['beacon'].cohorts
-    datasets=client['beacon'].datasets
-    genomicVariations=client['beacon'].genomicVariations
-    individuals=client['beacon'].individuals
-    runs=client['beacon'].runs
+    biosamples=client[mongo_conf.database_name].biosamples
+    cohorts=client[mongo_conf.database_name].cohorts
+    datasets=client[mongo_conf.database_name].datasets
+    genomicVariations=client[mongo_conf.database_name].genomicVariations
+    individuals=client[mongo_conf.database_name].individuals
+    runs=client[mongo_conf.database_name].runs
 
-    imagestudies=client['beacon'].imagestudies
-    patients=client['beacon'].patients
+    imagestudies=client[mongo_conf.database_name].imagestudies
+    patients=client[mongo_conf.database_name].patients
 
     #Get all the yml conf files for each entity
     list_of_modules=get_modules_confiles()
@@ -276,7 +277,7 @@ def insert_all_ontology_terms_used():
                     insert_found_terms(imagestudies, imagestudies_fields)
     if alphanumterms != []:
         client=get_client()
-        filtering_terms=client['beacon'].filtering_terms
+        filtering_terms=client[mongo_conf.database_name].filtering_terms
         filtering_terms.insert_many(alphanumterms)
 
 def find_ontology_terms_used(collection) -> List[Dict]:
@@ -399,7 +400,7 @@ def get_filtering_object(terms_ids: list, collection, fields):
 
 def get_alphanumeric_term_count(collection_name: str, key: str) -> int:
     client=get_client()
-    return len(client['beacon']\
+    return len(client[mongo_conf.database_name]\
         .get_collection(collection_name)\
         .distinct(key))
 
@@ -437,7 +438,7 @@ def merge_ontology_terms():
     Scan all the filtering terms of type ontology found and remove the duplicated ones.
     """
     client=get_client()
-    filtering_terms=client['beacon'].filtering_terms
+    filtering_terms=client[mongo_conf.database_name].filtering_terms
     filtering_terms_array = filtering_terms.find({"type": "ontology"})
     array_of_ids=[]
     repeated_ids=[]
@@ -478,7 +479,7 @@ def merge_alphanumeric_terms():
     Scan all the filtering terms of type alphanumeric found and remove the duplicated ones.
     """
     client=get_client()
-    filtering_terms_=client['beacon'].filtering_terms
+    filtering_terms_=client[mongo_conf.database_name].filtering_terms
     filtering_terms = filtering_terms_.find({"type": "alphanumeric"})
     array_of_ids=[]
     repeated_ids=[]
@@ -516,7 +517,7 @@ def merge_custom_terms():
     Scan all the filtering terms of type custom found and remove the duplicated ones.
     """
     client=get_client()
-    filtering_terms_=client['beacon'].filtering_terms
+    filtering_terms_=client[mongo_conf.database_name].filtering_terms
     filtering_terms = filtering_terms_.find({"type": "custom"})
     array_of_ids=[]
     repeated_ids=[]
@@ -562,7 +563,7 @@ def insert_zygosity_terms():
     zygosity_terms.append(heterozygous)
     zygosity_terms.append(homozygous)
     client=get_client()
-    filtering_terms_=client['beacon'].filtering_terms
+    filtering_terms_=client[mongo_conf.database_name].filtering_terms
     filtering_terms_.insert_many(zygosity_terms)
     
 
