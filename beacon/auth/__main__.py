@@ -139,6 +139,7 @@ def get_grants_from_visas(self, visa_tokens, list_visa_tokens):
 
 @log_with_args(config.level)
 def fetch_idp(self, access_token):
+    idp_issuer=None
     try:
         # Get the payload values of the token
         header = jwt.get_unverified_header(access_token)
@@ -156,7 +157,6 @@ def fetch_idp(self, access_token):
 
         # Initialize the user and idp issuer info variables
         user_info=''
-        idp_issuer=None
         # Iterate through the different accepted idp providers and check if there is one that matches the issuer of the token
         for env_filename in glob.glob("beacon/auth/idp_providers/*.env"):
             load_dotenv(env_filename, override=True)
@@ -181,7 +181,6 @@ def fetch_idp(self, access_token):
                 if isinstance(aud, str):
                     aud = [aud]
                 if idp_client_id not in aud:
-                    idp_issuer=None
                     raise NoPermissionsAvailable("Unauthorized. The client is not included in the audience of the access token.")
                 aud_must_include_url = os.getenv('MUST_INCLUDE_BEACON_URL_IN_AUDIENCE')
                 if isinstance(aud_must_include_url, str):
@@ -191,7 +190,6 @@ def fetch_idp(self, access_token):
                         aud_must_include_url=False
                 if aud_must_include_url == True:
                     if config.complete_url not in aud:
-                        idp_issuer=None
                         raise NoPermissionsAvailable("Unauthorized. The beacon's url is not included in the audience of the access token.")
                 if len(aud)==1:
                     aud=aud[0]
@@ -199,6 +197,7 @@ def fetch_idp(self, access_token):
             else:
                 continue
     except Exception as e:
+        idp_issuer=None
         self.LOG.warning(e)
     if idp_issuer is None:
         self.LOG.warning("Unauthorized. There is no issuer in the token. Please, use a valid token with an issuer header.")
