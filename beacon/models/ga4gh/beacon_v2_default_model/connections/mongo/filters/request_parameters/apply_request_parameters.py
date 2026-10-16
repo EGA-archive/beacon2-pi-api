@@ -39,7 +39,7 @@ def apply_request_parameters(self, query: Dict[str, List[dict]], dataset: str):
             endvalue=v
         if k == 'start':
             startvalue=v
-    # Iterate through the different request parameters from the request
+    # Iterate through the different request parameters from the request
     for k, v in self.request_attributes.qparams.query.requestParameters.items():
         if k == "start":
             # First, get how many parameters are being thrown and if there is more than one, assign the query to a bracket query.
@@ -81,7 +81,7 @@ def apply_request_parameters(self, query: Dict[str, List[dict]], dataset: str):
                     finalvalue=str(startvalue)+','+str(endvalue)
                 finalvalue = finalvalue.split(',')
                 filters = generate_position_filter_start(self, k, finalvalue)
-                # Build the query with those artificial filters and apply other request parameters as well, if any
+                # Build the query with those artificial filters and apply other request parameters as well, if any
                 for filter in filters:
                     startdict=apply_alphanumeric_filter(self, {}, filter, dataset, True)
                     startrangequery["$and"].append(startdict)  
@@ -120,7 +120,7 @@ def apply_request_parameters(self, query: Dict[str, List[dict]], dataset: str):
                     stage2v = str(startvalue)+','+str(v)
                 stage2v = stage2v.split(',')
                 filters = generate_position_filter_end(self, k, stage2v)
-                # Build the query with those artificial filters and apply other request parameters as well, if any
+                # Build the query with those artificial filters and apply other request parameters as well, if any
                 for filter in filters:
                     enddictvalue=apply_alphanumeric_filter(self, {}, filter, dataset, True)
                     endquery["$and"].append(enddictvalue)
@@ -129,7 +129,7 @@ def apply_request_parameters(self, query: Dict[str, List[dict]], dataset: str):
                 stage2v = str(int(v)+1)+','+str(9999999999)
                 stage2v =stage2v.split(',')
                 filters = generate_position_filter_end(self, k, stage2v)  
-                # Get the variants that have the length greater than the range end-start
+                # Get the variants that have the length greater than the range end-start
                 docs_length = lengthquery(self, genomicVariations, {'length': {'$gte': int(v)-int(startvalue)}, 'datasetId': dataset})
                 length_array=[]
                 for lengthdoc in docs_length:
@@ -139,7 +139,7 @@ def apply_request_parameters(self, query: Dict[str, List[dict]], dataset: str):
                             length_array.append(lengthdoc["_id"])
                     except Exception as e:
                         continue
-                # Build the length query syntax
+                # Build the length query syntax
                 length_query["$and"].append({'_id': {'$in': length_array}})
         elif k == "datasets":
             pass
