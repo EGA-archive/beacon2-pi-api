@@ -851,3 +851,37 @@ async def get_biosamples_of_individual(entry_id: Optional[str], qparams: Request
     docs = format_query_bio(docs)
 
     return DefaultSchemas.BIOSAMPLES, count, docs
+
+###########
+
+async def get_cohort_of_individual(entry_id: Optional[str], qparams: RequestParams = RequestParams()):
+    from beacon.models.omop.connections.postgresql.cohorts import create_cohort_model
+    cdm_cohort_def = get_table("cohort_definition", schema="cdm")
+    cdm_cohort = get_table("cohort", schema="cdm")
+    person_id = int(entry_id)
+
+    async with client.connect() as conn:
+
+        records_query = select(
+            cdm_cohort_def.c.cohort_definition_id,
+            cdm_cohort_def.c.cohort_definition_name,
+            cast(cdm_cohort_def.c.cohort_initiation_date, String)
+        ).where(cdm_cohort_def.c.cohort_definition_id.in_([person_id]))
+
+        result = await conn.execute(records_query)
+        records = result.mappings().all()
+
+        for cohort in records:
+            dict_cohort = {'id': str(cohort[0]), 'date': cohort[2], 'name': cohort[1]}
+            stmt = select(cdm_cohort.c.subject_id).where(
+                cdm_cohort.c.cohort_definition_id == cohort[0]
+            )
+            result_individuals = await conn.execute(stmt)
+            rows = result_individuals.mappings().all()
+            individuals = [row["subject_id"] for row in rows]
+            cohortBasicInfo = {'cohort': dict_cohort, 'individuals': individuals}
+            docs = [await create_cohort_model(cohortBasicInfo)]
+
+    count = len(records)
+
+    return DefaultSchemas.COHORTS, count, docs

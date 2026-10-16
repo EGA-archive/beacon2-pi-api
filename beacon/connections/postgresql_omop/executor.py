@@ -60,6 +60,11 @@ async def execute_collection_function(endpoint_view):
                 request_attributes.entry_id,
                 request_attributes.qparams,
             )       
+    elif request_attributes.entry_type == "individuals":
+        schema, count, docs = await individuals.get_cohort_of_individual(
+            request_attributes.entry_id,
+            request_attributes.qparams,
+        )
 
     return CollectionsResponse(
         docs=docs,

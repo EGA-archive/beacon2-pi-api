@@ -412,7 +412,6 @@ async def search_cohorts(cohort_id=None, is_all=False):
                 individuals = [row["subject_id"] for row in rows]
                 return {'cohort': dict_cohort, 'individuals': individuals}
     
-    return list_cohorts
 
 async def get_cohorts(entry_id: Optional[str]=None, qparams: RequestParams=None):   
     schema = DefaultSchemas.COHORTS
@@ -431,6 +430,8 @@ async def get_cohort_with_id(entry_id: Optional[str], qparams: RequestParams=Non
     cohortBasicInfo = await search_cohorts(entry_id)
     docs = [await create_cohort_model(cohortBasicInfo)]
     return schema, count, docs
+
+####
 
 async def get_cohort_individuals(cohort_id, offset=0, limit=10):
     cdm_cohort = get_table("cohort", schema="cdm")
@@ -469,3 +470,4 @@ async def get_individuals_of_cohort(cohort_id: Optional[str], qparams: RequestPa
         coh_ind = await get_cohort_individuals(cohort_id, 
                                   offset=qparams.query.pagination.skip,
                                   limit=qparams.query.pagination.limit)
+        return coh_ind
