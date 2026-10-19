@@ -559,6 +559,30 @@ class TestAuthZ(unittest.TestCase):
                     set(list_datasets_names)
                 )
 
+
+                datasets = await PermissionsProxy.get_permissions(
+                    self=PermissionsProxy,
+                    user_id='8718f980-47bc-4be6-9390-a01343eed37d',
+                    requested_datasets=[],
+                    visa_datasets=[],
+                    entry_type_id='individual'
+                )
+
+                # Collect dataset identifiers
+                list_datasets_names = []
+                for dataset in datasets:
+                    list_datasets_names.append(dataset.dataset)
+
+                # Ensure controlled dataset access includes privileged datasets
+                tc = unittest.TestCase()
+                tc.assertSetEqual(
+                    set([
+                        'test3',
+                        'test4'
+                    ]),
+                    set(list_datasets_names)
+                )
+
             loop.run_until_complete(test_verify_controlled_granularity_default())
             loop.run_until_complete(client.close())
 
