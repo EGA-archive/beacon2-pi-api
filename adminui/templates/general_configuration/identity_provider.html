@@ -18,20 +18,43 @@
         {% csrf_token %}
     {% for idp in identity_provider_list %}
     <div class="dataset">
-        {% for key, value in idp.items %}
-            {% if key == 'IdentityProvider' %}
-            
-                
-                <div>               
-                    <div>{{key}}: {{value}}</div>
-                    <input hidden type="text" id="id_{{key}}" name="{{key}}" value="{{value}}">
-                </div>
-            {% else %}
-                <div>               
-                    <input type="password" id="id_{{key}}" name="{{key}}" value="{{value}}">
-                </div>
-            {% endif %}
-        {% endfor %}
+    {% for key, value in idp.items %}
+        {% if key == 'IdentityProvider' %}
+            <div>
+                <div>{{ key }}: {{ value }}</div>
+                <input
+                    hidden
+                    type="text"
+                    id="id_{{ key }}"
+                    name="{{ key }}"
+                    value="{{ value }}"
+                >
+            </div>
+
+        {% elif key == 'BeaconInAudience' %}
+            <div>
+                <label for="id_{{ key }}">{{ key }}</label>
+                <input
+                    type="checkbox"
+                    id="id_{{ key }}"
+                    name="{{ key }}"
+                    value="true"
+                    {% if value == True or value == 'True' or value == 'true' or value == '1' %}checked{% endif %}
+                >
+            </div>
+
+        {% else %}
+            <div>
+                {{ key }}
+                <input
+                    type="password"
+                    id="id_{{ key }}"
+                    name="{{ key }}"
+                    value="{{ value }}"
+                >
+            </div>
+        {% endif %}
+    {% endfor %}
 
 
 
@@ -42,9 +65,9 @@
     <button type="submit" class="btn btn-danger mb-3" name="Delete" value="Delete">Delete</button>
     
                 
-        
-    {% endfor %}
     </form>
+    {% endfor %}
+    
     <span><button hx-on:click="htmx.toggleClass('#add_new', 'hidden')">Add New</button></span>
         <form id='add_new' method="post" onsubmit="openLoader()" class="hidden">
         {% csrf_token %}
