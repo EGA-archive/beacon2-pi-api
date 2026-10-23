@@ -37,6 +37,7 @@ class AuditPublisher:
                 durable=True,
             )
             queue = await self._channel.declare_queue("audit_queue", durable=True)
+            await queue.bind(exchange=self._exchange, routing_key="file.*")
             await queue.bind(exchange=self._exchange, routing_key="api.*")
             self._initialized = True
             self.LOG.info("Audit publisher connected to RabbitMQ")
@@ -62,6 +63,7 @@ class AuditPublisher:
             await self._exchange.publish(message=message, routing_key=routing_key)
         except Exception as e:
             self.LOG.error("Failed to publish audit event (non-blocking): %s", e)
+            raise
 
     async def close(self):
         if self._connection and not self._connection.is_closed:

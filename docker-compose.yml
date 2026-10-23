@@ -215,5 +215,22 @@ services:
     networks:
       - pub
 
+  file-monitor:
+    build:
+      context: .
+    command: python -m beacon.auditing.file_monitor
+    environment:
+      RABBITMQ_URL: amqp://audit_user:audit_password@rabbitmq:5672/
+    volumes:
+      - ./beacon/auditing/permanent_files:/var/lib/permanent_files
+      - ./beacon/conf:/beacon/conf:ro
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - pub
+    restart: unless-stopped
+
 volumes:
   rabbitmq_data:
+  permanent_files_state:
