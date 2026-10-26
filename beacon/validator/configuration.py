@@ -433,57 +433,64 @@ def check_configuration(
 
         pfile.close()
 
-        # Iterate through dataset permission definitions
-        for dataset_name, configuration in datasets.items():
+        if datasets != None:
 
-            # Configuration can be a simple boolean or a permission object
-            if not isinstance(configuration, bool):
+            if isinstance(datasets, dict):
+                pass
+            else:
+                raise('/beacon/permissions/datasets/datasets_permissions.yml file needs to be a dictionary')
 
-                for security_level, securityconf in configuration.items():
+            # Iterate through dataset permission definitions
+            for dataset_name, configuration in datasets.items():
 
-                    # Only supported security levels are allowed
-                    if security_level not in ['public', 'registered', 'controlled']:
-                        raise Exception(
-                            "keys for datasets have to be public, registered, controlled for security level"
-                        )
+                # Configuration can be a simple boolean or a permission object
+                if not isinstance(configuration, bool):
 
-                    # Security configuration can be boolean or detailed object
-                    if not isinstance(securityconf, bool):
+                    for security_level, securityconf in configuration.items():
 
-                        for parameters, paramsvalues in securityconf.items():
+                        # Only supported security levels are allowed
+                        if security_level not in ['public', 'registered', 'controlled']:
+                            raise Exception(
+                                "keys for datasets have to be public, registered, controlled for security level"
+                            )
 
-                            # Allowed permission configuration keys
-                            if parameters not in [
-                                'default_entry_types_granularity',
-                                'entry_types_exceptions',
-                                'user-list'
-                            ]:
-                                raise Exception(
-                                    "entries for dataset settings have to be "
-                                    "default_entry_types_granularity, "
-                                    "entry_types_exceptions or user-list"
-                                )
+                        # Security configuration can be boolean or detailed object
+                        if not isinstance(securityconf, bool):
 
-                            # Additional validation for controlled access users
-                            if security_level == 'controlled':
+                            for parameters, paramsvalues in securityconf.items():
 
-                                if parameters == 'user-list':
+                                # Allowed permission configuration keys
+                                if parameters not in [
+                                    'default_entry_types_granularity',
+                                    'entry_types_exceptions',
+                                    'user-list'
+                                ]:
+                                    raise Exception(
+                                        "entries for dataset settings have to be "
+                                        "default_entry_types_granularity, "
+                                        "entry_types_exceptions or user-list"
+                                    )
 
-                                    for user in paramsvalues:
+                                # Additional validation for controlled access users
+                                if security_level == 'controlled':
 
-                                        for confuser, valueuser in user.items():
+                                    if parameters == 'user-list':
 
-                                            # Validate user-specific configuration keys
-                                            if confuser not in [
-                                                'user_id',
-                                                'default_entry_types_granularity',
-                                                'entry_types_exceptions'
-                                            ]:
-                                                raise Exception(
-                                                    "entries for user settings in user-list "
-                                                    "must be be default_entry_types_granularity, "
-                                                    "entry_types_exceptions or user_id"
-                                                )
+                                        for user in paramsvalues:
+
+                                            for confuser, valueuser in user.items():
+
+                                                # Validate user-specific configuration keys
+                                                if confuser not in [
+                                                    'user_id',
+                                                    'default_entry_types_granularity',
+                                                    'entry_types_exceptions'
+                                                ]:
+                                                    raise Exception(
+                                                        "entries for user settings in user-list "
+                                                        "must be be default_entry_types_granularity, "
+                                                        "entry_types_exceptions or user_id"
+                                                    )
 
     except Exception:
         raise
