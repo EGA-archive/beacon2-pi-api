@@ -176,6 +176,9 @@ class TestMode(RootModel[bool]):
 
 
 class Info(BaseModel):
+    model_config = ConfigDict(
+        extra='allow',
+    )
     pass
 
 

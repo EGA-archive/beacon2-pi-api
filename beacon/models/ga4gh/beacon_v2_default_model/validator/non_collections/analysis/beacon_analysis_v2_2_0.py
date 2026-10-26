@@ -10,6 +10,9 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class Info(BaseModel):
+    model_config = ConfigDict(
+        extra='allow',
+    )
     pass
 
 
