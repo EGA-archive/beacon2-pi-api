@@ -275,7 +275,7 @@ class TestAuthN(unittest.TestCase):
                                     accepted_issuer=True
                                     break
                             if accepted_issuer==False:
-                                self.LOG.warning("Unauthorized visa: {}. Issuer not trusted.".format(visa))
+                                self.LOG.warning("Unauthorized visa. Issuer not trusted.")
                                 raise NoPermissionsAvailable("Unauthorized visa. Issuer not trusted.")
                             accepted_issuer=False
                             for issuers_values in conditions['issuers']:

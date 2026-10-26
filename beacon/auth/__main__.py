@@ -106,7 +106,7 @@ def get_grants_from_visas(self, visa_tokens, list_visa_tokens):
                                     accepted_issuer=True
                                     break
                             if accepted_issuer==False:
-                                self.LOG.warning("Unauthorized visa: {}. Issuer not trusted.".format(visa_token))
+                                self.LOG.warning("Unauthorized visa. Issuer not trusted.")
                                 raise NoPermissionsAvailable("Unauthorized visa. Issuer not trusted.")
                             accepted_issuer=False
                             visa_well_known=visa['iss']+'/.well-known/openid-configuration'
@@ -116,7 +116,7 @@ def get_grants_from_visas(self, visa_tokens, list_visa_tokens):
                             visa_jwks_url=well_known_info["jwks_uri"]
                             visa_validated = validate_ga4gh_visa(self, visa_token, visa['iss'], visa_jwks_url)
                             if visa_validated == False:
-                                self.LOG.warning("Unauthorized visa: {}. Visa not valid.".format(visa_token))
+                                self.LOG.warning("Unauthorized visa. Visa not valid.")
                                 raise NoPermissionsAvailable("Unauthorized visa. Visa not valid.")
                             for issuers_values in conditions['issuers']:
                                 if visa_values['value'] in issuers_values["accepted_values"]:
