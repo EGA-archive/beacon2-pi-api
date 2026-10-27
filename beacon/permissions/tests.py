@@ -35,7 +35,6 @@ class TestAuthZ(unittest.TestCase):
     Authorization test suite covering dataset access control,
     authentication headers, and granularity logic.
     """
-
     def test_authZ_verify_public_datasets(self):
         # Initialize async test environment
         with loop_context() as loop:
@@ -543,6 +542,20 @@ class TestAuthZ(unittest.TestCase):
                 list_datasets_names = []
                 for dataset in datasets:
                     list_datasets_names.append(dataset.dataset)
+                    if dataset.dataset == 'AV_Dataset':
+                        assert dataset.granularity == 'record'
+                    elif dataset.dataset == 'CINECA_synthetic_cohort_EUROPE_UK1':
+                        assert dataset.granularity == 'record'
+                    elif dataset.dataset == 'DemoDatasetBreast':
+                        assert dataset.granularity == 'record'
+                    elif dataset.dataset == 'test':
+                        assert dataset.granularity == 'record'
+                    elif dataset.dataset == 'test2':
+                        assert dataset.granularity == 'record'
+                    elif dataset.dataset == 'test3':
+                        assert dataset.granularity == 'count'
+                    elif dataset.dataset == 'test4':
+                        assert dataset.granularity == 'count'
 
                 # Ensure controlled dataset access includes privileged datasets
                 tc = unittest.TestCase()
@@ -572,11 +585,27 @@ class TestAuthZ(unittest.TestCase):
                 list_datasets_names = []
                 for dataset in datasets:
                     list_datasets_names.append(dataset.dataset)
+                    if dataset.dataset == 'CINECA_synthetic_cohort_EUROPE_UK1':
+                        assert dataset.granularity == 'record'
+                    elif dataset.dataset == 'DemoDatasetBreast':
+                        assert dataset.granularity == 'boolean'
+                    elif dataset.dataset == 'test':
+                        assert dataset.granularity == 'boolean'
+                    elif dataset.dataset == 'test2':
+                        assert dataset.granularity == 'boolean'
+                    elif dataset.dataset == 'test3':
+                        assert dataset.granularity == 'record'
+                    elif dataset.dataset == 'test4':
+                        assert dataset.granularity == 'count'
 
                 # Ensure controlled dataset access includes privileged datasets
                 tc = unittest.TestCase()
                 tc.assertSetEqual(
                     set([
+                        'CINECA_synthetic_cohort_EUROPE_UK1',
+                        'DemoDatasetBreast',
+                        'test',
+                        'test2',
                         'test3',
                         'test4'
                     ]),

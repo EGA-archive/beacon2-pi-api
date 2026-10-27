@@ -1,5 +1,3 @@
-
-
 def return_found_granularity_in_exceptions(self, granularity_exceptions, default_granularity, request_attr_entry_type_id,):
     """Method to get the granularity needed to be returned for a specific permissions case"""
     for granularity_exception in granularity_exceptions:
@@ -12,7 +10,7 @@ def return_found_granularity_in_exceptions(self, granularity_exceptions, default
     return default_granularity
 
 def return_granularity_and_exceptions(self, security_level_dict, user_id, default_granularity, granularity_exceptions):
-    """Methot to get the granularity and exceptions needed to be returned depending on the security leevl case"""
+    """Method to get the granularity and exceptions needed to be returned depending on the security leevl case"""
     # Loop over the datasets/datasets_permissions.yml file and
     if 'public' in security_level_dict:
          # If a dataset has security level as public and the request is not authenticated, get the granularity and the entry type exceptions
@@ -35,5 +33,9 @@ def return_granularity_and_exceptions(self, security_level_dict, user_id, defaul
                         default_granularity = user_exception.get('default_entry_types_granularity')
                     if 'entry_types_exceptions' in user_exception:
                         granularity_exceptions = user_exception.get('entry_types_exceptions')
+                    if default_granularity is None:
+                        default_granularity = 'boolean'
                     return default_granularity, granularity_exceptions
+    if default_granularity is None:
+        default_granularity == 'boolean'
     return default_granularity, granularity_exceptions

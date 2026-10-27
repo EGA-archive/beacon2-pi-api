@@ -110,7 +110,7 @@ def get_grants_from_visas(self, visa_tokens, list_visa_tokens):
                                 raise NoPermissionsAvailable("Unauthorized visa. Issuer not trusted.")
                             accepted_issuer=False
                             visa_well_known=visa['iss']+'/.well-known/openid-configuration'
-                            response = requests.get(visa_well_known)
+                            response = requests.get(visa_well_known, timeout=2)
                             response.raise_for_status()
                             well_known_info = response.json()
                             visa_jwks_url=well_known_info["jwks_uri"]
@@ -164,7 +164,7 @@ def fetch_idp(self, access_token):
             # In case the issuer matches, set the idp values to be used later for validating the token
             if issuer == idp_issuer:
                 idp_well_known_endpoint = os.getenv('WELL_KNOWN_ENDPOINT')
-                response = requests.get(idp_well_known_endpoint)
+                response = requests.get(idp_well_known_endpoint, timeout=2)
                 response.raise_for_status()
                 well_known_info = response.json()
                 user_info= well_known_info["userinfo_endpoint"]
