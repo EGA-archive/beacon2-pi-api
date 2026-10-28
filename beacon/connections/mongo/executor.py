@@ -1,57 +1,116 @@
+
 import asyncio
-from concurrent.futures import ThreadPoolExecutor
 from beacon.logs.logs import log_with_args
 from beacon.conf.conf_override import config
-from beacon.exceptions.exceptions import NoPermissionsAvailable, DatabaseIsDown
+from beacon.exceptions.exceptions import (
+    NoPermissionsAvailable,
+    DatabaseIsDown,
+)
 from pymongo.errors import ConnectionFailure
 from beacon.response.classes import MultipleDatasetsResponse
 from beacon.utils.modules import get_all_modules_connections_script
 
 @log_with_args(config.level)
 async def execute_function(self, datasets: list):
-    # Initiate the list where the different dataset classes are returned populated from the queries
-    list_of_responses=[]
-    # Get the function that will be the one to use for the query performed
-    list_of_non_collection_modules = get_all_modules_connections_script("non_collections", "mongo")
-    for non_collection_module in list_of_non_collection_modules:
-        try:
-            function = getattr(non_collection_module, self.request_attributes.function)
-        except Exception:
-            continue
-    # Get the current process where the app is being run
+    # Resolve the requested function from the enabled model modules.
+    modules = get_all_modules_connections_script(
+        "non_collections", "mongo"
+    )
+
+    function = None
+    for module in modules:
+        candidate = getattr(
+            module,
+            self.request_attributes.function,
+            None,
+        )
+        if callable(candidate):
+            function = candidate
+            break
+
+    if function is None:
+        raise RuntimeError(
+            "Non-collection function not found: "
+            f"{self.request_attributes.function}"
+        )
+
+    # Reuse the application-wide thread pool.
     loop = asyncio.get_running_loop()
-    if datasets != []:
-        # If there is more than one datasets to query, start a thread for each of the datasets and execute the previously chosen function in parallel and asynchronously
-        with ThreadPoolExecutor() as pool:
-            done, pending = await asyncio.wait(fs=[loop.run_in_executor(pool, function, self, dataset) for dataset in datasets],
-            return_when=asyncio.ALL_COMPLETED
+    pool = self.request.app["db_pool"]
+
+    if datasets:
+
+        tasks = []
+        for dataset in datasets:
+
+            task = loop.run_in_executor(
+                pool,
+                function,
+                self,
+                dataset,
             )
-        # When each of the queries finishes, append the dataset instance class populated in a list
-        for task in done:
-            responseClass= task.result()
-            list_of_responses.append(responseClass)
-    # When all the queries per dataset finish, return the array of datasets in a wrapper class of the single dataset instances
+
+            tasks.append(task)
+
+        # Wait for all dataset operations to finish.
+        try:
+            responses = await asyncio.gather(*tasks)
+        except ConnectionFailure as exc:
+            raise DatabaseIsDown(str(exc)) from exc
+
+
+        list_of_responses = [
+            result
+            for result in responses
+        ]
+
+    else:
+        list_of_responses = []
+
+    # Preserve the existing response format.
     try:
-        return MultipleDatasetsResponse(datasets_responses=list_of_responses)
-    except ConnectionFailure as e:
-        #client.close() # It's not the same that it doesn't found the database than the connection is wrong
-        raise DatabaseIsDown(str(e))
-    except Exception:
-        raise NoPermissionsAvailable("No datasets found. Check out the permissions or the datasets requested if a response was expected.")
+        return MultipleDatasetsResponse(
+            datasets_responses=list_of_responses
+        )
+    except ConnectionFailure as exc:
+        raise DatabaseIsDown(str(exc)) from exc
+    except Exception as exc:
+        raise NoPermissionsAvailable(
+            "No datasets found. Check the permissions or "
+            "the requested datasets if a response was expected."
+        ) from exc
     
 @log_with_args(config.level)
 async def execute_collection_function(self):
     try:
-        # Get the function that will be the one to use for the query performed
-        list_of_collection_modules = get_all_modules_connections_script("collections", "mongo")
-        for collection_module in list_of_collection_modules:
-            try:
-                function = getattr(collection_module, self.request_attributes.function)
-            except Exception:
-                continue
-        # Perform the query and return the class to return for the chosen collection
-        collectionsResponseClass = function(self)
-        return collectionsResponseClass
-    except ConnectionFailure as e:
-        #client.close()
-        raise DatabaseIsDown(str(e))
+        modules = get_all_modules_connections_script(
+            "collections", "mongo"
+        )
+
+        function = None
+        for module in modules:
+            candidate = getattr(
+                module, self.request_attributes.function, None
+            )
+            if callable(candidate):
+                function = candidate
+                break
+
+        if function is None:
+            raise RuntimeError(
+                "Collection function not found: "
+                f"{self.request_attributes.function}"
+            )
+
+        loop = asyncio.get_running_loop()
+        pool = self.request.app["db_pool"]
+
+        try:
+            return await loop.run_in_executor(
+                pool, function, self
+            )
+        except ConnectionFailure as exc:
+            raise DatabaseIsDown(str(exc)) from exc
+
+    except ConnectionFailure as exc:
+        raise DatabaseIsDown(str(exc)) from exc
