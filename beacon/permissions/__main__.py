@@ -24,8 +24,6 @@ async def authorization(self):
         user, list_visa_datasets = await authentication(self, access_token)
         # Get the token's sub as the user_id if the token is valid.
         user_id = user.get('sub')
-    except NoTermsAndConditionsForResearcherAvailable:
-        raise
     except Exception as e:
         list_visa_datasets = []
         user_id = None

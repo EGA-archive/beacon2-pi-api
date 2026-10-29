@@ -233,8 +233,6 @@ async def authentication(self, access_token):
         if access_token_validation == True:
             user, list_visa_tokens = await fetch_user_info(self, access_token, user_info, idp_issuer, list_visa_tokens)
             return user, list_visa_tokens
-    except NoTermsAndConditionsForResearcherAvailable:
-        raise
     except Exception as e:
         user = None
         list_visa_tokens=[]
