@@ -17,7 +17,7 @@ def return_granularity_and_exceptions(self, security_level_dict, user_id, defaul
         try:
             default_granularity = security_level_dict['public'].get('default_entry_types_granularity')
         except Exception:
-            default_granularity = None
+            default_granularity = 'boolean'
         try:
             granularity_exceptions = security_level_dict['public'].get('entry_types_exceptions')
         except Exception:
@@ -26,7 +26,7 @@ def return_granularity_and_exceptions(self, security_level_dict, user_id, defaul
         try:
             default_granularity = security_level_dict['registered'].get('default_entry_types_granularity')
         except Exception:
-            default_granularity = None
+            default_granularity = 'boolean'
         try:
             granularity_exceptions = security_level_dict['registered'].get('entry_types_exceptions')
         except Exception:
