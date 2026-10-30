@@ -72,3 +72,6 @@ query_budget_table = 'budget'
 imprecise_count=0 # If imprecise_count is 0, no modification of the count will be applied. If it's different than 0, count will always be this number when count is smaller than this number.
 round_to_tens=False # If true, the rounding will be done to the immediate superior tenth if the imprecise_count is 0
 round_to_hundreds=False # If true, the rounding will be done to the immediate superior hundredth if the imprecise_count is 0 and the round_to_tens is false
+
+# Performance
+max_num_of_concurrent_threads=32 # the max num of workers of the CPU assigned to the API query processing

@@ -412,6 +412,39 @@ AV_Dataset:
           - individual: record
 ``` 
 
+## Adding permissions and authentication conditionals through GA4GH visas
+
+Now, adding also the option to accept GA4GH visas is implemented. For doing that, go to [visas_conf.yml](https://github.com/EGA-archive/beacon-production-prototype/tree/main/beacon/permissions/ga4gh_visas/visas_conf.yml) and add the visa type as the main key and after that enable it or not, and the URL to grab the keys alongside the accepted issuers with the accepted value to make the visa work. The visa to give permissions for a dataset is *ControlledAccessGrants*. The other visas only are additional conditions to accept the authentication of the user. Bear in mind that *ControlledAcessGrants* will add a boolean granularity level permission, if you want more, you will need to go to datasets_permissions.yml and set this there.
+
+```
+AcceptedTermsAndPolicies:
+  enabled: False
+  issuers:
+  - iss: https://id.portal.dev.gdi.lu/realms/gdi
+    jwks_uri: https://id.portal.dev.gdi.lu/realms/gdi/protocol/openid-connect/certs
+    accepted_values:
+      - accepted
+  - iss: https://id.portal.gdi.lu//realms/gdi
+    jwks_uri: https://id.portal.gdi.lu/realms/gdi/protocol/openid-connect/certs
+    accepted_values: 
+      - accepted
+ResearcherStatus:
+  enabled: False
+  issuers:
+  - iss: https://id.portal.dev.gdi.lu/realms/gdi
+    jwks_uri: https://id.portal.dev.gdi.lu/realms/gdi/protocol/openid-connect/certs
+    accepted_values: 
+      - RESEARCHER
+ControlledAccessGrants:
+  enabled: False
+  issuers:
+  - iss: https://rems.test.example.org/
+    jwks_uri: https://rems.test.example.org/openid-connect/certs
+    accepted_values:
+      - https://rems.test.example.org/datasets/test-dataset
+``` 
+
+
 ## Managing configuration
 
 ### Generic configuration

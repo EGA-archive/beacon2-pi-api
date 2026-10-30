@@ -15,12 +15,10 @@ services:
     entrypoint: ['python','-m','beacon']
     volumes:
       - ./beacon/logs/log_files:/beacon/logs/log_files
-      - ./beacon/conf/conf.py:/beacon/conf/conf.py
-      - ./beacon/conf/conf_default.py:/beacon/conf/conf_default.py
-      - ./beacon/connections/mongo/conf.py:/beacon/connections/mongo/conf.py
+      - ./beacon/conf:/beacon/conf
+      - ./beacon/connections:/beacon/connections
       - ./beacon/permissions:/beacon/permissions
       - ./beacon/models:/beacon/models
-      - ./beacon/conf/models:/beacon/conf/models
       - ./beacon/custom_schemas:/beacon/custom_schemas
     networks:
       - pub
@@ -125,7 +123,7 @@ services:
       - pub
 
   beacon-ri-tools:
-    image: ghcr.io/ega-archive/beacon2-ri-tools-v2:2.3.1
+    image: ghcr.io/ega-archive/beacon2-ri-tools-v2:2.3.3
     hostname: beacon-ri-tools
     container_name: ri-tools
     networks:
