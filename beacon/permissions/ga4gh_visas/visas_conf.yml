@@ -2,20 +2,24 @@ AcceptedTermsAndPolicies:
   enabled: False
   issuers:
   - iss: https://id.portal.dev.gdi.lu/realms/gdi
+    jwks_uri: https://id.portal.dev.gdi.lu/realms/gdi/protocol/openid-connect/certs
     accepted_values:
       - accepted
   - iss: https://id.portal.gdi.lu//realms/gdi
+    jwks_uri: https://id.portal.gdi.lu/realms/gdi/protocol/openid-connect/certs
     accepted_values: 
       - accepted
 ResearcherStatus:
   enabled: False
   issuers:
   - iss: https://id.portal.dev.gdi.lu/realms/gdi
+    jwks_uri: https://id.portal.dev.gdi.lu/realms/gdi/protocol/openid-connect/certs
     accepted_values: 
       - RESEARCHER
 ControlledAccessGrants:
   enabled: False
   issuers:
   - iss: https://rems.test.example.org/
+    jwks_uri: https://rems.test.example.org/openid-connect/certs
     accepted_values:
       - https://rems.test.example.org/datasets/test-dataset

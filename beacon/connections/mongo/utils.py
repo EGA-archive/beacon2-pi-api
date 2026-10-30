@@ -23,16 +23,31 @@ def query_patientId(self, query: dict, document_id) -> dict:
     query["patientId"] = document_id
     return query
 
+
 @log_with_args_mongo(config.level)
-def join_query(self, mongo_collection, query: dict, original_id, dataset: str):
-    excluding_fields={"_id": 0, original_id: 1}
-    if dataset != None:
-        try:
-            query["$and"].append({"datasetId": dataset})
-        except Exception:
-            query["$and"]=[]
-            query["$and"].append({"datasetId": dataset})
-    return mongo_collection.find(query, excluding_fields).max_time_ms(100 * 1000)
+def join_query(
+    self,
+    mongo_collection,
+    query: dict,
+    original_id: str,
+    dataset: str,
+):
+    mongo_query = query.copy()
+
+    if dataset is not None:
+        existing_and = mongo_query.get("$and", [])
+        mongo_query["$and"] = [
+            *existing_and,
+            {"datasetId": dataset},
+        ]
+
+    projection = {"_id": 0, original_id: 1}
+
+    return mongo_collection.find(
+        mongo_query,
+        projection,
+        max_time_ms=100_000,
+    )
 
 @log_with_args_mongo(config.level)
 def get_documents(self, collection: Collection, query: dict, skip: int, limit: int) -> Cursor:
@@ -140,64 +155,94 @@ def get_filtering_documents(self, collection: Collection, query: dict, remove_id
     # Get the docs by removing the unwanted id
     return collection.find(query,remove_id).skip(skip).limit(limit).max_time_ms(100 * 1000)
 
+from functools import lru_cache
+
+
+@lru_cache(maxsize=4096)
+def _get_filtering_term_scopes(term_id):
+    """Cache filtering-term scopes to avoid repeated MongoDB reads."""
+    client = get_client()
+    filtering_terms = client[mongo_conf.database_name].filtering_terms
+
+    doc = filtering_terms.find_one(
+        {"id": term_id},
+        {"_id": 0, "scopes": 1},
+    )
+
+    if doc is None:
+        return None
+
+    return tuple(doc.get("scopes") or ())
+
+
+@lru_cache(maxsize=1)
+def _get_genomic_variant_endpoint():
+    """Cache the genomic variant endpoint configuration."""
+    return import_genomicVariant_confile()["genomicVariant"]["endpoint_name"]
+
+
 @log_with_args_mongo(config.level)
 def choose_scope(self, scope, filter):
-    client=get_client()
-    filtering_terms=client[mongo_conf.database_name].filtering_terms
-    # Initiate the dictionaries and create the syntax to query the filtering terms database to get the available scopes
-    query_filtering={}
-    query_filtering['$and']=[]
-    dict_id={}
-    dict_id['id']=filter.id
-    query_filtering['$and'].append(dict_id)
-    docs = get_documents(self,
-    filtering_terms,
-    query_filtering,
-    0,
-    1
-    )
-    docs = list(docs)
-    # If there are no docs with the requested filtering term, raise an exception
-    if docs == []:
-        raise InvalidRequest("The filtering term: {} is not a valid filtering term.".format(filter.id))
-    try:
-        fterm=docs[0]
-        scopes=fterm["scopes"]
-    except Exception:
-        scopes=[]
-    # If there is no scope requested, check if there are any scopes in the filtering term requested
-    genomicVariant_confile= import_genomicVariant_confile()
+    term_id = filter.id
+
+    # Retrieve cached scopes, or query MongoDB on the first request.
+    scopes = _get_filtering_term_scopes(term_id)
+
+    # If the filtering term does not exist, preserve the validation error.
+    if scopes is None:
+        raise InvalidRequest(
+            "The filtering term: {} is not a valid filtering term.".format(
+                term_id
+            )
+        )
+
+    genomic_variant_endpoint = _get_genomic_variant_endpoint()
+    entry_type = self.request_attributes.entry_type
+
+    # If no scope was requested, infer it from the term and endpoint.
     if scope is None:
-        if scopes == []:
-            # If there aren't any, check if the filtering term is not a zygosity term
-            if filter.id not in ["GENO:0000136", "GENO:0000458"]:
-                # If it's not a zygosity term, add the entry type as scop
-                if self.request_attributes.entry_type == genomicVariant_confile["genomicVariant"]["endpoint_name"]:
-                    scope = 'genomicVariation'
-                else:
-                    scope = self.request_attributes.entry_type[0:-1]
-            else: # If it's a zygosity term, return scope = None, as this is an internal filtering term
-                scope = None
-            return scope
-        else:
-            for scoped in scopes:
-                # If there are scopes and is an array, check if any scope is equal to the entry type requested, to assign it as the scope
-                if str(scoped)+'s'==self.request_attributes.entry_type and self.request_attributes.entry_type != genomicVariant_confile["genomicVariant"]["endpoint_name"]:
-                    scope=str(scoped)
-                    return scope
-                elif str(scoped)=='genomicVariation' and self.request_attributes.entry_type==genomicVariant_confile["genomicVariant"]["endpoint_name"]:
-                    scope=str(scoped)
-                    return scope
-            # If there is only one scope for the filtering term, assign this scope
-            if len(scopes) == 1:
-                scope = scopes[0]
-                return scope
-            # Otherwise, make compulsory to select a scope for the filtering term
-            else:
-                raise InvalidRequest("Look at filtering terms endpoint and select a scope from one of the available scope values for this filtering term: {}".format(filter.id))
-    else:
-        # If a scope is requested, use it as the scope
+        if not scopes:
+            # Internal zygosity terms do not have a scope.
+            if term_id in ("GENO:0000136", "GENO:0000458"):
+                return None
+
+            if entry_type == genomic_variant_endpoint:
+                return "genomicVariation"
+
+            return entry_type[:-1]
+
+        # Prefer a scope compatible with the requested endpoint.
         for scoped in scopes:
-            if scope == scoped:
-                return scope
-        raise InvalidRequest("Scope requested in filtering term does not match any of its possible scopes. Look at filtering terms endpoint to know which scopes you can select for this filtering term: {}".format(filter.id))
+            if (
+                str(scoped) + "s" == entry_type
+                and entry_type != genomic_variant_endpoint
+            ):
+                return str(scoped)
+
+            if (
+                str(scoped) == "genomicVariation"
+                and entry_type == genomic_variant_endpoint
+            ):
+                return str(scoped)
+
+        # If exactly one scope is available, infer it.
+        if len(scopes) == 1:
+            return scopes[0]
+
+        raise InvalidRequest(
+            "Look at filtering terms endpoint and select a scope "
+            "from one of the available scope values for this filtering "
+            "term: {}".format(term_id)
+        )
+
+    # If a scope was explicitly requested, validate it.
+    if scope in scopes:
+        return scope
+
+    raise InvalidRequest(
+        "Scope requested in filtering term does not match any of its "
+        "possible scopes. Look at filtering terms endpoint to know "
+        "which scopes you can select for this filtering term: {}".format(
+            term_id
+        )
+    )

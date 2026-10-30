@@ -7,6 +7,33 @@ from beacon.conf.conf_override import config
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.utils import import_dataset_confile, import_analysis_confile, import_biosample_confile, import_cohort_confile, import_individual_confile, import_genomicVariant_confile, import_run_confile
 from beacon.connections.mongo import conf as mongo_conf
 
+import threading
+
+_CROSS_QUERY_CONFIGS = None
+_CROSS_QUERY_CONFIGS_LOCK = threading.Lock()
+
+
+def get_cross_query_configs():
+    """Load cross-query configurations once per process."""
+    global _CROSS_QUERY_CONFIGS
+
+    if _CROSS_QUERY_CONFIGS is None:
+        with _CROSS_QUERY_CONFIGS_LOCK:
+            if _CROSS_QUERY_CONFIGS is None:
+                _CROSS_QUERY_CONFIGS = (
+                    import_biosample_confile(),
+                    import_analysis_confile(),
+                    import_run_confile(),
+                    import_genomicVariant_confile(),
+                    import_individual_confile(),
+                    import_cohort_confile(),
+                    import_dataset_confile(),
+                )
+
+    return _CROSS_QUERY_CONFIGS
+
+
+
 @log_with_args(config.level)
 def cross_query(self, query: dict, scope: str, request_parameters: dict, dataset: str):
     client=get_client()
@@ -18,13 +45,15 @@ def cross_query(self, query: dict, scope: str, request_parameters: dict, dataset
     individuals=client[mongo_conf.database_name].individuals
     runs=client[mongo_conf.database_name].runs
     # Import all the entry types configuration files
-    biosample_confile=import_biosample_confile()
-    analysis_confile=import_analysis_confile()
-    run_confile=import_run_confile()
-    genomicVariant_confile=import_genomicVariant_confile()
-    individual_confile=import_individual_confile()
-    cohort_confile=import_cohort_confile()
-    dataset_confile=import_dataset_confile()
+    (
+        biosample_confile,
+        analysis_confile,
+        run_confile,
+        genomicVariant_confile,
+        individual_confile,
+        cohort_confile,
+        dataset_confile,
+    ) = get_cross_query_configs()
     # Check for the different scopes and entry types to apply a different query syntax built.
     if scope == 'genomicVariation' and self.request_attributes.entry_type == genomicVariant_confile["genomicVariant"]["endpoint_name"]:
         subquery={}

@@ -1,33 +1,64 @@
+from functools import lru_cache
+
 from beacon.request.parameters import OntologyFilter
 from beacon.request.classes import Similarity
 from beacon.connections.mongo.utils import get_documents, choose_scope
 from beacon.connections.mongo.client import get_client
-from beacon.logs.logs import log_with_args
-from beacon.conf.conf_override import config
 from beacon.utils.modules import get_all_modules_connections_script
 from beacon.connections.mongo import conf as mongo_conf
+from beacon.exceptions.exceptions import InvalidRequest
 
-@log_with_args(config.level)
-def apply_ontology_filter(self, query: dict, filter: OntologyFilter, request_parameters: dict, dataset: str) -> dict:
-    client=get_client()
-    synonyms_=client[mongo_conf.database_name].synonyms
-    # Search for synonyms in the query filter
-    final_term_list=[]    
-    query_synonyms={}
-    query_synonyms['id']=filter.id
-    synonyms=get_documents(self,
-        synonyms_,
-        query_synonyms,
-        0,
-        1
+
+@lru_cache(maxsize=32)
+def get_cached_cross_query_modules():
+    """Cache cross-query module discovery across requests."""
+    return tuple(
+        get_all_modules_connections_script(
+            "filters.cross_queries.cross_query",
+            "mongo",
+        )
     )
+
+
+def apply_ontology_filter(
+    self,
+    query: dict,
+    filter: OntologyFilter,
+    request_parameters: dict,
+    dataset: str,
+) -> dict:
+
+    client = get_client()
+    database = client[mongo_conf.database_name]
+
+    synonyms_collection = database.synonyms
+    similarities_collection = database.similarities
+    filtering_terms_collection = database.filtering_terms
+
+    final_term_list = []
+
+    # ---------------------------------------------------------
+    # 1. Resolve synonyms
+    # ---------------------------------------------------------
+    synonym_doc = get_documents(
+        self,
+        synonyms_collection,
+        {"id": filter.id},
+        0,
+        1,
+    )
+
     try:
-        synonym_id=synonyms[0]['synonym']
-    except Exception:
-        synonym_id=None
+        synonym_id = synonym_doc[0]["synonym"]
+    except (IndexError, KeyError, TypeError):
+        synonym_id = None
+
     if synonym_id is not None:
         final_term_list.append(synonym_id)
 
+    # ---------------------------------------------------------
+    # 2. Resolve the ontology scope
+    # ---------------------------------------------------------
     try:
         scope = filter.scope
         scope=choose_scope(self, scope, filter)
@@ -39,94 +70,157 @@ def apply_ontology_filter(self, query: dict, filter: OntologyFilter, request_par
         else:
             raise
 
-    # Search similar
+    # ---------------------------------------------------------
+    # 3. Resolve similarity terms
+    # ---------------------------------------------------------
+    similarity_fields = {
+        Similarity.HIGH: "similarity_high",
+        Similarity.MEDIUM: "similarity_medium",
+        Similarity.LOW: "similarity_low",
+    }
+
     if filter.similarity != Similarity.EXACT:
-        similarities=client[mongo_conf.database_name].similarities
-        try:
-            if filter.similarity == Similarity.HIGH:
-                ontology_dict=similarities.find({"id": filter.id})
-                final_term_list = ontology_dict[0]["similarity_high"]
-            elif filter.similarity == Similarity.MEDIUM:
-                ontology_dict=similarities.find({"id": filter.id})
-                final_term_list = ontology_dict[0]["similarity_medium"]
-            elif filter.similarity == Similarity.LOW:
-                ontology_dict=similarities.find({"id": filter.id})
-                final_term_list = ontology_dict[0]["similarity_low"]
-        except Exception:
-            pass
-        
-    # Apply descendant terms
-    if filter.includeDescendantTerms == True:
-        ontology=filter.id.replace("\n","")
-        list_descendant = []
-        try:
-            ontology_dict=similarities.find({"id": ontology})
-            list_descendant = ontology_dict[0]["descendants"]
-            for descendant in list_descendant:
-                final_term_list.append(descendant)
-        except Exception:
-            pass
+        similarity_field = similarity_fields.get(filter.similarity)
+
+        if similarity_field is not None:
+            similarity_doc = similarities_collection.find_one(
+                {"id": filter.id},
+                {
+                    similarity_field: 1,
+                    "_id": 0,
+                },
+            )
+
+            if similarity_doc:
+                similar_terms = similarity_doc.get(
+                    similarity_field,
+                    [],
+                )
+
+                if similar_terms is not None:
+                    final_term_list = list(similar_terms)
+
+    # ---------------------------------------------------------
+    # 4. Include descendant terms
+    # ---------------------------------------------------------
+    if filter.includeDescendantTerms:
+        ontology_id = filter.id.replace("\n", "")
+
+        descendants_doc = similarities_collection.find_one(
+            {"id": ontology_id},
+            {
+                "descendants": 1,
+                "_id": 0,
+            },
+        )
+
+        if descendants_doc:
+            descendants = descendants_doc.get("descendants", [])
+
+            if descendants:
+                final_term_list.extend(descendants)
+
+    # Include the requested term itself.
     final_term_list.append(filter.id)
-    filtering_terms=client[mongo_conf.database_name].filtering_terms
-    # Create the query syntax for the filtering term to match the field with the ontology label
-    query_filtering={}
-    query_filtering['$and']=[]
-    dict_id={}
-    dict_id['id']=filter.id
-    dict_scope={}
-    dict_scope['scopes']=scope
-    query_filtering['$and'].append(dict_id)
-    query_filtering['$and'].append(dict_scope)
-    docs = get_documents(self,
-        filtering_terms,
-        query_filtering,
+
+    # Remove duplicate terms while preserving their order.
+    final_term_list = list(dict.fromkeys(final_term_list))
+
+    # ---------------------------------------------------------
+    # 5. Resolve the filtering-term label
+    # ---------------------------------------------------------
+    filtering_term_query = {
+        "$and": [
+            {"id": filter.id},
+            {"scopes": scope},
+        ]
+    }
+
+    filtering_term_docs = get_documents(
+        self,
+        filtering_terms_collection,
+        filtering_term_query,
         0,
-        1
+        1,
     )
 
-    for doc_term in docs:
-        label = doc_term['label']
-    
-    # Get the alphanumeric pair of the ontology filtering term
-    query_filtering={}
-    query_filtering['$and']=[]
-    dict_regex={}
-    try:
-        dict_regex['$regex']=":"+label
-        dict_regex['$options']='i'
-    except Exception:
-        dict_regex['$regex']=''
-    dict_id={}
-    dict_id['id']=dict_regex
-    dict_scope={}
-    dict_scope['scopes']=scope
-    query_filtering['$and'].append(dict_id)
-    query_filtering['$and'].append(dict_scope)
-    docs_2 = get_documents(self,
-        filtering_terms,
-        query_filtering,
+    if not filtering_term_docs:
+        raise InvalidRequest(
+            "No filtering-term label found for {} "
+            "with scope {}.".format(filter.id, scope)
+        )
+
+    label = filtering_term_docs[0].get("label")
+
+    if not label:
+        raise InvalidRequest(
+            "The filtering term {} has no label for scope {}.".format(
+                filter.id,
+                scope,
+            )
+        )
+
+    # ---------------------------------------------------------
+    # 6. Resolve the field/property to filter
+    # ---------------------------------------------------------
+    regex_query = {
+        "$and": [
+            {
+                "id": {
+                    "$regex": ":" + label,
+                    "$options": "i",
+                }
+            },
+            {"scopes": scope},
+        ]
+    }
+
+    field_docs = get_documents(
+        self,
+        filtering_terms_collection,
+        regex_query,
         0,
-        1
+        1,
     )
 
-    # Extract the field/property to look at
-    for doc2 in docs_2:
-        query_terms = doc2['id']
-        query_terms = query_terms.split(':')
-        query_term = query_terms[0] + '.id'
-    
-    # Generate the filter
-    if final_term_list !=[]:
-        new_query={}
-        query_id={}
-        new_query['$or']=[]
-        for simil in final_term_list:
-            query_id={}
-            query_id[query_term]=simil
-            new_query['$or'].append(query_id)
-        query = new_query
-    # Execute the cross query in case it's needed
-    list_modules = get_all_modules_connections_script("filters.cross_queries.cross_query", "mongo")
-    for module in list_modules:
-        query = module.cross_query(self, query, scope, request_parameters, dataset)
+    if not field_docs:
+        raise InvalidRequest(
+            "Unable to resolve the filtering-term field for "
+            "{} with scope {}.".format(filter.id, scope)
+        )
+
+    field_id = field_docs[0].get("id")
+
+    if not field_id or ":" not in field_id:
+        raise InvalidRequest(
+            "Invalid filtering-term field identifier: {}".format(
+                field_id
+            )
+        )
+
+    query_term = field_id.split(":", 1)[0] + ".id"
+
+    # ---------------------------------------------------------
+    # 7. Generate the ontology filter query
+    # ---------------------------------------------------------
+    if final_term_list:
+        query = {
+            "$or": [
+                {query_term: term}
+                for term in final_term_list
+            ]
+        }
+
+    # ---------------------------------------------------------
+    # 8. Apply cross-query modules
+    # ---------------------------------------------------------
+    for module in get_cached_cross_query_modules():
+        query = module.cross_query(
+            self,
+            query,
+            scope,
+            request_parameters,
+            dataset,
+        )
+
     return query
