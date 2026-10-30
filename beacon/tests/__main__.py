@@ -23,6 +23,7 @@ import tempfile
 import os
 from beacon.exceptions.exceptions import DatabaseIsDown
 from beacon.views.health import HealthView
+from concurrent.futures import ThreadPoolExecutor
 
 # Keeping the conf files loaded as dictionaries into variables
 analysis = import_analysis_confile()
@@ -50,6 +51,7 @@ def create_app():
     app['shutting_down'] = False
     app['state'] = 'Running - healthy'
     app['exit_fn'] = Mock()
+    app['db_pool'] = ThreadPoolExecutor(max_workers=config.max_num_of_concurrent_threads)
     app = append_routes(app=app)
     return app
 
@@ -4415,7 +4417,6 @@ class TestMain(unittest.TestCase):
             loop.run_until_complete(test_check_runs_variants())
             loop.run_until_complete(client.close())
 
-
     def test_variants_with_request_parameters(self):
         with loop_context() as loop:
             app = create_app()
@@ -4454,7 +4455,6 @@ class TestMain(unittest.TestCase):
 
             loop.run_until_complete(test_check_variants())
             loop.run_until_complete(client.close())
-
 
     def test_main_check_g_variants_sequence_query_fails(self):
         with loop_context() as loop:
@@ -6744,7 +6744,7 @@ class TestMain(unittest.TestCase):
             loop.run_until_complete(test_check_patients_with_id_endpoint_is_working())
             loop.run_until_complete(client.close())
 
-
+    
     def test_main_check_patients_collections_endpoint_is_working(self):
         # Validate patient-to-collection relationship endpoint
         with loop_context() as loop:
@@ -7275,7 +7275,6 @@ class TestHealthHandler(unittest.IsolatedAsyncioTestCase):
             self.assertIn("database is down", body)
 
             self.assertEqual(app['state'], 'Running - degraded')
-
 
 
 if __name__ == '__main__':

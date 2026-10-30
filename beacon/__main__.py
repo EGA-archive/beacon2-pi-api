@@ -3,7 +3,7 @@ import aiohttp.web as web
 import sys
 import datetime
 import warnings
-from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
+from concurrent.futures import ThreadPoolExecutor
 from aiohttp_middlewares import cors_middleware
 from beacon.conf.conf_override import config
 from beacon.validator.configuration import check_configuration, check_logs_configuration
@@ -59,8 +59,7 @@ async def create_api(port):
         app['shutting_down'] = False
         app['state'] = 'Running - healthy'
 
-        app['db_pool'] = ThreadPoolExecutor(max_workers=32)
-        app['cpu_pool'] = ProcessPoolExecutor(max_workers=8)
+        app['db_pool'] = ThreadPoolExecutor(max_workers=config.max_num_of_concurrent_threads)
 
         app = append_routes(app=app)
 

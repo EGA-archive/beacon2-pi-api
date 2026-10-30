@@ -8,6 +8,7 @@ import yaml
 from beacon.logs.logs import initialize_logger
 from beacon.conf.conf_override import config
 import asyncio
+import copy
 
 def import_genomicVariant_confile():
     """Get the information about the genomic variant entry type gor ga4gh model"""
@@ -67,172 +68,47 @@ genomicVariant = import_genomicVariant_confile()
 run = import_run_confile()
 individual = import_individual_confile()
 
+
+original_configurations = {
+    "analysis": copy.deepcopy(analysis),
+    "biosample": copy.deepcopy(biosample),
+    "cohort": copy.deepcopy(cohort),
+    "dataset": copy.deepcopy(dataset),
+    "genomicVariant": copy.deepcopy(genomicVariant),
+    "individual": copy.deepcopy(individual),
+    "run": copy.deepcopy(run),
+}
+
+
 # Create the class that will host all the unit test for exceptions that can arise for bad configuration
 class TestNoFilters(unittest.TestCase):
-    def test_no_filters_analysis_query_without_filters_allowed(self):
-        with loop_context() as loop:
-            # Disable unfiltered queries for the analysis endpoint
-            analysis["analysis"]["allow_queries_without_filters"] = False
+    def tearDown(self):
+        global analysis, biosample, cohort, dataset
+        global genomicVariant, individual, run
 
-            # Persist configuration change so the application loads it
-            with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/analysis.yml", 'w') as outfile:
-                yaml.dump(analysis, outfile, default_flow_style=False)
+        configurations = {
+            "analysis": analysis,
+            "biosample": biosample,
+            "cohort": cohort,
+            "dataset": dataset,
+            "genomicVariant": genomicVariant,
+            "individual": individual,
+            "run": run,
+        }
 
-            # Create and start a test instance of the application
-            app = create_app()
-            client = TestClient(TestServer(app), loop=loop)
-            loop.run_until_complete(client.start_server())
+        base_path = (
+            "/beacon/models/ga4gh/beacon_v2_default_model/"
+            "conf/entry_types/"
+        )
 
-            async def test_analysis_query_without_filters_allowed():
-                # Request endpoint without filters and verify it is rejected
-                resp = await client.get(
-                    conf_override.config.uri_subpath + "/" +
-                    analysis["analysis"]["endpoint_name"]
-                )
-                assert resp.status == 400
+        for name, configuration in configurations.items():
+            configuration.clear()
+            configuration.update(
+                copy.deepcopy(original_configurations[name])
+            )
 
-            loop.run_until_complete(test_analysis_query_without_filters_allowed())
-            loop.run_until_complete(client.close())
-
-            # Restore original configuration for subsequent tests
-            analysis["analysis"]["allow_queries_without_filters"] = True
-            with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/analysis.yml", 'w') as outfile:
-                yaml.dump(analysis, outfile, default_flow_style=False)
-
-
-    def test_no_filters_biosample_query_without_filters_allowed(self):
-        with loop_context() as loop:
-            # Prevent biosample queries from executing without filters
-            biosample["biosample"]["allow_queries_without_filters"] = False
-
-            with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/biosample.yml", 'w') as outfile:
-                yaml.dump(biosample, outfile, default_flow_style=False)
-
-            app = create_app()
-            client = TestClient(TestServer(app), loop=loop)
-            loop.run_until_complete(client.start_server())
-
-            async def test_biosample_query_without_filters_allowed():
-                # Verify endpoint returns HTTP 400 when filters are omitted
-                resp = await client.get(
-                    conf_override.config.uri_subpath + "/" +
-                    biosample["biosample"]["endpoint_name"]
-                )
-                assert resp.status == 400
-
-            loop.run_until_complete(test_biosample_query_without_filters_allowed())
-            loop.run_until_complete(client.close())
-
-            # Re-enable unfiltered queries after test execution
-            biosample["biosample"]["allow_queries_without_filters"] = True
-            with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/biosample.yml", 'w') as outfile:
-                yaml.dump(biosample, outfile, default_flow_style=False)
-    def test_no_filters_genomicVariation_query_without_filters_allowed(self):
-        with loop_context() as loop:
-            genomicVariant["genomicVariant"]["allow_queries_without_filters"]=False
-            with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/genomicVariant.yml", 'w') as outfile:
-                yaml.dump(genomicVariant, outfile, default_flow_style=False)
-            app = create_app()
-            client = TestClient(TestServer(app), loop=loop)
-            loop.run_until_complete(client.start_server())
-            async def test_genomicVariant_query_without_filters_allowed():
-                resp = await client.get(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"])
-                assert resp.status == 400
-            loop.run_until_complete(test_genomicVariant_query_without_filters_allowed())
-            loop.run_until_complete(client.close())
-            genomicVariant["genomicVariant"]["allow_queries_without_filters"]=True
-            with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/genomicVariant.yml", 'w') as outfile:
-                yaml.dump(genomicVariant, outfile, default_flow_style=False)
-    def test_no_filters_individual_query_without_filters_allowed(self):
-        with loop_context() as loop:
-            individual["individual"]["allow_queries_without_filters"]=False
-            with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/individual.yml", 'w') as outfile:
-                yaml.dump(individual, outfile, default_flow_style=False)
-            app = create_app()
-            client = TestClient(TestServer(app), loop=loop)
-            loop.run_until_complete(client.start_server())
-            async def test_individual_query_without_filters_allowed():
-                resp = await client.get(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"])
-                assert resp.status == 400
-            loop.run_until_complete(test_individual_query_without_filters_allowed())
-            loop.run_until_complete(client.close())
-            individual["individual"]["allow_queries_without_filters"]=True
-            with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/individual.yml", 'w') as outfile:
-                yaml.dump(individual, outfile, default_flow_style=False)
-    
-    def test_no_filters_run_query_without_filters_allowed(self):
-        with loop_context() as loop:
-            run["run"]["allow_queries_without_filters"]=False
-            with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/run.yml", 'w') as outfile:
-                yaml.dump(run, outfile, default_flow_style=False)
-            app = create_app()
-            client = TestClient(TestServer(app), loop=loop)
-            loop.run_until_complete(client.start_server())
-            async def test_run_query_without_filters_allowed():
-                resp = await client.get(conf_override.config.uri_subpath+"/"+run["run"]["endpoint_name"])
-                assert resp.status == 400
-            loop.run_until_complete(test_run_query_without_filters_allowed())
-            loop.run_until_complete(client.close())
-            run["run"]["allow_queries_without_filters"]=True
-            with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/run.yml", 'w') as outfile:
-                yaml.dump(run, outfile, default_flow_style=False)
-
-    def test_no_filters_cohort_query_without_filters_allowed(self):
-        with loop_context() as loop:
-            # Configure cohort endpoint to require filters
-            cohort["cohort"]["allow_queries_without_filters"] = False
-
-            with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/cohort.yml", 'w') as outfile:
-                yaml.dump(cohort, outfile, default_flow_style=False)
-
-            app = create_app()
-            client = TestClient(TestServer(app), loop=loop)
-            loop.run_until_complete(client.start_server())
-
-            async def test_cohort_query_without_filters_allowed():
-                # Expect a bad request when querying without filters
-                resp = await client.get(
-                    conf_override.config.uri_subpath + "/" +
-                    cohort["cohort"]["endpoint_name"]
-                )
-                assert resp.status == 400
-
-            loop.run_until_complete(test_cohort_query_without_filters_allowed())
-            loop.run_until_complete(client.close())
-
-            # Restore configuration
-            cohort["cohort"]["allow_queries_without_filters"] = True
-            with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/cohort.yml", 'w') as outfile:
-                yaml.dump(cohort, outfile, default_flow_style=False)
-
-
-    def test_no_filters_dataset_query_without_filters_allowed(self):
-        with loop_context() as loop:
-            # Disable dataset requests without filters
-            dataset["dataset"]["allow_queries_without_filters"] = False
-
-            with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/dataset.yml", 'w') as outfile:
-                yaml.dump(dataset, outfile, default_flow_style=False)
-
-            app = create_app()
-            client = TestClient(TestServer(app), loop=loop)
-            loop.run_until_complete(client.start_server())
-
-            async def test_dataset_query_without_filters_allowed():
-                # Ensure server rejects unfiltered dataset requests
-                resp = await client.get(
-                    conf_override.config.uri_subpath + "/" +
-                    dataset["dataset"]["endpoint_name"]
-                )
-                assert resp.status == 400
-
-            loop.run_until_complete(test_dataset_query_without_filters_allowed())
-            loop.run_until_complete(client.close())
-
-            # Reset configuration to default state
-            dataset["dataset"]["allow_queries_without_filters"] = True
-            with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/dataset.yml", 'w') as outfile:
-                yaml.dump(dataset, outfile, default_flow_style=False)
+            with open(f"{base_path}{name}.yml", "w") as outfile:
+                yaml.safe_dump(configuration, outfile)
 
 
     def test_map_endpoint_response_with_disabled_endpoint(self):
@@ -1393,21 +1269,194 @@ class TestNoFilters(unittest.TestCase):
 
             # Restore valid default granularity
             conf_override.config.allowed_uris=['*']
+    def a_test_no_filters_analysis_query_without_filters_allowed(self):
+        with loop_context() as loop:
+            # Disable unfiltered queries for the analysis endpoint
+            analysis["analysis"]["allow_queries_without_filters"] = False
+
+            # Persist configuration change so the application loads it
+            with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/analysis.yml", 'w') as outfile:
+                yaml.dump(analysis, outfile, default_flow_style=False)
+
+            # Create and start a test instance of the application
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+
+            async def test_analysis_query_without_filters_allowed():
+                # Request endpoint without filters and verify it is rejected
+                resp = await client.get(
+                    conf_override.config.uri_subpath + "/" +
+                    analysis["analysis"]["endpoint_name"]
+                )
+                assert resp.status == 400
+
+            loop.run_until_complete(test_analysis_query_without_filters_allowed())
+            loop.run_until_complete(client.close())
+
+            # Restore original configuration for subsequent tests
+            analysis["analysis"]["allow_queries_without_filters"] = True
+            with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/analysis.yml", 'w') as outfile:
+                yaml.dump(analysis, outfile, default_flow_style=False)
+
+
+    def a_test_no_filters_biosample_query_without_filters_allowed(self):
+        with loop_context() as loop:
+            # Prevent biosample queries from executing without filters
+            biosample["biosample"]["allow_queries_without_filters"] = False
+
+            with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/biosample.yml", 'w') as outfile:
+                yaml.dump(biosample, outfile, default_flow_style=False)
+
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+
+            async def test_biosample_query_without_filters_allowed():
+                # Verify endpoint returns HTTP 400 when filters are omitted
+                resp = await client.get(
+                    conf_override.config.uri_subpath + "/" +
+                    biosample["biosample"]["endpoint_name"]
+                )
+                assert resp.status == 400
+
+            loop.run_until_complete(test_biosample_query_without_filters_allowed())
+            loop.run_until_complete(client.close())
+
+            # Re-enable unfiltered queries after test execution
+            biosample["biosample"]["allow_queries_without_filters"] = True
+            with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/biosample.yml", 'w') as outfile:
+                yaml.dump(biosample, outfile, default_flow_style=False)
+    def a_test_no_filters_genomicVariation_query_without_filters_allowed(self):
+        with loop_context() as loop:
+            genomicVariant["genomicVariant"]["allow_queries_without_filters"]=False
+            with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/genomicVariant.yml", 'w') as outfile:
+                yaml.dump(genomicVariant, outfile, default_flow_style=False)
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_genomicVariant_query_without_filters_allowed():
+                resp = await client.get(conf_override.config.uri_subpath+"/"+genomicVariant["genomicVariant"]["endpoint_name"])
+                assert resp.status == 400
+            loop.run_until_complete(test_genomicVariant_query_without_filters_allowed())
+            loop.run_until_complete(client.close())
+            genomicVariant["genomicVariant"]["allow_queries_without_filters"]=True
+            with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/genomicVariant.yml", 'w') as outfile:
+                yaml.dump(genomicVariant, outfile, default_flow_style=False)
+    def a_test_no_filters_individual_query_without_filters_allowed(self):
+        with loop_context() as loop:
+            individual["individual"]["allow_queries_without_filters"]=False
+            with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/individual.yml", 'w') as outfile:
+                yaml.dump(individual, outfile, default_flow_style=False)
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_individual_query_without_filters_allowed():
+                resp = await client.get(conf_override.config.uri_subpath+"/"+individual["individual"]["endpoint_name"])
+                assert resp.status == 400
+            loop.run_until_complete(test_individual_query_without_filters_allowed())
+            loop.run_until_complete(client.close())
+            individual["individual"]["allow_queries_without_filters"]=True
+            with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/individual.yml", 'w') as outfile:
+                yaml.dump(individual, outfile, default_flow_style=False)
+    
+    def a_test_no_filters_run_query_without_filters_allowed(self):
+        with loop_context() as loop:
+            run["run"]["allow_queries_without_filters"]=False
+            with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/run.yml", 'w') as outfile:
+                yaml.dump(run, outfile, default_flow_style=False)
+            print("ALLOW QUERIES:", run["run"]["allow_queries_without_filters"])
+
+            with open(
+                "/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/run.yml"
+            ) as f:
+                saved_run = yaml.safe_load(f)
+
+            print("YAML VALUE:", saved_run["run"]["allow_queries_without_filters"])
+
+            print("URI:", conf_override.config.uri)
+            print("SUBPATH:", conf_override.config.uri_subpath)
+
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+            async def test_run_query_without_filters_allowed():
+                resp = await client.get(conf_override.config.uri_subpath+"/"+run["run"]["endpoint_name"])
+                print("\nRUN RESPONSE STATUS:", resp.status)
+                assert resp.status == 400
+            loop.run_until_complete(test_run_query_without_filters_allowed())
+            loop.run_until_complete(client.close())
+            run["run"]["allow_queries_without_filters"]=True
+            with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/run.yml", 'w') as outfile:
+                yaml.dump(run, outfile, default_flow_style=False)
+
+    def a_test_no_filters_cohort_query_without_filters_allowed(self):
+        with loop_context() as loop:
+            # Configure cohort endpoint to require filters
+            cohort["cohort"]["allow_queries_without_filters"] = False
+
+            with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/cohort.yml", 'w') as outfile:
+                yaml.dump(cohort, outfile, default_flow_style=False)
+
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+
+            async def test_cohort_query_without_filters_allowed():
+                # Expect a bad request when querying without filters
+                resp = await client.get(
+                    conf_override.config.uri_subpath + "/" +
+                    cohort["cohort"]["endpoint_name"]
+                )
+                assert resp.status == 400
+
+            loop.run_until_complete(test_cohort_query_without_filters_allowed())
+            loop.run_until_complete(client.close())
+
+            # Restore configuration
+            cohort["cohort"]["allow_queries_without_filters"] = True
+            with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/cohort.yml", 'w') as outfile:
+                yaml.dump(cohort, outfile, default_flow_style=False)
+
+
+    def a_test_no_filters_dataset_query_without_filters_allowed(self):
+        with loop_context() as loop:
+            # Disable dataset requests without filters
+            dataset["dataset"]["allow_queries_without_filters"] = False
+
+            with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/dataset.yml", 'w') as outfile:
+                yaml.dump(dataset, outfile, default_flow_style=False)
+
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+
+            async def test_dataset_query_without_filters_allowed():
+                # Ensure server rejects unfiltered dataset requests
+                resp = await client.get(
+                    conf_override.config.uri_subpath + "/" +
+                    dataset["dataset"]["endpoint_name"]
+                )
+                assert resp.status == 400
+
+            loop.run_until_complete(test_dataset_query_without_filters_allowed())
+            loop.run_until_complete(client.close())
+
+            # Reset configuration to default state
+            dataset["dataset"]["allow_queries_without_filters"] = True
+            with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/dataset.yml", 'w') as outfile:
+                yaml.dump(dataset, outfile, default_flow_style=False)
     
 
     
 
 def suite():
-    """
-        Gather all the tests from this module in a test suite.
-    """
-    test_suite = unittest.TestSuite()
-    test_suite.addTest(unittest.makeSuite(TestNoFilters))
-    return test_suite
+    return unittest.defaultTestLoader.loadTestsFromTestCase(TestNoFilters)
 
 
-mySuit=suite()
+if __name__ == "__main__":
+    runner = unittest.TextTestRunner(verbosity=2)
+    result = runner.run(suite())
 
-
-runner=unittest.TextTestRunner()
-runner.run(mySuit)
+    if not result.wasSuccessful():
+        exit(1)

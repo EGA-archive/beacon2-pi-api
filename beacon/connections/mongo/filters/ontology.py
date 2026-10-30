@@ -60,20 +60,15 @@ def apply_ontology_filter(
     # 2. Resolve the ontology scope
     # ---------------------------------------------------------
     try:
-        scope = choose_scope(self, filter.scope, filter)
-
+        scope = filter.scope
+        scope=choose_scope(self, scope, filter)
     except Exception:
-        if synonym_id is None:
+        if synonym_id is not None:
+            filter.id=synonym_id
+            scope = filter.scope
+            scope=choose_scope(self, scope, filter)
+        else:
             raise
-
-        # Preserve the original fallback behavior.
-        original_filter_id = filter.id
-
-        try:
-            filter.id = synonym_id
-            scope = choose_scope(self, filter.scope, filter)
-        finally:
-            filter.id = original_filter_id
 
     # ---------------------------------------------------------
     # 3. Resolve similarity terms
