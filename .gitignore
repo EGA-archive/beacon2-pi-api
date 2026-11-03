@@ -17,4 +17,3 @@ beacon/conf/conf.py
 beacon/models/prova
 *.msgpack
 *.initialized
-beacon/auditing/permanent_files

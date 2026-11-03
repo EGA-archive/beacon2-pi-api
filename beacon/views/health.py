@@ -8,6 +8,7 @@ from beacon.exceptions.exceptions import DatabaseIsDown
 from beacon.utils.modules import check_database_connections
 from aiohttp_cors import CorsViewMixin
 from aiohttp.web_request import Request
+from beacon.utils.txid import generate_txid
 import asyncio
 
 class HealthView(web.View, CorsViewMixin):
@@ -18,7 +19,8 @@ class HealthView(web.View, CorsViewMixin):
         self.request_attributes.ip = None
         self.request_attributes.headers=None
         self.LOG=self.request.app['logger']
-        self._id = request["txid"]
+        self._id=None
+        self._id = generate_txid(self)
 
     async def get(self):
         # Call the handler function for the view assigned to the queried endpoint
