@@ -4429,9 +4429,7 @@ def suite():
     """
         Gather all the tests from this module in a test suite.
     """
-    test_suite = unittest.TestSuite()
-    test_suite.addTest(unittest.makeSuite(TestConfigurationExceptions))
-    return test_suite
+    return unittest.defaultTestLoader.loadTestsFromTestCase(TestConfigurationExceptions)
 
 
 mySuit=suite()

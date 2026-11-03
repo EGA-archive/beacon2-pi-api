@@ -7,6 +7,8 @@ from beacon.logs.logs import log_with_args_check_configuration, log_with_args
 from beacon.conf.conf_override import config
 from beacon.exceptions.exceptions import DatabaseIsDown
 import asyncio
+from functools import lru_cache
+import importlib
 
 #TODO: get_client() passing one variable with the database name.
 @log_with_args(config.level)
@@ -127,14 +129,17 @@ async def check_database_connections(LOG=None, entry_type=None, pre_entry_type=N
         import importlib
         module = importlib.import_module(complete_client_module, package=None)
         client_from_module = getattr(module, 'get_client')
-        # Perform the ping of each of the connections with a timeout
+
         try:
-            await asyncio.wait_for(ping_from_module(client_from_module()), timeout=config.pending_requests_timeout_in_seconds)
-        # In case of timeout or ping not successful, raise an error of the database being down
+            client = client_from_module()
+            await asyncio.wait_for(
+                ping_from_module(client),
+                timeout=config.pending_requests_timeout_in_seconds,
+            )
         except Exception:
-            LOG.error('{} database is down'.format(folder))
+            LOG.exception("%s database is down", folder)
             raise DatabaseIsDown(folder)
-        
+
 def load_client(folder):
     """Method to get the modules of the connection strings for the databases dynamically"""
     complete_client_module='beacon.connections.'+folder+'.client'
@@ -450,52 +455,108 @@ def _model_is_enabled(models_confile, folder, subfolder=None):
             return False
     return True
 
-def get_all_modules_connections_script(script, connection):
-    """Method to get all the submodules of connections per model loaded dynamically"""
-    list_of_modules=[]
-    # Load the configuration file for the models that are enabled
-    with open("/beacon/conf/models/models_conf.yml", 'r') as pfile:
-        models_confile= yaml.safe_load(pfile)
-    pfile.close()
-    dirs = os.listdir("/beacon/models")
-    # Loop over the folders found in the mentioned path and save the ones that are active (enabled)
-    for folder in dirs:
-        subdirs = os.listdir("/beacon/models/"+folder)
-        # Get the models that are specifically enabled
-        if not _model_is_enabled(models_confile, folder):
+
+
+
+MODELS_DIR = "/beacon/models"
+MODELS_CONFIG = "/beacon/conf/models/models_conf.yml"
+
+
+@lru_cache(maxsize=1)
+def _load_models_config():
+    """Load the enabled-model configuration once."""
+    with open(MODELS_CONFIG, "r") as pfile:
+        return yaml.safe_load(pfile) or {}
+
+
+@lru_cache(maxsize=128)
+def _get_all_modules_connections_script_cached(script, connection):
+    """Discover and cache connection modules for a script and connection."""
+    models_config = _load_models_config()
+    modules = []
+
+    try:
+        folders = os.listdir(MODELS_DIR)
+    except OSError:
+        return ()
+
+    for folder in folders:
+        folder_path = os.path.join(MODELS_DIR, folder)
+
+        if not os.path.isdir(folder_path):
             continue
 
-        # Go over the connections for the entry types of the models enabled
-        if "connections" in subdirs:
-            connections = os.listdir("/beacon/models/"+folder+"/connections")
-            for dir in connections:
-                if dir == connection:
-                    # Get the modules names in an array
-                    complete_module='beacon.models.'+folder+'.connections.'+connection+'.'+script
-                    import importlib
-                    try:
-                        module = importlib.import_module(complete_module, package=None)
-                        list_of_modules.append(module)
-                    except Exception as e:
-                        continue
-        else:
-            # Loop over the subfolders found in the mentioned path and save the ones that are active (enabled)
+        if not _model_is_enabled(models_config, folder):
+            continue
+
+        # Models with connections directly under the model directory.
+        candidates = [(folder_path, folder)]
+
+        # Models may also contain a submodel.
+        try:
+            subdirs = os.listdir(folder_path)
+        except OSError:
+            continue
+
+        if "connections" not in subdirs:
+            candidates = []
+
             for subfolder in subdirs:
-                underdirs = os.listdir("/beacon/models/"+folder+"/"+subfolder)
-                # Get the models that are specifically enabled
-                if not _model_is_enabled(models_confile, folder, subfolder):
+                subfolder_path = os.path.join(folder_path, subfolder)
+
+                if not os.path.isdir(subfolder_path):
                     continue
-                # Go over the connections for the entry types of the models enabled
-                if "connections" in underdirs:
-                    connections = os.listdir("/beacon/models/"+folder+"/"+subfolder+"/connections")
-                    for dir in connections:
-                        if dir == connection:
-                            # Get the modules names in an array
-                            complete_module='beacon.models.'+folder+'.'+subfolder+'.connections.'+connection+'.'+script
-                            import importlib
-                            module = importlib.import_module(complete_module, package=None)
-                            list_of_modules.append(module)
-    return list_of_modules
+
+                if not _model_is_enabled(
+                    models_config, folder, subfolder
+                ):
+                    continue
+
+                candidates.append((
+                    subfolder_path,
+                    f"{folder}.{subfolder}",
+                ))
+
+        for candidate_path, module_prefix in candidates:
+            connections_path = os.path.join(
+                candidate_path, "connections"
+            )
+
+            if not os.path.isdir(connections_path):
+                continue
+
+            if connection not in os.listdir(connections_path):
+                continue
+
+            module_name = (
+                f"beacon.models.{module_prefix}."
+                f"connections.{connection}.{script}"
+            )
+
+            try:
+                module = importlib.import_module(module_name)
+            except ImportError:
+                # Preserve the original behavior of skipping modules
+                # that cannot be imported in the direct-model branch.
+                continue
+
+            modules.append(module)
+
+    # Immutable cached result prevents callers from modifying the cache.
+    return tuple(modules)
+
+@lru_cache(maxsize=None)
+def get_all_modules_connections_script(script, connection):
+    """Return the connection modules for the enabled models."""
+    return list(
+        _get_all_modules_connections_script_cached(script, connection)
+    )
+
+
+def clear_modules_connections_cache():
+    """Call after changing model configuration or enabling models."""
+    _load_models_config.cache_clear()
+    _get_all_modules_connections_script_cached.cache_clear()
 
 def get_all_modules_datasets(connection):
     """Method to get the datasets collections for each of the models to be returned"""
@@ -539,43 +600,55 @@ def get_all_modules_datasets(connection):
                     pass
     return list_of_modules
                   
+
+
+
+
+@lru_cache(maxsize=None)
+def load_entry_type_config(path):
+    """Load and cache a parsed YAML configuration file."""
+    with open(path, "r", encoding="utf-8") as pfile:
+        return yaml.safe_load(pfile) or {}
+
+
+@lru_cache(maxsize=1)
+def get_all_module_confs():
+    """Load and index all entry-type configurations once."""
+    configs_by_endpoint = {}
+
+    for root, dirs, files in os.walk(MODELS_DIR):
+        if os.path.basename(root) != "entry_types":
+            continue
+
+        for filename in files:
+            if not filename.endswith((".yml", ".yaml")):
+                continue
+
+            path = os.path.join(root, filename)
+            entry_type_config = load_entry_type_config(path)
+
+            for entry_type_id, params in entry_type_config.items():
+                endpoint = params.get("endpoint_name")
+                if endpoint:
+                    configs_by_endpoint.setdefault(
+                        endpoint, entry_type_config
+                    )
+
+    return configs_by_endpoint
+
+
 def get_one_module_conf(entry_type):
-    """Method to get the configuration of the desired entry types"""
-    # TODO: Cache the module conf loading to only execute it once.
-    dirs = os.listdir("/beacon/models")
-    # Loop over the folders found in the models and get the entry types configuration
-    for folder in dirs:
-        subdirs = os.listdir("/beacon/models/"+folder)
-        # Go over the entry types files in the conf folder
-        if "conf" in subdirs:
-            confiles = os.listdir("/beacon/models/"+folder+"/conf/entry_types/")
-            for confile in confiles:
-                # Skip the files that are of pycache type
-                if confile != '__pycache__':
-                    with open("/beacon/models/"+folder+"/conf/entry_types/" + confile, 'r') as pfile:
-                        entry_type_confile = yaml.safe_load(pfile)
-                    pfile.close()
-                # Get the configuration file for the entry type that matches the one requested
-                for entry_type_id, entry_type_params in entry_type_confile.items():
-                    if entry_type_params["endpoint_name"] == entry_type:
-                        return entry_type_confile
-        else:
-            # Loop over the subfolders found in the models and get the entry types configuration
-            for subfolder in subdirs:
-                underdirs = os.listdir("/beacon/models/"+folder+"/"+subfolder)
-                # Go over the entry types files in the conf folder
-                if "conf" in underdirs:
-                    confiles = os.listdir("/beacon/models/"+folder+"/"+subfolder+"/conf/entry_types/")
-                    for confile in confiles:
-                        # Skip the files that are of pycache type
-                        if confile != '__pycache__':
-                            with open("/beacon/models/"+folder+"/"+subfolder+"/conf/entry_types/" + confile, 'r') as pfile:
-                                entry_type_confile = yaml.safe_load(pfile)
-                            pfile.close()
-                        # Get the configuration file for the entry type that matches the one requested
-                        for entry_type_id, entry_type_params in entry_type_confile.items():
-                            if entry_type_params["endpoint_name"] == entry_type:
-                                return entry_type_confile
+    """Get the configuration of the requested entry type."""
+    configs = get_all_module_confs()
+
+    try:
+        return configs[entry_type]
+    except KeyError:
+        raise KeyError(
+            f"No configuration found for entry type: {entry_type}"
+        ) from None
+
+
 
 def get_modules_confiles():
     """Method to get all the entry types configuration files"""

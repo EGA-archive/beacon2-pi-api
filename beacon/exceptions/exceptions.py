@@ -56,6 +56,13 @@ class NoPermissionsAvailable(AppError):
         self.status = 401  # Unauthorized
         self.message = message
 
+# Authentication/authorization failure
+# Indicates missing or invalid credentials or insufficient permissions for T&C of a Researcher
+class NoTermsAndConditionsForResearcherAvailable(AppError):
+    def __init__(self, message):
+        self.status = 401  # Unauthorized
+        self.message = message
+
 
 # Service-level failure indicating backend infrastructure is unavailable
 # Typically used for database outages or connection failures

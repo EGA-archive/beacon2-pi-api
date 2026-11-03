@@ -1,5 +1,3 @@
-
-
 def return_found_granularity_in_exceptions(self, granularity_exceptions, default_granularity, request_attr_entry_type_id,):
     """Method to get the granularity needed to be returned for a specific permissions case"""
     for granularity_exception in granularity_exceptions:
@@ -11,29 +9,51 @@ def return_found_granularity_in_exceptions(self, granularity_exceptions, default
                 return default_granularity
     return default_granularity
 
-def return_granularity_and_exceptions(self, security_level_dict, username, default_granularity, granularity_exceptions):
-    """Methot to get the granularity and exceptions needed to be returned depending on the security leevl case"""
+def return_granularity_and_exceptions(self, security_level_dict, user_id, default_granularity, granularity_exceptions):
+    """Method to get the granularity and exceptions needed to be returned depending on the security leevl case"""
     # Loop over the datasets/datasets_permissions.yml file and
-    for security_level, dataset_properties in security_level_dict.items():
-        # If a dataset has security level as public and the request is not authenticated, get the granularity and the entry type exceptions
-        if security_level == 'public':
-            default_granularity = dataset_properties.get('default_entry_types_granularity')
-            granularity_exceptions = dataset_properties.get('entry_types_exceptions')
-        # If the request is correctly authenticated (username is not public) get the granularity and entry types exceptions in case the dataset has registered security level
-        if username != 'public' and security_level == 'registered':
-            default_granularity = dataset_properties.get('default_entry_types_granularity')
-            granularity_exceptions = dataset_properties.get('entry_types_exceptions')
-        # If the request is correctly authenticated (username is not public) get the granularity and entry types exceptions for the specific user that has logged in and in case the dataset has controlled security level
-        elif username != 'public' and security_level == 'controlled':
-            # Get the user list from the yaml file
-            user_exceptions = dataset_properties.get('user-list')
-            # If the user-list exists for the security level controlled
-            if user_exceptions != None:
-                for user_exception in user_exceptions:
-                    # Match if the user authenticated has specific permissions for the dataset
-                    if user_exception['user_e-mail'] == username:
-                        # Get the granularity and entry type exceptions and return them back, as this will override registered security level
+    if 'public' in security_level_dict:
+         # If a dataset has security level as public and the request is not authenticated, get the granularity and the entry type exceptions
+        try:
+            default_granularity = security_level_dict['public'].get('default_entry_types_granularity')
+        except Exception:
+            default_granularity = 'boolean'
+        try:
+            granularity_exceptions = security_level_dict['public'].get('entry_types_exceptions')
+        except Exception:
+            granularity_exceptions = None
+    if 'registered' in security_level_dict and user_id != None:
+        try:
+            default_granularity = security_level_dict['registered'].get('default_entry_types_granularity')
+        except Exception:
+            default_granularity = 'boolean'
+        try:
+            granularity_exceptions = security_level_dict['registered'].get('entry_types_exceptions')
+        except Exception:
+            granularity_exceptions = None
+    if 'controlled' in security_level_dict and user_id != None:
+        user_exceptions = security_level_dict['controlled'].get('user-list')
+        # If the user-list exists for the security level controlled
+        if user_exceptions != None:
+            for user_exception in user_exceptions:
+                # Match if the user authenticated has specific permissions for the dataset
+                if user_exception['user_id'] == user_id:
+                    try:
+                        default_granularity = security_level_dict['controlled'].get('default_entry_types_granularity')
+                    except Exception:
+                        default_granularity = None
+                    try:
+                        granularity_exceptions = security_level_dict['controlled'].get('entry_types_exceptions')
+                    except Exception:
+                        granularity_exceptions = None
+                    # Get the granularity and entry type exceptions and return them back, as this will override registered security level
+                    if 'default_entry_types_granularity' in user_exception:
                         default_granularity = user_exception.get('default_entry_types_granularity')
+                    if 'entry_types_exceptions' in user_exception:
                         granularity_exceptions = user_exception.get('entry_types_exceptions')
-                        return default_granularity, granularity_exceptions
+                    if default_granularity is None:
+                        default_granularity = 'boolean'
+                    return default_granularity, granularity_exceptions
+    if default_granularity is None:
+        default_granularity == 'boolean'
     return default_granularity, granularity_exceptions

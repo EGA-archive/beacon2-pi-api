@@ -3,6 +3,7 @@ import time
 from beacon.conf.conf_override import config
 import datetime
 from logging import handlers
+import functools
 
 def initialize_logger(level):
     try:
@@ -104,27 +105,47 @@ def log_with_args_initial(level):
 
 def log_with_args(level):
     def add_logging(func):
+        @functools.wraps(func)
         def wrapper(self, *args, **kwargs):
+            logger = self.LOG
+            debug_enabled = logger.isEnabledFor(10)  # DEBUG
+
+            if debug_enabled:
+                logger.debug(
+                    "%s - %s - initial call",
+                    self._id,
+                    func.__name__,
+                )
+
+            start = time.perf_counter()
+
             try:
-                # Store the initial time before the function is executed
-                start = time.perf_counter()
-                self.LOG.debug(f"{self._id} - {func.__name__} - initial call")
                 result = func(self, *args, **kwargs)
-                # Store the final time after the function is executed and log when ends
-                finish = time.perf_counter()
-                self.LOG.debug(f"{self._id} - {func.__name__} - {round(finish-start,3)}s - returned OK")
-                # Specific hard-coded logs for the initialize and shutting down of the app
-                if f"{func.__name__}" == 'initialize':
-                    self.LOG.info(f"{self._id} - Initialization done")
-                elif f"{func.__name__}" == 'destroy':
-                    self.LOG.info(f"{self._id} - Shutting down")
-                return result
-            except:
-                # Catch and log the error of the exception in case there is one for the funcion adding the function's name
-                err = "There was an exception in  "
-                err += func.__name__
-                self.LOG.error(f"{self._id} - {err}")
+            except Exception:
+                logger.exception(
+                    "%s - Exception in %s",
+                    self._id,
+                    func.__name__,
+                )
                 raise
+
+            elapsed = time.perf_counter() - start
+
+            if debug_enabled:
+                logger.debug(
+                    "%s - %s - %.3fs - returned OK",
+                    self._id,
+                    func.__name__,
+                    elapsed,
+                )
+
+            if func.__name__ == "initialize":
+                logger.info("%s - Initialization done", self._id)
+            elif func.__name__ == "destroy":
+                logger.info("%s - Shutting down", self._id)
+
+            return result
+
         return wrapper
     return add_logging
 

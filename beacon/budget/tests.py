@@ -39,16 +39,16 @@ class TestBudget(unittest.TestCase):
                 RequestAttributes.ip = "172.0.0.1"
 
                 # First budget check establishes baseline timestamp/quota window
-                time_now = check_budget(self=MagicClass, username="jane")
+                time_now = check_budget(self=MagicClass, user_id="jane")
 
                 # Simulate multiple requests consuming budget for same user
-                insert_budget(self=MagicClass, username="jane", time_now=time_now)
-                insert_budget(self=MagicClass, username="jane", time_now=time_now)
-                insert_budget(self=MagicClass, username="jane", time_now=time_now)
+                insert_budget(self=MagicClass, user_id="jane", time_now=time_now)
+                insert_budget(self=MagicClass, user_id="jane", time_now=time_now)
+                insert_budget(self=MagicClass, user_id="jane", time_now=time_now)
 
                 # Next check should exceed quota and raise rate-limit exception
                 try:
-                    resp = check_budget(self=MagicClass, username="jane")
+                    resp = check_budget(self=MagicClass, user_id="jane")
                 except Exception as e:
                     # Expected behavior: HTTP-like 429 Too Many Requests
                     assert e.status == 429
@@ -79,7 +79,7 @@ class TestBudget(unittest.TestCase):
 
                 # Budget check for "public" user should either bypass or fail safely
                 try:
-                    resp = check_budget(self=MagicClass, username="public")
+                    resp = check_budget(self=MagicClass, user_id="public")
                 except Exception:
                     # Any exception is considered acceptable behavior here
                     # (policy depends on implementation: deny or fallback)
@@ -112,16 +112,16 @@ class TestBudget(unittest.TestCase):
                 RequestAttributes.ip = "172.0.0.1"
 
                 # First call initializes budget tracking window for this IP/user
-                time_now = check_budget(self=MagicClass, username="public")
+                time_now = check_budget(self=MagicClass, user_id="public")
 
                 # Simulate repeated requests from same IP consuming quota
-                insert_budget(self=MagicClass, username="public", time_now=time_now)
-                insert_budget(self=MagicClass, username="public", time_now=time_now)
-                insert_budget(self=MagicClass, username="public", time_now=time_now)
+                insert_budget(self=MagicClass, user_id="public", time_now=time_now)
+                insert_budget(self=MagicClass, user_id="public", time_now=time_now)
+                insert_budget(self=MagicClass, user_id="public", time_now=time_now)
 
                 # Final check should trigger rate limit exception (429)
                 try:
-                    resp = check_budget(self=MagicClass, username="public")
+                    resp = check_budget(self=MagicClass, user_id="public")
                 except Exception as e:
                     assert e.status == 429
 

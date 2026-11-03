@@ -2,6 +2,7 @@ from beacon.connections.mongo.client import get_client
 from beacon.logs.logs import log_with_args_mongo
 from beacon.conf.conf_override import config
 import yaml
+from beacon.connections.mongo import conf as mongo_conf
 
 def import_collections_confile():
     with open("/beacon/models/EUCAIM/conf/entry_types/collections.yml", 'r') as pfile:
@@ -19,8 +20,8 @@ def import_patients_confile():
 @log_with_args_mongo(config.level)
 def get_non_collections_cross_query_attributes(self, entry_type, pre_entry_type):
     client=get_client()
-    collections=client['beacon'].collections
-    patients=client['beacon'].patients
+    collections=client[mongo_conf.database_name].collections
+    patients=client[mongo_conf.database_name].patients
     patients_confile=import_patients_confile()
     collections_confile=import_collections_confile()
     # For cross queries, save the attributes for the translation (linkage) between endpoints (idq to idq2) and the name of the collection for the initial endpoint queried (secondary_collection)

@@ -370,12 +370,10 @@ And it will use the ontology filter to filter the results.
 
 Go to [auth folder](https://github.com/EGA-archive/beacon-production-prototype/tree/main/beacon/auth/idp_providers) and create an .env file with the next Oauthv2 OIDC Identity Provider Relying Party known information:
 ```bash
-CLIENT_ID='your_idp_client_id'
-CLIENT_SECRET='your_idp_client_secret'
-USER_INFO='https://login.elixir-czech.org/oidc/userinfo'
-INTROSPECTION='https://login.elixir-czech.org/oidc/introspect'
-ISSUER='https://login.elixir-czech.org/oidc/'
-JWKS_URL='https://login.elixir-czech.org/oidc/jwk'
+CLIENT_ID=beacon
+WELL_KNOWN_ENDPOINT='http://idp:8080/auth/realms/Beacon/.well-known/openid-configuration'
+ISSUER='http://localhost:8080/auth/realms/Beacon'
+MUST_INCLUDE_BEACON_URL_IN_AUDIENCE=False
 ```
 
 For Keycloak IDP, an "aud" parameter will need to be added to the token's mappers, matching the Audience for the Keycloak realm.
@@ -408,11 +406,44 @@ AV_Dataset:
     entry_types_exceptions:
       - individual: boolean
     user-list:
-      - user_e-mail: jane.smith@beacon.ga4gh
+      - user_id: 47eff1b1-7621-4570-a0bb-01a719fba0a2
         default_entry_types_granularity: count
         entry_types_exceptions:
           - individual: record
 ``` 
+
+## Adding permissions and authentication conditionals through GA4GH visas
+
+Now, adding also the option to accept GA4GH visas is implemented. For doing that, go to [visas_conf.yml](https://github.com/EGA-archive/beacon-production-prototype/tree/main/beacon/permissions/ga4gh_visas/visas_conf.yml) and add the visa type as the main key and after that enable it or not, and the URL to grab the keys alongside the accepted issuers with the accepted value to make the visa work. The visa to give permissions for a dataset is *ControlledAccessGrants*. The other visas only are additional conditions to accept the authentication of the user. Bear in mind that *ControlledAcessGrants* will add a boolean granularity level permission, if you want more, you will need to go to datasets_permissions.yml and set this there.
+
+```
+AcceptedTermsAndPolicies:
+  enabled: False
+  issuers:
+  - iss: https://id.portal.dev.gdi.lu/realms/gdi
+    jwks_uri: https://id.portal.dev.gdi.lu/realms/gdi/protocol/openid-connect/certs
+    accepted_values:
+      - accepted
+  - iss: https://id.portal.gdi.lu//realms/gdi
+    jwks_uri: https://id.portal.gdi.lu/realms/gdi/protocol/openid-connect/certs
+    accepted_values: 
+      - accepted
+ResearcherStatus:
+  enabled: False
+  issuers:
+  - iss: https://id.portal.dev.gdi.lu/realms/gdi
+    jwks_uri: https://id.portal.dev.gdi.lu/realms/gdi/protocol/openid-connect/certs
+    accepted_values: 
+      - RESEARCHER
+ControlledAccessGrants:
+  enabled: False
+  issuers:
+  - iss: https://rems.test.example.org/
+    jwks_uri: https://rems.test.example.org/openid-connect/certs
+    accepted_values:
+      - https://rems.test.example.org/datasets/test-dataset
+``` 
+
 
 ## Managing configuration
 

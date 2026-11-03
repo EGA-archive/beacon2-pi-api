@@ -15,6 +15,9 @@ class CamelModel(BaseModel):
     )
 
 class Info(BaseModel):
+    model_config = ConfigDict(
+        extra='allow',
+    )
     pass
 
 

@@ -36,6 +36,10 @@ cors_urls = ["http://localhost:3003", "http://localhost:3000"]
 max_limit_of_records_per_dataset_in_a_page=100
 pending_requests_timeout_in_seconds=10 # Timeout waiting pending requests
 
+# Auth
+access_token_accepted_algorithms=[] # e.g. ["RS256"]
+ga4gh_visa_accepted_algorithms=[] # e.g. ["RS256"]
+
 # Service Info
 ga4gh_service_type_group = 'org.ga4gh'
 ga4gh_service_type_artifact = 'beacon'
@@ -68,3 +72,6 @@ query_budget_table = 'budget'
 imprecise_count=0 # If imprecise_count is 0, no modification of the count will be applied. If it's different than 0, count will always be this number when count is smaller than this number.
 round_to_tens=False # If true, the rounding will be done to the immediate superior tenth if the imprecise_count is 0
 round_to_hundreds=False # If true, the rounding will be done to the immediate superior hundredth if the imprecise_count is 0 and the round_to_tens is false
+
+# Performance
+max_num_of_concurrent_threads=32 # the max num of workers of the CPU assigned to the API query processing

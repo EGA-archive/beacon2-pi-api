@@ -1,30 +1,65 @@
 from pymongo.mongo_client import MongoClient
 from beacon.connections.mongo import conf
-from beacon.connections.mongo.ping import ping_database
 from beacon.conf.conf_override import config
-import aiohttp.web as web
-from beacon.exceptions.exceptions import DatabaseIsDown
-import asyncio
+import threading
+from pymongo import MongoClient
+from beacon.connections.mongo import conf
+import threading
+
+_CLIENTS = {}
+_CLIENTS_LOCK = threading.Lock()
+
 
 def get_client():
     if conf.database_cluster:
-        uri = "mongodb+srv://{}/?tls=true&authMechanism=SCRAM-SHA-256&retrywrites=false&maxIdleTimeMS=120000".format(
-            conf.database_host
+        uri = (
+            f"mongodb+srv://{conf.database_host}/"
+            "?tls=true&authMechanism=SCRAM-SHA-256"
+            "&retrywrites=false&maxIdleTimeMS=120000"
         )
     else:
-        uri = "mongodb://{}:{}/{}?authSource={}".format(
-            conf.database_host,
-            conf.database_port,
-            conf.database_name,
-            conf.database_auth_source
+        uri = (
+            f"mongodb://{conf.database_host}:"
+            f"{conf.database_port}/{conf.database_name}"
+            f"?authSource={conf.database_auth_source}"
         )
 
-    if conf.database_certificate != '' and conf.database_cafile != '':
-        uri += '&tls=true&tlsCertificateKeyFile={}&tlsCAFile={}'.format(conf.database_certificate, conf.database_cafile)
+    if conf.database_certificate and conf.database_cafile:
+        uri += (
+            f"&tls=true"
+            f"&tlsCertificateKeyFile={conf.database_certificate}"
+            f"&tlsCAFile={conf.database_cafile}"
+        )
 
-    client = MongoClient(uri, username=conf.database_user, password=conf.database_password)
-    
-    return client
+    # Include effective client settings in the cache key.
+    key = (
+        uri,
+        conf.database_user,
+        conf.database_max_pool_size,
+        conf.database_min_pool_size,
+        conf.database_server_selection_timeout_ms,
+        conf.database_connect_timeout_ms,
+    )
+
+    with _CLIENTS_LOCK:
+        client = _CLIENTS.get(key)
+
+        if client is None:
+            client = MongoClient(
+                uri,
+                username=conf.database_user,
+                password=conf.database_password,
+                maxPoolSize=conf.database_max_pool_size,
+                minPoolSize=conf.database_min_pool_size,
+                serverSelectionTimeoutMS=(
+                    conf.database_server_selection_timeout_ms
+                ),
+                connectTimeoutMS=conf.database_connect_timeout_ms,
+                waitQueueTimeoutMS=5000,
+            )
+            _CLIENTS[key] = client
+
+        return client
 
 def create_budget():
     client=get_client()

@@ -1,5 +1,6 @@
 import aiohttp.web as web
 from aiohttp.web_request import Request
+from beacon.utils.txid import generate_txid
 from bson import json_util
 from beacon.request.classes import RequestAttributes
 from beacon.utils.requests import deconstruct_request, RequestParams
@@ -24,7 +25,8 @@ class EndpointView(web.View, CorsViewMixin):
         self.request_attributes.qparams=RequestParams()
         self.request_attributes.returned_granularity="boolean"
         self.LOG=self.request.app['logger']
-        self._id = request["txid"]
+        self._id=None
+        self._id = generate_txid(self)
 
     async def get(self):
         try:

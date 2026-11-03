@@ -8,6 +8,7 @@ from beacon.connections.mongo.filters.format import format_value, format_operato
 from beacon.utils.modules import get_all_modules_connections_script
 from beacon.connections.mongo.filters.iso8601 import iso8601_to_number
 import re
+from beacon.connections.mongo import conf as mongo_conf
 
 @log_with_args(config.level)
 def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, dataset: str, isRequestParameter: bool) -> dict:
@@ -295,7 +296,7 @@ def apply_alphanumeric_filter(self, query: dict, filter: AlphanumericFilter, dat
         # If it's not an age filter, is a measurement filter
         else:
             client=get_client()
-            filtering_terms=client['beacon'].filtering_terms
+            filtering_terms=client[mongo_conf.database_name].filtering_terms
             # Find the filter in filtering terms
             query_filtering={}
             query_filtering['$and']=[]

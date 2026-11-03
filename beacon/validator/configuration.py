@@ -433,11 +433,15 @@ def check_configuration(
 
         pfile.close()
 
-        # Iterate through dataset permission definitions
-        for dataset_name, configuration in datasets.items():
+        if datasets != None:
 
-            # Configuration can be a simple boolean or a permission object
-            if not isinstance(configuration, bool):
+            if isinstance(datasets, dict):
+                pass
+            else:
+                raise('/beacon/permissions/datasets/datasets_permissions.yml file needs to be a dictionary')
+
+            # Iterate through dataset permission definitions
+            for dataset_name, configuration in datasets.items():
 
                 for security_level, securityconf in configuration.items():
 
@@ -448,7 +452,7 @@ def check_configuration(
                         )
 
                     # Security configuration can be boolean or detailed object
-                    if not isinstance(securityconf, bool):
+                    if securityconf is not None:
 
                         for parameters, paramsvalues in securityconf.items():
 
@@ -475,14 +479,14 @@ def check_configuration(
 
                                             # Validate user-specific configuration keys
                                             if confuser not in [
-                                                'user_e-mail',
+                                                'user_id',
                                                 'default_entry_types_granularity',
                                                 'entry_types_exceptions'
                                             ]:
                                                 raise Exception(
                                                     "entries for user settings in user-list "
                                                     "must be be default_entry_types_granularity, "
-                                                    "entry_types_exceptions or user_e-mail"
+                                                    "entry_types_exceptions or user_id"
                                                 )
 
     except Exception:

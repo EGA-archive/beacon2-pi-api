@@ -201,6 +201,9 @@ class CountAdjustedTo1(RootModel[list[CountAdjustedToItem]]):
 
 
 class Info(BaseModel):
+    model_config = ConfigDict(
+        extra='allow',
+    )
     pass
 
 
