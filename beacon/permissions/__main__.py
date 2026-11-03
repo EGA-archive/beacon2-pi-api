@@ -13,6 +13,7 @@ from beacon.exceptions.exceptions import InvalidRequest, NoPermissionsAvailable,
 @log_with_args(config.level)
 async def authorization(self):
     try:
+        self._request["auth"]={}
         # Get the token from the header Authorization
         auth = self.request_attributes.headers.get('Authorization')
         if not auth or not auth.lower().startswith('bearer '):

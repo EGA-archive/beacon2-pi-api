@@ -29,3 +29,4 @@ rfc3339_validator==0.1.4
 datamodel-code-generator==0.81.0
 psycopg2-binary==2.9.12
 SQLAlchemy==2.0.51
+aio-pika
