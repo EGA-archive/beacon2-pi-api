@@ -13,21 +13,6 @@ class OntologyFilter(CamelModel, extra='forbid'):
     includeDescendantTerms: Optional[bool] = True  # Whether ontology hierarchy descendants are included
     similarity: Optional[Similarity] = Similarity.EXACT  # Matching strictness for ontology search
 
-    # Validate that id follows CURIE format (prefix:value)
-    @field_validator('id')
-    @classmethod
-    def id__ontology_filter_must_be_CURIE(cls, v: str) -> str:
-        source = getattr(RequestAttributes, "source", None)
-        # Mongo: preserve the original Beacon validation
-        if source == "mongo":
-        # CURIE format validation using regex
-            if re.match("[A-Za-z0-9]+:[A-Za-z0-9]", v):
-                pass
-            else:
-                raise ValueError('id must be CURIE, e.g. NCIT:C42331')
-
-            return v
-
 
 # Filter for structured alphanumeric comparisons (e.g., numeric or string equality/range queries)
 class AlphanumericFilter(CamelModel, extra='forbid'):
@@ -35,21 +20,6 @@ class AlphanumericFilter(CamelModel, extra='forbid'):
     value: Union[str, int, List[int], float, List[float]]  # Filter value(s)
     scope: Optional[str] = None  # Optional domain scope
     operator: Operator = Operator.EQUAL  # Comparison operator (default: equality)
-
-    # Ensure id is NOT a CURIE (must be schema field name instead)
-    @field_validator('id')
-    @classmethod
-    def id__alphanumeric_filter_must_not_be_CURIE(cls, v: str) -> str:
-        source = getattr(RequestAttributes, "source", None)
-        # Mongo: preserve the original Beacon validation
-        if source == "mongo":
-            # Reject CURIE-style identifiers in this filter type
-            if re.match(r"^[A-Za-z0-9]+:[A-Za-z0-9]", v):
-                raise ValueError(
-                    'id must be a schema field reference, not a CURIE'
-                )
-
-            return v
 
 
 # Generic custom filter structure (no validation rules beyond schema constraint)
