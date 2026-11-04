@@ -1,0 +1,115 @@
+
+{
+  "audit_schema_version": "1.0.0",
+  "audit_id": "uuid",
+  "request_id": "uuid",
+  "status": "completed",
+  "started_at": "2026-11-03T10:00:00.000Z",
+  "completed_at": "2026-11-03T10:00:00.050Z",
+  "duration_ms": 50.0,
+
+  "request": {
+    "method": "GET",
+    "path": "/api/individuals",
+    "route": "/api/individuals",
+    "path_parameters": {},
+    "query_parameters": {},
+    "headers": {},
+    "http_version": "1.1",
+    "client": {
+      "ip": "192.0.2.10",
+      "user_agent": "ExampleClient/1.0"
+    },
+    "body": {
+      "present": false,
+      "size_bytes": 0,
+      "content_hash": null
+    }
+  },
+
+  "identity": {
+    "authenticated": true,
+    "user_id": "user-123",
+    "authentication_method": "bearer",
+    "authentication_status": "success"
+  },
+
+  "authorization": {
+    "requested_datasets": ["dataset-a"],
+    "authorized_datasets": ["dataset-a"],
+    "rejected_datasets": [],
+    "decisions": [
+      {
+        "dataset": "dataset-a",
+        "security_level": "public",
+        "allowed": true,
+        "requested_granularity": "record",
+        "allowed_granularity": "record",
+        "effective_granularity": "record",
+        "reason": "public_access"
+      }
+    ]
+  },
+
+  "configuration": {
+    "api_version": "v2.0",
+    "requested_schema": [],
+    "returned_schema": [],
+    "entry_type": "individual",
+    "pre_entry_type": null,
+    "source": "mongodb",
+    "response_type": "collection",
+    "test_mode": false,
+    "configuration_fingerprint": "sha256:..."
+  },
+
+  "budget": {
+    "enabled": true,
+    "scope": "user",
+    "period_seconds": 3600,
+    "maximum_queries": 100,
+    "previous_query_count": 12,
+    "decision": "allowed"
+  },
+
+  "database": {
+    "connections_selected": ["mongodb"],
+    "health_checks": [],
+    "operations": []
+  },
+
+  "execution": {
+    "events": []
+  },
+
+  "response": {
+    "status_code": 200,
+    "response_type": "record",
+    "exists": true,
+    "total_results": 25,
+    "returned_results": 25,
+    "returned_granularity": "record",
+    "returned_schemas": [],
+    "size_bytes": 12000,
+    "validation_status": "success",
+    "serialization_status": "success"
+  },
+
+  "error": null,
+
+  "runtime": {
+    "environment": "production",
+    "application_version": "1.0.0",
+    "git_commit": "abc123",
+    "instance_id": "beacon-01",
+    "process_id": 100,
+    "python_version": "3.x",
+    "application_state": "Running - healthy"
+  },
+
+  "integrity": {
+    "persistence_status": "pending",
+    "record_hash": null,
+    "previous_record_hash": null
+  }
+}

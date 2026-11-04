@@ -14,6 +14,7 @@ from datetime import date as DateType
 from datetime import datetime as DateTimeType
 import json
 from enum import Enum
+from beacon.auditing.decorator import audit_check
 
 def json_default(obj):
     if isinstance(obj, (DateType, DateTimeType)):
@@ -23,6 +24,7 @@ def json_default(obj):
     raise TypeError(f"Object of type {type(obj).__name__} is not JSON serializable")
 
 class EntryTypeView(EndpointView):
+    @audit_check
     @state_check
     @query_permissions
     @log_with_args(config.level)
