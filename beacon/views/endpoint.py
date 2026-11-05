@@ -27,6 +27,7 @@ class EndpointView(web.View, CorsViewMixin):
         self.LOG=self.request.app['logger']
         self._id=None
         self._id = generate_txid(self)
+        self.audit = request.get("audit")
 
     async def get(self):
         try:
