@@ -1,113 +1,61 @@
-import asyncio
-import os
-import time
-from aiohttp import web
-import datetime
-import json
+from functools import wraps
 
-from beacon.auditing.publisher import AuditPublisher
+from beacon.logs.logs import log_with_args
+from beacon.conf.conf_override import config
 
-audit_publisher = AuditPublisher(
-    rabbitmq_url=os.getenv("RABBITMQ_URL", "amqp://audit_user:audit_password@rabbitmq:5672/")
-)
-
-def get_client_ip(request: web.Request) -> str | None:
-    return request.remote
+from beacon.auditing.context import AuditContext
 
 
-def get_outcome(status: int) -> str:
-    if 200 <= status < 300:
-        return "success"
+def audit_check(func):
 
-    if 300 <= status < 400:
-        return "redirect"
+    @log_with_args(config.level)
+    @wraps(func)
+    async def wrapper(self, *args, **kwargs):
 
-    if 400 <= status < 500:
-        return "failure"
-
-    if 500 <= status < 600:
-        return "failure"
-
-    return "unknown"
-
-
-def get_event_name(request: web.Request) -> str:
-    # TODO: get the route from the route function better than from the URL
-    endpoint = request.match_info.route.name
-
-    if endpoint:
-        return f"{endpoint}.view"
-
-    path_parts = [
-        part for part in request.path.strip("/").split("/")
-        if part
-    ]
-
-    resource = path_parts[0] if path_parts else "root"
-
-    return f"{resource}.view"
-
-@web.middleware
-async def auditing_middleware(request: web.Request, handler):
-    response = None
-    error = None
-
-    try:
-        response = await handler(request)
-        return response
-
-    except Exception as exc:
-        error = exc
-        raise
-
-    finally:
-        auth = request.get("auth", {})
-
-        status = response.status if response else 500
-
-        event = {
-
-            "request_id": request["txid"],
-
-            "actor": auth.get("actor"),
-
-            "auth": {
-                "method": auth.get("method"),
-                "acr": auth.get("acr"),
-            },
-
-            "source_ip": request.remote,
-
-            "target": request.get("audit_target"),
-
-            "request": {
-                "method": request.method,
-                "path": request.path,
-                "status": status,
-                "outcome": (
-                    "success"
-                    if 200 <= status < 300
-                    else "failure"
-                ),
-            },
-
-            "client": {
-                "user_agent": request.headers.get("User-Agent"),
-            },
-        }
-
-        if error:
-            event["error"] = {
-                "type": type(error).__name__,
-            }
-
-        context = request.get("audit_context")
-        if context:
-            event["context"] = context
-
-        asyncio.create_task(
-            audit_publisher.publish(
-                event_type=get_event_name(request),
-                payload=event,
-            )
+        audit = await AuditContext.from_handler(
+            self,
+            config
         )
+
+        self.audit = audit
+
+        try:
+
+            audit.add_execution_event(
+                event="function_started",
+                function=func.__name__
+            )
+
+            result = await func(self, *args, **kwargs)
+
+            audit.capture_identity(self)
+
+            audit.add_execution_event(
+                event="function_completed",
+                function=func.__name__
+            )
+
+            audit.finalize(status="success")
+
+            return result
+
+        except Exception as exc:
+
+            audit.capture_identity(self)
+
+            audit.set_error(
+                error_type=type(exc).__name__,
+                message=str(exc)
+            )
+
+            audit.finalize(status="error")
+
+            raise
+
+        finally:
+
+            audit_data = audit.serialize()
+
+            self.LOG.warning(audit_data)
+
+    return wrapper

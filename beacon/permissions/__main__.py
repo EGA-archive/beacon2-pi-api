@@ -24,7 +24,42 @@ async def authorization(self):
         user, list_visa_datasets = await authentication(self, access_token)
         # Get the token's sub as the user_id if the token is valid.
         user_id = user.get('sub')
+        if user_id:
+            self.request_context = getattr(
+                self, 'request_context', {}
+            )
+
+            self.request_context['identity'] = {
+                'authenticated': True,
+                'user_id': user_id,
+                'authentication_method': 'bearer',
+                'authentication_status': 'success'
+            }
+
+        else:
+            self.request_context = getattr(
+                self, 'request_context', {}
+            )
+
+            self.request_context['identity'] = {
+                'authenticated': False,
+                'user_id': None,
+                'authentication_method': 'bearer',
+                'authentication_status': 'failure'
+            }
     except Exception as e:
+        self.request_context = getattr(
+            self, 'request_context', {}
+        )
+
+        self.request_context['identity'] = {
+            'authenticated': False,
+            'user_id': None,
+            'authentication_method': (
+                'bearer' if auth and auth.lower().startswith('bearer ') else None
+            ),
+            'authentication_status': 'failure'
+        }
         list_visa_datasets = []
         user_id = None
         return user_id, list_visa_datasets

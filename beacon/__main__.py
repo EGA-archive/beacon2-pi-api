@@ -8,7 +8,7 @@ from aiohttp_middlewares import cors_middleware
 from beacon.conf.conf_override import config
 from beacon.validator.configuration import check_configuration, check_logs_configuration
 from beacon.utils.routes import append_routes
-from beacon.utils.middlewares import error_middleware, track_requests_middleware, audit_middleware
+from beacon.utils.middlewares import error_middleware, track_requests_middleware
 from beacon.utils.shutters import _graceful_shutdown, on_startup as on_start
 from beacon.logs.logs import initialize_logger
 from beacon.utils.modules import check_database_connections
@@ -48,7 +48,6 @@ async def create_api(port):
 
         app = web.Application(
             middlewares=[
-                audit_middleware,
                 cors_middleware(origins=config.cors_urls),
                 error_middleware,
                 track_requests_middleware,

@@ -14,7 +14,7 @@ from datetime import date as DateType
 from datetime import datetime as DateTimeType
 import json
 from enum import Enum
-from beacon.auditing.decorator import audit_check
+from beacon.auditing.audit import audit_check
 
 def json_default(obj):
     if isinstance(obj, (DateType, DateTimeType)):
