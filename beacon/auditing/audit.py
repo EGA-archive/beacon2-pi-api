@@ -54,6 +54,9 @@ def audit_check(func):
 
         finally:
 
+            audit.capture_identity(self)
+            audit.capture_authorization(self)
+
             audit_data = audit.serialize()
 
             self.LOG.warning(audit_data)

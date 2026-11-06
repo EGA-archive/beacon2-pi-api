@@ -255,6 +255,17 @@ class AuditContext:
             **kwargs
         )
 
+    def capture_authorization(self, handler):
+
+        authorization = getattr(
+            handler,
+            "request_context",
+            {}
+        ).get("authorization")
+
+        if authorization:
+            self.update_authorization(**authorization)
+
     def update_authorization(self, **kwargs):
 
         self.data.authorization = self._update_model(
