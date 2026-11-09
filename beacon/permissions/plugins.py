@@ -36,7 +36,8 @@ class DummyPermissions(Permissions):
             if visa_datasets!=None:
                 for visa_dataset in visa_datasets:
                     if visa_dataset in datasets_permissions:
-                        continue
+                        if 'controlled' not in datasets_permissions[visa_dataset]:
+                            datasets_permissions[visa_dataset]["controlled"]={"default_entry_types_granularity": "boolean", "user-list": [{"user_id": user_id}]}
                     else:
                         datasets_permissions[visa_dataset]={"controlled": {"default_entry_types_granularity": "boolean", "user-list": [{"user_id": user_id}]}}
             if testMode == True:
