@@ -2,7 +2,7 @@ import yaml
 from beacon.exceptions.exceptions import NoPermissionsAvailable
 from beacon.response.classes import SingleDatasetResponse
 from beacon.permissions.utils import return_found_granularity_in_exceptions, return_granularity_and_exceptions
-
+from beacon.conf.conf_override import config
 
 class Permissions():
     """Base class, just to agree on the interface."""
@@ -19,8 +19,6 @@ class Permissions():
     async def close(self):
         raise NotImplementedError('Overload this function in a subclass')
 
-
-
 class DummyPermissions(Permissions):
     async def initialize(self):
         pass
@@ -33,6 +31,8 @@ class DummyPermissions(Permissions):
             with open("/beacon/permissions/datasets/datasets_permissions.yml", 'r') as pfile:
                 datasets_permissions = yaml.safe_load(pfile)
             pfile.close()
+            if datasets_permissions is None:
+                raise Exception('issue with datasets_permissions.yml, check if it exists or is not empty and see if there is any header missing')
             if visa_datasets!=None:
                 for visa_dataset in visa_datasets:
                     if visa_dataset in datasets_permissions:
@@ -44,6 +44,8 @@ class DummyPermissions(Permissions):
                 with open("/beacon/conf/datasets/datasets_conf.yml", 'r') as confile:
                     datasets_conf = yaml.safe_load(confile)
                 confile.close()
+                if datasets_conf is None:
+                    raise Exception('issue with datasets_conf.yml, check if it exists or is not empty')
                 # Initialize the list of test datasets that will be returned depending on the permissions.
                 test_datasets=[]
                 # Iterate the datasets configuration dictionary and get the test datasets ids.
@@ -75,14 +77,20 @@ class DummyPermissions(Permissions):
                 if default_granularity != None:
                     if definitive_granularity_per_dataset[dataset] != {}:
                         if next(iter(security_level_dict)) == 'registered':
+                            if 'registered' not in map(str.lower, config.security_levels):
+                                raise Exception("check datasets_permissions.yml, registered is not a configured security level for this beacon")
                             if 'controlled' not in definitive_granularity_per_dataset[dataset]:
                                 definitive_granularity_per_dataset[dataset]['registered']=default_granularity
                             if 'public' in definitive_granularity_per_dataset:
                                 definitive_granularity_per_dataset[dataset].pop('public')
                         elif next(iter(security_level_dict)) == 'public':
+                            if 'public' not in map(str.lower, config.security_levels):
+                                raise Exception("check datasets_permissions.yml, public is not a configured security level for this beacon")
                             if 'controlled' not in definitive_granularity_per_dataset[dataset] and 'registered' not in definitive_granularity_per_dataset[dataset]:
                                 definitive_granularity_per_dataset[dataset]['public']=default_granularity
                         elif next(iter(security_level_dict)) == 'controlled':
+                            if 'controlled' not in map(str.lower, config.security_levels):
+                                raise Exception("check datasets_permissions.yml, controlled is not a configured security level for this beacon")
                             if 'public' in definitive_granularity_per_dataset[dataset]:
                                 definitive_granularity_per_dataset[dataset].pop('public')
                             if 'registered' in definitive_granularity_per_dataset[dataset]:
@@ -98,9 +106,13 @@ class DummyPermissions(Permissions):
             for dataset, granularity in definitive_datasets_granularity.items():
                 datasetInstance = SingleDatasetResponse(dataset=dataset, granularity=granularity)
                 datasets.append(datasetInstance)
+            if datasets == []:
+                raise NoPermissionsAvailable('Unauthorized. Not enough permissions to query any dataset.')      
             return datasets
+        except NoPermissionsAvailable as e:
+            raise(e)
         except Exception as e:
-            raise NoPermissionsAvailable("Check if datasets_permissions.yml file is not empty of datasets or has any header missing.")
+            raise(e)
 
     async def close(self):
         pass

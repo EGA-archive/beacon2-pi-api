@@ -1269,6 +1269,42 @@ class TestNoFilters(unittest.TestCase):
 
             # Restore valid default granularity
             conf_override.config.allowed_uris=['*']
+    def test_main_configured_(self):
+        with loop_context() as loop:
+            from beacon.conf import conf_override
+
+            # Configure unsupported public security level
+            conf_override.config.security_levels=['REGISTERED', 'CONTROLLED']
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+
+            async def test_check_configured_datasets_do_not_allow_public():
+                resp = await client.post(
+                    conf_override.config.uri_subpath + "/" + individual["individual"]["endpoint_name"],
+                    json={
+                        "meta": {"apiVersion": "2.0"},
+                        "query": {
+                            "requestParameters": {
+                                "datasets": ["test"]
+                            },
+                            "includeResultsetResponses": "HIT",
+                            "pagination": {"skip": 0, "limit": 101},
+                            "testMode": True,
+                            "requestedGranularity": "record"
+                        }
+                    }
+                )
+
+                # Ensures dataset-scoped filtering does not break result aggregation
+                assert resp.status == 401
+
+
+            loop.run_until_complete(test_check_configured_datasets_do_not_allow_public())
+            loop.run_until_complete(client.close())
+
+            # Restore valid security levels
+            conf_override.config.security_levels=[]
     def a_test_no_filters_analysis_query_without_filters_allowed(self):
         with loop_context() as loop:
             # Disable unfiltered queries for the analysis endpoint
