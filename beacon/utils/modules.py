@@ -442,7 +442,8 @@ def load_routes():
                                         if conf_param == 'lookups':
                                             for lookup_id, lookup_value in value_param.items():
                                                 if isinstance(lookup_value, dict):
-                                                    routes_to_add[lookup_value['endpoint_name']]=[lookup_value['response_type']]
+                                                    if lookup_value['endpoint_enabled'] == True:
+                                                        routes_to_add[lookup_value['endpoint_name']]=[lookup_value['response_type']]
     return routes_to_add
 
 def _model_is_enabled(models_confile, folder, subfolder=None):

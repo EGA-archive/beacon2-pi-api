@@ -97,7 +97,7 @@ class DummyPermissions(Permissions):
                                 definitive_granularity_per_dataset[dataset].pop('registered')
                     else:
                         definitive_granularity_per_dataset[dataset][next(iter(security_level_dict), None)]=default_granularity
-                # If there is a default granularity, return it instantiating initially the datasets with their name and the default granularity.
+            # If there is a default granularity, return it instantiating initially the datasets with their name and the default granularity.
             definitive_datasets_granularity = {
                 dataset_id: next(iter(security_level.values()))
                 for dataset_id, security_level in definitive_granularity_per_dataset.items()

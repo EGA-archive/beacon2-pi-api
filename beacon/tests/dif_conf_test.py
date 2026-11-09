@@ -110,6 +110,58 @@ class TestNoFilters(unittest.TestCase):
             with open(f"{base_path}{name}.yml", "w") as outfile:
                 yaml.safe_dump(configuration, outfile)
 
+    def test_individual_endpoint_response_with_disabled_endpoint(self):
+        with loop_context() as loop:
+            # Temporarily disable analysis entry type
+            individual["individual"]["entry_type_enabled"] = False
+
+            with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/individual.yml", 'w') as outfile:
+                yaml.dump(individual, outfile, default_flow_style=False)
+
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+
+            async def test_check_map_endpoint_response_with_disabled_endpoint():
+                # Retrieve endpoint map
+                resp = await client.get(conf_override.config.uri_subpath + "/individuals")
+                assert resp.status == 404
+
+
+            loop.run_until_complete(test_check_map_endpoint_response_with_disabled_endpoint())
+            loop.run_until_complete(client.close())
+
+            # Re-enable analysis endpoint for later tests
+            individual["individual"]["entry_type_enabled"] = True
+            with open("/beacon/tests/mock_conf_files/conf/entry_types/ga4gh/beacon_v2_default_model/individual.yml", 'w') as outfile:
+                yaml.dump(individual, outfile, default_flow_style=False)
+
+    def test_cross_query_individual_endpoint_response_with_disabled_endpoint(self):
+        with loop_context() as loop:
+            # Temporarily disable analysis entry type
+            individual["individual"]["lookups"]["genomicVariant"]["endpoint_enabled"] = False
+
+            with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/individual.yml", 'w') as outfile:
+                yaml.dump(individual, outfile, default_flow_style=False)
+
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+
+            async def test_check_map_endpoint_response_with_disabled_endpoint():
+                # Retrieve endpoint map
+                resp = await client.get(conf_override.config.uri_subpath + "/individuals/SAMPLE2/g_variants")
+                assert resp.status == 404
+
+
+            loop.run_until_complete(test_check_map_endpoint_response_with_disabled_endpoint())
+            loop.run_until_complete(client.close())
+
+            # Re-enable analysis endpoint for later tests
+            individual["individual"]["lookups"]["genomicVariant"]["endpoint_enabled"] = True
+            with open("/beacon/tests/mock_conf_files/conf/entry_types/ga4gh/beacon_v2_default_model/individual.yml", 'w') as outfile:
+                yaml.dump(individual, outfile, default_flow_style=False)
+
 
     def test_map_endpoint_response_with_disabled_endpoint(self):
         with loop_context() as loop:
