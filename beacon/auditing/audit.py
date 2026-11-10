@@ -6,7 +6,7 @@ from beacon.conf.conf_override import config
 from beacon.auditing.context import AuditContext
 
 
-def audit_check(func):
+def audit_trace(func):
 
     @log_with_args(config.level)
     @wraps(func)

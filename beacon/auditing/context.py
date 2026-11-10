@@ -176,7 +176,7 @@ class AuditContext:
 
         headers = {
             key: (
-                "[REDACTED]"
+                "[REDACTED]" #TODO: what parts can be stored instead of REDACTED
                 if key.lower() in self.SENSITIVE_HEADERS
                 else value
             )
@@ -213,7 +213,7 @@ class AuditContext:
             path_parameters={},
             query_parameters=query_parameters,
             headers=headers,
-            http_version=http_version,
+            http_version=http_version, #TODO: don't write 2 times the code for storing things in audit
 
             client={
                 "ip": request.remote,
