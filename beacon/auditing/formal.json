@@ -309,13 +309,26 @@
 
     "budget": {
       "type": "object",
-      "required": ["enabled", "decision"],
+      "required": [
+        "enabled",
+        "scope",
+        "period_seconds",
+        "maximum_queries",
+        "previous_query_counts",
+        "decision"
+      ],
       "properties": {
         "enabled": {
-          "type": "boolean"
+          "type": "boolean",
+          "description": "True if either per-user or per-IP budget enforcement is enabled."
         },
         "scope": {
-          "enum": ["user", "ip", "global", null]
+          "enum": [
+            "user",
+            "ip",
+            "user_and_ip",
+            null
+          ]
         },
         "period_seconds": {
           "type": ["integer", "null"],
@@ -325,16 +338,40 @@
           "type": ["integer", "null"],
           "minimum": 0
         },
-        "previous_query_count": {
-          "type": ["integer", "null"],
-          "minimum": 0
+        "previous_query_counts": {
+          "type": "object",
+          "required": [
+            "user",
+            "ip"
+          ],
+          "properties": {
+            "user": {
+              "type": ["integer", "null"],
+              "minimum": 0
+            },
+            "ip": {
+              "type": ["integer", "null"],
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        },
+        "database": {
+          "type": ["string", "null"]
+        },
+        "db_name": {
+          "type": ["string", "null"]
+        },
+        "table": {
+          "type": ["string", "null"]
         },
         "decision": {
           "enum": [
             "allowed",
             "rejected",
             "not_applicable",
-            "not_evaluated"
+            "not_evaluated",
+            "error"
           ]
         },
         "reason": {

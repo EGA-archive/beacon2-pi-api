@@ -7,6 +7,7 @@ from urllib.parse import parse_qsl
 from time import perf_counter
 
 from beacon.auditing.models import AuditModel
+import json
 
 
 class AuditContext:
@@ -157,6 +158,13 @@ class AuditContext:
             config
         )
 
+        audit.capture_configuration(
+            handler,
+            config
+        )
+
+        audit.capture_budget(config)
+
         return audit
 
 
@@ -273,11 +281,84 @@ class AuditContext:
             **kwargs
         )
 
+    def capture_configuration(self, handler, config):
+
+        request_attributes = handler.request_attributes
+
+        # Extract only configuration relevant to auditing.
+        snapshot = {
+            "api_version": config.api_version,
+            "source": request_attributes.source,
+            "test_mode": request_attributes.qparams.query.testMode,
+            "entry_type": request_attributes.entry_type,
+            "requested_schema": request_attributes.qparams.meta.requestedSchemas,
+            "returned_schema": request_attributes.returned_schema, # TODO: Check what happens with returned_schema in case of an error
+            "response_type": request_attributes.response_type,
+            "pre_entry_type": getattr(
+                request_attributes,
+                "pre_entry_type",
+                None
+            ),
+        }
+
+        # Generate deterministic JSON.
+        canonical = json.dumps(
+            snapshot,
+            sort_keys=True,
+            separators=(",", ":"),
+            ensure_ascii=False
+        )
+
+        fingerprint = hashlib.sha256(
+            canonical.encode("utf-8")
+        ).hexdigest()
+
+        self.update_configuration(
+            **snapshot,
+            configuration_fingerprint=f"sha256:{fingerprint}"
+        )
+
     def update_configuration(self, **kwargs):
 
         self.data.configuration = self._update_model(
             self.data.configuration,
             **kwargs
+        )
+
+    def capture_budget(self, config):
+
+        per_user = config.query_budget_per_user
+        per_ip = config.query_budget_per_ip
+
+        enabled = per_user or per_ip
+
+        if per_user and per_ip:
+            scope = "user_and_ip"
+        elif per_user:
+            scope = "user"
+        elif per_ip:
+            scope = "ip"
+        else:
+            scope = None
+
+        self.update_budget(
+            enabled=enabled,
+            scope=scope,
+            period_seconds=config.query_budget_time_in_seconds,
+            maximum_queries=config.query_budget_amount,
+            previous_query_counts={
+                "user": None,
+                "ip": None
+            },
+            database=config.query_budget_database,
+            db_name=config.query_budget_db_name,
+            table=config.query_budget_table,
+            decision=(
+                "not_evaluated"
+                if enabled
+                else "not_applicable"
+            ),
+            reason=None
         )
 
     def update_budget(self, **kwargs):

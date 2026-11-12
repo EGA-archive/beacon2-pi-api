@@ -5,7 +5,6 @@ from beacon.conf.conf_override import config
 
 from beacon.auditing.context import AuditContext
 
-
 def audit_trace(func):
 
     @log_with_args(config.level)
@@ -28,8 +27,6 @@ def audit_trace(func):
 
             result = await func(self, *args, **kwargs)
 
-            audit.capture_identity(self)
-
             audit.add_execution_event(
                 event="function_completed",
                 function=func.__name__
@@ -40,8 +37,6 @@ def audit_trace(func):
             return result
 
         except Exception as exc:
-
-            audit.capture_identity(self)
 
             audit.set_error(
                 error_type=type(exc).__name__,
