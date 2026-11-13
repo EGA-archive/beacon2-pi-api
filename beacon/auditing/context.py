@@ -9,6 +9,8 @@ from time import perf_counter
 from beacon.auditing.models import AuditModel
 import json
 
+import threading
+
 
 class AuditContext:
 
@@ -85,7 +87,10 @@ class AuditContext:
                 "scope": None,
                 "period_seconds": None,
                 "maximum_queries": None,
-                "previous_query_count": None,
+                "previous_query_counts": {
+                    "user": None,
+                    "ip": None
+                },
                 "decision": "not_evaluated",
                 "reason": None
             },
@@ -133,6 +138,12 @@ class AuditContext:
         )
 
         self._event_timers = {}
+
+        # Database auditing state
+        self._database_lock = threading.Lock()
+        self._database_operations = []
+        self._database_health_checks = []
+        self._database_connections = []
 
     @staticmethod
     def _update_model(model, **kwargs):
@@ -350,9 +361,6 @@ class AuditContext:
                 "user": None,
                 "ip": None
             },
-            database=config.query_budget_database,
-            db_name=config.query_budget_db_name,
-            table=config.query_budget_table,
             decision=(
                 "not_evaluated"
                 if enabled
@@ -360,6 +368,32 @@ class AuditContext:
             ),
             reason=None
         )
+
+
+    def capture_budget_decision(
+        self,
+        enabled: bool,
+        scope: str | None = None,
+        period_seconds: int | None = None,
+        maximum_queries: int | None = None,
+        previous_query_counts: dict | None = None,
+        decision: str = "not_evaluated",
+        reason: str | None = None
+    ):
+        self.data.budget.enabled = enabled
+        self.data.budget.scope = scope
+        self.data.budget.period_seconds = period_seconds
+        self.data.budget.maximum_queries = maximum_queries
+
+        self.data.budget.previous_query_counts = (
+            previous_query_counts
+            if previous_query_counts is not None
+            else {"user": None, "ip": None}
+        )
+
+        self.data.budget.decision = decision
+        self.data.budget.reason = reason
+
 
     def update_budget(self, **kwargs):
 
@@ -461,6 +495,11 @@ class AuditContext:
             events=events
         )
 
+    def record_database_operation(self, operation):
+
+        with self._database_lock:
+            self._database_operations.append(operation)
+
     def update_database(self, **kwargs):
 
         self.data.database = self._update_model(
@@ -503,6 +542,19 @@ class AuditContext:
         if self._finalized:
             return
 
+        # Transfer database operations into the audit model.
+        with self._database_lock:
+
+            operations = list(
+                self._database_operations
+            )
+
+        self.data.database = self._update_model(
+            self.data.database,
+            operations=operations
+        )
+
+        # Finalize the audit record.
         self.data.status = status
 
         self.data.completed_at = datetime.now(timezone.utc)
