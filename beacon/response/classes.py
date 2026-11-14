@@ -10,6 +10,7 @@ class SingleDatasetResponse(BaseModel):
     docs: Optional[list[dict]] = None
     dataset: str
     granularity: str
+    security_level: str | None = None
 
 class MultipleDatasetsResponse(BaseModel):
     # This class is the contract class of the resultSet response, owning the information for all the datasets in a list and the total count of records found for the query for all the datasets.

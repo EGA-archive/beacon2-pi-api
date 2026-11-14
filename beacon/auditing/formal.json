@@ -169,6 +169,7 @@
     },
     "authorization": {
       "type": "object",
+      "description": "Authorization decisions for datasets requested by the client.",
       "required": [
         "requested_datasets",
         "authorized_datasets",
@@ -178,32 +179,96 @@
       "properties": {
         "requested_datasets": {
           "type": "array",
-          "items": {"type": "string"}
+          "items": {
+            "type": "string"
+          }
         },
         "authorized_datasets": {
           "type": "array",
-          "items": {"type": "string"}
+          "items": {
+            "type": "string"
+          }
         },
         "rejected_datasets": {
           "type": "array",
-          "items": {"type": "string"}
+          "items": {
+            "type": "string"
+          }
         },
         "decisions": {
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["dataset", "allowed", "reason"],
+            "required": [
+              "dataset",
+              "security_level",
+              "allowed",
+              "requested_granularity",
+              "allowed_granularity",
+              "effective_granularity",
+              "reason"
+            ],
             "properties": {
-              "dataset": {"type": "string"},
-              "security_level": {
-                "type": ["string", "null"],
-                "enum": ["public", "registered", "controlled", null]
+              "dataset": {
+                "type": "string"
               },
-              "allowed": {"type": "boolean"},
-              "requested_granularity": {"type": ["string", "null"]},
-              "allowed_granularity": {"type": ["string", "null"]},
-              "effective_granularity": {"type": ["string", "null"]},
-              "reason": {"type": "string"}
+              "security_level": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "enum": [
+                  "public",
+                  "registered",
+                  "controlled",
+                  null
+                ]
+              },
+              "allowed": {
+                "type": "boolean",
+                "description": "Whether the permission system authorized access to the dataset."
+              },
+              "requested_granularity": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "enum": [
+                  "record",
+                  "count",
+                  "boolean",
+                  null
+                ]
+              },
+              "allowed_granularity": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "enum": [
+                  "record",
+                  "count",
+                  "boolean",
+                  null
+                ],
+                "description": "Maximum granularity permitted by the authorization system."
+              },
+              "effective_granularity": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "enum": [
+                  "record",
+                  "count",
+                  "boolean",
+                  null
+                ],
+                "description": "Granularity actually disclosed in the response. Null if no effective response granularity could be established."
+              },
+              "reason": {
+                "type": "string"
+              }
             },
             "additionalProperties": false
           }
@@ -483,7 +548,6 @@
       "properties": {
         "environment": {"type": ["string", "null"]},
         "application_version": {"type": ["string", "null"]},
-        "git_commit": {"type": ["string", "null"]},
         "instance_id": {"type": ["string", "null"]},
         "process_id": {"type": ["integer", "null"]},
         "python_version": {"type": ["string", "null"]},

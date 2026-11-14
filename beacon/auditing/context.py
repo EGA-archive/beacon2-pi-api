@@ -11,6 +11,23 @@ import json
 
 import threading
 
+import socket
+
+import os
+
+import platform
+from contextvars import ContextVar
+
+current_audit = ContextVar(
+    "current_audit",
+    default=None
+)
+
+current_handler = ContextVar(
+    "current_handler",
+    default=None
+)
+
 
 class AuditContext:
 
@@ -123,7 +140,6 @@ class AuditContext:
             runtime={
                 "environment": None,
                 "application_version": None,
-                "git_commit": None,
                 "instance_id": None,
                 "process_id": None,
                 "python_version": None,
@@ -163,28 +179,49 @@ class AuditContext:
 
         audit = cls(request_id=handler._id)
 
-        await audit.capture_request(
-            handler.request,
-            handler.request_attributes,
-            config
-        )
+        # Capture raw HTTP request information.
+        await audit.capture_request(handler.request)
 
-        audit.capture_configuration(
-            handler,
-            config
-        )
-
+        # Capture configuration that is available at initialization.
         audit.capture_budget(config)
+        audit.capture_runtime(config)
 
         return audit
 
+    def enrich_from_handler(self, handler, config):
 
-    async def capture_request(
+        # Capture parsed request attributes.
+        self.update_request(
+            route=(
+                config.uri_subpath + "/"
+                + handler.request_attributes.entry_type
+                if handler.request_attributes.entry_type
+                else None
+            )
+        )
+
+        # Capture configuration derived from request parsing.
+        self.capture_configuration(handler, config)
+
+    def capture_request_attributes(
         self,
-        request,
         request_attributes,
         config
     ):
+
+        self.update_request(
+            route=(
+                config.uri_subpath + "/"
+                + request_attributes.entry_type
+                if request_attributes.entry_type
+                else None
+            ),
+            path_parameters={
+                # Populate these if your router exposes them.
+            }
+        )
+
+    async def capture_request(self, request):
 
         query_parameters = dict(
             parse_qsl(
@@ -195,7 +232,7 @@ class AuditContext:
 
         headers = {
             key: (
-                "[REDACTED]" #TODO: what parts can be stored instead of REDACTED
+                "[REDACTED]"
                 if key.lower() in self.SENSITIVE_HEADERS
                 else value
             )
@@ -207,7 +244,6 @@ class AuditContext:
         body_content_hash = None
 
         if body_present:
-
             raw_body = await request.read()
 
             body_size = len(raw_body)
@@ -217,28 +253,19 @@ class AuditContext:
                     raw_body
                 ).hexdigest()
 
-        http_version = (
-            f"{request.version.major}."
-            f"{request.version.minor}"
-        )
-
         self.update_request(
             method=request.method,
             path=request.path_qs,
-            route=(
-                config.uri_subpath + "/"
-                + request_attributes.entry_type
-            ),
-            path_parameters={},
             query_parameters=query_parameters,
             headers=headers,
-            http_version=http_version, #TODO: don't write 2 times the code for storing things in audit
-
+            http_version=(
+                f"{request.version.major}."
+                f"{request.version.minor}"
+            ),
             client={
                 "ip": request.remote,
                 "user_agent": request.headers.get("User-Agent")
             },
-
             body={
                 "present": body_present,
                 "size_bytes": body_size,
@@ -507,6 +534,99 @@ class AuditContext:
             **kwargs
         )
 
+    def capture_effective_granularity(self, response_data):
+
+        result_sets = (
+            response_data
+            .get("response", {})
+            .get("resultSets", [])
+        )
+
+        decisions = self.data.authorization.decisions
+
+        effective_granularities = {
+            result["id"]: (
+                "record"
+                if result.get("results") is not None
+                else "count"
+                if result.get("resultsCount") is not None
+                else "boolean"
+            )
+            for result in result_sets
+        }
+
+        updated_decisions = []
+
+        for decision in decisions:
+
+            effective = effective_granularities.get(
+                decision.dataset
+            )
+
+            updated_decisions.append(
+                decision.model_copy(
+                    update={
+                        "effective_granularity": effective
+                    }
+                )
+            )
+
+        self.data.authorization = self._update_model(
+            self.data.authorization,
+            decisions=updated_decisions
+        )
+
+    def capture_response(self, response):
+
+        body = response.body
+
+        response_data = {}
+
+        if body and response.content_type == "application/json":
+
+            try:
+                response_data = json.loads(body)
+
+            except (json.JSONDecodeError, UnicodeDecodeError):
+                response_data = {}
+
+        if response_data.get("response", {}).get("resultSets"):
+
+            self.capture_effective_granularity(
+                response_data
+            )
+
+        meta = response_data.get("meta", {})
+        summary = response_data.get("responseSummary", {})
+
+        response_type = None
+
+        if "resultSets" in response_data:
+            response_type = "resultSet"
+
+        elif "exists" in summary:
+            response_type = "boolean"
+
+        elif "totalCount" in summary:
+            response_type = "count"
+
+        returned_schemas = meta.get("returnedSchemas", [])
+
+        self.update_response(
+            status_code=response.status,
+            response_type=response_type,
+            exists=summary.get("exists"),
+            total_results=summary.get("totalCount"),
+            returned_granularity=meta.get("returnedGranularity"),
+            returned_schemas=returned_schemas,
+            size_bytes=(
+                len(body)
+                if body is not None
+                else None
+            ),
+            serialization_status="success"
+        )
+
 
     def update_response(self, **kwargs):
 
@@ -529,6 +649,22 @@ class AuditContext:
             "message": message,
             **kwargs
         }
+
+    def capture_runtime(self, config):
+
+        application_version = config.api_version_yaml
+
+        if isinstance(application_version, dict):
+            application_version = application_version.get("api_version")
+
+        self.update_runtime(
+            environment=config.environment,
+            application_version=application_version,
+            instance_id=socket.gethostname(),
+            process_id=os.getpid(),
+            python_version=platform.python_version(),
+            application_state="running"
+        )
 
     def update_runtime(self, **kwargs):
 

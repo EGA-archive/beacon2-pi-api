@@ -303,7 +303,6 @@ class Runtime(BaseModel):
     )
     environment: str | None
     application_version: str | None
-    git_commit: str | None = None
     instance_id: str | None
     process_id: int | None
     python_version: str | None = None

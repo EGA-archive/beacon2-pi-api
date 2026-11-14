@@ -2,6 +2,7 @@ import yaml
 from beacon.exceptions.exceptions import NoPermissionsAvailable
 from beacon.response.classes import SingleDatasetResponse
 from beacon.permissions.utils import return_found_granularity_in_exceptions, return_granularity_and_exceptions
+from beacon.auditing.decorators.audit_authorization import audit_authorization
 
 
 class Permissions():
@@ -24,7 +25,8 @@ class Permissions():
 class DummyPermissions(Permissions):
     async def initialize(self):
         pass
-    
+
+    @audit_authorization
     async def get_permissions(self, user_id, requested_datasets=None, testMode=False, entry_type_id=None, visa_datasets=None):
         # Initialize the list of datasets that will be returned depending on the permissions.
         datasets = []
@@ -96,7 +98,14 @@ class DummyPermissions(Permissions):
                 if security_level
             }
             for dataset, granularity in definitive_datasets_granularity.items():
-                datasetInstance = SingleDatasetResponse(dataset=dataset, granularity=granularity)
+                security_level = next(
+                    iter(definitive_granularity_per_dataset[dataset])
+                )
+                datasetInstance = SingleDatasetResponse(
+                    dataset=dataset,
+                    granularity=granularity,
+                    security_level=security_level
+                )
                 datasets.append(datasetInstance)
             return datasets
         except Exception as e:
