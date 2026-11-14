@@ -96,7 +96,33 @@ def audit_trace(func):
 
                 audit.finalize(status=status)
 
-                self.LOG.warning(audit.serialize()) # TODO: what to do with serializing
+                # Obtain the hash of the preceding audit record.
+                previous_hash = None  # Retrieve this from persistent storage.
+
+                # Calculate the current record hash.
+                audit.prepare_integrity(
+                    previous_record_hash=previous_hash
+                )
+
+                try:
+
+                    # TODO: Create persist_audit and update_audit_status functions to make the serlaziation persistence and update the persistence_status
+                    #await persist_audit(audit.serialize())
+
+                    #await update_audit_status(audit.data.audit_id,"success")
+
+                    audit.data.integrity.persistence_status = "success"
+
+                except Exception as exc:
+
+                    audit.data.integrity.persistence_status = "failed"
+
+                    #await update_audit_status(audit.data.audit_id,"failed")
+
+                    self.LOG.error(
+                        "Failed to persist audit record: %s",
+                        exc
+                    )
 
             finally:
                 current_handler.reset(handler_token)

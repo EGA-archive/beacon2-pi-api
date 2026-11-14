@@ -673,6 +673,67 @@ class AuditContext:
             **kwargs
         )
 
+    def calculate_record_hash(self):
+
+        payload = self.data.model_dump(mode="json")
+
+        integrity = payload.get("integrity", {})
+
+        # Exclude fields that are not part of the immutable audit content.
+        integrity.pop("record_hash", None)
+        integrity.pop("persistence_status", None)
+
+        canonical = json.dumps(
+            payload,
+            sort_keys=True,
+            separators=(",", ":"),
+            ensure_ascii=False,
+            allow_nan=False
+        )
+
+        digest = hashlib.sha256(
+            canonical.encode("utf-8")
+        ).hexdigest()
+
+        return f"sha256:{digest}"
+
+    def prepare_integrity(self, previous_record_hash=None):
+
+        self.data.integrity.previous_record_hash = (
+            previous_record_hash
+        )
+
+        self.data.integrity.record_hash = None
+
+        record_hash = self.calculate_record_hash()
+
+        self.data.integrity.record_hash = record_hash
+
+        return record_hash
+
+    def verify_integrity(self):
+
+        stored_hash = self.data.integrity.record_hash
+
+        if not stored_hash:
+            return False
+
+        calculated_hash = self.calculate_record_hash()
+
+        return stored_hash == calculated_hash
+
+    def verify_chain_link(previous_record, current_record):
+
+        expected_previous_hash = (
+            previous_record.integrity.record_hash
+        )
+
+        actual_previous_hash = (
+            current_record.integrity.previous_record_hash
+        )
+
+        return expected_previous_hash == actual_previous_hash
+
     def finalize(self, status: str):
 
         if self._finalized:
