@@ -10,54 +10,6 @@ from beacon.utils.modules import get_all_modules_datasets
 from beacon.response.classes import SingleDatasetResponse
 from beacon.exceptions.exceptions import InvalidRequest, NoPermissionsAvailable, NoTermsAndConditionsForResearcherAvailable
 
-def store_authorization_context(
-    self,
-    requested_datasets,
-    authorized_datasets,
-    response_datasets
-):
-    self.request_context = getattr(
-        self, "request_context", {}
-    )
-
-    authorized_ids = {
-        element.dataset
-        for element in authorized_datasets
-    }
-
-    response_ids = {
-        element.dataset
-        for element in response_datasets
-    }
-
-    rejected_datasets = (
-        set(requested_datasets) - authorized_ids
-    )
-
-    self.request_context["authorization"] = {
-        "requested_datasets": requested_datasets,
-        "authorized_datasets": sorted(authorized_ids),
-        "rejected_datasets": sorted(rejected_datasets),
-        "decisions": [
-            {
-                "dataset": dataset,
-                "security_level": None,
-                "allowed": dataset in authorized_ids,
-                "requested_granularity": None,
-                "allowed_granularity": None,
-                "effective_granularity": None,
-                "reason": (
-                    "permission_granted"
-                    if dataset in authorized_ids
-                    else "not_authorized"
-                )
-            }
-            for dataset in sorted(
-                set(requested_datasets) | authorized_ids
-            )
-        ]
-    }
-
 @log_with_args(config.level)
 async def authorization(self):
     try:
@@ -156,12 +108,6 @@ def query_permissions(func):
         time_now = check_budget(self, user_id)
         # Using the list of dataset classes, get rid of the ones thet are not found in the databases.
         response_datasets= await get_datasets_list(self, datasets_permissions)
-        store_authorization_context(
-            self,
-            requested_datasets,
-            datasets_permissions,
-            response_datasets
-        )
         return await func(self, response_datasets, user_id, time_now)
     return permission
 

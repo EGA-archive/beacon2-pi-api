@@ -23,9 +23,18 @@
     "response",
     "error",
     "runtime",
-    "integrity"
+    "integrity",
+    "semantic_action"
   ],
   "properties": {
+
+    "semantic_actions": {
+    "type": "array",
+    "description": "Semantic actions performed or attempted during the HTTP request.",
+    "items": {
+      "$ref": "#/$defs/action"
+    }
+  },
     "audit_schema_version": {
       "const": "1.0.0"
     },
@@ -97,6 +106,83 @@
     }
   },
   "$defs": {
+    "action": {
+    "type": "object",
+    "description": "Semantic description of the operation requested or performed by the application.",
+    "required": [
+      "name",
+      "category",
+      "target",
+      "outcome"
+    ],
+    "properties": {
+      "name": {
+        "type": "string",
+        "minLength": 3,
+        "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)+$",
+        "description": "Canonical semantic action identifier, such as dataset.query, patient_record.view or user.role.change."
+      },
+      "category": {
+        "type": "string",
+        "enum": [
+          "data_access",
+          "data_modification",
+          "data_export",
+          "authentication",
+          "authorization",
+          "administration",
+          "configuration",
+          "budget",
+          "database",
+          "health",
+          "system",
+          "other"
+        ]
+      },
+      "target": {
+        "type": ["object", "null"],
+        "properties": {
+          "type": {
+            "type": ["string", "null"],
+            "description": "Type of resource affected or accessed, such as dataset, patient, individual or collection."
+          },
+          "id": {
+            "type": ["string", "null"],
+            "description": "Stable identifier of the target resource, when applicable."
+          },
+          "identifiers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Multiple resource identifiers when the action targets several resources."
+          }
+        },
+        "additionalProperties": false
+      },
+      "outcome": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "success",
+          "denied",
+          "failed",
+          "partial",
+          "not_applicable"
+        ],
+        "description": "Final outcome of the semantic action."
+      },
+      "reason": {
+        "type": ["string", "null"],
+        "description": "Explanation of the outcome, particularly for denied or failed actions."
+      },
+      "attributes": {
+        "type": "object",
+        "description": "Additional non-sensitive contextual attributes relevant to the semantic action."
+      }
+    },
+    "additionalProperties": false
+  },
     "request": {
       "type": "object",
       "required": [

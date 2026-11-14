@@ -8,6 +8,7 @@ from beacon.conf.conf_override import config
 from beacon.exceptions.exceptions import NoPermissionsAvailable, NoTermsAndConditionsForResearcherAvailable
 import requests
 import yaml
+from beacon.auditing.decorators.audit_authentication import audit_authentication
 
 @log_with_args(config.level)
 def validate_access_token(self, access_token, idp_issuer, jwks_url, aud):
@@ -223,6 +224,7 @@ async def fetch_user_info(self, access_token, user_info, idp_issuer, list_visa_t
                 self.LOG.warning('Unauthorized. Could not fetch the user info from the token.')
                 raise NoPermissionsAvailable("Unauthorized. Could not fetch the user info from the token.")
 
+@audit_authentication
 @log_with_args(config.level)
 async def authentication(self, access_token):
     # Initiate the lisst of the datasets permissions that come from visas
