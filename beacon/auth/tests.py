@@ -16,7 +16,7 @@ import requests
 import yaml
 
 # for keycloak, create aud in mappers, with custom, aud and beacon for audience
-mock_access_token = 'eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJreS1tUXNxZ0ZYeHdSUVRfRUhuQlJJUGpmbVhfRXZuUTVEbzZWUTJCazdZIn0.eyJleHAiOjE3OTIwNjUzODIsImlhdCI6MTc5MjA2NTA4MiwianRpIjoiNjY0YTJiNzAtNDMwMi00ZjAzLTkwODktYTlhZGUyNDkzOGEwIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL0JlYWNvbiIsImF1ZCI6ImJlYWNvbiIsInN1YiI6IjQ3ZWZmMWIxLTc2MjEtNDU3MC1hMGJiLTAxYTcxOWZiYTBhMiIsInR5cCI6IkJlYXJlciIsImF6cCI6ImJlYWNvbiIsInNlc3Npb25fc3RhdGUiOiJlYmI2ODlkMC01NWE4LTQwNWUtOGQ0Zi1jODU2YzkzZWUxZjEiLCJhY3IiOiIxIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBlbWFpbCBtaWNyb3Byb2ZpbGUtand0Iiwic2lkIjoiZWJiNjg5ZDAtNTVhOC00MDVlLThkNGYtYzg1NmM5M2VlMWYxIiwidXBuIjoiamFuZSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwibmFtZSI6IkphbmUgU21pdGgiLCJncm91cHMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXSwicHJlZmVycmVkX3VzZXJuYW1lIjoiamFuZSIsImdpdmVuX25hbWUiOiJKYW5lIiwiZmFtaWx5X25hbWUiOiJTbWl0aCIsImVtYWlsIjoiamFuZS5zbWl0aEBiZWFjb24uZ2E0Z2gifQ.SqSTOuC5e5v5Pr522FkaaCW12u30Nj8FE2n14Lak1vEKtq0Uglf4aF_p5x6yOi9dGOVqV1PBJhPeFDdj-k_Lee4zkSPcQeo230MnPGnTwhRp71ZhNtv3Xssr_es-VY2z7WnRkPkqKdDlSXdRHwev53fYqJM6a6BUm00czF8Sa9QKn7pA0n8u0Mus0Bl_1QQpIH58sR6Tz8W1AOaGOVX2IXHMQodJSzPRWnvN3fk4DdWlt48R5Cgp0qjIW0Ztzpk_w09md68iRKvwv-0AvtYyEECkesMyCwFfKoKPq9XAG0tDTQjet0YWwHiARGph4AzsVmPepu_kx72eB-l4-DnW3A'
+mock_access_token = 'eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJreS1tUXNxZ0ZYeHdSUVRfRUhuQlJJUGpmbVhfRXZuUTVEbzZWUTJCazdZIn0.eyJleHAiOjE3OTQ4MzAyMDIsImlhdCI6MTc5NDgyOTkwMiwianRpIjoiZDY0Y2NmOWItODEwYi00MDk1LWJlYWUtMzM3NTBiMTg1OWM3IiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL0JlYWNvbiIsImF1ZCI6ImJlYWNvbiIsInN1YiI6IjQ3ZWZmMWIxLTc2MjEtNDU3MC1hMGJiLTAxYTcxOWZiYTBhMiIsInR5cCI6IkJlYXJlciIsImF6cCI6ImJlYWNvbiIsInNlc3Npb25fc3RhdGUiOiI4YjQ0ZjMwMS0xZjVkLTQ4OTUtOWNmNS1iNWYxMDU5ZjBhYTQiLCJhY3IiOiIxIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBlbWFpbCBtaWNyb3Byb2ZpbGUtand0Iiwic2lkIjoiOGI0NGYzMDEtMWY1ZC00ODk1LTljZjUtYjVmMTA1OWYwYWE0IiwidXBuIjoiamFuZSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwibmFtZSI6IkphbmUgU21pdGgiLCJncm91cHMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXSwicHJlZmVycmVkX3VzZXJuYW1lIjoiamFuZSIsImdpdmVuX25hbWUiOiJKYW5lIiwiZmFtaWx5X25hbWUiOiJTbWl0aCIsImVtYWlsIjoiamFuZS5zbWl0aEBiZWFjb24uZ2E0Z2gifQ.iZJWX-tQufN_V1RGcyw3C_b7L3uCyFKMuFvUQWEvlyaO2AmlaCzAQIIyB7mpmtxnVrCY10fqMkcL43tsoK5r6GvuVQb94mxXSC8NR9bBBJJ_DlXp4akj4zwFRooG_BeHYCHMOBe20JG3xxM1AeeIBFi2DG5l4gMQaFfXsNjceVx_L95J85SfiRdJeRaLaXliod8WMZyqn3UEpSZ0h-nR5o2UHZgfYQ6yfkN5ALF2YJ3kH9wka5MkTaCq2AI_GUprfETlx2mlYFximgmPFBmlwbzrqFNO0lshcwMZcBzEo7PEbjsvt0UBQMzmHztKiOIrRyxekM-JAawxiJ0wwdYkGQ'
 mock_access_token_false = 'public'
 mock_ga4gh_visa_dataset = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL3JlbXMudGVzdC5leGFtcGxlLm9yZy8iLCJzdWIiOiJ0ZXN0LXVzZXItMTIzIiwiaWF0IjoxNzAwMDAwMDAwLCJleHAiOjE5MDAwMDAwMDAsImdhNGdoX3Zpc2FfdjEiOnsidHlwZSI6IkNvbnRyb2xsZWRBY2Nlc3NHcmFudHMiLCJhc3NlcnRlZCI6MTcwMDAwMDAwMCwidmFsdWUiOiJodHRwczovL3JlbXMudGVzdC5leGFtcGxlLm9yZy9kYXRhc2V0cy90ZXN0LWRhdGFzZXQiLCJzb3VyY2UiOiJodHRwczovL3JlbXMudGVzdC5leGFtcGxlLm9yZy8iLCJieSI6ImRhYyJ9fQ.c3ludGhldGljLXRlc3Qtc2lnbmF0dXJl'
 
@@ -389,6 +389,156 @@ class TestAuthN(unittest.TestCase):
 
             loop.run_until_complete(test_check_researcher_status())
             loop.run_until_complete(client.close())
+
+    def test_auth_authentication_fails_without_public_datasets(self):
+        with loop_context() as loop:
+            from beacon.conf import conf_override
+
+            # Configure unsupported default granularity
+            conf_override.config.security_levels=['registered', 'controlled']
+            app = create_test_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+
+            async def test_authentication_fails_without_public_datasets():
+                resp = await client.get(
+                    conf_override.config.uri_subpath + "/biosamples"
+                )
+                assert resp.status == 401
+
+            loop.run_until_complete(test_authentication_fails_without_public_datasets())
+            loop.run_until_complete(client.close())
+
+            # Restore valid default granularity
+            conf_override.config.security_levels=['public', 'registered', 'controlled']
+
+    def test_auth_authentication_fails_without_public_datasets_and_invalid_token(self):
+        with loop_context() as loop:
+            from beacon.conf import conf_override
+
+            # Configure unsupported default granularity
+            conf_override.config.security_levels=['registered', 'controlled']
+            app = create_test_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+
+            async def test_authentication_fails_without_public_datasets_and_invalid_token():
+                resp = await client.get(
+                    conf_override.config.uri_subpath + "/biosamples",
+                    headers={'Authorization': 'Bearer {}'.format(mock_access_token_false)}
+                )
+                assert resp.status == 401
+
+            loop.run_until_complete(test_authentication_fails_without_public_datasets_and_invalid_token())
+            loop.run_until_complete(client.close())
+
+            # Restore valid default granularity
+            conf_override.config.security_levels=['public', 'registered', 'controlled']
+
+    def test_auth_authentication_fails_without_public_datasets_and_valid_token(self):
+        with loop_context() as loop:
+            from beacon.conf import conf_override
+
+            # Configure unsupported default granularity
+            conf_override.config.security_levels=['registered', 'controlled']
+            app = create_test_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+
+            async def test_authentication_fails_without_public_datasets_and_valid_token():
+                resp = await client.post(
+                    conf_override.config.uri_subpath + "/" + "biosamples",
+                    headers={'Authorization': 'Bearer {}'.format(mock_access_token)},
+                    json={
+                        "meta": {"apiVersion": "2.0"},
+                        "query": {
+                            "requestParameters": {
+                                "datasets": ["test4"]
+                            },
+                            "includeResultsetResponses": "HIT",
+                            "pagination": {"skip": 0, "limit": 101},
+                            "testMode": True,
+                            "requestedGranularity": "record"
+                        }
+                    }
+                )
+                assert resp.status == 401
+
+            loop.run_until_complete(test_authentication_fails_without_public_datasets_and_valid_token())
+            loop.run_until_complete(client.close())
+
+            # Restore valid default granularity
+            conf_override.config.security_levels=['public', 'registered', 'controlled']
+
+    def test_auth_authentication_fails_without_registered_datasets_and_valid_token(self):
+        with loop_context() as loop:
+            from beacon.conf import conf_override
+
+            # Configure unsupported default granularity
+            conf_override.config.security_levels=['registered', 'controlled']
+            app = create_test_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+
+            async def test_authentication_fails_without_registered_datasets_and_valid_token():
+                resp = await client.post(
+                    conf_override.config.uri_subpath + "/" + "biosamples",
+                    headers={'Authorization': 'Bearer {}'.format(mock_access_token)},
+                    json={
+                        "meta": {"apiVersion": "2.0"},
+                        "query": {
+                            "requestParameters": {
+                                "datasets": ["test3"]
+                            },
+                            "includeResultsetResponses": "HIT",
+                            "pagination": {"skip": 0, "limit": 101},
+                            "testMode": True,
+                            "requestedGranularity": "record"
+                        }
+                    }
+                )
+                assert resp.status == 401
+
+            loop.run_until_complete(test_authentication_fails_without_registered_datasets_and_valid_token())
+            loop.run_until_complete(client.close())
+
+            # Restore valid default granularity
+            conf_override.config.security_levels=['public', 'registered', 'controlled']
+
+    def test_auth_authentication_fails_without_controlled_datasets_and_valid_token(self):
+        with loop_context() as loop:
+            from beacon.conf import conf_override
+
+            # Configure unsupported default granularity
+            conf_override.config.security_levels=['controlled']
+            app = create_test_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+
+            async def test_authentication_fails_without_controlled_datasets_and_valid_token():
+                resp = await client.post(
+                    conf_override.config.uri_subpath + "/" + "biosamples",
+                    headers={'Authorization': 'Bearer {}'.format(mock_access_token)},
+                    json={
+                        "meta": {"apiVersion": "2.0"},
+                        "query": {
+                            "requestParameters": {
+                                "datasets": ["test3"]
+                            },
+                            "includeResultsetResponses": "HIT",
+                            "pagination": {"skip": 0, "limit": 101},
+                            "testMode": True,
+                            "requestedGranularity": "record"
+                        }
+                    }
+                )
+                assert resp.status == 401
+
+            loop.run_until_complete(test_authentication_fails_without_controlled_datasets_and_valid_token())
+            loop.run_until_complete(client.close())
+
+            # Restore valid default granularity
+            conf_override.config.security_levels=['public', 'registered', 'controlled']
 
 if __name__ == '__main__':
     unittest.main()

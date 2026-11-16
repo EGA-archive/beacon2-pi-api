@@ -234,6 +234,8 @@ async def authentication(self, access_token):
             user, list_visa_tokens = await fetch_user_info(self, access_token, user_info, idp_issuer, list_visa_tokens)
             return user, list_visa_tokens
     except Exception as e:
+        if 'public' not in map(str.lower, config.security_levels):
+            raise NoPermissionsAvailable('Unauthorized. This beacon needs authtentication in order to be queried.')
         user = None
         list_visa_tokens=[]
         return user, list_visa_tokens
