@@ -16,11 +16,12 @@ from beacon.auditing.models import Action, Target, Outcome
 
 def audit_trace(func):
 
-    @log_with_args(config.level)
+    @log_with_args(config.level)#TODO: Log has to be on the func straight away.
     @wraps(func)
-    async def wrapper(self, *args, **kwargs):
-
+    async def wrapper_to_HTTP_get_and_post_handler(self, *args, **kwargs):
+        # TODO: Check what happens with vars if not initialized with a context.
         # Create the audit context using the current request handler.
+        # TODO: Change names of the funcs like handler
         audit = await AuditContext.from_handler(
             self,
             config
@@ -34,7 +35,6 @@ def audit_trace(func):
         audit_token = current_audit.set(audit)
         handler_token = current_handler.set(self)
 
-        # Resolve the semantic action associated with this HTTP request.
         # Resolve the semantic action associated with this HTTP request.
         try:
 
@@ -190,4 +190,4 @@ def audit_trace(func):
                 current_handler.reset(handler_token)
                 current_audit.reset(audit_token)
 
-    return wrapper
+    return wrapper_to_HTTP_get_and_post_handler
