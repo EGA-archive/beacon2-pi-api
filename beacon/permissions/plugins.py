@@ -71,41 +71,22 @@ class DummyPermissions(Permissions):
                 default_granularity = None
                 granularity_exceptions = None
                 # Get the default granularity and any granularity restriction to return for the dataset and user (in case there is authentication).
-                default_granularity, granularity_exceptions = return_granularity_and_exceptions(self, security_level_dict, user_id, default_granularity, granularity_exceptions)
+                default_granularity, granularity_exceptions, security_level = return_granularity_and_exceptions(self, security_level_dict, user_id, default_granularity, granularity_exceptions)
+                if security_level==None:
+                    continue
                 # If there is any restriction apply it to the max granularity to return.
                 if granularity_exceptions != None:
                     default_granularity=return_found_granularity_in_exceptions(self, granularity_exceptions, default_granularity, entry_type_id)
-                if default_granularity != None:
-                    if definitive_granularity_per_dataset[dataset] != {}:
-                        if next(iter(security_level_dict)) == 'registered':
-                            if 'registered' not in map(str.lower, config.security_levels):
-                                raise Exception("check datasets_permissions.yml, registered is not a configured security level for this beacon")
-                            if 'controlled' not in definitive_granularity_per_dataset[dataset]:
-                                definitive_granularity_per_dataset[dataset]['registered']=default_granularity
-                            if 'public' in definitive_granularity_per_dataset:
-                                definitive_granularity_per_dataset[dataset].pop('public')
-                        elif next(iter(security_level_dict)) == 'public':
-                            if 'public' not in map(str.lower, config.security_levels):
-                                raise Exception("check datasets_permissions.yml, public is not a configured security level for this beacon")
-                            if 'controlled' not in definitive_granularity_per_dataset[dataset] and 'registered' not in definitive_granularity_per_dataset[dataset]:
-                                definitive_granularity_per_dataset[dataset]['public']=default_granularity
-                        elif next(iter(security_level_dict)) == 'controlled':
-                            if 'controlled' not in map(str.lower, config.security_levels):
-                                raise Exception("check datasets_permissions.yml, controlled is not a configured security level for this beacon")
-                            if 'public' in definitive_granularity_per_dataset[dataset]:
-                                definitive_granularity_per_dataset[dataset].pop('public')
-                            if 'registered' in definitive_granularity_per_dataset[dataset]:
-                                definitive_granularity_per_dataset[dataset].pop('registered')
-                    else:
-                        definitive_granularity_per_dataset[dataset][next(iter(security_level_dict), None)]=default_granularity
+                if default_granularity is None:
+                    default_granularity = 'boolean'
+                definitive_granularity_per_dataset[dataset][security_level]=default_granularity
             # If there is a default granularity, return it instantiating initially the datasets with their name and the default granularity.
-            definitive_datasets_granularity = {
-                dataset_id: next(iter(security_level.values()))
-                for dataset_id, security_level in definitive_granularity_per_dataset.items()
-                if security_level
-            }
-            for dataset, granularity in definitive_datasets_granularity.items():
-                datasetInstance = SingleDatasetResponse(dataset=dataset, granularity=granularity)
+            for dataset, security_level_dict in definitive_granularity_per_dataset.items():
+                datasetInstance = SingleDatasetResponse(
+                    dataset=dataset,
+                    granularity=next(iter(security_level_dict.values())),
+                    security_level=next(iter(security_level_dict.keys()))
+                )
                 datasets.append(datasetInstance)
             if datasets == []:
                 raise NoPermissionsAvailable('Unauthorized. Not enough permissions to query any dataset.')      

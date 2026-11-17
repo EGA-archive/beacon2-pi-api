@@ -1,3 +1,5 @@
+from beacon.conf.conf_override import config
+
 def return_found_granularity_in_exceptions(self, granularity_exceptions, default_granularity, request_attr_entry_type_id,):
     """Method to get the granularity needed to be returned for a specific permissions case"""
     for granularity_exception in granularity_exceptions:
@@ -11,9 +13,13 @@ def return_found_granularity_in_exceptions(self, granularity_exceptions, default
 
 def return_granularity_and_exceptions(self, security_level_dict, user_id, default_granularity, granularity_exceptions):
     """Method to get the granularity and exceptions needed to be returned depending on the security leevl case"""
+    security_level=None
     # Loop over the datasets/datasets_permissions.yml file and
     if 'public' in security_level_dict:
-         # If a dataset has security level as public and the request is not authenticated, get the granularity and the entry type exceptions
+        if 'public' not in map(str.lower, config.security_levels):
+            raise Exception("check datasets_permissions.yml, public is not a configured security level for this beacon")
+        security_level='public'
+        # If a dataset has security level as public and the request is not authenticated, get the granularity and the entry type exceptions
         try:
             default_granularity = security_level_dict['public'].get('default_entry_types_granularity')
         except Exception:
@@ -23,6 +29,9 @@ def return_granularity_and_exceptions(self, security_level_dict, user_id, defaul
         except Exception:
             granularity_exceptions = None
     if 'registered' in security_level_dict and user_id != None:
+        if 'registered' not in map(str.lower, config.security_levels):
+            raise Exception("check datasets_permissions.yml, registered is not a configured security level for this beacon")
+        security_level='registered'
         try:
             default_granularity = security_level_dict['registered'].get('default_entry_types_granularity')
         except Exception:
@@ -32,12 +41,15 @@ def return_granularity_and_exceptions(self, security_level_dict, user_id, defaul
         except Exception:
             granularity_exceptions = None
     if 'controlled' in security_level_dict and user_id != None:
+        if 'controlled' not in map(str.lower, config.security_levels):
+            raise Exception("check datasets_permissions.yml, controlled is not a configured security level for this beacon")
         user_exceptions = security_level_dict['controlled'].get('user-list')
         # If the user-list exists for the security level controlled
         if user_exceptions != None:
             for user_exception in user_exceptions:
                 # Match if the user authenticated has specific permissions for the dataset
                 if user_exception['user_id'] == user_id:
+                    security_level = 'controlled'
                     try:
                         default_granularity = security_level_dict['controlled'].get('default_entry_types_granularity')
                     except Exception:
@@ -51,9 +63,5 @@ def return_granularity_and_exceptions(self, security_level_dict, user_id, defaul
                         default_granularity = user_exception.get('default_entry_types_granularity')
                     if 'entry_types_exceptions' in user_exception:
                         granularity_exceptions = user_exception.get('entry_types_exceptions')
-                    if default_granularity is None:
-                        default_granularity = 'boolean'
-                    return default_granularity, granularity_exceptions
-    if default_granularity is None:
-        default_granularity == 'boolean'
-    return default_granularity, granularity_exceptions
+                    return default_granularity, granularity_exceptions, security_level
+    return default_granularity, granularity_exceptions, security_level
