@@ -370,6 +370,7 @@ class TestAuthZ(unittest.TestCase):
                 for dataset in datasets:
                     assert dataset.dataset == 'test4'
                     assert dataset.granularity == 'count'
+                    assert dataset.security_level == 'controlled'
                     list_datasets_names.append(dataset.dataset)
 
             loop.run_until_complete(test_verify_controlled_granularity_default())
@@ -399,6 +400,7 @@ class TestAuthZ(unittest.TestCase):
                 for dataset in datasets:
                     assert dataset.dataset == 'test4'
                     assert dataset.granularity == 'record'
+                    assert dataset.security_level == 'controlled'
                     list_datasets_names.append(dataset.dataset)
 
             loop.run_until_complete(test_verify_controlled_granularity_default())
@@ -428,6 +430,7 @@ class TestAuthZ(unittest.TestCase):
                 for dataset in datasets:
                     assert dataset.dataset == 'test4'
                     assert dataset.granularity == 'count'
+                    assert dataset.security_level == 'controlled'
                     list_datasets_names.append(dataset.dataset)
 
             loop.run_until_complete(test_verify_controlled_granularity_default())
@@ -457,6 +460,7 @@ class TestAuthZ(unittest.TestCase):
                 for dataset in datasets:
                     assert dataset.dataset == 'test4'
                     assert dataset.granularity == 'count'
+                    assert dataset.security_level == 'registered'
                     list_datasets_names.append(dataset.dataset)
 
             loop.run_until_complete(test_verify_controlled_granularity_default())
@@ -486,13 +490,13 @@ class TestAuthZ(unittest.TestCase):
                 for dataset in datasets:
                     assert dataset.dataset == 'test3'
                     assert dataset.granularity == 'count'
+                    print('{} security level is {}'.format(dataset.dataset,dataset.security_level), flush=True)
+                    assert dataset.security_level == 'public'
                     list_datasets_names.append(dataset.dataset)
 
             loop.run_until_complete(test_verify_controlled_granularity_default())
             loop.run_until_complete(client.close())
     def test_authZ_verify_dataset_sets_controlled_granularity_default6(self):
-        #TODO: case where 3 security levels are present. Case where controlled is empty and public is filled. Case where only registered and controlled datasets are present. Case where only public is filled.
-        # Test access control for a controlled-access (authorized) user
         with loop_context() as loop:
             app = create_test_app()
             client = TestClient(TestServer(app), loop=loop)
@@ -515,6 +519,7 @@ class TestAuthZ(unittest.TestCase):
                 for dataset in datasets:
                     assert dataset.dataset == 'test3'
                     assert dataset.granularity == 'record'
+                    assert dataset.security_level == 'controlled'
                     list_datasets_names.append(dataset.dataset)
 
             loop.run_until_complete(test_verify_controlled_granularity_default())
@@ -544,18 +549,25 @@ class TestAuthZ(unittest.TestCase):
                     list_datasets_names.append(dataset.dataset)
                     if dataset.dataset == 'AV_Dataset':
                         assert dataset.granularity == 'record'
+                        assert dataset.security_level == 'controlled'
                     elif dataset.dataset == 'CINECA_synthetic_cohort_EUROPE_UK1':
                         assert dataset.granularity == 'record'
+                        assert dataset.security_level == 'public'
                     elif dataset.dataset == 'DemoDatasetBreast':
                         assert dataset.granularity == 'record'
+                        assert dataset.security_level == 'controlled'
                     elif dataset.dataset == 'test':
                         assert dataset.granularity == 'record'
+                        assert dataset.security_level == 'controlled'
                     elif dataset.dataset == 'test2':
                         assert dataset.granularity == 'record'
+                        assert dataset.security_level == 'controlled'
                     elif dataset.dataset == 'test3':
                         assert dataset.granularity == 'count'
+                        assert dataset.security_level == 'public'
                     elif dataset.dataset == 'test4':
                         assert dataset.granularity == 'count'
+                        assert dataset.security_level == 'controlled'
 
                 # Ensure controlled dataset access includes privileged datasets
                 tc = unittest.TestCase()
@@ -587,16 +599,22 @@ class TestAuthZ(unittest.TestCase):
                     list_datasets_names.append(dataset.dataset)
                     if dataset.dataset == 'CINECA_synthetic_cohort_EUROPE_UK1':
                         assert dataset.granularity == 'record'
+                        assert dataset.security_level == 'public'
                     elif dataset.dataset == 'DemoDatasetBreast':
                         assert dataset.granularity == 'boolean'
+                        assert dataset.security_level == 'controlled'
                     elif dataset.dataset == 'test':
                         assert dataset.granularity == 'boolean'
+                        assert dataset.security_level == 'controlled'
                     elif dataset.dataset == 'test2':
                         assert dataset.granularity == 'boolean'
+                        assert dataset.security_level == 'controlled'
                     elif dataset.dataset == 'test3':
                         assert dataset.granularity == 'record'
+                        assert dataset.security_level == 'controlled'
                     elif dataset.dataset == 'test4':
                         assert dataset.granularity == 'count'
+                        assert dataset.security_level == 'controlled'
 
                 # Ensure controlled dataset access includes privileged datasets
                 tc = unittest.TestCase()

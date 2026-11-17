@@ -3354,6 +3354,36 @@ class TestMain(unittest.TestCase):
             loop.run_until_complete(test_check_datasets_list_query_is_working())
             loop.run_until_complete(client.close())
 
+    def test_main_check_datasets_list_query_is_unauthorized(self):
+        with loop_context() as loop:
+            # Query uses requestParameters.datasets to restrict dataset scope
+            app = create_app()
+            client = TestClient(TestServer(app), loop=loop)
+            loop.run_until_complete(client.start_server())
+
+            async def test_check_datasets_list_query_is_working():
+                resp = await client.post(
+                    conf_override.config.uri_subpath + "/" + individual["individual"]["endpoint_name"],
+                    json={
+                        "meta": {"apiVersion": "2.0"},
+                        "query": {
+                            "requestParameters": {
+                                "datasets": ["not_authorized_dataset"]
+                            },
+                            "includeResultsetResponses": "HIT",
+                            "pagination": {"skip": 0, "limit": 101},
+                            "testMode": True,
+                            "requestedGranularity": "record"
+                        }
+                    }
+                )
+
+                # Ensures dataset-scoped filtering does not break result aggregation
+                assert resp.status == 401
+
+            loop.run_until_complete(test_check_datasets_list_query_is_working())
+            loop.run_until_complete(client.close())
+
 
     def test_main_check_range_query_with_variant_assemblyId_GRCh37_is_working(self):
         with loop_context() as loop:
@@ -5243,14 +5273,8 @@ class TestMain(unittest.TestCase):
                     genomicVariant["genomicVariant"]["endpoint_name"] +
                     "?datasets=no_dataset"
                 )
-                # API still responds successfully
-                assert resp.status == 200  
-
-                responsetext = await resp.text()
-                responsedict = json.loads(responsetext)
-
-                # No dataset should result in empty logical match
-                assert responsedict["responseSummary"]["exists"] is False
+                # API still responds with a 401
+                assert resp.status == 401
 
             loop.run_until_complete(test_check_check_no_dataset_found())
             loop.run_until_complete(client.close())

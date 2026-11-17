@@ -25,6 +25,8 @@ async def authorization(self):
         # Get the token's sub as the user_id if the token is valid.
         user_id = user.get('sub')
     except Exception as e:
+        if 'public' not in map(str.lower, config.security_levels):
+            raise NoPermissionsAvailable('Unauthorized. This beacon needs authentication in order to be queried.')
         list_visa_datasets = []
         user_id = None
         return user_id, list_visa_datasets
