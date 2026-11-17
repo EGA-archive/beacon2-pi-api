@@ -65,8 +65,6 @@ class DummyPermissions(Permissions):
                     # In case testMode is active, get rid of the datasets that are not meant for testMode.
                     if dataset not in test_datasets:
                         continue
-                if dataset not in definitive_granularity_per_dataset:
-                    definitive_granularity_per_dataset[dataset]={}
                 # Initialize the default granularity and granularity restrictions to return.
                 default_granularity = None
                 granularity_exceptions = None
@@ -79,6 +77,8 @@ class DummyPermissions(Permissions):
                     default_granularity=return_found_granularity_in_exceptions(self, granularity_exceptions, default_granularity, entry_type_id)
                 if default_granularity is None:
                     default_granularity = 'boolean'
+                if dataset not in definitive_granularity_per_dataset:
+                    definitive_granularity_per_dataset[dataset]={}
                 definitive_granularity_per_dataset[dataset][security_level]=default_granularity
             # If there is a default granularity, return it instantiating initially the datasets with their name and the default granularity.
             for dataset, security_level_dict in definitive_granularity_per_dataset.items():

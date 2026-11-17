@@ -35,7 +35,6 @@ class TestAuthZ(unittest.TestCase):
     Authorization test suite covering dataset access control,
     authentication headers, and granularity logic.
     """
-    """
     def test_authZ_verify_public_datasets(self):
         # Initialize async test environment
         with loop_context() as loop:
@@ -436,7 +435,6 @@ class TestAuthZ(unittest.TestCase):
 
             loop.run_until_complete(test_verify_controlled_granularity_default())
             loop.run_until_complete(client.close())
-    """
     def test_authZ_verify_dataset_sets_controlled_granularity_default4(self):
         #TODO: case where 3 security levels are present. Case where controlled is empty and public is filled. Case where only registered and controlled datasets are present. Case where only public is filled.
         # Test access control for a controlled-access (authorized) user
@@ -499,10 +497,7 @@ class TestAuthZ(unittest.TestCase):
 
             loop.run_until_complete(test_verify_controlled_granularity_default())
             loop.run_until_complete(client.close())
-    """
     def test_authZ_verify_dataset_sets_controlled_granularity_default6(self):
-        #TODO: case where 3 security levels are present. Case where controlled is empty and public is filled. Case where only registered and controlled datasets are present. Case where only public is filled.
-        # Test access control for a controlled-access (authorized) user
         with loop_context() as loop:
             app = create_test_app()
             client = TestClient(TestServer(app), loop=loop)
@@ -570,7 +565,7 @@ class TestAuthZ(unittest.TestCase):
                         assert dataset.security_level == 'controlled'
                     elif dataset.dataset == 'test3':
                         assert dataset.granularity == 'count'
-                        assert dataset.security_level == 'controlled'
+                        assert dataset.security_level == 'public'
                     elif dataset.dataset == 'test4':
                         assert dataset.granularity == 'count'
                         assert dataset.security_level == 'controlled'
@@ -638,7 +633,6 @@ class TestAuthZ(unittest.TestCase):
 
             loop.run_until_complete(test_verify_controlled_granularity_default())
             loop.run_until_complete(client.close())
-    """
 
 if __name__ == '__main__':
     unittest.main()
