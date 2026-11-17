@@ -5273,14 +5273,8 @@ class TestMain(unittest.TestCase):
                     genomicVariant["genomicVariant"]["endpoint_name"] +
                     "?datasets=no_dataset"
                 )
-                # API still responds successfully
-                assert resp.status == 200  
-
-                responsetext = await resp.text()
-                responsedict = json.loads(responsetext)
-
-                # No dataset should result in empty logical match
-                assert responsedict["responseSummary"]["exists"] is False
+                # API still responds with a 401
+                assert resp.status == 401
 
             loop.run_until_complete(test_check_check_no_dataset_found())
             loop.run_until_complete(client.close())

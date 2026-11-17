@@ -314,7 +314,7 @@ def check_configuration(
 
     # Validate each declared security level.
     for security_level in conf_override.config.security_levels:
-        if security_level not in ['PUBLIC', 'REGISTERED', 'CONTROLLED']:
+        if security_level not in ['PUBLIC', 'REGISTERED', 'CONTROLLED', 'public', 'registered', 'controlled']:
             raise Exception(
                 "Security levels can only have PUBLIC, REGISTERED or CONTROLLED level."
             )
