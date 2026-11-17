@@ -39,7 +39,7 @@ def validate_access_token(self, access_token, idp_issuer, jwks_url, aud):
 @log_with_args(config.level)
 def check_needed_visa_conf(self, visas_conf, visas_outcome):
     for visa_type, conditions in visas_conf.items():
-        if conditions['enabled']==True:
+        if conditions['enabled']==True and visa_type != 'ControlledAccessGrants':
             if visa_type in visas_outcome:
                 if visas_outcome[visa_type]==False:
                     self.LOG.warning('{} condition was not met'.format(visa_type))
@@ -234,6 +234,8 @@ async def authentication(self, access_token):
             user, list_visa_tokens = await fetch_user_info(self, access_token, user_info, idp_issuer, list_visa_tokens)
             return user, list_visa_tokens
     except Exception as e:
+        if 'public' not in map(str.lower, config.security_levels):
+            raise NoPermissionsAvailable('Unauthorized. This beacon needs authtentication in order to be queried.')
         user = None
         list_visa_tokens=[]
         return user, list_visa_tokens

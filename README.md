@@ -444,6 +444,10 @@ ControlledAccessGrants:
       - https://rems.test.example.org/datasets/test-dataset
 ``` 
 
+##
+
+Here is an illustration showing the Auth Flow that Beacon PI follows:
+
 
 ## Managing configuration
 
@@ -787,7 +791,7 @@ docker compose restart beaconprod
 
 Now state checks are available through `/health` endpoint. The implemented checks and their flow are the ones that are shown in the diagram below:
 
-![MongoDB vulnerabilities](https://github.com/EGA-archive/beacon-production-prototype/blob/main/ri-tools/files/Machine_State_v3.jpg)
+![Auth Flow](https://github.com/EGA-archive/beacon-production-prototype/blob/main/ri-tools/files/authflow.png)
 
 ## Alternative Schemas
 
