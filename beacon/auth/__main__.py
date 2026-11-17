@@ -39,7 +39,7 @@ def validate_access_token(self, access_token, idp_issuer, jwks_url, aud):
 @log_with_args(config.level)
 def check_needed_visa_conf(self, visas_conf, visas_outcome):
     for visa_type, conditions in visas_conf.items():
-        if conditions['enabled']==True:
+        if conditions['enabled']==True and visa_type != 'ControlledAccessGrants':
             if visa_type in visas_outcome:
                 if visas_outcome[visa_type]==False:
                     self.LOG.warning('{} condition was not met'.format(visa_type))

@@ -460,7 +460,6 @@ class TestAuthZ(unittest.TestCase):
                 for dataset in datasets:
                     assert dataset.dataset == 'test4'
                     assert dataset.granularity == 'count'
-                    print('{} security level is {}'.format(dataset.dataset,dataset.security_level), flush=True)
                     assert dataset.security_level == 'registered'
                     list_datasets_names.append(dataset.dataset)
 
