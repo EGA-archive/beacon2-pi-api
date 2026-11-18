@@ -68,7 +68,7 @@ def get_count(self, collection: Collection, query: dict) -> int:
         try:
             counts=list(counts)
             if counts == []:
-                total_counts=collection.count_documents(query)
+                total_counts=collection.count_documents(query, maxTimeMS=100000)
                 insert_dict={}
                 insert_dict['id']=str(query)
                 insert_dict['num_results']=total_counts
