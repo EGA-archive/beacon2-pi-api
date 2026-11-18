@@ -26,6 +26,6 @@ progressbar==2.5
 tqdm==4.66.3
 python-dateutil==2.9.0
 rfc3339_validator==0.1.4
-datamodel-code-generator==0.81.0
+datamodel-code-generator==0.89.0
 psycopg2-binary==2.9.12
 SQLAlchemy==2.0.51

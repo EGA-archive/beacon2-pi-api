@@ -9,7 +9,9 @@ from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.utils import 
 from beacon.response.classes import SingleDatasetResponse
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.utils import import_analysis_confile, import_biosample_confile, import_genomicVariant_confile, import_individual_confile, import_run_confile
 from beacon.connections.mongo import conf as mongo_conf
+from beacon.auditing.decorators.audit_database import audit_database
 
+@audit_database
 @log_with_args(config.level)
 def get_phenotypic_endpoint(self, dataset: SingleDatasetResponse):
     # Initialize the boolean parameter to know if the request parameters come from query string.

@@ -9,6 +9,7 @@ from beacon.exceptions.exceptions import AppError
 from pydantic import ValidationError
 from beacon.exceptions.exceptions import InvalidData
 from beacon.utils.modules import load_framework_module
+from beacon.auditing.audit import audit_trace
 
 class EndpointView(web.View, CorsViewMixin):    
     def __init__(self, request: Request):
@@ -27,10 +28,13 @@ class EndpointView(web.View, CorsViewMixin):
         self.LOG=self.request.app['logger']
         self._id=None
         self._id = generate_txid(self)
+        self.audit = request.get("audit")
 
+    @audit_trace
     async def get(self):
         return await self.handle_request()
 
+    @audit_trace
     async def post(self):
         return await self.handle_request()
 

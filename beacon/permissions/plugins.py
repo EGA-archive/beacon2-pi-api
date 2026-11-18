@@ -22,7 +22,8 @@ class Permissions():
 class DummyPermissions(Permissions):
     async def initialize(self):
         pass
-    
+
+    @audit_authorization
     async def get_permissions(self, user_id, requested_datasets=None, testMode=False, entry_type_id=None, visa_datasets=None):
         # Initialize the list of datasets that will be returned depending on the permissions.
         datasets = []
