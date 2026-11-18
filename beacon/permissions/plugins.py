@@ -3,7 +3,6 @@ from beacon.exceptions.exceptions import NoPermissionsAvailable
 from beacon.response.classes import SingleDatasetResponse
 from beacon.permissions.utils import return_found_granularity_in_exceptions, return_granularity_and_exceptions
 from beacon.conf.conf_override import config
-from beacon.auditing.decorators.audit_authorization import audit_authorization
 
 class Permissions():
     """Base class, just to agree on the interface."""
@@ -23,8 +22,7 @@ class Permissions():
 class DummyPermissions(Permissions):
     async def initialize(self):
         pass
-
-    @audit_authorization
+    
     async def get_permissions(self, user_id, requested_datasets=None, testMode=False, entry_type_id=None, visa_datasets=None):
         # Initialize the list of datasets that will be returned depending on the permissions.
         datasets = []
