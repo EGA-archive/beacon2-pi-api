@@ -32,22 +32,13 @@ class EndpointView(web.View, CorsViewMixin):
 
     @audit_trace
     async def get(self):
-        try:
-            # Decompound/validate the request and store the attributes needed in the class RequestAttributes
-            await deconstruct_request(self, self.request)
-            # Call the handler function for the view assigned to the queried endpoint
-            return await self.handler()
-        except AppError as e:
-            # In case a handled error occurs, return the error message and status for it
-            response_obj = self.error_builder(e.status, e.message)
-            return web.Response(text=json_util.dumps(response_obj), status=e.status, content_type='application/json')
-        except Exception as e:
-            # In case an unhandled error occurs, return a 500 and the generic error message below
-            response_obj = self.error_builder(500, "Unexpected internal error: {}".format(e))
-            return web.Response(text=json_util.dumps(response_obj), status=500, content_type='application/json')
+        return await self.handle_request()
 
     @audit_trace
     async def post(self):
+        return await self.handle_request()
+
+    async def handle_request(self):
         try:
             # Decompound/validate the request and store the attributes needed in the class RequestAttributes
             await deconstruct_request(self, self.request)
@@ -59,7 +50,7 @@ class EndpointView(web.View, CorsViewMixin):
             return web.Response(text=json_util.dumps(response_obj), status=e.status, content_type='application/json')
         except Exception as e:
             # In case an unhandled error occurs, return a 500 and the generic error message below
-            response_obj = self.error_builder(500, "Unexpected internal error: {}".format(e))
+            response_obj = self.error_builder(500, "Unexpected internal error.")
             return web.Response(text=json_util.dumps(response_obj), status=500, content_type='application/json')
 
     def create_response(self):
@@ -85,3 +76,4 @@ class EndpointView(web.View, CorsViewMixin):
         except ValidationError as v:
             # Stdout the information about ErrorResponse failed about it not being according to the spec
             raise InvalidData('ErrorResponse templates or data are not correct')
+

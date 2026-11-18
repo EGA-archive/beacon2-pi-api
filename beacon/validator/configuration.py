@@ -314,7 +314,7 @@ def check_configuration(
 
     # Validate each declared security level.
     for security_level in conf_override.config.security_levels:
-        if security_level not in ['PUBLIC', 'REGISTERED', 'CONTROLLED']:
+        if security_level not in ['PUBLIC', 'REGISTERED', 'CONTROLLED', 'public', 'registered', 'controlled']:
             raise Exception(
                 "Security levels can only have PUBLIC, REGISTERED or CONTROLLED level."
             )
@@ -446,9 +446,9 @@ def check_configuration(
                 for security_level, securityconf in configuration.items():
 
                     # Only supported security levels are allowed
-                    if security_level not in ['public', 'registered', 'controlled']:
+                    if security_level not in map(str.lower, conf_override.config.security_levels):
                         raise Exception(
-                            "keys for datasets have to be public, registered, controlled for security level"
+                            "keys for datasets in datasets_permissions.yml have to be {} for security level".format(conf_override.config.security_levels)
                         )
 
                     # Security configuration can be boolean or detailed object
