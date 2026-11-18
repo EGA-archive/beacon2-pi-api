@@ -2,6 +2,7 @@ import yaml
 from beacon.exceptions.exceptions import NoPermissionsAvailable
 from beacon.response.classes import SingleDatasetResponse
 from beacon.permissions.utils import return_found_granularity_in_exceptions, return_granularity_and_exceptions
+from beacon.conf.conf_override import config
 from beacon.auditing.decorators.audit_authorization import audit_authorization
 
 class Permissions():
