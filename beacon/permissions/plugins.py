@@ -39,6 +39,13 @@ class DummyPermissions(Permissions):
                         if 'controlled' not in datasets_permissions[visa_dataset]:
                             datasets_permissions[visa_dataset]["controlled"]={"default_entry_types_granularity": "boolean", "user-list": [{"user_id": user_id}]}
                     else:
+                        # An operator-configured controlled tier exists: keep its granularity and add the
+                        # visa holder to its user-list, since only listed users are granted the controlled tier.
+                        ctrl = datasets_permissions[visa_dataset]["controlled"]
+                        if ctrl.get("user-list") is None:
+                            ctrl["user-list"] = []
+                        ctrl["user-list"].append({"user_id": user_id})
+                    else:
                         datasets_permissions[visa_dataset]={"controlled": {"default_entry_types_granularity": "boolean", "user-list": [{"user_id": user_id}]}}
             if testMode == True:
                 # If the testMode is requested, open the datasets configuration file and save it in a dictionary.
