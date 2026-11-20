@@ -5,6 +5,7 @@ import threading
 from pymongo import MongoClient
 from beacon.connections.mongo import conf
 import threading
+from beacon.auditing.database.instrumentation import MONGO_AUDIT_LISTENER
 
 _CLIENTS = {}
 _CLIENTS_LOCK = threading.Lock()
@@ -56,6 +57,9 @@ def get_client():
                 ),
                 connectTimeoutMS=conf.database_connect_timeout_ms,
                 waitQueueTimeoutMS=5000,
+                event_listeners=[
+                    MONGO_AUDIT_LISTENER
+                ]
             )
             _CLIENTS[key] = client
 

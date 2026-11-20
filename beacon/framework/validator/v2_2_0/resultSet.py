@@ -8,6 +8,7 @@ import math
 from beacon.utils.handovers import list_of_handovers_per_dataset
 from beacon.conf import conf_override
 from beacon.utils.modules import load_types_of_results, load_class
+from beacon.auditing.decorators.audit_event import audit_event
 
 
 def validate_count_precision(v: str) -> str:
@@ -26,7 +27,9 @@ def make_ResultsetInstance(self):
     def countPrecision_validator(cls, v):
         return validate_count_precision(v)
 
+
     @classmethod
+    @audit_event('granularity_enforcement')
     def build_response_by_dataset(cls, datasetInstance, allowed_granularity, granularity):
         resultsHandovers = None
         countAdjustedTo = None

@@ -5,7 +5,9 @@ from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.cross
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.cross_queries.get_total_query import get_total_query
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.utils import import_analysis_confile, import_biosample_confile, import_individual_confile, import_run_confile
 from beacon.connections.mongo import conf as mongo_conf
+from beacon.auditing.decorators.audit_event import audit_event
 
+@audit_event('database_operation')
 @log_with_args(config.level)
 def request_parameters(self, total_query, request_parameters, dataset): 
     client=get_client()

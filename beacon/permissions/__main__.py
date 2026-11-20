@@ -9,6 +9,7 @@ from beacon.budget.__main__ import check_budget
 from beacon.utils.modules import get_all_modules_datasets
 from beacon.response.classes import SingleDatasetResponse
 from beacon.exceptions.exceptions import InvalidRequest, NoPermissionsAvailable, NoTermsAndConditionsForResearcherAvailable
+from beacon.auditing.decorators.audit_event import audit_event
 
 @log_with_args(config.level)
 async def authorization(self):
@@ -22,9 +23,12 @@ async def authorization(self):
         access_token = auth[7:].strip() # the number 7 is the length of executing len('Bearer ')
         # Validate the token
         user, list_visa_datasets = await authentication(self, access_token)
+        self.LOG.warning('here is my answer')
+        self.LOG.warning(user)
         # Get the token's sub as the user_id if the token is valid.
         user_id = user.get('sub')
     except Exception as e:
+        self.LOG.warning(e)
         if 'public' not in map(str.lower, config.security_levels):
             raise NoPermissionsAvailable('Unauthorized. This beacon needs authentication in order to be queried.')
         list_visa_datasets = []
@@ -56,6 +60,7 @@ async def get_datasets_list(self, authorized_datasets):
         response_datasets =  [element for element in authorized_datasets if element.dataset in [r['id'] for r in beacon_datasets]]
     return response_datasets
 
+@audit_event("authorization")
 def query_permissions(func):
     @log_with_args(config.level)
     async def permission(self):
@@ -69,6 +74,7 @@ def query_permissions(func):
             requested_datasets = []
         # Get the usernq, and the list of datasets that the user has permissions for from visas.
         user_id, list_visa_datasets = await authorization(self)
+        self.LOG.warning(user_id)
         # Get the datasets that the user has permissions for from the datasets permissions conf file in a list of classes for the datasets.
         datasets_permissions = await PermissionsProxy.get_permissions(self, user_id=user_id, requested_datasets=requested_datasets, testMode=self.request_attributes.qparams.query.testMode, entry_type_id=self.request_attributes.entry_type_id, visa_datasets=list_visa_datasets)
         # Return the time to be inserted in the budget in case the budget doesn't return an exception for the query.

@@ -9,6 +9,7 @@ from beacon.exceptions.exceptions import NoPermissionsAvailable, NoTermsAndCondi
 import requests
 import yaml
 from beacon.auditing.decorators.audit_authentication import audit_authentication
+from beacon.auditing.decorators.audit_event import audit_event
 
 @log_with_args(config.level)
 def validate_access_token(self, access_token, idp_issuer, jwks_url, aud):
@@ -143,6 +144,7 @@ def fetch_idp(self, access_token):
         algorithm=header["alg"]
         decoded = jwt.decode(access_token, options={"verify_signature": False})
     except Exception as e:
+        self.LOG.warning(e)
         self.LOG.warning("Unauthorized. The token could not be decoded")
         raise NoPermissionsAvailable("Unauthorized. The token could not be decoded")
     if algorithm not in config.access_token_accepted_algorithms:
@@ -224,6 +226,7 @@ async def fetch_user_info(self, access_token, user_info, idp_issuer, list_visa_t
                 self.LOG.warning('Unauthorized. Could not fetch the user info from the token.')
                 raise NoPermissionsAvailable("Unauthorized. Could not fetch the user info from the token.")
 
+@audit_event("authentication")
 @audit_authentication
 @log_with_args(config.level)
 async def authentication(self, access_token):
@@ -232,10 +235,14 @@ async def authentication(self, access_token):
     try:
         idp_issuer, user_info, idp_jwks_url, aud = fetch_idp(self, access_token)
         access_token_validation = validate_access_token(self, access_token, idp_issuer, idp_jwks_url, aud)
+        self.LOG.warning(access_token_validation)
         if access_token_validation == True:
             user, list_visa_tokens = await fetch_user_info(self, access_token, user_info, idp_issuer, list_visa_tokens)
+            self.LOG.warning('here is my user')
+            self.LOG.warning(user)
             return user, list_visa_tokens
     except Exception as e:
+        self.LOG.warning(e)
         if 'public' not in map(str.lower, config.security_levels):
             raise NoPermissionsAvailable('Unauthorized. This beacon needs authtentication in order to be queried.')
         user = None

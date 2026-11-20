@@ -16,18 +16,8 @@ import socket
 import os
 
 import platform
-from contextvars import ContextVar
-
-current_audit = ContextVar(
-    "current_audit",
-    default=None
-)
-
-current_handler = ContextVar(
-    "current_handler",
-    default=None
-)
-
+from beacon.auditing.decorators.audit_event import audit_event
+from beacon.auditing.context_vars import current_audit, current_handler
 
 class AuditContext:
 
@@ -514,18 +504,23 @@ class AuditContext:
         """
         Method to state that an event has finished
         """
-
+        print('startingggg', flush=True)
         # Collect the current list of events from execution
         events = list(self.data.execution.events)
 
         # In case the number of the sequence is already parsed, don't do anything.
         if sequence >= len(events):
+            print(f"Invalid sequence: {sequence}, events: {len(events)}", flush=True)
             return
 
         # Grab the sequence event from execution in auditing context
         event = events[sequence]
-
+        print('the event is {}'.format(event), flush=True)
         if event.sequence != sequence:
+            print(
+                f"Sequence mismatch: requested={sequence}, "
+                f"actual={event.sequence}", flush=True
+            )
             return
 
         # Add the timers of completion to the event
@@ -586,23 +581,14 @@ class AuditContext:
 
     def capture_effective_granularity(self, response_data):
         """
-        Determine the effective granularity of each dataset based
-        on the data actually returned in the API response.
+        Determine the effective granularity of each dataset
+        based on the actual API response.
 
-        The function inspects the response resultSets and identifies
-        the granularity according to the returned content:
-
-            - record:   Individual records were returned.
-            - count:    Only the number of records was returned.
-            - boolean:  Only a boolean existence result was returned.
-
-        It then matches each result set to its corresponding dataset
-        in the authorization decisions and updates its
-        effective_granularity field.
-
-        This allows the audit record to distinguish between the
-        granularity requested, the maximum granularity authorized,
-        and the granularity actually disclosed by the API.
+        Possible values:
+            - record
+            - count
+            - boolean
+            - None (not determinable)
         """
 
         result_sets = (
@@ -613,25 +599,35 @@ class AuditContext:
 
         decisions = self.data.authorization.decisions
 
-        # Build a mapping between dataset IDs and their actual
-        # returned granularity.
-        effective_granularities = {
-            result["id"]: (
-                "record"
-                if result.get("results") is not None
-                else "count"
-                if result.get("resultsCount") is not None
-                else "boolean"
-            )
-            for result in result_sets
-        }
+        # Build the mapping between dataset identifiers
+        # and their effective returned granularity.
+        effective_granularities = {}
 
-        # Update each authorization decision with the granularity
-        # observed in the actual API response.
+        for result in result_sets:
+
+            dataset_id = result.get("id")
+
+            if not dataset_id:
+                continue
+
+            if result.get("results") is not None:
+                granularity = "record"
+
+            elif result.get("resultsCount") is not None:
+                granularity = "count"
+
+            elif isinstance(result.get("exists"), bool):
+                granularity = "boolean"
+
+            else:
+                granularity = None
+
+            effective_granularities[dataset_id] = granularity
+
+        # Update authorization decisions.
         updated_decisions = []
 
         for decision in decisions:
-
             effective = effective_granularities.get(
                 decision.dataset
             )
@@ -643,13 +639,13 @@ class AuditContext:
                     }
                 )
             )
-
-        # Validate and store the updated authorization information.
+        # Persist the updated authorization decisions.
         self.data.authorization = self._update_model(
             self.data.authorization,
             decisions=updated_decisions
         )
 
+    @audit_event('http_response')
     def capture_response(self, response):
         # Get the response the API returned to the client
         body = response.body

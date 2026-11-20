@@ -4,6 +4,8 @@ from beacon.conf.conf_override import config
 from beacon.connections.mongo.client import get_client
 from beacon.connections.mongo import conf as mongo_conf
 import yaml
+from beacon.auditing.decorators.audit_event import audit_event
+
 
 def import_genomicVariant_confile():
     with open("/beacon/models/ga4gh/beacon_v2_default_model/conf/entry_types/genomicVariant.yml", 'r') as pfile:
@@ -52,6 +54,7 @@ def lengthquery(self, collection: Collection,query: dict):
     # Return the length of al the records for the query
     return collection.find(query, {"_id": 1, "variation.location.interval.start.value": 1, "variation.location.interval.end.value": 1}).max_time_ms(100 * 1000)
 
+@audit_event('database_operation')
 @log_with_args_mongo(config.level)
 def get_phenotypic_cross_query_attributes(self, entry_type, pre_entry_type):
     individual_confile = import_individual_confile()

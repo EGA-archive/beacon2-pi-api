@@ -2,7 +2,9 @@ from beacon.connections.mongo.client import get_client
 from beacon.logs.logs import log_with_args
 from beacon.conf.conf_override import config
 from beacon.connections.mongo import conf as mongo_conf
+from beacon.auditing.decorators.audit_event import audit_event
 
+@audit_event('database_operation')
 @log_with_args(config.level)
 def cross_query_scope_is_genomicVariant_and_entry_type_is_not(self, original_id, query, dataset):
     client=get_client()

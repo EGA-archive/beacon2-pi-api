@@ -90,6 +90,7 @@ def audit_trace(func):
                 else:
                     status = "failed"
 
+
             # Mark the HTTP request execution event as successful.
             audit.complete_execution_event(
                 event_id,

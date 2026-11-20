@@ -10,6 +10,8 @@ from beacon.response.classes import SingleDatasetResponse
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.utils import import_analysis_confile, import_biosample_confile, import_genomicVariant_confile, import_individual_confile, import_run_confile
 from beacon.connections.mongo import conf as mongo_conf
 from beacon.auditing.decorators.audit_database import audit_database
+from beacon.auditing.decorators.audit_event import audit_event
+
 
 @audit_database
 @log_with_args(config.level)
@@ -69,6 +71,7 @@ def get_phenotypic_endpoint_with_id(self, dataset: SingleDatasetResponse):
     responseClass = get_docs_by_response_type(self, include, query, dataset, limit, skip)
     return responseClass
 
+@audit_event('database_operation')
 @log_with_args(config.level)
 def get_variants_of_phenotypic_endpoint(self, dataset: SingleDatasetResponse):
     client=get_client()
@@ -148,6 +151,7 @@ def get_variants_of_phenotypic_endpoint(self, dataset: SingleDatasetResponse):
     responseClass = get_docs_by_response_type(self, include, query, dataset, limit, skip)
     return responseClass
 
+@audit_event('database_operation')
 @log_with_args(config.level)
 def get_phenotypic_endpoint_of_variants(self, dataset: SingleDatasetResponse):
     client=get_client()
@@ -333,6 +337,7 @@ def get_phenotypic_endpoint_of_dataset(self, dataset: SingleDatasetResponse):
     responseClass = get_docs_by_response_type(self, include, query, dataset, limit, skip)
     return responseClass
 
+@audit_event('database_operation')
 @log_with_args(config.level)
 def get_phenotypic_endpoint_of_cohort(self, dataset: SingleDatasetResponse):
     client=get_client()
@@ -362,6 +367,7 @@ def get_phenotypic_endpoint_of_cohort(self, dataset: SingleDatasetResponse):
     responseClass = get_docs_by_response_type(self, include, query, dataset, limit, skip)
     return responseClass
 
+@audit_event('database_operation')
 @log_with_args(config.level)
 def get_variants_of_cohort(self, dataset: SingleDatasetResponse):
     client=get_client()
@@ -413,6 +419,7 @@ def get_variants_of_cohort(self, dataset: SingleDatasetResponse):
     responseClass = get_docs_by_response_type(self, include, query, dataset, limit, skip)
     return responseClass
 
+@audit_event('database_operation')
 @log_with_args(config.level)
 def get_phenotypic_cross_query(self, dataset: SingleDatasetResponse):
     # Get the translation of ids for the entry types lookup for the cross query.

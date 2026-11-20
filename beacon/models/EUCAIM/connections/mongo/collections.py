@@ -7,7 +7,9 @@ from beacon.response.classes import CollectionsResponse
 from beacon.models.EUCAIM.connections.mongo.utils import get_non_collections_cross_query_attributes
 from beacon.models.EUCAIM.connections.mongo.utils import import_patients_confile
 from beacon.connections.mongo import conf as mongo_conf
+from beacon.auditing.decorators.audit_event import audit_event
 
+@audit_event('database_operation')
 @log_with_args_mongo(config.level)
 def get_collections(self):
     client=get_client()
@@ -19,6 +21,7 @@ def get_collections(self):
     query = collections.find(query)
     return query
 
+@audit_event('database_operation')
 @log_with_args_mongo(config.level)
 def get_full_collections(self):
     client=get_client()

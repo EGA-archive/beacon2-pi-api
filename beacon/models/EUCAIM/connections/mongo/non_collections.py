@@ -6,6 +6,7 @@ from beacon.connections.mongo.utils import get_docs_by_response_type, query_id
 from beacon.models.EUCAIM.connections.mongo.utils import import_patients_confile
 from beacon.models.EUCAIM.connections.mongo.utils import get_non_collections_cross_query_attributes
 from beacon.response.classes import SingleDatasetResponse
+from beacon.auditing.decorators.audit_event import audit_event
 
 @log_with_args(config.level)
 def get_endpoint(self, dataset: SingleDatasetResponse):
@@ -44,6 +45,7 @@ def get_endpoint_with_id(self, dataset: SingleDatasetResponse):
     responseClass = get_docs_by_response_type(self, include, query, dataset, limit, skip)
     return responseClass
 
+@audit_event('database_operation')
 @log_with_args(config.level)
 def get_endpoint_cross_query(self, dataset: SingleDatasetResponse):
     # Get the translation of ids for the entry types lookup for the cross query.

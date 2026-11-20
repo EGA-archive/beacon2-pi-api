@@ -10,6 +10,7 @@ from pydantic import ValidationError
 from beacon.exceptions.exceptions import InvalidData
 from beacon.utils.modules import load_framework_module
 from beacon.auditing.audit import audit_trace
+from beacon.auditing.decorators.audit_event import audit_event
 
 class EndpointView(web.View, CorsViewMixin):    
     def __init__(self, request: Request):
@@ -38,6 +39,7 @@ class EndpointView(web.View, CorsViewMixin):
     async def post(self):
         return await self.handle_request()
 
+    @audit_event('response_generation')
     async def handle_request(self):
         try:
             # Decompound/validate the request and store the attributes needed in the class RequestAttributes
@@ -53,6 +55,7 @@ class EndpointView(web.View, CorsViewMixin):
             response_obj = self.error_builder(500, "Unexpected internal error.")
             return web.Response(text=json_util.dumps(response_obj), status=500, content_type='application/json')
 
+    @audit_event('response_serialization')
     def create_response(self):
         # Convert the previously created class of the response to JSON:
         classtoJSON = self.classResponse.model_dump(exclude_none=True, by_alias=True)

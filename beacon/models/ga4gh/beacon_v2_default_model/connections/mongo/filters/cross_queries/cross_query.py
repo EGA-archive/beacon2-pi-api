@@ -6,6 +6,7 @@ from beacon.logs.logs import log_with_args
 from beacon.conf.conf_override import config
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.utils import import_dataset_confile, import_analysis_confile, import_biosample_confile, import_cohort_confile, import_individual_confile, import_genomicVariant_confile, import_run_confile
 from beacon.connections.mongo import conf as mongo_conf
+from beacon.auditing.decorators.audit_event import audit_event
 
 import threading
 
@@ -34,6 +35,7 @@ def get_cross_query_configs():
 
 
 
+@audit_event('database_operation')
 @log_with_args(config.level)
 def cross_query(self, query: dict, scope: str, request_parameters: dict, dataset: str):
     client=get_client()

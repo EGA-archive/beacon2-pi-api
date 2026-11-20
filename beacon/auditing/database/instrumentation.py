@@ -121,6 +121,7 @@ class MongoAuditListener(CommandListener):
                 "operation": operation,
                 "collection": collection,
                 "query_fingerprint": fingerprint,
+                "database": event.database_name,
             }
 
     def succeeded(self, event):
@@ -186,6 +187,7 @@ class MongoAuditListener(CommandListener):
         operation = {
             "connection": operation_data["connection"],
             "operation": operation_data["operation"],
+            "database": operation_data["database"],
             "collection": operation_data["collection"],
             "query_fingerprint": operation_data["query_fingerprint"],
             "status": status,

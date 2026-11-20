@@ -8,6 +8,8 @@ from beacon.response.classes import SingleDatasetResponse
 from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.utils import import_genomicVariant_confile
 from beacon.connections.mongo import conf as mongo_conf
 
+from beacon.auditing.decorators.audit_event import audit_event
+
 @log_with_args_mongo(config.level)
 def query_id(self, query: dict, document_id) -> dict:
     query["id"] = document_id
@@ -23,7 +25,7 @@ def query_patientId(self, query: dict, document_id) -> dict:
     query["patientId"] = document_id
     return query
 
-
+@audit_event('database_operation')
 @log_with_args_mongo(config.level)
 def join_query(
     self,
@@ -49,14 +51,17 @@ def join_query(
         max_time_ms=100_000,
     )
 
+@audit_event('database_operation')
 @log_with_args_mongo(config.level)
 def get_documents(self, collection: Collection, query: dict, skip: int, limit: int) -> Cursor:
     return collection.find(query,{"_id": 0, "datasetId": 0}).skip(skip).limit(limit).max_time_ms(100 * 1000)
 
+@audit_event('database_operation')
 @log_with_args_mongo(config.level)
 def get_documents_for_cohorts(self, collection: Collection, query: dict, skip: int, limit: int) -> Cursor:
     return collection.find(query,{"_id": 0}).skip(skip).limit(limit).max_time_ms(100 * 1000)
 
+@audit_event('database_operation')
 @log_with_args_mongo(config.level)
 def get_count(self, collection: Collection, query: dict) -> int:
     client=get_client()
@@ -150,6 +155,7 @@ def get_docs_by_response_type(self, include: str, query: dict, dataset: SingleDa
     dataset.docs=docs
     return dataset
 
+@audit_event('database_operation')
 @log_with_args_mongo(config.level)
 def get_filtering_documents(self, collection: Collection, query: dict, remove_id: dict,skip: int, limit: int) -> Cursor:
     # Get the docs by removing the unwanted id

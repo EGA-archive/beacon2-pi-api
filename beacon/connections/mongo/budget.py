@@ -1,7 +1,9 @@
 from beacon.connections.mongo.client import get_client
 from beacon.logs.logs import log_with_args_mongo
 from beacon.conf.conf_override import config
+from beacon.auditing.decorators.audit_event import audit_event
 
+@audit_event('database_operation')
 @log_with_args_mongo(config.level)
 def get_remaining_budget_by_user(self, user_id, start_budget_time):
     client=get_client()
@@ -28,6 +30,7 @@ def insert_budget(self, user_id, time_now):
     budget_query["date"]=time_now
     client[config.query_budget_db_name][config.query_budget_table].insert_one(budget_query)
 
+@audit_event('database_operation')
 @log_with_args_mongo(config.level)
 def get_remaining_budget_by_ip(self, start_budget_time):
     client=get_client()

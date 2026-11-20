@@ -7,7 +7,9 @@ from beacon.models.ga4gh.beacon_v2_default_model.connections.mongo.filters.reque
 from beacon.connections.mongo import conf as mongo_conf
 from beacon.connections.mongo.client import get_client
 from beacon.response.classes import CollectionsResponse
+from beacon.auditing.decorators.audit_event import audit_event
 
+@audit_event('database_operation')
 @log_with_args_mongo(config.level)
 def get_datasets(self):
     client=get_client()
@@ -17,6 +19,7 @@ def get_datasets(self):
     query = datasets.find(query)
     return query
 
+@audit_event('database_operation')
 @log_with_args_mongo(config.level)
 def get_full_datasets(self):
     client=get_client()

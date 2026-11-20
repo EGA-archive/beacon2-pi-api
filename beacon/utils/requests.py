@@ -13,6 +13,7 @@ import os
 from beacon.request.parameters import RequestMeta, SchemasPerEntity
 from pydantic import ValidationError
 from beacon.utils.modules import get_one_module_conf, load_source_module
+from beacon.auditing.decorators.audit_event import audit_event
 
 @log_with_args(config.level)
 def parse_query_string(self, request):
@@ -339,6 +340,7 @@ def set_headers(self, request):
     self.request_attributes.headers=request.headers
 
 @log_with_args(config.level)
+@audit_event('request_validation')
 async def deconstruct_request(self, request):
     '''
     Here we grab the attributes that come from a request: ip, headers, entry_type related attributes and request parameters in four different steps, the order of which is

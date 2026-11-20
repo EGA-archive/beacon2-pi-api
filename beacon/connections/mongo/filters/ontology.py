@@ -7,7 +7,7 @@ from beacon.connections.mongo.client import get_client
 from beacon.utils.modules import get_all_modules_connections_script
 from beacon.connections.mongo import conf as mongo_conf
 from beacon.exceptions.exceptions import InvalidRequest
-
+from beacon.auditing.decorators.audit_event import audit_event
 
 @lru_cache(maxsize=32)
 def get_cached_cross_query_modules():
@@ -19,7 +19,7 @@ def get_cached_cross_query_modules():
         )
     )
 
-
+@audit_event('database_operation')
 def apply_ontology_filter(
     self,
     query: dict,

@@ -45,7 +45,7 @@ def audit_authentication(func):
                 # Record the successful authentication result.
                 audit.update_identity(
                     authenticated=True,
-                    user_id=str(result.user_id),
+                    user_id=str(result[0]["sub"]),
                     authentication_method="Bearer",
                     authentication_status="success"
                 )
